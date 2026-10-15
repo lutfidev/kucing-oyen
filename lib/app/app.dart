@@ -18,6 +18,7 @@ class _KucingOrenAppState extends State<KucingOrenApp> {
   late final GoRouter _router = createRouter(
     initialLocation: widget.initialLocation,
   );
+  final ThemeData _theme = KoTheme.light();
 
   @override
   void dispose() {
@@ -30,7 +31,7 @@ class _KucingOrenAppState extends State<KucingOrenApp> {
     return MaterialApp.router(
       title: 'Kucing Oren',
       debugShowCheckedModeBanner: false,
-      theme: KoTheme.light(),
+      theme: _theme,
       routerConfig: _router,
     );
   }
