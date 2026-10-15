@@ -63,6 +63,6 @@ class Level {
 
 /// Mengurai isi file JSON berisi daftar level.
 List<Level> parseLevels(String source) => [
-      for (final json in (jsonDecode(source) as List).cast<Map<String, dynamic>>())
-        Level.fromJson(json),
-    ];
+  for (final json in (jsonDecode(source) as List).cast<Map<String, dynamic>>())
+    Level.fromJson(json),
+];

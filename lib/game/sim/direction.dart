@@ -19,8 +19,12 @@ enum Direction {
 
   /// Urutan cek barang di meja dan pemecah seri jarak ikan:
   /// depan, searah jarum jam, berlawanan jarum jam, belakang.
-  List<Direction> get lookOrder =>
-      [this, clockwise, counterClockwise, opposite];
+  List<Direction> get lookOrder => [
+    this,
+    clockwise,
+    counterClockwise,
+    opposite,
+  ];
 
   static Direction? fromSymbol(String symbol) {
     for (final d in values) {

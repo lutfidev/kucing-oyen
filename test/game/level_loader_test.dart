@@ -23,8 +23,11 @@ void main() {
       expect(level.solution, hasLength(level.starItems), reason: '$level');
       for (final item in Item.values) {
         final used = level.solution.where((p) => p.item == item).length;
-        expect(used, lessThanOrEqualTo(level.inventory[item] ?? 0),
-            reason: '$level: ${item.key}');
+        expect(
+          used,
+          lessThanOrEqualTo(level.inventory[item] ?? 0),
+          reason: '$level: ${item.key}',
+        );
       }
       for (final p in level.solution) {
         expect(level.board.canPlace(p.pos), isTrue, reason: '$level: $p');
