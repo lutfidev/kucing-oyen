@@ -13,8 +13,9 @@ Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kar
 ## Struktur
 
 - `lib/game/sim/`: simulasi Dart murni. `simulate(board, placed)` → `SimResult` (`win`, `vaseBroken`, `steps`, `failReason`, `trace` berisi `SimStep` per langkah, `vaseBrokenAtStep`). `solve(board, inventory, {needSafe})` → `SolveResult` (`minItems`, `solutions`: semua susunan minimum tanpa duplikat) atau null. `Board.parse`, `Level`/`parseLevels`, `Cell`, `Direction`, `Item`/`Placement`, `Pos`. Impor lewat `sim/sim.dart`.
+- `lib/game/model/level_session.dart`: `LevelSession(level)`, Dart murni. Fase `SessionPhase` (`arrange` → `running` → `result`). Aksi fase atur `place`/`move`/`remove` mengembalikan `false` kalau ditolak; `canPlaceAt(pos)` untuk petak menyala. `itemAt(pos)` hanya benda pemain (benda bawaan lewat `board.cellAt`), `placed`, `remaining` (sisa baki), `itemsUsed`. Pindah fase: `wake()` → `SimResult`, `finish()` ke layar hasil, `arrangeAgain()` (Atur Lagi/Coba Lagi, susunan tetap), `reset()` (Ulangi, papan kosong); pindah fase yang tidak sah melempar `StateError`. `stars` 0–3, null di fase atur.
 - `lib/game/level_loader.dart`: `loadLevels()` membaca aset level lewat `rootBundle`.
-- `test/game/`: test simulasi, solver, dan loader.
+- `test/game/`: test simulasi, solver, loader, dan sesi level.
 
 Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API penting.
 
