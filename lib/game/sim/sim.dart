@@ -8,3 +8,4 @@ export 'item.dart';
 export 'level.dart';
 export 'pos.dart';
 export 'simulator.dart';
+export 'solver.dart';

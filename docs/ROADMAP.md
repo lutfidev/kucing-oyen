@@ -15,7 +15,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 ## Status
 
 - [x] 1. Simulasi Oyen di Dart murni dan loader level
-- [ ] 2. Solver dan cek data level
+- [x] 2. Solver dan cek data level
 - [ ] 3. Model sesi level (baki, penempatan, bintang)
 - [ ] 4. Fondasi UI: token desain, font, komponen dasar
 - [ ] 5. Gambar petak, papan, dan Oyen
@@ -35,9 +35,11 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 
 Selesai langsung di `main` (commit `47fc414`), sebelum alur PR dipakai. Isinya `lib/game/sim/`, `lib/game/level_loader.dart`, test 20 solusi, dan test level 13. Simulasi sudah dibandingkan dengan `oyen_simulator.py` pada 93.829 kasus (semua penempatan isi baki di 20 level, papan acak, lorong di batas 80 langkah) dan log per langkahnya identik.
 
-## 2. Solver dan cek data level
+## 2. Solver dan cek data level ✅
 
 **Hasil:** solver Dart yang hasilnya sama dengan `solve()` Python, dan test yang membuktikan angka bintang 3 di data level benar.
+
+Selesai: `lib/game/sim/solver.dart` dan `test/game/sim/solver_test.dart`. Semua solusi minimum dari Dart identik dengan Python di 40 kasus (20 level, dengan dan tanpa syarat vas aman, total 78 solusi). Ke-20 level selesai sekitar 1 detik.
 
 > Baca `docs/reference/oyen_simulator.py` (`solve`, `empty_cells`) dan `lib/game/sim/`. Port solver ke `lib/game/sim/solver.dart`, Dart murni. Diberi `Board` dan isi baki, solver mencari jumlah benda paling sedikit yang menang tanpa vas pecah (`need_safe=True`), mulai dari 0 benda, beserta semua solusi minimum tanpa duplikat (benda sejenis yang bertukar tempat dihitung satu). Petak calon = `Board.emptyCells`. Test untuk ke-20 level: jumlah minimum sama dengan `starItems`, solusi di JSON termasuk solusi minimum, dan jumlah solusi minimum = 3 untuk level 3, 5, 19, 20; 2 untuk level 9, 10, 17, 18; 1 untuk level lainnya (angka dari solver Python, sudah dicek). Kalau hasilnya beda, cari salahnya di port; jangan ubah data level. Solver Python butuh sekitar 11 detik untuk ke-20 level. Versi Dart jangan membuat `flutter test` lambat: enumerasi kombinasi petak per jenis benda, bukan permutasi seperti Python.
 
