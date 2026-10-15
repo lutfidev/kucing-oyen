@@ -16,8 +16,10 @@ class Board {
     for (var y = 0; y < rows.length; y++) {
       final row = rows[y];
       if (row.length != width) {
-        throw FormatException('Baris $y panjangnya ${row.length}, '
-            'seharusnya $width');
+        throw FormatException(
+          'Baris $y panjangnya ${row.length}, '
+          'seharusnya $width',
+        );
       }
       for (var x = 0; x < width; x++) {
         final symbol = row[x];
@@ -33,14 +35,21 @@ class Board {
         }
         final cell = Cell.fromSymbol(symbol);
         if (cell == null) {
-          throw FormatException('Huruf peta tidak dikenal "$symbol" di ($x,$y)');
+          throw FormatException(
+            'Huruf peta tidak dikenal "$symbol" di ($x,$y)',
+          );
         }
         cells.add(cell);
       }
     }
     if (start == null) throw const FormatException('Oyen tidak ada di peta');
     return Board._(
-        width, rows.length, List.unmodifiable(cells), start, startDir!);
+      width,
+      rows.length,
+      List.unmodifiable(cells),
+      start,
+      startDir!,
+    );
   }
 
   final int width;
@@ -61,10 +70,10 @@ class Board {
 
   /// Semua petak yang bisa diisi benda, urut baris lalu kolom.
   List<Pos> get emptyCells => [
-        for (var y = 0; y < height; y++)
-          for (var x = 0; x < width; x++)
-            if (canPlace(Pos(x, y))) Pos(x, y),
-      ];
+    for (var y = 0; y < height; y++)
+      for (var x = 0; x < width; x++)
+        if (canPlace(Pos(x, y))) Pos(x, y),
+  ];
 
   /// Salinan isi petak (baris demi baris) yang boleh diubah simulasi.
   List<Cell> copyCells() => List.of(_cells);

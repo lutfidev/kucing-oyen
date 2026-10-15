@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 
 void main() {
-  final levels =
-      parseLevels(File('assets/levels/chapter1-2.json').readAsStringSync());
+  final levels = parseLevels(
+    File('assets/levels/chapter1-2.json').readAsStringSync(),
+  );
 
   group('Level 13 · Vas Ibu', () {
     final board = levels.firstWhere((l) => l.id == 13).board;
@@ -20,8 +21,7 @@ void main() {
     });
 
     test('ikan saja di (2,4) menang, tapi vas pecah di langkah 2', () {
-      final result =
-          simulate(board, const [Placement(Item.fish, Pos(2, 4))]);
+      final result = simulate(board, const [Placement(Item.fish, Pos(2, 4))]);
       expect(result.win, isTrue);
       expect(result.vaseBroken, isTrue);
       expect(result.vaseBrokenAtStep, 2);
@@ -72,9 +72,11 @@ void main() {
 
     test('ditolak di tembok, meja, mangkuk, dan petak Oyen', () {
       for (final pos in const [Pos(0, 0), Pos(2, 3), Pos(3, 4), Pos(4, 3)]) {
-        expect(() => simulate(board, [Placement(Item.fish, pos)]),
-            throwsArgumentError,
-            reason: '$pos');
+        expect(
+          () => simulate(board, [Placement(Item.fish, pos)]),
+          throwsArgumentError,
+          reason: '$pos',
+        );
       }
     });
 

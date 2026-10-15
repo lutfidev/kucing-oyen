@@ -118,12 +118,12 @@ SimResult simulate(Board board, [Iterable<Placement> placed = const []]) {
   final trace = <SimStep>[];
 
   SimResult end(int steps, {FailReason? fail}) => SimResult(
-        win: fail == null,
-        vaseBroken: vase,
-        steps: steps,
-        trace: List.unmodifiable(trace),
-        failReason: fail,
-      );
+    win: fail == null,
+    vaseBroken: vase,
+    steps: steps,
+    trace: List.unmodifiable(trace),
+    failReason: fail,
+  );
 
   for (var step = 0; step <= maxSteps; step++) {
     if (cell(pos) == Cell.bowl) return end(step);
@@ -154,19 +154,21 @@ SimResult simulate(Board board, [Iterable<Placement> placed = const []]) {
       knocked.add(target);
       final isVase = cell(target) == Cell.tableVase;
       if (isVase) vase = true;
-      trace.add(SimStep(
-        isVase ? StepKind.knockVase : StepKind.knockGlass,
-        pos,
-        dir,
-        changed: target,
-      ));
+      trace.add(
+        SimStep(
+          isVase ? StepKind.knockVase : StepKind.knockGlass,
+          pos,
+          dir,
+          changed: target,
+        ),
+      );
       continue;
     }
 
     // 2. ikan terlihat
     ({int dist, Direction dir, Pos pos})? best;
     for (final d in dir.lookOrder) {
-      for (var dist = 1;; dist++) {
+      for (var dist = 1; ; dist++) {
         final q = pos.shift(d, dist);
         final c = cell(q);
         if (c.blocksSight) break;
@@ -197,7 +199,9 @@ SimResult simulate(Board board, [Iterable<Placement> placed = const []]) {
     pos = next;
     if (c == Cell.fish) {
       grid[index(next)] = Cell.floor;
-      trace.add(SimStep(StepKind.eat, pos, dir, changed: next, chasing: chasing));
+      trace.add(
+        SimStep(StepKind.eat, pos, dir, changed: next, chasing: chasing),
+      );
     } else if (c == Cell.box) {
       sit = 2;
       trace.add(SimStep(StepKind.enterBox, pos, dir, chasing: chasing));
@@ -210,8 +214,14 @@ SimResult simulate(Board board, [Iterable<Placement> placed = const []]) {
 
 /// Keadaan untuk deteksi mondar-mandir: posisi, arah, sisa duduk, letak semua
 /// benda (ikan, air, kardus), dan meja yang barangnya sudah jatuh.
-String _stateKey(Pos pos, Direction dir, int sit, List<Cell> grid,
-    Set<Pos> knocked, int width) {
+String _stateKey(
+  Pos pos,
+  Direction dir,
+  int sit,
+  List<Cell> grid,
+  Set<Pos> knocked,
+  int width,
+) {
   final key = StringBuffer('${pos.x},${pos.y},${dir.index},$sit|');
   for (var i = 0; i < grid.length; i++) {
     if (grid[i].isItem) key.write('$i,');
