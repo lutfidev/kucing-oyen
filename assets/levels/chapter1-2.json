@@ -1,0 +1,629 @@
+[
+ {
+  "id": 1,
+  "name": "Bangunkan Oyen",
+  "chapter": 1,
+  "map": [
+   "#######",
+   "#..T..#",
+   "#.....#",
+   "#.....#",
+   "#.....#",
+   "#.....#",
+   "#.....#",
+   "#..^..#",
+   "#######"
+  ],
+  "inventory": {},
+  "starItems": 0,
+  "solution": [],
+  "solutionSteps": 6
+ },
+ {
+  "id": 2,
+  "name": "Belok Kanan",
+  "chapter": 1,
+  "map": [
+   "#######",
+   "#...T.#",
+   "#.....#",
+   "#.....#",
+   "#.....#",
+   "#.....#",
+   "#.....#",
+   "#^....#",
+   "#######"
+  ],
+  "inventory": {},
+  "starItems": 0,
+  "solution": [],
+  "solutionSteps": 10
+ },
+ {
+  "id": 3,
+  "name": "Ikan Pertama",
+  "chapter": 1,
+  "map": [
+   "#######",
+   "#.....#",
+   "#.....#",
+   "#..T..#",
+   "#.....#",
+   "#.....#",
+   "#.....#",
+   "#^....#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1
+  },
+  "starItems": 1,
+  "solution": [
+   {
+    "item": "fish",
+    "x": 2,
+    "y": 3
+   }
+  ],
+  "solutionSteps": 6
+ },
+ {
+  "id": 4,
+  "name": "Ikan Terdekat",
+  "chapter": 1,
+  "map": [
+   "#######",
+   "#..F..#",
+   "#.....#",
+   "#.....#",
+   "#.T...#",
+   "#.....#",
+   "#.....#",
+   "#..^..#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1
+  },
+  "starItems": 1,
+  "solution": [
+   {
+    "item": "fish",
+    "x": 1,
+    "y": 4
+   }
+  ],
+  "solutionSteps": 4
+ },
+ {
+  "id": 5,
+  "name": "Dua Ikan",
+  "chapter": 1,
+  "map": [
+   "#######",
+   "#.....#",
+   "#.....#",
+   "#.....#",
+   "#.>...#",
+   "#..####",
+   "##.T.##",
+   "##....#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 2
+  },
+  "starItems": 2,
+  "solution": [
+   {
+    "item": "fish",
+    "x": 2,
+    "y": 5
+   },
+   {
+    "item": "fish",
+    "x": 4,
+    "y": 6
+   }
+  ],
+  "solutionSteps": 3
+ },
+ {
+  "id": 6,
+  "name": "Ember Pertama",
+  "chapter": 1,
+  "map": [
+   "#######",
+   "#.....#",
+   "#..^..#",
+   "#....##",
+   "##...##",
+   "##...##",
+   "##...##",
+   "#..T..#",
+   "#######"
+  ],
+  "inventory": {
+   "water": 1
+  },
+  "starItems": 1,
+  "solution": [
+   {
+    "item": "water",
+    "x": 3,
+    "y": 1
+   }
+  ],
+  "solutionSteps": 6
+ },
+ {
+  "id": 7,
+  "name": "Genangan",
+  "chapter": 1,
+  "map": [
+   "#######",
+   "#.....#",
+   "#T....#",
+   "#...#.#",
+   "##...A#",
+   "#.....#",
+   "####^.#",
+   "#.....#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1,
+   "water": 1
+  },
+  "starItems": 1,
+  "solution": [
+   {
+    "item": "fish",
+    "x": 1,
+    "y": 3
+   }
+  ],
+  "solutionSteps": 11
+ },
+ {
+  "id": 8,
+  "name": "Ikan dan Ember",
+  "chapter": 1,
+  "map": [
+   "#######",
+   "#.....#",
+   "#..^.##",
+   "###...#",
+   "##....#",
+   "#.....#",
+   "#.T...#",
+   "#.....#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1,
+   "water": 1
+  },
+  "starItems": 2,
+  "solution": [
+   {
+    "item": "water",
+    "x": 3,
+    "y": 1
+   },
+   {
+    "item": "fish",
+    "x": 1,
+    "y": 6
+   }
+  ],
+  "solutionSteps": 6
+ },
+ {
+  "id": 9,
+  "name": "Ikan Godaan",
+  "chapter": 1,
+  "map": [
+   "#######",
+   "#...F.#",
+   "#.....#",
+   "#.....#",
+   "#.....#",
+   "#....F#",
+   "#<###.#",
+   "#..T.##",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1,
+   "water": 1
+  },
+  "starItems": 2,
+  "solution": [
+   {
+    "item": "water",
+    "x": 1,
+    "y": 5
+   },
+   {
+    "item": "fish",
+    "x": 2,
+    "y": 7
+   }
+  ],
+  "solutionSteps": 5
+ },
+ {
+  "id": 10,
+  "name": "BOS: Pesta Ikan Asin",
+  "chapter": 1,
+  "map": [
+   "#######",
+   "#.....#",
+   "#...###",
+   "#^##T.#",
+   "#..F..#",
+   "#.F...#",
+   "#.#...#",
+   "#.#...#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 2,
+   "water": 1
+  },
+  "starItems": 3,
+  "solution": [
+   {
+    "item": "water",
+    "x": 4,
+    "y": 7
+   },
+   {
+    "item": "fish",
+    "x": 1,
+    "y": 5
+   },
+   {
+    "item": "fish",
+    "x": 4,
+    "y": 6
+   }
+  ],
+  "solutionSteps": 13
+ },
+ {
+  "id": 11,
+  "name": "Meja Tamu",
+  "chapter": 2,
+  "map": [
+   "#######",
+   "#....##",
+   "#....T#",
+   "#...M.#",
+   "#..<..#",
+   "#.M...#",
+   "#M....#",
+   "#....M#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 2
+  },
+  "starItems": 1,
+  "solution": [
+   {
+    "item": "fish",
+    "x": 4,
+    "y": 2
+   }
+  ],
+  "solutionSteps": 9
+ },
+ {
+  "id": 12,
+  "name": "Gelas Jatuh",
+  "chapter": 2,
+  "map": [
+   "#######",
+   "#GT...#",
+   "#...GM#",
+   "#.....#",
+   "#.....#",
+   "#..M..#",
+   "#.....#",
+   "#^...##",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1
+  },
+  "starItems": 1,
+  "solution": [
+   {
+    "item": "fish",
+    "x": 3,
+    "y": 1
+   }
+  ],
+  "solutionSteps": 19
+ },
+ {
+  "id": 13,
+  "name": "Vas Ibu",
+  "chapter": 2,
+  "map": [
+   "#######",
+   "#..#..#",
+   "#..#..#",
+   "#.V.<.#",
+   "#G.T..#",
+   "#.....#",
+   "#.....#",
+   "#..M..#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1,
+   "water": 1
+  },
+  "starItems": 2,
+  "solution": [
+   {
+    "item": "water",
+    "x": 3,
+    "y": 3
+   },
+   {
+    "item": "fish",
+    "x": 2,
+    "y": 4
+   }
+  ],
+  "solutionSteps": 6
+ },
+ {
+  "id": 14,
+  "name": "Kardus Penghalang",
+  "chapter": 2,
+  "map": [
+   "#######",
+   "#.....#",
+   "#.....#",
+   "#.....#",
+   "#MMv..#",
+   "#F....#",
+   "#....##",
+   "#....T#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1,
+   "box": 1
+  },
+  "starItems": 2,
+  "solution": [
+   {
+    "item": "fish",
+    "x": 4,
+    "y": 7
+   },
+   {
+    "item": "box",
+    "x": 2,
+    "y": 5
+   }
+  ],
+  "solutionSteps": 5
+ },
+ {
+  "id": 15,
+  "name": "Kardus Penyok",
+  "chapter": 2,
+  "map": [
+   "#######",
+   "#.....#",
+   "#.....#",
+   "#..MM.#",
+   "#FK...#",
+   "#....##",
+   "#.<..##",
+   "#.T#..#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1,
+   "water": 1
+  },
+  "starItems": 1,
+  "solution": [
+   {
+    "item": "fish",
+    "x": 2,
+    "y": 3
+   }
+  ],
+  "solutionSteps": 12
+ },
+ {
+  "id": 16,
+  "name": "Jalan Memutar",
+  "chapter": 2,
+  "map": [
+   "#######",
+   "#...#.#",
+   "#.....#",
+   "##....#",
+   "##V...#",
+   "#....T#",
+   "#..v.M#",
+   "#...M.#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1,
+   "water": 1
+  },
+  "starItems": 2,
+  "solution": [
+   {
+    "item": "water",
+    "x": 3,
+    "y": 7
+   },
+   {
+    "item": "fish",
+    "x": 4,
+    "y": 5
+   }
+  ],
+  "solutionSteps": 4
+ },
+ {
+  "id": 17,
+  "name": "Dua Vas",
+  "chapter": 2,
+  "map": [
+   "#######",
+   "#.....#",
+   "#v..#.#",
+   "#.....#",
+   "#...M.#",
+   "#V...V#",
+   "#....T#",
+   "#.....#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 2,
+   "water": 1
+  },
+  "starItems": 2,
+  "solution": [
+   {
+    "item": "fish",
+    "x": 2,
+    "y": 2
+   },
+   {
+    "item": "fish",
+    "x": 4,
+    "y": 6
+   }
+  ],
+  "solutionSteps": 9
+ },
+ {
+  "id": 18,
+  "name": "Ruang Sempit",
+  "chapter": 2,
+  "map": [
+   "#######",
+   "#....##",
+   "#TV..^#",
+   "#...#.#",
+   "#.F##.#",
+   "#..#..#",
+   "#..#..#",
+   "#....##",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1,
+   "box": 1
+  },
+  "starItems": 2,
+  "solution": [
+   {
+    "item": "fish",
+    "x": 4,
+    "y": 7
+   },
+   {
+    "item": "box",
+    "x": 2,
+    "y": 5
+   }
+  ],
+  "solutionSteps": 32
+ },
+ {
+  "id": 19,
+  "name": "Semua Bersama",
+  "chapter": 2,
+  "map": [
+   "#######",
+   "#.....#",
+   "#..#..#",
+   "#.....#",
+   "#...G.#",
+   "#v...F#",
+   "#.V.T.#",
+   "#.#.M.#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 1,
+   "water": 1,
+   "box": 1
+  },
+  "starItems": 3,
+  "solution": [
+   {
+    "item": "water",
+    "x": 1,
+    "y": 6
+   },
+   {
+    "item": "fish",
+    "x": 3,
+    "y": 6
+   },
+   {
+    "item": "box",
+    "x": 2,
+    "y": 5
+   }
+  ],
+  "solutionSteps": 17
+ },
+ {
+  "id": 20,
+  "name": "BOS: Hari Lebaran",
+  "chapter": 2,
+  "map": [
+   "#######",
+   "#.T.#.#",
+   "#VG.#V#",
+   "#...#.#",
+   "#...V.#",
+   "#.....#",
+   "#v..M.#",
+   "#..F..#",
+   "#######"
+  ],
+  "inventory": {
+   "fish": 2,
+   "water": 1
+  },
+  "starItems": 3,
+  "solution": [
+   {
+    "item": "water",
+    "x": 3,
+    "y": 4
+   },
+   {
+    "item": "fish",
+    "x": 1,
+    "y": 1
+   },
+   {
+    "item": "fish",
+    "x": 2,
+    "y": 3
+   }
+  ],
+  "solutionSteps": 22
+ }
+]
