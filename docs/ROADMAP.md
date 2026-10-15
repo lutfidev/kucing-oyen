@@ -16,7 +16,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 
 - [x] 1. Simulasi Oyen di Dart murni dan loader level
 - [x] 2. Solver dan cek data level
-- [ ] 3. Model sesi level (baki, penempatan, bintang)
+- [x] 3. Model sesi level (baki, penempatan, bintang)
 - [ ] 4. Fondasi UI: token desain, font, komponen dasar
 - [ ] 5. Gambar petak, papan, dan Oyen
 - [ ] 6. Gameplay fase atur
@@ -43,9 +43,11 @@ Selesai: `lib/game/sim/solver.dart` dan `test/game/sim/solver_test.dart`. Semua 
 
 > Baca `docs/reference/oyen_simulator.py` (`solve`, `empty_cells`) dan `lib/game/sim/`. Port solver ke `lib/game/sim/solver.dart`, Dart murni. Diberi `Board` dan isi baki, solver mencari jumlah benda paling sedikit yang menang tanpa vas pecah (`need_safe=True`), mulai dari 0 benda, beserta semua solusi minimum tanpa duplikat (benda sejenis yang bertukar tempat dihitung satu). Petak calon = `Board.emptyCells`. Test untuk ke-20 level: jumlah minimum sama dengan `starItems`, solusi di JSON termasuk solusi minimum, dan jumlah solusi minimum = 3 untuk level 3, 5, 19, 20; 2 untuk level 9, 10, 17, 18; 1 untuk level lainnya (angka dari solver Python, sudah dicek). Kalau hasilnya beda, cari salahnya di port; jangan ubah data level. Solver Python butuh sekitar 11 detik untuk ke-20 level. Versi Dart jangan membuat `flutter test` lambat: enumerasi kombinasi petak per jenis benda, bukan permutasi seperti Python.
 
-## 3. Model sesi level
+## 3. Model sesi level ✅
 
 **Hasil:** alur fase atur → jalan → hasil ada di model Dart murni yang bisa diuji tanpa layar.
+
+Selesai: `lib/game/model/level_session.dart` dan `test/game/model/level_session_test.dart` (22 test). Selain aksi di prompt, ada `finish()` (fase jalan → layar hasil), `arrangeAgain()` (Atur Lagi/Coba Lagi, dari fase jalan atau hasil), dan `canPlaceAt(pos)` untuk petak yang menyala. Gagal juga lewat fase `result` (layar Oyen bosan), lalu `arrangeAgain()`. Test 2 bintang memakai level 15: solusi JSON + ember di (1,1).
 
 > Baca GDD bagian "Alur satu level" dan "Bintang", lalu `lib/game/sim/`. Buat `lib/game/model/level_session.dart` (Dart murni, tanpa Flutter). `LevelSession(level)` menyimpan fase (`arrange`, `running`, `result`), benda yang ditaruh pemain, dan sisa baki (`inventory` dikurangi benda terpasang). Aksi: `place(item, pos)` (hanya di petak `board.canPlace` yang belum terisi dan kalau sisa baki > 0), `move(from, to)`, `remove(pos)` (kembali ke baki), `reset()`. `wake()` menjalankan `simulate` dan menyimpan `SimResult`. Bintang: 0 kalau gagal, 1 kalau menang, 2 kalau menang dan vas aman, 3 kalau juga jumlah benda dipakai ≤ `starItems`. Gagal atau "Atur Lagi" kembali ke fase atur dengan susunan benda tetap. Model harus bisa membedakan benda pemain dari benda bawaan peta, karena desain menggambarnya berbeda. Unit test semua aksi termasuk penolakan, dan bintang untuk level 13: solusi JSON (3 bintang), ikan saja di (2,4) (1 bintang, vas pecah), tanpa benda (gagal). Belum ada UI.
 
