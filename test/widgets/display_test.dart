@@ -8,13 +8,6 @@ import '../test_helpers.dart';
 void main() {
   const c = KoColors.standard;
 
-  BoxDecoration decorationOf(WidgetTester tester, Finder of) {
-    final box = tester.widget<Container>(
-      find.descendant(of: of, matching: find.byType(Container)).first,
-    );
-    return box.decoration! as BoxDecoration;
-  }
-
   group('KoChip', () {
     testWidgets('chip krem: ikon dan angka', (tester) async {
       await pumpThemed(

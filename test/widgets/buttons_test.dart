@@ -13,13 +13,6 @@ double shiftOf(WidgetTester tester, Finder button) {
   return transform.transform.getTranslation().y;
 }
 
-BoxDecoration decorationOf(WidgetTester tester, Finder button) {
-  final container = tester.widget<Container>(
-    find.descendant(of: button, matching: find.byType(Container)).first,
-  );
-  return container.decoration! as BoxDecoration;
-}
-
 /// Bayangan padat (tanpa blur) di bawah tombol, atau null.
 BoxShadow? solidShadowOf(WidgetTester tester, Finder button) {
   final shadows = decorationOf(tester, button).boxShadow ?? const [];
@@ -180,6 +173,31 @@ void main() {
       semantics.dispose();
     });
 
+    testWidgets('di dalam Row (lebar tak terbatas) selebar isinya', (
+      tester,
+    ) async {
+      await pumpThemed(
+        tester,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            KoButton(
+              label: 'Ulangi',
+              kind: KoButtonKind.secondary,
+              onPressed: () {},
+            ),
+            KoButton(label: 'Lanjut', icon: KoIcons.play, onPressed: () {}),
+          ],
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      final width = tester
+          .getSize(find.widgetWithText(KoButton, 'Ulangi'))
+          .width;
+      expect(width, greaterThan(48));
+      expect(width, lessThan(200));
+    });
+
     testWidgets('label panjang mengecil di tempat sempit, tanpa overflow', (
       tester,
     ) async {
@@ -281,6 +299,42 @@ void main() {
       expect(solidShadowOf(tester, button('Tutup')), isNull);
       expect(decorationOf(tester, button('Kosongkan papan')).color, c.floor);
       expect(solidShadowOf(tester, button('Kosongkan papan')), isNull);
+    });
+
+    testWidgets('petunjuk berlabel tidak digambar bulat', (tester) async {
+      await pumpThemed(
+        tester,
+        KoIconButton(
+          icon: KoIcons.hint,
+          semanticLabel: 'Petunjuk',
+          label: 'Petunjuk',
+          tone: KoIconButtonTone.hint,
+          onPressed: () {},
+        ),
+      );
+      final button = find.byType(KoIconButton);
+      expect(decorationOf(tester, button).shape, BoxShape.rectangle);
+      expect(decorationOf(tester, button).color, c.hint);
+    });
+
+    testWidgets('label mengecil di tempat sempit dengan teks 130%', (
+      tester,
+    ) async {
+      setTextScale(tester, 1.3);
+      await pumpThemed(
+        tester,
+        SizedBox(
+          width: 80,
+          child: KoIconButton(
+            icon: KoIcons.rules,
+            semanticLabel: 'Aturan',
+            label: 'Aturan',
+            onPressed: () {},
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      expect(tester.getSize(find.byType(KoIconButton)).width, 80);
     });
 
     testWidgets('dengan label melebar berisi ikon dan teks', (tester) async {

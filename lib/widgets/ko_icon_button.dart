@@ -14,7 +14,7 @@ enum KoIconButtonTone {
   /// Warna lantai tanpa bayangan (kosongkan papan di baki).
   floor,
 
-  /// Bulat kuning (petunjuk).
+  /// Kuning (petunjuk); bulat kalau tanpa label.
   hint,
 }
 
@@ -69,7 +69,7 @@ class KoIconButton extends StatelessWidget {
       borderColor: line,
       borderWidth: s.border,
       radius: context.koRadius.icon,
-      circle: tone == KoIconButtonTone.hint,
+      circle: tone == KoIconButtonTone.hint && text == null,
       width: text == null ? s.iconButton : null,
       height: s.iconButton,
       padding: text == null
@@ -77,17 +77,20 @@ class KoIconButton extends StatelessWidget {
           : EdgeInsetsDirectional.only(start: space.s10, end: space.s14),
       child: text == null
           ? Center(child: glyph)
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                glyph,
-                SizedBox(width: space.s6),
-                Text(
-                  text,
-                  maxLines: 1,
-                  style: context.koType.label.copyWith(color: c.ink),
-                ),
-              ],
+          : FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  glyph,
+                  SizedBox(width: space.s6),
+                  Text(
+                    text,
+                    maxLines: 1,
+                    style: context.koType.label.copyWith(color: c.ink),
+                  ),
+                ],
+              ),
             ),
     );
   }

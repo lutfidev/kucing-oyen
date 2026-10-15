@@ -29,7 +29,8 @@ enum KoButtonSize {
 /// Tombol teks dengan bayangan padat yang hilang saat ditekan.
 ///
 /// Selebar isinya, atau selebar induk kalau induk memaksa lebarnya (mis.
-/// di dalam `Column` yang `stretch`). Label mengecil kalau tidak muat.
+/// di dalam `Column` yang `stretch`). Ikon dan label mengecil bersama kalau
+/// tidak muat.
 class KoButton extends StatelessWidget {
   const KoButton({
     super.key,
@@ -109,24 +110,18 @@ class KoButton extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: space.s24),
       child: Center(
         widthFactor: 1,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              KoIcon(icon!, size: iconSize, color: fg),
-              SizedBox(width: gap),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                KoIcon(icon!, size: iconSize, color: fg),
+                SizedBox(width: gap),
+              ],
+              Text(label, maxLines: 1, style: style.copyWith(color: fg)),
             ],
-            Flexible(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  style: style.copyWith(color: fg),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
