@@ -17,6 +17,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
     required this.pressSecondary,
     required this.pressIcon,
     required this.card,
+    required this.tray,
     required this.board,
     required this.glow,
     required this.glowStrong,
@@ -31,6 +32,13 @@ class KoShadow extends ThemeExtension<KoShadow> {
     card: [
       BoxShadow(
         color: c.shadowCard,
+        offset: const Offset(0, 6),
+        blurRadius: 16,
+      ),
+    ],
+    tray: [
+      BoxShadow(
+        color: c.shadowTray,
         offset: const Offset(0, 6),
         blurRadius: 16,
       ),
@@ -77,6 +85,9 @@ class KoShadow extends ThemeExtension<KoShadow> {
   /// Kartu: 0 6 16, 14%.
   final List<BoxShadow> card;
 
+  /// Panel baki: 0 6 16, 10%.
+  final List<BoxShadow> tray;
+
   /// Papan: cincin 4 px + 0 14 28.
   final List<BoxShadow> board;
 
@@ -100,6 +111,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
     double? pressSecondary,
     double? pressIcon,
     List<BoxShadow>? card,
+    List<BoxShadow>? tray,
     List<BoxShadow>? board,
     List<BoxShadow>? glow,
     List<BoxShadow>? glowStrong,
@@ -111,6 +123,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
       pressSecondary: pressSecondary ?? this.pressSecondary,
       pressIcon: pressIcon ?? this.pressIcon,
       card: card ?? this.card,
+      tray: tray ?? this.tray,
       board: board ?? this.board,
       glow: glow ?? this.glow,
       glowStrong: glowStrong ?? this.glowStrong,
@@ -130,6 +143,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
       pressSecondary: d(pressSecondary, other.pressSecondary),
       pressIcon: d(pressIcon, other.pressIcon),
       card: l(card, other.card),
+      tray: l(tray, other.tray),
       board: l(board, other.board),
       glow: l(glow, other.glow),
       glowStrong: l(glowStrong, other.glowStrong),

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 /// Radius sudut (kartu "Jarak, radius, bayangan").
 ///
 /// 8 petak · 14 ikon · 20 tombol · 24 tombol utama besar · 28 sheet · pill.
-/// [slot] dan [card] berasal dari komponen di layar desain.
+/// [slot], [card], dan [tray] berasal dari komponen di layar desain.
 @immutable
 class KoRadius extends ThemeExtension<KoRadius> {
   const KoRadius({
@@ -14,6 +14,7 @@ class KoRadius extends ThemeExtension<KoRadius> {
     required this.slot,
     required this.button,
     required this.card,
+    required this.tray,
     required this.primary,
     required this.sheet,
     required this.pill,
@@ -25,6 +26,7 @@ class KoRadius extends ThemeExtension<KoRadius> {
     slot: 16,
     button: 20,
     card: 20,
+    tray: 22,
     primary: 24,
     sheet: 28,
     pill: 999,
@@ -45,6 +47,9 @@ class KoRadius extends ThemeExtension<KoRadius> {
   /// Kartu (kartu aturan).
   final double card;
 
+  /// Panel baki di bawah papan.
+  final double tray;
+
   /// Tombol utama besar ("Main", "Bangunkan Oyen").
   final double primary;
 
@@ -61,6 +66,7 @@ class KoRadius extends ThemeExtension<KoRadius> {
     double? slot,
     double? button,
     double? card,
+    double? tray,
     double? primary,
     double? sheet,
     double? pill,
@@ -71,6 +77,7 @@ class KoRadius extends ThemeExtension<KoRadius> {
       slot: slot ?? this.slot,
       button: button ?? this.button,
       card: card ?? this.card,
+      tray: tray ?? this.tray,
       primary: primary ?? this.primary,
       sheet: sheet ?? this.sheet,
       pill: pill ?? this.pill,
@@ -87,6 +94,7 @@ class KoRadius extends ThemeExtension<KoRadius> {
       slot: d(slot, other.slot),
       button: d(button, other.button),
       card: d(card, other.card),
+      tray: d(tray, other.tray),
       primary: d(primary, other.primary),
       sheet: d(sheet, other.sheet),
       pill: d(pill, other.pill),

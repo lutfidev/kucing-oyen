@@ -30,6 +30,9 @@ class KoType extends ThemeExtension<KoType> {
     required this.numberSmall,
     required this.badge,
     required this.labelSmall,
+    required this.chipLabel,
+    required this.bodySmall,
+    required this.caption,
   });
 
   static const standard = KoType(
@@ -108,6 +111,21 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 13,
       fontWeight: FontWeight.w800,
     ),
+    chipLabel: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 14,
+      fontWeight: FontWeight.w800,
+    ),
+    bodySmall: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+    ),
+    caption: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 12,
+      fontWeight: FontWeight.w700,
+    ),
   );
 
   /// Fredoka 700/46: "Berhasil!".
@@ -146,8 +164,18 @@ class KoType extends ThemeExtension<KoType> {
   /// Fredoka 600/14: angka sisa di slot baki.
   final TextStyle badge;
 
-  /// Nunito 800/13: label chip gelap ("Langkah").
+  /// Nunito 800/13: label chip gelap ("Langkah"), petunjuk baki ("Taruh di
+  /// petak").
   final TextStyle labelSmall;
+
+  /// Nunito 800/14: chip target bintang ("pakai 2 benda").
+  final TextStyle chipLabel;
+
+  /// Nunito 700/14: teks kecil ("Level ini belum butuh benda.").
+  final TextStyle bodySmall;
+
+  /// Nunito 700/12: keterangan kecil ("yang menyala").
+  final TextStyle caption;
 
   @override
   KoType copyWith({
@@ -164,6 +192,9 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? numberSmall,
     TextStyle? badge,
     TextStyle? labelSmall,
+    TextStyle? chipLabel,
+    TextStyle? bodySmall,
+    TextStyle? caption,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -179,6 +210,9 @@ class KoType extends ThemeExtension<KoType> {
       numberSmall: numberSmall ?? this.numberSmall,
       badge: badge ?? this.badge,
       labelSmall: labelSmall ?? this.labelSmall,
+      chipLabel: chipLabel ?? this.chipLabel,
+      bodySmall: bodySmall ?? this.bodySmall,
+      caption: caption ?? this.caption,
     );
   }
 
@@ -200,6 +234,9 @@ class KoType extends ThemeExtension<KoType> {
       numberSmall: s(numberSmall, other.numberSmall),
       badge: s(badge, other.badge),
       labelSmall: s(labelSmall, other.labelSmall),
+      chipLabel: s(chipLabel, other.chipLabel),
+      bodySmall: s(bodySmall, other.bodySmall),
+      caption: s(caption, other.caption),
     );
   }
 }
