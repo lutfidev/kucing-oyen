@@ -27,6 +27,13 @@ class _LevelScreenState extends State<LevelScreen> {
 
   void _back() => context.go(AppRoutes.home);
 
+  /// "Lanjut": level berikutnya; sesudah level terakhir kembali ke Beranda
+  /// (peta babak dibuat di langkah 9).
+  void _next(List<Level> levels, Level level) {
+    final next = levels.where((l) => l.id == level.id + 1).firstOrNull;
+    context.go(next == null ? AppRoutes.home : AppRoutes.level(next.id));
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -47,6 +54,7 @@ class _LevelScreenState extends State<LevelScreen> {
           level: level,
           backLabel: _backLabel,
           onBack: _back,
+          onNext: () => _next(levels!, level),
         );
       },
     );

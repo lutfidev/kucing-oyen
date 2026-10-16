@@ -53,6 +53,7 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.artBorder,
     required this.divider,
     required this.dimSaturation,
+    required this.artMinScale,
   });
 
   static const standard = KoSize(
@@ -101,6 +102,7 @@ class KoSize extends ThemeExtension<KoSize> {
     artBorder: 3,
     divider: 1.5,
     dimSaturation: 0.7,
+    artMinScale: 0.3,
   );
 
   /// Tombol "Main" di Beranda.
@@ -217,6 +219,10 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Saturasi papan di layar gagal (`saturate(0.7)`).
   final double dimSaturation;
 
+  /// Skala paling kecil kartu ilustrasi layar hasil; kalau tempatnya kurang,
+  /// ilustrasinya disembunyikan.
+  final double artMinScale;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -264,6 +270,7 @@ class KoSize extends ThemeExtension<KoSize> {
     double? artBorder,
     double? divider,
     double? dimSaturation,
+    double? artMinScale,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -311,6 +318,7 @@ class KoSize extends ThemeExtension<KoSize> {
       artBorder: artBorder ?? this.artBorder,
       divider: divider ?? this.divider,
       dimSaturation: dimSaturation ?? this.dimSaturation,
+      artMinScale: artMinScale ?? this.artMinScale,
     );
   }
 
@@ -364,6 +372,7 @@ class KoSize extends ThemeExtension<KoSize> {
       artBorder: d(artBorder, other.artBorder),
       divider: d(divider, other.divider),
       dimSaturation: d(dimSaturation, other.dimSaturation),
+      artMinScale: d(artMinScale, other.artMinScale),
     );
   }
 }
