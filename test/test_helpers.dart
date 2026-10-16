@@ -1,7 +1,33 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/app.dart';
+import 'package:kucing_oren/app/progress_scope.dart';
+import 'package:kucing_oren/app/progress_store.dart';
+import 'package:kucing_oren/game/level_loader.dart';
+import 'package:kucing_oren/game/model/progress.dart';
+import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/theme/theme.dart';
+
+/// Level dibaca langsung dari berkas, tanpa `rootBundle`.
+final testLevels = parseLevels(File(chapter1to2Asset).readAsStringSync());
+
+/// Progres untuk test: [best] = bintang terbaik per level, disimpan di
+/// memori.
+ProgressController testProgress([Map<int, int> best = const {}]) {
+  final progress = Progress(best);
+  return ProgressController(
+    levels: testLevels,
+    store: MemoryProgressStore(progress),
+    progress: progress,
+  );
+}
+
+/// Semua level sampai [last] menang dengan [stars] bintang.
+Map<int, int> wonUpTo(int last, {int stars = 3}) => {
+  for (var id = 1; id <= last; id++) id: stars,
+};
 
 /// Ukuran layar logis (dpr 1), dipulihkan setelah test.
 void setScreenSize(WidgetTester tester, Size size) {
@@ -16,10 +42,33 @@ void setTextScale(WidgetTester tester, double scale) {
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
 }
 
-/// Pompa aplikasi lengkap di [location].
-Future<void> pumpApp(WidgetTester tester, {String location = '/'}) async {
-  await tester.pumpWidget(KucingOrenApp(initialLocation: location));
-  await tester.pumpAndSettle();
+/// Pompa aplikasi lengkap di [location] dengan [progress] (default:
+/// progres kosong), lalu [settle]. Mengembalikan progres yang dipakai.
+Future<ProgressController> pumpApp(
+  WidgetTester tester, {
+  String location = '/',
+  ProgressController? progress,
+}) async {
+  final controller = progress ?? testProgress();
+  await tester.pumpWidget(
+    KucingOrenApp(progress: controller, initialLocation: location),
+  );
+  await settle(tester);
+  return controller;
+}
+
+/// Seperti `pumpAndSettle`, tapi berhenti tanpa gagal setelah [max]: node
+/// level saat ini di peta babak berdenyut terus.
+Future<void> settle(
+  WidgetTester tester, {
+  Duration max = const Duration(seconds: 3),
+}) async {
+  const frame = Duration(milliseconds: 100);
+  var elapsed = Duration.zero;
+  do {
+    await tester.pump(frame);
+    elapsed += frame;
+  } while (tester.binding.hasScheduledFrame && elapsed < max);
 }
 
 /// Dekorasi [Container] pertama di dalam [of] (permukaan tombol, chip, slot).

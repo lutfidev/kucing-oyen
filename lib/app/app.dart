@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../theme/theme.dart';
+import 'progress_scope.dart';
 import 'router.dart';
 import 'routes.dart';
 
 class KucingOrenApp extends StatefulWidget {
-  const KucingOrenApp({super.key, this.initialLocation = AppRoutes.home});
+  const KucingOrenApp({
+    super.key,
+    required this.progress,
+    this.initialLocation = AppRoutes.home,
+  });
 
+  /// Data level dan progres pemain, dibagikan ke semua layar.
+  final ProgressController progress;
   final String initialLocation;
 
   @override
@@ -28,11 +35,14 @@ class _KucingOrenAppState extends State<KucingOrenApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Kucing Oren',
-      debugShowCheckedModeBanner: false,
-      theme: _theme,
-      routerConfig: _router,
+    return ProgressScope(
+      progress: widget.progress,
+      child: MaterialApp.router(
+        title: 'Kucing Oren',
+        debugShowCheckedModeBanner: false,
+        theme: _theme,
+        routerConfig: _router,
+      ),
     );
   }
 }

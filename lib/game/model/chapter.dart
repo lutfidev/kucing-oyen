@@ -59,7 +59,7 @@ List<Chapter> chaptersOf(List<Level> levels) {
 
 /// Babak yang dibuka tombol Main: babak level yang dimainkan berikutnya,
 /// atau babak terakhir kalau semua level sudah menang.
-Chapter currentChapter(List<Chapter> chapters, Progress progress) {
+Chapter chapterToPlay(List<Chapter> chapters, Progress progress) {
   for (final chapter in chapters) {
     if (!chapter.isDone(progress)) return chapter;
   }

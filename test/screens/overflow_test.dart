@@ -14,13 +14,15 @@ import 'result_fixtures.dart';
 /// ke daftar ini.
 final routes = <String>[
   AppRoutes.home,
+  AppRoutes.chapter(1),
+  AppRoutes.chapter(2),
   AppRoutes.gallery,
   AppRoutes.galleryBoard,
   AppRoutes.galleryOyen,
   // Tanpa benda, dua jenis benda, dan tiga jenis benda (baki terlebar).
-  AppRoutes.level(1),
-  AppRoutes.level(13),
-  AppRoutes.level(19),
+  AppRoutes.level(1, chapter: 1),
+  AppRoutes.level(13, chapter: 2),
+  AppRoutes.level(19, chapter: 2),
 ];
 
 const sizes = <Size>[
@@ -61,7 +63,10 @@ void main() {
           (tester) async {
             setScreenSize(tester, size);
             setTextScale(tester, scale);
-            await pumpApp(tester, location: AppRoutes.level(id));
+            await pumpApp(
+              tester,
+              location: AppRoutes.level(id, chapter: levels[id - 1].chapter),
+            );
             await tester.tap(find.text('Bangunkan Oyen'));
             await tester.pumpAndSettle();
             await tester.tap(find.text('Lihat hasil'));

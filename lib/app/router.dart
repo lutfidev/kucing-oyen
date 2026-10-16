@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../gallery/gallery_board_screen.dart';
 import '../gallery/gallery_oyen_screen.dart';
 import '../gallery/gallery_screen.dart';
+import '../screens/chapter/chapter_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/level/level_screen.dart';
 import 'routes.dart';
@@ -30,13 +31,25 @@ GoRouter createRouter({String initialLocation = AppRoutes.home}) {
             ],
           ),
           GoRoute(
-            path: 'level/:id',
-            builder: (context, state) => LevelScreen(
-              levelId: int.tryParse(state.pathParameters['id'] ?? ''),
-            ),
+            path: 'babak/:chapter',
+            builder: (context, state) =>
+                ChapterScreen(chapter: _number(state, 'chapter')),
+            routes: [
+              GoRoute(
+                path: 'level/:id',
+                builder: (context, state) => LevelScreen(
+                  chapter: _number(state, 'chapter'),
+                  levelId: _number(state, 'id'),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     ],
   );
 }
+
+/// Angka di path, atau null kalau bukan angka.
+int? _number(GoRouterState state, String name) =>
+    int.tryParse(state.pathParameters[name] ?? '');

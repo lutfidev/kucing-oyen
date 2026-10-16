@@ -1,62 +1,62 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
-import '../../game/level_loader.dart';
 import '../../game/sim/level.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'level_view.dart';
 
-/// Rute `/level/:id`: memuat level dari aset lalu menampilkan [LevelView].
-class LevelScreen extends StatefulWidget {
-  const LevelScreen({super.key, required this.levelId});
+/// Rute `/babak/:chapter/level/:id`: level dari [ProgressScope] di
+/// [LevelView]. Bintang dicatat saat layar hasil dibuka.
+class LevelScreen extends StatelessWidget {
+  const LevelScreen({super.key, required this.chapter, required this.levelId});
+
+  /// Nomor babak di path; null kalau bukan angka.
+  final int? chapter;
 
   /// Nomor level; null kalau rutenya tidak berisi angka.
   final int? levelId;
 
-  @override
-  State<LevelScreen> createState() => _LevelScreenState();
-}
-
-class _LevelScreenState extends State<LevelScreen> {
-  late final Future<List<Level>> _levels = loadLevels();
-
-  // Peta babak dibuat di langkah 9; sampai itu kembali ke Beranda.
-  static const _backLabel = 'Kembali ke Beranda';
-
-  void _back() => context.go(AppRoutes.home);
-
-  /// "Lanjut": level berikutnya; sesudah level terakhir kembali ke Beranda
-  /// (peta babak dibuat di langkah 9).
-  void _next(List<Level> levels, Level level) {
-    final next = levels.where((l) => l.id == level.id + 1).firstOrNull;
-    context.go(next == null ? AppRoutes.home : AppRoutes.level(next.id));
-  }
+  static const _backLabel = 'Kembali ke peta';
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _levels,
-      builder: (context, snapshot) {
-        final levels = snapshot.data;
-        if (levels == null && !snapshot.hasError) {
-          return const Scaffold(body: SizedBox.shrink());
-        }
-        final level = levels
-            ?.where((level) => level.id == widget.levelId)
-            .firstOrNull;
-        if (level == null) {
-          return _NotFound(backLabel: _backLabel, onBack: _back);
-        }
-        return LevelView(
-          key: ValueKey(level.id),
-          level: level,
-          backLabel: _backLabel,
-          onBack: _back,
-          onNext: () => _next(levels!, level),
-        );
-      },
+    final progress = ProgressScope.read(context);
+    final id = levelId;
+    final level = id == null ? null : progress.levelById(id);
+    // Kembali ke peta babak level itu; kalau levelnya tidak ada, ke peta
+    // di path, atau Beranda kalau path-nya juga bukan babak.
+    final backTo = level?.chapter ?? chapter;
+    void back() =>
+        context.go(backTo == null ? AppRoutes.home : AppRoutes.chapter(backTo));
+    if (level == null) {
+      return _NotFound(
+        backLabel: backTo == null ? 'Kembali ke Beranda' : _backLabel,
+        onBack: back,
+      );
+    }
+    return LevelView(
+      key: ValueKey(level.id),
+      level: level,
+      backLabel: _backLabel,
+      onBack: back,
+      onNext: () => _next(context, progress.levels, level),
+      onResult: (stars) => unawaited(progress.record(level.id, stars)),
+    );
+  }
+
+  /// "Lanjut": level berikutnya; sesudah level terakhir kembali ke peta.
+  void _next(BuildContext context, List<Level> levels, Level level) {
+    final i = levels.indexOf(level);
+    final next = i + 1 < levels.length ? levels[i + 1] : null;
+    context.go(
+      next == null
+          ? AppRoutes.chapter(level.chapter)
+          : AppRoutes.level(next.id, chapter: next.chapter),
     );
   }
 }

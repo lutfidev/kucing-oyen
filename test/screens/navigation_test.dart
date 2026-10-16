@@ -4,6 +4,7 @@ import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/gallery/gallery_board_screen.dart';
 import 'package:kucing_oren/gallery/gallery_oyen_screen.dart';
 import 'package:kucing_oren/gallery/gallery_screen.dart';
+import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
 import 'package:kucing_oren/screens/home/home_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
@@ -11,59 +12,148 @@ import 'package:kucing_oren/widgets/widgets.dart';
 import '../test_helpers.dart';
 
 void main() {
-  testWidgets('Beranda → galeri → kembali ke Beranda', (tester) async {
+  testWidgets('Beranda → Main → peta → level 1 → kembali ke peta → Beranda', (
+    tester,
+  ) async {
     await pumpApp(tester);
     expect(find.byType(HomeScreen), findsOneWidget);
-    expect(find.text('Kucing Oren'), findsOneWidget);
 
-    await tester.tap(find.text('Galeri komponen'));
-    await tester.pumpAndSettle();
+    await tester.tap(find.text('Main'));
+    await settle(tester);
+    expect(find.byType(ChapterView), findsOneWidget);
+    expect(find.text('Dapur'), findsOneWidget);
+
+    await tester.tap(find.bySemanticsLabel('Level 1, main sekarang'));
+    await settle(tester);
+    expect(find.byType(LevelView), findsOneWidget);
+    expect(find.text('Level 1 · Bangunkan Oyen'), findsOneWidget);
+
+    await tester.tap(_back('Kembali ke peta'));
+    await settle(tester);
+    expect(find.byType(ChapterView), findsOneWidget);
+    expect(find.byType(LevelView), findsNothing);
+
+    await tester.tap(_back('Kembali ke Beranda'));
+    await settle(tester);
+    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(ChapterView), findsNothing);
+  });
+
+  testWidgets('tombol kembali sistem: level → peta → Beranda', (tester) async {
+    await pumpApp(tester, location: AppRoutes.level(13, chapter: 2));
+    expect(find.byType(LevelView), findsOneWidget);
+
+    await tester.binding.handlePopRoute();
+    await settle(tester);
+    expect(find.byType(ChapterView), findsOneWidget);
+    expect(find.text('Ruang Tamu'), findsOneWidget);
+
+    await tester.binding.handlePopRoute();
+    await settle(tester);
+    expect(find.byType(HomeScreen), findsOneWidget);
+  });
+
+  testWidgets('Main membuka babak level yang dimainkan berikutnya', (
+    tester,
+  ) async {
+    await pumpApp(tester, progress: testProgress(wonUpTo(10)));
+    await tester.tap(find.text('Main'));
+    await settle(tester);
+    expect(find.text('Ruang Tamu'), findsOneWidget);
+    expect(find.bySemanticsLabel('Level 11, main sekarang'), findsOneWidget);
+  });
+
+  testWidgets('kartu babak membuka babak lain kalau terbuka', (tester) async {
+    await pumpApp(
+      tester,
+      location: AppRoutes.chapter(2),
+      progress: testProgress(wonUpTo(10)),
+    );
+    await tester.tap(find.text('Babak 1 – Dapur'));
+    await settle(tester);
+    expect(find.text('Dapur'), findsOneWidget);
+
+    await tester.tap(find.text('Babak 2 – Ruang Tamu'));
+    await settle(tester);
+    expect(find.text('Ruang Tamu'), findsOneWidget);
+  });
+
+  testWidgets('babak terkunci dan level terkunci tidak bisa dibuka', (
+    tester,
+  ) async {
+    await pumpApp(tester, location: AppRoutes.chapter(1));
+    await tester.tap(find.text('Babak 2 – Ruang Tamu'));
+    await settle(tester);
+    expect(find.text('Dapur'), findsOneWidget);
+
+    await tester.tap(find.bySemanticsLabel('Level 2, terkunci'));
+    await tester.tap(
+      find.bySemanticsLabel('Level 10, bos Pesta Ikan Asin, terkunci'),
+    );
+    await settle(tester);
+    expect(find.byType(LevelView), findsNothing);
+  });
+
+  testWidgets('level yang sudah selesai bisa dimainkan lagi', (tester) async {
+    await pumpApp(
+      tester,
+      location: AppRoutes.chapter(1),
+      progress: testProgress({1: 2}),
+    );
+    await tester.tap(find.bySemanticsLabel('Level 1, 2 bintang'));
+    await settle(tester);
+    expect(find.text('Level 1 · Bangunkan Oyen'), findsOneWidget);
+  });
+
+  group('rute yang tidak ada', () {
+    for (final (location, back, target) in [
+      ('/babak/2/level/99', 'Kembali ke peta', ChapterView),
+      ('/babak/abc/level/abc', 'Kembali ke Beranda', HomeScreen),
+    ]) {
+      testWidgets('$location: level tidak ada, bisa kembali', (tester) async {
+        await pumpApp(tester, location: location);
+        expect(find.text('Level ini nggak ada.'), findsOneWidget);
+        await tester.tap(_back(back));
+        await settle(tester);
+        expect(find.byType(target), findsOneWidget);
+      });
+    }
+
+    testWidgets('/babak/9: babak tidak ada, bisa kembali', (tester) async {
+      await pumpApp(tester, location: '/babak/9');
+      expect(find.text('Babak ini nggak ada.'), findsOneWidget);
+      await tester.tap(_back('Kembali ke Beranda'));
+      await settle(tester);
+      expect(find.byType(HomeScreen), findsOneWidget);
+    });
+
+    testWidgets('level di path babak lain kembali ke babaknya sendiri', (
+      tester,
+    ) async {
+      await pumpApp(tester, location: '/babak/1/level/13');
+      expect(find.text('Level 13 · Vas Ibu'), findsOneWidget);
+      await tester.tap(_back('Kembali ke peta'));
+      await settle(tester);
+      expect(find.text('Ruang Tamu'), findsOneWidget);
+    });
+  });
+
+  testWidgets('galeri (tanpa tombol di Beranda) → kembali ke Beranda', (
+    tester,
+  ) async {
+    await pumpApp(tester, location: AppRoutes.gallery);
     expect(find.byType(GalleryScreen), findsOneWidget);
     expect(find.text('Token & komponen'), findsOneWidget);
 
-    await tester.tap(
-      find.byWidgetPredicate(
-        (w) => w is KoIconButton && w.semanticLabel == 'Kembali ke Beranda',
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.byType(HomeScreen), findsOneWidget);
-  });
-
-  testWidgets('Beranda → Level 13 → kembali ke Beranda', (tester) async {
-    await pumpApp(tester);
-    await tester.tap(find.bySemanticsLabel('Level 13'));
-    await tester.pumpAndSettle();
-    expect(find.byType(LevelView), findsOneWidget);
-    expect(find.text('Level 13 · Vas Ibu'), findsOneWidget);
-
     await tester.tap(_back('Kembali ke Beranda'));
-    await tester.pumpAndSettle();
+    await settle(tester);
     expect(find.byType(HomeScreen), findsOneWidget);
   });
-
-  testWidgets('Beranda sementara punya jalan ke level 1–20', (tester) async {
-    setScreenSize(tester, const Size(390, 2000));
-    await pumpApp(tester);
-    for (var id = 1; id <= 20; id++) {
-      expect(find.bySemanticsLabel('Level $id'), findsOneWidget);
-    }
-  });
-
-  for (final location in ['/level/99', '/level/abc']) {
-    testWidgets('$location: level tidak ada, bisa kembali', (tester) async {
-      await pumpApp(tester, location: location);
-      expect(find.text('Level ini nggak ada.'), findsOneWidget);
-      await tester.tap(_back('Kembali ke Beranda'));
-      await tester.pumpAndSettle();
-      expect(find.byType(HomeScreen), findsOneWidget);
-    });
-  }
 
   testWidgets('galeri menampilkan semua komponen dasar', (tester) async {
     // Layar tinggi supaya semua bagian galeri dibangun ListView.
     setScreenSize(tester, const Size(390, 5000));
-    await pumpApp(tester, location: '/galeri');
+    await pumpApp(tester, location: AppRoutes.gallery);
     for (final type in [
       KoButton,
       KoIconButton,

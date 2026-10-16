@@ -139,11 +139,11 @@ void main() {
     });
 
     test('babak level saat ini; semua menang = babak terakhir', () {
-      expect(currentChapter(chapters, Progress.empty).number, 1);
+      expect(chapterToPlay(chapters, Progress.empty).number, 1);
       final kitchenDone = Progress({for (var id = 1; id <= 10; id++) id: 1});
-      expect(currentChapter(chapters, kitchenDone).number, 2);
+      expect(chapterToPlay(chapters, kitchenDone).number, 2);
       final all = Progress({for (final id in _ids) id: 1});
-      expect(currentChapter(chapters, all).number, 2);
+      expect(chapterToPlay(chapters, all).number, 2);
     });
 
     test('babak dari nomor dan dari level', () {
