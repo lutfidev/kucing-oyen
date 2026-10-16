@@ -58,15 +58,6 @@ void main() {
       // Di antara dua sinar (15°).
       expect(at(350 + 54, 150), _near(_white));
     });
-
-    test('diputar setengah jarak antarsinar', () async {
-      final at = await _paint(size, (canvas) {
-        canvas.translate(350, 350);
-        paintRays(canvas, turns: 1 / 24);
-      });
-      expect(at(350, 150), _near(_white));
-      expect(at(350 + 54, 150), _near(ray));
-    });
   });
 
   group('ilustrasi vas pecah', () {

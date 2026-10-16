@@ -103,10 +103,6 @@ class SuccessResult extends StatelessWidget {
   final VoidCallback onNext;
   final VoidCallback? onReplay;
 
-  /// Tebal garis bintang kiri-kanan dan tengah (desain 06).
-  static const _starStroke = 1.2;
-  static const _midStarStroke = 1.1;
-
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
@@ -150,8 +146,8 @@ class SuccessResult extends StatelessWidget {
                   size: s.resultStar,
                   midSize: s.resultStarMid,
                   raise: space.s14,
-                  strokeWidth: _starStroke,
-                  midStrokeWidth: _midStarStroke,
+                  strokeWidth: ResultArt.successStarStroke,
+                  midStrokeWidth: ResultArt.successMidStarStroke,
                   shine: true,
                   pop: true,
                 ),
@@ -277,9 +273,6 @@ class VaseResult extends StatelessWidget {
   final VoidCallback onRetry;
   final VoidCallback onNext;
 
-  /// Tebal garis bintang (desain 07).
-  static const _starStroke = 1.3;
-
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
@@ -312,7 +305,7 @@ class VaseResult extends StatelessWidget {
           size: s.partialStar,
           midSize: s.partialStarMid,
           raise: space.s10,
-          strokeWidth: _starStroke,
+          strokeWidth: ResultArt.vaseStarStroke,
         ),
         SizedBox(height: space.s6),
         const Expanded(

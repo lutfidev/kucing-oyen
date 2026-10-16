@@ -26,6 +26,13 @@ abstract final class ResultArt {
   static const raysTurn = Duration(seconds: 40);
   static const double raysBelowStars = 50;
 
+  /// Tebal garis bintang hasil di viewBox 24: kiri-kanan dan tengah layar
+  /// Berhasil, bintang layar vas pecah, dan bintang kecil baris syarat.
+  static const double successStarStroke = 1.2;
+  static const double successMidStarStroke = 1.1;
+  static const double vaseStarStroke = 1.3;
+  static const double ruleStarStroke = 1.6;
+
   // ── Vas pecah ─────────────────────────────────────────────────────────
 
   /// Kartu ilustrasi (lantai kotak-kotak 60 px); gambarnya 358×300 dan
@@ -68,20 +75,14 @@ final _vasePrang = SvgTemplate(vasePrangSvg).render(const {});
 /// fill-box; transform-origin: center`).
 final _prangPivot = _vasePrang.bounds.center;
 
-/// Sinar layar Berhasil berpusat di (0, 0), diputar [turns] putaran.
-void paintRays(Canvas canvas, {double turns = 0}) {
-  const r = ResultArt.raysRadius;
-  canvas
-    ..save()
-    ..rotate(turns * 2 * math.pi)
-    ..saveLayer(
-      Rect.fromCircle(center: Offset.zero, radius: r),
-      Paint()..color = Color.fromRGBO(0, 0, 0, ResultArt.raysOpacity),
-    );
+/// Sinar layar Berhasil berpusat di (0, 0), sinar pertama lurus ke atas.
+void paintRays(Canvas canvas) {
+  canvas.saveLayer(
+    Rect.fromCircle(center: Offset.zero, radius: ResultArt.raysRadius),
+    Paint()..color = Color.fromRGBO(0, 0, 0, ResultArt.raysOpacity),
+  );
   _rays.paint(canvas);
-  canvas
-    ..restore()
-    ..restore();
+  canvas.restore();
 }
 
 /// Mangkuk layar Berhasil di kotak [ResultArt.bowlViewBox].

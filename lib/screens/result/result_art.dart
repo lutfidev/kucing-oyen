@@ -9,8 +9,9 @@ import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
 /// Sinar berputar di belakang layar Berhasil, berpusat di (0, 0) kotaknya
-/// sendiri: taruh lewat `Positioned` dengan ukuran 0. Diam kalau animasi
-/// dimatikan.
+/// sendiri: taruh lewat `Positioned` dengan ukuran 0. Sinar digambar sekali
+/// di lapisannya sendiri lalu hanya diputar. Diam di sudut awal kalau
+/// animasi dimatikan.
 class ResultRays extends StatefulWidget {
   const ResultRays({super.key});
 
@@ -29,7 +30,7 @@ class _ResultRaysState extends State<ResultRays>
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (MediaQuery.disableAnimationsOf(context)) {
-      _turn.stop();
+      _turn.value = 0;
     } else if (!_turn.isAnimating) {
       _turn.repeat();
     }
@@ -44,21 +45,24 @@ class _ResultRaysState extends State<ResultRays>
   @override
   Widget build(BuildContext context) {
     return ExcludeSemantics(
-      child: RepaintBoundary(child: CustomPaint(painter: _RaysPainter(_turn))),
+      child: RotationTransition(
+        turns: _turn,
+        child: const RepaintBoundary(
+          child: CustomPaint(painter: _RaysPainter()),
+        ),
+      ),
     );
   }
 }
 
 class _RaysPainter extends CustomPainter {
-  _RaysPainter(this.turn) : super(repaint: turn);
-
-  final Animation<double> turn;
+  const _RaysPainter();
 
   @override
-  void paint(Canvas canvas, Size size) => paintRays(canvas, turns: turn.value);
+  void paint(Canvas canvas, Size size) => paintRays(canvas);
 
   @override
-  bool shouldRepaint(_RaysPainter old) => old.turn != turn;
+  bool shouldRepaint(_RaysPainter old) => false;
 }
 
 /// Kartu ilustrasi layar hasil seukuran [size]: lantai kotak-kotak (pola
@@ -385,7 +389,20 @@ class RestBoard extends StatelessWidget {
                     child: BoardView(scene),
                   ),
                 ),
-                Positioned(top: space.s14, right: space.s16, child: badge),
+                // Chip mengecil kalau papannya lebih sempit dari chip.
+                Positioned(
+                  top: space.s14,
+                  right: space.s16,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: math.max(
+                        0,
+                        BoardScene.width * scale - 2 * space.s16,
+                      ),
+                    ),
+                    child: FittedBox(fit: BoxFit.scaleDown, child: badge),
+                  ),
+                ),
               ],
             ),
           ),

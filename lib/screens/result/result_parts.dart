@@ -4,6 +4,7 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
 
+import '../../game/render/render.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -390,7 +391,10 @@ class _RuleRow extends StatelessWidget {
                 child: Row(
                   children: [
                     for (var i = 0; i < stars; i++)
-                      KoStar(size: s.starSmall, strokeWidth: _ruleStroke),
+                      KoStar(
+                        size: s.starSmall,
+                        strokeWidth: ResultArt.ruleStarStroke,
+                      ),
                   ],
                 ),
               ),
@@ -428,9 +432,6 @@ class _RuleRow extends StatelessWidget {
       ),
     );
   }
-
-  /// Bintang kecil di baris syarat (desain 06).
-  static const _ruleStroke = 1.6;
 }
 
 /// Garis putus-putus selebar baris (CSS `border-bottom: 1.5px dashed`).
