@@ -93,6 +93,23 @@ void main() {
     expect(calls.last.memberName, #restore);
   });
 
+  test('opacity pada <g>: semua anaknya di satu lapisan', () {
+    final drawing = SvgTemplate('''
+<g opacity="0.8" transform="translate(10 0)">
+  <rect x="0" y="0" width="4" height="4" fill="#000000"></rect>
+  <circle cx="10" cy="2" r="2" fill="#FFFFFF" opacity="0.5"></circle>
+</g>
+''').render({});
+    expect(drawing.bounds, const Rect.fromLTRB(10, 0, 22, 4));
+    final calls = _record(drawing);
+    expect(calls.first.memberName, #saveLayer);
+    final layer = calls.first.positionalArguments[1] as Paint;
+    expect(layer.color.a, closeTo(0.8, 0.002));
+    // Opasitas anak tetap jadi alfa warnanya sendiri, di dalam lapisan.
+    expect(_paints(calls).map((p) => p.color.a), [1, closeTo(0.5, 0.002)]);
+    expect(calls.last.memberName, #restore);
+  });
+
   test('stroke-dasharray memotong garis jadi putus-putus', () {
     final calls = _record(
       SvgTemplate(
