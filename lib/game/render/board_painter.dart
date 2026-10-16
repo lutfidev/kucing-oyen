@@ -1,9 +1,12 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:path_drawing/path_drawing.dart';
+
 import '../../theme/ko_colors.dart';
 import '../../theme/ko_shadow.dart';
 import '../sim/direction.dart';
+import '../sim/pos.dart';
 import 'board_scene.dart';
 import 'design_svg.dart';
 import 'oyen_painter.dart';
@@ -20,6 +23,10 @@ abstract final class BoardArt {
   /// kepalanya menyembul ke petak atas.
   static const double oyenSize = 62;
   static const Offset oyenOffset = Offset(-6, -12);
+
+  /// Garis jalur Oyen: tebal 4, putus-putus 2 9, ujung bulat.
+  static const double pathWidth = 4;
+  static const List<double> pathDash = [2, 9];
 
   /// Panah arah hadap: ikon 12 px di lingkaran 18 px (padding 3) dengan
   /// cincin 2 px.
@@ -48,8 +55,9 @@ void paintBoardFrame(Canvas canvas) {
   }
 }
 
-/// Menggambar isi papan di kotak 0..350 × 0..450: 63 petak, Oyen, dan panah
-/// arah hadap, dipotong sudut 16 px seperti `overflow: hidden` di desain.
+/// Menggambar isi papan di kotak 0..350 × 0..450: 63 petak, jalur Oyen,
+/// Oyen, dan panah arah hadap, dipotong sudut 16 px seperti
+/// `overflow: hidden` di desain.
 ///
 /// [glowOpacity] untuk kedip petak menyala, lihat [tileGlowOpacity].
 void paintBoard(Canvas canvas, BoardScene scene, {double glowOpacity = 1}) {
@@ -57,8 +65,31 @@ void paintBoard(Canvas canvas, BoardScene scene, {double glowOpacity = 1}) {
     ..save()
     ..clipRRect(BoardArt.rrect);
   paintBoardTiles(canvas, scene, glowOpacity: glowOpacity);
+  paintBoardPath(canvas, scene);
   paintBoardOyen(canvas, scene);
   canvas.restore();
+}
+
+/// Jalur Oyen ([BoardScene.path]) sebagai garis putus-putus oranye lewat
+/// tengah petak (`polyline` di `Board.dc.html`), di atas petak dan di bawah
+/// Oyen.
+void paintBoardPath(Canvas canvas, BoardScene scene) {
+  final path = scene.path;
+  if (path.length < 2) return;
+  Offset center(Pos p) => Offset(p.x + 0.5, p.y + 0.5) * Tile.size;
+  final line = Path()..moveTo(center(path.first).dx, center(path.first).dy);
+  for (final p in path.skip(1)) {
+    line.lineTo(center(p).dx, center(p).dy);
+  }
+  canvas.drawPath(
+    dashPath(line, dashArray: CircularIntervalList(BoardArt.pathDash)),
+    Paint()
+      ..color = KoColors.standard.orangeLine
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = BoardArt.pathWidth
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round,
+  );
 }
 
 /// Bagian petak dari [paintBoard] (63 petak dan bendanya), tanpa potongan

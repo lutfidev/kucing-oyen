@@ -28,6 +28,23 @@ void main() {
       expect(tester.widget<Text>(find.text('Langkah')).style!.color, c.cream);
       expect(tester.widget<Text>(find.text('1')).style!.color, c.cream);
     });
+
+    testWidgets('chip gelap besar: 44 px, angka 24 (desain 04)', (
+      tester,
+    ) async {
+      await pumpThemed(
+        tester,
+        const KoChip.dark(label: 'Langkah', text: '6', large: true),
+      );
+      expect(tester.getSize(find.byType(KoChip)).height, 44);
+      final number = tester.widget<Text>(find.text('6')).style!;
+      expect((number.fontFamily, number.fontSize), (KoFonts.fredoka, 24));
+      // Label dan angka sejajar garis dasar huruf.
+      expect(
+        tester.getBottomLeft(find.text('Langkah')).dy,
+        lessThan(tester.getBottomLeft(find.text('6')).dy),
+      );
+    });
   });
 
   group('TraySlot', () {

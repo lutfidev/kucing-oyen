@@ -45,23 +45,33 @@ OyenLook runLook(RunFrame frame) {
   };
 }
 
-/// Papan di [frame] fase jalan: peta [map] dengan benda pemain [placed],
-/// tanpa benda yang sudah hilang (ikan dimakan, kardus penyok), barang yang
-/// sudah jatuh, dan Oyen ([runLook]).
+/// Papan di langkah ke-[step] fase jalan ([frames] dari `runFrames`): peta
+/// [map] dengan benda pemain [placed], tanpa benda yang sudah hilang (ikan
+/// dimakan, kardus penyok), barang yang sudah jatuh, jalur Oyen sampai
+/// langkah ini (desain 04), dan Oyen ([runLook]).
 ///
 /// Selama Oyen duduk di kardus, kardusnya ikut digambar pose `box`, jadi
 /// petaknya dikosongkan.
 BoardScene runScene(
   List<String> map,
   Iterable<Placement> placed,
-  RunFrame frame,
-) => BoardScene.fromMap(
-  map,
-  items: {
-    for (final p in placed) p.pos: ItemArt.tileItem(p.item),
-    for (final pos in frame.cleared) pos: TileItem.none,
-    if (frame.inBox) frame.pos: TileItem.none,
-  },
-  knocked: frame.knocked,
-  oyen: BoardOyen.at(frame.pos, runLook(frame)),
-);
+  List<RunFrame> frames,
+  int step,
+) {
+  final frame = frames[step];
+  final path = <Pos>[];
+  for (final f in frames.take(step + 1)) {
+    if (path.isEmpty || path.last != f.pos) path.add(f.pos);
+  }
+  return BoardScene.fromMap(
+    map,
+    items: {
+      for (final p in placed) p.pos: ItemArt.tileItem(p.item),
+      for (final pos in frame.cleared) pos: TileItem.none,
+      if (frame.inBox) frame.pos: TileItem.none,
+    },
+    knocked: frame.knocked,
+    oyen: BoardOyen.at(frame.pos, runLook(frame)),
+    path: path,
+  );
+}

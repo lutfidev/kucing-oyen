@@ -203,6 +203,22 @@ void main() {
     expect(at(225, 236), _near(const Color(0xFFFBD9A8)));
   });
 
+  test('piksel jalur Oyen: putus-putus 2 9 lewat tengah petak', () async {
+    final scene = BoardScene.fromMap(
+      BoardScene.designMap,
+      showOyen: false,
+      path: const [Pos(4, 3), Pos(5, 3), Pos(5, 4)],
+    );
+    final at = await _sampler(await _renderBoard(scene));
+    const line = Color(0xFFE07A10);
+    // Garis dari (225, 175): titik di 225–227, celah 9, titik 236–238.
+    expect(at(226, 175), _near(line));
+    expect(at(232, 175), _near(const Color(0xFFF1DDBA)));
+    expect(at(237, 175), _near(line));
+    // Tebal 4: 2 px di atas dan bawah garis.
+    expect(at(226, 172), _near(const Color(0xFFF1DDBA)));
+  });
+
   group('Oyen fase jalan (tidak ada di desain)', () {
     /// Oyen 200 px (2 px per satuan viewBox) dengan tepi 60 px untuk
     /// gelembung; mengembalikan warna di titik viewBox (x, y).

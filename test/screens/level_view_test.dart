@@ -481,6 +481,14 @@ void main() {
     Future<void> nextStep(WidgetTester tester) =>
         tester.pump(RunClock.stepTime);
 
+    /// Waktu [duration] berlalu dalam bingkai-bingkai 1/60 detik.
+    Future<void> pumpFrames(WidgetTester tester, Duration duration) async {
+      const frame = Duration(microseconds: 1000000 ~/ 60);
+      for (var t = Duration.zero; t < duration; t += frame) {
+        await tester.pump(duration - t < frame ? duration - t : frame);
+      }
+    }
+
     testWidgets('solusi level 13: langkah demi langkah seperti desain 04', (
       tester,
     ) async {
@@ -570,8 +578,11 @@ void main() {
       await gesture.up();
 
       await tester.pumpAndSettle();
+      // Ketukan ganda sebelum layar dibangun ulang tidak memicu error.
+      await tester.tap(find.text('Lihat hasil'));
       await tester.tap(find.text('Lihat hasil'));
       await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
       expect(
         find.text(
           'Oyen sampai di mangkuk! ${level.solutionSteps} langkah, 3 bintang.',
@@ -690,14 +701,23 @@ void main() {
       );
       expect(_game(tester).moveTime, 0.125);
 
-      await tester.pump(const Duration(milliseconds: 500));
+      await pumpFrames(tester, const Duration(milliseconds: 500));
       expect(step(tester), 5);
 
       await tester.tap(fast);
       await tester.pump();
       expect(_game(tester).moveTime, 0.25);
-      await tester.pump(const Duration(milliseconds: 500));
+      await pumpFrames(tester, const Duration(milliseconds: 500));
       expect(step(tester), 7);
+    });
+
+    testWidgets('bingkai yang tersendat tidak melompati langkah', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13);
+      await wake(tester);
+      await tester.pump(const Duration(seconds: 3));
+      expect(step(tester), 2);
     });
 
     testWidgets('kembali di fase jalan: ke fase atur, susunan tetap', (

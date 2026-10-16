@@ -69,7 +69,7 @@ void main() {
   test('papan akhir level 15: ikan dimakan, kardus hilang', () {
     final l = level(15);
     final f = frames(l);
-    final start = runScene(l.map, l.solution, f.first);
+    final start = runScene(l.map, l.solution, f, 0);
     expect(start.tileAt(const Pos(2, 3)).item, TileItem.fishP);
     expect(start.tileAt(const Pos(1, 4)).item, TileItem.fish);
     expect(start.tileAt(const Pos(2, 4)).item, TileItem.box);
@@ -77,11 +77,11 @@ void main() {
 
     // Selama duduk, kardusnya digambar pose box, bukan petak.
     expect(
-      runScene(l.map, l.solution, f[7]).tileAt(const Pos(2, 4)).item,
+      runScene(l.map, l.solution, f, 7).tileAt(const Pos(2, 4)).item,
       TileItem.none,
     );
 
-    final end = runScene(l.map, l.solution, f.last);
+    final end = runScene(l.map, l.solution, f, f.length - 1);
     for (final pos in const [Pos(2, 3), Pos(1, 4), Pos(2, 4)]) {
       expect(end.tileAt(pos).item, TileItem.none, reason: '$pos');
     }
@@ -93,16 +93,34 @@ void main() {
   test('papan akhir level 13 ikan saja: vas pecah, gelas tetap', () {
     final l = level(13);
     const placed = [Placement(Item.fish, Pos(2, 4))];
-    final end = runScene(l.map, placed, frames(l, placed).last);
+    final f = frames(l, placed);
+    final end = runScene(l.map, placed, f, f.length - 1);
     expect(end.tileAt(const Pos(2, 3)).kind, TileKind.tableBroken);
     expect(end.tileAt(const Pos(1, 4)).kind, TileKind.tableGlass);
     // Ikan pemain tidak termakan: Oyen sampai di mangkuk lebih dulu.
     expect(end.tileAt(const Pos(2, 4)).item, TileItem.fishP);
   });
 
+  test('jalur Oyen sampai langkah yang tampil, tanpa petak berulang', () {
+    final l = level(13);
+    final f = frames(l);
+    List<Pos> path(int step) => runScene(l.map, l.solution, f, step).path;
+    // Langkah 1 (kaget) belum pindah petak.
+    expect(path(1), [const Pos(4, 3)]);
+    expect(path(3), [const Pos(4, 3), const Pos(5, 3)]);
+    expect(path(6), const [
+      Pos(4, 3),
+      Pos(5, 3),
+      Pos(5, 4),
+      Pos(4, 4),
+      Pos(3, 4),
+    ]);
+  });
+
   test('gelas jatuh jadi meja kosong', () {
     final l = level(12);
-    final end = runScene(l.map, l.solution, frames(l).last);
+    final f = frames(l);
+    final end = runScene(l.map, l.solution, f, f.length - 1);
     expect(end.tileAt(const Pos(1, 1)).kind, TileKind.table);
     expect(end.tileAt(const Pos(4, 2)).kind, TileKind.table);
   });

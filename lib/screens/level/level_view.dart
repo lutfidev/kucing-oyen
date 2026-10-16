@@ -119,7 +119,9 @@ class _LevelViewState extends State<LevelView>
   /// petak awalnya. Fase jalan: keadaan papan di langkah yang tampil.
   BoardScene _buildScene() {
     final run = _run;
-    if (run != null) return runScene(_level.map, _session.placed, run.frame);
+    if (run != null) {
+      return runScene(_level.map, _session.placed, run.frames, run.clock.step);
+    }
     final drag = _drag;
     return BoardScene.fromMap(
       _level.map,
@@ -212,6 +214,8 @@ class _LevelViewState extends State<LevelView>
   // Tombol tetap aktif selama benda diseret, seperti desain 03. Kalau
   // ditekan jari lain, seretan dibatalkan dulu; sisa seretan itu diabaikan.
   void _wake() {
+    // Ketukan kedua di bingkai yang sama sudah bukan fase atur.
+    if (_session.phase != SessionPhase.arrange) return;
     _update(() {
       _drag = null;
       final board = _level.board;
@@ -227,6 +231,7 @@ class _LevelViewState extends State<LevelView>
 
   /// Fase jalan atau layar hasil → fase atur, susunan benda tetap.
   void _arrangeAgain() {
+    if (_session.phase == SessionPhase.arrange) return;
     _update(() {
       _session.arrangeAgain();
       _run = null;
@@ -235,7 +240,9 @@ class _LevelViewState extends State<LevelView>
   }
 
   /// "Lihat hasil": layar hasil sementara sampai langkah 8.
-  void _finish() => _update(_session.finish);
+  void _finish() {
+    if (_session.phase == SessionPhase.running) _update(_session.finish);
+  }
 
   // ── Fase jalan ──────────────────────────────────────────────────────
 
@@ -259,7 +266,9 @@ class _LevelViewState extends State<LevelView>
     final dt = elapsed - _lastTick;
     _lastTick = elapsed;
     if (clock == null) return;
-    if (clock.tick(dt)) _update(() {});
+    // Selama aplikasi di latar belakang atau rute tertutup, waktu ticker
+    // tetap berjalan; jangan sampai Oyen melompati langkah sekaligus.
+    if (clock.tick(dt > clock.interval ? clock.interval : dt)) _update(() {});
     if (!clock.playing) _ticker.stop();
   }
 

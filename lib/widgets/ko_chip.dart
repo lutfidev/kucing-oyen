@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../theme/theme.dart';
 
-/// Chip setinggi 40 px.
+/// Chip setinggi 40 px (44 px untuk chip gelap [large]).
 ///
 /// - [KoChip.new]: pill krem bergaris, angka Fredoka, ikon opsional di depan
 ///   ("★ 14/60").
