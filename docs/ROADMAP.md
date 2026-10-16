@@ -21,7 +21,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 5. Gambar petak, papan, dan Oyen
 - [x] 6. Gameplay fase atur
 - [x] 7. Gameplay fase jalan
-- [ ] 8. Hasil: berhasil, vas pecah, Oyen bosan
+- [x] 8. Hasil: berhasil, vas pecah, Oyen bosan
 - [ ] 9. Beranda, peta babak, progres tersimpan
 - [ ] 10. Putar ulang
 - [ ] 11. Kartu aturan dan tutorial
@@ -89,9 +89,11 @@ Selesai: keadaan papan per langkah dibangun ulang dari `trace` tanpa simulasi ul
 
 > Baca `docs/design/source/04-gameplay-fase-jalan.html` (termasuk daftar `steps` dan caption-nya), `16-komponen-oyen.html`, dan GDD bagian "Alur satu level". Setelah "Bangunkan Oyen", mainkan `trace` satu langkah demi satu langkah: 4 langkah per detik sesuai GDD (desain memakai transisi 0,35 detik; ikuti GDD dan catat), tombol ×2, Jeda/Lanjutkan, penghitung "Langkah N", status vas dan jumlah benda dipakai seperti desain. Pose per `StepKind`: `walk` → walk; `scared` → shock + gelembung kaget (desain menampilkan kaget masih menghadap air, sedangkan `SimStep.dir` adalah arah sesudah putar balik); `turn` → idle dengan arah baru; `enterBox`/`sit` → box; `knockGlass`/`knockVase` → knock (gelas jatuh jadi meja kosong, vas jadi `tableBroken`); `eat` → eat dan ikannya hilang. Kardus hilang pada langkah `sit` yang punya `changed`. Langkah terakhir di mangkuk memakai pose seperti desain. Gelembung pikiran bergambar ikan saat `SimStep.chasing` tidak null disebut di GDD tapi tidak ada di desain: buat dengan gaya gelembung kaget dan catat. Selesai → tombol "Lihat hasil" (layar hasil di langkah 8; sementara kembali ke fase atur). Kalau `MediaQuery.disableAnimations`, langsung ke keadaan akhir. Test: urutan pose dan posisi untuk solusi level 13 dan level 15 (kardus), keadaan papan akhir, jeda, dan ×2.
 
-## 8. Hasil: berhasil, vas pecah, Oyen bosan
+## 8. Hasil: berhasil, vas pecah, Oyen bosan ✅
 
 **Hasil:** ketiga layar hasil tersambung ke fase jalan dan fase atur.
+
+Selesai: `lib/screens/result/` (`ResultView` memilih `SuccessResult`, `VaseResult`, atau `BoredResult` dari `LevelSession`) yang menutupi layar level setelah "Lihat hasil", tanpa rute baru. Sinar berputar, bintang `koStar`, Ibu `koPeek`, dan "PRANG!" `koShake` dibuat seperti desain, dengan SVG 06 dan 07 disalin utuh. Papan Oyen bosan memakai keadaan papan terakhir (`restScene`). Ulangi = papan kosong, Coba Lagi/Atur Lagi = susunan tetap, Lanjut = level berikutnya (sesudah level 20 ke Beranda). Putar ulang nonaktif sampai langkah 10. Kelamaan tidak bisa terjadi di 20 level sekarang; teksnya dibuat dan diuji dengan peta buatan. Keputusan lain di `docs/DESIGN_NOTES.md`.
 
 > Baca `docs/design/source/06-hasil-berhasil.html`, `07-hasil-vas-pecah.html`, `08-gagal-oyen-bosan.html`, dan GDD bagian "Bintang". Buat ketiga layar dengan teks persis seperti desain. Berhasil: animasi bintang, jumlah langkah, benda dipakai, penjelasan bintang, Ulangi/Lanjut, dan "Tonton putar ulang" (nonaktif sampai langkah 10). Vas pecah: "Sampai sih... tapi vas Ibu?", "Pecah di langkah N" dari `vaseBrokenAtStep`, Coba Lagi/Lanjut Saja. Oyen bosan untuk `FailReason.loop`; desain belum punya teks untuk `FailReason.tooManySteps` (kelamaan), jadi buat teks santai yang senada dan catat. Atur Lagi → fase atur dengan susunan tetap; Ulangi → papan kosong; Lanjut → level berikutnya. Angka bintang dari `LevelSession`. Test untuk level 13: solusi JSON (berhasil, 3 bintang), ikan saja di (2,4) ("Pecah di langkah 2", 10 langkah, 1 benda, sama dengan contoh desain), tanpa benda (Oyen bosan). Tambah rute ke test overflow.
 

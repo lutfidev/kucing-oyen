@@ -11,6 +11,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/app.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/kucing_game.dart';
+import 'package:kucing_oren/game/sim/sim.dart';
+import 'package:kucing_oren/screens/level/level_view.dart';
+import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -35,6 +38,37 @@ const _fullPages = <String, (String, double)>{
 };
 
 const _size = Size(390, 844);
+
+/// Menaruh benda (awalan nama slot baki, kolom, baris) lewat seretan.
+Future<void> _place(WidgetTester tester, List<(String, int, int)> items) async {
+  final board = tester.getRect(find.byType(GameWidget<KucingGame>));
+  final scale = board.width / 350;
+  for (final (slotName, col, row) in items) {
+    final slot = find.byWidgetPredicate(
+      (w) => w is TraySlot && w.semanticLabel.startsWith(slotName),
+    );
+    final target = board.topLeft + Offset(col * 50 + 25, row * 50 + 25) * scale;
+    final gesture = await tester.startGesture(tester.getCenter(slot));
+    await tester.pump();
+    await gesture.moveTo(target);
+    await tester.pump();
+    await gesture.up();
+    await tester.pumpAndSettle();
+  }
+}
+
+/// Membangunkan Oyen, memutar sampai selesai, lalu membuka layar hasil dan
+/// menunggu bintang dan Ibu selesai muncul. Sinar dan "PRANG!" bergerak
+/// terus, jadi tanpa `pumpAndSettle`.
+Future<void> _showResult(WidgetTester tester) async {
+  await tester.tap(find.text('Bangunkan Oyen'));
+  await tester.pump();
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Lihat hasil'));
+  for (var i = 0; i < 30; i++) {
+    await tester.pump(const Duration(milliseconds: 50));
+  }
+}
 
 void main() {
   final folder = '${_size.width.toInt()}x${_size.height.toInt()}';
@@ -91,6 +125,88 @@ void main() {
       await capture(tester, '$folder/03-fase-atur-seret-ember');
       await gesture.up();
       await tester.pumpAndSettle();
+    });
+  }, skip: !screenshotsEnabled);
+
+  /// Layar hasil: level, benda, dan ukuran layar.
+  const results = <String, (int, List<(String, int, int)>, Size)>{
+    '06-berhasil-level-13': (
+      13,
+      [('Ember air', 3, 3), ('Ikan asin', 2, 4)],
+      _size,
+    ),
+    '06-berhasil-2-bintang-level-15': (
+      15,
+      [('Ikan asin', 2, 3), ('Ember air', 1, 1)],
+      _size,
+    ),
+    '06-berhasil-level-1-360x640': (1, [], Size(360, 640)),
+    '07-vas-pecah-level-13': (13, [('Ikan asin', 2, 4)], _size),
+    '07-vas-pecah-level-13-360x640': (
+      13,
+      [('Ikan asin', 2, 4)],
+      Size(360, 640),
+    ),
+    '08-oyen-bosan-level-13': (13, [], _size),
+    '08-oyen-bosan-level-13-360x640': (13, [], Size(360, 640)),
+  };
+  for (final MapEntry(key: name, value: (id, items, size)) in results.entries) {
+    testWidgets('$folder/$name', (tester) async {
+      setScreenSize(tester, size);
+      await withShadows(() async {
+        await tester.pumpWidget(
+          capturable(KucingOrenApp(initialLocation: AppRoutes.level(id))),
+        );
+        await tester.pumpAndSettle();
+        await _place(tester, items);
+        await _showResult(tester);
+        await capture(tester, '$folder/$name');
+      });
+    }, skip: !screenshotsEnabled);
+  }
+
+  testWidgets('$folder/08-oyen-kelamaan', (tester) async {
+    setScreenSize(tester, _size);
+    // Tidak ada level yang bisa lewat 80 langkah; peta ini dibuat untuk
+    // contoh layar kelamaan.
+    final level = Level(
+      id: 21,
+      name: 'Lorong Panjang',
+      chapter: 3,
+      map: const [
+        '#######',
+        '#^..#.#',
+        '#.....#',
+        '#T...##',
+        '#.#..##',
+        '###.FA#',
+        '##.F..#',
+        '#.A#.F#',
+        '#######',
+      ],
+      inventory: const {},
+      starItems: 0,
+      solution: const [],
+      solutionSteps: 0,
+    );
+    await withShadows(() async {
+      await tester.pumpWidget(
+        capturable(
+          MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: KoTheme.light(),
+            home: LevelView(
+              level: level,
+              backLabel: 'Kembali',
+              onBack: () {},
+              onNext: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await _showResult(tester);
+      await capture(tester, '$folder/08-oyen-kelamaan');
     });
   }, skip: !screenshotsEnabled);
 

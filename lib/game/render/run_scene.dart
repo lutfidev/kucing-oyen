@@ -59,6 +59,49 @@ BoardScene runScene(
   int step,
 ) {
   final frame = frames[step];
+  return _scene(
+    map,
+    placed,
+    frames,
+    step,
+    BoardOyen.at(frame.pos, runLook(frame)),
+    hideBox: frame.inBox,
+  );
+}
+
+/// Papan layar gagal (desain 08): keadaan papan di langkah terakhir dengan
+/// seluruh jalur Oyen, dan Oyen tertidur lagi (Zzz) di petak terakhirnya
+/// menghadap arah terakhirnya, tanpa panah arah hadap. Kardus tempat Oyen
+/// duduk tetap tergambar di bawahnya.
+BoardScene restScene(
+  List<String> map,
+  Iterable<Placement> placed,
+  List<RunFrame> frames,
+) {
+  final frame = frames.last;
+  return _scene(
+    map,
+    placed,
+    frames,
+    frames.length - 1,
+    BoardOyen.at(
+      frame.pos,
+      OyenLook(pose: OyenPose.sleep, dir: frame.dir, bubble: OyenBubble.zzz),
+    ),
+    facing: false,
+  );
+}
+
+BoardScene _scene(
+  List<String> map,
+  Iterable<Placement> placed,
+  List<RunFrame> frames,
+  int step,
+  BoardOyen oyen, {
+  bool hideBox = false,
+  bool facing = true,
+}) {
+  final frame = frames[step];
   final path = <Pos>[];
   for (final f in frames.take(step + 1)) {
     if (path.isEmpty || path.last != f.pos) path.add(f.pos);
@@ -68,10 +111,11 @@ BoardScene runScene(
     items: {
       for (final p in placed) p.pos: ItemArt.tileItem(p.item),
       for (final pos in frame.cleared) pos: TileItem.none,
-      if (frame.inBox) frame.pos: TileItem.none,
+      if (hideBox) frame.pos: TileItem.none,
     },
     knocked: frame.knocked,
-    oyen: BoardOyen.at(frame.pos, runLook(frame)),
+    oyen: oyen,
+    facing: facing,
     path: path,
   );
 }

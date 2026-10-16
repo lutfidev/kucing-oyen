@@ -366,3 +366,94 @@ const fishBubbleSvg = r'''
 </g>
 </g>
 ''';
+
+/// Sinar di belakang layar Berhasil (`06-hasil-berhasil.html`), viewBox
+/// -310 -310 620 620: dua belas segitiga dari titik tengah.
+const raysSvg = r'''
+    <g fill="#FCE3BC">
+      <path d="M0 0 L-28 -310 L28 -310 Z"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(30)"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(60)"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(90)"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(120)"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(150)"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(180)"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(210)"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(240)"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(270)"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(300)"></path>
+      <path d="M0 0 L-28 -310 L28 -310 Z" transform="rotate(330)"></path>
+    </g>
+''';
+
+/// Mangkuk penuh pakan di layar Berhasil (`06-hasil-berhasil.html`), viewBox
+/// 140×54.
+const successBowlSvg = r'''
+      <ellipse cx="70" cy="46" rx="62" ry="7" fill="#7A4A1F" opacity="0.16"></ellipse>
+      <path d="M8 14 H132 L120 44 Q70 54 20 44 Z" fill="#3E9BCB"></path>
+      <ellipse cx="70" cy="14" rx="62" ry="10" fill="#2F86B8"></ellipse>
+      <ellipse cx="70" cy="13" rx="54" ry="7" fill="#BFE7F7"></ellipse>
+      <circle cx="52" cy="11" r="4" fill="#A0703D"></circle><circle cx="64" cy="13" r="4" fill="#B98250"></circle><circle cx="80" cy="11" r="4" fill="#A0703D"></circle><circle cx="92" cy="14" r="3.5" fill="#8C5E2E"></circle>
+      <path d="M26 30 Q70 40 114 30" stroke="#8FD3F0" stroke-width="3" fill="none" stroke-linecap="round"></path>
+''';
+
+/// Mangkuk di layar vas pecah (`07-hasil-vas-pecah.html`), viewBox 140×54.
+const vaseBowlSvg = r'''
+      <ellipse cx="70" cy="46" rx="62" ry="7" fill="#7A4A1F" opacity="0.16"></ellipse>
+      <path d="M8 14 H132 L120 44 Q70 54 20 44 Z" fill="#3E9BCB"></path>
+      <ellipse cx="70" cy="14" rx="62" ry="10" fill="#2F86B8"></ellipse>
+      <ellipse cx="70" cy="13" rx="54" ry="7" fill="#BFE7F7"></ellipse>
+      <circle cx="56" cy="11" r="4" fill="#A0703D"></circle><circle cx="72" cy="13" r="4" fill="#B98250"></circle><circle cx="86" cy="11" r="4" fill="#A0703D"></circle>
+''';
+
+/// Ilustrasi layar vas pecah (`07-hasil-vas-pecah.html`), viewBox 358×300,
+/// dipotong jadi empat bagian karena dua di antaranya bergerak. Urutan
+/// gambar: dinding dan pintu, Ibu ([vaseMomSvg], geser masuk `koPeek`), meja
+/// dengan pecahan vas, lalu "PRANG!" ([vasePrangSvg], goyang `koShake`).
+const vaseRoomSvg = r'''
+      <rect x="0" y="0" width="358" height="64" fill="#E9C9A0"></rect>
+      <rect x="0" y="58" width="358" height="8" fill="#B07A4F"></rect>
+
+      <rect x="250" y="8" width="96" height="164" rx="4" fill="#8A5A3B"></rect>
+      <rect x="259" y="17" width="78" height="155" fill="#4A2F1C"></rect>
+''';
+
+/// Ibu yang muncul dari pintu dengan wajah kesal (grup `koPeek`).
+const vaseMomSvg = r'''
+        <rect x="274" y="96" width="58" height="80" rx="18" fill="#4F8A8B"></rect>
+        <path d="M290 100 L303 116 L316 100" fill="none" stroke="#3B6C6D" stroke-width="3" stroke-linejoin="round"></path>
+        <circle cx="303" cy="70" r="24" fill="#F0C29E"></circle>
+        <path d="M279 70 Q281 42 303 44 Q325 42 327 70 Q321 55 303 55 Q285 55 279 70 Z" fill="#3B2716"></path>
+        <circle cx="303" cy="38" r="11" fill="#3B2716"></circle>
+        <path d="M290 63 L299 67 M316 63 L307 67" stroke="#3B2716" stroke-width="3" stroke-linecap="round"></path>
+        <circle cx="295" cy="73" r="2.5" fill="#3B2716"></circle>
+        <circle cx="311" cy="73" r="2.5" fill="#3B2716"></circle>
+        <path d="M296 85 Q303 80 310 85" stroke="#3B2716" stroke-width="2.6" fill="none" stroke-linecap="round"></path>
+        <ellipse cx="287" cy="80" rx="4" ry="2.4" fill="#E58C7A" opacity="0.5"></ellipse>
+        <ellipse cx="319" cy="80" rx="4" ry="2.4" fill="#E58C7A" opacity="0.5"></ellipse>
+        <ellipse cx="262" cy="118" rx="8" ry="10" fill="#F0C29E"></ellipse>
+        <path d="M330 44 Q334 48 330 52 M338 44 Q334 48 338 52 M327 47 Q331 51 335 47 M327 55 Q331 51 335 55" stroke="#C2492F" stroke-width="2.6" fill="none" stroke-linecap="round"></path>
+''';
+
+/// Meja, pecahan vas, daun, dan koin di lantai.
+const vaseTableSvg = r'''
+      <rect x="34" y="112" width="96" height="74" rx="12" fill="#7A4A1F" opacity="0.16"></rect>
+      <rect x="28" y="104" width="96" height="74" rx="12" fill="#D9A066" stroke="#A8733F" stroke-width="2.5"></rect>
+      <path d="M40 124 H104 M40 156 H92" stroke="#C48A50" stroke-width="2" stroke-linecap="round"></path>
+      <path d="M60 128 L72 120 L70 138 Z" fill="#C2492F"></path>
+      <path d="M80 136 L94 132 L90 148 Z" fill="#A83B24"></path>
+      <path d="M58 150 L70 152 L62 162 Z" fill="#C2492F"></path>
+      <path d="M22 196 L32 190 L34 202 Z" fill="#C2492F"></path>
+      <path d="M126 192 L138 188 L136 200 Z" fill="#A83B24"></path>
+      <path d="M100 206 L108 200 L112 210 Z" fill="#C2492F"></path>
+      <ellipse cx="96" cy="160" rx="10" ry="4" fill="#5BA96A" transform="rotate(-20 96 160)"></ellipse>
+      <ellipse cx="44" cy="214" rx="9" ry="3.6" fill="#6BB37A" transform="rotate(25 44 214)"></ellipse>
+      <circle cx="148" cy="214" r="5" fill="#FFC83D" stroke="#E0A100" stroke-width="1.2"></circle>
+''';
+
+/// Ledakan "PRANG!" di sekitar titik (0, 0); desain menaruhnya di
+/// `translate(60 76)` dan menggoyangnya (grup `koShake`).
+const vasePrangSvg = r'''
+        <path d="M0 -26 L8 -12 L24 -18 L16 -4 L30 4 L14 8 L18 24 L4 14 L-6 28 L-8 12 L-26 16 L-14 2 L-28 -8 L-10 -10 L-14 -26 L-2 -16 Z" fill="#FFFBF3" stroke="#C2492F" stroke-width="2.5" stroke-linejoin="round"></path>
+        <text x="1" y="6" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="13" fill="#9A3520">PRANG!</text>
+''';

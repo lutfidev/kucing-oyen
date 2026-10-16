@@ -19,6 +19,10 @@ class KoRadius extends ThemeExtension<KoRadius> {
     required this.sheet,
     required this.pill,
     required this.control,
+    required this.art,
+    required this.stat,
+    required this.statCompact,
+    required this.avatar,
   });
 
   static const standard = KoRadius(
@@ -32,6 +36,10 @@ class KoRadius extends ThemeExtension<KoRadius> {
     sheet: 28,
     pill: 999,
     control: 18,
+    art: 28,
+    stat: 18,
+    statCompact: 14,
+    avatar: 16,
   );
 
   /// Petak papan.
@@ -64,6 +72,16 @@ class KoRadius extends ThemeExtension<KoRadius> {
   /// Kotak caption dan tombol kontrol fase jalan.
   final double control;
 
+  /// Kartu ilustrasi layar hasil.
+  final double art;
+
+  /// Kotak angka di layar Berhasil dan versi kecilnya di layar vas pecah.
+  final double stat;
+  final double statCompact;
+
+  /// Kotak Oyen tidur di kartu pesan layar gagal.
+  final double avatar;
+
   @override
   KoRadius copyWith({
     double? tile,
@@ -76,6 +94,10 @@ class KoRadius extends ThemeExtension<KoRadius> {
     double? sheet,
     double? pill,
     double? control,
+    double? art,
+    double? stat,
+    double? statCompact,
+    double? avatar,
   }) {
     return KoRadius(
       tile: tile ?? this.tile,
@@ -88,6 +110,10 @@ class KoRadius extends ThemeExtension<KoRadius> {
       sheet: sheet ?? this.sheet,
       pill: pill ?? this.pill,
       control: control ?? this.control,
+      art: art ?? this.art,
+      stat: stat ?? this.stat,
+      statCompact: statCompact ?? this.statCompact,
+      avatar: avatar ?? this.avatar,
     );
   }
 
@@ -106,6 +132,10 @@ class KoRadius extends ThemeExtension<KoRadius> {
       sheet: d(sheet, other.sheet),
       pill: d(pill, other.pill),
       control: d(control, other.control),
+      art: d(art, other.art),
+      stat: d(stat, other.stat),
+      statCompact: d(statCompact, other.statCompact),
+      avatar: d(avatar, other.avatar),
     );
   }
 }

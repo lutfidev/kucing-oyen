@@ -39,6 +39,7 @@ class KoButton extends StatelessWidget {
     this.kind = KoButtonKind.primary,
     this.size = KoButtonSize.medium,
     this.icon,
+    this.trailingIcon,
   });
 
   final String label;
@@ -47,7 +48,12 @@ class KoButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final KoButtonKind kind;
   final KoButtonSize size;
+
+  /// Ikon di kiri label.
   final KoIconData? icon;
+
+  /// Ikon di kanan label (panah "Lanjut" di layar hasil).
+  final KoIconData? trailingIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +95,15 @@ class KoButton extends StatelessWidget {
             KoButtonSize.large => t.title,
             KoButtonSize.medium => t.button,
           };
-    final (double height, double iconSize) = switch (size) {
-      KoButtonSize.hero => (s.buttonHero, s.iconHero),
-      KoButtonSize.large => (s.buttonLarge, s.iconLarge),
-      KoButtonSize.medium => (s.button, s.icon),
+    // Tombol 64 px di layar hasil: ikon kiri 20 px, panah kanan 22 px.
+    final (
+      double height,
+      double iconSize,
+      double trailingSize,
+    ) = switch (size) {
+      KoButtonSize.hero => (s.buttonHero, s.iconHero, s.iconHero),
+      KoButtonSize.large => (s.buttonLarge, s.iconLarge, s.iconLarge),
+      KoButtonSize.medium => (s.button, s.iconSmall, s.icon),
     };
     final gap = big ? space.s12 : space.s8;
 
@@ -120,6 +131,10 @@ class KoButton extends StatelessWidget {
                 SizedBox(width: gap),
               ],
               Text(label, maxLines: 1, style: style.copyWith(color: fg)),
+              if (trailingIcon != null) ...[
+                SizedBox(width: gap),
+                KoIcon(trailingIcon!, size: trailingSize, color: fg),
+              ],
             ],
           ),
         ),

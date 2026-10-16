@@ -13,6 +13,7 @@ import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../result/result_view.dart';
 import 'level_bar.dart';
 import 'level_board.dart';
 import 'run_panel.dart';
@@ -51,7 +52,8 @@ class _Run {
 
 /// Layar satu level: bar atas, target bintang, papan [KucingGame], baki,
 /// dan tombol "Bangunkan Oyen"; setelah dibangunkan, Oyen berjalan langkah
-/// demi langkah dengan caption, Jeda/Lanjutkan, ×2, dan "Lihat hasil".
+/// demi langkah dengan caption, Jeda/Lanjutkan, ×2, dan "Lihat hasil", lalu
+/// layar hasil ([ResultView]) menutupi layar level.
 ///
 /// Aturan ada di [LevelSession]. Layar ini hanya menerjemahkan seretan:
 /// lepas di petak menyala = taruh atau pindah; benda dari papan yang
@@ -63,6 +65,7 @@ class LevelView extends StatefulWidget {
     required this.level,
     required this.backLabel,
     required this.onBack,
+    required this.onNext,
   });
 
   final Level level;
@@ -70,6 +73,9 @@ class LevelView extends StatefulWidget {
   /// Tombol kembali dan label pembaca layarnya.
   final String backLabel;
   final VoidCallback onBack;
+
+  /// "Lanjut" di layar hasil: level berikutnya.
+  final VoidCallback onNext;
 
   @override
   State<LevelView> createState() => _LevelViewState();
@@ -84,7 +90,7 @@ class _LevelViewState extends State<LevelView>
   final _stageKey = GlobalKey();
   _ItemDrag? _drag;
 
-  /// Fase jalan dan layar hasil sementara; null di fase atur.
+  /// Fase jalan dan layar hasil; null di fase atur.
   _Run? _run;
   Duration _lastTick = Duration.zero;
   bool _reduceMotion = false;
@@ -229,7 +235,8 @@ class _LevelViewState extends State<LevelView>
     _syncTicker();
   }
 
-  /// Fase jalan atau layar hasil → fase atur, susunan benda tetap.
+  /// Fase jalan atau layar hasil → fase atur, susunan benda tetap ("Atur
+  /// Lagi", "Coba Lagi").
   void _arrangeAgain() {
     if (_session.phase == SessionPhase.arrange) return;
     _update(() {
@@ -239,7 +246,7 @@ class _LevelViewState extends State<LevelView>
     _syncTicker();
   }
 
-  /// "Lihat hasil": layar hasil sementara sampai langkah 8.
+  /// "Lihat hasil": layar hasil.
   void _finish() {
     if (_session.phase == SessionPhase.running) _update(_session.finish);
   }
@@ -288,22 +295,14 @@ class _LevelViewState extends State<LevelView>
     _session.reset();
   });
 
-  /// Hasil sementara sampai layar hasil (langkah 8) dibuat.
-  String _resultText(SimResult result) {
-    if (result.win) {
-      final broken = result.vaseBrokenAtStep;
-      if (broken != null) {
-        return 'Oyen sampai, tapi vas pecah di langkah $broken. '
-            '${_session.stars} bintang.';
-      }
-      return 'Oyen sampai di mangkuk! ${result.steps} langkah, '
-          '${_session.stars} bintang.';
-    }
-    return switch (result.failReason) {
-      FailReason.tooManySteps =>
-        'Oyen kelamaan jalan, lewat $maxSteps langkah.',
-      _ => 'Oyen bosan mondar-mandir.',
-    };
+  /// "Ulangi" di layar Berhasil: fase atur dengan papan kosong.
+  void _restart() {
+    if (_session.phase != SessionPhase.result) return;
+    _update(() {
+      _session.reset();
+      _run = null;
+    });
+    _syncTicker();
   }
 
   @override
@@ -312,67 +311,82 @@ class _LevelViewState extends State<LevelView>
     final drag = _drag;
     final run = _run;
     final running = _session.phase == SessionPhase.running;
+    final showResult = _session.phase == SessionPhase.result;
 
     return Scaffold(
       body: Stack(
         key: _stageKey,
         children: [
+          // Layar level tetap terpasang di bawah layar hasil supaya papan
+          // Flame tidak dilepas lalu dipasang lagi.
           Positioned.fill(
-            child: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  space.gutter,
-                  space.s8,
-                  space.gutter,
-                  space.s16,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    LevelTopBar(
-                      title: 'Level ${_level.id} · ${_level.name}',
-                      backLabel: running
-                          ? 'Kembali ke fase atur'
-                          : widget.backLabel,
-                      onBack: running ? _arrangeAgain : widget.onBack,
-                      trailing: run == null
-                          ? const RulesButton(onPressed: null)
-                          : StepCounter(step: run.clock.step),
-                    ),
-                    if (_level.inventory.isNotEmpty) ...[
-                      SizedBox(height: space.s10),
-                      SizedBox(
-                        height: context.koSize.iconButton,
-                        child: Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: run == null
-                              ? TargetChip(items: _level.starItems)
-                              : RunStatus(
-                                  vaseBroken: _hasVase
-                                      ? run.frame.vaseBroken
-                                      : null,
-                                  itemsUsed: _session.itemsUsed,
-                                ),
-                        ),
+            child: Offstage(
+              offstage: showResult,
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    space.gutter,
+                    space.s8,
+                    space.gutter,
+                    space.s16,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      LevelTopBar(
+                        title: 'Level ${_level.id} · ${_level.name}',
+                        backLabel: running
+                            ? 'Kembali ke fase atur'
+                            : widget.backLabel,
+                        onBack: running ? _arrangeAgain : widget.onBack,
+                        trailing: run == null
+                            ? const RulesButton(onPressed: null)
+                            : StepCounter(step: run.clock.step),
                       ),
+                      if (_level.inventory.isNotEmpty) ...[
+                        SizedBox(height: space.s10),
+                        SizedBox(
+                          height: context.koSize.iconButton,
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: run == null
+                                ? TargetChip(items: _level.starItems)
+                                : RunStatus(
+                                    vaseBroken: _hasVase
+                                        ? run.frame.vaseBroken
+                                        : null,
+                                    itemsUsed: _session.itemsUsed,
+                                  ),
+                          ),
+                        ),
+                      ],
+                      SizedBox(height: space.s12),
+                      Expanded(child: LevelBoard(game: _game)),
+                      SizedBox(height: space.s14),
+                      _bottom(),
                     ],
-                    SizedBox(height: space.s12),
-                    Expanded(child: LevelBoard(game: _game)),
-                    SizedBox(height: space.s14),
-                    _bottom(),
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
+          if (showResult)
+            Positioned.fill(
+              child: ResultView(
+                session: _session,
+                onArrange: _arrangeAgain,
+                onRestart: _restart,
+                onNext: widget.onNext,
+              ),
+            ),
           if (drag != null) _lifted(drag),
         ],
       ),
     );
   }
 
-  /// Bagian bawah: baki dan tombol (fase atur, hasil sementara), atau
-  /// caption dan kontrol putar (fase jalan). Tingginya sama di semua fase
+  /// Bagian bawah: baki dan tombol (fase atur), atau caption dan kontrol
+  /// putar (fase jalan; di bawah layar hasil). Tingginya sama di semua fase
   /// supaya papan tidak berubah ukuran saat Oyen dibangunkan atau caption
   /// berganti.
   Widget _bottom() {
@@ -390,7 +404,7 @@ class _LevelViewState extends State<LevelView>
             RunControls.heightOf(context);
         final arrangeHeight = s.tray + space.s16 + s.buttonLarge;
         final List<Widget> children;
-        if (run != null && _session.phase == SessionPhase.running) {
+        if (run != null) {
           final clock = run.clock;
           children = [
             RunCaption(step: clock.step, text: run.caption, lines: lines),
@@ -410,19 +424,12 @@ class _LevelViewState extends State<LevelView>
           children = [
             _tray(),
             SizedBox(height: space.s16),
-            if (_session.phase == SessionPhase.arrange)
-              KoButton(
-                label: 'Bangunkan Oyen',
-                icon: KoIcons.wake,
-                size: KoButtonSize.large,
-                onPressed: _wake,
-              )
-            else
-              KoButton(
-                label: 'Atur Lagi',
-                size: KoButtonSize.large,
-                onPressed: _arrangeAgain,
-              ),
+            KoButton(
+              label: 'Bangunkan Oyen',
+              icon: KoIcons.wake,
+              size: KoButtonSize.large,
+              onPressed: _wake,
+            ),
           ];
         }
         return SizedBox(
@@ -436,10 +443,8 @@ class _LevelViewState extends State<LevelView>
     );
   }
 
-  /// Baki (fase atur) atau hasil sementara (layar hasil).
+  /// Baki fase atur.
   Widget _tray() {
-    final result = _session.result;
-    if (result != null) return TrayMessage(_resultText(result), strong: true);
     if (_level.inventory.isEmpty) {
       return const TrayMessage('Level ini belum butuh benda.');
     }

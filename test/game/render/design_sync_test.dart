@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/render/design_svg.dart';
+import 'package:kucing_oren/game/render/result_art.dart';
 
 /// `docs/design/` tidak ikut repo; test ini hanya jalan di komputer yang
 /// punya ekspor desainnya.
@@ -73,6 +75,58 @@ void main() {
       for (final tag in tags) {
         expect(source, contains(tag[0]));
       }
+    });
+
+    group('layar hasil', () {
+      test('sinar dan mangkuk disalin dari desain 06', () {
+        final source = _read('06-hasil-berhasil.html');
+        for (final svg in [raysSvg, successBowlSvg]) {
+          expect(source, contains(_lf(svg)));
+        }
+      });
+
+      test('ilustrasi dan mangkuk disalin dari desain 07', () {
+        final source = _read('07-hasil-vas-pecah.html');
+        for (final svg in [
+          vaseBowlSvg,
+          vaseRoomSvg,
+          vaseMomSvg,
+          vaseTableSvg,
+          vasePrangSvg,
+        ]) {
+          expect(source, contains(_lf(svg)));
+        }
+        final at = ResultArt.prangAt;
+        expect(
+          source,
+          contains(
+            '<g transform="translate(${at.dx.toInt()} ${at.dy.toInt()})">',
+          ),
+        );
+      });
+
+      test('letak Oyen dan mangkuk di kartu ilustrasi', () {
+        String place(Rect r) =>
+            'left: ${r.left.toInt()}px; top: ${r.top.toInt()}px';
+        final success = _read('06-hasil-berhasil.html');
+        expect(success, contains(place(ResultArt.successOyen)));
+        expect(
+          success,
+          contains('size="${ResultArt.successOyen.width.toInt()}"'),
+        );
+        expect(success, contains(place(ResultArt.successBowl)));
+        final vase = _read('07-hasil-vas-pecah.html');
+        expect(vase, contains(place(ResultArt.vaseOyen)));
+        expect(vase, contains('size="${ResultArt.vaseOyen.width.toInt()}"'));
+        expect(vase, contains(place(ResultArt.vaseBowl)));
+        expect(
+          vase,
+          contains(
+            'width="${ResultArt.vaseBowl.width.toInt()}" '
+            'height="${ResultArt.vaseBowl.height.toInt()}"',
+          ),
+        );
+      });
     });
   }, skip: missing);
 }

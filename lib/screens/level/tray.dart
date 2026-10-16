@@ -192,15 +192,12 @@ class _TrayItem extends StatelessWidget {
   }
 }
 
-/// Panel baki tanpa benda: teks di tengah ("Level ini belum butuh benda.",
-/// hasil sementara setelah Oyen dibangunkan).
+/// Panel baki tanpa benda: teks kecil pudar di tengah ("Level ini belum
+/// butuh benda.").
 class TrayMessage extends StatelessWidget {
-  const TrayMessage(this.text, {super.key, this.strong = false});
+  const TrayMessage(this.text, {super.key});
 
   final String text;
-
-  /// Teks tebal warna tinta (hasil), bukan teks kecil pudar.
-  final bool strong;
 
   @override
   Widget build(BuildContext context) {
@@ -214,9 +211,7 @@ class TrayMessage extends StatelessWidget {
           textAlign: TextAlign.center,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
-          style: strong
-              ? t.label
-              : t.bodySmall.copyWith(color: context.koColors.inkSoft),
+          style: t.bodySmall.copyWith(color: context.koColors.inkSoft),
         ),
       ),
     );
