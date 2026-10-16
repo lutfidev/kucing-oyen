@@ -8,7 +8,12 @@ import '../test_helpers.dart';
 /// dengan teks sistem 130%. Overflow RenderFlex dilaporkan sebagai exception
 /// sehingga test gagal. Rute baru di langkah roadmap berikutnya ditambahkan
 /// ke daftar ini.
-const routes = <String>[AppRoutes.home, AppRoutes.gallery];
+const routes = <String>[
+  AppRoutes.home,
+  AppRoutes.gallery,
+  AppRoutes.galleryBoard,
+  AppRoutes.galleryOyen,
+];
 
 const sizes = <Size>[
   Size(360, 640),
@@ -50,4 +55,24 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
+
+  for (final (route, last) in [
+    (AppRoutes.galleryBoard, find.text('Vas pecah')),
+    (AppRoutes.galleryOyen, find.text('Kacamata')),
+  ]) {
+    testWidgets('$route bisa digulir sampai bawah di 360×640, teks 130%', (
+      tester,
+    ) async {
+      setScreenSize(tester, const Size(360, 640));
+      setTextScale(tester, 1.3);
+      await pumpApp(tester, location: route);
+      await tester.scrollUntilVisible(
+        last,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    });
+  }
 }

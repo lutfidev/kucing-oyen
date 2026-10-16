@@ -1,0 +1,88 @@
+import 'dart:ui';
+
+import '../sim/direction.dart';
+import 'design_svg.dart';
+import 'oyen.dart';
+import 'svg_template.dart';
+
+final _template = SvgTemplate(oyenSvg);
+final _cache = <OyenLook, SvgDrawing>{};
+
+/// Port `renderVals()` di `Oyen.dc.html` (tanpa `label` dan `size`, yang
+/// dipakai elemen `<svg>` luar).
+Map<String, Object> oyenVals(OyenLook look) {
+  final pose = look.pose;
+  final dir = look.dir;
+  final costume = look.costume;
+  final isSleep = pose == OyenPose.sleep;
+  final isBox = pose == OyenPose.box;
+  final isNormal = !isSleep && !isBox;
+  final back = dir == Direction.up && isNormal;
+  final front = !back;
+  final side = (dir == Direction.left || dir == Direction.right) && !isSleep;
+  var ty = 0;
+  if (pose == OyenPose.shock) ty = -3;
+  if (pose == OyenPose.eat) ty = 9;
+  if (isBox) ty = 8;
+  final tx = side ? -5 : 0;
+  final walk = pose == OyenPose.walk;
+  final happy = pose == OyenPose.happy;
+  final shock = pose == OyenPose.shock;
+  final eat = pose == OyenPose.eat;
+  return {
+    'flipT': dir == Direction.right
+        ? 'translate(100 0) scale(-1 1)'
+        : 'translate(0 0)',
+    'headT': 'translate($tx $ty)',
+    'faceT': side ? 'translate(-4 1)' : 'translate(0 0)',
+    'isSleep': isSleep,
+    'isBox': isBox,
+    'isNormal': isNormal,
+    'notSleep': !isSleep,
+    'front': front,
+    'back': back,
+    'isKnock': pose == OyenPose.knock,
+    'isShock': shock,
+    'isEat': eat,
+    'isHappy': happy,
+    'showTailSide': isNormal && !back,
+    'showTailBack': back,
+    'tailD': happy ? 'M73 72 C88 66 92 44 84 28' : 'M73 77 C94 79 98 58 86 45',
+    'tailTipD': happy
+        ? 'M85 31 C84.5 29.5 84.2 28.6 84 28'
+        : 'M87.5 47 C87 46.2 86.5 45.6 86 45',
+    'bodyY': shock ? 69 : 71,
+    'bellyY': shock ? 75 : 77,
+    'pawL': walk ? 85 : 88,
+    'pawR': walk ? 91 : 88,
+    'eyeSleepy': !(shock || happy || eat || isSleep),
+    'eyeWide': shock,
+    'eyeClosed': false,
+    'eyeHappy': happy || eat,
+    'mouthW': !(shock || happy || eat),
+    'mouthO': shock,
+    'mouthOpen': happy || eat,
+    'showPeci': costume == OyenCostume.peci && !isSleep,
+    'showKoki': costume == OyenCostume.koki && !isSleep,
+    'showGlasses': costume == OyenCostume.kacamata && front && !isSleep,
+    'showSarung': costume == OyenCostume.sarung && isNormal,
+    'showZzz': look.bubble == OyenBubble.zzz,
+    'showKaget': look.bubble == OyenBubble.kaget,
+    'zzzT': isSleep ? 'translate(-26 16)' : 'translate(0 0)',
+  };
+}
+
+/// Menggambar Oyen seukuran [size] px di pojok kiri atas kanvas. Gelembung
+/// dan topi koki boleh keluar dari kotak itu, seperti `overflow: visible`
+/// di desain.
+void paintOyen(Canvas canvas, OyenLook look, {double size = OyenLook.viewBox}) {
+  final drawing = _cache.putIfAbsent(
+    look,
+    () => _template.render(oyenVals(look)),
+  );
+  canvas
+    ..save()
+    ..scale(size / OyenLook.viewBox);
+  drawing.paint(canvas);
+  canvas.restore();
+}

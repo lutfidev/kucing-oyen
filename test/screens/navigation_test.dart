@@ -1,5 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/routes.dart';
+import 'package:kucing_oren/gallery/gallery_board_screen.dart';
+import 'package:kucing_oren/gallery/gallery_oyen_screen.dart';
 import 'package:kucing_oren/gallery/gallery_screen.dart';
 import 'package:kucing_oren/screens/home/home_screen.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
@@ -41,4 +44,51 @@ void main() {
       expect(find.byType(type), findsWidgets);
     }
   });
+
+  testWidgets('galeri → Elemen papan / Oyen → kembali ke galeri', (
+    tester,
+  ) async {
+    await pumpApp(tester, location: AppRoutes.gallery);
+    await tester.tap(find.text('Elemen papan'));
+    await tester.pumpAndSettle();
+    expect(find.byType(GalleryBoardScreen), findsOneWidget);
+
+    await tester.tap(_back('Kembali ke galeri'));
+    await tester.pumpAndSettle();
+    expect(find.byType(GalleryScreen), findsOneWidget);
+
+    await tester.tap(find.text('Oyen'));
+    await tester.pumpAndSettle();
+    expect(find.byType(GalleryOyenScreen), findsOneWidget);
+
+    await tester.tap(_back('Kembali ke galeri'));
+    await tester.pumpAndSettle();
+    expect(find.byType(GalleryScreen), findsOneWidget);
+  });
+
+  testWidgets('galeri papan menggambar 18 petak dan 3 papan', (tester) async {
+    setScreenSize(tester, const Size(390, 5000));
+    await pumpApp(tester, location: AppRoutes.galleryBoard);
+    expect(find.byType(TileView), findsNWidgets(18));
+    expect(find.byType(BoardView), findsNWidgets(3));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('galeri Oyen menggambar arah, pose, dan kostum', (tester) async {
+    setScreenSize(tester, const Size(390, 5000));
+    await pumpApp(tester, location: AppRoutes.galleryOyen);
+    expect(find.byType(OyenView), findsNWidgets(4 + 7 + 4));
+    for (final label in [
+      'Oyen jalan, menghadap kanan',
+      'Oyen kaget, menghadap bawah',
+      'Oyen duduk dalam kardus, menghadap bawah',
+    ]) {
+      expect(find.bySemanticsLabel(label), findsOneWidget, reason: label);
+    }
+    expect(tester.takeException(), isNull);
+  });
 }
+
+Finder _back(String label) => find.byWidgetPredicate(
+  (w) => w is KoIconButton && w.semanticLabel == label,
+);

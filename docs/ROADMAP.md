@@ -18,7 +18,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 2. Solver dan cek data level
 - [x] 3. Model sesi level (baki, penempatan, bintang)
 - [x] 4. Fondasi UI: token desain, font, komponen dasar
-- [ ] 5. Gambar petak, papan, dan Oyen
+- [x] 5. Gambar petak, papan, dan Oyen
 - [ ] 6. Gameplay fase atur
 - [ ] 7. Gameplay fase jalan
 - [ ] 8. Hasil: berhasil, vas pecah, Oyen bosan
@@ -59,9 +59,11 @@ Selesai: `lib/theme/` (KoColors, KoType, KoSpace, KoRadius, KoShadow, KoSize, `K
 
 > Baca `docs/design/source/13-design-token-komponen-ui.html` (warna, tipografi, jarak, radius, bayangan, komponen) dan `01-beranda.html` untuk gaya umum. Buat `lib/theme/` dengan semua token dalam satu `ThemeExtension` (desain menulis "Nama token disiapkan untuk Flutter: satu ThemeExtension") dan gaya teks display, title, heading, number, body, label, overline (Fredoka 500–700, Nunito 600–800). Font dibundel sebagai aset, bukan diunduh saat aplikasi jalan. Komponen di `lib/widgets/`: tombol utama, sukses, sekunder, dan ikon (dengan efek tekan "press"), chip, slot baki, kartu. Kerangka app: `MaterialApp.router` + `go_router`, rute `/` sementara dan `/galeri` yang menampilkan semua komponen. Tidak ada warna atau ukuran hardcode di widget; tambah token kalau butuh nilai baru. Test: widget test komponen, test overflow semua rute di 360×640 sampai 412×915 dengan teks 130% (rute baru di langkah berikutnya ditambahkan ke test ini), dan potret layar `flutter test test/screenshots --dart-define=SCREENSHOTS=true` → `build/screenshots/390x844/*.png` dengan font asli, di-skip di test biasa. Pola yang sudah jalan bisa dicontoh dari repo `D:\Dev\personal\game\busy_network` (`lib/theme/`, `test/screens/overflow_test.dart`, `test/screenshots/`).
 
-## 5. Gambar petak, papan, dan Oyen
+## 5. Gambar petak, papan, dan Oyen ✅
 
 **Hasil:** semua gambar papan dan Oyen dari desain tergambar di `Canvas` dan bisa dicek di galeri.
+
+Selesai: `lib/game/render/` (`Tile`, `OyenLook`, `BoardScene.fromMap` Dart murni; `paintTile`, `paintOyen`, `paintBoard`, `paintBoardFrame`, `tileGlowOpacity`), `lib/widgets/game_art.dart` (`TileView`, `OyenView`, `BoardView`), dan galeri `/galeri/papan` serta `/galeri/oyen`. Isi `<svg>` desain disalin utuh ke `design_svg.dart` dan digambar oleh pengurai SVG kecil (`SvgTemplate`), bukan diketik ulang. Warna piksel di koordinat dari angka desain dicek di `painters_test.dart`. Gelas jatuh, arah pose menjatuhkan, dan hal yang ditunda ke langkah 6, 7, 10 dicatat di `docs/DESIGN_NOTES.md`.
 
 > Baca `docs/design/source/Tile.dc.html`, `Oyen.dc.html`, `Board.dc.html`, lalu halaman `14-sprite-oyen-arah-pose.html`, `15-elemen-papan.html`, `16-komponen-oyen.html`, `17-komponen-petak.html`. Port ketiga komponen ke `lib/game/render/` sebagai fungsi gambar `Canvas` murni yang bisa dipakai Flutter maupun Flame:
 >

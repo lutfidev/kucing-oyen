@@ -6,4 +6,10 @@ abstract final class AppRoutes {
 
   /// Galeri token dan komponen untuk cek visual terhadap desain.
   static const gallery = '/galeri';
+
+  /// Galeri petak dan papan (desain 15, 17, 18).
+  static const galleryBoard = '/galeri/papan';
+
+  /// Galeri sprite Oyen (desain 14, 16).
+  static const galleryOyen = '/galeri/oyen';
 }

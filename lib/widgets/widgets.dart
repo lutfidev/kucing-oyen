@@ -1,6 +1,7 @@
 /// Barrel: `import 'package:kucing_oren/widgets/widgets.dart';`
 library;
 
+export 'game_art.dart';
 export 'ko_button.dart';
 export 'ko_card.dart';
 export 'ko_chip.dart';

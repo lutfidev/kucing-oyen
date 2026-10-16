@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../app/routes.dart';
 import '../theme/theme.dart';
 import '../widgets/widgets.dart';
+import 'gallery_page.dart';
 
 /// Galeri token dan komponen, untuk dicek terhadap lembar desain
 /// `13-design-token-komponen-ui.html`.
@@ -12,70 +13,40 @@ class GalleryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.koColors;
-    final t = context.koType;
     final space = context.koSpace;
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.all(space.gutter),
-          children: [
-            Row(
-              children: [
-                KoIconButton(
-                  icon: KoIcons.back,
-                  semanticLabel: 'Kembali ke Beranda',
-                  onPressed: () => context.go(AppRoutes.home),
-                ),
-                SizedBox(width: space.s12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'KUCING OREN · SISTEM DESAIN',
-                        style: t.overline.copyWith(color: c.inkSoft),
-                      ),
-                      Text('Token & komponen', style: t.title),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: space.s24),
-            const _Section(title: 'Warna', child: _ColorGrid()),
-            const _Section(title: 'Tipografi', child: _TypeScale()),
-            const _Section(
-              title: 'Jarak, radius, bayangan',
-              child: _SpaceRadiusShadow(),
-            ),
-            const _Section(title: 'Komponen UI', child: _Components()),
-          ],
+    return GalleryPage(
+      overline: 'Kucing Oren · sistem desain',
+      title: 'Token & komponen',
+      backTo: AppRoutes.home,
+      backLabel: 'Kembali ke Beranda',
+      children: [
+        GallerySection(
+          title: 'Gambar papan & Oyen',
+          child: Wrap(
+            spacing: space.s12,
+            runSpacing: space.s16,
+            children: [
+              KoButton(
+                label: 'Elemen papan',
+                kind: KoButtonKind.secondary,
+                onPressed: () => context.go(AppRoutes.galleryBoard),
+              ),
+              KoButton(
+                label: 'Oyen',
+                kind: KoButtonKind.secondary,
+                onPressed: () => context.go(AppRoutes.galleryOyen),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
-}
-
-class _Section extends StatelessWidget {
-  const _Section({required this.title, required this.child});
-
-  final String title;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final space = context.koSpace;
-    return Padding(
-      padding: EdgeInsets.only(bottom: space.s32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(title, style: context.koType.heading),
-          SizedBox(height: space.s12),
-          child,
-        ],
-      ),
+        const GallerySection(title: 'Warna', child: _ColorGrid()),
+        const GallerySection(title: 'Tipografi', child: _TypeScale()),
+        const GallerySection(
+          title: 'Jarak, radius, bayangan',
+          child: _SpaceRadiusShadow(),
+        ),
+        const GallerySection(title: 'Komponen UI', child: _Components()),
+      ],
     );
   }
 }

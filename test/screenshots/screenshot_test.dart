@@ -16,6 +16,15 @@ import 'capture.dart';
 const _screens = <String, String>{
   '00-beranda-sementara': AppRoutes.home,
   'galeri': AppRoutes.gallery,
+  'galeri-papan': AppRoutes.galleryBoard,
+  'galeri-oyen': AppRoutes.galleryOyen,
+};
+
+/// Halaman galeri utuh dalam satu gambar panjang: rute dan tinggi layarnya.
+const _fullPages = <String, (String, double)>{
+  'galeri-penuh': (AppRoutes.gallery, 4800),
+  'galeri-papan-penuh': (AppRoutes.galleryBoard, 3150),
+  'galeri-oyen-penuh': (AppRoutes.galleryOyen, 1900),
 };
 
 const _size = Size(390, 844);
@@ -36,15 +45,17 @@ void main() {
     }, skip: !screenshotsEnabled);
   }
 
-  // Galeri utuh dalam satu gambar panjang.
-  testWidgets('$folder/galeri-penuh', (tester) async {
-    setScreenSize(tester, Size(_size.width, 4800));
-    await withShadows(() async {
-      await tester.pumpWidget(
-        capturable(const KucingOrenApp(initialLocation: AppRoutes.gallery)),
-      );
-      await tester.pumpAndSettle();
-      await capture(tester, '$folder/galeri-penuh');
-    });
-  }, skip: !screenshotsEnabled);
+  for (final MapEntry(key: name, value: (location, height))
+      in _fullPages.entries) {
+    testWidgets('$folder/$name', (tester) async {
+      setScreenSize(tester, Size(_size.width, height));
+      await withShadows(() async {
+        await tester.pumpWidget(
+          capturable(KucingOrenApp(initialLocation: location)),
+        );
+        await tester.pumpAndSettle();
+        await capture(tester, '$folder/$name');
+      });
+    }, skip: !screenshotsEnabled);
+  }
 }
