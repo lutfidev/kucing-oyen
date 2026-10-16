@@ -12,4 +12,7 @@ abstract final class AppRoutes {
 
   /// Galeri sprite Oyen (desain 14, 16).
   static const galleryOyen = '/galeri/oyen';
+
+  /// Layar level nomor [id] (fase atur, desain 03).
+  static String level(int id) => '/level/$id';
 }

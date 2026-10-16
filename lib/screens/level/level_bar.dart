@@ -1,0 +1,97 @@
+import 'package:flutter/widgets.dart';
+
+import '../../theme/theme.dart';
+import '../../widgets/widgets.dart';
+
+/// Bar atas layar level: kembali, judul level, dan tombol Aturan.
+class LevelTopBar extends StatelessWidget {
+  const LevelTopBar({
+    super.key,
+    required this.title,
+    required this.backLabel,
+    required this.onBack,
+    required this.onRules,
+  });
+
+  /// "Level 13 · Vas Ibu".
+  final String title;
+
+  /// Label pembaca layar tombol kembali.
+  final String backLabel;
+  final VoidCallback onBack;
+
+  /// Null = tombol Aturan belum berfungsi (kartu aturan di langkah 11).
+  final VoidCallback? onRules;
+
+  @override
+  Widget build(BuildContext context) {
+    final space = context.koSpace;
+    return SizedBox(
+      height: context.koSize.iconButton,
+      child: Row(
+        children: [
+          KoIconButton(
+            icon: KoIcons.back,
+            semanticLabel: backLabel,
+            onPressed: onBack,
+          ),
+          SizedBox(width: space.s10),
+          Expanded(
+            child: Semantics(
+              header: true,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(title, maxLines: 1, style: context.koType.heading),
+              ),
+            ),
+          ),
+          SizedBox(width: space.s10),
+          KoIconButton(
+            icon: KoIcons.rules,
+            semanticLabel: 'Aturan',
+            label: 'Aturan',
+            onPressed: onRules,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Target bintang 3 di bawah bar atas: "★★★ pakai 2 benda".
+class TargetChip extends StatelessWidget {
+  const TargetChip({super.key, required this.items});
+
+  /// Jumlah benda paling banyak untuk bintang 3.
+  final int items;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final space = context.koSpace;
+    final s = context.koSize;
+    final text = 'pakai $items benda';
+    return Semantics(
+      container: true,
+      label: 'Target 3 bintang: $text',
+      excludeSemantics: true,
+      child: Container(
+        height: s.chip,
+        padding: EdgeInsetsDirectional.only(start: space.s10, end: space.s14),
+        decoration: BoxDecoration(
+          color: c.surface,
+          borderRadius: BorderRadius.circular(context.koRadius.pill),
+          border: Border.all(color: c.line, width: s.border),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < 3; i++) KoStar(size: s.starSmall),
+            SizedBox(width: space.s8),
+            Text(text, maxLines: 1, style: context.koType.chipLabel),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -5,6 +5,7 @@ import 'package:kucing_oren/gallery/gallery_board_screen.dart';
 import 'package:kucing_oren/gallery/gallery_oyen_screen.dart';
 import 'package:kucing_oren/gallery/gallery_screen.dart';
 import 'package:kucing_oren/screens/home/home_screen.dart';
+import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -28,6 +29,36 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(HomeScreen), findsOneWidget);
   });
+
+  testWidgets('Beranda → Level 13 → kembali ke Beranda', (tester) async {
+    await pumpApp(tester);
+    await tester.tap(find.bySemanticsLabel('Level 13'));
+    await tester.pumpAndSettle();
+    expect(find.byType(LevelView), findsOneWidget);
+    expect(find.text('Level 13 · Vas Ibu'), findsOneWidget);
+
+    await tester.tap(_back('Kembali ke Beranda'));
+    await tester.pumpAndSettle();
+    expect(find.byType(HomeScreen), findsOneWidget);
+  });
+
+  testWidgets('Beranda sementara punya jalan ke level 1–20', (tester) async {
+    setScreenSize(tester, const Size(390, 2000));
+    await pumpApp(tester);
+    for (var id = 1; id <= 20; id++) {
+      expect(find.bySemanticsLabel('Level $id'), findsOneWidget);
+    }
+  });
+
+  for (final location in ['/level/99', '/level/abc']) {
+    testWidgets('$location: level tidak ada, bisa kembali', (tester) async {
+      await pumpApp(tester, location: location);
+      expect(find.text('Level ini nggak ada.'), findsOneWidget);
+      await tester.tap(_back('Kembali ke Beranda'));
+      await tester.pumpAndSettle();
+      expect(find.byType(HomeScreen), findsOneWidget);
+    });
+  }
 
   testWidgets('galeri menampilkan semua komponen dasar', (tester) async {
     // Layar tinggi supaya semua bagian galeri dibangun ListView.
