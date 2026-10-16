@@ -1,14 +1,21 @@
+import 'dart:math' as math;
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../../game/kucing_game.dart';
 import '../../game/model/level_session.dart';
+import '../../game/model/run_caption.dart';
+import '../../game/model/run_clock.dart';
+import '../../game/model/run_frames.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'level_bar.dart';
 import 'level_board.dart';
+import 'run_panel.dart';
 import 'tray.dart';
 
 /// Benda yang sedang diseret jari, dari baki atau dari papan.
@@ -30,8 +37,21 @@ class _ItemDrag {
   Pos? target;
 }
 
+/// Keadaan fase jalan: langkah-langkah Oyen dan jam pemutarnya.
+class _Run {
+  _Run(this.frames, this.captions) : clock = RunClock(frames.length - 1);
+
+  final List<RunFrame> frames;
+  final List<String> captions;
+  final RunClock clock;
+
+  RunFrame get frame => frames[clock.step];
+  String get caption => captions[clock.step];
+}
+
 /// Layar satu level: bar atas, target bintang, papan [KucingGame], baki,
-/// dan tombol "Bangunkan Oyen".
+/// dan tombol "Bangunkan Oyen"; setelah dibangunkan, Oyen berjalan langkah
+/// demi langkah dengan caption, Jeda/Lanjutkan, ×2, dan "Lihat hasil".
 ///
 /// Aturan ada di [LevelSession]. Layar ini hanya menerjemahkan seretan:
 /// lepas di petak menyala = taruh atau pindah; benda dari papan yang
@@ -55,26 +75,51 @@ class LevelView extends StatefulWidget {
   State<LevelView> createState() => _LevelViewState();
 }
 
-class _LevelViewState extends State<LevelView> implements BoardInput {
+class _LevelViewState extends State<LevelView>
+    with SingleTickerProviderStateMixin
+    implements BoardInput {
   late final LevelSession _session = LevelSession(widget.level);
   late final KucingGame _game = KucingGame(scene: _buildScene(), input: this);
+  late final Ticker _ticker = createTicker(_onTick);
   final _stageKey = GlobalKey();
   _ItemDrag? _drag;
 
+  /// Fase jalan dan layar hasil sementara; null di fase atur.
+  _Run? _run;
+  Duration _lastTick = Duration.zero;
+  bool _reduceMotion = false;
+
   Level get _level => widget.level;
+
+  /// Ada vas di peta: status vas tampil di fase jalan.
+  late final bool _hasVase = _level.board.copyCells().contains(Cell.tableVase);
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
     // Loop Flame tidak ikut TickerMode sendiri (rute tertutup rute lain).
-    _game.animate =
-        TickerMode.valuesOf(context).enabled &&
-        !(MediaQuery.maybeDisableAnimationsOf(context) ?? false);
+    _game.animate = TickerMode.valuesOf(context).enabled && !_reduceMotion;
+    final clock = _run?.clock;
+    if (_reduceMotion && clock != null && !clock.done) {
+      clock.skipToEnd();
+      _syncTicker();
+      _game.scene = _buildScene();
+    }
   }
 
-  /// Isi papan dari sesi: benda pemain (kecuali yang sedang diangkat dari
-  /// papan) dan petak tujuan yang menyala. Oyen tidur di petak awalnya.
+  @override
+  void dispose() {
+    _ticker.dispose();
+    super.dispose();
+  }
+
+  /// Isi papan dari sesi. Fase atur: benda pemain (kecuali yang sedang
+  /// diangkat dari papan), petak tujuan yang menyala, dan Oyen tidur di
+  /// petak awalnya. Fase jalan: keadaan papan di langkah yang tampil.
   BoardScene _buildScene() {
+    final run = _run;
+    if (run != null) return runScene(_level.map, _session.placed, run.frame);
     final drag = _drag;
     return BoardScene.fromMap(
       _level.map,
@@ -166,20 +211,75 @@ class _LevelViewState extends State<LevelView> implements BoardInput {
 
   // Tombol tetap aktif selama benda diseret, seperti desain 03. Kalau
   // ditekan jari lain, seretan dibatalkan dulu; sisa seretan itu diabaikan.
-  void _wake() => _update(() {
-    _drag = null;
-    _session.wake();
-  });
+  void _wake() {
+    _update(() {
+      _drag = null;
+      final board = _level.board;
+      final frames = runFrames(board, _session.wake());
+      final run = _Run(frames, [
+        for (var i = 0; i < frames.length; i++) runCaption(board, frames, i),
+      ]);
+      if (_reduceMotion) run.clock.skipToEnd();
+      _run = run;
+    });
+    _syncTicker();
+  }
 
-  void _arrangeAgain() => _update(_session.arrangeAgain);
+  /// Fase jalan atau layar hasil → fase atur, susunan benda tetap.
+  void _arrangeAgain() {
+    _update(() {
+      _session.arrangeAgain();
+      _run = null;
+    });
+    _syncTicker();
+  }
+
+  /// "Lihat hasil": layar hasil sementara sampai langkah 8.
+  void _finish() => _update(_session.finish);
+
+  // ── Fase jalan ──────────────────────────────────────────────────────
+
+  /// Ticker jalan selama jam [_run] berputar; Oyen digeser selama satu
+  /// langkah.
+  void _syncTicker() {
+    final clock = _run?.clock;
+    _game.moveTime = clock == null
+        ? 0
+        : clock.interval.inMicroseconds / Duration.microsecondsPerSecond;
+    if (clock == null || !clock.playing) {
+      _ticker.stop();
+    } else if (!_ticker.isActive) {
+      _lastTick = Duration.zero;
+      _ticker.start();
+    }
+  }
+
+  void _onTick(Duration elapsed) {
+    final clock = _run?.clock;
+    final dt = elapsed - _lastTick;
+    _lastTick = elapsed;
+    if (clock == null) return;
+    if (clock.tick(dt)) _update(() {});
+    if (!clock.playing) _ticker.stop();
+  }
+
+  void _control(void Function(RunClock clock) action) {
+    final clock = _run?.clock;
+    if (clock == null) return;
+    _update(() => action(clock));
+    _syncTicker();
+  }
+
+  void _togglePause() => _control((clock) => clock.togglePause());
+  void _toggleFast() => _control((clock) => clock.toggleFast());
+  void _stepOnce() => _control((clock) => clock.stepOnce());
 
   void _clear() => _update(() {
     _drag = null;
     _session.reset();
   });
 
-  /// Hasil sementara sampai animasi jalan (langkah 7) dan layar hasil
-  /// (langkah 8) dibuat.
+  /// Hasil sementara sampai layar hasil (langkah 8) dibuat.
   String _resultText(SimResult result) {
     if (result.win) {
       final broken = result.vaseBrokenAtStep;
@@ -201,27 +301,8 @@ class _LevelViewState extends State<LevelView> implements BoardInput {
   Widget build(BuildContext context) {
     final space = context.koSpace;
     final drag = _drag;
-    final arranging = _session.phase == SessionPhase.arrange;
-    final result = _session.result;
-
-    final Widget panel;
-    if (result != null) {
-      panel = TrayMessage(_resultText(result), strong: true);
-    } else if (_level.inventory.isEmpty) {
-      panel = const TrayMessage('Level ini belum butuh benda.');
-    } else {
-      final remaining = _session.remaining;
-      final fromTray = drag != null && drag.from == null ? drag.item : null;
-      panel = TrayPanel(
-        counts: {
-          for (final item in _level.inventory.keys)
-            item: remaining[item]! - (item == fromTray ? 1 : 0),
-        },
-        dragging: fromTray,
-        onDragStart: _startFromTray,
-        onClear: _session.itemsUsed > 0 ? _clear : null,
-      );
-    }
+    final run = _run;
+    final running = _session.phase == SessionPhase.running;
 
     return Scaffold(
       body: Stack(
@@ -241,9 +322,13 @@ class _LevelViewState extends State<LevelView> implements BoardInput {
                   children: [
                     LevelTopBar(
                       title: 'Level ${_level.id} · ${_level.name}',
-                      backLabel: widget.backLabel,
-                      onBack: widget.onBack,
-                      onRules: null,
+                      backLabel: running
+                          ? 'Kembali ke fase atur'
+                          : widget.backLabel,
+                      onBack: running ? _arrangeAgain : widget.onBack,
+                      trailing: run == null
+                          ? const RulesButton(onPressed: null)
+                          : StepCounter(step: run.clock.step),
                     ),
                     if (_level.inventory.isNotEmpty) ...[
                       SizedBox(height: space.s10),
@@ -251,28 +336,21 @@ class _LevelViewState extends State<LevelView> implements BoardInput {
                         height: context.koSize.iconButton,
                         child: Align(
                           alignment: AlignmentDirectional.centerStart,
-                          child: TargetChip(items: _level.starItems),
+                          child: run == null
+                              ? TargetChip(items: _level.starItems)
+                              : RunStatus(
+                                  vaseBroken: _hasVase
+                                      ? run.frame.vaseBroken
+                                      : null,
+                                  itemsUsed: _session.itemsUsed,
+                                ),
                         ),
                       ),
                     ],
                     SizedBox(height: space.s12),
                     Expanded(child: LevelBoard(game: _game)),
                     SizedBox(height: space.s14),
-                    panel,
-                    SizedBox(height: space.s16),
-                    if (arranging)
-                      KoButton(
-                        label: 'Bangunkan Oyen',
-                        icon: KoIcons.wake,
-                        size: KoButtonSize.large,
-                        onPressed: _wake,
-                      )
-                    else
-                      KoButton(
-                        label: 'Atur Lagi',
-                        size: KoButtonSize.large,
-                        onPressed: _arrangeAgain,
-                      ),
+                    _bottom(),
                   ],
                 ),
               ),
@@ -281,6 +359,92 @@ class _LevelViewState extends State<LevelView> implements BoardInput {
           if (drag != null) _lifted(drag),
         ],
       ),
+    );
+  }
+
+  /// Bagian bawah: baki dan tombol (fase atur, hasil sementara), atau
+  /// caption dan kontrol putar (fase jalan). Tingginya sama di semua fase
+  /// supaya papan tidak berubah ukuran saat Oyen dibangunkan atau caption
+  /// berganti.
+  Widget _bottom() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final space = context.koSpace;
+        final s = context.koSize;
+        final run = _run;
+        final lines = run == null
+            ? RunCaption.minLines
+            : RunCaption.linesFor(context, constraints.maxWidth, run.captions);
+        final runHeight =
+            RunCaption.heightFor(context, lines) +
+            space.s24 +
+            RunControls.heightOf(context);
+        final arrangeHeight = s.tray + space.s16 + s.buttonLarge;
+        final List<Widget> children;
+        if (run != null && _session.phase == SessionPhase.running) {
+          final clock = run.clock;
+          children = [
+            RunCaption(step: clock.step, text: run.caption, lines: lines),
+            SizedBox(height: space.s24),
+            if (clock.done)
+              RunDoneButton(onPressed: _finish)
+            else
+              RunControls(
+                playing: clock.playing,
+                fast: clock.fast,
+                onStepOnce: _stepOnce,
+                onTogglePlay: _togglePause,
+                onToggleFast: _toggleFast,
+              ),
+          ];
+        } else {
+          children = [
+            _tray(),
+            SizedBox(height: space.s16),
+            if (_session.phase == SessionPhase.arrange)
+              KoButton(
+                label: 'Bangunkan Oyen',
+                icon: KoIcons.wake,
+                size: KoButtonSize.large,
+                onPressed: _wake,
+              )
+            else
+              KoButton(
+                label: 'Atur Lagi',
+                size: KoButtonSize.large,
+                onPressed: _arrangeAgain,
+              ),
+          ];
+        }
+        return SizedBox(
+          height: math.max(runHeight, arrangeHeight),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: children,
+          ),
+        );
+      },
+    );
+  }
+
+  /// Baki (fase atur) atau hasil sementara (layar hasil).
+  Widget _tray() {
+    final result = _session.result;
+    if (result != null) return TrayMessage(_resultText(result), strong: true);
+    if (_level.inventory.isEmpty) {
+      return const TrayMessage('Level ini belum butuh benda.');
+    }
+    final drag = _drag;
+    final remaining = _session.remaining;
+    final fromTray = drag != null && drag.from == null ? drag.item : null;
+    return TrayPanel(
+      counts: {
+        for (final item in _level.inventory.keys)
+          item: remaining[item]! - (item == fromTray ? 1 : 0),
+      },
+      dragging: fromTray,
+      onDragStart: _startFromTray,
+      onClear: _session.itemsUsed > 0 ? _clear : null,
     );
   }
 

@@ -30,6 +30,14 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.dash,
     required this.dashGap,
     required this.ghostOpacity,
+    required this.chipSmall,
+    required this.dot,
+    required this.captionBox,
+    required this.stepBadge,
+    required this.control,
+    required this.play,
+    required this.iconMedium,
+    required this.iconPlay,
   });
 
   static const standard = KoSize(
@@ -55,6 +63,14 @@ class KoSize extends ThemeExtension<KoSize> {
     dash: 6,
     dashGap: 4,
     ghostOpacity: 0.28,
+    chipSmall: 32,
+    dot: 10,
+    captionBox: 56,
+    stepBadge: 30,
+    control: 56,
+    play: 80,
+    iconMedium: 24,
+    iconPlay: 32,
   );
 
   /// Tombol "Main" di Beranda.
@@ -111,6 +127,30 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Bayangan benda di slot baki yang sedang diseret.
   final double ghostOpacity;
 
+  /// Chip status fase jalan ("Vas aman", "2 benda dipakai").
+  final double chipSmall;
+
+  /// Titik warna di chip status vas.
+  final double dot;
+
+  /// Tinggi paling kecil kotak caption langkah.
+  final double captionBox;
+
+  /// Lingkaran nomor langkah di kotak caption.
+  final double stepBadge;
+
+  /// Tombol kontrol fase jalan ("Maju satu langkah", ×2).
+  final double control;
+
+  /// Tombol bulat Jeda/Lanjutkan.
+  final double play;
+
+  /// Ikon tombol kontrol fase jalan.
+  final double iconMedium;
+
+  /// Ikon di tombol Jeda/Lanjutkan.
+  final double iconPlay;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -135,6 +175,14 @@ class KoSize extends ThemeExtension<KoSize> {
     double? dash,
     double? dashGap,
     double? ghostOpacity,
+    double? chipSmall,
+    double? dot,
+    double? captionBox,
+    double? stepBadge,
+    double? control,
+    double? play,
+    double? iconMedium,
+    double? iconPlay,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -159,6 +207,14 @@ class KoSize extends ThemeExtension<KoSize> {
       dash: dash ?? this.dash,
       dashGap: dashGap ?? this.dashGap,
       ghostOpacity: ghostOpacity ?? this.ghostOpacity,
+      chipSmall: chipSmall ?? this.chipSmall,
+      dot: dot ?? this.dot,
+      captionBox: captionBox ?? this.captionBox,
+      stepBadge: stepBadge ?? this.stepBadge,
+      control: control ?? this.control,
+      play: play ?? this.play,
+      iconMedium: iconMedium ?? this.iconMedium,
+      iconPlay: iconPlay ?? this.iconPlay,
     );
   }
 
@@ -189,6 +245,14 @@ class KoSize extends ThemeExtension<KoSize> {
       dash: d(dash, other.dash),
       dashGap: d(dashGap, other.dashGap),
       ghostOpacity: d(ghostOpacity, other.ghostOpacity),
+      chipSmall: d(chipSmall, other.chipSmall),
+      dot: d(dot, other.dot),
+      captionBox: d(captionBox, other.captionBox),
+      stepBadge: d(stepBadge, other.stepBadge),
+      control: d(control, other.control),
+      play: d(play, other.play),
+      iconMedium: d(iconMedium, other.iconMedium),
+      iconPlay: d(iconPlay, other.iconPlay),
     );
   }
 }

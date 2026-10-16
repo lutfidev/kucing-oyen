@@ -7,14 +7,21 @@ import '../theme/theme.dart';
 /// - [KoChip.new]: pill krem bergaris, angka Fredoka, ikon opsional di depan
 ///   ("★ 14/60").
 /// - [KoChip.dark]: kotak tinta gelap, label kecil + angka ("Langkah 1").
+///   Dengan [large], setinggi tombol ikon dan angkanya lebih besar, seperti
+///   penghitung langkah di bar atas fase jalan (desain 04).
 class KoChip extends StatelessWidget {
   const KoChip({super.key, required this.text, this.leading})
     : label = null,
-      dark = false;
+      dark = false,
+      large = false;
 
-  const KoChip.dark({super.key, required String this.label, required this.text})
-    : leading = null,
-      dark = true;
+  const KoChip.dark({
+    super.key,
+    required String this.label,
+    required this.text,
+    this.large = false,
+  }) : leading = null,
+       dark = true;
 
   /// Angka atau teks utama.
   final String text;
@@ -25,6 +32,9 @@ class KoChip extends StatelessWidget {
   /// Label di depan angka (chip gelap).
   final String? label;
   final bool dark;
+
+  /// Chip gelap 44 px dengan angka [KoType.numberMedium].
+  final bool large;
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +47,10 @@ class KoChip extends StatelessWidget {
 
     return MergeSemantics(
       child: Container(
-        height: s.chip,
+        height: large ? s.iconButton : s.chip,
         padding: EdgeInsetsDirectional.only(
-          start: leading == null ? space.s14 : space.s8,
-          end: space.s14,
+          start: large ? space.s16 : (leading == null ? space.s14 : space.s8),
+          end: large ? space.s16 : space.s14,
         ),
         decoration: BoxDecoration(
           color: dark ? c.ink : c.cream,
@@ -51,6 +61,10 @@ class KoChip extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: large
+              ? CrossAxisAlignment.baseline
+              : CrossAxisAlignment.center,
+          textBaseline: TextBaseline.alphabetic,
           children: [
             if (leading != null) ...[leading!, SizedBox(width: space.s6)],
             if (prefix != null) ...[
@@ -59,7 +73,8 @@ class KoChip extends StatelessWidget {
             ],
             Text(
               text,
-              style: (dark ? t.numberSmall : t.chip).copyWith(color: fg),
+              style: (large ? t.numberMedium : (dark ? t.numberSmall : t.chip))
+                  .copyWith(color: fg),
             ),
           ],
         ),

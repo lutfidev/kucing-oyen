@@ -26,9 +26,10 @@ abstract interface class BoardInput {
 /// Game tidak menyimpan aturan: layar mengisi [scene] dari `LevelSession`,
 /// dan seretan di papan diteruskan ke [input].
 ///
-/// Mesin hanya jalan selama ada petak menyala yang berkedip dan [animate]
-/// aktif. Selain itu tiap perubahan digambar satu bingkai lalu mesin
-/// berhenti sendiri, jadi `pumpAndSettle` di test tidak macet.
+/// Mesin hanya jalan selama ada petak menyala yang berkedip atau Oyen
+/// berpindah petak, dan [animate] aktif. Selain itu tiap perubahan digambar
+/// satu bingkai lalu mesin berhenti sendiri, jadi `pumpAndSettle` di test
+/// tidak macet.
 class KucingGame extends FlameGame {
   KucingGame({required this._scene, this.input, this._animate = true})
     : super(
@@ -38,14 +39,17 @@ class KucingGame extends FlameGame {
         ),
       ) {
     camera.viewfinder.anchor = Anchor.topLeft;
-    world.addAll([
-      BoardComponent()..priority = 0,
-      CatComponent()..priority = 1,
-    ]);
+    world.addAll([BoardComponent()..priority = 0, _cat..priority = 1]);
   }
+
+  final _cat = CatComponent();
 
   /// Penerima seretan di papan; null = papan hanya untuk dilihat.
   BoardInput? input;
+
+  /// Lama Oyen digeser ke petak barunya saat [scene] berganti, dalam detik.
+  /// 0 = langsung pindah.
+  double moveTime = 0;
 
   BoardScene _scene;
   bool _animate;
@@ -59,7 +63,8 @@ class KucingGame extends FlameGame {
     _invalidate();
   }
 
-  /// False = petak menyala diam, tidak berkedip (setelan "kurangi animasi").
+  /// False = petak menyala diam dan Oyen langsung pindah petak (setelan
+  /// "kurangi animasi").
   bool get animate => _animate;
   set animate(bool value) {
     if (value == _animate) return;
@@ -68,6 +73,10 @@ class KucingGame extends FlameGame {
   }
 
   bool get _blinking => _animate && _scene.tiles.any((t) => t.glow);
+
+  /// Posisi Oyen yang sedang tampil (kolom, baris pecahan), termasuk saat
+  /// digeser ke petak baru; null sebelum bingkai pertama.
+  Offset? get oyenShown => _cat.shown;
 
   /// Opasitas kotak menyala di bingkai ini, lihat [tileGlowOpacity].
   double get glowOpacity => _blinking ? tileGlowOpacity(_seconds) : 1;
@@ -100,7 +109,7 @@ class KucingGame extends FlameGame {
     final blinking = _blinking;
     _seconds = blinking ? _seconds + dt : 0;
     super.update(dt);
-    if (!blinking) pauseEngine();
+    if (!blinking && !_cat.moving) pauseEngine();
   }
 
   /// Minta satu bingkai baru; [update] menghentikan mesin lagi kalau diam.

@@ -81,24 +81,26 @@ void paintBoardTiles(
 }
 
 /// Bagian Oyen dari [paintBoard] (Oyen dan panah arah hadap), tanpa potongan
-/// sudut.
-void paintBoardOyen(Canvas canvas, BoardScene scene) {
+/// sudut. [at] (kolom, baris) menimpa posisi Oyen di [scene], untuk animasi
+/// pindah petak.
+void paintBoardOyen(Canvas canvas, BoardScene scene, {Offset? at}) {
   final oyen = scene.oyen;
   if (oyen == null) return;
+  final tile = (at ?? Offset(oyen.col, oyen.row)) * Tile.size;
   canvas
     ..save()
     ..translate(
-      oyen.col * Tile.size + BoardArt.oyenOffset.dx,
-      oyen.row * Tile.size + BoardArt.oyenOffset.dy,
+      tile.dx + BoardArt.oyenOffset.dx,
+      tile.dy + BoardArt.oyenOffset.dy,
     );
   paintOyen(canvas, oyen.look, size: BoardArt.oyenSize);
   canvas.restore();
-  if (scene.showFacing) _paintFacing(canvas, oyen);
+  if (scene.showFacing) _paintFacing(canvas, tile, oyen.look.dir);
 }
 
-/// Panah di tepi petak Oyen, ke arah hadapnya (`facingStyle` di desain).
-void _paintFacing(Canvas canvas, BoardOyen oyen) {
-  final dir = oyen.look.dir;
+/// Panah di tepi petak Oyen (pojok kiri atasnya di [tile]), ke arah hadapnya
+/// (`facingStyle` di desain).
+void _paintFacing(Canvas canvas, Offset tile, Direction dir) {
   // Pojok kiri atas ikon 12 px, relatif ke pojok petak.
   final (fx, fy) = switch (dir) {
     Direction.right => (44.0, 19.0),
@@ -117,10 +119,7 @@ void _paintFacing(Canvas canvas, BoardOyen oyen) {
   const c = KoColors.standard;
   canvas
     ..save()
-    ..translate(
-      oyen.col * Tile.size + fx + half,
-      oyen.row * Tile.size + fy + half,
-    )
+    ..translate(tile.dx + fx + half, tile.dy + fy + half)
     ..drawCircle(
       Offset.zero,
       radius + BoardArt.facingRing,

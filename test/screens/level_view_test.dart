@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/kucing_game.dart';
 import 'package:kucing_oren/game/level_loader.dart';
+import 'package:kucing_oren/game/model/run_clock.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/screens/level/level_bar.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
+import 'package:kucing_oren/screens/level/run_panel.dart';
 import 'package:kucing_oren/screens/level/tray.dart';
 import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
@@ -454,15 +456,121 @@ void main() {
     });
   });
 
-  group('Bangunkan Oyen (hasil sementara)', () {
-    testWidgets('solusi level 13: sampai, 3 bintang; Atur Lagi', (
+  group('fase jalan', () {
+    /// Menaruh solusi JSON level [id] lewat seretan dari baki.
+    Future<void> placeSolution(WidgetTester tester, int id) async {
+      for (final p in _levels[id - 1].solution) {
+        await _dragToTile(tester, p.item, p.pos.x, p.pos.y);
+      }
+    }
+
+    Future<void> wake(WidgetTester tester) async {
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pump();
+    }
+
+    int step(WidgetTester tester) =>
+        tester.widget<StepCounter>(find.byType(StepCounter)).step;
+
+    String caption(WidgetTester tester) =>
+        tester.widget<RunCaption>(find.byType(RunCaption)).text;
+
+    BoardOyen oyen(WidgetTester tester) => _game(tester).scene.oyen!;
+
+    /// Satu langkah: 0,25 detik.
+    Future<void> nextStep(WidgetTester tester) =>
+        tester.pump(RunClock.stepTime);
+
+    testWidgets('solusi level 13: langkah demi langkah seperti desain 04', (
       tester,
     ) async {
+      await _pumpLevel(tester, 13);
+      await placeSolution(tester, 13);
+      await wake(tester);
+
+      // Langkah 1 langsung tampil: kaget, masih menghadap ember.
+      expect(step(tester), 1);
+      expect(find.text('Langkah'), findsOneWidget);
+      expect(caption(tester), 'Ada air! Oyen kaget, lalu putar balik.');
+      expect(find.text('Vas aman'), findsOneWidget);
+      expect(find.text('2 benda dipakai'), findsOneWidget);
+      expect(find.byType(TargetChip), findsNothing);
+      expect(find.text('Aturan'), findsNothing);
+      expect(find.byType(TraySlot), findsNothing);
+      expect(find.text('Bangunkan Oyen'), findsNothing);
+      expect(find.text('Jeda'), findsOneWidget);
+      expect(
+        oyen(tester),
+        BoardOyen.at(
+          const Pos(4, 3),
+          const OyenLook(
+            pose: OyenPose.shock,
+            dir: Direction.left,
+            bubble: OyenBubble.kaget,
+          ),
+        ),
+      );
+
+      final poses = [oyen(tester).look.pose];
+      for (var i = 2; i <= 6; i++) {
+        await nextStep(tester);
+        expect(step(tester), i);
+        poses.add(oyen(tester).look.pose);
+      }
+      expect(poses, [
+        OyenPose.shock,
+        OyenPose.walk,
+        OyenPose.idle,
+        OyenPose.walk,
+        OyenPose.walk,
+        OyenPose.eat,
+      ]);
+      expect(caption(tester), 'Sampai di mangkuk! Nyam nyam.');
+      expect(oyen(tester).col, 3);
+      expect(oyen(tester).row, 4);
+
+      // Langkah terakhir: kontrol diganti "Lihat hasil".
+      await tester.pumpAndSettle();
+      expect(step(tester), 6);
+      expect(find.text('Jeda'), findsNothing);
+      expect(find.text('Lihat hasil'), findsOneWidget);
+    });
+
+    testWidgets('Oyen digeser ke petak baru selama satu langkah', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13);
+      await placeSolution(tester, 13);
+      await wake(tester);
+      await tester.pump();
+      expect(_game(tester).oyenShown, const Offset(4, 3));
+
+      // Langkah 2: jalan dari (4,3) ke (5,3).
+      await nextStep(tester);
+      await tester.pump();
+      expect(_game(tester).oyenShown, const Offset(4, 3));
+      await tester.pump(RunClock.stepTime ~/ 2);
+      expect(
+        _game(tester).oyenShown!.dx,
+        closeTo(4 + Curves.ease.transform(0.5), 1e-6),
+      );
+      await tester.pump(RunClock.stepTime ~/ 2);
+      expect(_game(tester).oyenShown, const Offset(5, 3));
+    });
+
+    testWidgets('Lihat hasil: hasil sementara, lalu Atur Lagi', (tester) async {
       final level = _levels[12];
       await _pumpLevel(tester, 13);
-      await _dragToTile(tester, Item.water, 3, 3);
-      await _dragToTile(tester, Item.fish, 2, 4);
-      await tester.tap(find.text('Bangunkan Oyen'));
+      await placeSolution(tester, 13);
+      await wake(tester);
+
+      // Papan terkunci selama fase jalan.
+      final gesture = await _dragTile(tester, (2, 4), (1, 5), release: false);
+      expect(find.byType(LiftedItemView), findsNothing);
+      await gesture.up();
+
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Lihat hasil'));
       await tester.pumpAndSettle();
       expect(
         find.text(
@@ -470,28 +578,37 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(find.byType(TraySlot), findsNothing);
-
-      // Papan terkunci selama fase jalan.
-      final gesture = await _dragTile(tester, (2, 4), (1, 5), release: false);
-      expect(find.byType(LiftedItemView), findsNothing);
-      await gesture.up();
-      await tester.pump();
+      // Papan tetap di keadaan akhir.
+      expect(oyen(tester).look.pose, OyenPose.eat);
 
       await tester.tap(find.text('Atur Lagi'));
       await tester.pumpAndSettle();
       expect(find.text('Bangunkan Oyen'), findsOneWidget);
+      expect(find.byType(StepCounter), findsNothing);
       expect(_tile(tester, 3, 3).item, TileItem.bucketP);
       expect(_tile(tester, 2, 4).item, TileItem.fishP);
       expect(_slotOf(tester, Item.fish).count, 0);
+      expect(oyen(tester).look.pose, OyenPose.sleep);
+      expect(_game(tester).oyenShown, const Offset(4, 3));
     });
 
-    testWidgets('ikan saja di (2,4): vas pecah di langkah 2, 1 bintang', (
-      tester,
-    ) async {
+    testWidgets('ikan saja di (2,4): vas pecah di langkah 2', (tester) async {
       await _pumpLevel(tester, 13);
       await _dragToTile(tester, Item.fish, 2, 4);
-      await tester.tap(find.text('Bangunkan Oyen'));
+      await wake(tester);
+      expect(find.text('Vas aman'), findsOneWidget);
+      expect(find.text('1 benda dipakai'), findsOneWidget);
+
+      await nextStep(tester);
+      expect(caption(tester), 'Waduh! Vas Ibu jatuh dan pecah.');
+      expect(find.text('Vas pecah'), findsOneWidget);
+      expect(_tile(tester, 2, 3).kind, TileKind.tableBroken);
+      expect(oyen(tester).look.pose, OyenPose.knock);
+      expect(oyen(tester).look.mirror, isTrue);
+
+      await tester.pumpAndSettle();
+      expect(step(tester), 10);
+      await tester.tap(find.text('Lihat hasil'));
       await tester.pumpAndSettle();
       expect(
         find.text('Oyen sampai, tapi vas pecah di langkah 2. 1 bintang.'),
@@ -499,11 +616,141 @@ void main() {
       );
     });
 
-    testWidgets('tanpa benda: Oyen bosan', (tester) async {
-      await _pumpLevel(tester, 13);
-      await tester.tap(find.text('Bangunkan Oyen'));
+    testWidgets('level 15: ikan dimakan, kardus hilang di papan akhir', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 15);
+      await placeSolution(tester, 15);
+      expect(_tile(tester, 2, 4).item, TileItem.box);
+      await wake(tester);
+      // Tidak ada vas di level 15.
+      expect(find.textContaining('Vas'), findsNothing);
+      expect(find.text('1 benda dipakai'), findsOneWidget);
+
+      for (var i = 2; i <= 7; i++) {
+        await nextStep(tester);
+      }
+      expect(oyen(tester).look.pose, OyenPose.box);
+      expect(_tile(tester, 2, 4).item, TileItem.none);
+
       await tester.pumpAndSettle();
-      expect(find.text('Oyen bosan mondar-mandir.'), findsOneWidget);
+      expect(step(tester), 12);
+      for (final pos in const [Pos(1, 4), Pos(2, 3), Pos(2, 4)]) {
+        expect(_tile(tester, pos.x, pos.y).item, TileItem.none, reason: '$pos');
+      }
+      expect(oyen(tester).col, 2);
+      expect(oyen(tester).row, 7);
+    });
+
+    testWidgets('Jeda menahan langkah; Lanjutkan meneruskan', (tester) async {
+      await _pumpLevel(tester, 13);
+      await wake(tester);
+      await tester.tap(find.bySemanticsLabel('Jeda'));
+      await tester.pump();
+      expect(find.text('Lanjutkan'), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 2));
+      expect(step(tester), 1);
+
+      await tester.tap(find.bySemanticsLabel('Lanjutkan'));
+      await tester.pump();
+      expect(find.text('Jeda'), findsOneWidget);
+      await nextStep(tester);
+      expect(step(tester), 2);
+    });
+
+    testWidgets('Maju satu langkah: jeda lalu langkah berikutnya', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13);
+      await wake(tester);
+      await tester.tap(find.bySemanticsLabel('Maju satu langkah'));
+      await tester.pump();
+      expect(step(tester), 2);
+      expect(find.text('Lanjutkan'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 2));
+      expect(step(tester), 2);
+    });
+
+    testWidgets('×2: 8 langkah per detik, Oyen digeser lebih cepat', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13);
+      await wake(tester);
+      final fast = find.bySemanticsLabel('Percepat dua kali');
+      expect(
+        tester.getSemantics(fast),
+        isSemantics(isToggled: false, hasToggledState: true),
+      );
+      await tester.tap(fast);
+      await tester.pump();
+      expect(
+        tester.getSemantics(fast),
+        isSemantics(isToggled: true, hasToggledState: true),
+      );
+      expect(_game(tester).moveTime, 0.125);
+
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(step(tester), 5);
+
+      await tester.tap(fast);
+      await tester.pump();
+      expect(_game(tester).moveTime, 0.25);
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(step(tester), 7);
+    });
+
+    testWidgets('kembali di fase jalan: ke fase atur, susunan tetap', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13);
+      await _dragToTile(tester, Item.water, 3, 3);
+      await wake(tester);
+      await nextStep(tester);
+      await tester.tap(find.bySemanticsLabel('Kembali ke fase atur'));
+      await tester.pumpAndSettle();
+      expect(find.text('Bangunkan Oyen'), findsOneWidget);
+      expect(_tile(tester, 3, 3).item, TileItem.bucketP);
+      expect(oyen(tester), BoardScene.fromMap(_levels[12].map).oyen);
+      expect(_game(tester).paused, isTrue);
+    });
+
+    testWidgets('tanpa animasi: langsung ke keadaan akhir', (tester) async {
+      await _pumpLevel(tester, 13, disableAnimations: true);
+      await placeSolution(tester, 13);
+      await wake(tester);
+      expect(step(tester), 6);
+      expect(find.text('Lihat hasil'), findsOneWidget);
+      expect(oyen(tester).look.pose, OyenPose.eat);
+      await tester.pump();
+      expect(_game(tester).oyenShown, const Offset(3, 4));
+      expect(_game(tester).paused, isTrue);
+    });
+
+    testWidgets('level tanpa benda: tanpa chip status', (tester) async {
+      await _pumpLevel(tester, 1);
+      await wake(tester);
+      expect(find.byType(RunStatus), findsNothing);
+      await tester.pumpAndSettle();
+      expect(step(tester), _levels[0].solutionSteps);
+    });
+
+    testWidgets('papan tetap seukuran dari fase atur sampai hasil', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13, size: const Size(360, 640));
+      await placeSolution(tester, 13);
+      final size = tester.getSize(_board);
+      expect(size.width, lessThan(BoardScene.width));
+
+      await wake(tester);
+      expect(tester.getSize(_board), size);
+      await tester.pumpAndSettle();
+      expect(tester.getSize(_board), size);
+      await tester.tap(find.text('Lihat hasil'));
+      await tester.pumpAndSettle();
+      expect(tester.getSize(_board), size);
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('dibangunkan saat benda diseret: seretan batal', (
@@ -518,17 +765,18 @@ void main() {
         release: false,
       );
       // Tombol tetap aktif seperti desain 03; ditekan dengan jari lain.
-      await tester.tap(find.text('Bangunkan Oyen'));
-      await tester.pump();
+      await wake(tester);
       expect(find.byType(LiftedItemView), findsNothing);
-      expect(find.text('Oyen bosan mondar-mandir.'), findsOneWidget);
+      expect(step(tester), 1);
 
       await gesture.up();
       await tester.pumpAndSettle();
       expect(_tile(tester, 2, 4).item, TileItem.none);
       expect(_glowing(tester), isEmpty);
     });
+  });
 
+  group('seretan batal', () {
     testWidgets('kosongkan papan saat benda diangkat: seretan batal', (
       tester,
     ) async {

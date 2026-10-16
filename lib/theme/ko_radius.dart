@@ -18,6 +18,7 @@ class KoRadius extends ThemeExtension<KoRadius> {
     required this.primary,
     required this.sheet,
     required this.pill,
+    required this.control,
   });
 
   static const standard = KoRadius(
@@ -30,6 +31,7 @@ class KoRadius extends ThemeExtension<KoRadius> {
     primary: 24,
     sheet: 28,
     pill: 999,
+    control: 18,
   );
 
   /// Petak papan.
@@ -59,6 +61,9 @@ class KoRadius extends ThemeExtension<KoRadius> {
   /// Chip, badge, tombol bulat.
   final double pill;
 
+  /// Kotak caption dan tombol kontrol fase jalan.
+  final double control;
+
   @override
   KoRadius copyWith({
     double? tile,
@@ -70,6 +75,7 @@ class KoRadius extends ThemeExtension<KoRadius> {
     double? primary,
     double? sheet,
     double? pill,
+    double? control,
   }) {
     return KoRadius(
       tile: tile ?? this.tile,
@@ -81,6 +87,7 @@ class KoRadius extends ThemeExtension<KoRadius> {
       primary: primary ?? this.primary,
       sheet: sheet ?? this.sheet,
       pill: pill ?? this.pill,
+      control: control ?? this.control,
     );
   }
 
@@ -98,6 +105,7 @@ class KoRadius extends ThemeExtension<KoRadius> {
       primary: d(primary, other.primary),
       sheet: d(sheet, other.sheet),
       pill: d(pill, other.pill),
+      control: d(control, other.control),
     );
   }
 }

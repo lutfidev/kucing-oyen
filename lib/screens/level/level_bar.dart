@@ -3,14 +3,15 @@ import 'package:flutter/widgets.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
-/// Bar atas layar level: kembali, judul level, dan tombol Aturan.
+/// Bar atas layar level: kembali, judul level, dan [trailing] (tombol
+/// Aturan di fase atur, penghitung langkah di fase jalan).
 class LevelTopBar extends StatelessWidget {
   const LevelTopBar({
     super.key,
     required this.title,
     required this.backLabel,
     required this.onBack,
-    required this.onRules,
+    required this.trailing,
   });
 
   /// "Level 13 · Vas Ibu".
@@ -19,9 +20,7 @@ class LevelTopBar extends StatelessWidget {
   /// Label pembaca layar tombol kembali.
   final String backLabel;
   final VoidCallback onBack;
-
-  /// Null = tombol Aturan belum berfungsi (kartu aturan di langkah 11).
-  final VoidCallback? onRules;
+  final Widget trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +45,27 @@ class LevelTopBar extends StatelessWidget {
             ),
           ),
           SizedBox(width: space.s10),
-          KoIconButton(
-            icon: KoIcons.rules,
-            semanticLabel: 'Aturan',
-            label: 'Aturan',
-            onPressed: onRules,
-          ),
+          trailing,
         ],
       ),
+    );
+  }
+}
+
+/// Tombol Aturan di bar atas fase atur.
+class RulesButton extends StatelessWidget {
+  const RulesButton({super.key, required this.onPressed});
+
+  /// Null = belum berfungsi (kartu aturan di langkah 11).
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return KoIconButton(
+      icon: KoIcons.rules,
+      semanticLabel: 'Aturan',
+      label: 'Aturan',
+      onPressed: onPressed,
     );
   }
 }

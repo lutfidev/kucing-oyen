@@ -22,6 +22,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
     required this.glow,
     required this.glowStrong,
     required this.badgeRing,
+    required this.glowPlay,
   });
 
   factory KoShadow.from(KoColors c) => KoShadow(
@@ -66,6 +67,13 @@ class KoShadow extends ThemeExtension<KoShadow> {
       ),
     ],
     badgeRing: [BoxShadow(color: c.surface, spreadRadius: 2)],
+    glowPlay: [
+      BoxShadow(
+        color: c.shadowGlow,
+        offset: const Offset(0, 14),
+        blurRadius: 24,
+      ),
+    ],
   );
 
   static final standard = KoShadow.from(KoColors.standard);
@@ -99,6 +107,9 @@ class KoShadow extends ThemeExtension<KoShadow> {
   /// Cincin 2 px warna permukaan di sekeliling badge angka.
   final List<BoxShadow> badgeRing;
 
+  /// Sinar di bawah tombol bulat Jeda/Lanjutkan: 0 14 24, 25%.
+  final List<BoxShadow> glowPlay;
+
   /// Bayangan padat setinggi [depth] (tanpa blur).
   static List<BoxShadow> solid(Color color, double depth) => [
     BoxShadow(color: color, offset: Offset(0, depth)),
@@ -116,6 +127,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
     List<BoxShadow>? glow,
     List<BoxShadow>? glowStrong,
     List<BoxShadow>? badgeRing,
+    List<BoxShadow>? glowPlay,
   }) {
     return KoShadow(
       pressHero: pressHero ?? this.pressHero,
@@ -128,6 +140,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
       glow: glow ?? this.glow,
       glowStrong: glowStrong ?? this.glowStrong,
       badgeRing: badgeRing ?? this.badgeRing,
+      glowPlay: glowPlay ?? this.glowPlay,
     );
   }
 
@@ -148,6 +161,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
       glow: l(glow, other.glow),
       glowStrong: l(glowStrong, other.glowStrong),
       badgeRing: l(badgeRing, other.badgeRing),
+      glowPlay: l(glowPlay, other.glowPlay),
     );
   }
 }
