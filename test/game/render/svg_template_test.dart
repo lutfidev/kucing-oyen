@@ -125,6 +125,14 @@ void main() {
     expect(m[1] * x + m[5] * y + m[13], closeTo(50, 1e-9));
   });
 
+  test('bounds: semua bentuk sesudah transform, tanpa tebal garis', () {
+    final drawing = SvgTemplate('''
+<rect x="0" y="0" width="10" height="4" fill="#000000" stroke="#000000" stroke-width="6"></rect>
+<g transform="translate(20 0)"><circle cx="0" cy="10" r="2" fill="#000000"></circle></g>
+''').render({});
+    expect(drawing.bounds, const Rect.fromLTRB(0, 0, 22, 12));
+  });
+
   test('teks: atribut huruf diwariskan dari <g>', () {
     final calls = _record(
       SvgTemplate('''

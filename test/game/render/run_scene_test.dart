@@ -117,6 +117,39 @@ void main() {
     ]);
   });
 
+  test('layar gagal: Oyen tidur lagi di petak terakhir, jalur penuh', () {
+    final l = level(13);
+    final f = frames(l, const []);
+    final scene = restScene(l.map, const [], f);
+    final last = f.last;
+    expect(
+      scene.oyen,
+      BoardOyen.at(
+        last.pos,
+        OyenLook(pose: OyenPose.sleep, dir: last.dir, bubble: OyenBubble.zzz),
+      ),
+    );
+    expect(scene.showFacing, isFalse);
+    expect(scene.path, runScene(l.map, const [], f, f.length - 1).path);
+    expect(scene.path.length, greaterThan(1));
+    // Vas yang jatuh selama mondar-mandir tetap pecah.
+    expect(scene.tileAt(const Pos(2, 3)).kind, TileKind.tableBroken);
+  });
+
+  test('layar gagal: kardus tempat Oyen duduk tetap tergambar', () {
+    final l = level(15);
+    // Langkah 7 solusi level 15: Oyen duduk di kardus bawaan (2,4).
+    final f = frames(l).sublist(0, 8);
+    expect(f.last.inBox, isTrue);
+    expect(
+      runScene(l.map, l.solution, f, 7).tileAt(const Pos(2, 4)).item,
+      TileItem.none,
+    );
+    final scene = restScene(l.map, l.solution, f);
+    expect(scene.tileAt(const Pos(2, 4)).item, TileItem.box);
+    expect(scene.oyen!.look.pose, OyenPose.sleep);
+  });
+
   test('gelas jatuh jadi meja kosong', () {
     final l = level(12);
     final f = frames(l);

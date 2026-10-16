@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/routes.dart';
+import 'package:kucing_oren/game/model/level_session.dart';
+import 'package:kucing_oren/screens/result/result_view.dart';
+import 'package:kucing_oren/theme/theme.dart';
 
 import '../test_helpers.dart';
+import 'result_fixtures.dart';
 
 /// Semua rute harus bebas overflow dari layar kecil sampai besar, juga
 /// dengan teks sistem 130%. Overflow RenderFlex dilaporkan sebagai exception
@@ -45,8 +49,9 @@ void main() {
     }
   }
 
-  // Fase jalan sampai hasil sementara, tanpa benda: level 1 (tanpa chip
-  // status), level 12 (gelas jatuh), level 13 (vas pecah, mondar-mandir).
+  // Fase jalan sampai layar hasil, tanpa benda: level 1 (tanpa chip
+  // status, Berhasil), level 12 (gelas jatuh), level 13 (vas pecah,
+  // mondar-mandir).
   for (final size in sizes) {
     for (final scale in textScales) {
       for (final id in const [1, 12, 13]) {
@@ -60,7 +65,47 @@ void main() {
             await tester.tap(find.text('Bangunkan Oyen'));
             await tester.pumpAndSettle();
             await tester.tap(find.text('Lihat hasil'));
-            await tester.pumpAndSettle();
+            // Sinar layar Berhasil berputar terus: tanpa pumpAndSettle.
+            await pumpFor(tester, const Duration(milliseconds: 1500));
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+    }
+  }
+
+  // Layar hasil langsung dari sesi: Berhasil 3 dan 2 bintang, vas pecah,
+  // mondar-mandir, dan kelamaan.
+  final results = <String, LevelSession Function()>{
+    'Berhasil level 13': () => resultOf(levels[12], levels[12].solution),
+    'Berhasil 2 bintang level 15': () => resultOf(levels[14], twoStars),
+    'vas pecah level 13': () => resultOf(levels[12], fishOnly),
+    'Oyen bosan level 20': () => resultOf(levels[19]),
+    'kelamaan': () => resultOf(longWalk),
+  };
+  for (final size in sizes) {
+    for (final scale in textScales) {
+      for (final MapEntry(key: name, value: session) in results.entries) {
+        final label = '${size.width.toInt()}×${size.height.toInt()}';
+        testWidgets(
+          'tanpa overflow: hasil $name @ $label, teks ${scale * 100}%',
+          (tester) async {
+            setScreenSize(tester, size);
+            setTextScale(tester, scale);
+            await tester.pumpWidget(
+              MaterialApp(
+                theme: KoTheme.light(),
+                home: Scaffold(
+                  body: ResultView(
+                    session: session(),
+                    onArrange: () {},
+                    onRestart: () {},
+                    onNext: () {},
+                  ),
+                ),
+              ),
+            );
+            await pumpFor(tester, const Duration(milliseconds: 1500));
             expect(tester.takeException(), isNull);
           },
         );

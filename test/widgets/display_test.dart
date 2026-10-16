@@ -1,9 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
+
+/// Gambar [child] (persegi [side] px) lalu kembalikan pembaca warna
+/// pikselnya.
+Future<Color Function(double x, double y)> _pixels(
+  WidgetTester tester,
+  Widget child,
+  double side,
+) async {
+  final key = GlobalKey();
+  await pumpThemed(
+    tester,
+    RepaintBoundary(
+      key: key,
+      child: SizedBox.square(dimension: side, child: child),
+    ),
+  );
+  final boundary =
+      key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+  final bytes = (await tester.runAsync(() async {
+    final image = await boundary.toImage();
+    return image.toByteData();
+  }))!;
+  return (x, y) {
+    final i = (y.floor() * side.toInt() + x.floor()) * 4;
+    return Color.fromARGB(
+      bytes.getUint8(i + 3),
+      bytes.getUint8(i),
+      bytes.getUint8(i + 1),
+      bytes.getUint8(i + 2),
+    );
+  };
+}
 
 void main() {
   const c = KoColors.standard;
@@ -139,6 +172,41 @@ void main() {
         (elevated.decoration as BoxDecoration).boxShadow,
         KoShadow.standard.card,
       );
+    });
+  });
+
+  group('KoStar', () {
+    // Kilau "M9 9.5l2-.4" di viewBox 24: tengahnya (10, 9.3).
+    const shineAt = Offset(100, 93);
+
+    testWidgets('kilau hanya di bintang kuning', (tester) async {
+      var at = await _pixels(tester, const KoStar(size: 240, shine: true), 240);
+      expect(at(shineAt.dx, shineAt.dy), c.starShine);
+      at = await _pixels(tester, const KoStar(size: 240), 240);
+      expect(at(shineAt.dx, shineAt.dy), c.star);
+      at = await _pixels(
+        tester,
+        const KoStar(size: 240, filled: false, shine: true),
+        240,
+      );
+      expect(at(shineAt.dx, shineAt.dy), c.starEmpty);
+    });
+  });
+
+  group('KoIcon', () {
+    testWidgets('viewBox selain 0 0 24 24: jejak kaki di tengah', (
+      tester,
+    ) async {
+      final at = await _pixels(
+        tester,
+        KoIcon(KoIcons.steps, size: 240, color: c.statIcon),
+        240,
+      );
+      // Telapak (0, 3) dan jari kiri (-5.2, -3.6) di viewBox -10 -12 20 20.
+      expect(at(120, 180), c.statIcon);
+      expect(at(57.6, 100.8), c.statIcon);
+      expect(at(5, 5).a, 0);
+      expect(at(120, 100).a, 0);
     });
   });
 

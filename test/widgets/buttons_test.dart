@@ -198,6 +198,26 @@ void main() {
       expect(width, lessThan(200));
     });
 
+    testWidgets('ikon kiri 20 px dan panah kanan 22 px (layar hasil)', (
+      tester,
+    ) async {
+      await pumpThemed(
+        tester,
+        KoButton(
+          label: 'Lanjut',
+          icon: KoIcons.restart,
+          trailingIcon: KoIcons.next,
+          onPressed: () {},
+        ),
+      );
+      final icons = tester.widgetList<KoIcon>(find.byType(KoIcon)).toList();
+      expect(icons.map((i) => i.icon), [KoIcons.restart, KoIcons.next]);
+      expect(icons.map((i) => i.size), [20, 22]);
+      final label = tester.getCenter(find.text('Lanjut')).dx;
+      expect(tester.getCenter(find.byType(KoIcon).first).dx, lessThan(label));
+      expect(tester.getCenter(find.byType(KoIcon).last).dx, greaterThan(label));
+    });
+
     testWidgets('label panjang mengecil di tempat sempit, tanpa overflow', (
       tester,
     ) async {
