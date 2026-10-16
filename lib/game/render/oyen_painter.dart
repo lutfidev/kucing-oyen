@@ -7,6 +7,7 @@ import 'svg_template.dart';
 
 final _template = SvgTemplate(oyenSvg);
 final _cache = <OyenLook, SvgDrawing>{};
+final _fishBubble = SvgTemplate(fishBubbleSvg).render(const {});
 
 /// Port `renderVals()` di `Oyen.dc.html` (tanpa `label` dan `size`, yang
 /// dipakai elemen `<svg>` luar).
@@ -76,13 +77,19 @@ Map<String, Object> oyenVals(OyenLook look) {
 /// dan topi koki boleh keluar dari kotak itu, seperti `overflow: visible`
 /// di desain.
 void paintOyen(Canvas canvas, OyenLook look, {double size = OyenLook.viewBox}) {
+  final plain = look.copyWith(mirror: false);
   final drawing = _cache.putIfAbsent(
-    look,
-    () => _template.render(oyenVals(look)),
+    plain,
+    () => _template.render(oyenVals(plain)),
   );
-  canvas
-    ..save()
-    ..scale(size / OyenLook.viewBox);
+  canvas.save();
+  if (look.mirror) {
+    canvas
+      ..translate(size, 0)
+      ..scale(-1, 1);
+  }
+  canvas.scale(size / OyenLook.viewBox);
   drawing.paint(canvas);
+  if (look.bubble == OyenBubble.ikan) _fishBubble.paint(canvas);
   canvas.restore();
 }

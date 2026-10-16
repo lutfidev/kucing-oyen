@@ -47,7 +47,10 @@ class BoardScene {
   /// Mengikuti `renderVals()` di `Board.dc.html`.
   ///
   /// [items] menimpa benda di peta (benda pemain memakai `fishP`, `bucketP`,
-  /// `boxP`). [broken] mengganti semua vas dengan vas pecah. Tanpa [oyen],
+  /// `boxP`; `none` menghapus benda bawaan). [broken] mengganti semua vas
+  /// dengan vas pecah. Di petak [knocked] barangnya sudah jatuh: gelas jadi
+  /// meja kosong (tidak ada gambar gelas jatuh di desain), vas jadi vas
+  /// pecah. Tanpa [oyen],
   /// Oyen tidur di petak awal peta dengan Zzz; [showOyen] false
   /// menyembunyikannya. [facing] menampilkan panah arah hadap saat Oyen tidur.
   factory BoardScene.fromMap(
@@ -55,6 +58,7 @@ class BoardScene {
     Map<Pos, TileItem> items = const {},
     Set<Pos> glow = const {},
     bool broken = false,
+    Set<Pos> knocked = const {},
     BoardOyen? oyen,
     bool showOyen = true,
     bool facing = true,
@@ -68,6 +72,7 @@ class BoardScene {
         var kind = TileKind.floor;
         var item = TileItem.none;
         final dir = Direction.fromSymbol(ch);
+        final fell = knocked.contains(Pos(c, r));
         switch (ch) {
           case '#':
             if (r == 0) {
@@ -82,9 +87,9 @@ class BoardScene {
           case 'M':
             kind = TileKind.table;
           case 'G':
-            kind = TileKind.tableGlass;
+            kind = fell ? TileKind.table : TileKind.tableGlass;
           case 'V':
-            kind = broken ? TileKind.tableBroken : TileKind.tableVase;
+            kind = broken || fell ? TileKind.tableBroken : TileKind.tableVase;
           case 'F':
             item = TileItem.fish;
           case 'A':

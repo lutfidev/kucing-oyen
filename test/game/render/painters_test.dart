@@ -202,4 +202,55 @@ void main() {
     // Perut Oyen (50, 77) sprite → 194 + 31, 188 + 47,74.
     expect(at(225, 236), _near(const Color(0xFFFBD9A8)));
   });
+
+  group('Oyen fase jalan (tidak ada di desain)', () {
+    /// Oyen 200 px (2 px per satuan viewBox) dengan tepi 60 px untuk
+    /// gelembung; mengembalikan warna di titik viewBox (x, y).
+    Future<Color Function(double x, double y)> renderOyen(OyenLook look) async {
+      const margin = 60;
+      const side = 200 + 2 * margin;
+      final recorder = PictureRecorder();
+      final canvas = Canvas(recorder)
+        ..translate(margin.toDouble(), margin.toDouble());
+      paintOyen(canvas, look, size: 200);
+      final image = await recorder.endRecording().toImage(side, side);
+      final bytes = (await image.toByteData())!;
+      return (x, y) {
+        final i = ((y * 2).floor() + margin) * side + (x * 2).floor() + margin;
+        return Color.fromARGB(
+          bytes.getUint8(i * 4 + 3),
+          bytes.getUint8(i * 4),
+          bytes.getUint8(i * 4 + 1),
+          bytes.getUint8(i * 4 + 2),
+        );
+      };
+    }
+
+    test('gelembung ikan di tempat gelembung kaget', () async {
+      final at = await renderOyen(
+        const OyenLook(
+          pose: OyenPose.walk,
+          dir: Direction.left,
+          bubble: OyenBubble.ikan,
+        ),
+      );
+      // Lingkaran besar (98, -12) r 13,5: putih di atas ikan, garis di tepi.
+      expect(at(98, -23), _near(const Color(0xFFFFFFFF)));
+      expect(at(98, -25.3), _near(const Color(0xFF3A2618)));
+      // Badan ikan (17, 25) petak → diputar -24°, diperkecil 0,6 ke pusat
+      // gelembung: (93,3; -10,05).
+      expect(at(93.3, -10.05), _near(const Color(0xFFCDB892)));
+    });
+
+    test('dicerminkan: tangan menjatuhkan pindah ke kiri', () async {
+      const knock = OyenLook(pose: OyenPose.knock);
+      final normal = await renderOyen(knock);
+      final mirrored = await renderOyen(knock.copyWith(mirror: true));
+      // Telapak tangan (89, 50) jadi (11, 50).
+      expect(normal(89, 50), _near(const Color(0xFFFBD9A8)));
+      expect(normal(11, 50).a, 0);
+      expect(mirrored(11, 50), _near(const Color(0xFFFBD9A8)));
+      expect(mirrored(89, 50).a, 0);
+    });
+  });
 }
