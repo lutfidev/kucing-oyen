@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/render/design_svg.dart';
+import 'package:kucing_oren/game/render/map_art.dart';
 import 'package:kucing_oren/game/render/result_art.dart';
 
 /// `docs/design/` tidak ikut repo; test ini hanya jalan di komputer yang
@@ -75,6 +76,59 @@ void main() {
       for (final tag in tags) {
         expect(source, contains(tag[0]));
       }
+    });
+
+    group('Beranda dan peta babak', () {
+      /// Setiap baris salinan ada di desain (salinan boleh dipotong).
+      void linesIn(String svg, String source) {
+        for (final line in _lf(svg).split('\n')) {
+          expect(source, contains(line.trim()), reason: line);
+        }
+      }
+
+      test('jejak kaki latar disalin dari desain 01', () {
+        final source = _read('01-beranda.html');
+        linesIn(homePawsBottomSvg, source);
+        linesIn(homePawsTopSvg, source);
+      });
+
+      test('ikon dapur, area bos, dan ketupat disalin dari desain 02', () {
+        final source = _read('02-peta-babak-2-ruang-tamu.html');
+        for (final svg in [chapterKitchenSvg, bossAreaSvg, bossKetupatSvg]) {
+          linesIn(svg, source);
+        }
+      });
+
+      test('ikon ruang tamu dan ikan bos: bentuk dari desain 02 dan Tile', () {
+        final source =
+            _read('02-peta-babak-2-ruang-tamu.html') + _read('Tile.dc.html');
+        for (final svg in [chapterLivingRoomSvg, bossFishSvg]) {
+          final tags = RegExp(r'<(?!g\b)[a-z][^>]*>').allMatches(svg);
+          expect(tags, isNotEmpty);
+          for (final tag in tags) {
+            expect(source, contains(tag[0]), reason: tag[0]);
+          }
+        }
+      });
+
+      test('letak node, jejak kaki, dan bos sama dengan desain 02', () {
+        final source = _read('02-peta-babak-2-ruang-tamu.html');
+        final points = MapArt.points
+            .map((p) => '[${p.dx.toInt()}, ${p.dy.toInt()}]')
+            .join(', ');
+        expect(source, contains('const pts = [$points];'));
+        expect(source, contains('[0.36, 0.64].forEach'));
+        expect(source, contains('const off = k === 0 ? 5 : -5;'));
+        expect(
+          source,
+          contains('opacity: \' + (i + 1 < current ? 0.95 : 0.4)'),
+        );
+        expect(source, contains('animation: koPulse 1.4s ease-out infinite'));
+        expect(source, contains('100%{transform:scale(1.45);opacity:0}'));
+        final boss = MapArt.points.last;
+        // Kotak bos 106 px (label) di kiri 147, atas 642: tengah kotak 96 px.
+        expect(boss, const Offset(147 + 106 / 2, 642 + 96 / 2));
+      });
     });
 
     group('layar hasil', () {

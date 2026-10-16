@@ -6,6 +6,7 @@ library;
 export 'board_painter.dart';
 export 'board_scene.dart';
 export 'item_art.dart';
+export 'map_art.dart';
 export 'oyen.dart';
 export 'oyen_painter.dart';
 export 'result_art.dart';
