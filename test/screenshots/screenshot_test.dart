@@ -93,4 +93,77 @@ void main() {
       await tester.pumpAndSettle();
     });
   }, skip: !screenshotsEnabled);
+
+  /// Fase jalan: level, benda (awalan nama slot baki, kolom, baris), lalu
+  /// berapa kali "Maju satu langkah" ditekan (null = putar sampai selesai),
+  /// dan apakah ×2 dinyalakan.
+  const runs = <String, (int, List<(String, int, int)>, int?, bool)>{
+    '04-fase-jalan-langkah-1': (
+      13,
+      [('Ember air', 3, 3), ('Ikan asin', 2, 4)],
+      0,
+      false,
+    ),
+    '04-fase-jalan-langkah-5-jeda-x2': (
+      13,
+      [('Ember air', 3, 3), ('Ikan asin', 2, 4)],
+      4,
+      true,
+    ),
+    '04-fase-jalan-selesai': (
+      13,
+      [('Ember air', 3, 3), ('Ikan asin', 2, 4)],
+      null,
+      false,
+    ),
+    '04-fase-jalan-vas-pecah': (13, [('Ikan asin', 2, 4)], 1, false),
+    '04-fase-jalan-kardus-level-15': (15, [('Ikan asin', 2, 3)], 6, false),
+  };
+  for (final MapEntry(key: name, value: (id, items, steps, fast))
+      in runs.entries) {
+    testWidgets('$folder/$name', (tester) async {
+      setScreenSize(tester, _size);
+      await withShadows(() async {
+        await tester.pumpWidget(
+          capturable(KucingOrenApp(initialLocation: AppRoutes.level(id))),
+        );
+        await tester.pumpAndSettle();
+        final board = tester.getRect(find.byType(GameWidget<KucingGame>));
+        final scale = board.width / 350;
+        for (final (slotName, col, row) in items) {
+          final slot = find.byWidgetPredicate(
+            (w) => w is TraySlot && w.semanticLabel.startsWith(slotName),
+          );
+          final target =
+              board.topLeft + Offset(col * 50 + 25, row * 50 + 25) * scale;
+          final gesture = await tester.startGesture(tester.getCenter(slot));
+          await tester.pump();
+          await gesture.moveTo(target);
+          await tester.pump();
+          await gesture.up();
+          await tester.pumpAndSettle();
+        }
+        await tester.tap(find.text('Bangunkan Oyen'));
+        await tester.pump();
+        if (steps == null) {
+          await tester.pumpAndSettle();
+        } else {
+          for (var i = 0; i < steps; i++) {
+            await tester.tap(find.bySemanticsLabel('Maju satu langkah'));
+            await tester.pump();
+          }
+          if (steps == 0) {
+            await tester.tap(find.bySemanticsLabel('Jeda'));
+            await tester.pump();
+          }
+          if (fast) {
+            await tester.tap(find.bySemanticsLabel('Percepat dua kali'));
+            await tester.pump();
+          }
+          await tester.pump(const Duration(seconds: 1));
+        }
+        await capture(tester, '$folder/$name');
+      });
+    }, skip: !screenshotsEnabled);
+  }
 }
