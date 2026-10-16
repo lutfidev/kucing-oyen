@@ -54,6 +54,20 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.divider,
     required this.dimSaturation,
     required this.artMinScale,
+    required this.oyenHome,
+    required this.oyenHomeOverlap,
+    required this.menuButton,
+    required this.starHome,
+    required this.node,
+    required this.nodeRing,
+    required this.nodeDash,
+    required this.mapStar,
+    required this.boss,
+    required this.bossArt,
+    required this.bossBadge,
+    required this.chapterCard,
+    required this.chapterIcon,
+    required this.iconMicro,
   });
 
   static const standard = KoSize(
@@ -103,6 +117,20 @@ class KoSize extends ThemeExtension<KoSize> {
     divider: 1.5,
     dimSaturation: 0.7,
     artMinScale: 0.3,
+    oyenHome: 190,
+    oyenHomeOverlap: 34,
+    menuButton: 56,
+    starHome: 26,
+    node: 64,
+    nodeRing: 4,
+    nodeDash: 3,
+    mapStar: 17,
+    boss: 96,
+    bossArt: 64,
+    bossBadge: 32,
+    chapterCard: 52,
+    chapterIcon: 36,
+    iconMicro: 12,
   );
 
   /// Tombol "Main" di Beranda.
@@ -223,6 +251,43 @@ class KoSize extends ThemeExtension<KoSize> {
   /// ilustrasinya disembunyikan.
   final double artMinScale;
 
+  /// Oyen tidur di Beranda dan seberapa jauh logo menutupinya.
+  final double oyenHome;
+
+  final double oyenHomeOverlap;
+
+  /// Tombol Lemari Kostum dan Pengaturan di Beranda.
+  final double menuButton;
+
+  /// Bintang di total bintang Beranda.
+  final double starHome;
+
+  /// Node level di peta babak, tebal cincin node saat ini (juga garis kotak
+  /// bos), dan tebal garis putus-putus node terkunci.
+  final double node;
+
+  final double nodeRing;
+
+  final double nodeDash;
+
+  /// Bintang di bawah node level.
+  final double mapStar;
+
+  /// Kotak level bos, gambar di dalamnya, dan badge gemboknya.
+  final double boss;
+
+  final double bossArt;
+
+  final double bossBadge;
+
+  /// Kartu babak lain di bawah judul peta dan ikonnya.
+  final double chapterCard;
+
+  final double chapterIcon;
+
+  /// Ikon di badge "Selesai".
+  final double iconMicro;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -271,6 +336,20 @@ class KoSize extends ThemeExtension<KoSize> {
     double? divider,
     double? dimSaturation,
     double? artMinScale,
+    double? oyenHome,
+    double? oyenHomeOverlap,
+    double? menuButton,
+    double? starHome,
+    double? node,
+    double? nodeRing,
+    double? nodeDash,
+    double? mapStar,
+    double? boss,
+    double? bossArt,
+    double? bossBadge,
+    double? chapterCard,
+    double? chapterIcon,
+    double? iconMicro,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -319,6 +398,20 @@ class KoSize extends ThemeExtension<KoSize> {
       divider: divider ?? this.divider,
       dimSaturation: dimSaturation ?? this.dimSaturation,
       artMinScale: artMinScale ?? this.artMinScale,
+      oyenHome: oyenHome ?? this.oyenHome,
+      oyenHomeOverlap: oyenHomeOverlap ?? this.oyenHomeOverlap,
+      menuButton: menuButton ?? this.menuButton,
+      starHome: starHome ?? this.starHome,
+      node: node ?? this.node,
+      nodeRing: nodeRing ?? this.nodeRing,
+      nodeDash: nodeDash ?? this.nodeDash,
+      mapStar: mapStar ?? this.mapStar,
+      boss: boss ?? this.boss,
+      bossArt: bossArt ?? this.bossArt,
+      bossBadge: bossBadge ?? this.bossBadge,
+      chapterCard: chapterCard ?? this.chapterCard,
+      chapterIcon: chapterIcon ?? this.chapterIcon,
+      iconMicro: iconMicro ?? this.iconMicro,
     );
   }
 
@@ -373,6 +466,20 @@ class KoSize extends ThemeExtension<KoSize> {
       divider: d(divider, other.divider),
       dimSaturation: d(dimSaturation, other.dimSaturation),
       artMinScale: d(artMinScale, other.artMinScale),
+      oyenHome: d(oyenHome, other.oyenHome),
+      oyenHomeOverlap: d(oyenHomeOverlap, other.oyenHomeOverlap),
+      menuButton: d(menuButton, other.menuButton),
+      starHome: d(starHome, other.starHome),
+      node: d(node, other.node),
+      nodeRing: d(nodeRing, other.nodeRing),
+      nodeDash: d(nodeDash, other.nodeDash),
+      mapStar: d(mapStar, other.mapStar),
+      boss: d(boss, other.boss),
+      bossArt: d(bossArt, other.bossArt),
+      bossBadge: d(bossBadge, other.bossBadge),
+      chapterCard: d(chapterCard, other.chapterCard),
+      chapterIcon: d(chapterIcon, other.chapterIcon),
+      iconMicro: d(iconMicro, other.iconMicro),
     );
   }
 }

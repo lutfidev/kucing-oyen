@@ -23,6 +23,8 @@ class KoRadius extends ThemeExtension<KoRadius> {
     required this.stat,
     required this.statCompact,
     required this.avatar,
+    required this.boss,
+    required this.tag,
   });
 
   static const standard = KoRadius(
@@ -40,6 +42,8 @@ class KoRadius extends ThemeExtension<KoRadius> {
     stat: 18,
     statCompact: 14,
     avatar: 16,
+    boss: 30,
+    tag: 10,
   );
 
   /// Petak papan.
@@ -82,6 +86,12 @@ class KoRadius extends ThemeExtension<KoRadius> {
   /// Kotak Oyen tidur di kartu pesan layar gagal.
   final double avatar;
 
+  /// Kotak level bos.
+  final double boss;
+
+  /// Label nama bos.
+  final double tag;
+
   @override
   KoRadius copyWith({
     double? tile,
@@ -98,6 +108,8 @@ class KoRadius extends ThemeExtension<KoRadius> {
     double? stat,
     double? statCompact,
     double? avatar,
+    double? boss,
+    double? tag,
   }) {
     return KoRadius(
       tile: tile ?? this.tile,
@@ -114,6 +126,8 @@ class KoRadius extends ThemeExtension<KoRadius> {
       stat: stat ?? this.stat,
       statCompact: statCompact ?? this.statCompact,
       avatar: avatar ?? this.avatar,
+      boss: boss ?? this.boss,
+      tag: tag ?? this.tag,
     );
   }
 
@@ -136,6 +150,8 @@ class KoRadius extends ThemeExtension<KoRadius> {
       stat: d(stat, other.stat),
       statCompact: d(statCompact, other.statCompact),
       avatar: d(avatar, other.avatar),
+      boss: d(boss, other.boss),
+      tag: d(tag, other.tag),
     );
   }
 }

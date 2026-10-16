@@ -55,6 +55,18 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.successText,
     required this.creamDim,
     required this.starShine,
+    required this.logo,
+    required this.checker,
+    required this.mapFloor,
+    required this.plank,
+    required this.plankJoint,
+    required this.shadowNode,
+    required this.nodeLocked,
+    required this.nodeLockedInk,
+    required this.boss,
+    required this.bossEdge,
+    required this.brickEdge,
+    required this.onBrick,
   });
 
   static const standard = KoColors(
@@ -105,6 +117,18 @@ class KoColors extends ThemeExtension<KoColors> {
     successText: Color(0xFF1C6F62),
     creamDim: Color(0xFFF3E6D2),
     starShine: Color(0xFFFFF1C2),
+    logo: Color(0xFFD9700F),
+    checker: Color(0x33E2C08C), // rgba(226,192,140,.20)
+    mapFloor: Color(0xFFF3E0C2),
+    plank: Color(0x38B07A4F), // rgba(176,122,79,.22)
+    plankJoint: Color(0x24B07A4F), // rgba(176,122,79,.14)
+    shadowNode: Color(0x38965014), // rgba(150,80,20,.22)
+    nodeLocked: Color(0xFFE8D6B8),
+    nodeLockedInk: Color(0xFF8A7259),
+    boss: Color(0xFFE3C9A6),
+    bossEdge: Color(0xFFB28A64),
+    brickEdge: Color(0xFF8E3220),
+    onBrick: Color(0xFFFFFFFF),
   );
 
   /// Latar semua layar.
@@ -225,6 +249,37 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Kilau bintang besar di layar Berhasil.
   final Color starShine;
 
+  /// "Oren" di logo Beranda.
+  final Color logo;
+
+  /// Kotak-kotak latar Beranda.
+  final Color checker;
+
+  /// Lantai kayu peta babak, garis antarpapan, dan sambungan papan.
+  final Color mapFloor;
+
+  final Color plank;
+
+  final Color plankJoint;
+
+  /// Bayangan lembut node level yang sudah selesai.
+  final Color shadowNode;
+
+  /// Node level terkunci (juga bintang kosong di peta) dan gemboknya.
+  final Color nodeLocked;
+
+  final Color nodeLockedInk;
+
+  /// Kotak level bos dan bayangan padatnya.
+  final Color boss;
+
+  final Color bossEdge;
+
+  /// Bayangan padat label bos dan teksnya.
+  final Color brickEdge;
+
+  final Color onBrick;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -274,6 +329,18 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? successText,
     Color? creamDim,
     Color? starShine,
+    Color? logo,
+    Color? checker,
+    Color? mapFloor,
+    Color? plank,
+    Color? plankJoint,
+    Color? shadowNode,
+    Color? nodeLocked,
+    Color? nodeLockedInk,
+    Color? boss,
+    Color? bossEdge,
+    Color? brickEdge,
+    Color? onBrick,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -323,6 +390,18 @@ class KoColors extends ThemeExtension<KoColors> {
       successText: successText ?? this.successText,
       creamDim: creamDim ?? this.creamDim,
       starShine: starShine ?? this.starShine,
+      logo: logo ?? this.logo,
+      checker: checker ?? this.checker,
+      mapFloor: mapFloor ?? this.mapFloor,
+      plank: plank ?? this.plank,
+      plankJoint: plankJoint ?? this.plankJoint,
+      shadowNode: shadowNode ?? this.shadowNode,
+      nodeLocked: nodeLocked ?? this.nodeLocked,
+      nodeLockedInk: nodeLockedInk ?? this.nodeLockedInk,
+      boss: boss ?? this.boss,
+      bossEdge: bossEdge ?? this.bossEdge,
+      brickEdge: brickEdge ?? this.brickEdge,
+      onBrick: onBrick ?? this.onBrick,
     );
   }
 
@@ -378,6 +457,18 @@ class KoColors extends ThemeExtension<KoColors> {
       successText: c(successText, other.successText),
       creamDim: c(creamDim, other.creamDim),
       starShine: c(starShine, other.starShine),
+      logo: c(logo, other.logo),
+      checker: c(checker, other.checker),
+      mapFloor: c(mapFloor, other.mapFloor),
+      plank: c(plank, other.plank),
+      plankJoint: c(plankJoint, other.plankJoint),
+      shadowNode: c(shadowNode, other.shadowNode),
+      nodeLocked: c(nodeLocked, other.nodeLocked),
+      nodeLockedInk: c(nodeLockedInk, other.nodeLockedInk),
+      boss: c(boss, other.boss),
+      bossEdge: c(bossEdge, other.bossEdge),
+      brickEdge: c(brickEdge, other.brickEdge),
+      onBrick: c(onBrick, other.onBrick),
     );
   }
 }

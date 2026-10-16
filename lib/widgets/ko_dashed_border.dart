@@ -12,24 +12,29 @@ class KoDashedBorder extends StatelessWidget {
     required this.color,
     required this.radius,
     required this.child,
+    this.width,
   });
 
   final Color color;
   final double radius;
   final Widget child;
 
+  /// Tebal garis; default [KoSize.border].
+  final double? width;
+
   @override
   Widget build(BuildContext context) {
     final s = context.koSize;
+    final width = this.width ?? s.border;
     return CustomPaint(
       foregroundPainter: _DashedRRectPainter(
         color: color,
-        width: s.border,
+        width: width,
         radius: radius,
         dash: s.dash,
         gap: s.dashGap,
       ),
-      child: Padding(padding: EdgeInsets.all(s.border), child: child),
+      child: Padding(padding: EdgeInsets.all(width), child: child),
     );
   }
 }

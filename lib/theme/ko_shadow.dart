@@ -16,6 +16,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
     required this.press,
     required this.pressSecondary,
     required this.pressIcon,
+    required this.pressNode,
     required this.card,
     required this.tray,
     required this.board,
@@ -23,6 +24,8 @@ class KoShadow extends ThemeExtension<KoShadow> {
     required this.glowStrong,
     required this.badgeRing,
     required this.glowPlay,
+    required this.node,
+    required this.logo,
   });
 
   factory KoShadow.from(KoColors c) => KoShadow(
@@ -30,6 +33,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
     press: 6,
     pressSecondary: 4,
     pressIcon: 3,
+    pressNode: 5,
     card: [
       BoxShadow(
         color: c.shadowCard,
@@ -74,6 +78,14 @@ class KoShadow extends ThemeExtension<KoShadow> {
         blurRadius: 24,
       ),
     ],
+    node: [
+      BoxShadow(
+        color: c.shadowNode,
+        offset: const Offset(0, 10),
+        blurRadius: 16,
+      ),
+    ],
+    logo: [Shadow(color: c.ink, offset: const Offset(0, 4))],
   );
 
   static final standard = KoShadow.from(KoColors.standard);
@@ -89,6 +101,9 @@ class KoShadow extends ThemeExtension<KoShadow> {
 
   /// Tinggi bayangan padat tombol ikon dan slot baki (0 3 0).
   final double pressIcon;
+
+  /// Tinggi bayangan padat node level di peta (0 5 0).
+  final double pressNode;
 
   /// Kartu: 0 6 16, 14%.
   final List<BoxShadow> card;
@@ -110,6 +125,12 @@ class KoShadow extends ThemeExtension<KoShadow> {
   /// Sinar di bawah tombol bulat Jeda/Lanjutkan: 0 14 24, 25%.
   final List<BoxShadow> glowPlay;
 
+  /// Bayangan lembut node level yang sudah selesai: 0 10 16, 22%.
+  final List<BoxShadow> node;
+
+  /// Bayangan padat teks "Oren" di logo Beranda (0 4 0 tinta).
+  final List<Shadow> logo;
+
   /// Bayangan padat setinggi [depth] (tanpa blur).
   static List<BoxShadow> solid(Color color, double depth) => [
     BoxShadow(color: color, offset: Offset(0, depth)),
@@ -121,6 +142,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
     double? press,
     double? pressSecondary,
     double? pressIcon,
+    double? pressNode,
     List<BoxShadow>? card,
     List<BoxShadow>? tray,
     List<BoxShadow>? board,
@@ -128,12 +150,15 @@ class KoShadow extends ThemeExtension<KoShadow> {
     List<BoxShadow>? glowStrong,
     List<BoxShadow>? badgeRing,
     List<BoxShadow>? glowPlay,
+    List<BoxShadow>? node,
+    List<Shadow>? logo,
   }) {
     return KoShadow(
       pressHero: pressHero ?? this.pressHero,
       press: press ?? this.press,
       pressSecondary: pressSecondary ?? this.pressSecondary,
       pressIcon: pressIcon ?? this.pressIcon,
+      pressNode: pressNode ?? this.pressNode,
       card: card ?? this.card,
       tray: tray ?? this.tray,
       board: board ?? this.board,
@@ -141,6 +166,8 @@ class KoShadow extends ThemeExtension<KoShadow> {
       glowStrong: glowStrong ?? this.glowStrong,
       badgeRing: badgeRing ?? this.badgeRing,
       glowPlay: glowPlay ?? this.glowPlay,
+      node: node ?? this.node,
+      logo: logo ?? this.logo,
     );
   }
 
@@ -155,6 +182,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
       press: d(press, other.press),
       pressSecondary: d(pressSecondary, other.pressSecondary),
       pressIcon: d(pressIcon, other.pressIcon),
+      pressNode: d(pressNode, other.pressNode),
       card: l(card, other.card),
       tray: l(tray, other.tray),
       board: l(board, other.board),
@@ -162,6 +190,8 @@ class KoShadow extends ThemeExtension<KoShadow> {
       glowStrong: l(glowStrong, other.glowStrong),
       badgeRing: l(badgeRing, other.badgeRing),
       glowPlay: l(glowPlay, other.glowPlay),
+      node: l(node, other.node),
+      logo: Shadow.lerpList(logo, other.logo, t)!,
     );
   }
 }

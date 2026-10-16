@@ -166,6 +166,12 @@ abstract final class KoIcons {
     KoIconShape.path('M8 11V8a4 4 0 0 1 8 0v3'),
   ], strokeWidth: 2.4);
 
+  /// Badge gembok kotak bos di peta: [lock] dengan garis lebih tebal.
+  static const lockBold = KoIconData([
+    KoIconShape.rrect(Rect.fromLTWH(5, 11, 14, 10), 2.5),
+    KoIconShape.path('M8 11V8a4 4 0 0 1 8 0v3'),
+  ], strokeWidth: 2.6);
+
   /// Lemari Kostum (gantungan baju).
   static const costume = KoIconData([
     KoIconShape.path('M12 7a2 2 0 1 1 2-2c0 1-2 1.5-2 3'),
@@ -240,6 +246,11 @@ abstract final class KoIcons {
   static const check = KoIconData([
     KoIconShape.path('M5 12.5l4.5 4.5L19 7.5'),
   ], strokeWidth: 3.4);
+
+  /// Babak selesai di kartu babak: [check] dengan garis lebih tebal.
+  static const checkBold = KoIconData([
+    KoIconShape.path('M5 12.5l4.5 4.5L19 7.5'),
+  ], strokeWidth: 3.6);
 }
 
 /// Menggambar [KoIconData] seukuran [size] dengan warna [color]. Hiasan
