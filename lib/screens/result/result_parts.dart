@@ -302,9 +302,9 @@ class ResultStats extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        for (final child in children) ...[
-          if (child != children.first) SizedBox(width: context.koSpace.s12),
-          Expanded(child: child),
+        for (var i = 0; i < children.length; i++) ...[
+          if (i > 0) SizedBox(width: context.koSpace.s12),
+          Expanded(child: children[i]),
         ],
       ],
     );
@@ -356,9 +356,9 @@ class ResultRules extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (final rule in rules) ...[
-            _RuleRow(rule),
-            if (rule != rules.last) const _DashedLine(),
+          for (var i = 0; i < rules.length; i++) ...[
+            if (i > 0) const _DashedLine(),
+            _RuleRow(rules[i]),
           ],
         ],
       ),

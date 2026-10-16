@@ -42,8 +42,10 @@ class SvgDrawing {
 
   /// Kotak pembatas semua bentuk dan teks tanpa tebal garis, seperti
   /// `fill-box` CSS (mis. titik putar `transform-origin: center`).
-  Rect get bounds =>
-      _ops.map((op) => op.bounds).reduce((a, b) => a.expandToInclude(b));
+  /// [Rect.zero] kalau tidak ada yang digambar.
+  Rect get bounds => _ops.isEmpty
+      ? Rect.zero
+      : _ops.map((op) => op.bounds).reduce((a, b) => a.expandToInclude(b));
 
   void paint(Canvas canvas) {
     for (final op in _ops) {

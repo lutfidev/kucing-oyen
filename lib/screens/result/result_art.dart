@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
@@ -358,11 +359,17 @@ class RestBoard extends StatelessWidget {
     final space = context.koSpace;
     return LayoutBuilder(
       builder: (context, box) {
-        final scale = [
-          (box.maxWidth - 2 * ring) / BoardScene.width,
-          (box.maxHeight - 2 * ring) / BoardScene.height,
-          1.0,
-        ].reduce((a, b) => a < b ? a : b).clamp(0.0, 1.0);
+        // BoardView hanya mengecil, tidak membesar melewati 350×450.
+        final scale = math.max(
+          0.0,
+          math.min(
+            1.0,
+            math.min(
+              (box.maxWidth - 2 * ring) / BoardScene.width,
+              (box.maxHeight - 2 * ring) / BoardScene.height,
+            ),
+          ),
+        );
         return Center(
           child: SizedBox(
             width: BoardScene.width * scale,

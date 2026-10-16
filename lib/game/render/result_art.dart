@@ -64,6 +64,10 @@ final _vaseMom = SvgTemplate(vaseMomSvg).render(const {});
 final _vaseTable = SvgTemplate(vaseTableSvg).render(const {});
 final _vasePrang = SvgTemplate(vasePrangSvg).render(const {});
 
+/// Titik putar "PRANG!": tengah kotak gambarnya (`transform-box:
+/// fill-box; transform-origin: center`).
+final _prangPivot = _vasePrang.bounds.center;
+
 /// Sinar layar Berhasil berpusat di (0, 0), diputar [turns] putaran.
 void paintRays(Canvas canvas, {double turns = 0}) {
   const r = ResultArt.raysRadius;
@@ -100,7 +104,7 @@ void paintVaseScene(
   _vaseMom.paint(canvas);
   canvas.restore();
   _vaseTable.paint(canvas);
-  final pivot = _vasePrang.bounds.center;
+  final pivot = _prangPivot;
   canvas
     ..save()
     ..translate(
