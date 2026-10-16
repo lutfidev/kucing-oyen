@@ -45,6 +45,10 @@ abstract final class MapArt {
   static const double pawOpacity = 0.95;
   static const double pawDimOpacity = 0.4;
 
+  /// Lebar kotak tempat node, label bos, dan bintangnya di tengah: label
+  /// boleh lebih lebar dari node (teks besar), tapi tetap di dalam layar.
+  static const double nodeSlot = 300;
+
   /// Label "Main" di atas node level saat ini.
   static const double labelAbove = 30;
 

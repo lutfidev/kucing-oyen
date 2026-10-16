@@ -132,6 +132,53 @@ void main() {
       expect(_paws(tester), (0, 18));
     });
 
+    testWidgets(
+      'label Main di bawah node kalau node sebelumnya tepat di atas',
+      (tester) async {
+        Future<(Rect, Rect)> labelAndNode(
+          Map<int, int> best,
+          String node,
+        ) async {
+          await pumpApp(
+            tester,
+            location: AppRoutes.chapter(1),
+            progress: testProgress(best),
+          );
+          return (
+            tester.getRect(find.text('Main')),
+            tester.getRect(_label(node)),
+          );
+        }
+
+        // Level 3: seperti desain (level 13), label di atas.
+        final (above, three) = await labelAndNode({
+          1: 3,
+          2: 2,
+        }, 'Level 3, main sekarang');
+        expect(above.bottom, lessThan(three.top));
+
+        // Level 4 dan 7 tepat di bawah level 3 dan 6: label di bawah supaya
+        // bintang level sebelumnya tidak tertutup.
+        for (final (best, node, previous) in [
+          ({1: 3, 2: 2, 3: 1}, 'Level 4, main sekarang', 'Level 3, 1 bintang'),
+          (wonUpTo(6), 'Level 7, main sekarang', 'Level 6, 3 bintang'),
+        ]) {
+          final (label, rect) = await labelAndNode(best, node);
+          expect(label.top, greaterThan(rect.bottom), reason: node);
+          final stars = tester.getRect(
+            find.descendant(
+              of: find.ancestor(
+                of: _label(previous),
+                matching: find.byType(LevelNode),
+              ),
+              matching: find.byType(Row),
+            ),
+          );
+          expect(label.overlaps(stars), isFalse, reason: node);
+        }
+      },
+    );
+
     testWidgets('Babak 2 terbuka tapi belum selesai: tanpa badge', (
       tester,
     ) async {

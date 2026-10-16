@@ -41,7 +41,10 @@ class ChapterMap extends StatelessWidget {
   final ValueChanged<Level> onPlay;
 
   /// Ukuran isi peta (koordinat desain).
-  static const size = Size(390, 844 - MapArt.mapTop);
+  static final size = Size(
+    MapArt.screen.width,
+    MapArt.screen.height - MapArt.mapTop,
+  );
 
   /// Tengah node level ke-[index] babak (koordinat [size]).
   static Offset pointOf(int index) =>
@@ -99,11 +102,24 @@ class ChapterMap extends StatelessWidget {
                 state: states[i],
                 stars: progress.starsOf(levels[i].id),
                 onPressed: () => onPlay(levels[i]),
+                labelBelow: _labelBelow(context, i),
               ),
             ),
         ],
       ),
     );
+  }
+
+  /// Label "Main" pindah ke bawah node kalau node sebelumnya tepat di
+  /// atasnya, supaya bintang node itu tidak tertutup (level 4 dan 7 tiap
+  /// babak). Desain hanya menampilkan level 13 sebagai level saat ini.
+  static bool _labelBelow(BuildContext context, int index) {
+    if (index == 0) return false;
+    final s = context.koSize;
+    final d = pointOf(index) - pointOf(index - 1);
+    // Atas label sampai bawah bintang node sebelumnya.
+    final reach = s.node + MapArt.labelAbove + context.koSpace.s6 + s.mapStar;
+    return d.dy > 0 && d.dy < reach && d.dx.abs() < s.node;
   }
 
   /// Node dengan tengah lingkaran (atau kotak bos) di [center]. Kotaknya
@@ -117,7 +133,7 @@ class ChapterMap extends StatelessWidget {
   }) {
     final s = context.koSize;
     final half = (boss ? s.boss : s.node) / 2;
-    const width = 300.0;
+    const width = MapArt.nodeSlot;
     return Positioned(
       left: center.dx - width / 2,
       top: center.dy - half,
@@ -135,12 +151,16 @@ class LevelNode extends StatelessWidget {
     required this.state,
     required this.stars,
     required this.onPressed,
+    this.labelBelow = false,
   });
 
   final Level level;
   final NodeState state;
   final int stars;
   final VoidCallback onPressed;
+
+  /// Label "Main" di bawah node, bukan di atas.
+  final bool labelBelow;
 
   /// Label pembaca layar, sama dengan `aria-label` desain.
   static String labelOf(Level level, NodeState state, int stars) =>
@@ -208,6 +228,7 @@ class LevelNode extends StatelessWidget {
                 border: Border.all(color: c.orange, width: s.nodeRing),
               ),
             ),
+            labelBelow: labelBelow,
             child: circle,
           )
         else
@@ -361,13 +382,18 @@ class BossNode extends StatelessWidget {
 }
 
 /// Node level saat ini: cincin berdenyut di belakangnya dan label "Main"
-/// di atasnya.
+/// di atasnya (atau di bawahnya, [labelBelow]).
 class _Current extends StatelessWidget {
-  const _Current({required this.ring, required this.child});
+  const _Current({
+    required this.ring,
+    required this.child,
+    this.labelBelow = false,
+  });
 
   /// Bentuk cincin seukuran [child].
   final Widget ring;
   final Widget child;
+  final bool labelBelow;
 
   @override
   Widget build(BuildContext context) {
@@ -379,7 +405,8 @@ class _Current extends StatelessWidget {
         Positioned.fill(child: _Pulse(child: ring)),
         child,
         Positioned(
-          top: -MapArt.labelAbove,
+          top: labelBelow ? null : -MapArt.labelAbove,
+          bottom: labelBelow ? -MapArt.labelAbove : null,
           left: -MapArt.labelAbove * 2,
           right: -MapArt.labelAbove * 2,
           child: Center(
