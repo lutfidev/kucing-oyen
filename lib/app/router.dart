@@ -4,6 +4,7 @@ import '../gallery/gallery_board_screen.dart';
 import '../gallery/gallery_oyen_screen.dart';
 import '../gallery/gallery_screen.dart';
 import '../screens/home/home_screen.dart';
+import '../screens/level/level_screen.dart';
 import 'routes.dart';
 
 GoRouter createRouter({String initialLocation = AppRoutes.home}) {
@@ -27,6 +28,12 @@ GoRouter createRouter({String initialLocation = AppRoutes.home}) {
                 builder: (context, state) => const GalleryOyenScreen(),
               ),
             ],
+          ),
+          GoRoute(
+            path: 'level/:id',
+            builder: (context, state) => LevelScreen(
+              levelId: int.tryParse(state.pathParameters['id'] ?? ''),
+            ),
           ),
         ],
       ),

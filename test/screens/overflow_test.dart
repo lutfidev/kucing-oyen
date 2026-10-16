@@ -8,11 +8,15 @@ import '../test_helpers.dart';
 /// dengan teks sistem 130%. Overflow RenderFlex dilaporkan sebagai exception
 /// sehingga test gagal. Rute baru di langkah roadmap berikutnya ditambahkan
 /// ke daftar ini.
-const routes = <String>[
+final routes = <String>[
   AppRoutes.home,
   AppRoutes.gallery,
   AppRoutes.galleryBoard,
   AppRoutes.galleryOyen,
+  // Tanpa benda, dua jenis benda, dan tiga jenis benda (baki terlebar).
+  AppRoutes.level(1),
+  AppRoutes.level(13),
+  AppRoutes.level(19),
 ];
 
 const sizes = <Size>[

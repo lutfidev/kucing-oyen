@@ -56,6 +56,18 @@ void paintBoard(Canvas canvas, BoardScene scene, {double glowOpacity = 1}) {
   canvas
     ..save()
     ..clipRRect(BoardArt.rrect);
+  paintBoardTiles(canvas, scene, glowOpacity: glowOpacity);
+  paintBoardOyen(canvas, scene);
+  canvas.restore();
+}
+
+/// Bagian petak dari [paintBoard] (63 petak dan bendanya), tanpa potongan
+/// sudut.
+void paintBoardTiles(
+  Canvas canvas,
+  BoardScene scene, {
+  double glowOpacity = 1,
+}) {
   for (var i = 0; i < scene.tiles.length; i++) {
     canvas
       ..save()
@@ -66,20 +78,22 @@ void paintBoard(Canvas canvas, BoardScene scene, {double glowOpacity = 1}) {
     paintTile(canvas, scene.tiles[i], glowOpacity: glowOpacity);
     canvas.restore();
   }
+}
 
+/// Bagian Oyen dari [paintBoard] (Oyen dan panah arah hadap), tanpa potongan
+/// sudut.
+void paintBoardOyen(Canvas canvas, BoardScene scene) {
   final oyen = scene.oyen;
-  if (oyen != null) {
-    canvas
-      ..save()
-      ..translate(
-        oyen.col * Tile.size + BoardArt.oyenOffset.dx,
-        oyen.row * Tile.size + BoardArt.oyenOffset.dy,
-      );
-    paintOyen(canvas, oyen.look, size: BoardArt.oyenSize);
-    canvas.restore();
-    if (scene.showFacing) _paintFacing(canvas, oyen);
-  }
+  if (oyen == null) return;
+  canvas
+    ..save()
+    ..translate(
+      oyen.col * Tile.size + BoardArt.oyenOffset.dx,
+      oyen.row * Tile.size + BoardArt.oyenOffset.dy,
+    );
+  paintOyen(canvas, oyen.look, size: BoardArt.oyenSize);
   canvas.restore();
+  if (scene.showFacing) _paintFacing(canvas, oyen);
 }
 
 /// Panah di tepi petak Oyen, ke arah hadapnya (`facingStyle` di desain).

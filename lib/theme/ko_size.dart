@@ -17,6 +17,8 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.icon,
     required this.iconSmall,
     required this.chip,
+    required this.tray,
+    required this.trayHint,
     required this.slot,
     required this.slotItem,
     required this.slotGhost,
@@ -40,6 +42,8 @@ class KoSize extends ThemeExtension<KoSize> {
     icon: 22,
     iconSmall: 20,
     chip: 40,
+    tray: 88,
+    trayHint: 72,
     slot: 64,
     slotItem: 50,
     slotGhost: 40,
@@ -74,6 +78,13 @@ class KoSize extends ThemeExtension<KoSize> {
 
   /// Tinggi chip.
   final double chip;
+
+  /// Tinggi panel baki di bawah papan.
+  final double tray;
+
+  /// Lebar paling sempit petunjuk "Taruh di petak yang menyala" di baki
+  /// (dikali skala teks). Kalau tempatnya kurang, petunjuk disembunyikan.
+  final double trayHint;
 
   /// Slot baki, gambar benda di dalamnya, dan bayangan benda yang sedang
   /// diseret.
@@ -111,6 +122,8 @@ class KoSize extends ThemeExtension<KoSize> {
     double? icon,
     double? iconSmall,
     double? chip,
+    double? tray,
+    double? trayHint,
     double? slot,
     double? slotItem,
     double? slotGhost,
@@ -133,6 +146,8 @@ class KoSize extends ThemeExtension<KoSize> {
       icon: icon ?? this.icon,
       iconSmall: iconSmall ?? this.iconSmall,
       chip: chip ?? this.chip,
+      tray: tray ?? this.tray,
+      trayHint: trayHint ?? this.trayHint,
       slot: slot ?? this.slot,
       slotItem: slotItem ?? this.slotItem,
       slotGhost: slotGhost ?? this.slotGhost,
@@ -161,6 +176,8 @@ class KoSize extends ThemeExtension<KoSize> {
       icon: d(icon, other.icon),
       iconSmall: d(iconSmall, other.iconSmall),
       chip: d(chip, other.chip),
+      tray: d(tray, other.tray),
+      trayHint: d(trayHint, other.trayHint),
       slot: d(slot, other.slot),
       slotItem: d(slotItem, other.slotItem),
       slotGhost: d(slotGhost, other.slotGhost),

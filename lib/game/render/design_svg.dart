@@ -309,3 +309,42 @@ const oyenSvg = r'''
 const facingSvg = r'''
 <path d="M3 2 L9 6 L3 10" fill="none" stroke="#3B2716" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
 ''';
+
+/// Ikan asin di slot baki (`03-gameplay-fase-atur.html`), viewBox 50×50.
+const trayFishSvg = r'''
+<g transform="rotate(-24 25 25)"><path d="M8 25 Q21 13 34 25 Q21 37 8 25 Z M34 25 L43 18 L42 32 Z" fill="#F28C28" stroke="#F28C28" stroke-width="6" stroke-linejoin="round"></path><path d="M34 25 L43 18 L42 32 Z" fill="#B49C74" stroke="#7E6848" stroke-width="1.4" stroke-linejoin="round"></path><path d="M8 25 Q21 13 34 25 Q21 37 8 25 Z" fill="#CDB892" stroke="#7E6848" stroke-width="1.4"></path><path d="M19 20.5 V29.5 M24 19.5 V30.5 M29 21 V29" stroke="#8D7656" stroke-width="1.1"></path><circle cx="13" cy="24" r="1.7" fill="#3A2618"></circle></g>
+''';
+
+/// Ember air yang sedang diseret (`03-gameplay-fase-atur.html`), viewBox
+/// 50×50. Dipakai juga untuk ember di slot baki, yang tidak ada di desain.
+const trayBucketSvg = r'''
+      <circle cx="25" cy="25" r="18" fill="#FFFBF3" stroke="#F28C28" stroke-width="3.5"></circle>
+      <circle cx="25" cy="25" r="15" fill="#2F86B8"></circle>
+      <circle cx="25" cy="25" r="11.5" fill="#8FD3F0"></circle>
+      <path d="M17 26 Q21 23 25 26 T33 26" stroke="#FFFFFF" stroke-width="1.6" fill="none" stroke-linecap="round"></path>
+      <path d="M10 25 Q25 3 40 25" stroke="#1F5E80" stroke-width="2.4" fill="none"></path>
+''';
+
+/// Bayangan ember di slot baki yang sisanya 0
+/// (`03-gameplay-fase-atur.html`), viewBox 50×50.
+const trayBucketGhostSvg = r'''
+<circle cx="25" cy="25" r="15" fill="#2F86B8"></circle><circle cx="25" cy="25" r="11.5" fill="#8FD3F0"></circle><path d="M10 25 Q25 3 40 25" stroke="#1F5E80" stroke-width="2.4" fill="none"></path>
+''';
+
+/// Kardus di slot baki: blok kardus `Tile.dc.html` tanpa bayangan lantai
+/// (baris `<ellipse>` pertama), seperti ikan dan ember di slot desain 03.
+/// `{{player}}` true = cincin oranye benda pemain.
+const trayBoxSvg = r'''
+    <sc-if value="{{player}}" hint-placeholder-val="{{ false }}">
+      <rect x="4.5" y="4.5" width="41" height="41" rx="5" fill="none" stroke="#F28C28" stroke-width="3.5"></rect>
+    </sc-if>
+    <rect x="8" y="8" width="34" height="34" rx="2.5" fill="#C8955A" stroke="#9E6C37" stroke-width="1.5"></rect>
+    <rect x="13" y="13" width="24" height="24" rx="1.5" fill="#7E5228"></rect>
+    <path d="M8 8 L13 13 L37 13 L42 8 Z M8 42 L13 37 L37 37 L42 42 Z" fill="#DDB07A" stroke="#9E6C37" stroke-width="1" stroke-linejoin="round"></path>
+''';
+
+/// Bayangan ikan di slot baki yang sisanya 0: [trayFishSvg] tanpa cincin
+/// oranye, mengikuti bayangan ember. Tidak ada di desain.
+const trayFishGhostSvg = r'''
+<g transform="rotate(-24 25 25)"><path d="M34 25 L43 18 L42 32 Z" fill="#B49C74" stroke="#7E6848" stroke-width="1.4" stroke-linejoin="round"></path><path d="M8 25 Q21 13 34 25 Q21 37 8 25 Z" fill="#CDB892" stroke="#7E6848" stroke-width="1.4"></path><path d="M19 20.5 V29.5 M24 19.5 V30.5 M29 21 V29" stroke="#8D7656" stroke-width="1.1"></path><circle cx="13" cy="24" r="1.7" fill="#3A2618"></circle></g>
+''';

@@ -48,6 +48,8 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.shadowGlow,
     required this.shadowGlowStrong,
     required this.shadowSprite,
+    required this.shadowLift,
+    required this.shadowTray,
   });
 
   static const standard = KoColors(
@@ -91,6 +93,8 @@ class KoColors extends ThemeExtension<KoColors> {
     shadowGlow: Color(0x40A0500A), // rgba(160,80,10,.25)
     shadowGlowStrong: Color(0x47A0500A), // rgba(160,80,10,.28)
     shadowSprite: Color(0x297A4A1F), // #7A4A1F, opacity .16
+    shadowLift: Color(0x595B3414), // rgba(91,52,20,.35)
+    shadowTray: Color(0x1A784614), // rgba(120,70,20,.10)
   );
 
   /// Latar semua layar.
@@ -190,6 +194,12 @@ class KoColors extends ThemeExtension<KoColors> {
   final Color shadowGlowStrong;
   final Color shadowSprite;
 
+  /// Bayangan jatuh benda yang sedang diseret.
+  final Color shadowLift;
+
+  /// Bayangan lembut panel baki.
+  final Color shadowTray;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -232,6 +242,8 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? shadowGlow,
     Color? shadowGlowStrong,
     Color? shadowSprite,
+    Color? shadowLift,
+    Color? shadowTray,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -274,6 +286,8 @@ class KoColors extends ThemeExtension<KoColors> {
       shadowGlow: shadowGlow ?? this.shadowGlow,
       shadowGlowStrong: shadowGlowStrong ?? this.shadowGlowStrong,
       shadowSprite: shadowSprite ?? this.shadowSprite,
+      shadowLift: shadowLift ?? this.shadowLift,
+      shadowTray: shadowTray ?? this.shadowTray,
     );
   }
 
@@ -322,6 +336,8 @@ class KoColors extends ThemeExtension<KoColors> {
       shadowGlow: c(shadowGlow, other.shadowGlow),
       shadowGlowStrong: c(shadowGlowStrong, other.shadowGlowStrong),
       shadowSprite: c(shadowSprite, other.shadowSprite),
+      shadowLift: c(shadowLift, other.shadowLift),
+      shadowTray: c(shadowTray, other.shadowTray),
     );
   }
 }

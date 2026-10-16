@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app/routes.dart';
+import '../game/sim/item.dart';
 import '../theme/theme.dart';
 import '../widgets/widgets.dart';
 import 'gallery_page.dart';
@@ -543,12 +544,12 @@ class _Components extends StatelessWidget {
                   TraySlot(
                     count: 2,
                     semanticLabel: 'Kardus, sisa 2',
-                    child: _ItemPlaceholder(),
+                    child: ItemArtView(Item.box),
                   ),
                   TraySlot(
                     count: 0,
                     semanticLabel: 'Kardus, sedang diseret, sisa 0',
-                    child: _ItemPlaceholder(),
+                    child: ItemArtView(Item.box, ghost: true),
                   ),
                 ],
               ),
@@ -614,27 +615,6 @@ class _CardText extends StatelessWidget {
         SizedBox(height: context.koSpace.s2),
         Text(body, style: t.body.copyWith(color: color ?? c.inkSoft)),
       ],
-    );
-  }
-}
-
-/// Pengganti gambar kardus di slot baki sampai gambar petak dibuat
-/// (langkah 5 roadmap).
-class _ItemPlaceholder extends StatelessWidget {
-  const _ItemPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.koColors;
-    return Padding(
-      padding: EdgeInsets.all(context.koSpace.s6),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: c.box,
-          borderRadius: BorderRadius.circular(context.koRadius.tile),
-          border: Border.all(color: c.boxEdge, width: context.koSize.border),
-        ),
-      ),
     );
   }
 }

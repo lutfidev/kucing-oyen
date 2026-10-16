@@ -19,7 +19,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 3. Model sesi level (baki, penempatan, bintang)
 - [x] 4. Fondasi UI: token desain, font, komponen dasar
 - [x] 5. Gambar petak, papan, dan Oyen
-- [ ] 6. Gameplay fase atur
+- [x] 6. Gameplay fase atur
 - [ ] 7. Gameplay fase jalan
 - [ ] 8. Hasil: berhasil, vas pecah, Oyen bosan
 - [ ] 9. Beranda, peta babak, progres tersimpan
@@ -73,9 +73,11 @@ Selesai: `lib/game/render/` (`Tile`, `OyenLook`, `BoardScene.fromMap` Dart murni
 >
 > Salin string `d` path SVG apa adanya lalu urai dengan `parseSvgPathData` dari package `path_drawing`; jangan menyalin ulang koordinat dengan tangan. Gelas yang sudah jatuh tidak punya gambar di desain: pakai `table` kosong dan catat. Tambahkan halaman petak dan Oyen (seperti halaman desain 14 dan 15) ke `/galeri`. Test: pemetaan peta → jenis petak untuk level 13 dan 18 (Dart murni) dan galeri tergambar tanpa error. Sebelum PR, ambil potret galeri dan periksa hasilnya dengan membandingkan angka di file desain.
 
-## 6. Gameplay fase atur
+## 6. Gameplay fase atur ✅
 
 **Hasil:** layar level bisa dibuka; pemain bisa menaruh, memindah, dan mengembalikan benda.
+
+Selesai: `lib/game/kucing_game.dart` (`KucingGame`, `BoardInput`), `lib/game/components/` (`BoardComponent`, `CatComponent`), `lib/screens/level/` (rute `/level/:id`, `LevelView`, baki), gambar benda baki dari desain 03 (`paintItemArt`, `paintLiftedItem`), dan tombol 1–20 di Beranda sementara. Yang menyala hanya petak tujuan di bawah jari (desain 03 dan 15). Benda papan yang dilepas di luar papan kembali ke baki; di petak tidak sah kembali ke petak asal. Hasil `wake()` sementara berupa teks dengan tombol "Atur Lagi". `loadLevels()` kini tanpa cache `rootBundle` supaya bisa dimuat di banyak widget test. Keputusan lain di `docs/DESIGN_NOTES.md`.
 
 > Baca `docs/design/source/03-gameplay-fase-atur.html`, `18-komponen-papan-7x9.html`, dan GDD bagian "Alur satu level" serta "Pembagian komponen Flame". Tambah `flame` (busy_network memakai `flame: ^1.38.2` dengan versi Flutter yang sama). Buat `KucingGame` (`FlameGame`) dengan kamera beresolusi tetap 350×450 (koordinat papan desain), lalu `BoardComponent` dan `CatComponent` yang menggambar lewat `lib/game/render/`. Layar `/level/:id` memuat level lewat `loadLevels()` dan memakai `LevelSession`: bar atas (kembali, "Level 13 · Vas Ibu", target bintang 3 "pakai N benda", tombol Aturan yang belum berfungsi), papan dengan Oyen tidur + Zzz + panah arah hadap, baki dengan angka sisa, petunjuk "Taruh di petak yang menyala", dan tombol "Bangunkan Oyen". Seret benda dari baki ke papan: petak yang boleh diisi menyala (`glow`) dan benda menempel ke petak. Benda di papan bisa diseret ke petak lain atau kembali ke baki. Logika tetap di `LevelSession`; komponen Flame hanya menerjemahkan sentuhan ke koordinat petak. "Bangunkan Oyen" cukup memanggil `wake()` dan menampilkan hasil sementara berupa teks; animasinya di langkah 7. Test: widget test menyeret benda (buat helper seret ke petak), penolakan petak tidak sah, angka baki berubah. Tambah rute ini ke test overflow.
 
