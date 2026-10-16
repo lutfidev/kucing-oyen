@@ -40,6 +40,11 @@ class SvgDrawing {
   /// Jumlah bentuk dan teks.
   int get length => _ops.length;
 
+  /// Kotak pembatas semua bentuk dan teks tanpa tebal garis, seperti
+  /// `fill-box` CSS (mis. titik putar `transform-origin: center`).
+  Rect get bounds =>
+      _ops.map((op) => op.bounds).reduce((a, b) => a.expandToInclude(b));
+
   void paint(Canvas canvas) {
     for (final op in _ops) {
       op.paint(canvas);
@@ -281,6 +286,14 @@ abstract class _Op {
   }
 
   void draw(Canvas canvas);
+
+  /// Bentuk yang dibatasi [bounds], sebelum [matrix].
+  Path get outline;
+
+  Rect get bounds {
+    final m = matrix;
+    return m == null ? outline.getBounds() : outline.transform(m).getBounds();
+  }
 }
 
 class _ShapeOp extends _Op {
@@ -358,6 +371,9 @@ class _ShapeOp extends _Op {
   final double layerOpacity;
 
   @override
+  Path get outline => path;
+
+  @override
   void draw(Canvas canvas) {
     final layer = layerOpacity < 1;
     if (layer) {
@@ -424,6 +440,10 @@ class _TextOp extends _Op {
 
   final Paragraph paragraph;
   final Offset offset;
+
+  @override
+  Path get outline =>
+      Path()..addRect(offset & Size(paragraph.width, paragraph.height));
 
   @override
   void draw(Canvas canvas) => canvas.drawParagraph(paragraph, offset);

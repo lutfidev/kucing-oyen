@@ -8,6 +8,7 @@ export 'board_scene.dart';
 export 'item_art.dart';
 export 'oyen.dart';
 export 'oyen_painter.dart';
+export 'result_art.dart';
 export 'run_scene.dart';
 export 'tile.dart';
 export 'tile_painter.dart';
