@@ -4,58 +4,87 @@ import 'package:path_drawing/path_drawing.dart';
 /// Cara menggambar satu bentuk ikon.
 enum KoIconPaint { stroke, fill, fillAndStroke }
 
-/// Satu bentuk di ikon viewBox 24×24: path SVG, lingkaran, atau persegi
-/// bersudut bulat. Semuanya memakai warna ikon (`currentColor` di desain).
+/// Satu bentuk di ikon: path SVG, lingkaran, elips, atau persegi bersudut
+/// bulat. Semuanya memakai warna ikon (`currentColor` di desain).
 @immutable
 class KoIconShape {
   const KoIconShape.path(String this.d, {this.paint = KoIconPaint.stroke})
     : center = null,
       rect = null,
-      radius = 0;
+      radius = 0,
+      radiusY = null;
 
   const KoIconShape.circle(
     Offset this.center,
     this.radius, {
     this.paint = KoIconPaint.stroke,
   }) : d = null,
-       rect = null;
+       rect = null,
+       radiusY = null;
 
   const KoIconShape.rrect(
     Rect this.rect,
     this.radius, {
     this.paint = KoIconPaint.stroke,
   }) : d = null,
-       center = null;
+       center = null,
+       radiusY = null;
+
+  /// Elips (`<ellipse>` di SVG): [radius] mendatar, [radiusY] tegak.
+  const KoIconShape.ellipse(
+    Offset this.center,
+    this.radius,
+    double this.radiusY, {
+    this.paint = KoIconPaint.stroke,
+  }) : d = null,
+       rect = null;
 
   final String? d;
   final Offset? center;
   final Rect? rect;
 
-  /// Jari-jari lingkaran atau sudut persegi.
+  /// Jari-jari lingkaran, jari-jari mendatar elips, atau sudut persegi.
   final double radius;
   final KoIconPaint paint;
+
+  /// Jari-jari tegak elips; null untuk bentuk lain.
+  final double? radiusY;
 
   static final _cache = <String, Path>{};
 
   Path toPath() {
     if (d != null) return _cache.putIfAbsent(d!, () => parseSvgPathData(d!));
     if (center != null) {
-      return Path()..addOval(Rect.fromCircle(center: center!, radius: radius));
+      return Path()..addOval(
+        Rect.fromCenter(
+          center: center!,
+          width: 2 * radius,
+          height: 2 * (radiusY ?? radius),
+        ),
+      );
     }
     return Path()
       ..addRRect(RRect.fromRectAndRadius(rect!, Radius.circular(radius)));
   }
 }
 
-/// Definisi ikon: bentuk-bentuk dan tebal garisnya.
+/// Definisi ikon: bentuk-bentuk, tebal garisnya, dan viewBox (umumnya
+/// 0 0 24 24).
 @immutable
 class KoIconData {
-  const KoIconData(this.shapes, {required this.strokeWidth});
+  const KoIconData(
+    this.shapes, {
+    required this.strokeWidth,
+    this.viewBox = standardViewBox,
+  });
 
   final List<KoIconShape> shapes;
   final double strokeWidth;
 
-  static const double viewBox = 24;
+  /// Kotak koordinat yang digambar memenuhi ukuran ikon (persegi).
+  final Rect viewBox;
+
+  static const standardViewBox = Rect.fromLTWH(0, 0, 24, 24);
 }
 
 /// Ikon garis dari layar desain, path disalin apa adanya dari SVG.
@@ -152,6 +181,65 @@ abstract final class KoIcons {
     KoIconShape.circle(Offset(10, 12), 2),
     KoIconShape.circle(Offset(18, 18), 2),
   ], strokeWidth: 2.2);
+
+  /// Ulangi di layar Berhasil: [reset] dengan garis lebih tebal.
+  static const restart = KoIconData([
+    KoIconShape.path('M3 12a9 9 0 1 0 3-6.7L3 8'),
+    KoIconShape.path('M3 3v5h5'),
+  ], strokeWidth: 2.6);
+
+  /// Coba Lagi di layar vas pecah: [reset] dengan garis paling tebal.
+  static const retry = KoIconData([
+    KoIconShape.path('M3 12a9 9 0 1 0 3-6.7L3 8'),
+    KoIconShape.path('M3 3v5h5'),
+  ], strokeWidth: 2.8);
+
+  /// Lanjut (panah kanan, di kanan label).
+  static const next = KoIconData([
+    KoIconShape.path('M9 5l7 7-7 7'),
+  ], strokeWidth: 2.8);
+
+  /// Putar Ulang (lingkaran dan segitiga putar).
+  static const replay = KoIconData([
+    KoIconShape.circle(Offset(12, 12), 9),
+    KoIconShape.path('M10 8.5v7l5.5-3.5z', paint: KoIconPaint.fillAndStroke),
+  ], strokeWidth: 2.6);
+
+  /// Atur Lagi (pensil).
+  static const edit = KoIconData([
+    KoIconShape.path('M12 20h9'),
+    KoIconShape.path('M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z'),
+  ], strokeWidth: 2.6);
+
+  /// Oyen muter terus (panah melingkar searah jarum jam).
+  static const loop = KoIconData([
+    KoIconShape.path('M21 12a9 9 0 1 1-3-6.7L21 8'),
+    KoIconShape.path('M21 3v5h-5'),
+  ], strokeWidth: 2.6);
+
+  /// Jumlah langkah (jejak kaki, viewBox -10 -12 20 20).
+  static const steps = KoIconData(
+    [
+      KoIconShape.ellipse(Offset(0, 3), 5, 4.3, paint: KoIconPaint.fill),
+      KoIconShape.circle(Offset(-5.2, -3.6), 2, paint: KoIconPaint.fill),
+      KoIconShape.circle(Offset(-1.8, -6.6), 2, paint: KoIconPaint.fill),
+      KoIconShape.circle(Offset(1.8, -6.6), 2, paint: KoIconPaint.fill),
+      KoIconShape.circle(Offset(5.2, -3.6), 2, paint: KoIconPaint.fill),
+    ],
+    strokeWidth: 0,
+    viewBox: Rect.fromLTWH(-10, -12, 20, 20),
+  );
+
+  /// Jumlah benda dipakai (kardus terbuka).
+  static const items = KoIconData([
+    KoIconShape.rrect(Rect.fromLTWH(4, 7, 16, 13), 2),
+    KoIconShape.path('M4 7l3-3h10l3 3M10 11h4'),
+  ], strokeWidth: 2.4);
+
+  /// Syarat bintang tercapai (centang).
+  static const check = KoIconData([
+    KoIconShape.path('M5 12.5l4.5 4.5L19 7.5'),
+  ], strokeWidth: 3.4);
 }
 
 /// Menggambar [KoIconData] seukuran [size] dengan warna [color]. Hiasan
@@ -182,7 +270,10 @@ class _KoIconPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.scale(size.width / KoIconData.viewBox);
+    final box = icon.viewBox;
+    canvas
+      ..scale(size.width / box.width)
+      ..translate(-box.left, -box.top);
     final fill = Paint()..color = color;
     final stroke = Paint()
       ..color = color

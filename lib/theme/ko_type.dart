@@ -37,6 +37,10 @@ class KoType extends ThemeExtension<KoType> {
     required this.numberBadge,
     required this.paragraph,
     required this.controlLabel,
+    required this.overlineLarge,
+    required this.headline,
+    required this.headlineSmall,
+    required this.numberCompact,
   });
 
   static const standard = KoType(
@@ -45,6 +49,7 @@ class KoType extends ThemeExtension<KoType> {
       fontFamilyFallback: _fredokaFallback,
       fontSize: 46,
       fontWeight: FontWeight.w700,
+      height: 1.05,
     ),
     title: TextStyle(
       fontFamily: KoFonts.fredoka,
@@ -153,9 +158,36 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 13,
       fontWeight: FontWeight.w700,
     ),
+    overlineLarge: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 13,
+      fontWeight: FontWeight.w800,
+      letterSpacing: 1.2,
+    ),
+    headline: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 32,
+      fontWeight: FontWeight.w700,
+      height: 1.1,
+    ),
+    headlineSmall: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 28,
+      fontWeight: FontWeight.w700,
+      height: 1.1,
+    ),
+    numberCompact: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 22,
+      fontWeight: FontWeight.w700,
+    ),
   );
 
-  /// Fredoka 700/46: "Berhasil!".
+  /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
+  /// token menulis 1).
   final TextStyle display;
 
   /// Fredoka 700/26: judul sheet ("Aturan Oyen"), tombol utama besar.
@@ -216,6 +248,18 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 700/13: keterangan tombol putar ("Jeda", "Lanjutkan").
   final TextStyle controlLabel;
 
+  /// Nunito 800/13, jarak huruf 1.2: "LEVEL 13 · VAS IBU" di layar hasil.
+  final TextStyle overlineLarge;
+
+  /// Fredoka 700/32, tinggi baris 1,1: "Sampai sih... tapi vas Ibu?".
+  final TextStyle headline;
+
+  /// Fredoka 700/28, tinggi baris 1,1: "Oyen bosan mondar-mandir.".
+  final TextStyle headlineSmall;
+
+  /// Fredoka 700/22: angka kotak kecil di layar vas pecah ("10 langkah").
+  final TextStyle numberCompact;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -238,6 +282,10 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? numberBadge,
     TextStyle? paragraph,
     TextStyle? controlLabel,
+    TextStyle? overlineLarge,
+    TextStyle? headline,
+    TextStyle? headlineSmall,
+    TextStyle? numberCompact,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -260,6 +308,10 @@ class KoType extends ThemeExtension<KoType> {
       numberBadge: numberBadge ?? this.numberBadge,
       paragraph: paragraph ?? this.paragraph,
       controlLabel: controlLabel ?? this.controlLabel,
+      overlineLarge: overlineLarge ?? this.overlineLarge,
+      headline: headline ?? this.headline,
+      headlineSmall: headlineSmall ?? this.headlineSmall,
+      numberCompact: numberCompact ?? this.numberCompact,
     );
   }
 
@@ -288,6 +340,10 @@ class KoType extends ThemeExtension<KoType> {
       numberBadge: s(numberBadge, other.numberBadge),
       paragraph: s(paragraph, other.paragraph),
       controlLabel: s(controlLabel, other.controlLabel),
+      overlineLarge: s(overlineLarge, other.overlineLarge),
+      headline: s(headline, other.headline),
+      headlineSmall: s(headlineSmall, other.headlineSmall),
+      numberCompact: s(numberCompact, other.numberCompact),
     );
   }
 }

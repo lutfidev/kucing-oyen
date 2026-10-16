@@ -6,12 +6,27 @@ import '../theme/theme.dart';
 /// Satu bintang (viewBox 24): kuning kalau [filled], krem pudar kalau belum
 /// didapat.
 class KoStar extends StatelessWidget {
-  const KoStar({super.key, this.filled = true, this.size});
+  const KoStar({
+    super.key,
+    this.filled = true,
+    this.size,
+    this.strokeWidth = defaultStrokeWidth,
+    this.shine = false,
+  });
 
   final bool filled;
 
   /// Default [KoSize.star].
   final double? size;
+
+  /// Tebal garis tepi di viewBox 24.
+  final double strokeWidth;
+
+  /// Kilau kecil di kiri atas bintang kuning (bintang besar layar Berhasil).
+  final bool shine;
+
+  /// Garis tepi bintang di lembar token.
+  static const double defaultStrokeWidth = 1.4;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +38,8 @@ class KoStar extends StatelessWidget {
         painter: _StarPainter(
           fill: filled ? c.star : c.starEmpty,
           edge: filled ? c.starEdge : c.muted,
+          strokeWidth: strokeWidth,
+          shine: filled && shine ? c.starShine : null,
         ),
       ),
     );
@@ -56,16 +73,24 @@ class KoStars extends StatelessWidget {
 }
 
 class _StarPainter extends CustomPainter {
-  _StarPainter({required this.fill, required this.edge});
+  _StarPainter({
+    required this.fill,
+    required this.edge,
+    required this.strokeWidth,
+    required this.shine,
+  });
 
   static final _path = parseSvgPathData(
     'M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9z',
   );
+  static final _shinePath = parseSvgPathData('M9 9.5l2-.4');
   static const _viewBox = 24.0;
-  static const _strokeWidth = 1.4;
+  static const _shineWidth = 1.2;
 
   final Color fill;
   final Color edge;
+  final double strokeWidth;
+  final Color? shine;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -76,11 +101,26 @@ class _StarPainter extends CustomPainter {
       Paint()
         ..color = edge
         ..style = PaintingStyle.stroke
-        ..strokeWidth = _strokeWidth
+        ..strokeWidth = strokeWidth
         ..strokeJoin = StrokeJoin.round,
     );
+    final shine = this.shine;
+    if (shine != null) {
+      canvas.drawPath(
+        _shinePath,
+        Paint()
+          ..color = shine
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = _shineWidth
+          ..strokeCap = StrokeCap.round,
+      );
+    }
   }
 
   @override
-  bool shouldRepaint(_StarPainter old) => old.fill != fill || old.edge != edge;
+  bool shouldRepaint(_StarPainter old) =>
+      old.fill != fill ||
+      old.edge != edge ||
+      old.strokeWidth != strokeWidth ||
+      old.shine != shine;
 }

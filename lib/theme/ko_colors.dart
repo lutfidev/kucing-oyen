@@ -51,6 +51,11 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.shadowLift,
     required this.shadowTray,
     required this.inkDeep,
+    required this.rays,
+    required this.statIcon,
+    required this.successText,
+    required this.creamDim,
+    required this.starShine,
   });
 
   static const standard = KoColors(
@@ -97,6 +102,11 @@ class KoColors extends ThemeExtension<KoColors> {
     shadowLift: Color(0x595B3414), // rgba(91,52,20,.35)
     shadowTray: Color(0x1A784614), // rgba(120,70,20,.10)
     inkDeep: Color(0xFF1E140B),
+    rays: Color(0xFFFCE3BC),
+    statIcon: Color(0xFFC99466),
+    successText: Color(0xFF1C6F62),
+    creamDim: Color(0xFFF3E6D2),
+    starShine: Color(0xFFFFF1C2),
   );
 
   /// Latar semua layar.
@@ -205,6 +215,21 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Bayangan padat tombol gelap (×2 yang menyala).
   final Color inkDeep;
 
+  /// Sinar berputar di belakang layar Berhasil.
+  final Color rays;
+
+  /// Ikon kotak angka di layar Berhasil (jejak kaki, kardus).
+  final Color statIcon;
+
+  /// Teks syarat bintang yang didapat ("Dapat").
+  final Color successText;
+
+  /// Latar layar gagal (Oyen bosan) dan kotak Oyen tidur di kartunya.
+  final Color creamDim;
+
+  /// Kilau bintang besar di layar Berhasil.
+  final Color starShine;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -250,6 +275,11 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? shadowLift,
     Color? shadowTray,
     Color? inkDeep,
+    Color? rays,
+    Color? statIcon,
+    Color? successText,
+    Color? creamDim,
+    Color? starShine,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -295,6 +325,11 @@ class KoColors extends ThemeExtension<KoColors> {
       shadowLift: shadowLift ?? this.shadowLift,
       shadowTray: shadowTray ?? this.shadowTray,
       inkDeep: inkDeep ?? this.inkDeep,
+      rays: rays ?? this.rays,
+      statIcon: statIcon ?? this.statIcon,
+      successText: successText ?? this.successText,
+      creamDim: creamDim ?? this.creamDim,
+      starShine: starShine ?? this.starShine,
     );
   }
 
@@ -346,6 +381,11 @@ class KoColors extends ThemeExtension<KoColors> {
       shadowLift: c(shadowLift, other.shadowLift),
       shadowTray: c(shadowTray, other.shadowTray),
       inkDeep: c(inkDeep, other.inkDeep),
+      rays: c(rays, other.rays),
+      statIcon: c(statIcon, other.statIcon),
+      successText: c(successText, other.successText),
+      creamDim: c(creamDim, other.creamDim),
+      starShine: c(starShine, other.starShine),
     );
   }
 }

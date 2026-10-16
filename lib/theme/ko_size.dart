@@ -38,6 +38,21 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.play,
     required this.iconMedium,
     required this.iconPlay,
+    required this.resultStar,
+    required this.resultStarMid,
+    required this.partialStar,
+    required this.partialStarMid,
+    required this.statBox,
+    required this.statBoxCompact,
+    required this.ruleRow,
+    required this.checkBadge,
+    required this.iconTiny,
+    required this.chipCompact,
+    required this.iconChip,
+    required this.avatar,
+    required this.artBorder,
+    required this.divider,
+    required this.dimSaturation,
   });
 
   static const standard = KoSize(
@@ -71,6 +86,21 @@ class KoSize extends ThemeExtension<KoSize> {
     play: 80,
     iconMedium: 24,
     iconPlay: 32,
+    resultStar: 66,
+    resultStarMid: 86,
+    partialStar: 56,
+    partialStarMid: 68,
+    statBox: 68,
+    statBoxCompact: 44,
+    ruleRow: 44,
+    checkBadge: 26,
+    iconTiny: 14,
+    chipCompact: 30,
+    iconChip: 16,
+    avatar: 56,
+    artBorder: 3,
+    divider: 1.5,
+    dimSaturation: 0.7,
   );
 
   /// Tombol "Main" di Beranda.
@@ -151,6 +181,42 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Ikon di tombol Jeda/Lanjutkan.
   final double iconPlay;
 
+  /// Bintang di layar Berhasil: kiri-kanan dan tengah.
+  final double resultStar;
+  final double resultStarMid;
+
+  /// Bintang di layar vas pecah: kiri-kanan dan tengah.
+  final double partialStar;
+  final double partialStarMid;
+
+  /// Kotak angka ("6 langkah") di layar Berhasil dan versi kecilnya di
+  /// layar vas pecah.
+  final double statBox;
+  final double statBoxCompact;
+
+  /// Tinggi paling kecil baris syarat bintang di layar hasil.
+  final double ruleRow;
+
+  /// Lingkaran centang syarat bintang yang didapat dan centangnya.
+  final double checkBadge;
+  final double iconTiny;
+
+  /// Chip gelap di atas papan layar gagal ("Muter terus") dan ikonnya.
+  final double chipCompact;
+  final double iconChip;
+
+  /// Kotak Oyen tidur di kartu pesan layar gagal.
+  final double avatar;
+
+  /// Garis dalam kartu ilustrasi layar hasil.
+  final double artBorder;
+
+  /// Garis putus-putus antarbaris syarat bintang.
+  final double divider;
+
+  /// Saturasi papan di layar gagal (`saturate(0.7)`).
+  final double dimSaturation;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -183,6 +249,21 @@ class KoSize extends ThemeExtension<KoSize> {
     double? play,
     double? iconMedium,
     double? iconPlay,
+    double? resultStar,
+    double? resultStarMid,
+    double? partialStar,
+    double? partialStarMid,
+    double? statBox,
+    double? statBoxCompact,
+    double? ruleRow,
+    double? checkBadge,
+    double? iconTiny,
+    double? chipCompact,
+    double? iconChip,
+    double? avatar,
+    double? artBorder,
+    double? divider,
+    double? dimSaturation,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -215,6 +296,21 @@ class KoSize extends ThemeExtension<KoSize> {
       play: play ?? this.play,
       iconMedium: iconMedium ?? this.iconMedium,
       iconPlay: iconPlay ?? this.iconPlay,
+      resultStar: resultStar ?? this.resultStar,
+      resultStarMid: resultStarMid ?? this.resultStarMid,
+      partialStar: partialStar ?? this.partialStar,
+      partialStarMid: partialStarMid ?? this.partialStarMid,
+      statBox: statBox ?? this.statBox,
+      statBoxCompact: statBoxCompact ?? this.statBoxCompact,
+      ruleRow: ruleRow ?? this.ruleRow,
+      checkBadge: checkBadge ?? this.checkBadge,
+      iconTiny: iconTiny ?? this.iconTiny,
+      chipCompact: chipCompact ?? this.chipCompact,
+      iconChip: iconChip ?? this.iconChip,
+      avatar: avatar ?? this.avatar,
+      artBorder: artBorder ?? this.artBorder,
+      divider: divider ?? this.divider,
+      dimSaturation: dimSaturation ?? this.dimSaturation,
     );
   }
 
@@ -253,6 +349,21 @@ class KoSize extends ThemeExtension<KoSize> {
       play: d(play, other.play),
       iconMedium: d(iconMedium, other.iconMedium),
       iconPlay: d(iconPlay, other.iconPlay),
+      resultStar: d(resultStar, other.resultStar),
+      resultStarMid: d(resultStarMid, other.resultStarMid),
+      partialStar: d(partialStar, other.partialStar),
+      partialStarMid: d(partialStarMid, other.partialStarMid),
+      statBox: d(statBox, other.statBox),
+      statBoxCompact: d(statBoxCompact, other.statBoxCompact),
+      ruleRow: d(ruleRow, other.ruleRow),
+      checkBadge: d(checkBadge, other.checkBadge),
+      iconTiny: d(iconTiny, other.iconTiny),
+      chipCompact: d(chipCompact, other.chipCompact),
+      iconChip: d(iconChip, other.iconChip),
+      avatar: d(avatar, other.avatar),
+      artBorder: d(artBorder, other.artBorder),
+      divider: d(divider, other.divider),
+      dimSaturation: d(dimSaturation, other.dimSaturation),
     );
   }
 }
