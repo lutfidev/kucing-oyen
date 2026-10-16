@@ -41,5 +41,29 @@ void main() {
       ).firstMatch(_read('Board.dc.html'))![1]!;
       expect(_lf(facingSvg), _lf(svg));
     });
+
+    group('gambar slot baki', () {
+      const screen = '03-gameplay-fase-atur.html';
+
+      test('ikan, ember, dan bayangan ember disalin dari desain 03', () {
+        final source = _read(screen);
+        for (final svg in [trayFishSvg, trayBucketSvg, trayBucketGhostSvg]) {
+          expect(source, contains(_lf(svg)));
+        }
+      });
+
+      test('kardus disalin dari Tile.dc.html', () {
+        expect(_read('Tile.dc.html'), contains(_lf(trayBoxSvg)));
+      });
+
+      test('setiap elemen bayangan ikan ada di desain 03', () {
+        final source = _read(screen);
+        final tags = RegExp(r'<[a-z][^>]*>').allMatches(trayFishGhostSvg);
+        expect(tags, isNotEmpty);
+        for (final tag in tags) {
+          expect(source, contains(tag[0]));
+        }
+      });
+    });
   }, skip: missing);
 }
