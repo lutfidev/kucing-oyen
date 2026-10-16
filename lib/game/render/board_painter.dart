@@ -1,9 +1,12 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:path_drawing/path_drawing.dart';
+
 import '../../theme/ko_colors.dart';
 import '../../theme/ko_shadow.dart';
 import '../sim/direction.dart';
+import '../sim/pos.dart';
 import 'board_scene.dart';
 import 'design_svg.dart';
 import 'oyen_painter.dart';
@@ -20,6 +23,10 @@ abstract final class BoardArt {
   /// kepalanya menyembul ke petak atas.
   static const double oyenSize = 62;
   static const Offset oyenOffset = Offset(-6, -12);
+
+  /// Garis jalur Oyen: tebal 4, putus-putus 2 9, ujung bulat.
+  static const double pathWidth = 4;
+  static const List<double> pathDash = [2, 9];
 
   /// Panah arah hadap: ikon 12 px di lingkaran 18 px (padding 3) dengan
   /// cincin 2 px.
@@ -48,8 +55,9 @@ void paintBoardFrame(Canvas canvas) {
   }
 }
 
-/// Menggambar isi papan di kotak 0..350 × 0..450: 63 petak, Oyen, dan panah
-/// arah hadap, dipotong sudut 16 px seperti `overflow: hidden` di desain.
+/// Menggambar isi papan di kotak 0..350 × 0..450: 63 petak, jalur Oyen,
+/// Oyen, dan panah arah hadap, dipotong sudut 16 px seperti
+/// `overflow: hidden` di desain.
 ///
 /// [glowOpacity] untuk kedip petak menyala, lihat [tileGlowOpacity].
 void paintBoard(Canvas canvas, BoardScene scene, {double glowOpacity = 1}) {
@@ -57,8 +65,31 @@ void paintBoard(Canvas canvas, BoardScene scene, {double glowOpacity = 1}) {
     ..save()
     ..clipRRect(BoardArt.rrect);
   paintBoardTiles(canvas, scene, glowOpacity: glowOpacity);
+  paintBoardPath(canvas, scene);
   paintBoardOyen(canvas, scene);
   canvas.restore();
+}
+
+/// Jalur Oyen ([BoardScene.path]) sebagai garis putus-putus oranye lewat
+/// tengah petak (`polyline` di `Board.dc.html`), di atas petak dan di bawah
+/// Oyen.
+void paintBoardPath(Canvas canvas, BoardScene scene) {
+  final path = scene.path;
+  if (path.length < 2) return;
+  Offset center(Pos p) => Offset(p.x + 0.5, p.y + 0.5) * Tile.size;
+  final line = Path()..moveTo(center(path.first).dx, center(path.first).dy);
+  for (final p in path.skip(1)) {
+    line.lineTo(center(p).dx, center(p).dy);
+  }
+  canvas.drawPath(
+    dashPath(line, dashArray: CircularIntervalList(BoardArt.pathDash)),
+    Paint()
+      ..color = KoColors.standard.orangeLine
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = BoardArt.pathWidth
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round,
+  );
 }
 
 /// Bagian petak dari [paintBoard] (63 petak dan bendanya), tanpa potongan
@@ -81,24 +112,26 @@ void paintBoardTiles(
 }
 
 /// Bagian Oyen dari [paintBoard] (Oyen dan panah arah hadap), tanpa potongan
-/// sudut.
-void paintBoardOyen(Canvas canvas, BoardScene scene) {
+/// sudut. [at] (kolom, baris) menimpa posisi Oyen di [scene], untuk animasi
+/// pindah petak.
+void paintBoardOyen(Canvas canvas, BoardScene scene, {Offset? at}) {
   final oyen = scene.oyen;
   if (oyen == null) return;
+  final tile = (at ?? Offset(oyen.col, oyen.row)) * Tile.size;
   canvas
     ..save()
     ..translate(
-      oyen.col * Tile.size + BoardArt.oyenOffset.dx,
-      oyen.row * Tile.size + BoardArt.oyenOffset.dy,
+      tile.dx + BoardArt.oyenOffset.dx,
+      tile.dy + BoardArt.oyenOffset.dy,
     );
   paintOyen(canvas, oyen.look, size: BoardArt.oyenSize);
   canvas.restore();
-  if (scene.showFacing) _paintFacing(canvas, oyen);
+  if (scene.showFacing) _paintFacing(canvas, tile, oyen.look.dir);
 }
 
-/// Panah di tepi petak Oyen, ke arah hadapnya (`facingStyle` di desain).
-void _paintFacing(Canvas canvas, BoardOyen oyen) {
-  final dir = oyen.look.dir;
+/// Panah di tepi petak Oyen (pojok kiri atasnya di [tile]), ke arah hadapnya
+/// (`facingStyle` di desain).
+void _paintFacing(Canvas canvas, Offset tile, Direction dir) {
   // Pojok kiri atas ikon 12 px, relatif ke pojok petak.
   final (fx, fy) = switch (dir) {
     Direction.right => (44.0, 19.0),
@@ -117,10 +150,7 @@ void _paintFacing(Canvas canvas, BoardOyen oyen) {
   const c = KoColors.standard;
   canvas
     ..save()
-    ..translate(
-      oyen.col * Tile.size + fx + half,
-      oyen.row * Tile.size + fy + half,
-    )
+    ..translate(tile.dx + fx + half, tile.dy + fy + half)
     ..drawCircle(
       Offset.zero,
       radius + BoardArt.facingRing,

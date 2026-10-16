@@ -106,6 +106,31 @@ abstract final class KoIcons {
     KoIconShape.path('M7 4.5v15l12.5-7.5z', paint: KoIconPaint.fillAndStroke),
   ], strokeWidth: 2);
 
+  /// Lanjutkan fase jalan (segitiga penuh, garis lebih tipis dari [play]).
+  static const resume = KoIconData([
+    KoIconShape.path('M7 4.5v15l12.5-7.5z', paint: KoIconPaint.fillAndStroke),
+  ], strokeWidth: 1.5);
+
+  /// Jeda fase jalan (dua batang).
+  static const pause = KoIconData([
+    KoIconShape.rrect(
+      Rect.fromLTWH(6, 4.5, 4.2, 15),
+      1.4,
+      paint: KoIconPaint.fill,
+    ),
+    KoIconShape.rrect(
+      Rect.fromLTWH(13.8, 4.5, 4.2, 15),
+      1.4,
+      paint: KoIconPaint.fill,
+    ),
+  ], strokeWidth: 0);
+
+  /// Maju satu langkah.
+  static const stepForward = KoIconData([
+    KoIconShape.path('M6 5l9 7-9 7z', paint: KoIconPaint.fillAndStroke),
+    KoIconShape.path('M19 5v14'),
+  ], strokeWidth: 2.4);
+
   /// Level terkunci (gembok).
   static const lock = KoIconData([
     KoIconShape.rrect(Rect.fromLTWH(5, 11, 14, 10), 2.5),

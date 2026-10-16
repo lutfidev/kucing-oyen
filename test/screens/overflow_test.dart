@@ -45,6 +45,29 @@ void main() {
     }
   }
 
+  // Fase jalan sampai hasil sementara, tanpa benda: level 1 (tanpa chip
+  // status), level 12 (gelas jatuh), level 13 (vas pecah, mondar-mandir).
+  for (final size in sizes) {
+    for (final scale in textScales) {
+      for (final id in const [1, 12, 13]) {
+        final label = '${size.width.toInt()}×${size.height.toInt()}';
+        testWidgets(
+          'tanpa overflow: fase jalan level $id @ $label, teks ${scale * 100}%',
+          (tester) async {
+            setScreenSize(tester, size);
+            setTextScale(tester, scale);
+            await pumpApp(tester, location: AppRoutes.level(id));
+            await tester.tap(find.text('Bangunkan Oyen'));
+            await tester.pumpAndSettle();
+            await tester.tap(find.text('Lihat hasil'));
+            await tester.pumpAndSettle();
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+    }
+  }
+
   testWidgets('galeri bisa digulir sampai bawah di 360×640, teks 130%', (
     tester,
   ) async {

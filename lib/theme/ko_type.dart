@@ -33,6 +33,10 @@ class KoType extends ThemeExtension<KoType> {
     required this.chipLabel,
     required this.bodySmall,
     required this.caption,
+    required this.numberMedium,
+    required this.numberBadge,
+    required this.paragraph,
+    required this.controlLabel,
   });
 
   static const standard = KoType(
@@ -126,6 +130,29 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 12,
       fontWeight: FontWeight.w700,
     ),
+    numberMedium: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 24,
+      fontWeight: FontWeight.w700,
+    ),
+    numberBadge: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 15,
+      fontWeight: FontWeight.w700,
+    ),
+    paragraph: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 15,
+      fontWeight: FontWeight.w700,
+      height: 1.3,
+    ),
+    controlLabel: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 13,
+      fontWeight: FontWeight.w700,
+    ),
   );
 
   /// Fredoka 700/46: "Berhasil!".
@@ -177,6 +204,18 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 700/12: keterangan kecil ("yang menyala").
   final TextStyle caption;
 
+  /// Fredoka 700/24: angka "Langkah" di bar atas fase jalan.
+  final TextStyle numberMedium;
+
+  /// Fredoka 700/15: nomor langkah di lingkaran caption.
+  final TextStyle numberBadge;
+
+  /// Nunito 700/15, tinggi baris 1,3: caption langkah fase jalan.
+  final TextStyle paragraph;
+
+  /// Nunito 700/13: keterangan tombol putar ("Jeda", "Lanjutkan").
+  final TextStyle controlLabel;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -195,6 +234,10 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? chipLabel,
     TextStyle? bodySmall,
     TextStyle? caption,
+    TextStyle? numberMedium,
+    TextStyle? numberBadge,
+    TextStyle? paragraph,
+    TextStyle? controlLabel,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -213,6 +256,10 @@ class KoType extends ThemeExtension<KoType> {
       chipLabel: chipLabel ?? this.chipLabel,
       bodySmall: bodySmall ?? this.bodySmall,
       caption: caption ?? this.caption,
+      numberMedium: numberMedium ?? this.numberMedium,
+      numberBadge: numberBadge ?? this.numberBadge,
+      paragraph: paragraph ?? this.paragraph,
+      controlLabel: controlLabel ?? this.controlLabel,
     );
   }
 
@@ -237,6 +284,10 @@ class KoType extends ThemeExtension<KoType> {
       chipLabel: s(chipLabel, other.chipLabel),
       bodySmall: s(bodySmall, other.bodySmall),
       caption: s(caption, other.caption),
+      numberMedium: s(numberMedium, other.numberMedium),
+      numberBadge: s(numberBadge, other.numberBadge),
+      paragraph: s(paragraph, other.paragraph),
+      controlLabel: s(controlLabel, other.controlLabel),
     );
   }
 }

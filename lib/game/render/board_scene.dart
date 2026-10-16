@@ -33,8 +33,13 @@ class BoardOyen {
 /// Isi papan 7×9 yang siap digambar `paintBoard`: 63 petak (baris demi
 /// baris), Oyen, dan panah arah hadap. Dart murni.
 class BoardScene {
-  BoardScene({required List<Tile> tiles, this.oyen, this.facing = true})
-    : tiles = List.unmodifiable(tiles) {
+  BoardScene({
+    required List<Tile> tiles,
+    this.oyen,
+    this.facing = true,
+    List<Pos> path = const [],
+  }) : tiles = List.unmodifiable(tiles),
+       path = List.unmodifiable(path) {
     if (tiles.length != columns * rows) {
       throw ArgumentError.value(
         tiles.length,
@@ -47,17 +52,22 @@ class BoardScene {
   /// Mengikuti `renderVals()` di `Board.dc.html`.
   ///
   /// [items] menimpa benda di peta (benda pemain memakai `fishP`, `bucketP`,
-  /// `boxP`). [broken] mengganti semua vas dengan vas pecah. Tanpa [oyen],
-  /// Oyen tidur di petak awal peta dengan Zzz; [showOyen] false
-  /// menyembunyikannya. [facing] menampilkan panah arah hadap saat Oyen tidur.
+  /// `boxP`; `none` menghapus benda bawaan). [broken] mengganti semua vas
+  /// dengan vas pecah. Di petak [knocked] barangnya sudah jatuh: gelas jadi
+  /// meja kosong (tidak ada gambar gelas jatuh di desain), vas jadi vas
+  /// pecah. Tanpa [oyen], Oyen tidur di petak awal peta dengan Zzz;
+  /// [showOyen] false menyembunyikannya. [facing] menampilkan panah arah
+  /// hadap saat Oyen tidur. [path] = jalur Oyen (garis putus-putus).
   factory BoardScene.fromMap(
     List<String> map, {
     Map<Pos, TileItem> items = const {},
     Set<Pos> glow = const {},
     bool broken = false,
+    Set<Pos> knocked = const {},
     BoardOyen? oyen,
     bool showOyen = true,
     bool facing = true,
+    List<Pos> path = const [],
   }) {
     BoardOyen? mapOyen;
     final tiles = <Tile>[];
@@ -68,6 +78,7 @@ class BoardScene {
         var kind = TileKind.floor;
         var item = TileItem.none;
         final dir = Direction.fromSymbol(ch);
+        final fell = knocked.contains(Pos(c, r));
         switch (ch) {
           case '#':
             if (r == 0) {
@@ -82,9 +93,9 @@ class BoardScene {
           case 'M':
             kind = TileKind.table;
           case 'G':
-            kind = TileKind.tableGlass;
+            kind = fell ? TileKind.table : TileKind.tableGlass;
           case 'V':
-            kind = broken ? TileKind.tableBroken : TileKind.tableVase;
+            kind = broken || fell ? TileKind.tableBroken : TileKind.tableVase;
           case 'F':
             item = TileItem.fish;
           case 'A':
@@ -118,6 +129,7 @@ class BoardScene {
       tiles: tiles,
       oyen: showOyen ? oyen ?? mapOyen : null,
       facing: facing,
+      path: path,
     );
   }
 
@@ -159,6 +171,10 @@ class BoardScene {
   final List<Tile> tiles;
   final BoardOyen? oyen;
   final bool facing;
+
+  /// Petak-petak yang dilewati Oyen, berurutan (prop `path`). Digambar
+  /// sebagai garis putus-putus lewat tengah petak kalau lebih dari satu.
+  final List<Pos> path;
 
   Tile tileAt(Pos p) => tiles[p.y * columns + p.x];
 

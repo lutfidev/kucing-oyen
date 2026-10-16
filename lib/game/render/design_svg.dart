@@ -348,3 +348,21 @@ const trayBoxSvg = r'''
 const trayFishGhostSvg = r'''
 <g transform="rotate(-24 25 25)"><path d="M34 25 L43 18 L42 32 Z" fill="#B49C74" stroke="#7E6848" stroke-width="1.4" stroke-linejoin="round"></path><path d="M8 25 Q21 13 34 25 Q21 37 8 25 Z" fill="#CDB892" stroke="#7E6848" stroke-width="1.4"></path><path d="M19 20.5 V29.5 M24 19.5 V30.5 M29 21 V29" stroke="#8D7656" stroke-width="1.1"></path><circle cx="13" cy="24" r="1.7" fill="#3A2618"></circle></g>
 ''';
+
+/// Gelembung pikiran ikan di atas Oyen, viewBox 100×100 seperti
+/// [oyenSvg]. Tidak ada di desain (GDD: gelembung menunjukkan incaran
+/// Oyen): lingkaran gelembung kaget `Oyen.dc.html` dengan ikan asin
+/// `Tile.dc.html` (tanpa bayangan dan cincin pemain) diperkecil di dalamnya.
+const fishBubbleSvg = r'''
+<circle cx="76" cy="12" r="2.6" fill="#FFFFFF" stroke="#3A2618" stroke-width="1.6"></circle>
+<circle cx="83" cy="3" r="3.8" fill="#FFFFFF" stroke="#3A2618" stroke-width="1.6"></circle>
+<circle cx="98" cy="-12" r="13.5" fill="#FFFFFF" stroke="#3A2618" stroke-width="2"></circle>
+<g transform="translate(98 -12) scale(0.6) translate(-25.5 -25)">
+<g transform="rotate(-24 25 25)">
+<path d="M34 25 L43 18 L42 32 Z" fill="#B49C74" stroke="#7E6848" stroke-width="1.4" stroke-linejoin="round"></path>
+<path d="M8 25 Q21 13 34 25 Q21 37 8 25 Z" fill="#CDB892" stroke="#7E6848" stroke-width="1.4"></path>
+<path d="M19 20.5 V29.5 M24 19.5 V30.5 M29 21 V29" stroke="#8D7656" stroke-width="1.1" opacity="0.8"></path>
+<circle cx="13" cy="24" r="1.7" fill="#3A2618"></circle>
+</g>
+</g>
+''';

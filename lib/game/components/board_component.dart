@@ -7,7 +7,8 @@ import 'package:flutter/gestures.dart' show Drag;
 import '../kucing_game.dart';
 import '../render/render.dart';
 
-/// Petak dan benda papan 350×450 (`paintBoardTiles`), dipotong sudut papan.
+/// Petak dan benda papan 350×450 (`paintBoardTiles`) dan jalur Oyen
+/// (`paintBoardPath`), dipotong sudut papan.
 ///
 /// Seretan di papan diterjemahkan ke petak lalu diteruskan ke
 /// [KucingGame.input]; komponen ini tidak tahu benda mana yang boleh
@@ -26,6 +27,7 @@ class BoardComponent extends PositionComponent
       ..save()
       ..clipRRect(BoardArt.rrect);
     paintBoardTiles(canvas, game.scene, glowOpacity: game.glowOpacity);
+    paintBoardPath(canvas, game.scene);
     canvas.restore();
   }
 

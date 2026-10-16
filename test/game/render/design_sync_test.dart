@@ -65,5 +65,14 @@ void main() {
         }
       });
     });
+
+    test('gelembung ikan: lingkaran dari Oyen.dc.html, ikan dari Tile', () {
+      final source = _read('Oyen.dc.html') + _read('Tile.dc.html');
+      final tags = RegExp(r'<(?!g\b)[a-z][^>]*>').allMatches(fishBubbleSvg);
+      expect(tags, hasLength(7));
+      for (final tag in tags) {
+        expect(source, contains(tag[0]));
+      }
+    });
   }, skip: missing);
 }

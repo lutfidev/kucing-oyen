@@ -23,6 +23,7 @@ class KoPressable extends StatefulWidget {
     this.width,
     this.height,
     this.padding,
+    this.toggled,
   });
 
   /// Null = nonaktif: tidak bisa ditekan dan tidak turun.
@@ -49,6 +50,9 @@ class KoPressable extends StatefulWidget {
   final double? height;
   final EdgeInsetsGeometry? padding;
   final Widget child;
+
+  /// Tombol nyala/mati untuk pembaca layar (mis. ×2); null = tombol biasa.
+  final bool? toggled;
 
   @override
   State<KoPressable> createState() => _KoPressableState();
@@ -80,6 +84,7 @@ class _KoPressableState extends State<KoPressable> {
       button: true,
       enabled: enabled,
       label: widget.semanticLabel,
+      toggled: widget.toggled,
       onTap: widget.onPressed,
       excludeSemantics: true,
       child: GestureDetector(
