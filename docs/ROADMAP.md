@@ -20,7 +20,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 4. Fondasi UI: token desain, font, komponen dasar
 - [x] 5. Gambar petak, papan, dan Oyen
 - [x] 6. Gameplay fase atur
-- [ ] 7. Gameplay fase jalan
+- [x] 7. Gameplay fase jalan
 - [ ] 8. Hasil: berhasil, vas pecah, Oyen bosan
 - [ ] 9. Beranda, peta babak, progres tersimpan
 - [ ] 10. Putar ulang
@@ -81,9 +81,11 @@ Selesai: `lib/game/kucing_game.dart` (`KucingGame`, `BoardInput`), `lib/game/com
 
 > Baca `docs/design/source/03-gameplay-fase-atur.html`, `18-komponen-papan-7x9.html`, dan GDD bagian "Alur satu level" serta "Pembagian komponen Flame". Tambah `flame` (busy_network memakai `flame: ^1.38.2` dengan versi Flutter yang sama). Buat `KucingGame` (`FlameGame`) dengan kamera beresolusi tetap 350×450 (koordinat papan desain), lalu `BoardComponent` dan `CatComponent` yang menggambar lewat `lib/game/render/`. Layar `/level/:id` memuat level lewat `loadLevels()` dan memakai `LevelSession`: bar atas (kembali, "Level 13 · Vas Ibu", target bintang 3 "pakai N benda", tombol Aturan yang belum berfungsi), papan dengan Oyen tidur + Zzz + panah arah hadap, baki dengan angka sisa, petunjuk "Taruh di petak yang menyala", dan tombol "Bangunkan Oyen". Seret benda dari baki ke papan: petak yang boleh diisi menyala (`glow`) dan benda menempel ke petak. Benda di papan bisa diseret ke petak lain atau kembali ke baki. Logika tetap di `LevelSession`; komponen Flame hanya menerjemahkan sentuhan ke koordinat petak. "Bangunkan Oyen" cukup memanggil `wake()` dan menampilkan hasil sementara berupa teks; animasinya di langkah 7. Test: widget test menyeret benda (buat helper seret ke petak), penolakan petak tidak sah, angka baki berubah. Tambah rute ini ke test overflow.
 
-## 7. Gameplay fase jalan
+## 7. Gameplay fase jalan ✅
 
 **Hasil:** Oyen bergerak langkah demi langkah mengikuti `SimResult.trace`.
+
+Selesai: keadaan papan per langkah dibangun ulang dari `trace` tanpa simulasi ulang (`runFrames`), jam pemutar 4 langkah per detik dengan jeda, ×2, dan maju satu langkah (`RunClock`), caption per `StepKind` (`runCaption`), pose dan papan per langkah (`runLook`, `runScene`, termasuk garis jalur putus-putus desain 04), Oyen digeser antarpetak di `CatComponent`, dan layar fase jalan desain 04 (`run_panel.dart`). Gelembung ikan dan pose menjatuhkan yang dicerminkan ke arah meja dibuat dengan gaya desain. "Lihat hasil" membuka teks hasil sementara langkah 6 sampai langkah 8. Keputusan lain di `docs/DESIGN_NOTES.md`.
 
 > Baca `docs/design/source/04-gameplay-fase-jalan.html` (termasuk daftar `steps` dan caption-nya), `16-komponen-oyen.html`, dan GDD bagian "Alur satu level". Setelah "Bangunkan Oyen", mainkan `trace` satu langkah demi satu langkah: 4 langkah per detik sesuai GDD (desain memakai transisi 0,35 detik; ikuti GDD dan catat), tombol ×2, Jeda/Lanjutkan, penghitung "Langkah N", status vas dan jumlah benda dipakai seperti desain. Pose per `StepKind`: `walk` → walk; `scared` → shock + gelembung kaget (desain menampilkan kaget masih menghadap air, sedangkan `SimStep.dir` adalah arah sesudah putar balik); `turn` → idle dengan arah baru; `enterBox`/`sit` → box; `knockGlass`/`knockVase` → knock (gelas jatuh jadi meja kosong, vas jadi `tableBroken`); `eat` → eat dan ikannya hilang. Kardus hilang pada langkah `sit` yang punya `changed`. Langkah terakhir di mangkuk memakai pose seperti desain. Gelembung pikiran bergambar ikan saat `SimStep.chasing` tidak null disebut di GDD tapi tidak ada di desain: buat dengan gaya gelembung kaget dan catat. Selesai → tombol "Lihat hasil" (layar hasil di langkah 8; sementara kembali ke fase atur). Kalau `MediaQuery.disableAnimations`, langsung ke keadaan akhir. Test: urutan pose dan posisi untuk solusi level 13 dan level 15 (kardus), keadaan papan akhir, jeda, dan ×2.
 
