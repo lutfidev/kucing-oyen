@@ -1,0 +1,139 @@
+import 'dart:ui' show lerpDouble;
+
+import 'package:flutter/material.dart';
+
+import 'ko_colors.dart';
+
+/// Bayangan (kartu "Jarak, radius, bayangan").
+///
+/// Tombol memakai bayangan padat tanpa blur ("press": 0 6 0 orangeDeep) yang
+/// hilang saat ditekan; tingginya disimpan sebagai angka di sini, warnanya
+/// ikut varian tombol. Kartu dan papan memakai bayangan lembut.
+@immutable
+class KoShadow extends ThemeExtension<KoShadow> {
+  const KoShadow({
+    required this.pressHero,
+    required this.press,
+    required this.pressSecondary,
+    required this.pressIcon,
+    required this.card,
+    required this.board,
+    required this.glow,
+    required this.glowStrong,
+    required this.badgeRing,
+  });
+
+  factory KoShadow.from(KoColors c) => KoShadow(
+    pressHero: 7,
+    press: 6,
+    pressSecondary: 4,
+    pressIcon: 3,
+    card: [
+      BoxShadow(
+        color: c.shadowCard,
+        offset: const Offset(0, 6),
+        blurRadius: 16,
+      ),
+    ],
+    board: [
+      BoxShadow(color: c.boardRing, spreadRadius: 4),
+      BoxShadow(
+        color: c.shadowBoard,
+        offset: const Offset(0, 14),
+        blurRadius: 28,
+      ),
+    ],
+    glow: [
+      BoxShadow(
+        color: c.shadowGlow,
+        offset: const Offset(0, 16),
+        blurRadius: 28,
+      ),
+    ],
+    glowStrong: [
+      BoxShadow(
+        color: c.shadowGlowStrong,
+        offset: const Offset(0, 16),
+        blurRadius: 28,
+      ),
+    ],
+    badgeRing: [BoxShadow(color: c.surface, spreadRadius: 2)],
+  );
+
+  static final standard = KoShadow.from(KoColors.standard);
+
+  /// Tinggi bayangan padat tombol utama besar (0 7 0).
+  final double pressHero;
+
+  /// Tinggi bayangan padat tombol utama dan sukses (0 6 0).
+  final double press;
+
+  /// Tinggi bayangan padat tombol sekunder (0 4 0).
+  final double pressSecondary;
+
+  /// Tinggi bayangan padat tombol ikon dan slot baki (0 3 0).
+  final double pressIcon;
+
+  /// Kartu: 0 6 16, 14%.
+  final List<BoxShadow> card;
+
+  /// Papan: cincin 4 px + 0 14 28.
+  final List<BoxShadow> board;
+
+  /// Sinar di bawah tombol utama besar: 0 16 28, 25% ("Bangunkan Oyen")
+  /// atau 28% ("Main").
+  final List<BoxShadow> glow;
+  final List<BoxShadow> glowStrong;
+
+  /// Cincin 2 px warna permukaan di sekeliling badge angka.
+  final List<BoxShadow> badgeRing;
+
+  /// Bayangan padat setinggi [depth] (tanpa blur).
+  static List<BoxShadow> solid(Color color, double depth) => [
+    BoxShadow(color: color, offset: Offset(0, depth)),
+  ];
+
+  @override
+  KoShadow copyWith({
+    double? pressHero,
+    double? press,
+    double? pressSecondary,
+    double? pressIcon,
+    List<BoxShadow>? card,
+    List<BoxShadow>? board,
+    List<BoxShadow>? glow,
+    List<BoxShadow>? glowStrong,
+    List<BoxShadow>? badgeRing,
+  }) {
+    return KoShadow(
+      pressHero: pressHero ?? this.pressHero,
+      press: press ?? this.press,
+      pressSecondary: pressSecondary ?? this.pressSecondary,
+      pressIcon: pressIcon ?? this.pressIcon,
+      card: card ?? this.card,
+      board: board ?? this.board,
+      glow: glow ?? this.glow,
+      glowStrong: glowStrong ?? this.glowStrong,
+      badgeRing: badgeRing ?? this.badgeRing,
+    );
+  }
+
+  @override
+  KoShadow lerp(KoShadow? other, double t) {
+    if (other == null) return this;
+    double d(double a, double b) => lerpDouble(a, b, t)!;
+    List<BoxShadow> l(List<BoxShadow> a, List<BoxShadow> b) =>
+        BoxShadow.lerpList(a, b, t)!;
+    return KoShadow(
+      pressHero: d(pressHero, other.pressHero),
+      press: d(press, other.press),
+      pressSecondary: d(pressSecondary, other.pressSecondary),
+      pressIcon: d(pressIcon, other.pressIcon),
+      card: l(card, other.card),
+      board: l(board, other.board),
+      glow: l(glow, other.glow),
+      glowStrong: l(glowStrong, other.glowStrong),
+      badgeRing: l(badgeRing, other.badgeRing),
+    );
+  }
+}

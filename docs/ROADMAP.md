@@ -17,7 +17,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 1. Simulasi Oyen di Dart murni dan loader level
 - [x] 2. Solver dan cek data level
 - [x] 3. Model sesi level (baki, penempatan, bintang)
-- [ ] 4. Fondasi UI: token desain, font, komponen dasar
+- [x] 4. Fondasi UI: token desain, font, komponen dasar
 - [ ] 5. Gambar petak, papan, dan Oyen
 - [ ] 6. Gameplay fase atur
 - [ ] 7. Gameplay fase jalan
@@ -51,9 +51,11 @@ Selesai: `lib/game/model/level_session.dart` dan `test/game/model/level_session_
 
 > Baca GDD bagian "Alur satu level" dan "Bintang", lalu `lib/game/sim/`. Buat `lib/game/model/level_session.dart` (Dart murni, tanpa Flutter). `LevelSession(level)` menyimpan fase (`arrange`, `running`, `result`), benda yang ditaruh pemain, dan sisa baki (`inventory` dikurangi benda terpasang). Aksi: `place(item, pos)` (hanya di petak `board.canPlace` yang belum terisi dan kalau sisa baki > 0), `move(from, to)`, `remove(pos)` (kembali ke baki), `reset()`. `wake()` menjalankan `simulate` dan menyimpan `SimResult`. Bintang: 0 kalau gagal, 1 kalau menang, 2 kalau menang dan vas aman, 3 kalau juga jumlah benda dipakai ≤ `starItems`. Gagal atau "Atur Lagi" kembali ke fase atur dengan susunan benda tetap. Model harus bisa membedakan benda pemain dari benda bawaan peta, karena desain menggambarnya berbeda. Unit test semua aksi termasuk penolakan, dan bintang untuk level 13: solusi JSON (3 bintang), ikan saja di (2,4) (1 bintang, vas pecah), tanpa benda (gagal). Belum ada UI.
 
-## 4. Fondasi UI
+## 4. Fondasi UI ✅
 
 **Hasil:** token desain, font, komponen dasar, kerangka app dengan rute galeri, dan perkakas test layar.
+
+Selesai: `lib/theme/` (KoColors, KoType, KoSpace, KoRadius, KoShadow, KoSize, `KoTheme.light()`, akses `context.koColors` dst.), `lib/widgets/` (`KoButton`, `KoIconButton`, `KoChip`, `TraySlot`, `KoCard`, `KoStars`, `KoIcons`), `lib/app/` (go_router: `/` sementara, `/galeri`), dan font di `assets/fonts/`. Token dipisah per grup seperti lembar token, bukan satu `ThemeExtension`; alasan dan keputusan lain di `docs/DESIGN_NOTES.md`. Semua test memakai font asli lewat `test/flutter_test_config.dart`. Node level menunggu langkah 9.
 
 > Baca `docs/design/source/13-design-token-komponen-ui.html` (warna, tipografi, jarak, radius, bayangan, komponen) dan `01-beranda.html` untuk gaya umum. Buat `lib/theme/` dengan semua token dalam satu `ThemeExtension` (desain menulis "Nama token disiapkan untuk Flutter: satu ThemeExtension") dan gaya teks display, title, heading, number, body, label, overline (Fredoka 500–700, Nunito 600–800). Font dibundel sebagai aset, bukan diunduh saat aplikasi jalan. Komponen di `lib/widgets/`: tombol utama, sukses, sekunder, dan ikon (dengan efek tekan "press"), chip, slot baki, kartu. Kerangka app: `MaterialApp.router` + `go_router`, rute `/` sementara dan `/galeri` yang menampilkan semua komponen. Tidak ada warna atau ukuran hardcode di widget; tambah token kalau butuh nilai baru. Test: widget test komponen, test overflow semua rute di 360×640 sampai 412×915 dengan teks 130% (rute baru di langkah berikutnya ditambahkan ke test ini), dan potret layar `flutter test test/screenshots --dart-define=SCREENSHOTS=true` → `build/screenshots/390x844/*.png` dengan font asli, di-skip di test biasa. Pola yang sudah jalan bisa dicontoh dari repo `D:\Dev\personal\game\busy_network` (`lib/theme/`, `test/screens/overflow_test.dart`, `test/screenshots/`).
 
