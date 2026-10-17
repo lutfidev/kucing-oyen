@@ -41,6 +41,13 @@ class KoType extends ThemeExtension<KoType> {
     required this.headline,
     required this.headlineSmall,
     required this.numberCompact,
+    required this.logoSmall,
+    required this.logo,
+    required this.bodyLarge,
+    required this.numberChip,
+    required this.numberChipSmall,
+    required this.tag,
+    required this.tagSmall,
   });
 
   static const standard = KoType(
@@ -184,6 +191,49 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 22,
       fontWeight: FontWeight.w700,
     ),
+    logoSmall: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 54,
+      fontWeight: FontWeight.w700,
+      height: 0.88,
+      letterSpacing: -0.5,
+    ),
+    logo: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 82,
+      fontWeight: FontWeight.w700,
+      height: 0.88,
+      letterSpacing: -0.5,
+    ),
+    bodyLarge: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+    ),
+    numberChip: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 22,
+      fontWeight: FontWeight.w600,
+    ),
+    numberChipSmall: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 15,
+      fontWeight: FontWeight.w600,
+    ),
+    tag: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 12.5,
+      fontWeight: FontWeight.w800,
+    ),
+    tagSmall: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 12,
+      fontWeight: FontWeight.w800,
+    ),
   );
 
   /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
@@ -260,6 +310,27 @@ class KoType extends ThemeExtension<KoType> {
   /// Fredoka 700/22: angka kotak kecil di layar vas pecah ("10 langkah").
   final TextStyle numberCompact;
 
+  /// Fredoka 700/54 dan 700/82, tinggi baris 0,88: logo "Kucing" dan "Oren"
+  /// di Beranda.
+  final TextStyle logoSmall;
+
+  final TextStyle logo;
+
+  /// Nunito 700/16: tagline Beranda.
+  final TextStyle bodyLarge;
+
+  /// Fredoka 600/22: total bintang di Beranda ("31/60").
+  final TextStyle numberChip;
+
+  /// Fredoka 600/15: bintang babak di kartu babak ("26/30").
+  final TextStyle numberChipSmall;
+
+  /// Nunito 800/12,5: badge "Selesai" di kartu babak.
+  final TextStyle tag;
+
+  /// Nunito 800/12: label "Main" di atas node level saat ini.
+  final TextStyle tagSmall;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -286,6 +357,13 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? headline,
     TextStyle? headlineSmall,
     TextStyle? numberCompact,
+    TextStyle? logoSmall,
+    TextStyle? logo,
+    TextStyle? bodyLarge,
+    TextStyle? numberChip,
+    TextStyle? numberChipSmall,
+    TextStyle? tag,
+    TextStyle? tagSmall,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -312,6 +390,13 @@ class KoType extends ThemeExtension<KoType> {
       headline: headline ?? this.headline,
       headlineSmall: headlineSmall ?? this.headlineSmall,
       numberCompact: numberCompact ?? this.numberCompact,
+      logoSmall: logoSmall ?? this.logoSmall,
+      logo: logo ?? this.logo,
+      bodyLarge: bodyLarge ?? this.bodyLarge,
+      numberChip: numberChip ?? this.numberChip,
+      numberChipSmall: numberChipSmall ?? this.numberChipSmall,
+      tag: tag ?? this.tag,
+      tagSmall: tagSmall ?? this.tagSmall,
     );
   }
 
@@ -344,6 +429,13 @@ class KoType extends ThemeExtension<KoType> {
       headline: s(headline, other.headline),
       headlineSmall: s(headlineSmall, other.headlineSmall),
       numberCompact: s(numberCompact, other.numberCompact),
+      logoSmall: s(logoSmall, other.logoSmall),
+      logo: s(logo, other.logo),
+      bodyLarge: s(bodyLarge, other.bodyLarge),
+      numberChip: s(numberChip, other.numberChip),
+      numberChipSmall: s(numberChipSmall, other.numberChipSmall),
+      tag: s(tag, other.tag),
+      tagSmall: s(tagSmall, other.tagSmall),
     );
   }
 }

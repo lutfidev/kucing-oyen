@@ -19,16 +19,34 @@ import 'package:kucing_oren/widgets/widgets.dart';
 import '../test_helpers.dart';
 import 'capture.dart';
 
-const _screens = <String, String>{
-  '00-beranda-sementara': AppRoutes.home,
-  '03-fase-atur-level-13': '/level/13',
-  '03-fase-atur-level-1': '/level/1',
-  '03-fase-atur-level-19': '/level/19',
-  '03-fase-atur-level-19-360x640': '/level/19',
-  'galeri': AppRoutes.gallery,
-  'galeri-papan': AppRoutes.galleryBoard,
-  'galeri-oyen': AppRoutes.galleryOyen,
+/// Progres seperti contoh desain: Babak 1 selesai dengan 26 bintang, level
+/// 11 dan 12 menang (5 bintang), level 13 sedang dimainkan (total 31/60).
+final _designProgress = {...wonUpTo(8), 9: 1, 10: 1, 11: 3, 12: 2};
+
+/// Rute dan progresnya.
+final _screens = <String, (String, Map<int, int>)>{
+  '01-beranda': (AppRoutes.home, _designProgress),
+  '01-beranda-baru-360x640': (AppRoutes.home, const {}),
+  '02-peta-babak-2': (AppRoutes.chapter(2), _designProgress),
+  '02-peta-babak-2-360x640': (AppRoutes.chapter(2), _designProgress),
+  '02-peta-babak-2-bos': (AppRoutes.chapter(2), wonUpTo(19, stars: 2)),
+  '02-peta-babak-2-selesai': (AppRoutes.chapter(2), wonUpTo(20)),
+  '02-peta-babak-1-baru': (AppRoutes.chapter(1), const {}),
+  '02-peta-babak-1-level-4': (AppRoutes.chapter(1), {1: 3, 2: 2, 3: 1}),
+  '02-peta-babak-1-bos-360x640': (AppRoutes.chapter(1), wonUpTo(9)),
+  '03-fase-atur-level-13': (AppRoutes.level(13, chapter: 2), const {}),
+  '03-fase-atur-level-1': (AppRoutes.level(1, chapter: 1), const {}),
+  '03-fase-atur-level-19': (AppRoutes.level(19, chapter: 2), const {}),
+  '03-fase-atur-level-19-360x640': (AppRoutes.level(19, chapter: 2), const {}),
+  'galeri': (AppRoutes.gallery, const {}),
+  'galeri-papan': (AppRoutes.galleryBoard, const {}),
+  'galeri-oyen': (AppRoutes.galleryOyen, const {}),
 };
+
+/// Aplikasi lengkap di [location] dengan progres [best], siap dipotret.
+Widget _app(String location, [Map<int, int> best = const {}]) => capturable(
+  KucingOrenApp(progress: testProgress(best), initialLocation: location),
+);
 
 /// Halaman galeri utuh dalam satu gambar panjang: rute dan tinggi layarnya.
 const _fullPages = <String, (String, double)>{
@@ -73,17 +91,16 @@ Future<void> _showResult(WidgetTester tester) async {
 void main() {
   final folder = '${_size.width.toInt()}x${_size.height.toInt()}';
 
-  for (final MapEntry(key: name, value: location) in _screens.entries) {
+  for (final MapEntry(key: name, value: (location, best)) in _screens.entries) {
     testWidgets('$folder/$name', (tester) async {
       setScreenSize(
         tester,
         name.endsWith('-360x640') ? const Size(360, 640) : _size,
       );
       await withShadows(() async {
-        await tester.pumpWidget(
-          capturable(KucingOrenApp(initialLocation: location)),
-        );
-        await tester.pumpAndSettle();
+        await tester.pumpWidget(_app(location, best));
+        // Node level saat ini di peta berdenyut terus.
+        await settle(tester);
         await capture(tester, '$folder/$name');
       });
     }, skip: !screenshotsEnabled);
@@ -94,9 +111,7 @@ void main() {
     testWidgets('$folder/$name', (tester) async {
       setScreenSize(tester, Size(_size.width, height));
       await withShadows(() async {
-        await tester.pumpWidget(
-          capturable(KucingOrenApp(initialLocation: location)),
-        );
+        await tester.pumpWidget(_app(location));
         await tester.pumpAndSettle();
         await capture(tester, '$folder/$name');
       });
@@ -106,9 +121,7 @@ void main() {
   testWidgets('$folder/03-fase-atur-seret-ember', (tester) async {
     setScreenSize(tester, _size);
     await withShadows(() async {
-      await tester.pumpWidget(
-        capturable(KucingOrenApp(initialLocation: AppRoutes.level(13))),
-      );
+      await tester.pumpWidget(_app(AppRoutes.level(13, chapter: 2)));
       await tester.pumpAndSettle();
       // Ember diseret ke petak (3, 3) seperti layar desain 03.
       final board = tester.getRect(find.byType(GameWidget<KucingGame>));
@@ -155,7 +168,7 @@ void main() {
       setScreenSize(tester, size);
       await withShadows(() async {
         await tester.pumpWidget(
-          capturable(KucingOrenApp(initialLocation: AppRoutes.level(id))),
+          _app(AppRoutes.level(id, chapter: testLevels[id - 1].chapter)),
         );
         await tester.pumpAndSettle();
         await _place(tester, items);
@@ -241,7 +254,7 @@ void main() {
       setScreenSize(tester, _size);
       await withShadows(() async {
         await tester.pumpWidget(
-          capturable(KucingOrenApp(initialLocation: AppRoutes.level(id))),
+          _app(AppRoutes.level(id, chapter: testLevels[id - 1].chapter)),
         );
         await tester.pumpAndSettle();
         final board = tester.getRect(find.byType(GameWidget<KucingGame>));

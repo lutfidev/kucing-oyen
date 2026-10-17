@@ -457,3 +457,81 @@ const vasePrangSvg = r'''
         <path d="M0 -26 L8 -12 L24 -18 L16 -4 L30 4 L14 8 L18 24 L4 14 L-6 28 L-8 12 L-26 16 L-14 2 L-28 -8 L-10 -10 L-14 -26 L-2 -16 Z" fill="#FFFBF3" stroke="#C2492F" stroke-width="2.5" stroke-linejoin="round"></path>
         <text x="1" y="6" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="13" fill="#9A3520">PRANG!</text>
 ''';
+
+/// Jejak kaki di latar Beranda (`01-beranda.html`), di koordinat layar
+/// 390×844. Dipotong dua karena dua jejak bawah menempel ke sudut kiri
+/// bawah layar dan dua jejak atas ke sudut kanan atas.
+const homePawsBottomSvg = r'''
+    <g fill="#E7C796">
+      <g transform="translate(46 760) rotate(-20)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
+      <g transform="translate(78 724) rotate(-10)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
+    </g>
+''';
+
+const homePawsTopSvg = r'''
+    <g fill="#E7C796">
+      <g transform="translate(330 140) rotate(25)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
+      <g transform="translate(352 178) rotate(35)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
+    </g>
+''';
+
+/// Ikon Babak 1 – Dapur di kartu babak (`02-peta-babak-2-ruang-tamu.html`),
+/// viewBox 36×36: lemari dan mangkuk.
+const chapterKitchenSvg = r'''
+<rect width="36" height="36" rx="10" fill="#F7E8CE"></rect><rect x="6" y="7" width="24" height="15" rx="2.5" fill="#B07A4F"></rect><rect x="8.5" y="9" width="9" height="11" rx="1.5" fill="#C99466"></rect><rect x="18.5" y="9" width="9" height="11" rx="1.5" fill="#C99466"></rect><circle cx="18" cy="28" r="4.5" fill="#3E9BCB"></circle><circle cx="18" cy="28" r="3" fill="#BFE7F7"></circle>
+''';
+
+/// Ikon Babak 2 – Ruang Tamu di kartu babak, viewBox 36×36. Tidak ada di
+/// desain (desain 02 hanya punya ikon dapur): latar [chapterKitchenSvg]
+/// dengan meja dan vas `Tile.dc.html` diperkecil.
+const chapterLivingRoomSvg = r'''
+<rect width="36" height="36" rx="10" fill="#F7E8CE"></rect>
+<g transform="translate(18 18) scale(0.64) translate(-25 -23.5)">
+    <rect x="4" y="3.5" width="42" height="40" rx="6" fill="#D9A066" stroke="#A8733F" stroke-width="2"></rect>
+    <path d="M10 14 H38 M10 33 H33" stroke="#C48A50" stroke-width="1.4" stroke-linecap="round"></path>
+    <circle cx="25" cy="24" r="11.5" fill="#C2492F"></circle>
+    <circle cx="25" cy="24" r="8.5" fill="none" stroke="#E7826A" stroke-width="1.6" stroke-dasharray="3 2.5"></circle>
+    <circle cx="25" cy="24" r="5" fill="#6E2414"></circle>
+    <ellipse cx="18" cy="15" rx="6" ry="2.6" fill="#5BA96A" transform="rotate(40 18 15)"></ellipse>
+    <ellipse cx="32.5" cy="14.5" rx="6" ry="2.6" fill="#6BB37A" transform="rotate(-40 32.5 14.5)"></ellipse>
+    <circle cx="25" cy="12.5" r="3.4" fill="#FFC83D" stroke="#E0A100" stroke-width="1"></circle>
+</g>
+''';
+
+/// Area bos di peta babak (`02-peta-babak-2-ruang-tamu.html`), di
+/// koordinat layar 390×844.
+const bossAreaSvg = r'''
+    <rect x="30" y="626" width="330" height="168" rx="30" fill="#C2492F" opacity="0.16"></rect>
+    <rect x="44" y="640" width="302" height="140" rx="22" fill="none" stroke="#C2492F" stroke-width="3" stroke-dasharray="2 9" opacity="0.4"></rect>
+''';
+
+/// Ketupat bos Babak 2 "Hari Lebaran" (`02-peta-babak-2-ruang-tamu.html`),
+/// viewBox 64×64.
+const bossKetupatSvg = r'''
+<g opacity="0.8"><path d="M32 6 L54 28 L32 50 L10 28 Z" fill="#7DBE6E" stroke="#3F7A3A" stroke-width="2.4" stroke-linejoin="round"></path><path d="M21 17 L43 39 M43 17 L21 39 M26.5 11.5 L48.5 33.5 M37.5 11.5 L15.5 33.5" stroke="#4E9447" stroke-width="2"></path><path d="M32 50 Q28 56 24 62 M32 50 Q36 56 41 61" stroke="#3F7A3A" stroke-width="2.6" fill="none" stroke-linecap="round"></path></g>
+''';
+
+/// Bos Babak 1 "Pesta Ikan Asin", viewBox 64×64. Tidak ada di desain
+/// (desain 02 hanya punya ketupat bos Babak 2): sepasang ikan asin
+/// `Tile.dc.html` yang berlawanan arah, dengan opasitas grup
+/// [bossKetupatSvg].
+const bossFishSvg = r'''
+<g opacity="0.8">
+<g transform="translate(30 23) scale(1.3) translate(-25.5 -25)">
+    <g transform="rotate(-24 25 25)">
+      <path d="M34 25 L43 18 L42 32 Z" fill="#B49C74" stroke="#7E6848" stroke-width="1.4" stroke-linejoin="round"></path>
+      <path d="M8 25 Q21 13 34 25 Q21 37 8 25 Z" fill="#CDB892" stroke="#7E6848" stroke-width="1.4"></path>
+      <path d="M19 20.5 V29.5 M24 19.5 V30.5 M29 21 V29" stroke="#8D7656" stroke-width="1.1" opacity="0.8"></path>
+      <circle cx="13" cy="24" r="1.7" fill="#3A2618"></circle>
+    </g>
+</g>
+<g transform="translate(34 42) scale(-1.3 1.3) translate(-25.5 -25)">
+    <g transform="rotate(-24 25 25)">
+      <path d="M34 25 L43 18 L42 32 Z" fill="#B49C74" stroke="#7E6848" stroke-width="1.4" stroke-linejoin="round"></path>
+      <path d="M8 25 Q21 13 34 25 Q21 37 8 25 Z" fill="#CDB892" stroke="#7E6848" stroke-width="1.4"></path>
+      <path d="M19 20.5 V29.5 M24 19.5 V30.5 M29 21 V29" stroke="#8D7656" stroke-width="1.1" opacity="0.8"></path>
+      <circle cx="13" cy="24" r="1.7" fill="#3A2618"></circle>
+    </g>
+</g>
+</g>
+''';

@@ -22,7 +22,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 6. Gameplay fase atur
 - [x] 7. Gameplay fase jalan
 - [x] 8. Hasil: berhasil, vas pecah, Oyen bosan
-- [ ] 9. Beranda, peta babak, progres tersimpan
+- [x] 9. Beranda, peta babak, progres tersimpan
 - [ ] 10. Putar ulang
 - [ ] 11. Kartu aturan dan tutorial
 - [ ] 12. Petunjuk dan koin
@@ -97,9 +97,11 @@ Selesai: `lib/screens/result/` (`ResultView` memilih `SuccessResult`, `VaseResul
 
 > Baca `docs/design/source/06-hasil-berhasil.html`, `07-hasil-vas-pecah.html`, `08-gagal-oyen-bosan.html`, dan GDD bagian "Bintang". Buat ketiga layar dengan teks persis seperti desain. Berhasil: animasi bintang, jumlah langkah, benda dipakai, penjelasan bintang, Ulangi/Lanjut, dan "Tonton putar ulang" (nonaktif sampai langkah 10). Vas pecah: "Sampai sih... tapi vas Ibu?", "Pecah di langkah N" dari `vaseBrokenAtStep`, Coba Lagi/Lanjut Saja. Oyen bosan untuk `FailReason.loop`; desain belum punya teks untuk `FailReason.tooManySteps` (kelamaan), jadi buat teks santai yang senada dan catat. Atur Lagi → fase atur dengan susunan tetap; Ulangi → papan kosong; Lanjut → level berikutnya. Angka bintang dari `LevelSession`. Test untuk level 13: solusi JSON (berhasil, 3 bintang), ikan saja di (2,4) ("Pecah di langkah 2", 10 langkah, 1 benda, sama dengan contoh desain), tanpa benda (Oyen bosan). Tambah rute ke test overflow.
 
-## 9. Beranda, peta babak, progres tersimpan
+## 9. Beranda, peta babak, progres tersimpan ✅
 
 **Hasil:** game bisa dimainkan dari Beranda sampai level 20, dan progres tidak hilang.
+
+Selesai: `Progress` dan `Chapter` (Dart murni, `lib/game/model/`), `ProgressStore` (`shared_preferences`, versi memori untuk test) dan `ProgressController`/`ProgressScope` di `lib/app/`, Beranda (desain 01), dan peta babak `/babak/:n` (desain 02) untuk kedua babak. Level pindah ke `/babak/:n/level/:id` supaya kembali menuju peta; bintang dicatat saat layar hasil dibuka. Babak 1 memakai tata letak desain 02 dengan gambar bos dan ikon babak yang dirakit dari gambar desain. Chip koin di Beranda menunggu langkah 12. Keputusan lain di `docs/DESIGN_NOTES.md`.
 
 > Baca `docs/design/source/01-beranda.html`, `02-peta-babak-2-ruang-tamu.html`, dan GDD bagian "Babak 1" serta "Babak 2". Beranda: logo, Oyen tidur, total bintang `x/60`, tombol Main, Lemari Kostum dan Pengaturan (belum berfungsi). Peta babak: desain hanya punya Babak 2 – Ruang Tamu; buat Babak 1 – Dapur (level 1–10, bos "Pesta Ikan Asin") dengan tata letak dan gaya yang sama, lalu catat. Tiap level menampilkan 0–3 bintang; level terkunci pudar dengan gembok; level saat ini menonjol; level bos lebih besar. Progres (bintang terbaik per level) disimpan lokal dengan `shared_preferences` di balik antarmuka kecil supaya mudah diuji. Level n+1 terbuka setelah level n menang (aturan ini belum ada di GDD; catat). Sambungkan Beranda → Peta → Level → Hasil → Lanjut atau kembali ke Peta. Test: simpan dan muat progres, buka kunci, total bintang, alur navigasi. Tambah rute ke test overflow.
 

@@ -12,6 +12,7 @@ class KoStar extends StatelessWidget {
     this.size,
     this.strokeWidth = defaultStrokeWidth,
     this.shine = false,
+    this.emptyColor,
   });
 
   final bool filled;
@@ -25,6 +26,10 @@ class KoStar extends StatelessWidget {
   /// Kilau kecil di kiri atas bintang kuning (bintang besar layar Berhasil).
   final bool shine;
 
+  /// Isi bintang yang belum didapat; default [KoColors.starEmpty] (peta
+  /// babak memakai [KoColors.nodeLocked]).
+  final Color? emptyColor;
+
   /// Garis tepi bintang di lembar token.
   static const double defaultStrokeWidth = 1.4;
 
@@ -36,7 +41,7 @@ class KoStar extends StatelessWidget {
       child: CustomPaint(
         size: Size.square(side),
         painter: _StarPainter(
-          fill: filled ? c.star : c.starEmpty,
+          fill: filled ? c.star : (emptyColor ?? c.starEmpty),
           edge: filled ? c.starEdge : c.muted,
           strokeWidth: strokeWidth,
           shine: filled && shine ? c.starShine : null,

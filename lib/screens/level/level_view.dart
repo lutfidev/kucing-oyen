@@ -66,6 +66,7 @@ class LevelView extends StatefulWidget {
     required this.backLabel,
     required this.onBack,
     required this.onNext,
+    this.onResult,
   });
 
   final Level level;
@@ -76,6 +77,9 @@ class LevelView extends StatefulWidget {
 
   /// "Lanjut" di layar hasil: level berikutnya.
   final VoidCallback onNext;
+
+  /// Dipanggil dengan bintang 0–3 setiap kali layar hasil dibuka.
+  final ValueChanged<int>? onResult;
 
   @override
   State<LevelView> createState() => _LevelViewState();
@@ -248,7 +252,9 @@ class _LevelViewState extends State<LevelView>
 
   /// "Lihat hasil": layar hasil.
   void _finish() {
-    if (_session.phase == SessionPhase.running) _update(_session.finish);
+    if (_session.phase != SessionPhase.running) return;
+    _update(_session.finish);
+    widget.onResult?.call(_session.stars!);
   }
 
   // ── Fase jalan ──────────────────────────────────────────────────────

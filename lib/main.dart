@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'app/app.dart';
+import 'app/progress_scope.dart';
+import 'app/progress_store.dart';
+import 'game/level_loader.dart';
 import 'theme/theme.dart';
 
 Future<void> main() async {
@@ -15,5 +18,11 @@ Future<void> main() async {
     }
   });
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const KucingOrenApp());
+  // Level dan progres dimuat sebelum layar pertama, jadi layar tidak perlu
+  // menunggu.
+  final progress = await ProgressController.load(
+    levels: await loadLevels(),
+    store: PrefsProgressStore(),
+  );
+  runApp(KucingOrenApp(progress: progress));
 }

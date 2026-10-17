@@ -1,58 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
+import '../../game/render/render.dart';
+import '../../game/sim/sim.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
-/// Beranda sementara sampai langkah 9 roadmap: judul, jalan pintas ke tiap
-/// level, dan jalan ke galeri.
+/// Beranda (desain 01): Oyen tidur di atas logo, total bintang, tombol Main
+/// ke peta babak yang sedang dimainkan, serta Lemari Kostum dan Pengaturan
+/// yang belum berfungsi.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
-    final t = context.koType;
     final space = context.koSpace;
+    final s = context.koSize;
+    final progress = ProgressScope.of(context);
+
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(space.gutter),
+      body: CustomPaint(
+        painter: _HomeBackground(c.checker),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              space.s24,
+              space.s8,
+              space.s24,
+              space.s16,
+            ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  'Kucing Oren',
-                  textAlign: TextAlign.center,
-                  style: t.display.copyWith(color: c.ink),
+                Expanded(
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: _Title(
+                        stars: progress.progress.totalStars,
+                        maxStars: progress.maxStars,
+                      ),
+                    ),
+                  ),
                 ),
-                SizedBox(height: space.s8),
-                Text(
-                  'Oyen nggak bisa disuruh. Kamu yang mikir.',
-                  textAlign: TextAlign.center,
-                  style: t.body.copyWith(color: c.inkSoft),
-                ),
-                SizedBox(height: space.s32),
-                Text(
-                  'Coba level'.toUpperCase(),
-                  style: t.overline.copyWith(color: c.inkSoft),
-                ),
-                SizedBox(height: space.s12),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: space.s8,
-                  runSpacing: space.s12,
-                  children: [
-                    for (var id = 1; id <= 20; id++) _LevelButton(id: id),
-                  ],
-                ),
-                SizedBox(height: space.s32),
+                SizedBox(height: space.s16),
                 KoButton(
-                  label: 'Galeri komponen',
-                  kind: KoButtonKind.secondary,
-                  onPressed: () => context.go(AppRoutes.gallery),
+                  label: 'Main',
+                  size: KoButtonSize.hero,
+                  icon: KoIcons.play,
+                  onPressed: () => context.go(
+                    AppRoutes.chapter(progress.currentChapter.number),
+                  ),
+                ),
+                // Desain: jarak 16 + margin 8.
+                SizedBox(height: space.s24),
+                SizedBox(
+                  height: s.menuButton,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Lemari Kostum (langkah 13) dan Pengaturan (langkah
+                      // 14) belum berfungsi.
+                      const Expanded(
+                        child: _MenuButton(
+                          icon: KoIcons.costume,
+                          label: 'Lemari Kostum',
+                        ),
+                      ),
+                      SizedBox(width: space.s12),
+                      const Expanded(
+                        child: _MenuButton(
+                          icon: KoIcons.settings,
+                          label: 'Pengaturan',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -63,33 +89,188 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-/// Tombol kecil bernomor ke layar level.
-class _LevelButton extends StatelessWidget {
-  const _LevelButton({required this.id});
+/// Oyen tidur, logo, tagline, dan total bintang.
+class _Title extends StatelessWidget {
+  const _Title({required this.stars, required this.maxStars});
 
-  final int id;
+  final int stars;
+  final int maxStars;
 
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
+    final t = context.koType;
+    final space = context.koSpace;
     final s = context.koSize;
-    return KoPressable(
-      onPressed: () => context.go(AppRoutes.level(id)),
-      semanticLabel: 'Level $id',
-      color: c.surface,
-      edgeColor: c.lineDeep,
-      depth: context.koShadow.pressIcon,
-      borderColor: c.line,
-      borderWidth: s.border,
-      radius: context.koRadius.icon,
-      width: s.iconButton,
-      height: s.iconButton,
-      child: Center(
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text('$id', style: context.koType.chip),
+    const oyen = OyenLook(
+      pose: OyenPose.sleep,
+      dir: Direction.down,
+      bubble: OyenBubble.zzz,
+    );
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Logo menutupi bagian bawah Oyen (desain: margin bawah -34).
+        Align(
+          alignment: Alignment.topCenter,
+          heightFactor: (s.oyenHome - s.oyenHomeOverlap) / s.oyenHome,
+          child: OyenView(oyen, size: s.oyenHome),
+        ),
+        SizedBox(height: space.s4),
+        Semantics(
+          header: true,
+          label: 'Kucing Oren',
+          child: ExcludeSemantics(
+            child: Column(
+              children: [
+                Text('Kucing', style: t.logoSmall.copyWith(color: c.ink)),
+                Text(
+                  'Oren',
+                  style: t.logo.copyWith(
+                    color: c.logo,
+                    shadows: context.koShadow.logo,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        // Desain: jarak 4 + margin 18.
+        SizedBox(height: space.s16 + space.s6),
+        Text(
+          'Oyen nggak bisa disuruh. Kamu yang mikir.',
+          textAlign: TextAlign.center,
+          style: t.bodyLarge.copyWith(color: c.inkSoft),
+        ),
+        // Desain: jarak 4 + margin 22.
+        SizedBox(height: space.s24 + space.s2),
+        _StarTotal(stars: stars, maxStars: maxStars),
+      ],
+    );
+  }
+}
+
+/// "★ 31/60 bintang".
+class _StarTotal extends StatelessWidget {
+  const _StarTotal({required this.stars, required this.maxStars});
+
+  final int stars;
+  final int maxStars;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final t = context.koType;
+    final space = context.koSpace;
+    final s = context.koSize;
+    return Semantics(
+      label: '$stars dari $maxStars bintang',
+      child: ExcludeSemantics(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: space.s16 + space.s2,
+            vertical: space.s10,
+          ),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: BorderRadius.circular(context.koRadius.pill),
+            border: Border.all(color: c.line, width: s.border),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              KoStar(size: s.starHome),
+              SizedBox(width: space.s10),
+              Text.rich(
+                TextSpan(
+                  text: '$stars',
+                  children: [
+                    TextSpan(
+                      text: '/$maxStars',
+                      style: TextStyle(color: c.inkSoft),
+                    ),
+                  ],
+                ),
+                style: t.numberChip.copyWith(color: c.ink),
+              ),
+              SizedBox(width: space.s10),
+              Text('bintang', style: t.bodySmall.copyWith(color: c.inkSoft)),
+            ],
+          ),
         ),
       ),
     );
   }
+}
+
+/// Tombol krem kecil di bawah "Main". Belum berfungsi: tidak bisa ditekan,
+/// tampilannya tetap seperti desain.
+class _MenuButton extends StatelessWidget {
+  const _MenuButton({required this.icon, required this.label});
+
+  final KoIconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final space = context.koSpace;
+    final s = context.koSize;
+    return KoPressable(
+      onPressed: null,
+      semanticLabel: label,
+      color: c.surface,
+      edgeColor: c.lineDeep,
+      depth: context.koShadow.pressSecondary,
+      borderColor: c.line,
+      borderWidth: s.border,
+      radius: context.koRadius.control,
+      padding: EdgeInsets.symmetric(horizontal: space.s8),
+      child: Center(
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              KoIcon(icon, size: s.icon, color: c.ink),
+              SizedBox(width: space.s8),
+              Text(
+                label,
+                maxLines: 1,
+                style: context.koType.label.copyWith(color: c.ink),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Latar Beranda: kotak-kotak krem (`conic-gradient`, petak kanan atas dan
+/// kiri bawah tiap pola) dan jejak kaki di sudut.
+class _HomeBackground extends CustomPainter {
+  _HomeBackground(this.checker);
+
+  final Color checker;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const pattern = MapArt.checkerPattern;
+    const half = pattern / 2;
+    final path = Path();
+    for (var y = 0.0; y < size.height; y += pattern) {
+      for (var x = 0.0; x < size.width; x += pattern) {
+        path
+          ..addRect(Rect.fromLTWH(x + half, y, half, half))
+          ..addRect(Rect.fromLTWH(x, y + half, half, half));
+      }
+    }
+    canvas.drawPath(path, Paint()..color = checker);
+    paintHomePaws(canvas, size);
+  }
+
+  @override
+  bool shouldRepaint(_HomeBackground old) => old.checker != checker;
 }

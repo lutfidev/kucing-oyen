@@ -14,8 +14,9 @@ import 'package:path_drawing/path_drawing.dart';
 ///
 /// Hanya subset yang dipakai desain: elemen `g`, `rect`, `circle`,
 /// `ellipse`, `path`, `text`; atribut `fill`, `stroke`, `stroke-width`,
-/// `stroke-linecap`, `stroke-linejoin`, `stroke-dasharray`, `opacity`,
-/// `fill-opacity`, `transform` (translate, scale, rotate), dan atribut huruf.
+/// `stroke-linecap`, `stroke-linejoin`, `stroke-dasharray`, `opacity`
+/// (juga di `g`), `fill-opacity`, `transform` (translate, scale, rotate), dan
+/// atribut huruf.
 /// Elemen lain membuat [render] gagal supaya tidak ada yang hilang diam-diam.
 class SvgTemplate {
   SvgTemplate(String source) : _nodes = _parse(source);
@@ -37,7 +38,7 @@ class SvgDrawing {
 
   final List<_Op> _ops;
 
-  /// Jumlah bentuk dan teks.
+  /// Jumlah perintah gambar: bentuk, teks, dan grup `<g opacity>`.
   int get length => _ops.length;
 
   /// Kotak pembatas semua bentuk dan teks tanpa tebal garis, seperti
@@ -167,9 +168,8 @@ void _emit(
     final m = transform == null ? matrix : matrix * _parseTransform(transform);
     switch (el.name) {
       case 'g':
-        if (el.attrs.containsKey('opacity')) {
-          throw UnsupportedError('opacity di <g> belum didukung');
-        }
+        final opacity = _num(attrs, 'opacity', 1);
+        final children = opacity < 1 ? <_Op>[] : ops;
         _emit(
           el.children,
           vals,
@@ -178,8 +178,11 @@ void _emit(
               if (_inherited.contains(key)) key: value,
           },
           m,
-          ops,
+          children,
         );
+        if (opacity < 1 && children.isNotEmpty) {
+          ops.add(_GroupOp(List.unmodifiable(children), opacity));
+        }
       case 'text':
         ops.add(_TextOp.from(attrs, el.text, m));
       case 'rect' || 'circle' || 'ellipse' || 'path':
@@ -387,6 +390,31 @@ class _ShapeOp extends _Op {
     if (fill != null) canvas.drawPath(path, fill!);
     if (stroke != null) canvas.drawPath(strokePath, stroke!);
     if (layer) canvas.restore();
+  }
+}
+
+/// `<g opacity>`: semua anaknya digambar di satu lapisan transparan, seperti
+/// SVG (bukan alfa tiap bentuk, supaya bentuk yang bertumpuk tidak tembus).
+class _GroupOp extends _Op {
+  _GroupOp(this.children, this.opacity) : super(null);
+
+  final List<_Op> children;
+  final double opacity;
+
+  @override
+  Rect get bounds =>
+      children.map((op) => op.bounds).reduce((a, b) => a.expandToInclude(b));
+
+  @override
+  Path get outline => Path()..addRect(bounds);
+
+  @override
+  void draw(Canvas canvas) {
+    canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, opacity));
+    for (final op in children) {
+      op.paint(canvas);
+    }
+    canvas.restore();
   }
 }
 
