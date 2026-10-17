@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
+import 'package:kucing_oren/screens/level/rules_sheet.dart';
+import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
 import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
@@ -47,6 +49,55 @@ void main() {
           setScreenSize(tester, size);
           setTextScale(tester, scale);
           await pumpApp(tester, location: route);
+          expect(tester.takeException(), isNull);
+        });
+      }
+    }
+  }
+
+  // Tutorial level 1, 3, dan 6 (kartu teks di atas sorotan), dan sheet
+  // Aturan (level 13: kardus terkunci, level 20: semua terbuka) yang bisa
+  // digulir sampai kartu terakhir.
+  for (final size in sizes) {
+    for (final scale in textScales) {
+      final label = '${size.width.toInt()}×${size.height.toInt()}';
+      for (final id in tutorialLevels) {
+        testWidgets(
+          'tanpa overflow: tutorial level $id @ $label, teks ${scale * 100}%',
+          (tester) async {
+            setScreenSize(tester, size);
+            setTextScale(tester, scale);
+            await pumpApp(
+              tester,
+              location: AppRoutes.level(id, chapter: levels[id - 1].chapter),
+              progress: testProgress(wonUpTo(id - 1), {}),
+            );
+            expect(tester.takeException(), isNull);
+            final title = tester.getRect(find.text(tutorialFor(id)!.title));
+            expect(title.top, greaterThanOrEqualTo(0));
+            expect(title.right, lessThanOrEqualTo(size.width));
+            expect(find.text('Lewati').hitTestable(), findsOneWidget);
+          },
+        );
+      }
+      for (final id in const [13, 20]) {
+        testWidgets('tanpa overflow: kartu aturan level $id @ $label, '
+            'teks ${scale * 100}%', (tester) async {
+          setScreenSize(tester, size);
+          setTextScale(tester, scale);
+          await pumpApp(
+            tester,
+            location: AppRoutes.level(id, chapter: 2),
+            progress: testProgress(wonUpTo(id - 1)),
+          );
+          await tester.tap(find.text('Aturan'));
+          await pumpFor(tester, RulesSheet.openTime * 2);
+          expect(tester.takeException(), isNull);
+          final last = find.byType(RuleCard).last;
+          await tester.ensureVisible(last);
+          await pumpFor(tester, const Duration(milliseconds: 300));
+          expect(tester.getRect(last).bottom, lessThanOrEqualTo(size.height));
+          expect(last.hitTestable(), findsOneWidget);
           expect(tester.takeException(), isNull);
         });
       }

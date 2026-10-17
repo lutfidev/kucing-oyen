@@ -10,6 +10,7 @@ import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/screens/level/level_bar.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
+import 'package:kucing_oren/screens/level/rules_sheet.dart';
 import 'package:kucing_oren/screens/level/run_panel.dart';
 import 'package:kucing_oren/screens/level/tray.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
@@ -174,12 +175,17 @@ void main() {
       expect(rect.left, closeTo(20, 0.01));
     });
 
-    testWidgets('tombol Aturan tampil tapi belum berfungsi', (tester) async {
+    testWidgets('tombol Aturan membuka kartu aturan sesuai nomor level', (
+      tester,
+    ) async {
       await _pumpLevel(tester, 13);
-      final rules = tester.widget<KoIconButton>(
-        find.widgetWithText(KoIconButton, 'Aturan'),
-      );
-      expect(rules.onPressed, isNull);
+      await tester.tap(find.text('Aturan'));
+      // Kucing kartu 4 berputar terus: tanpa pumpAndSettle.
+      await tester.pump();
+      await tester.pump(RulesSheet.openTime);
+      expect(find.text('Aturan Oyen'), findsOneWidget);
+      expect(find.text('Jatuhkan barang di sebelahnya'), findsOneWidget);
+      expect(find.text('Kardus: ???'), findsOneWidget);
     });
 
     testWidgets('level tanpa benda: pesan di baki, tanpa target bintang', (

@@ -24,7 +24,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 8. Hasil: berhasil, vas pecah, Oyen bosan
 - [x] 9. Beranda, peta babak, progres tersimpan
 - [x] 10. Putar ulang
-- [ ] 11. Kartu aturan dan tutorial
+- [x] 11. Kartu aturan dan tutorial
 - [ ] 12. Petunjuk dan koin
 - [ ] 13. Lemari kostum
 - [ ] 14. Polish dan rilis Android
@@ -113,9 +113,11 @@ Selesai: nomor jejak dan caption rekap (`replayTrail`, `replayCaptions`, Dart mu
 
 > Baca `docs/design/source/09-putar-ulang.html` (slider, mundur/maju satu langkah, jejak langkah bernomor, garis jalur, caption per langkah). Bangun ulang keadaan papan di tiap langkah dari `SimResult.trace` (barang jatuh, ikan dimakan, kardus penyok) tanpa menjalankan ulang simulasi. Caption dibuat dari `StepKind` dengan arah layar (atas, bawah, kiri, kanan) dan bahasa santai seperti contoh caption di desain 04 dan 09; teks aturan tetap memakai "berputar searah jarum jam". Putar ulang dibuka dari layar Berhasil ("Tonton putar ulang") dan Oyen bosan ("Putar Ulang"). Test: keadaan papan di langkah 0, tengah, dan akhir untuk level 13 dan 15; caption untuk tiap `StepKind`.
 
-## 11. Kartu aturan dan tutorial
+## 11. Kartu aturan dan tutorial ✅
 
 **Hasil:** tombol Aturan membuka kartu aturan sesuai yang sudah dipelajari, dan level pengenalan punya tutorial.
+
+Selesai: `OyenRule` dan `learnedRules` (Dart murni, `lib/game/model/rules.dart`), sheet "Aturan Oyen" (desain 05) dari tombol Aturan di fase atur dengan lima kartu urut cek per langkah, terkunci sampai level pengenalannya terbuka, dan overlay tutorial (desain 11) di level 1, 3, dan 6 yang selesai saat yang disorot dipakai atau "Lewati", disimpan di `ProgressStore` sehingga hanya muncul sekali. Kartu dan tutorial yang tidak ada di desain dibuat dengan gaya yang sama. Keputusan lain di `docs/DESIGN_NOTES.md`.
 
 > Baca `docs/design/source/05-kartu-aturan-oyen.html`, `11-tutorial-level-1.html`, dan kolom "Hal baru" di tabel level GDD. Kartu aturan (bottom sheet dari tombol Aturan) berisi lima kartu urut seperti desain. Kartu terbuka saat pemain sudah membuka level yang memperkenalkannya: tembok/meja di level 2, ikan di level 3, air di level 6, jatuhkan barang di level 12, kardus di level 14 (desain menampilkan kartu kardus masih "???", cocok untuk pemain yang baru sampai level 13 seperti layar contoh lainnya). Tutorial level 1 berupa overlay seperti desain, dengan teks persis. Desain 11 memakai peta dan nama level 1 versi lama ("Halo, Oyen"); pakai data level 1 dari JSON dan ambil gaya serta teks overlay-nya saja. GDD juga meminta tutorial level 3 (ikan) dan level 6 (ember) yang belum ada desainnya: buat dengan gaya yang sama dan teks pendek yang santai, lalu catat. Status tutorial selesai disimpan. Test: kartu terkunci/terbuka per level, tutorial hanya muncul sekali.
 

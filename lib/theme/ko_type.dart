@@ -51,6 +51,11 @@ class KoType extends ThemeExtension<KoType> {
     required this.headingLarge,
     required this.paragraphSmall,
     required this.numberTick,
+    required this.cardTitle,
+    required this.cardBody,
+    required this.cardBodyStrong,
+    required this.numberRule,
+    required this.dialogTitle,
   });
 
   static const standard = KoType(
@@ -256,6 +261,38 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 13,
       fontWeight: FontWeight.w600,
     ),
+    cardTitle: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 17,
+      fontWeight: FontWeight.w600,
+      height: 1.2,
+    ),
+    cardBody: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 13.5,
+      fontWeight: FontWeight.w700,
+      height: 1.35,
+    ),
+    cardBodyStrong: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 13.5,
+      fontWeight: FontWeight.w800,
+      height: 1.4,
+    ),
+    numberRule: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+    ),
+    dialogTitle: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 22,
+      fontWeight: FontWeight.w600,
+      height: 1.25,
+    ),
   );
 
   /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
@@ -362,6 +399,22 @@ class KoType extends ThemeExtension<KoType> {
   /// Fredoka 600/13: angka di bawah slider waktu putar ulang.
   final TextStyle numberTick;
 
+  /// Fredoka 600/17, tinggi baris 1,2: judul kartu aturan.
+  final TextStyle cardTitle;
+
+  /// Nunito 700/13,5, tinggi baris 1,35: isi kartu aturan.
+  final TextStyle cardBody;
+
+  /// Nunito 800/13,5, tinggi baris 1,4: baris tebal kartu aturan
+  /// ("depan → searah jarum jam ↻ → ...").
+  final TextStyle cardBodyStrong;
+
+  /// Fredoka 700/14: nomor kartu aturan.
+  final TextStyle numberRule;
+
+  /// Fredoka 600/22, tinggi baris 1,25: teks besar kartu tutorial.
+  final TextStyle dialogTitle;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -398,6 +451,11 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? headingLarge,
     TextStyle? paragraphSmall,
     TextStyle? numberTick,
+    TextStyle? cardTitle,
+    TextStyle? cardBody,
+    TextStyle? cardBodyStrong,
+    TextStyle? numberRule,
+    TextStyle? dialogTitle,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -434,6 +492,11 @@ class KoType extends ThemeExtension<KoType> {
       headingLarge: headingLarge ?? this.headingLarge,
       paragraphSmall: paragraphSmall ?? this.paragraphSmall,
       numberTick: numberTick ?? this.numberTick,
+      cardTitle: cardTitle ?? this.cardTitle,
+      cardBody: cardBody ?? this.cardBody,
+      cardBodyStrong: cardBodyStrong ?? this.cardBodyStrong,
+      numberRule: numberRule ?? this.numberRule,
+      dialogTitle: dialogTitle ?? this.dialogTitle,
     );
   }
 
@@ -476,6 +539,11 @@ class KoType extends ThemeExtension<KoType> {
       headingLarge: s(headingLarge, other.headingLarge),
       paragraphSmall: s(paragraphSmall, other.paragraphSmall),
       numberTick: s(numberTick, other.numberTick),
+      cardTitle: s(cardTitle, other.cardTitle),
+      cardBody: s(cardBody, other.cardBody),
+      cardBodyStrong: s(cardBodyStrong, other.cardBodyStrong),
+      numberRule: s(numberRule, other.numberRule),
+      dialogTitle: s(dialogTitle, other.dialogTitle),
     );
   }
 }

@@ -35,11 +35,28 @@ void main() {
         expect(await PrefsProgressStore().load(), Progress.empty);
       });
     }
+
+    test('tutorial selesai: simpan lalu muat, id rusak dibuang', () async {
+      expect(await PrefsProgressStore().loadTutorials(), isEmpty);
+      await PrefsProgressStore().saveTutorials({6, 1});
+      expect(await PrefsProgressStore().loadTutorials(), {1, 6});
+      expect(
+        await SharedPreferencesAsync().getStringList(
+          PrefsProgressStore.tutorialsKey,
+        ),
+        ['1', '6'],
+      );
+      await SharedPreferencesAsync().setStringList(
+        PrefsProgressStore.tutorialsKey,
+        ['3', 'tiga'],
+      );
+      expect(await PrefsProgressStore().loadTutorials(), {3});
+    });
   });
 
   group('ProgressController', () {
     test('memuat dari simpanan', () async {
-      final store = MemoryProgressStore(Progress({1: 2}));
+      final store = MemoryProgressStore(Progress({1: 2}), {1});
       final controller = await ProgressController.load(
         levels: testLevels,
         store: store,
@@ -51,7 +68,30 @@ void main() {
       expect(controller.levelById(99), isNull);
       expect(controller.chapter(2)?.name, 'Ruang Tamu');
       expect(controller.currentChapter.number, 1);
+      expect(controller.isTutorialDone(1), isTrue);
+      expect(controller.isTutorialDone(3), isFalse);
     });
+
+    test(
+      'tutorial selesai: disimpan sekali dan pendengar diberi tahu',
+      () async {
+        final store = MemoryProgressStore();
+        final controller = ProgressController(levels: testLevels, store: store);
+        var notified = 0;
+        controller.addListener(() => notified++);
+
+        await controller.finishTutorial(3);
+        expect(controller.isTutorialDone(3), isTrue);
+        expect(store.tutorials, {3});
+        expect(notified, 1);
+
+        await controller.finishTutorial(3);
+        expect(notified, 1);
+        await controller.finishTutorial(1);
+        expect(store.tutorials, {1, 3});
+        expect(controller.tutorialsDone, {1, 3});
+      },
+    );
 
     test('menang: dicatat, disimpan, dan pendengar diberi tahu', () async {
       final store = MemoryProgressStore();

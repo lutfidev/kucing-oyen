@@ -74,6 +74,12 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.slider,
     required this.sliderTrack,
     required this.sliderThumb,
+    required this.sheetHandle,
+    required this.sheetHandleThickness,
+    required this.ruleArt,
+    required this.ruleBadge,
+    required this.oyenTutorial,
+    required this.oyenTutorialOverlap,
   });
 
   static const standard = KoSize(
@@ -143,6 +149,12 @@ class KoSize extends ThemeExtension<KoSize> {
     slider: 28,
     sliderTrack: 6,
     sliderThumb: 20,
+    sheetHandle: 44,
+    sheetHandleThickness: 5,
+    ruleArt: 76,
+    ruleBadge: 26,
+    oyenTutorial: 96,
+    oyenTutorialOverlap: 26,
   );
 
   /// Tombol "Main" di Beranda.
@@ -318,6 +330,24 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Garis tengah pegangan slider.
   final double sliderThumb;
 
+  /// Lebar pegangan sheet.
+  final double sheetHandle;
+
+  /// Tebal pegangan sheet.
+  final double sheetHandleThickness;
+
+  /// Gambar kartu aturan.
+  final double ruleArt;
+
+  /// Lingkaran nomor kartu aturan.
+  final double ruleBadge;
+
+  /// Oyen di kartu tutorial.
+  final double oyenTutorial;
+
+  /// Seberapa jauh Oyen menimpa kartu tutorial.
+  final double oyenTutorialOverlap;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -386,6 +416,12 @@ class KoSize extends ThemeExtension<KoSize> {
     double? slider,
     double? sliderTrack,
     double? sliderThumb,
+    double? sheetHandle,
+    double? sheetHandleThickness,
+    double? ruleArt,
+    double? ruleBadge,
+    double? oyenTutorial,
+    double? oyenTutorialOverlap,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -454,6 +490,12 @@ class KoSize extends ThemeExtension<KoSize> {
       slider: slider ?? this.slider,
       sliderTrack: sliderTrack ?? this.sliderTrack,
       sliderThumb: sliderThumb ?? this.sliderThumb,
+      sheetHandle: sheetHandle ?? this.sheetHandle,
+      sheetHandleThickness: sheetHandleThickness ?? this.sheetHandleThickness,
+      ruleArt: ruleArt ?? this.ruleArt,
+      ruleBadge: ruleBadge ?? this.ruleBadge,
+      oyenTutorial: oyenTutorial ?? this.oyenTutorial,
+      oyenTutorialOverlap: oyenTutorialOverlap ?? this.oyenTutorialOverlap,
     );
   }
 
@@ -528,6 +570,12 @@ class KoSize extends ThemeExtension<KoSize> {
       slider: d(slider, other.slider),
       sliderTrack: d(sliderTrack, other.sliderTrack),
       sliderThumb: d(sliderThumb, other.sliderThumb),
+      sheetHandle: d(sheetHandle, other.sheetHandle),
+      sheetHandleThickness: d(sheetHandleThickness, other.sheetHandleThickness),
+      ruleArt: d(ruleArt, other.ruleArt),
+      ruleBadge: d(ruleBadge, other.ruleBadge),
+      oyenTutorial: d(oyenTutorial, other.oyenTutorial),
+      oyenTutorialOverlap: d(oyenTutorialOverlap, other.oyenTutorialOverlap),
     );
   }
 }

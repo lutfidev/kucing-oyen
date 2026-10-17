@@ -257,6 +257,23 @@ abstract final class KoIcons {
   static const checkBold = KoIconData([
     KoIconShape.path('M5 12.5l4.5 4.5L19 7.5'),
   ], strokeWidth: 3.6);
+
+  /// Panah →, ↻, dan ↺ di teks kartu aturan. Tidak ada di desain sebagai
+  /// ikon (desain menulis karakternya), tapi font Fredoka dan Nunito yang
+  /// dibundel tidak punya glyph itu.
+  static const arrowRight = KoIconData([
+    KoIconShape.path('M4 12h15M13 6l6 6-6 6'),
+  ], strokeWidth: 2.6);
+
+  static const turnClockwise = KoIconData([
+    KoIconShape.path('M15.5 5.94A7 7 0 1 1 8.5 5.94'),
+    KoIconShape.path('M6.54 10.54 8.5 5.94 3.54 5.34'),
+  ], strokeWidth: 2.6);
+
+  static const turnCounterClockwise = KoIconData([
+    KoIconShape.path('M8.5 5.94A7 7 0 1 0 15.5 5.94'),
+    KoIconShape.path('M17.46 10.54 15.5 5.94 20.46 5.34'),
+  ], strokeWidth: 2.6);
 }
 
 /// Menggambar [KoIconData] seukuran [size] dengan warna [color]. Hiasan

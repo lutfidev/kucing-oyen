@@ -26,6 +26,8 @@ class KoShadow extends ThemeExtension<KoShadow> {
     required this.glowPlay,
     required this.node,
     required this.logo,
+    required this.sheet,
+    required this.dialog,
   });
 
   factory KoShadow.from(KoColors c) => KoShadow(
@@ -86,6 +88,20 @@ class KoShadow extends ThemeExtension<KoShadow> {
       ),
     ],
     logo: [Shadow(color: c.ink, offset: const Offset(0, 4))],
+    sheet: [
+      BoxShadow(
+        color: c.shadowSheet,
+        offset: const Offset(0, -10),
+        blurRadius: 30,
+      ),
+    ],
+    dialog: [
+      BoxShadow(
+        color: c.shadowDialog,
+        offset: const Offset(0, 16),
+        blurRadius: 30,
+      ),
+    ],
   );
 
   static final standard = KoShadow.from(KoColors.standard);
@@ -131,6 +147,12 @@ class KoShadow extends ThemeExtension<KoShadow> {
   /// Bayangan padat teks "Oren" di logo Beranda (0 4 0 tinta).
   final List<Shadow> logo;
 
+  /// Sheet aturan: 0 -10 30, 30%.
+  final List<BoxShadow> sheet;
+
+  /// Kartu tutorial: 0 16 30, hitam 30%.
+  final List<BoxShadow> dialog;
+
   /// Bayangan padat setinggi [depth] (tanpa blur).
   static List<BoxShadow> solid(Color color, double depth) => [
     BoxShadow(color: color, offset: Offset(0, depth)),
@@ -152,6 +174,8 @@ class KoShadow extends ThemeExtension<KoShadow> {
     List<BoxShadow>? glowPlay,
     List<BoxShadow>? node,
     List<Shadow>? logo,
+    List<BoxShadow>? sheet,
+    List<BoxShadow>? dialog,
   }) {
     return KoShadow(
       pressHero: pressHero ?? this.pressHero,
@@ -168,6 +192,8 @@ class KoShadow extends ThemeExtension<KoShadow> {
       glowPlay: glowPlay ?? this.glowPlay,
       node: node ?? this.node,
       logo: logo ?? this.logo,
+      sheet: sheet ?? this.sheet,
+      dialog: dialog ?? this.dialog,
     );
   }
 
@@ -192,6 +218,8 @@ class KoShadow extends ThemeExtension<KoShadow> {
       glowPlay: l(glowPlay, other.glowPlay),
       node: l(node, other.node),
       logo: Shadow.lerpList(logo, other.logo, t)!,
+      sheet: l(sheet, other.sheet),
+      dialog: l(dialog, other.dialog),
     );
   }
 }

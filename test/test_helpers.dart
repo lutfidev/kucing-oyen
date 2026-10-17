@@ -8,19 +8,33 @@ import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/game/level_loader.dart';
 import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
+import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/theme/theme.dart';
 
 /// Level dibaca langsung dari berkas, tanpa `rootBundle`.
 final testLevels = parseLevels(File(chapter1to2Asset).readAsStringSync());
 
+/// Level yang punya tutorial.
+final tutorialLevels = {
+  for (final level in testLevels)
+    if (tutorialFor(level.id) != null) level.id,
+};
+
 /// Progres untuk test: [best] = bintang terbaik per level, disimpan di
-/// memori.
-ProgressController testProgress([Map<int, int> best = const {}]) {
+/// memori. Semua tutorial dianggap sudah selesai kecuali [tutorialsDone]
+/// diberikan, supaya overlay tutorial (yang bergerak terus) tidak menutupi
+/// layar di test lain.
+ProgressController testProgress([
+  Map<int, int> best = const {},
+  Set<int>? tutorialsDone,
+]) {
   final progress = Progress(best);
+  final tutorials = tutorialsDone ?? tutorialLevels;
   return ProgressController(
     levels: testLevels,
-    store: MemoryProgressStore(progress),
+    store: MemoryProgressStore(progress, tutorials),
     progress: progress,
+    tutorialsDone: tutorials,
   );
 }
 
