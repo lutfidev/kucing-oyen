@@ -13,6 +13,7 @@ import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../replay/replay_view.dart';
 import '../result/result_view.dart';
 import 'level_bar.dart';
 import 'level_board.dart';
@@ -53,7 +54,9 @@ class _Run {
 /// Layar satu level: bar atas, target bintang, papan [KucingGame], baki,
 /// dan tombol "Bangunkan Oyen"; setelah dibangunkan, Oyen berjalan langkah
 /// demi langkah dengan caption, Jeda/Lanjutkan, ×2, dan "Lihat hasil", lalu
-/// layar hasil ([ResultView]) menutupi layar level.
+/// layar hasil ([ResultView]) menutupi layar level. Dari layar hasil, putar
+/// ulang ([ReplayView]) menutupi layar hasil; tombol kembali (juga tombol
+/// kembali sistem) menutupnya lagi.
 ///
 /// Aturan ada di [LevelSession]. Layar ini hanya menerjemahkan seretan:
 /// lepas di petak menyala = taruh atau pindah; benda dari papan yang
@@ -96,6 +99,9 @@ class _LevelViewState extends State<LevelView>
 
   /// Fase jalan dan layar hasil; null di fase atur.
   _Run? _run;
+
+  /// Putar ulang sedang terbuka di atas layar hasil.
+  bool _replaying = false;
   Duration _lastTick = Duration.zero;
   bool _reduceMotion = false;
 
@@ -246,6 +252,7 @@ class _LevelViewState extends State<LevelView>
     _update(() {
       _session.arrangeAgain();
       _run = null;
+      _replaying = false;
     });
     _syncTicker();
   }
@@ -307,9 +314,18 @@ class _LevelViewState extends State<LevelView>
     _update(() {
       _session.reset();
       _run = null;
+      _replaying = false;
     });
     _syncTicker();
   }
+
+  /// "Tonton putar ulang" dan "Putar Ulang" di layar hasil.
+  void _openReplay() {
+    if (_session.phase != SessionPhase.result) return;
+    setState(() => _replaying = true);
+  }
+
+  void _closeReplay() => setState(() => _replaying = false);
 
   @override
   Widget build(BuildContext context) {
@@ -319,74 +335,98 @@ class _LevelViewState extends State<LevelView>
     final running = _session.phase == SessionPhase.running;
     final showResult = _session.phase == SessionPhase.result;
 
-    return Scaffold(
-      body: Stack(
-        key: _stageKey,
-        children: [
-          // Layar level tetap terpasang di bawah layar hasil supaya papan
-          // Flame tidak dilepas lalu dipasang lagi.
-          Positioned.fill(
-            child: Offstage(
-              offstage: showResult,
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    space.gutter,
-                    space.s8,
-                    space.gutter,
-                    space.s16,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      LevelTopBar(
-                        title: 'Level ${_level.id} · ${_level.name}',
-                        backLabel: running
-                            ? 'Kembali ke fase atur'
-                            : widget.backLabel,
-                        onBack: running ? _arrangeAgain : widget.onBack,
-                        trailing: run == null
-                            ? const RulesButton(onPressed: null)
-                            : StepCounter(step: run.clock.step),
-                      ),
-                      if (_level.inventory.isNotEmpty) ...[
-                        SizedBox(height: space.s10),
-                        SizedBox(
-                          height: context.koSize.iconButton,
-                          child: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: run == null
-                                ? TargetChip(items: _level.starItems)
-                                : RunStatus(
-                                    vaseBroken: _hasVase
-                                        ? run.frame.vaseBroken
-                                        : null,
-                                    itemsUsed: _session.itemsUsed,
-                                  ),
-                          ),
+    return PopScope(
+      canPop: !_replaying,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _closeReplay();
+      },
+      child: Scaffold(
+        body: Stack(
+          key: _stageKey,
+          children: [
+            // Layar level tetap terpasang di bawah layar hasil supaya papan
+            // Flame tidak dilepas lalu dipasang lagi.
+            Positioned.fill(
+              child: Offstage(
+                offstage: showResult,
+                child: SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      space.gutter,
+                      space.s8,
+                      space.gutter,
+                      space.s16,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        LevelTopBar(
+                          title: 'Level ${_level.id} · ${_level.name}',
+                          backLabel: running
+                              ? 'Kembali ke fase atur'
+                              : widget.backLabel,
+                          onBack: running ? _arrangeAgain : widget.onBack,
+                          trailing: run == null
+                              ? const RulesButton(onPressed: null)
+                              : StepCounter(step: run.clock.step),
                         ),
+                        if (_level.inventory.isNotEmpty) ...[
+                          SizedBox(height: space.s10),
+                          SizedBox(
+                            height: context.koSize.iconButton,
+                            child: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: run == null
+                                  ? TargetChip(items: _level.starItems)
+                                  : RunStatus(
+                                      vaseBroken: _hasVase
+                                          ? run.frame.vaseBroken
+                                          : null,
+                                      itemsUsed: _session.itemsUsed,
+                                    ),
+                            ),
+                          ),
+                        ],
+                        SizedBox(height: space.s12),
+                        Expanded(child: LevelBoard(game: _game)),
+                        SizedBox(height: space.s14),
+                        _bottom(),
                       ],
-                      SizedBox(height: space.s12),
-                      Expanded(child: LevelBoard(game: _game)),
-                      SizedBox(height: space.s14),
-                      _bottom(),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          if (showResult)
-            Positioned.fill(
-              child: ResultView(
-                session: _session,
-                onArrange: _arrangeAgain,
-                onRestart: _restart,
-                onNext: widget.onNext,
+            // Layar hasil tetap terpasang di bawah putar ulang supaya
+            // bintangnya tidak muncul ulang; animasinya berhenti selama
+            // tertutup.
+            if (showResult)
+              Positioned.fill(
+                child: Offstage(
+                  offstage: _replaying,
+                  child: TickerMode(
+                    enabled: !_replaying,
+                    child: ResultView(
+                      session: _session,
+                      onArrange: _arrangeAgain,
+                      onRestart: _restart,
+                      onNext: widget.onNext,
+                      onReplay: _openReplay,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          if (drag != null) _lifted(drag),
-        ],
+            if (showResult && _replaying)
+              Positioned.fill(
+                child: ReplayView(
+                  session: _session,
+                  onBack: _closeReplay,
+                  onMap: widget.onBack,
+                ),
+              ),
+            if (drag != null) _lifted(drag),
+          ],
+        ),
       ),
     );
   }

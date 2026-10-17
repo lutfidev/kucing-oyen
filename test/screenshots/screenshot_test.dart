@@ -295,4 +295,48 @@ void main() {
       });
     }, skip: !screenshotsEnabled);
   }
+
+  /// Putar ulang: level, benda, berapa kali "Maju satu langkah" ditekan, dan
+  /// ukuran layar. Dibuka dari "Tonton putar ulang" (Berhasil) atau "Putar
+  /// Ulang" (Oyen bosan).
+  const replays = <String, (int, List<(String, int, int)>, int, Size)>{
+    '09-putar-ulang-langkah-4': (
+      13,
+      [('Ember air', 3, 3), ('Ikan asin', 2, 4)],
+      4,
+      _size,
+    ),
+    '09-putar-ulang-awal-360x640': (
+      13,
+      [('Ember air', 3, 3), ('Ikan asin', 2, 4)],
+      0,
+      Size(360, 640),
+    ),
+    '09-putar-ulang-kardus-level-15': (15, [('Ikan asin', 2, 3)], 8, _size),
+    '09-putar-ulang-bosan-level-20': (20, [], 40, _size),
+  };
+  for (final MapEntry(key: name, value: (id, items, steps, size))
+      in replays.entries) {
+    testWidgets('$folder/$name', (tester) async {
+      setScreenSize(tester, size);
+      await withShadows(() async {
+        await tester.pumpWidget(
+          _app(AppRoutes.level(id, chapter: testLevels[id - 1].chapter)),
+        );
+        await tester.pumpAndSettle();
+        await _place(tester, items);
+        await _showResult(tester);
+        final open = find.text('Tonton putar ulang');
+        await tester.tap(
+          open.evaluate().isEmpty ? find.text('Putar Ulang') : open,
+        );
+        await tester.pumpAndSettle();
+        for (var i = 0; i < steps; i++) {
+          await tester.tap(find.bySemanticsLabel('Maju satu langkah'));
+          await tester.pumpAndSettle();
+        }
+        await capture(tester, '$folder/$name');
+      });
+    }, skip: !screenshotsEnabled);
+  }
 }
