@@ -21,10 +21,17 @@ Future<void> showRulesSheet(
     barrierLabel: 'Tutup aturan',
     barrierColor: context.koColors.scrim,
     transitionDuration: reduceMotion ? Duration.zero : RulesSheet.openTime,
-    pageBuilder: (context, _, _) => RulesSheet(
-      learned: learned,
-      onClose: () => Navigator.of(context).pop(),
-    ),
+    pageBuilder: (context, _, _) {
+      final route = ModalRoute.of(context);
+      return RulesSheet(
+        learned: learned,
+        // Hanya menutup sheet ini, walau dipanggil lagi saat sheet sedang
+        // menutup (layar level di bawahnya tidak ikut ditutup).
+        onClose: () {
+          if (route?.isCurrent ?? false) Navigator.of(context).pop();
+        },
+      );
+    },
     transitionBuilder: (context, animation, _, child) {
       final t = CurvedAnimation(parent: animation, curve: Curves.easeOut);
       return AnimatedBuilder(

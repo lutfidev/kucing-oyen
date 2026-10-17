@@ -175,6 +175,7 @@ class _TutorialOverlayState extends State<TutorialOverlay>
           );
           final handTop = tip.dy - RuleArt.handTip.dy;
           final side = space.gutter + space.s8;
+          final cardTop = padding.top + space.s8;
           children.addAll([
             Positioned(
               left: tip.dx - RuleArt.handTip.dx,
@@ -189,8 +190,13 @@ class _TutorialOverlayState extends State<TutorialOverlay>
             Positioned(
               left: side,
               right: side,
-              top: padding.top + space.s8,
-              bottom: math.max(0, constraints.maxHeight - handTop),
+              top: cardTop,
+              // Tidak pernah setinggi negatif, juga di layar yang sangat
+              // pendek.
+              bottom: math.max(
+                0,
+                constraints.maxHeight - math.max(handTop, cardTop),
+              ),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: FittedBox(

@@ -134,6 +134,17 @@ void main() {
       expect(find.text('Level 13 · Vas Ibu'), findsOneWidget);
     });
 
+    testWidgets('ketuk Tutup dua kali hanya menutup sheet', (tester) async {
+      await _openLevel(tester, 13);
+      await _openRules(tester);
+      await tester.tap(find.bySemanticsLabel('Tutup'));
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.tap(find.bySemanticsLabel('Tutup'), warnIfMissed: false);
+      await _pumpFor(tester, RulesSheet.openTime * 2);
+      expect(find.text('Aturan Oyen'), findsNothing);
+      expect(find.text('Level 13 · Vas Ibu'), findsOneWidget);
+    });
+
     testWidgets('ketuk latar gelap di atas sheet menutupnya', (tester) async {
       await _openLevel(tester, 13);
       await _openRules(tester);
