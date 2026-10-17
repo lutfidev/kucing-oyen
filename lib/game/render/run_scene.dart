@@ -1,3 +1,4 @@
+import '../model/replay.dart';
 import '../model/run_frames.dart';
 import '../sim/sim.dart';
 import 'board_scene.dart';
@@ -92,6 +93,41 @@ BoardScene restScene(
   );
 }
 
+/// Papan putar ulang (desain 09) di langkah ke-[step]: keadaan papan dan
+/// Oyen seperti fase jalan ([runScene]), tapi dengan seluruh jalur Oyen dan
+/// nomor jejak [trail] (dari `replayTrail`) sejak langkah 0; nomor petak
+/// langkah ini menyala. Di langkah 0 Oyen masih tidur, tanpa Zzz dan panah
+/// arah hadap (desain).
+BoardScene replayScene(
+  List<String> map,
+  Iterable<Placement> placed,
+  List<RunFrame> frames,
+  List<TrailMark> trail,
+  int step,
+) {
+  final frame = frames[step];
+  return _scene(
+    map,
+    placed,
+    frames,
+    step,
+    BoardOyen.at(
+      frame.pos,
+      step == 0
+          ? OyenLook(pose: OyenPose.sleep, dir: frame.dir)
+          : runLook(frame),
+    ),
+    hideBox: frame.inBox,
+    facing: false,
+    pathTo: frames.length - 1,
+    trail: [
+      for (final mark in trail)
+        BoardMark(mark.pos, mark.label, active: mark.steps.contains(step)),
+    ],
+  );
+}
+
+/// Jalur digambar sampai langkah [pathTo] (bawaan: [step]).
 BoardScene _scene(
   List<String> map,
   Iterable<Placement> placed,
@@ -100,10 +136,12 @@ BoardScene _scene(
   BoardOyen oyen, {
   bool hideBox = false,
   bool facing = true,
+  int? pathTo,
+  List<BoardMark> trail = const [],
 }) {
   final frame = frames[step];
   final path = <Pos>[];
-  for (final f in frames.take(step + 1)) {
+  for (final f in frames.take((pathTo ?? step) + 1)) {
     if (path.isEmpty || path.last != f.pos) path.add(f.pos);
   }
   return BoardScene.fromMap(
@@ -117,5 +155,6 @@ BoardScene _scene(
     oyen: oyen,
     facing: facing,
     path: path,
+    trail: trail,
   );
 }

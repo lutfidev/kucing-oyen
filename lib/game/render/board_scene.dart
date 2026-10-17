@@ -30,16 +30,41 @@ class BoardOyen {
   String toString() => 'BoardOyen($col, $row, $look)';
 }
 
+/// Nomor jejak putar ulang di pojok kiri atas petak [pos] (prop `trail` di
+/// `Board.dc.html`). [active] = langkah yang sedang tampil ada di petak ini.
+class BoardMark {
+  const BoardMark(this.pos, this.label, {this.active = false});
+
+  final Pos pos;
+  final String label;
+  final bool active;
+
+  @override
+  bool operator ==(Object other) =>
+      other is BoardMark &&
+      other.pos == pos &&
+      other.label == label &&
+      other.active == active;
+
+  @override
+  int get hashCode => Object.hash(pos, label, active);
+
+  @override
+  String toString() => 'BoardMark($pos, $label${active ? ', active' : ''})';
+}
+
 /// Isi papan 7×9 yang siap digambar `paintBoard`: 63 petak (baris demi
-/// baris), Oyen, dan panah arah hadap. Dart murni.
+/// baris), jalur dan nomor jejak, Oyen, dan panah arah hadap. Dart murni.
 class BoardScene {
   BoardScene({
     required List<Tile> tiles,
     this.oyen,
     this.facing = true,
     List<Pos> path = const [],
+    List<BoardMark> trail = const [],
   }) : tiles = List.unmodifiable(tiles),
-       path = List.unmodifiable(path) {
+       path = List.unmodifiable(path),
+       trail = List.unmodifiable(trail) {
     if (tiles.length != columns * rows) {
       throw ArgumentError.value(
         tiles.length,
@@ -57,7 +82,8 @@ class BoardScene {
   /// meja kosong (tidak ada gambar gelas jatuh di desain), vas jadi vas
   /// pecah. Tanpa [oyen], Oyen tidur di petak awal peta dengan Zzz;
   /// [showOyen] false menyembunyikannya. [facing] menampilkan panah arah
-  /// hadap saat Oyen tidur. [path] = jalur Oyen (garis putus-putus).
+  /// hadap saat Oyen tidur. [path] = jalur Oyen (garis putus-putus),
+  /// [trail] = nomor jejak putar ulang.
   factory BoardScene.fromMap(
     List<String> map, {
     Map<Pos, TileItem> items = const {},
@@ -68,6 +94,7 @@ class BoardScene {
     bool showOyen = true,
     bool facing = true,
     List<Pos> path = const [],
+    List<BoardMark> trail = const [],
   }) {
     BoardOyen? mapOyen;
     final tiles = <Tile>[];
@@ -130,6 +157,7 @@ class BoardScene {
       oyen: showOyen ? oyen ?? mapOyen : null,
       facing: facing,
       path: path,
+      trail: trail,
     );
   }
 
@@ -175,6 +203,9 @@ class BoardScene {
   /// Petak-petak yang dilewati Oyen, berurutan (prop `path`). Digambar
   /// sebagai garis putus-putus lewat tengah petak kalau lebih dari satu.
   final List<Pos> path;
+
+  /// Nomor jejak putar ulang, di atas jalur dan di bawah Oyen.
+  final List<BoardMark> trail;
 
   Tile tileAt(Pos p) => tiles[p.y * columns + p.x];
 
