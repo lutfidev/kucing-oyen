@@ -10,6 +10,10 @@ import 'tile.dart';
 final _template = SvgTemplate(tileSvg);
 final _cache = <Tile, SvgDrawing>{};
 
+/// Batas layer pudar satu petak, supaya tidak selebar kanvas di tiap
+/// bingkai.
+const _tileRect = Rect.fromLTWH(0, 0, Tile.size, Tile.size);
+
 /// Hanya kotak menyala; digambar terpisah supaya bisa berkedip.
 final _glow = _template.render({'glow': true});
 
@@ -55,7 +59,7 @@ void paintTile(Canvas canvas, Tile tile, {double glowOpacity = 1}) {
       _glow.paint(canvas);
     } else {
       canvas.saveLayer(
-        null,
+        _tileRect,
         Paint()..color = Color.fromRGBO(0, 0, 0, glowOpacity),
       );
       _glow.paint(canvas);
@@ -65,7 +69,7 @@ void paintTile(Canvas canvas, Tile tile, {double glowOpacity = 1}) {
   final ghost = tile.ghost;
   if (ghost != null && tile.item == TileItem.none) {
     canvas.saveLayer(
-      null,
+      _tileRect,
       Paint()..color = const Color.fromRGBO(0, 0, 0, ItemArt.hintOpacity),
     );
     paintItemArt(canvas, ghost, ghost: true);

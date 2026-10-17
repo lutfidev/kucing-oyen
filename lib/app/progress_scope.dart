@@ -127,9 +127,12 @@ class ProgressController extends ChangeNotifier implements HintSource {
         _coins -= cost;
       case HintPay.ad:
         _unlocking.add(levelId);
-        final bool watched;
+        bool watched;
         try {
           watched = await ads.show();
+        } on Object {
+          // SDK iklan yang gagal dimuat dengan error dianggap iklan gagal.
+          watched = false;
         } finally {
           _unlocking.remove(levelId);
         }

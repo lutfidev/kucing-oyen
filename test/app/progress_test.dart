@@ -246,5 +246,19 @@ void main() {
       expect(await c.unlockHint(3, 0, HintPay.coins), HintUnlock.notReady);
       expect(c.coins, 500);
     });
+
+    test('iklan yang melempar error dianggap gagal', () async {
+      final c = testProgressWith(ads: _ThrowingAds());
+      expect(await c.unlockHint(3, 1, HintPay.ad), HintUnlock.adFailed);
+      expect(c.hintTier(3), 0);
+      // Tidak macet: tingkat yang sama bisa dicoba lagi.
+      expect(await c.unlockHint(3, 1, HintPay.ad), HintUnlock.adFailed);
+    });
   });
+}
+
+/// Iklan yang gagal dimuat dengan error, seperti SDK asli.
+class _ThrowingAds implements RewardedAds {
+  @override
+  Future<bool> show() async => throw StateError('iklan gagal dimuat');
 }
