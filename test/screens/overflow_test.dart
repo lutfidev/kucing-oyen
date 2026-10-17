@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
 import 'package:kucing_oren/screens/level/rules_sheet.dart';
+import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
 import 'package:kucing_oren/screens/replay/replay_view.dart';
@@ -91,7 +92,7 @@ void main() {
             progress: testProgress(wonUpTo(id - 1)),
           );
           await tester.tap(find.text('Aturan'));
-          await pumpFor(tester, RulesSheet.openTime * 2);
+          await pumpFor(tester, LevelSheet.openTime * 2);
           expect(tester.takeException(), isNull);
           final last = find.byType(RuleCard).last;
           await tester.ensureVisible(last);

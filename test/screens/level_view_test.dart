@@ -9,8 +9,8 @@ import 'package:kucing_oren/game/model/run_clock.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/screens/level/level_bar.dart';
+import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
-import 'package:kucing_oren/screens/level/rules_sheet.dart';
 import 'package:kucing_oren/screens/level/run_panel.dart';
 import 'package:kucing_oren/screens/level/tray.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
@@ -182,7 +182,7 @@ void main() {
       await tester.tap(find.text('Aturan'));
       // Kucing kartu 4 berputar terus: tanpa pumpAndSettle.
       await tester.pump();
-      await tester.pump(RulesSheet.openTime);
+      await tester.pump(LevelSheet.openTime);
       expect(find.text('Aturan Oyen'), findsOneWidget);
       expect(find.text('Jatuhkan barang di sebelahnya'), findsOneWidget);
       expect(find.text('Kardus: ???'), findsOneWidget);
