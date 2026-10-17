@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
+import 'package:kucing_oren/screens/replay/replay_parts.dart';
+import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/theme/theme.dart';
 
@@ -111,6 +113,54 @@ void main() {
               ),
             );
             await pumpFor(tester, const Duration(milliseconds: 1500));
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+    }
+  }
+
+  // Putar ulang langsung dari sesi: 6 langkah, Oyen bosan (40 langkah,
+  // judul level terpanjang), dan kelamaan (80 langkah), di langkah 0 dan
+  // terakhir.
+  final replays = <String, LevelSession Function()>{
+    'level 13': () => resultOf(levels[12], levels[12].solution),
+    'Oyen bosan level 20': () => resultOf(levels[19]),
+    'kelamaan': () => resultOf(longWalk),
+  };
+  for (final size in sizes) {
+    for (final scale in textScales) {
+      for (final MapEntry(key: name, value: session) in replays.entries) {
+        final label = '${size.width.toInt()}×${size.height.toInt()}';
+        testWidgets(
+          'tanpa overflow: putar ulang $name @ $label, teks ${scale * 100}%',
+          (tester) async {
+            setScreenSize(tester, size);
+            setTextScale(tester, scale);
+            await tester.pumpWidget(
+              MaterialApp(
+                theme: KoTheme.light(),
+                home: Scaffold(
+                  body: ReplayView(
+                    session: session(),
+                    onBack: () {},
+                    onMap: () {},
+                  ),
+                ),
+              ),
+            );
+            await tester.pumpAndSettle();
+            expect(tester.takeException(), isNull);
+            // Langkah terakhir: ketuk ujung kanan slider.
+            final track = tester.getRect(
+              find.descendant(
+                of: find.byType(ReplaySlider),
+                matching: find.byType(CustomPaint),
+              ),
+            );
+            await tester.tapAt(track.centerRight - const Offset(1, 0));
+            await tester.pumpAndSettle();
+            expect(find.byType(ReplayCaption), findsOneWidget);
             expect(tester.takeException(), isNull);
           },
         );

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/game/model/replay.dart';
 import 'package:kucing_oren/game/model/run_frames.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
@@ -156,5 +157,111 @@ void main() {
     final end = runScene(l.map, l.solution, f, f.length - 1);
     expect(end.tileAt(const Pos(1, 1)).kind, TileKind.table);
     expect(end.tileAt(const Pos(4, 2)).kind, TileKind.table);
+  });
+
+  group('putar ulang', () {
+    BoardScene replay(Level l, List<Placement> placed, int step) {
+      final f = frames(l, placed);
+      return replayScene(l.map, placed, f, replayTrail(f), step);
+    }
+
+    /// Nomor jejak yang menyala.
+    List<String> active(BoardScene scene) => [
+      for (final mark in scene.trail)
+        if (mark.active) '${mark.pos} ${mark.label}',
+    ];
+
+    const fullPath13 = [Pos(4, 3), Pos(5, 3), Pos(5, 4), Pos(4, 4), Pos(3, 4)];
+
+    test('level 13 langkah 0: Oyen tidur tanpa Zzz dan panah', () {
+      final l = level(13);
+      final scene = replay(l, l.solution, 0);
+      expect(
+        scene.oyen,
+        BoardOyen.at(
+          const Pos(4, 3),
+          const OyenLook(pose: OyenPose.sleep, dir: Direction.left),
+        ),
+      );
+      expect(scene.showFacing, isFalse);
+      // Seluruh jalur dan semua nomor sudah tampil, belum ada yang menyala.
+      expect(scene.path, fullPath13);
+      expect(scene.trail.map((m) => m.label), ['1', '2·3', '4', '5', '6']);
+      expect(active(scene), isEmpty);
+      expect(scene.tileAt(const Pos(3, 3)).item, TileItem.bucketP);
+      expect(scene.tileAt(const Pos(2, 4)).item, TileItem.fishP);
+      expect(scene.tileAt(const Pos(2, 3)).kind, TileKind.tableVase);
+    });
+
+    test('level 13 langkah 4 (desain 09) dan akhir', () {
+      final l = level(13);
+      final f = frames(l);
+      final middle = replay(l, l.solution, 4);
+      expect(middle.oyen, BoardOyen.at(const Pos(5, 4), runLook(f[4])));
+      expect(middle.oyen!.look.pose, OyenPose.walk);
+      expect(middle.path, fullPath13);
+      expect(active(middle), ['(5,4) 4']);
+      expect(active(replay(l, l.solution, 3)), ['(5,3) 2·3']);
+
+      final end = replay(l, l.solution, 6);
+      expect(end.oyen, BoardOyen.at(const Pos(3, 4), runLook(f[6])));
+      expect(end.oyen!.look.pose, OyenPose.eat);
+      expect(active(end), ['(3,4) 6']);
+      expect(end.tileAt(const Pos(2, 3)).kind, TileKind.tableVase);
+      expect(end.tileAt(const Pos(1, 4)).kind, TileKind.tableGlass);
+    });
+
+    test('level 13 ikan saja: vas pecah mulai langkah 2', () {
+      final l = level(13);
+      const placed = [Placement(Item.fish, Pos(2, 4))];
+      expect(
+        replay(l, placed, 1).tileAt(const Pos(2, 3)).kind,
+        TileKind.tableVase,
+      );
+      expect(
+        replay(l, placed, 2).tileAt(const Pos(2, 3)).kind,
+        TileKind.tableBroken,
+      );
+      final f = frames(l, placed);
+      expect(
+        replay(l, placed, f.length - 1).tileAt(const Pos(2, 3)).kind,
+        TileKind.tableBroken,
+      );
+    });
+
+    test('level 15 langkah 0, tengah, dan akhir', () {
+      final l = level(15);
+      final f = frames(l);
+      final start = replay(l, l.solution, 0);
+      expect(start.tileAt(const Pos(2, 3)).item, TileItem.fishP);
+      expect(start.tileAt(const Pos(1, 4)).item, TileItem.fish);
+      expect(start.tileAt(const Pos(2, 4)).item, TileItem.box);
+      expect(
+        start.oyen!.look,
+        const OyenLook(pose: OyenPose.sleep, dir: Direction.left),
+      );
+
+      // Langkah 8: ikan sudah dimakan, Oyen duduk di kardus.
+      final middle = replay(l, l.solution, 8);
+      expect(middle.tileAt(const Pos(2, 3)).item, TileItem.none);
+      expect(middle.tileAt(const Pos(1, 4)).item, TileItem.none);
+      expect(middle.tileAt(const Pos(2, 4)).item, TileItem.none);
+      expect(middle.oyen, BoardOyen.at(const Pos(2, 4), runLook(f[8])));
+      expect(middle.oyen!.look.pose, OyenPose.box);
+      expect(active(middle), ['(2,4) 7–9']);
+
+      // Mundur ke langkah 4: ikan pemain belum dimakan, kardus utuh.
+      final back = replay(l, l.solution, 4);
+      expect(back.tileAt(const Pos(2, 3)).item, TileItem.fishP);
+      expect(back.tileAt(const Pos(1, 4)).item, TileItem.none);
+      expect(back.tileAt(const Pos(2, 4)).item, TileItem.box);
+
+      final end = replay(l, l.solution, 12);
+      expect(end.tileAt(const Pos(2, 4)).item, TileItem.none);
+      expect(end.oyen, BoardOyen.at(const Pos(2, 7), runLook(f[12])));
+      expect(active(end), ['(2,7) 12']);
+      expect(end.path, start.path);
+      expect(end.path.last, const Pos(2, 7));
+    });
   });
 }

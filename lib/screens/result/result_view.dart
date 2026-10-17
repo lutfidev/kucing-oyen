@@ -32,8 +32,8 @@ class ResultView extends StatelessWidget {
   /// "Lanjut" dan "Lanjut Saja": level berikutnya.
   final VoidCallback onNext;
 
-  /// "Tonton putar ulang" dan "Putar Ulang"; null = nonaktif (putar ulang
-  /// dibuat di langkah 10 roadmap).
+  /// "Tonton putar ulang" (Berhasil) dan "Putar Ulang" (Oyen bosan); null =
+  /// nonaktif. Layar vas pecah tidak punya tombol putar ulang (desain 07).
   final VoidCallback? onReplay;
 
   @override

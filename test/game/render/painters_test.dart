@@ -219,6 +219,27 @@ void main() {
     expect(at(226, 172), _near(const Color(0xFFF1DDBA)));
   });
 
+  test('piksel nomor jejak putar ulang: pill 20 px di (3, 3)', () async {
+    final scene = BoardScene.fromMap(
+      BoardScene.designMap,
+      showOyen: false,
+      trail: const [
+        BoardMark(Pos(1, 5), '12'),
+        BoardMark(Pos(2, 5), '4', active: true),
+      ],
+    );
+    final at = await _sampler(await _renderBoard(scene));
+    // Tidak menyala: isi krem dengan cincin 1,5 px oranye tua.
+    expect(at(52, 263), _near(const Color(0xFFE07A10)));
+    expect(at(55, 263), _near(const Color(0xFFFFFBF3)));
+    // Menyala: isi gelap dengan cincin 2 px oranye.
+    expect(at(102, 263), _near(const Color(0xFFF59A33)));
+    expect(at(105, 263), _near(const Color(0xFF3B2716)));
+    // Tinggi 20: dari y 253 sampai 273, lalu lantai lagi.
+    expect(at(113, 254), _near(const Color(0xFF3B2716)));
+    expect(at(113, 278), isNot(_near(const Color(0xFF3B2716))));
+  });
+
   group('Oyen fase jalan (tidak ada di desain)', () {
     /// Oyen 200 px (2 px per satuan viewBox) dengan tepi 60 px untuk
     /// gelembung; mengembalikan warna di titik viewBox (x, y).

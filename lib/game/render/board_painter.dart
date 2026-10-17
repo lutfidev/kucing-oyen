@@ -5,6 +5,7 @@ import 'package:path_drawing/path_drawing.dart';
 
 import '../../theme/ko_colors.dart';
 import '../../theme/ko_shadow.dart';
+import '../../theme/ko_type.dart';
 import '../sim/direction.dart';
 import '../sim/pos.dart';
 import 'board_scene.dart';
@@ -27,6 +28,16 @@ abstract final class BoardArt {
   /// Garis jalur Oyen: tebal 4, putus-putus 2 9, ujung bulat.
   static const double pathWidth = 4;
   static const List<double> pathDash = [2, 9];
+
+  /// Nomor jejak putar ulang: pill setinggi 20 (lebar paling sedikit 20,
+  /// padding 5) di (3, 3) dari pojok petak, Fredoka 700/12. Cincin 2 px
+  /// oranye saat aktif, 1,5 px oranye tua saat tidak.
+  static const Offset markInset = Offset(3, 3);
+  static const double markHeight = 20;
+  static const double markPadding = 5;
+  static const double markFont = 12;
+  static const double markRing = 1.5;
+  static const double markRingActive = 2;
 
   /// Panah arah hadap: ikon 12 px di lingkaran 18 px (padding 3) dengan
   /// cincin 2 px.
@@ -56,19 +67,91 @@ void paintBoardFrame(Canvas canvas) {
 }
 
 /// Menggambar isi papan di kotak 0..350 × 0..450: 63 petak, jalur Oyen,
-/// Oyen, dan panah arah hadap, dipotong sudut 16 px seperti
+/// nomor jejak, Oyen, dan panah arah hadap, dipotong sudut 16 px seperti
 /// `overflow: hidden` di desain.
 ///
 /// [glowOpacity] untuk kedip petak menyala, lihat [tileGlowOpacity].
-void paintBoard(Canvas canvas, BoardScene scene, {double glowOpacity = 1}) {
+/// [oyenAt] (kolom, baris) menimpa posisi Oyen, untuk animasi pindah petak.
+void paintBoard(
+  Canvas canvas,
+  BoardScene scene, {
+  double glowOpacity = 1,
+  Offset? oyenAt,
+}) {
   canvas
     ..save()
     ..clipRRect(BoardArt.rrect);
   paintBoardTiles(canvas, scene, glowOpacity: glowOpacity);
   paintBoardPath(canvas, scene);
-  paintBoardOyen(canvas, scene);
+  paintBoardTrail(canvas, scene);
+  paintBoardOyen(canvas, scene, at: oyenAt);
   canvas.restore();
 }
+
+/// Nomor jejak putar ulang ([BoardScene.trail]): pill bernomor di pojok
+/// kiri atas petak, gelap kalau aktif (`trail` di `Board.dc.html`).
+void paintBoardTrail(Canvas canvas, BoardScene scene) {
+  const c = KoColors.standard;
+  for (final mark in scene.trail) {
+    final text = _markText(mark.label, mark.active);
+    final width = math.max(
+      BoardArt.markHeight,
+      text.width + 2 * BoardArt.markPadding,
+    );
+    final topLeft =
+        Offset(mark.pos.x.toDouble(), mark.pos.y.toDouble()) * Tile.size +
+        BoardArt.markInset;
+    final pill = RRect.fromRectAndRadius(
+      topLeft & Size(width, BoardArt.markHeight),
+      const Radius.circular(BoardArt.markHeight / 2),
+    );
+    final ring = mark.active ? BoardArt.markRingActive : BoardArt.markRing;
+    canvas
+      ..drawRRect(
+        pill.inflate(ring),
+        Paint()..color = mark.active ? c.orange : c.orangeLine,
+      )
+      ..drawRRect(pill, Paint()..color = mark.active ? c.ink : c.surface)
+      ..drawParagraph(
+        text,
+        pill.center - Offset(text.width / 2, text.height / 2),
+      );
+  }
+}
+
+/// Teks nomor jejak yang sudah ditata, disimpan supaya tidak ditata ulang
+/// tiap bingkai animasi.
+final _markTexts = <(String, bool), Paragraph>{};
+
+Paragraph _markText(String label, bool active) =>
+    _markTexts[(label, active)] ??= () {
+      const c = KoColors.standard;
+      final builder =
+          ParagraphBuilder(
+              ParagraphStyle(
+                fontFamily: KoFonts.fredoka,
+                fontSize: BoardArt.markFont,
+                fontWeight: FontWeight.w700,
+                height: 1,
+                textDirection: TextDirection.ltr,
+              ),
+            )
+            ..pushStyle(
+              TextStyle(
+                color: active ? c.cream : c.ink,
+                fontFamily: KoFonts.fredoka,
+                fontSize: BoardArt.markFont,
+                fontWeight: FontWeight.w700,
+                height: 1,
+              ),
+            )
+            ..addText(label);
+      final text = builder.build()
+        ..layout(const ParagraphConstraints(width: double.infinity));
+      return text..layout(
+        ParagraphConstraints(width: text.maxIntrinsicWidth.ceilToDouble()),
+      );
+    }();
 
 /// Jalur Oyen ([BoardScene.path]) sebagai garis putus-putus oranye lewat
 /// tengah petak (`polyline` di `Board.dc.html`), di atas petak dan di bawah
