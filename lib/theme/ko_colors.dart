@@ -67,6 +67,15 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.bossEdge,
     required this.brickEdge,
     required this.onBrick,
+    required this.scrim,
+    required this.shadowSheet,
+    required this.scrimDeep,
+    required this.shadowDialog,
+    required this.sheetHandle,
+    required this.onLockedSoft,
+    required this.turnClockwise,
+    required this.spotlightRing,
+    required this.onScrimLine,
   });
 
   static const standard = KoColors(
@@ -129,6 +138,15 @@ class KoColors extends ThemeExtension<KoColors> {
     bossEdge: Color(0xFFB28A64),
     brickEdge: Color(0xFF8E3220),
     onBrick: Color(0xFFFFFFFF),
+    scrim: Color(0x9E2E1E10), // rgba(46,30,16,.62),
+    shadowSheet: Color(0x4D2E1E10), // rgba(46,30,16,.3),
+    scrimDeep: Color(0xBD1E140A), // rgba(30,20,10,.74),
+    shadowDialog: Color(0x4D000000), // rgba(0,0,0,.3),
+    sheetHandle: Color(0xFFD8BF97),
+    onLockedSoft: Color(0xFF6B5A47),
+    turnClockwise: Color(0xFF3E9BCB),
+    spotlightRing: Color(0xB3F59A33), // rgba(245,154,51,.7),
+    onScrimLine: Color(0xB3FFF4E2), // rgba(255,244,226,.7),
   );
 
   /// Latar semua layar.
@@ -280,6 +298,33 @@ class KoColors extends ThemeExtension<KoColors> {
 
   final Color onBrick;
 
+  /// Latar gelap di belakang sheet aturan.
+  final Color scrim;
+
+  /// Bayangan sheet aturan.
+  final Color shadowSheet;
+
+  /// Overlay gelap tutorial.
+  final Color scrimDeep;
+
+  /// Bayangan kartu tutorial.
+  final Color shadowDialog;
+
+  /// Pegangan sheet.
+  final Color sheetHandle;
+
+  /// Teks kecil kartu aturan terkunci.
+  final Color onLockedSoft;
+
+  /// Panah ↻ di kartu aturan ([brickDeep] untuk ↺).
+  final Color turnClockwise;
+
+  /// Cincin denyut di sekeliling sorotan tutorial.
+  final Color spotlightRing;
+
+  /// Garis tombol "Lewati" di atas overlay tutorial.
+  final Color onScrimLine;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -341,6 +386,15 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? bossEdge,
     Color? brickEdge,
     Color? onBrick,
+    Color? scrim,
+    Color? shadowSheet,
+    Color? scrimDeep,
+    Color? shadowDialog,
+    Color? sheetHandle,
+    Color? onLockedSoft,
+    Color? turnClockwise,
+    Color? spotlightRing,
+    Color? onScrimLine,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -402,6 +456,15 @@ class KoColors extends ThemeExtension<KoColors> {
       bossEdge: bossEdge ?? this.bossEdge,
       brickEdge: brickEdge ?? this.brickEdge,
       onBrick: onBrick ?? this.onBrick,
+      scrim: scrim ?? this.scrim,
+      shadowSheet: shadowSheet ?? this.shadowSheet,
+      scrimDeep: scrimDeep ?? this.scrimDeep,
+      shadowDialog: shadowDialog ?? this.shadowDialog,
+      sheetHandle: sheetHandle ?? this.sheetHandle,
+      onLockedSoft: onLockedSoft ?? this.onLockedSoft,
+      turnClockwise: turnClockwise ?? this.turnClockwise,
+      spotlightRing: spotlightRing ?? this.spotlightRing,
+      onScrimLine: onScrimLine ?? this.onScrimLine,
     );
   }
 
@@ -469,6 +532,15 @@ class KoColors extends ThemeExtension<KoColors> {
       bossEdge: c(bossEdge, other.bossEdge),
       brickEdge: c(brickEdge, other.brickEdge),
       onBrick: c(onBrick, other.onBrick),
+      scrim: c(scrim, other.scrim),
+      shadowSheet: c(shadowSheet, other.shadowSheet),
+      scrimDeep: c(scrimDeep, other.scrimDeep),
+      shadowDialog: c(shadowDialog, other.shadowDialog),
+      sheetHandle: c(sheetHandle, other.sheetHandle),
+      onLockedSoft: c(onLockedSoft, other.onLockedSoft),
+      turnClockwise: c(turnClockwise, other.turnClockwise),
+      spotlightRing: c(spotlightRing, other.spotlightRing),
+      onScrimLine: c(onScrimLine, other.onScrimLine),
     );
   }
 }
