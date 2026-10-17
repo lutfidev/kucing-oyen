@@ -25,9 +25,10 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 9. Beranda, peta babak, progres tersimpan
 - [x] 10. Putar ulang
 - [x] 11. Kartu aturan dan tutorial
-- [ ] 12. Petunjuk dan koin
+- [x] 12. Petunjuk dan koin
 - [ ] 13. Lemari kostum
-- [ ] 14. Polish dan rilis Android
+- [ ] 14. Koin tambahan: tonton iklan dan bonus harian
+- [ ] 15. Polish dan rilis Android
 
 ---
 
@@ -121,11 +122,13 @@ Selesai: `OyenRule` dan `learnedRules` (Dart murni, `lib/game/model/rules.dart`)
 
 > Baca `docs/design/source/05-kartu-aturan-oyen.html`, `11-tutorial-level-1.html`, dan kolom "Hal baru" di tabel level GDD. Kartu aturan (bottom sheet dari tombol Aturan) berisi lima kartu urut seperti desain. Kartu terbuka saat pemain sudah membuka level yang memperkenalkannya: tembok/meja di level 2, ikan di level 3, air di level 6, jatuhkan barang di level 12, kardus di level 14 (desain menampilkan kartu kardus masih "???", cocok untuk pemain yang baru sampai level 13 seperti layar contoh lainnya). Tutorial level 1 berupa overlay seperti desain, dengan teks persis. Desain 11 memakai peta dan nama level 1 versi lama ("Halo, Oyen"); pakai data level 1 dari JSON dan ambil gaya serta teks overlay-nya saja. GDD juga meminta tutorial level 3 (ikan) dan level 6 (ember) yang belum ada desainnya: buat dengan gaya yang sama dan teks pendek yang santai, lalu catat. Status tutorial selesai disimpan. Test: kartu terkunci/terbuka per level, tutorial hanya muncul sekali.
 
-## 12. Petunjuk dan koin
+## 12. Petunjuk dan koin ✅
 
 **Hasil:** tiga tingkat petunjuk bisa dibuka dengan iklan berhadiah (palsu dulu) atau koin.
 
-> Baca `docs/design/source/10-petunjuk.html` dan GDD bagian "Petunjuk". GDD belum mengatur cara pemain mendapat koin: tanyakan ke pemilik repo di awal sesi sebelum menulis kode, lalu catat jawabannya. Tiga tingkat dibuka berurutan: (1) sorot petak benda pertama, (2) tunjukkan jenis benda untuk petak itu, (3) tampilkan solusi bintang 3 lengkap. Sumbernya `level.solution`, yang di langkah 2 sudah terbukti termasuk solusi minimum. Tiap tingkat dibuka dengan "Tonton iklan" atau koin, dengan harga persis seperti desain. Iklan lewat antarmuka `RewardedAds` dengan implementasi palsu yang selalu berhasil; SDK iklan asli dipasang di langkah 14. Koin dan petunjuk yang sudah terbuka disimpan per level. Test: urutan buka tingkat, koin berkurang, petunjuk tampil di papan.
+Selesai: 10 koin per bintang yang pertama kali didapat (sumber koin yang disepakati dengan pemilik repo; pemain lama mendapat total bintang × 10), isi petunjuk dan teksnya (Dart murni, `lib/game/model/hints.dart`), koin dan tingkat petunjuk per level tersimpan lewat `ProgressStore`, `RewardedAds` dengan `FakeRewardedAds`, sheet Petunjuk (desain 10) dari tombol bohlam di fase atur, tanda petunjuk di papan (petak menyala + benda samar) yang tetap ada setelah sheet ditutup, chip koin di Beranda, dan "+N koin" di layar Berhasil dan vas pecah. Petunjuk tidak mengurangi bintang. Desain dan rencana di `docs/superpowers/`; keputusan lain di `docs/DESIGN_NOTES.md`.
+
+> Baca `docs/design/source/10-petunjuk.html` dan GDD bagian "Petunjuk". GDD belum mengatur cara pemain mendapat koin: tanyakan ke pemilik repo di awal sesi sebelum menulis kode, lalu catat jawabannya. Tiga tingkat dibuka berurutan: (1) sorot petak benda pertama, (2) tunjukkan jenis benda untuk petak itu, (3) tampilkan solusi bintang 3 lengkap. Sumbernya `level.solution`, yang di langkah 2 sudah terbukti termasuk solusi minimum. Tiap tingkat dibuka dengan "Tonton iklan" atau koin, dengan harga persis seperti desain. Iklan lewat antarmuka `RewardedAds` dengan implementasi palsu yang selalu berhasil; SDK iklan asli dipasang di langkah 15. Koin dan petunjuk yang sudah terbuka disimpan per level. Test: urutan buka tingkat, koin berkurang, petunjuk tampil di papan.
 
 ## 13. Lemari kostum
 
@@ -133,8 +136,14 @@ Selesai: `OyenRule` dan `learnedRules` (Dart murni, `lib/game/model/rules.dart`)
 
 > Fitur ini tidak ada di daftar "Isi versi pertama" GDD, tapi tombolnya ada di Beranda dan desainnya sudah jadi. Baca `docs/design/source/12-lemari-kostum.html` dan `14-sprite-oyen-arah-pose.html`. Grid kostum (peci, sarung, koki, kacamata) dengan pratinjau Oyen, harga koin persis desain, beli, pakai, dan simpan pilihan. Oyen di papan dan di layar hasil memakai kostum terpilih (gambar Oyen dari langkah 5 sudah mendukung `costume`). Test: beli, pakai, koin tidak cukup.
 
-## 14. Polish dan rilis Android
+## 14. Koin tambahan: tonton iklan dan bonus harian
+
+**Hasil:** pemain bisa menambah koin dengan menonton iklan berhadiah dan mendapat bonus koin harian.
+
+> Disetujui pemilik repo saat brainstorming langkah 12. Baca `docs/superpowers/specs/2026-10-17-hints-coins-design.md`, `docs/DESIGN_NOTES.md` bagian langkah 12, dan kode koin yang ada (`ProgressController.coins`, `RewardedAds`, `FakeRewardedAds`, chip koin Beranda). Tanyakan dulu ke pemilik repo: berapa koin per iklan, batas iklan per hari (kalau ada), besar bonus harian, dan di mana tombolnya (mis. "Tonton iklan, koin ×2" di layar Berhasil, atau chip koin Beranda). Desainnya belum ada: buat dengan gaya desain yang ada (lihat sheet Petunjuk dan Lemari Kostum), cek lewat potret layar, dan catat. Iklan tetap lewat `RewardedAds` (palsu sampai langkah 15). Bonus harian butuh tanggal: simpan hari terakhir klaim lewat `ProgressStore` dan buat jam bisa diganti di test. Test: koin bertambah sekali per iklan yang selesai, iklan gagal tidak menambah, bonus hanya sekali per hari, saldo tersimpan.
+
+## 15. Polish dan rilis Android
 
 **Hasil:** app bundle release yang siap diunggah ke Play Console.
 
-> Tanyakan dulu ke pemilik repo: `applicationId` final (sekarang `com.example.kucing_oren`), ID AdMob, dan isi layar Pengaturan (GDD dan desain belum mengaturnya; minimal reset progres). Lalu: nama app "Kucing Oren", ikon launcher dan splash dari palet desain, layar Pengaturan, iklan berhadiah asli (`google_mobile_ads`) menggantikan implementasi palsu dari langkah 12, signing release dengan keystore di luar repo, dan `flutter build appbundle`. Centang daftar "Isi versi pertama" di GDD.
+> Tanyakan dulu ke pemilik repo: `applicationId` final (sekarang `com.example.kucing_oren`), ID AdMob, dan isi layar Pengaturan (GDD dan desain belum mengaturnya; minimal reset progres). Lalu: nama app "Kucing Oren", ikon launcher dan splash dari palet desain, layar Pengaturan, iklan berhadiah asli (`google_mobile_ads`) menggantikan implementasi palsu dari langkah 12 (dipakai petunjuk dan iklan koin langkah 14), signing release dengan keystore di luar repo, dan `flutter build appbundle`. Centang daftar "Isi versi pertama" di GDD.
