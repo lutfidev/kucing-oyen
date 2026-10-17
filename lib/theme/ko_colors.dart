@@ -76,6 +76,9 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.turnClockwise,
     required this.spotlightRing,
     required this.onScrimLine,
+    required this.scrimLight,
+    required this.successSoft,
+    required this.disabledLine,
   });
 
   static const standard = KoColors(
@@ -147,6 +150,9 @@ class KoColors extends ThemeExtension<KoColors> {
     turnClockwise: Color(0xFF3E9BCB),
     spotlightRing: Color(0xB3F59A33), // rgba(245,154,51,.7),
     onScrimLine: Color(0xB3FFF4E2), // rgba(255,244,226,.7),
+    scrimLight: Color(0x8C2E1E10), // rgba(46,30,16,.55),
+    successSoft: Color(0xFFE3F5F1),
+    disabledLine: Color(0xFFD8C3A2),
   );
 
   /// Latar semua layar.
@@ -325,6 +331,15 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Garis tombol "Lewati" di atas overlay tutorial.
   final Color onScrimLine;
 
+  /// Latar gelap di belakang sheet Petunjuk (desain 10).
+  final Color scrimLight;
+
+  /// Kotak teks petunjuk yang sudah dibuka.
+  final Color successSoft;
+
+  /// Garis tombol nonaktif di kartu petunjuk yang terkunci.
+  final Color disabledLine;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -395,6 +410,9 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? turnClockwise,
     Color? spotlightRing,
     Color? onScrimLine,
+    Color? scrimLight,
+    Color? successSoft,
+    Color? disabledLine,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -465,6 +483,9 @@ class KoColors extends ThemeExtension<KoColors> {
       turnClockwise: turnClockwise ?? this.turnClockwise,
       spotlightRing: spotlightRing ?? this.spotlightRing,
       onScrimLine: onScrimLine ?? this.onScrimLine,
+      scrimLight: scrimLight ?? this.scrimLight,
+      successSoft: successSoft ?? this.successSoft,
+      disabledLine: disabledLine ?? this.disabledLine,
     );
   }
 
@@ -541,6 +562,9 @@ class KoColors extends ThemeExtension<KoColors> {
       turnClockwise: c(turnClockwise, other.turnClockwise),
       spotlightRing: c(spotlightRing, other.spotlightRing),
       onScrimLine: c(onScrimLine, other.onScrimLine),
+      scrimLight: c(scrimLight, other.scrimLight),
+      successSoft: c(successSoft, other.successSoft),
+      disabledLine: c(disabledLine, other.disabledLine),
     );
   }
 }

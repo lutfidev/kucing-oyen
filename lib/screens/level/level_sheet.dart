@@ -7,10 +7,12 @@ import '../../theme/theme.dart';
 /// Membuka sheet bawah di atas layar level (sheet Aturan desain 05, sheet
 /// Petunjuk desain 10): latar gelap, sheet naik sambil muncul. Ditutup
 /// dengan `onClose` dari [builder] (tombol tutup, tarik ke bawah), ketuk
-/// latar, atau tombol kembali sistem.
+/// latar, atau tombol kembali sistem. [barrierColor] default
+/// [KoColors.scrim].
 Future<void> showLevelSheet(
   BuildContext context, {
   required String barrierLabel,
+  Color? barrierColor,
   required Widget Function(BuildContext context, VoidCallback onClose) builder,
 }) {
   final reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
@@ -18,7 +20,7 @@ Future<void> showLevelSheet(
     context: context,
     barrierDismissible: true,
     barrierLabel: barrierLabel,
-    barrierColor: context.koColors.scrim,
+    barrierColor: barrierColor ?? context.koColors.scrim,
     transitionDuration: reduceMotion ? Duration.zero : LevelSheet.openTime,
     pageBuilder: (context, _, _) {
       final route = ModalRoute.of(context);

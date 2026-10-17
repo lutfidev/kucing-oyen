@@ -107,3 +107,21 @@ class TargetChip extends StatelessWidget {
     );
   }
 }
+
+/// Tombol bohlam kuning di kanan chip target (desain 03): membuka sheet
+/// Petunjuk.
+class HintButton extends StatelessWidget {
+  const HintButton({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return KoIconButton(
+      icon: KoIcons.hint,
+      semanticLabel: 'Petunjuk',
+      tone: KoIconButtonTone.hint,
+      onPressed: onPressed,
+    );
+  }
+}

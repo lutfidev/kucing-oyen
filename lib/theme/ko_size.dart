@@ -80,6 +80,9 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.ruleBadge,
     required this.oyenTutorial,
     required this.oyenTutorialOverlap,
+    required this.hintButton,
+    required this.iconCompact,
+    required this.lockedOpacity,
   });
 
   static const standard = KoSize(
@@ -155,6 +158,9 @@ class KoSize extends ThemeExtension<KoSize> {
     ruleBadge: 26,
     oyenTutorial: 96,
     oyenTutorialOverlap: 26,
+    hintButton: 46,
+    iconCompact: 18,
+    lockedOpacity: 0.75,
   );
 
   /// Tombol "Main" di Beranda.
@@ -348,6 +354,15 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Seberapa jauh Oyen menimpa kartu tutorial.
   final double oyenTutorialOverlap;
 
+  /// Tombol "Tonton iklan" dan bayar koin di kartu petunjuk.
+  final double hintButton;
+
+  /// Ikon iklan dan koin di tombol kartu petunjuk.
+  final double iconCompact;
+
+  /// Opasitas kartu petunjuk yang belum bisa dibuka.
+  final double lockedOpacity;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -422,6 +437,9 @@ class KoSize extends ThemeExtension<KoSize> {
     double? ruleBadge,
     double? oyenTutorial,
     double? oyenTutorialOverlap,
+    double? hintButton,
+    double? iconCompact,
+    double? lockedOpacity,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -496,6 +514,9 @@ class KoSize extends ThemeExtension<KoSize> {
       ruleBadge: ruleBadge ?? this.ruleBadge,
       oyenTutorial: oyenTutorial ?? this.oyenTutorial,
       oyenTutorialOverlap: oyenTutorialOverlap ?? this.oyenTutorialOverlap,
+      hintButton: hintButton ?? this.hintButton,
+      iconCompact: iconCompact ?? this.iconCompact,
+      lockedOpacity: lockedOpacity ?? this.lockedOpacity,
     );
   }
 
@@ -576,6 +597,9 @@ class KoSize extends ThemeExtension<KoSize> {
       ruleBadge: d(ruleBadge, other.ruleBadge),
       oyenTutorial: d(oyenTutorial, other.oyenTutorial),
       oyenTutorialOverlap: d(oyenTutorialOverlap, other.oyenTutorialOverlap),
+      hintButton: d(hintButton, other.hintButton),
+      iconCompact: d(iconCompact, other.iconCompact),
+      lockedOpacity: d(lockedOpacity, other.lockedOpacity),
     );
   }
 }
