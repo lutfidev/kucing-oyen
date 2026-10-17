@@ -182,5 +182,63 @@ void main() {
         );
       });
     });
+
+    group('kartu aturan dan tutorial', () {
+      test('kartu 1–4 dan kardus terkunci disalin dari desain 05', () {
+        final source = _read('05-kartu-aturan-oyen.html');
+        for (final svg in [
+          ruleKnockSvg,
+          ruleFishSvg,
+          ruleWaterSvg,
+          ruleWallSvg,
+          ruleWallCatSvg,
+          ruleBoxLockedSvg,
+        ]) {
+          expect(source, contains(_lf(svg)));
+        }
+        expect(
+          source,
+          contains(
+            '@keyframes koQuarter{0%,30%{transform:rotate(0deg)}'
+            '60%,100%{transform:rotate(90deg)}}',
+          ),
+        );
+        expect(source, contains('animation: koQuarter 2.4s ease-in-out'));
+      });
+
+      test(
+        'kardus terbuka dan kartu terkunci: bentuk dari desain 05 dan Tile',
+        () {
+          final source =
+              _read('05-kartu-aturan-oyen.html') + _read('Tile.dc.html');
+          for (final svg in [
+            ruleBoxSvg,
+            ruleKnockLockedSvg,
+            ruleFishLockedSvg,
+            ruleWaterLockedSvg,
+            ruleWallLockedSvg,
+          ]) {
+            final tags = RegExp(r'<(?!g\b)[a-z][^>]*>').allMatches(svg);
+            expect(tags, isNotEmpty);
+            for (final tag in tags) {
+              expect(source, contains(tag[0]), reason: tag[0]);
+            }
+          }
+        },
+      );
+
+      test('tangan penunjuk dan geraknya dari desain 11', () {
+        final source = _read('11-tutorial-level-1.html');
+        expect(source, contains(_lf(tutorialHandSvg)));
+        expect(source, contains('width="52" height="64"'));
+        expect(
+          source,
+          contains('50%{transform:translateY(10px) rotate(180deg)}'),
+        );
+        expect(source, contains('animation: koTap 1s ease-in-out infinite'));
+        expect(source, contains('animation: koRing 1.4s ease-out infinite'));
+        expect(source, contains('box-shadow:0 0 0 16px rgba(245,154,51,0)'));
+      });
+    });
   }, skip: missing);
 }

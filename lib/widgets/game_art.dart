@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../game/model/rules.dart';
 import '../game/render/render.dart';
 import '../game/sim/item.dart';
 import '../theme/theme.dart';
@@ -176,4 +177,49 @@ class _BoardPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_BoardPainter old) => old.scene != scene;
+}
+
+/// Gambar kartu aturan [rule] seukuran [RuleArt.size]. Kartu 4 yang
+/// [learned] berputar seperempat terus (`koQuarter`) kalau [turn] (0–1 tiap
+/// [RuleArt.quarterTime]) diberikan. Hiasan saja.
+class RuleArtView extends StatelessWidget {
+  const RuleArtView(this.rule, {super.key, required this.learned, this.turn});
+
+  final OyenRule rule;
+  final bool learned;
+  final Animation<double>? turn;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(
+      child: CustomPaint(
+        size: const Size.square(RuleArt.size),
+        painter: _RuleArtPainter(rule, learned, turn),
+      ),
+    );
+  }
+}
+
+class _RuleArtPainter extends CustomPainter {
+  _RuleArtPainter(this.rule, this.learned, this.turn) : super(repaint: turn);
+
+  final OyenRule rule;
+  final bool learned;
+  final Animation<double>? turn;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.scale(size.width / RuleArt.size);
+    final t = turn?.value ?? 0;
+    paintRuleArt(
+      canvas,
+      rule,
+      learned: learned,
+      catAngle: RuleArt.quarterAngle(t),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_RuleArtPainter old) =>
+      old.rule != rule || old.learned != learned || old.turn != turn;
 }

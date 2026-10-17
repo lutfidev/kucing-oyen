@@ -535,3 +535,96 @@ const bossFishSvg = r'''
 </g>
 </g>
 ''';
+
+// ── Kartu aturan dan tutorial ───────────────────────────────────────────
+
+/// Gambar kartu aturan 1–4 (`05-kartu-aturan-oyen.html`), viewBox 76×76:
+/// jatuhkan barang, kejar ikan, air, dan mentok tembok. Kucing kartu 4
+/// berputar seperempat (grup `koQuarter`), jadi dipisah ke
+/// [ruleWallCatSvg].
+const ruleKnockSvg = r'''
+<rect width="76" height="76" rx="16" fill="#F7E8CE"></rect><rect x="38" y="10" width="30" height="30" rx="5" fill="#D9A066" stroke="#A8733F" stroke-width="2"></rect><circle cx="53" cy="25" r="7" fill="#CDEBF7" stroke="#5FAED3" stroke-width="2"></circle><path d="M55 44 l4 8 M50 46 l-1 7 M60 41 l7 4" stroke="#C2492F" stroke-width="2.4" stroke-linecap="round"></path><g transform="translate(22 50)"><path d="M-10 -2 L-9 -13 L-2 -8 Z M10 -2 L9 -13 L2 -8 Z" fill="#F29A3A"></path><circle r="10" fill="#F5A447"></circle><path d="M-5 -1 h3.5 M1.5 -1 h3.5" stroke="#3A2618" stroke-width="1.8" stroke-linecap="round"></path></g><path d="M30 38 Q34 30 40 30" stroke="#E07A10" stroke-width="3" fill="none" stroke-linecap="round"></path>
+''';
+
+const ruleFishSvg = r'''
+<rect width="76" height="76" rx="16" fill="#F7E8CE"></rect>
+            <path d="M38 22 V9" stroke="#E07A10" stroke-width="2.6" stroke-linecap="round"></path><path d="M34 12.5 L38 8 L42 12.5" stroke="#E07A10" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M49 25 A17 17 0 0 1 55 43" stroke="#3E9BCB" stroke-width="2.6" fill="none" stroke-linecap="round"></path><path d="M51.5 40 L55 44.5 L58.5 40" stroke="#3E9BCB" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M27 25 A17 17 0 0 0 21 43" stroke="#9A3520" stroke-width="2.6" fill="none" stroke-linecap="round"></path><path d="M17.5 40 L21 44.5 L24.5 40" stroke="#9A3520" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M38 58 V69" stroke="#8A7259" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="1 4"></path><path d="M34 65.5 L38 70 L42 65.5" stroke="#8A7259" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+            <ellipse cx="38" cy="45" rx="7.5" ry="9.5" fill="#F29A3A"></ellipse><path d="M38 54 Q38 59 42 60" stroke="#E8892B" stroke-width="3.4" fill="none" stroke-linecap="round"></path><path d="M31 32 L31.5 24.5 L36 29 Z M45 32 L44.5 24.5 L40 29 Z" fill="#F29A3A"></path><circle cx="38" cy="34" r="7.5" fill="#F5A447"></circle><path d="M34 33 h2.6 M39.4 33 h2.6" stroke="#3A2618" stroke-width="1.6" stroke-linecap="round"></path>
+''';
+
+const ruleWaterSvg = r'''
+<rect width="76" height="76" rx="16" fill="#F7E8CE"></rect><path d="M46 26 C44 18 56 13 62 17 C70 15 74 26 68 32 C70 41 58 45 52 41 C44 42 42 33 46 26 Z" fill="#8FD3F0" stroke="#4FA9D6" stroke-width="1.5"></path><g transform="translate(24 30)"><path d="M-10 -2 L-9 -13 L-2 -8 Z M10 -2 L9 -13 L2 -8 Z" fill="#F29A3A"></path><circle r="10" fill="#F5A447"></circle><circle cx="-4" cy="-1" r="2.6" fill="#FFFDF7" stroke="#3A2618" stroke-width="1.2"></circle><circle cx="4" cy="-1" r="2.6" fill="#FFFDF7" stroke="#3A2618" stroke-width="1.2"></circle></g><path d="M38 46 C 38 62, 14 62, 14 52" stroke="#E07A10" stroke-width="3" fill="none" stroke-linecap="round"></path><path d="M9 56 L14 50 L19 56" stroke="#E07A10" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+''';
+
+const ruleWallSvg = r'''
+<rect width="76" height="76" rx="16" fill="#F7E8CE"></rect><rect x="56" y="6" width="16" height="64" rx="3" fill="#B07A4F"></rect><path d="M56 27 H72 M56 48 H72" stroke="#946140" stroke-width="1.4"></path>
+            <path d="M24 20.7 A20 20 0 1 1 16.7 48" stroke="#E07A10" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-dasharray="1 5.5"></path><path d="M16.2 55.2 L16.7 48 L23.2 51.2" stroke="#E07A10" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+''';
+
+const ruleWallCatSvg = r'''
+              <path d="M28 37 Q22 37 20 33" stroke="#E8892B" stroke-width="3.4" fill="none" stroke-linecap="round"></path>
+              <ellipse cx="35" cy="37" rx="9.5" ry="7.5" fill="#F29A3A"></ellipse>
+              <path d="M44 30 L51.5 30.5 L47 35 Z M44 44 L51.5 43.5 L47 39 Z" fill="#F29A3A"></path>
+              <circle cx="46" cy="37" r="7.5" fill="#F5A447"></circle>
+              <path d="M47 33 v2.6 M47 38.4 v2.6" stroke="#3A2618" stroke-width="1.6" stroke-linecap="round"></path>
+              <path d="M24 37 L54 37" stroke="none"></path>
+''';
+
+/// Kartu kardus terkunci (`05-kartu-aturan-oyen.html`), viewBox 76×76.
+const ruleBoxLockedSvg = r'''
+<rect width="76" height="76" rx="16" fill="#E6D6BC"></rect><g opacity="0.45"><rect x="18" y="18" width="40" height="40" rx="3" fill="#C8955A" stroke="#9E6C37" stroke-width="1.5"></rect><rect x="24" y="24" width="28" height="28" rx="2" fill="#7E5228"></rect></g><circle cx="38" cy="38" r="15" fill="#3B2716"></circle><rect x="31" y="37" width="14" height="10" rx="2.5" fill="none" stroke="#FFF4E2" stroke-width="2.2"></rect><path d="M34 37v-3a4 4 0 0 1 8 0v3" fill="none" stroke="#FFF4E2" stroke-width="2.2"></path>
+''';
+
+/// Kartu kardus terbuka, viewBox 76×76. Tidak ada di desain (desain 05
+/// hanya punya kardus terkunci): latar kartu 1, kardus dari
+/// [ruleBoxLockedSvg] tanpa pudar, dan kepala Oyen bermata tertutup dari
+/// kartu 1 di dalamnya.
+const ruleBoxSvg = r'''
+<rect width="76" height="76" rx="16" fill="#F7E8CE"></rect><rect x="18" y="18" width="40" height="40" rx="3" fill="#C8955A" stroke="#9E6C37" stroke-width="1.5"></rect><rect x="24" y="24" width="28" height="28" rx="2" fill="#7E5228"></rect>
+<g transform="translate(38 41)"><path d="M-10 -2 L-9 -13 L-2 -8 Z M10 -2 L9 -13 L2 -8 Z" fill="#F29A3A"></path><circle r="10" fill="#F5A447"></circle><path d="M-5 -1 h3.5 M1.5 -1 h3.5" stroke="#3A2618" stroke-width="1.8" stroke-linecap="round"></path></g>
+''';
+
+/// Kartu 1–4 terkunci, viewBox 76×76. Tidak ada di desain: latar, pudar
+/// 0,45, dan gembok [ruleBoxLockedSvg] di atas benda dari gambar kartu
+/// terbukanya (meja dan gelas, ikan asin `Tile.dc.html`, genangan, tembok)
+/// yang digeser ke tengah.
+const ruleKnockLockedSvg = r'''
+<rect width="76" height="76" rx="16" fill="#E6D6BC"></rect><g opacity="0.45">
+<g transform="translate(-15 13)"><rect x="38" y="10" width="30" height="30" rx="5" fill="#D9A066" stroke="#A8733F" stroke-width="2"></rect><circle cx="53" cy="25" r="7" fill="#CDEBF7" stroke="#5FAED3" stroke-width="2"></circle></g>
+</g><circle cx="38" cy="38" r="15" fill="#3B2716"></circle><rect x="31" y="37" width="14" height="10" rx="2.5" fill="none" stroke="#FFF4E2" stroke-width="2.2"></rect><path d="M34 37v-3a4 4 0 0 1 8 0v3" fill="none" stroke="#FFF4E2" stroke-width="2.2"></path>
+''';
+
+const ruleFishLockedSvg = r'''
+<rect width="76" height="76" rx="16" fill="#E6D6BC"></rect><g opacity="0.45">
+<g transform="translate(38 38) scale(1.3) translate(-25.5 -25)">
+<g transform="rotate(-24 25 25)">
+<path d="M34 25 L43 18 L42 32 Z" fill="#B49C74" stroke="#7E6848" stroke-width="1.4" stroke-linejoin="round"></path>
+<path d="M8 25 Q21 13 34 25 Q21 37 8 25 Z" fill="#CDB892" stroke="#7E6848" stroke-width="1.4"></path>
+<path d="M19 20.5 V29.5 M24 19.5 V30.5 M29 21 V29" stroke="#8D7656" stroke-width="1.1" opacity="0.8"></path>
+<circle cx="13" cy="24" r="1.7" fill="#3A2618"></circle>
+</g>
+</g>
+</g><circle cx="38" cy="38" r="15" fill="#3B2716"></circle><rect x="31" y="37" width="14" height="10" rx="2.5" fill="none" stroke="#FFF4E2" stroke-width="2.2"></rect><path d="M34 37v-3a4 4 0 0 1 8 0v3" fill="none" stroke="#FFF4E2" stroke-width="2.2"></path>
+''';
+
+const ruleWaterLockedSvg = r'''
+<rect width="76" height="76" rx="16" fill="#E6D6BC"></rect><g opacity="0.45">
+<g transform="translate(-20 9)"><path d="M46 26 C44 18 56 13 62 17 C70 15 74 26 68 32 C70 41 58 45 52 41 C44 42 42 33 46 26 Z" fill="#8FD3F0" stroke="#4FA9D6" stroke-width="1.5"></path></g>
+</g><circle cx="38" cy="38" r="15" fill="#3B2716"></circle><rect x="31" y="37" width="14" height="10" rx="2.5" fill="none" stroke="#FFF4E2" stroke-width="2.2"></rect><path d="M34 37v-3a4 4 0 0 1 8 0v3" fill="none" stroke="#FFF4E2" stroke-width="2.2"></path>
+''';
+
+const ruleWallLockedSvg = r'''
+<rect width="76" height="76" rx="16" fill="#E6D6BC"></rect><g opacity="0.45">
+<g transform="translate(-26 0)"><rect x="56" y="6" width="16" height="64" rx="3" fill="#B07A4F"></rect><path d="M56 27 H72 M56 48 H72" stroke="#946140" stroke-width="1.4"></path></g>
+</g><circle cx="38" cy="38" r="15" fill="#3B2716"></circle><rect x="31" y="37" width="14" height="10" rx="2.5" fill="none" stroke="#FFF4E2" stroke-width="2.2"></rect><path d="M34 37v-3a4 4 0 0 1 8 0v3" fill="none" stroke="#FFF4E2" stroke-width="2.2"></path>
+''';
+
+/// Tangan penunjuk tutorial (`11-tutorial-level-1.html`), viewBox 52×64,
+/// sebelum diputar 180° (`koTap`).
+const tutorialHandSvg = r'''
+    <path d="M14 8 a6 6 0 0 1 12 0 v18 h3 a5 5 0 0 1 5 5 v1 a5 5 0 0 1 6 4.5 v1 a5 5 0 0 1 5 5 v6 c0 10 -7 15 -16 15 h-5 c-8 0 -12 -4 -15 -10 l-6 -12 a4.5 4.5 0 0 1 7.5 -4.8 l3.5 5.3 z" fill="#FFE1C4" stroke="#3B2716" stroke-width="2.4" stroke-linejoin="round"></path>
+    <path d="M26 26 v8 M34 32 v6 M40 37 v5" stroke="#3B2716" stroke-width="2" stroke-linecap="round" opacity="0.5"></path>
+''';
