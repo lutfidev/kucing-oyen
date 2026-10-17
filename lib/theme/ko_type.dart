@@ -48,6 +48,9 @@ class KoType extends ThemeExtension<KoType> {
     required this.numberChipSmall,
     required this.tag,
     required this.tagSmall,
+    required this.headingLarge,
+    required this.paragraphSmall,
+    required this.numberTick,
   });
 
   static const standard = KoType(
@@ -234,6 +237,25 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 12,
       fontWeight: FontWeight.w800,
     ),
+    headingLarge: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 24,
+      fontWeight: FontWeight.w700,
+      height: 1.1,
+    ),
+    paragraphSmall: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+      height: 1.3,
+    ),
+    numberTick: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 13,
+      fontWeight: FontWeight.w600,
+    ),
   );
 
   /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
@@ -331,6 +353,15 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 800/12: label "Main" di atas node level saat ini.
   final TextStyle tagSmall;
 
+  /// Fredoka 700/24, tinggi baris 1,1: judul "Putar Ulang" (desain 09).
+  final TextStyle headingLarge;
+
+  /// Nunito 700/14, tinggi baris 1,3: caption putar ulang.
+  final TextStyle paragraphSmall;
+
+  /// Fredoka 600/13: angka di bawah slider waktu putar ulang.
+  final TextStyle numberTick;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -364,6 +395,9 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? numberChipSmall,
     TextStyle? tag,
     TextStyle? tagSmall,
+    TextStyle? headingLarge,
+    TextStyle? paragraphSmall,
+    TextStyle? numberTick,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -397,6 +431,9 @@ class KoType extends ThemeExtension<KoType> {
       numberChipSmall: numberChipSmall ?? this.numberChipSmall,
       tag: tag ?? this.tag,
       tagSmall: tagSmall ?? this.tagSmall,
+      headingLarge: headingLarge ?? this.headingLarge,
+      paragraphSmall: paragraphSmall ?? this.paragraphSmall,
+      numberTick: numberTick ?? this.numberTick,
     );
   }
 
@@ -436,6 +473,9 @@ class KoType extends ThemeExtension<KoType> {
       numberChipSmall: s(numberChipSmall, other.numberChipSmall),
       tag: s(tag, other.tag),
       tagSmall: s(tagSmall, other.tagSmall),
+      headingLarge: s(headingLarge, other.headingLarge),
+      paragraphSmall: s(paragraphSmall, other.paragraphSmall),
+      numberTick: s(numberTick, other.numberTick),
     );
   }
 }

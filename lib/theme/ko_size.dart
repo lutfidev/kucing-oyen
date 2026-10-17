@@ -68,6 +68,12 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.chapterCard,
     required this.chapterIcon,
     required this.iconMicro,
+    required this.chipMedium,
+    required this.dotSmall,
+    required this.captionBoxSmall,
+    required this.slider,
+    required this.sliderTrack,
+    required this.sliderThumb,
   });
 
   static const standard = KoSize(
@@ -131,6 +137,12 @@ class KoSize extends ThemeExtension<KoSize> {
     chapterCard: 52,
     chapterIcon: 36,
     iconMicro: 12,
+    chipMedium: 36,
+    dotSmall: 8,
+    captionBoxSmall: 52,
+    slider: 28,
+    sliderTrack: 6,
+    sliderThumb: 20,
   );
 
   /// Tombol "Main" di Beranda.
@@ -288,6 +300,24 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Ikon di badge "Selesai".
   final double iconMicro;
 
+  /// Chip "Rekaman" di bar atas putar ulang.
+  final double chipMedium;
+
+  /// Titik di chip "Rekaman".
+  final double dotSmall;
+
+  /// Tinggi paling kecil kotak caption putar ulang.
+  final double captionBoxSmall;
+
+  /// Tinggi slider waktu putar ulang (`input type=range`).
+  final double slider;
+
+  /// Tebal jalur slider.
+  final double sliderTrack;
+
+  /// Garis tengah pegangan slider.
+  final double sliderThumb;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -350,6 +380,12 @@ class KoSize extends ThemeExtension<KoSize> {
     double? chapterCard,
     double? chapterIcon,
     double? iconMicro,
+    double? chipMedium,
+    double? dotSmall,
+    double? captionBoxSmall,
+    double? slider,
+    double? sliderTrack,
+    double? sliderThumb,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -412,6 +448,12 @@ class KoSize extends ThemeExtension<KoSize> {
       chapterCard: chapterCard ?? this.chapterCard,
       chapterIcon: chapterIcon ?? this.chapterIcon,
       iconMicro: iconMicro ?? this.iconMicro,
+      chipMedium: chipMedium ?? this.chipMedium,
+      dotSmall: dotSmall ?? this.dotSmall,
+      captionBoxSmall: captionBoxSmall ?? this.captionBoxSmall,
+      slider: slider ?? this.slider,
+      sliderTrack: sliderTrack ?? this.sliderTrack,
+      sliderThumb: sliderThumb ?? this.sliderThumb,
     );
   }
 
@@ -480,6 +522,12 @@ class KoSize extends ThemeExtension<KoSize> {
       chapterCard: d(chapterCard, other.chapterCard),
       chapterIcon: d(chapterIcon, other.chapterIcon),
       iconMicro: d(iconMicro, other.iconMicro),
+      chipMedium: d(chipMedium, other.chipMedium),
+      dotSmall: d(dotSmall, other.dotSmall),
+      captionBoxSmall: d(captionBoxSmall, other.captionBoxSmall),
+      slider: d(slider, other.slider),
+      sliderTrack: d(sliderTrack, other.sliderTrack),
+      sliderThumb: d(sliderThumb, other.sliderThumb),
     );
   }
 }

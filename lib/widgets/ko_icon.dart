@@ -160,6 +160,12 @@ abstract final class KoIcons {
     KoIconShape.path('M19 5v14'),
   ], strokeWidth: 2.4);
 
+  /// Mundur satu langkah (putar ulang, desain 09).
+  static const stepBack = KoIconData([
+    KoIconShape.path('M18 5l-9 7 9 7z', paint: KoIconPaint.fillAndStroke),
+    KoIconShape.path('M5 5v14'),
+  ], strokeWidth: 2.4);
+
   /// Level terkunci (gembok).
   static const lock = KoIconData([
     KoIconShape.rrect(Rect.fromLTWH(5, 11, 14, 10), 2.5),
