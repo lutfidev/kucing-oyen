@@ -4,7 +4,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../app/hint_source.dart';
 import '../../game/kucing_game.dart';
+import '../../game/model/hints.dart';
 import '../../game/model/level_session.dart';
 import '../../game/model/progress.dart';
 import '../../game/model/rules.dart';
@@ -17,6 +19,7 @@ import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../replay/replay_view.dart';
 import '../result/result_view.dart';
+import 'hint_sheet.dart';
 import 'level_bar.dart';
 import 'level_board.dart';
 import 'rules_sheet.dart';
@@ -62,9 +65,10 @@ class _Run {
 /// ulang ([ReplayView]) menutupi layar hasil; tombol kembali (juga tombol
 /// kembali sistem) menutupnya lagi.
 ///
-/// Di fase atur, tombol Aturan membuka sheet kartu aturan ([rules]), dan
-/// [tutorial] (kalau ada) menutupi layar sampai yang disorotnya dipakai
-/// atau dilewati.
+/// Di fase atur, tombol Aturan membuka sheet kartu aturan ([rules]), tombol
+/// bohlam membuka sheet Petunjuk ([hints]) yang tandanya tetap di papan
+/// selama fase atur, dan [tutorial] (kalau ada) menutupi layar sampai yang
+/// disorotnya dipakai atau dilewati.
 ///
 /// Aturan ada di [LevelSession]. Layar ini hanya menerjemahkan seretan:
 /// lepas di petak menyala = taruh atau pindah; benda dari papan yang
@@ -81,6 +85,7 @@ class LevelView extends StatefulWidget {
     this.rules,
     this.tutorial,
     this.onTutorialDone,
+    this.hints,
   });
 
   final Level level;
@@ -92,8 +97,9 @@ class LevelView extends StatefulWidget {
   /// "Lanjut" di layar hasil: level berikutnya.
   final VoidCallback onNext;
 
-  /// Dipanggil dengan bintang 0–3 setiap kali layar hasil dibuka.
-  final ValueChanged<int>? onResult;
+  /// Dipanggil dengan bintang 0–3 setiap kali layar hasil dibuka;
+  /// mengembalikan koin yang didapat (tampil di layar hasil).
+  final int Function(int stars)? onResult;
 
   /// Kartu aturan yang terbuka; null = hanya dari nomor level (progres
   /// kosong).
@@ -104,6 +110,9 @@ class LevelView extends StatefulWidget {
 
   /// Tutorial selesai (dipakai atau dilewati).
   final VoidCallback? onTutorialDone;
+
+  /// Saldo koin dan petunjuk yang terbuka; null = tanpa tombol Petunjuk.
+  final HintSource? hints;
 
   @override
   State<LevelView> createState() => _LevelViewState();
@@ -139,6 +148,30 @@ class _LevelViewState extends State<LevelView>
   /// Ada vas di peta: status vas tampil di fase jalan.
   late final bool _hasVase = _level.board.copyCells().contains(Cell.tableVase);
 
+  /// Koin yang didapat percobaan terakhir, untuk layar hasil.
+  int _coinsEarned = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.hints?.addListener(_onHints);
+  }
+
+  @override
+  void didUpdateWidget(LevelView old) {
+    super.didUpdateWidget(old);
+    if (!identical(old.hints, widget.hints)) {
+      old.hints?.removeListener(_onHints);
+      widget.hints?.addListener(_onHints);
+      _game.scene = _buildScene();
+    }
+  }
+
+  /// Tingkat petunjuk baru dibuka: tandanya langsung tampil di papan.
+  void _onHints() {
+    if (mounted) _update(() {});
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -155,26 +188,41 @@ class _LevelViewState extends State<LevelView>
 
   @override
   void dispose() {
+    widget.hints?.removeListener(_onHints);
     _ticker.dispose();
     super.dispose();
   }
 
   /// Isi papan dari sesi. Fase atur: benda pemain (kecuali yang sedang
-  /// diangkat dari papan), petak tujuan yang menyala, dan Oyen tidur di
-  /// petak awalnya. Fase jalan: keadaan papan di langkah yang tampil.
+  /// diangkat dari papan), petak tujuan yang menyala, tanda petunjuk, dan
+  /// Oyen tidur di petak awalnya. Fase jalan: keadaan papan di langkah yang
+  /// tampil.
   BoardScene _buildScene() {
     final run = _run;
     if (run != null) {
       return runScene(_level.map, _session.placed, run.frames, run.clock.step);
     }
     final drag = _drag;
+    final hintGlow = <Pos>{};
+    final ghosts = <Pos, Item>{};
+    final tier = widget.hints?.hintTier(_level.id) ?? 0;
+    for (final MapEntry(key: pos, :value) in hintMarks(_level, tier).entries) {
+      final placed = pos == drag?.from ? null : _session.itemAt(pos);
+      // Jenis yang belum dibuka: benda apa pun memadamkan petak, supaya
+      // jenisnya tidak bisa ditebak dengan coba-coba.
+      if (placed == null || (value != null && placed != value)) {
+        hintGlow.add(pos);
+      }
+      if (value != null && placed == null) ghosts[pos] = value;
+    }
     return BoardScene.fromMap(
       _level.map,
       items: {
         for (final p in _session.placed)
           if (p.pos != drag?.from) p.pos: ItemArt.tileItem(p.item),
       },
-      glow: {?drag?.target},
+      glow: {...hintGlow, ?drag?.target},
+      ghosts: ghosts,
     );
   }
 
@@ -294,8 +342,10 @@ class _LevelViewState extends State<LevelView>
   /// "Lihat hasil": layar hasil.
   void _finish() {
     if (_session.phase != SessionPhase.running) return;
-    _update(_session.finish);
-    widget.onResult?.call(_session.stars!);
+    _update(() {
+      _session.finish();
+      _coinsEarned = widget.onResult?.call(_session.stars!) ?? 0;
+    });
   }
 
   // ── Fase jalan ──────────────────────────────────────────────────────
@@ -346,6 +396,14 @@ class _LevelViewState extends State<LevelView>
       context,
       learned: widget.rules ?? learnedRules(Progress.empty, _level.id),
     );
+  }
+
+  /// Tombol bohlam. Seretan yang sedang berjalan dibatalkan dulu.
+  void _openHints() {
+    final hints = widget.hints;
+    if (hints == null || _session.phase != SessionPhase.arrange) return;
+    if (_drag != null) _update(() => _drag = null);
+    showHintSheet(context, level: _level, hints: hints);
   }
 
   void _finishTutorial() {
@@ -420,20 +478,29 @@ class _LevelViewState extends State<LevelView>
                               ? RulesButton(onPressed: _openRules)
                               : StepCounter(step: run.clock.step),
                         ),
-                        if (_level.inventory.isNotEmpty) ...[
+                        // Target dan tombol Petunjuk (desain 03). Barisnya
+                        // tetap ada di fase jalan supaya papan tidak berubah
+                        // ukuran.
+                        if (_level.inventory.isNotEmpty ||
+                            widget.hints != null) ...[
                           SizedBox(height: space.s10),
                           SizedBox(
                             height: context.koSize.iconButton,
-                            child: Align(
-                              alignment: AlignmentDirectional.centerStart,
-                              child: run == null
-                                  ? TargetChip(items: _level.starItems)
-                                  : RunStatus(
-                                      vaseBroken: _hasVase
-                                          ? run.frame.vaseBroken
-                                          : null,
-                                      itemsUsed: _session.itemsUsed,
-                                    ),
+                            child: Row(
+                              children: [
+                                if (_level.inventory.isNotEmpty)
+                                  run == null
+                                      ? TargetChip(items: _level.starItems)
+                                      : RunStatus(
+                                          vaseBroken: _hasVase
+                                              ? run.frame.vaseBroken
+                                              : null,
+                                          itemsUsed: _session.itemsUsed,
+                                        ),
+                                const Spacer(),
+                                if (run == null && widget.hints != null)
+                                  HintButton(onPressed: _openHints),
+                              ],
                             ),
                           ),
                         ],

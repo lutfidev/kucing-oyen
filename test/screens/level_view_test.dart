@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flame/game.dart' hide RouterComponent;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/hint_source.dart';
 import 'package:kucing_oren/game/kucing_game.dart';
 import 'package:kucing_oren/game/level_loader.dart';
 import 'package:kucing_oren/game/model/run_clock.dart';
@@ -30,6 +31,7 @@ Future<void> _pumpLevel(
   int id, {
   Size size = const Size(390, 844),
   bool disableAnimations = false,
+  HintSource? hints,
 }) async {
   _nextTaps = 0;
   setScreenSize(tester, size);
@@ -46,10 +48,16 @@ Future<void> _pumpLevel(
         backLabel: 'Kembali',
         onBack: () {},
         onNext: () => _nextTaps++,
+        hints: hints,
       ),
     ),
   );
-  await tester.pumpAndSettle();
+  // Petak petunjuk berkedip terus: tanpa pumpAndSettle.
+  if (hints == null) {
+    await tester.pumpAndSettle();
+  } else {
+    await settle(tester, max: const Duration(milliseconds: 300));
+  }
 }
 
 final _board = find.byType(GameWidget<KucingGame>);
@@ -950,6 +958,103 @@ void main() {
       expect(_tile(tester, 1, 5).item, TileItem.bucketP);
       expect(_tile(tester, 5, 7).item, TileItem.none);
       expect(_slotOf(tester, Item.fish).count, 1);
+    });
+  });
+
+  group('petunjuk', () {
+    const water = Pos(3, 3);
+
+    Future<void> pumpFrames(WidgetTester tester, Duration time) async {
+      const frame = Duration(milliseconds: 50);
+      for (var t = Duration.zero; t < time; t += frame) {
+        await tester.pump(frame);
+      }
+    }
+
+    testWidgets('tingkat tersimpan langsung tampil di papan', (tester) async {
+      await _pumpLevel(tester, 13, hints: testProgressWith(hints: {13: 2}));
+      expect(_glowing(tester), [water]);
+      expect(_tile(tester, 3, 3).ghost, Item.water);
+      expect(_tile(tester, 2, 4).ghost, isNull);
+    });
+
+    testWidgets('tingkat 3: semua petak solusi dengan bendanya', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13, hints: testProgressWith(hints: {13: 3}));
+      expect(_glowing(tester), [water, const Pos(2, 4)]);
+      expect(_tile(tester, 2, 4).ghost, Item.fish);
+    });
+
+    testWidgets('membeli tingkat dari sheet memperbarui papan', (tester) async {
+      final hints = testProgressWith(coins: 100);
+      await _pumpLevel(tester, 13, hints: hints);
+      expect(_glowing(tester), isEmpty);
+      await tester.tap(find.bySemanticsLabel('Petunjuk'));
+      await pumpFrames(tester, LevelSheet.openTime * 2);
+      await tester.tap(find.text('20 koin'));
+      await tester.pump();
+      await tester.tap(find.bySemanticsLabel('Tutup'));
+      await pumpFrames(tester, LevelSheet.openTime * 2);
+      expect(find.text('Petunjuk'), findsNothing);
+      expect(hints.coins, 80);
+      expect(_glowing(tester), [water]);
+      expect(_tile(tester, 3, 3).ghost, isNull);
+    });
+
+    testWidgets('tingkat 1: benda apa pun memadamkan petak', (tester) async {
+      await _pumpLevel(tester, 13, hints: testProgressWith(hints: {13: 1}));
+      await _dragToTile(tester, Item.fish, 3, 3);
+      expect(_glowing(tester), isEmpty);
+    });
+
+    testWidgets('tingkat 2: benda salah tetap menyala, pindah menyala lagi', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13, hints: testProgressWith(hints: {13: 2}));
+      await _dragToTile(tester, Item.fish, 3, 3);
+      expect(_glowing(tester), [water]);
+      expect(_tile(tester, 3, 3).ghost, isNull);
+      expect(_tile(tester, 3, 3).item, TileItem.fishP);
+
+      await _dragTile(tester, (3, 3), (1, 5));
+      expect(_glowing(tester), [water]);
+      expect(_tile(tester, 3, 3).ghost, Item.water);
+
+      await _dragToTile(tester, Item.water, 3, 3);
+      expect(_glowing(tester), isEmpty);
+      expect(_tile(tester, 3, 3).item, TileItem.bucketP);
+    });
+
+    testWidgets('fase jalan tanpa tanda; Atur Lagi menampilkannya lagi', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13, hints: testProgressWith(hints: {13: 3}));
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pump();
+      expect(_glowing(tester), isEmpty);
+      expect(_tile(tester, 3, 3).ghost, isNull);
+      expect(find.bySemanticsLabel('Petunjuk'), findsNothing);
+
+      await tester.tap(find.bySemanticsLabel('Kembali ke fase atur'));
+      await tester.pump();
+      expect(_glowing(tester), [water, const Pos(2, 4)]);
+    });
+
+    testWidgets('level 1: tombol Petunjuk, papan tetap seukuran', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 1, hints: testProgressWith());
+      expect(find.bySemanticsLabel('Petunjuk'), findsOneWidget);
+      final rect = tester.getRect(_board);
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pump();
+      expect(tester.getRect(_board), rect);
+    });
+
+    testWidgets('tanpa sumber petunjuk tidak ada tombol', (tester) async {
+      await _pumpLevel(tester, 13);
+      expect(find.bySemanticsLabel('Petunjuk'), findsNothing);
     });
   });
 }
