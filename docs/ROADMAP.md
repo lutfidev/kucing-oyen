@@ -23,7 +23,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 7. Gameplay fase jalan
 - [x] 8. Hasil: berhasil, vas pecah, Oyen bosan
 - [x] 9. Beranda, peta babak, progres tersimpan
-- [ ] 10. Putar ulang
+- [x] 10. Putar ulang
 - [ ] 11. Kartu aturan dan tutorial
 - [ ] 12. Petunjuk dan koin
 - [ ] 13. Lemari kostum
@@ -105,9 +105,11 @@ Selesai: `Progress` dan `Chapter` (Dart murni, `lib/game/model/`), `ProgressStor
 
 > Baca `docs/design/source/01-beranda.html`, `02-peta-babak-2-ruang-tamu.html`, dan GDD bagian "Babak 1" serta "Babak 2". Beranda: logo, Oyen tidur, total bintang `x/60`, tombol Main, Lemari Kostum dan Pengaturan (belum berfungsi). Peta babak: desain hanya punya Babak 2 – Ruang Tamu; buat Babak 1 – Dapur (level 1–10, bos "Pesta Ikan Asin") dengan tata letak dan gaya yang sama, lalu catat. Tiap level menampilkan 0–3 bintang; level terkunci pudar dengan gembok; level saat ini menonjol; level bos lebih besar. Progres (bintang terbaik per level) disimpan lokal dengan `shared_preferences` di balik antarmuka kecil supaya mudah diuji. Level n+1 terbuka setelah level n menang (aturan ini belum ada di GDD; catat). Sambungkan Beranda → Peta → Level → Hasil → Lanjut atau kembali ke Peta. Test: simpan dan muat progres, buka kunci, total bintang, alur navigasi. Tambah rute ke test overflow.
 
-## 10. Putar ulang
+## 10. Putar ulang ✅
 
 **Hasil:** pemain bisa memutar ulang langkah Oyen maju dan mundur.
+
+Selesai: nomor jejak dan caption rekap (`replayTrail`, `replayCaptions`, Dart murni di `lib/game/model/replay.dart`), papan per langkah (`replayScene`, `paintBoardTrail`) dari `runFrames` tanpa simulasi ulang, dan layar `ReplayView` (desain 09) yang dibuka dari "Tonton putar ulang" (Berhasil) dan "Putar Ulang" (Oyen bosan) di atas layar hasil, tanpa rute baru. Caption solusi level 13 persis desain 09. Langkah terakhir yang gagal menyebut langkah yang terulang atau batas 80 langkah. Keputusan lain di `docs/DESIGN_NOTES.md`.
 
 > Baca `docs/design/source/09-putar-ulang.html` (slider, mundur/maju satu langkah, jejak langkah bernomor, garis jalur, caption per langkah). Bangun ulang keadaan papan di tiap langkah dari `SimResult.trace` (barang jatuh, ikan dimakan, kardus penyok) tanpa menjalankan ulang simulasi. Caption dibuat dari `StepKind` dengan arah layar (atas, bawah, kiri, kanan) dan bahasa santai seperti contoh caption di desain 04 dan 09; teks aturan tetap memakai "berputar searah jarum jam". Putar ulang dibuka dari layar Berhasil ("Tonton putar ulang") dan Oyen bosan ("Putar Ulang"). Test: keadaan papan di langkah 0, tengah, dan akhir untuk level 13 dan 15; caption untuk tiap `StepKind`.
 
