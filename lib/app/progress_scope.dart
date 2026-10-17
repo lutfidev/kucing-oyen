@@ -12,10 +12,12 @@ class ProgressController extends ChangeNotifier {
     required List<Level> levels,
     required this.store,
     this._progress = Progress.empty,
+    Set<int> tutorialsDone = const {},
   }) : levels = List.unmodifiable(levels),
+       _tutorialsDone = Set.unmodifiable(tutorialsDone),
        chapters = List.unmodifiable(chaptersOf(levels));
 
-  /// Memuat progres dari [store].
+  /// Memuat progres dan tutorial yang sudah selesai dari [store].
   static Future<ProgressController> load({
     required List<Level> levels,
     required ProgressStore store,
@@ -23,6 +25,7 @@ class ProgressController extends ChangeNotifier {
     levels: levels,
     store: store,
     progress: await store.load(),
+    tutorialsDone: await store.loadTutorials(),
   );
 
   final List<Level> levels;
@@ -31,6 +34,13 @@ class ProgressController extends ChangeNotifier {
 
   Progress _progress;
   Progress get progress => _progress;
+
+  Set<int> _tutorialsDone;
+
+  /// Id level yang tutorialnya sudah selesai (dikerjakan atau dilewati).
+  Set<int> get tutorialsDone => _tutorialsDone;
+
+  bool isTutorialDone(int id) => _tutorialsDone.contains(id);
 
   Level? levelById(int id) {
     for (final level in levels) {
@@ -55,6 +65,14 @@ class ProgressController extends ChangeNotifier {
     _progress = next;
     notifyListeners();
     await store.save(next);
+  }
+
+  /// Menandai tutorial level [id] selesai supaya tidak muncul lagi.
+  Future<void> finishTutorial(int id) async {
+    if (isTutorialDone(id)) return;
+    _tutorialsDone = Set.unmodifiable({..._tutorialsDone, id});
+    notifyListeners();
+    await store.saveTutorials(_tutorialsDone);
   }
 }
 
