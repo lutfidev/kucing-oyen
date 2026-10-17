@@ -529,6 +529,7 @@ class _LevelViewState extends State<LevelView>
                       onRestart: _restart,
                       onNext: widget.onNext,
                       onReplay: _openReplay,
+                      coins: _coinsEarned,
                     ),
                   ),
                 ),

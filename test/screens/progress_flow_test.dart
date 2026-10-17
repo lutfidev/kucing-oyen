@@ -115,6 +115,8 @@ void main() {
     await _play(tester);
     expect(progress.progress.starsOf(13), 1);
     expect(progress.progress.isUnlocked(14), isTrue);
+    final before = progress.coins;
+    expect(find.text('+10'), findsOneWidget);
 
     // Coba lagi dengan solusi: 3 bintang menggantikan 1 bintang.
     await tester.tap(find.text('Coba Lagi'));
@@ -125,6 +127,35 @@ void main() {
     ]);
     await _play(tester);
     expect(progress.progress.starsOf(13), 3);
+    expect(find.text('+20'), findsOneWidget);
+    expect(progress.coins, before + 20);
+  });
+
+  testWidgets('koin: menang pertama +30, ulang tanpa koin, saldo di Beranda', (
+    tester,
+  ) async {
+    final progress = testProgress();
+    await pumpApp(
+      tester,
+      location: AppRoutes.level(1, chapter: 1),
+      progress: progress,
+    );
+    await _play(tester);
+    expect(find.text('+30'), findsOneWidget);
+    expect(progress.coins, 30);
+    expect((progress.store as MemoryProgressStore).coins, 30);
+
+    await tester.tap(find.text('Ulangi'));
+    await tester.pumpAndSettle();
+    await _play(tester);
+    expect(find.text('Berhasil!'), findsOneWidget);
+    expect(find.text('koin'), findsNothing);
+    expect(progress.coins, 30);
+
+    // Aplikasi dibuka ulang dengan progres yang sama: Beranda.
+    await tester.pumpWidget(const SizedBox());
+    await pumpApp(tester, progress: progress);
+    expect(find.bySemanticsLabel('30 koin'), findsOneWidget);
   });
 
   testWidgets('Lanjut sesudah level 20 kembali ke peta Babak 2', (
