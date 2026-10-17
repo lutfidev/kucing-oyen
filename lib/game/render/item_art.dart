@@ -30,7 +30,7 @@ abstract final class ItemArt {
   /// Opasitas benda petunjuk di petak papan (gambar bayangan slot baki).
   /// Desain tidak punya; lebih tebal dari bayangan slot (0,28) supaya
   /// jenisnya terbaca di papan.
-  static const double hintOpacity = 0.55;
+  static const double hintOpacity = 0.7;
 
   /// Benda pemain di petak papan: digambar dengan cincin oranye.
   static TileItem tileItem(Item item) => switch (item) {

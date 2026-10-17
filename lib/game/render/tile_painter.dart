@@ -43,12 +43,25 @@ Map<String, Object> tileVals(Tile tile) {
 /// pemanggil (`canvas.translate`/`canvas.scale`).
 ///
 /// [glowOpacity] untuk kedip petak menyala, lihat [tileGlowOpacity]. Benda
-/// petunjuk ([Tile.ghost]) digambar samar di bawah kotak menyala.
+/// petunjuk ([Tile.ghost]) digambar samar di atas kotak menyala supaya
+/// warnanya tetap terbaca.
 void paintTile(Canvas canvas, Tile tile, {double glowOpacity = 1}) {
   final base = Tile(kind: tile.kind, item: tile.item, alt: tile.alt);
   _cache
       .putIfAbsent(base, () => _template.render(tileVals(base)))
       .paint(canvas);
+  if (tile.glow && glowOpacity > 0) {
+    if (glowOpacity >= 1) {
+      _glow.paint(canvas);
+    } else {
+      canvas.saveLayer(
+        null,
+        Paint()..color = Color.fromRGBO(0, 0, 0, glowOpacity),
+      );
+      _glow.paint(canvas);
+      canvas.restore();
+    }
+  }
   final ghost = tile.ghost;
   if (ghost != null && tile.item == TileItem.none) {
     canvas.saveLayer(
@@ -58,11 +71,6 @@ void paintTile(Canvas canvas, Tile tile, {double glowOpacity = 1}) {
     paintItemArt(canvas, ghost, ghost: true);
     canvas.restore();
   }
-  if (!tile.glow || glowOpacity <= 0) return;
-  if (glowOpacity >= 1) return _glow.paint(canvas);
-  canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, glowOpacity));
-  _glow.paint(canvas);
-  canvas.restore();
 }
 
 /// Opasitas kotak menyala pada detik ke-[seconds] animasi `koGlow` di

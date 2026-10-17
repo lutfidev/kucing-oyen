@@ -291,7 +291,7 @@ void main() {
     });
   });
 
-  test('piksel benda petunjuk: ember samar 0,55 di atas lantai', () async {
+  test('piksel benda petunjuk: ember samar 0,7 di atas lantai', () async {
     Future<Color Function(double x, double y)> render(
       Map<Pos, Item> ghosts, {
       Map<Pos, TileItem> items = const {},
@@ -301,8 +301,8 @@ void main() {
       ),
     );
     final at = await render({const Pos(3, 3): Item.water});
-    // Air #8FD3F0 dengan opasitas 0,55 di atas lantai #F7E8CE.
-    expect(at(175, 175), _near(const Color(0xFFBEDCE1), tolerance: 3));
+    // Air #8FD3F0 dengan opasitas 0,7 di atas lantai #F7E8CE.
+    expect(at(175, 175), _near(const Color(0xFFAED9E6), tolerance: 3));
     // Petak tanpa petunjuk tetap lantai.
     expect(at(175, 275), _near(const Color(0xFFF7E8CE)));
     // Benda pemain menutupi gambar samar.
@@ -311,5 +311,20 @@ void main() {
       items: {const Pos(3, 3): TileItem.bucketP},
     );
     expect(covered(175, 180), _near(const Color(0xFF8FD3F0)));
+  });
+
+  test('piksel benda petunjuk di atas kotak menyala', () async {
+    final at = await _sampler(
+      await _renderBoard(
+        BoardScene.fromMap(
+          BoardScene.designMap,
+          ghosts: {const Pos(3, 3): Item.water},
+          glow: {const Pos(3, 3)},
+        ),
+      ),
+    );
+    // Lantai + oranye 0,28 dulu, lalu air 0,7 di atasnya: warna ember tidak
+    // tertutup kotak menyala.
+    expect(at(175, 175), _near(const Color(0xFFAED3D9), tolerance: 3));
   });
 }

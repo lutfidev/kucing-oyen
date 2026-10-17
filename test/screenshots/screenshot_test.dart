@@ -44,14 +44,19 @@ final _screens = <String, (String, Map<int, int>)>{
 };
 
 /// Aplikasi lengkap di [location] dengan progres [best], siap dipotret.
-/// Semua tutorial sudah selesai kecuali [tutorialsDone] diberikan.
+/// Semua tutorial sudah selesai kecuali [tutorialsDone] diberikan. Saldo
+/// 120 koin seperti contoh desain, kecuali progres kosong.
 Widget _app(
   String location, [
   Map<int, int> best = const {},
   Set<int>? tutorialsDone,
 ]) => capturable(
   KucingOrenApp(
-    progress: testProgress(best, tutorialsDone),
+    progress: testProgressWith(
+      best: best,
+      tutorialsDone: tutorialsDone,
+      coins: best.isEmpty ? 0 : 120,
+    ),
     initialLocation: location,
   ),
 );
@@ -389,6 +394,48 @@ void main() {
         // Cincin dan tangan bergerak terus.
         for (var i = 0; i < 10; i++) {
           await tester.pump(const Duration(milliseconds: 50));
+        }
+        await capture(tester, '$folder/$name');
+      });
+    }, skip: !screenshotsEnabled);
+  }
+
+  // Sheet Petunjuk (desain 10): 120 koin, tingkat 1 terbuka seperti desain,
+  // semua tertutup, koin kurang, level tanpa benda, dan papan dengan
+  // tingkat 3 sesudah sheet ditutup.
+  const hints = <String, (int, int, Map<int, int>, bool, Size)>{
+    '10-petunjuk': (13, 120, {13: 1}, true, _size),
+    '10-petunjuk-awal': (13, 120, {}, true, _size),
+    '10-petunjuk-koin-kurang-360x640': (13, 10, {13: 1}, true, Size(360, 640)),
+    '10-petunjuk-level-1': (1, 120, {}, true, _size),
+    '10-petunjuk-papan': (13, 0, {13: 3}, false, _size),
+  };
+  for (final MapEntry(key: name, value: (id, coins, opened, sheet, size))
+      in hints.entries) {
+    testWidgets('$folder/$name', (tester) async {
+      setScreenSize(tester, size);
+      await withShadows(() async {
+        await tester.pumpWidget(
+          capturable(
+            KucingOrenApp(
+              progress: testProgressWith(
+                best: wonUpTo(id - 1),
+                coins: coins,
+                hints: opened,
+              ),
+              initialLocation: AppRoutes.level(id, chapter: id <= 10 ? 1 : 2),
+            ),
+          ),
+        );
+        // Petak petunjuk berkedip terus: tanpa pumpAndSettle.
+        for (var i = 0; i < 10; i++) {
+          await tester.pump(const Duration(milliseconds: 50));
+        }
+        if (sheet) {
+          await tester.tap(find.bySemanticsLabel('Petunjuk'));
+          for (var i = 0; i < 10; i++) {
+            await tester.pump(const Duration(milliseconds: 50));
+          }
         }
         await capture(tester, '$folder/$name');
       });
