@@ -64,6 +64,16 @@ Pemilik repo biasanya `/clear` setelah tiap sesi, jadi aturan ini yang berlaku, 
 - **Atribusi:** commit dan PR atas nama akun git pemilik repo. Jangan tambahkan `Co-Authored-By: Claude`, "Generated with Claude Code", atau atribusi Claude lain di pesan commit maupun badan PR.
 - Kesepakatan baru soal alur kerja langsung dicatat di file ini, jangan hanya diucapkan di chat.
 
+## Skill dan effort
+
+Pemilik repo nyaman dengan skill superpowers: selalu pakai skill yang cocok. Effort sesi utama diatur pemilik repo lewat `/effort`; effort subagent ditulis di sini dan berlaku sebagai permintaan pemilik repo.
+
+- **Planning:** `superpowers:brainstorming` lalu `superpowers:writing-plans` di sesi utama (high; xhigh untuk langkah dengan banyak keputusan seperti 12 dan 14). Brainstorming hanya untuk hal yang belum diputuskan prompt roadmap, GDD, atau desain, dan pertanyaan yang diminta prompt roadmap (mis. sumber koin di langkah 12) diajukan di sini. Jalankan rencana dengan `superpowers:executing-plans` di sesi utama, bukan `subagent-driven-development`.
+- **Cari bug:** `superpowers:systematic-debugging` di sesi utama (high). Kalau penyebabnya bisa di banyak tempat, sebar pencarian ke subagent `Explore` effort low; analisis akar masalah tetap di sesi utama.
+- **Cari kode yang lebar:** subagent `Explore` effort low, hanya kalau bagian "Struktur" di atas dan `grep` langsung tidak cukup.
+- **Review sebelum PR:** `superpowers:requesting-code-review` dengan satu subagent effort high, lalu `superpowers:receiving-code-review` untuk menimbang temuannya sebelum diperbaiki. Sesudah itu `superpowers:verification-before-completion` sebelum push.
+- **Desain, logo, ikon, dan gambar lain:** di sesi utama (high), bukan subagent, karena butuh konteks desain lengkap. Yang ada di `docs/design/source/` disalin persis; yang belum ada desainnya (mis. ikon launcher dan splash di langkah 14) mulai dengan `superpowers:brainstorming`, pakai palet dan gaya desain, cek hasilnya lewat potret layar `test/screenshots/`, lalu catat di `docs/DESIGN_NOTES.md`.
+
 ## Lanjut ke mana
 
 Lihat `docs/ROADMAP.md`: status tiap langkah dan prompt siap tempel. Langkah berikutnya = langkah pertama yang belum dicentang.
