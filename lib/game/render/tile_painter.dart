@@ -3,11 +3,16 @@ import 'dart:ui';
 import 'package:flutter/animation.dart' show Curves;
 
 import 'design_svg.dart';
+import 'item_art.dart';
 import 'svg_template.dart';
 import 'tile.dart';
 
 final _template = SvgTemplate(tileSvg);
 final _cache = <Tile, SvgDrawing>{};
+
+/// Batas layer pudar satu petak, supaya tidak selebar kanvas di tiap
+/// bingkai.
+const _tileRect = Rect.fromLTWH(0, 0, Tile.size, Tile.size);
 
 /// Hanya kotak menyala; digambar terpisah supaya bisa berkedip.
 final _glow = _template.render({'glow': true});
@@ -41,17 +46,35 @@ Map<String, Object> tileVals(Tile tile) {
 /// Menggambar [tile] di kotak 0..50 kanvas. Skala dan posisi diatur
 /// pemanggil (`canvas.translate`/`canvas.scale`).
 ///
-/// [glowOpacity] untuk kedip petak menyala, lihat [tileGlowOpacity].
+/// [glowOpacity] untuk kedip petak menyala, lihat [tileGlowOpacity]. Benda
+/// petunjuk ([Tile.ghost]) digambar samar di atas kotak menyala supaya
+/// warnanya tetap terbaca.
 void paintTile(Canvas canvas, Tile tile, {double glowOpacity = 1}) {
-  final base = tile.glow ? tile.copyWith(glow: false) : tile;
+  final base = Tile(kind: tile.kind, item: tile.item, alt: tile.alt);
   _cache
       .putIfAbsent(base, () => _template.render(tileVals(base)))
       .paint(canvas);
-  if (!tile.glow || glowOpacity <= 0) return;
-  if (glowOpacity >= 1) return _glow.paint(canvas);
-  canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, glowOpacity));
-  _glow.paint(canvas);
-  canvas.restore();
+  if (tile.glow && glowOpacity > 0) {
+    if (glowOpacity >= 1) {
+      _glow.paint(canvas);
+    } else {
+      canvas.saveLayer(
+        _tileRect,
+        Paint()..color = Color.fromRGBO(0, 0, 0, glowOpacity),
+      );
+      _glow.paint(canvas);
+      canvas.restore();
+    }
+  }
+  final ghost = tile.ghost;
+  if (ghost != null && tile.item == TileItem.none) {
+    canvas.saveLayer(
+      _tileRect,
+      Paint()..color = const Color.fromRGBO(0, 0, 0, ItemArt.hintOpacity),
+    );
+    paintItemArt(canvas, ghost, ghost: true);
+    canvas.restore();
+  }
 }
 
 /// Opasitas kotak menyala pada detik ke-[seconds] animasi `koGlow` di

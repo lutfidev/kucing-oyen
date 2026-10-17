@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/app.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/progress_store.dart';
+import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/game/level_loader.dart';
 import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
@@ -27,14 +28,29 @@ final tutorialLevels = {
 ProgressController testProgress([
   Map<int, int> best = const {},
   Set<int>? tutorialsDone,
-]) {
+]) => testProgressWith(best: best, tutorialsDone: tutorialsDone);
+
+/// Seperti [testProgress], ditambah saldo [coins], tingkat petunjuk
+/// [hints] per level, dan iklan [ads] (default iklan palsu yang berhasil).
+ProgressController testProgressWith({
+  Map<int, int> best = const {},
+  Set<int>? tutorialsDone,
+  int coins = 0,
+  Map<int, int> hints = const {},
+  RewardedAds? ads,
+}) {
   final progress = Progress(best);
   final tutorials = tutorialsDone ?? tutorialLevels;
   return ProgressController(
     levels: testLevels,
-    store: MemoryProgressStore(progress, tutorials),
+    store: MemoryProgressStore(progress, tutorials)
+      ..coins = coins
+      ..hints = hints,
     progress: progress,
     tutorialsDone: tutorials,
+    coins: coins,
+    hints: hints,
+    ads: ads,
   );
 }
 

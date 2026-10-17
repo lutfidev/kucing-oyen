@@ -1,36 +1,57 @@
 import 'package:flutter/widgets.dart';
 
 import '../game/model/chapter.dart';
+import '../game/model/hints.dart';
 import '../game/model/progress.dart';
 import '../game/sim/sim.dart';
+import 'hint_source.dart';
 import 'progress_store.dart';
+import 'rewarded_ads.dart';
 
-/// Data level dan progres pemain untuk semua layar. Dimuat sekali sebelum
-/// aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
-class ProgressController extends ChangeNotifier {
+/// Data level dan progres pemain untuk semua layar: bintang, tutorial,
+/// koin, dan petunjuk. Dimuat sekali sebelum aplikasi jalan (`main`), lalu
+/// dibagikan lewat [ProgressScope].
+class ProgressController extends ChangeNotifier implements HintSource {
   ProgressController({
     required List<Level> levels,
     required this.store,
     this._progress = Progress.empty,
     Set<int> tutorialsDone = const {},
+    this._coins = 0,
+    Map<int, int> hints = const {},
+    RewardedAds? ads,
   }) : levels = List.unmodifiable(levels),
        _tutorialsDone = Set.unmodifiable(tutorialsDone),
+       _hints = Map.unmodifiable(hints),
+       ads = ads ?? FakeRewardedAds(),
        chapters = List.unmodifiable(chaptersOf(levels));
 
-  /// Memuat progres dan tutorial yang sudah selesai dari [store].
+  /// Memuat progres, tutorial, koin, dan petunjuk dari [store]. Koin yang
+  /// belum pernah disimpan (progres dari sebelum ada koin) dihitung dari
+  /// total bintang.
   static Future<ProgressController> load({
     required List<Level> levels,
     required ProgressStore store,
-  }) async => ProgressController(
-    levels: levels,
-    store: store,
-    progress: await store.load(),
-    tutorialsDone: await store.loadTutorials(),
-  );
+    RewardedAds? ads,
+  }) async {
+    final progress = await store.load();
+    return ProgressController(
+      levels: levels,
+      store: store,
+      progress: progress,
+      tutorialsDone: await store.loadTutorials(),
+      coins: await store.loadCoins() ?? progress.totalStars * coinsPerStar,
+      hints: await store.loadHints(),
+      ads: ads,
+    );
+  }
 
   final List<Level> levels;
   final List<Chapter> chapters;
   final ProgressStore store;
+
+  /// Iklan berhadiah untuk membuka petunjuk.
+  final RewardedAds ads;
 
   Progress _progress;
   Progress get progress => _progress;
@@ -57,14 +78,74 @@ class ProgressController extends ChangeNotifier {
   /// Bintang paling banyak semua level ("31/60").
   int get maxStars => levels.length * Progress.maxStars;
 
-  /// Mencatat hasil level [id] lalu menyimpannya kalau lebih baik. Gagal
-  /// (0 bintang) tidak dicatat.
+  /// Koin yang didapat kalau level [id] selesai dengan [stars] bintang
+  /// sekarang: hanya bintang yang baru.
+  int coinsFor(int id, int stars) =>
+      coinsForStars(_progress.starsOf(id), stars);
+
+  /// Mencatat hasil level [id] lalu menyimpannya kalau lebih baik, dan
+  /// menambah koin untuk bintang yang baru. Gagal (0 bintang) tidak
+  /// dicatat.
   Future<void> record(int id, int stars) async {
+    final earned = coinsFor(id, stars);
     final next = _progress.record(id, stars);
     if (identical(next, _progress)) return;
     _progress = next;
+    _coins += earned;
     notifyListeners();
-    await store.save(next);
+    await Future.wait([
+      store.save(next),
+      if (earned > 0) store.saveCoins(_coins),
+    ]);
+  }
+
+  int _coins;
+  Map<int, int> _hints;
+
+  /// Level yang tingkat petunjuknya sedang dibuka (menunggu iklan), supaya
+  /// ketukan kedua tidak membuka atau membayar dua kali.
+  final _unlocking = <int>{};
+
+  @override
+  int get coins => _coins;
+
+  @override
+  int hintTier(int levelId) => _hints[levelId] ?? 0;
+
+  @override
+  Future<HintUnlock> unlockHint(int levelId, int tier, HintPay pay) async {
+    bool ready() =>
+        tier >= 1 &&
+        tier <= maxHintTier &&
+        tier == hintTier(levelId) + 1 &&
+        !_unlocking.contains(levelId);
+    if (!ready()) return HintUnlock.notReady;
+    switch (pay) {
+      case HintPay.coins:
+        final cost = hintCost(tier);
+        if (_coins < cost) return HintUnlock.notEnoughCoins;
+        _coins -= cost;
+      case HintPay.ad:
+        _unlocking.add(levelId);
+        bool watched;
+        try {
+          watched = await ads.show();
+        } on Object {
+          // SDK iklan yang gagal dimuat dengan error dianggap iklan gagal.
+          watched = false;
+        } finally {
+          _unlocking.remove(levelId);
+        }
+        if (!watched) return HintUnlock.adFailed;
+        if (!ready()) return HintUnlock.notReady;
+    }
+    _hints = Map.unmodifiable({..._hints, levelId: tier});
+    notifyListeners();
+    await Future.wait([
+      store.saveHints(_hints),
+      if (pay == HintPay.coins) store.saveCoins(_coins),
+    ]);
+    return HintUnlock.opened;
   }
 
   /// Menandai tutorial level [id] selesai supaya tidak muncul lagi.

@@ -28,6 +28,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
     required this.logo,
     required this.sheet,
     required this.dialog,
+    required this.coinChip,
   });
 
   factory KoShadow.from(KoColors c) => KoShadow(
@@ -102,6 +103,14 @@ class KoShadow extends ThemeExtension<KoShadow> {
         blurRadius: 30,
       ),
     ],
+    coinChip: [
+      BoxShadow(color: c.line, offset: const Offset(0, 2)),
+      BoxShadow(
+        color: c.shadowTray,
+        offset: const Offset(0, 6),
+        blurRadius: 14,
+      ),
+    ],
   );
 
   static final standard = KoShadow.from(KoColors.standard);
@@ -153,6 +162,9 @@ class KoShadow extends ThemeExtension<KoShadow> {
   /// Kartu tutorial: 0 16 30, hitam 30%.
   final List<BoxShadow> dialog;
 
+  /// Chip saldo koin di Beranda: garis padat 2 px dan bayangan lembut.
+  final List<BoxShadow> coinChip;
+
   /// Bayangan padat setinggi [depth] (tanpa blur).
   static List<BoxShadow> solid(Color color, double depth) => [
     BoxShadow(color: color, offset: Offset(0, depth)),
@@ -176,6 +188,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
     List<Shadow>? logo,
     List<BoxShadow>? sheet,
     List<BoxShadow>? dialog,
+    List<BoxShadow>? coinChip,
   }) {
     return KoShadow(
       pressHero: pressHero ?? this.pressHero,
@@ -194,6 +207,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
       logo: logo ?? this.logo,
       sheet: sheet ?? this.sheet,
       dialog: dialog ?? this.dialog,
+      coinChip: coinChip ?? this.coinChip,
     );
   }
 
@@ -220,6 +234,7 @@ class KoShadow extends ThemeExtension<KoShadow> {
       logo: Shadow.lerpList(logo, other.logo, t)!,
       sheet: l(sheet, other.sheet),
       dialog: l(dialog, other.dialog),
+      coinChip: l(coinChip, other.coinChip),
     );
   }
 }

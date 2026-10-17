@@ -14,6 +14,7 @@ class KoCard extends StatelessWidget {
     this.padding,
     this.locked = false,
     this.elevated = false,
+    this.borderColor,
   });
 
   final Widget child;
@@ -22,6 +23,9 @@ class KoCard extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final bool locked;
   final bool elevated;
+
+  /// Warna garis kartu terbuka; default [KoColors.line].
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,10 @@ class KoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.surface,
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: c.line, width: context.koSize.border),
+        border: Border.all(
+          color: borderColor ?? c.line,
+          width: context.koSize.border,
+        ),
         boxShadow: shadows,
       ),
       child: Padding(

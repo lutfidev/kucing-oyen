@@ -19,9 +19,14 @@ class ResultView extends StatelessWidget {
     required this.onRestart,
     required this.onNext,
     this.onReplay,
+    this.coins = 0,
   });
 
   final LevelSession session;
+
+  /// Koin yang baru didapat; tampil di layar Berhasil dan vas pecah kalau
+  /// lebih dari 0.
+  final int coins;
 
   /// "Coba Lagi" dan "Atur Lagi": fase atur dengan susunan benda tetap.
   final VoidCallback onArrange;
@@ -63,6 +68,7 @@ class ResultView extends StatelessWidget {
         brokenAt: brokenAt,
         onRetry: onArrange,
         onNext: onNext,
+        coins: coins,
       );
     }
     return SuccessResult(
@@ -73,9 +79,20 @@ class ResultView extends StatelessWidget {
       onRestart: onRestart,
       onNext: onNext,
       onReplay: onReplay,
+      coins: coins,
     );
   }
 }
+
+/// Kotak "+N koin" di layar hasil.
+ResultStat _coinStat(BuildContext context, int coins, {bool compact = false}) =>
+    ResultStat(
+      value: coins,
+      prefix: '+',
+      label: 'koin',
+      compact: compact,
+      leading: CoinView(size: context.koSize.iconMedium),
+    );
 
 /// Layar Berhasil (desain 06): bintang muncul satu per satu di depan sinar
 /// yang berputar, Oyen makan, jumlah langkah dan benda, syarat bintang,
@@ -90,10 +107,14 @@ class SuccessResult extends StatelessWidget {
     required this.onRestart,
     required this.onNext,
     this.onReplay,
+    this.coins = 0,
   });
 
   /// "Level 13 · Vas Ibu".
   final String title;
+
+  /// Koin yang baru didapat; 0 = tanpa kotak koin.
+  final int coins;
 
   /// 2 atau 3 (vas tidak pecah).
   final int stars;
@@ -171,6 +192,7 @@ class SuccessResult extends StatelessWidget {
               value: itemsUsed,
               label: 'benda dipakai',
             ),
+            if (coins > 0) _coinStat(context, coins),
           ],
         ),
         SizedBox(height: space.s16),
@@ -261,10 +283,14 @@ class VaseResult extends StatelessWidget {
     required this.brokenAt,
     required this.onRetry,
     required this.onNext,
+    this.coins = 0,
   });
 
   /// "Level 13 · Vas Ibu".
   final String title;
+
+  /// Koin yang baru didapat; 0 = tanpa kotak koin.
+  final int coins;
   final int steps;
   final int itemsUsed;
 
@@ -333,6 +359,7 @@ class VaseResult extends StatelessWidget {
           children: [
             ResultStat(value: steps, label: 'langkah', compact: true),
             ResultStat(value: itemsUsed, label: 'benda dipakai', compact: true),
+            if (coins > 0) _coinStat(context, coins, compact: true),
           ],
         ),
         SizedBox(height: space.s16),

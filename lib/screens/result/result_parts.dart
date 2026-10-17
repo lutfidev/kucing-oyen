@@ -226,20 +226,28 @@ class _ResultStarsState extends State<ResultStars>
   }
 }
 
-/// Kotak angka hasil: "6 langkah", "2 benda dipakai". [compact] = kotak
-/// kecil tanpa ikon di layar vas pecah.
+/// Kotak angka hasil: "6 langkah", "2 benda dipakai", "+30 koin".
+/// [compact] = kotak kecil di layar vas pecah.
 class ResultStat extends StatelessWidget {
   const ResultStat({
     super.key,
     required this.value,
     required this.label,
     this.icon,
+    this.leading,
+    this.prefix = '',
     this.compact = false,
   });
 
   final int value;
   final String label;
   final KoIconData? icon;
+
+  /// Gambar di kiri angka, menggantikan [icon] (koin).
+  final Widget? leading;
+
+  /// Di depan angka ("+").
+  final String prefix;
   final bool compact;
 
   @override
@@ -251,9 +259,14 @@ class ResultStat extends StatelessWidget {
     final r = context.koRadius;
     final gap = compact ? space.s8 : space.s10;
     final icon = this.icon;
+    final leading =
+        this.leading ??
+        (icon == null
+            ? null
+            : KoIcon(icon, size: s.iconMedium, color: c.statIcon));
     return Semantics(
       container: true,
-      label: '$value $label',
+      label: '$prefix$value $label',
       excludeSemantics: true,
       child: Container(
         height: compact ? s.statBoxCompact : s.statBox,
@@ -269,12 +282,9 @@ class ResultStat extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (icon != null) ...[
-                  KoIcon(icon, size: s.iconMedium, color: c.statIcon),
-                  SizedBox(width: gap),
-                ],
+                if (leading != null) ...[leading, SizedBox(width: gap)],
                 Text(
-                  '$value',
+                  '$prefix$value',
                   maxLines: 1,
                   style: compact ? t.numberCompact : t.number,
                 ),
@@ -293,7 +303,7 @@ class ResultStat extends StatelessWidget {
   }
 }
 
-/// Dua kotak angka berdampingan dengan jarak 12.
+/// Kotak angka berdampingan dengan jarak 12.
 class ResultStats extends StatelessWidget {
   const ResultStats({super.key, required this.children});
 

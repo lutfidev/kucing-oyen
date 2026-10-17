@@ -20,6 +20,7 @@ Future<void> pumpResult(
   LevelSession session, {
   Size size = const Size(390, 844),
   bool disableAnimations = false,
+  int coins = 0,
 }) async {
   _taps.clear();
   setScreenSize(tester, size);
@@ -37,6 +38,7 @@ Future<void> pumpResult(
           onArrange: () => _taps.add('atur'),
           onRestart: () => _taps.add('ulangi'),
           onNext: () => _taps.add('lanjut'),
+          coins: coins,
         ),
       ),
     ),
@@ -170,6 +172,38 @@ void main() {
       expect(degrees, closeTo(6, 1e-9));
       expect(opacity, 1);
       expect(ResultStars.popAt(1), (1.0, 0.0, 1.0));
+    });
+  });
+
+  group('koin', () {
+    testWidgets('Berhasil dengan koin baru: kotak "+30 koin"', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await pumpResult(
+        tester,
+        resultOf(levels[12], levels[12].solution),
+        coins: 30,
+      );
+      await pumpFor(tester, const Duration(seconds: 2));
+      expect(find.text('+30'), findsOneWidget);
+      expect(find.text('koin'), findsOneWidget);
+      expect(find.bySemanticsLabel('+30 koin'), findsOneWidget);
+      expect(find.byType(ResultStat), findsNWidgets(3));
+      semantics.dispose();
+    });
+
+    testWidgets('tanpa koin baru: tanpa kotak koin', (tester) async {
+      await pumpResult(tester, resultOf(levels[12], levels[12].solution));
+      await pumpFor(tester, const Duration(seconds: 2));
+      expect(find.text('koin'), findsNothing);
+      expect(find.byType(ResultStat), findsNWidgets(2));
+    });
+
+    testWidgets('vas pecah dengan koin baru: "+10 koin"', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await pumpResult(tester, resultOf(levels[12], fishOnly), coins: 10);
+      await pumpFor(tester, const Duration(seconds: 1));
+      expect(find.bySemanticsLabel('+10 koin'), findsOneWidget);
+      semantics.dispose();
     });
   });
 

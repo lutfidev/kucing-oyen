@@ -56,6 +56,9 @@ class KoType extends ThemeExtension<KoType> {
     required this.cardBodyStrong,
     required this.numberRule,
     required this.dialogTitle,
+    required this.numberCoin,
+    required this.numberTier,
+    required this.hintReveal,
   });
 
   static const standard = KoType(
@@ -293,6 +296,24 @@ class KoType extends ThemeExtension<KoType> {
       fontWeight: FontWeight.w600,
       height: 1.25,
     ),
+    numberCoin: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+    ),
+    numberTier: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+    ),
+    hintReveal: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontSize: 14,
+      fontWeight: FontWeight.w800,
+      height: 1.35,
+    ),
   );
 
   /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
@@ -415,6 +436,15 @@ class KoType extends ThemeExtension<KoType> {
   /// Fredoka 600/22, tinggi baris 1,25: teks besar kartu tutorial.
   final TextStyle dialogTitle;
 
+  /// Fredoka 600/16: saldo koin di sheet Petunjuk.
+  final TextStyle numberCoin;
+
+  /// Fredoka 700/16: nomor tingkat petunjuk.
+  final TextStyle numberTier;
+
+  /// Nunito 800/14, tinggi baris 1,35: teks petunjuk yang dibuka.
+  final TextStyle hintReveal;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -456,6 +486,9 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? cardBodyStrong,
     TextStyle? numberRule,
     TextStyle? dialogTitle,
+    TextStyle? numberCoin,
+    TextStyle? numberTier,
+    TextStyle? hintReveal,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -497,6 +530,9 @@ class KoType extends ThemeExtension<KoType> {
       cardBodyStrong: cardBodyStrong ?? this.cardBodyStrong,
       numberRule: numberRule ?? this.numberRule,
       dialogTitle: dialogTitle ?? this.dialogTitle,
+      numberCoin: numberCoin ?? this.numberCoin,
+      numberTier: numberTier ?? this.numberTier,
+      hintReveal: hintReveal ?? this.hintReveal,
     );
   }
 
@@ -544,6 +580,9 @@ class KoType extends ThemeExtension<KoType> {
       cardBodyStrong: s(cardBodyStrong, other.cardBodyStrong),
       numberRule: s(numberRule, other.numberRule),
       dialogTitle: s(dialogTitle, other.dialogTitle),
+      numberCoin: s(numberCoin, other.numberCoin),
+      numberTier: s(numberTier, other.numberTier),
+      hintReveal: s(hintReveal, other.hintReveal),
     );
   }
 }

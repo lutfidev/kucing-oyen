@@ -49,6 +49,17 @@ void main() {
       expect(find.text('bintang'), findsOneWidget);
     });
 
+    testWidgets('chip koin di kiri atas (desain 01)', (tester) async {
+      setScreenSize(tester, const Size(390, 844));
+      await pumpApp(tester, progress: testProgressWith(coins: 120));
+      expect(find.text('120'), findsOneWidget);
+      expect(_label('120 koin'), findsOneWidget);
+      final chip = tester.getRect(_label('120 koin'));
+      expect(chip.left, closeTo(24, 0.5));
+      expect(chip.height, 40);
+      expect(chip.top, lessThan(tester.getRect(find.text('Kucing')).top));
+    });
+
     testWidgets('progres kosong: 0/60', (tester) async {
       await pumpApp(tester);
       expect(_label('0 dari 60 bintang'), findsOneWidget);

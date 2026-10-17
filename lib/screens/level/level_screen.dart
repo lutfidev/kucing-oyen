@@ -13,8 +13,9 @@ import 'level_view.dart';
 import 'tutorial.dart';
 
 /// Rute `/babak/:chapter/level/:id`: level dari [ProgressScope] di
-/// [LevelView]. Bintang dicatat saat layar hasil dibuka. Kartu aturan
-/// mengikuti progres, dan tutorial level tampil sampai selesai sekali.
+/// [LevelView]. Bintang (dan koin bintang baru) dicatat saat layar hasil
+/// dibuka. Kartu aturan mengikuti progres, petunjuk dan saldo dari
+/// [ProgressController], dan tutorial level tampil sampai selesai sekali.
 class LevelScreen extends StatelessWidget {
   const LevelScreen({super.key, required this.chapter, required this.levelId});
 
@@ -48,12 +49,17 @@ class LevelScreen extends StatelessWidget {
       backLabel: _backLabel,
       onBack: back,
       onNext: () => _next(context, progress.levels, level),
-      onResult: (stars) => unawaited(progress.record(level.id, stars)),
+      onResult: (stars) {
+        final earned = progress.coinsFor(level.id, stars);
+        unawaited(progress.record(level.id, stars));
+        return earned;
+      },
       rules: learnedRules(progress.progress, level.id),
       tutorial: progress.isTutorialDone(level.id)
           ? null
           : tutorialFor(level.id),
       onTutorialDone: () => unawaited(progress.finishTutorial(level.id)),
+      hints: progress,
     );
   }
 

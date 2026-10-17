@@ -1,4 +1,5 @@
 import '../sim/direction.dart';
+import '../sim/item.dart';
 import '../sim/pos.dart';
 import 'oyen.dart';
 import 'tile.dart';
@@ -83,11 +84,13 @@ class BoardScene {
   /// pecah. Tanpa [oyen], Oyen tidur di petak awal peta dengan Zzz;
   /// [showOyen] false menyembunyikannya. [facing] menampilkan panah arah
   /// hadap saat Oyen tidur. [path] = jalur Oyen (garis putus-putus),
-  /// [trail] = nomor jejak putar ulang.
+  /// [trail] = nomor jejak putar ulang. [ghosts] = benda petunjuk yang
+  /// digambar samar.
   factory BoardScene.fromMap(
     List<String> map, {
     Map<Pos, TileItem> items = const {},
     Set<Pos> glow = const {},
+    Map<Pos, Item> ghosts = const {},
     bool broken = false,
     Set<Pos> knocked = const {},
     BoardOyen? oyen,
@@ -148,6 +151,7 @@ class BoardScene {
             item: items[pos] ?? item,
             alt: (c + r) % 2 == 1,
             glow: glow.contains(pos),
+            ghost: ghosts[pos],
           ),
         );
       }

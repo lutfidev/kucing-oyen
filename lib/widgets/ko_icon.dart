@@ -102,6 +102,12 @@ abstract final class KoIcons {
     ),
   ], strokeWidth: 2.2);
 
+  /// Tonton iklan (layar dengan tombol main), desain 10.
+  static const ad = KoIconData([
+    KoIconShape.rrect(Rect.fromLTWH(3, 5, 18, 14), 3),
+    KoIconShape.path('M10 9v6l5-3z', paint: KoIconPaint.fillAndStroke),
+  ], strokeWidth: 2.4);
+
   /// Aturan (buku).
   static const rules = KoIconData([
     KoIconShape.path(

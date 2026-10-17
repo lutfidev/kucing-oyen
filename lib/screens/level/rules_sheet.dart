@@ -1,11 +1,10 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../../game/model/rules.dart';
 import '../../game/render/render.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import 'level_sheet.dart';
 
 /// Membuka sheet "Aturan Oyen" (desain 05) di atas layar level. Ditutup
 /// dengan tombol tutup, ketuk latar gelap, tombol kembali sistem, atau
@@ -13,79 +12,30 @@ import '../../widgets/widgets.dart';
 Future<void> showRulesSheet(
   BuildContext context, {
   required Set<OyenRule> learned,
-}) {
-  final reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-  return showGeneralDialog<void>(
-    context: context,
-    barrierDismissible: true,
-    barrierLabel: 'Tutup aturan',
-    barrierColor: context.koColors.scrim,
-    transitionDuration: reduceMotion ? Duration.zero : RulesSheet.openTime,
-    pageBuilder: (context, _, _) {
-      final route = ModalRoute.of(context);
-      return RulesSheet(
-        learned: learned,
-        // Hanya menutup sheet ini, walau dipanggil lagi saat sheet sedang
-        // menutup (layar level di bawahnya tidak ikut ditutup).
-        onClose: () {
-          if (route?.isCurrent ?? false) Navigator.of(context).pop();
-        },
-      );
-    },
-    transitionBuilder: (context, animation, _, child) {
-      final t = CurvedAnimation(parent: animation, curve: Curves.easeOut);
-      return AnimatedBuilder(
-        animation: t,
-        builder: (context, child) => Opacity(
-          opacity: t.value,
-          child: Transform.translate(
-            offset: Offset(0, RulesSheet.openRise * (1 - t.value)),
-            child: child,
-          ),
-        ),
-        child: child,
-      );
-    },
-  );
-}
+}) => showLevelSheet(
+  context,
+  barrierLabel: 'Tutup aturan',
+  builder: (context, onClose) => RulesSheet(learned: learned, onClose: onClose),
+);
 
-/// Isi sheet Aturan Oyen: pegangan, judul, tombol tutup, dan lima kartu
-/// aturan urut cek per langkah. Kartu yang belum ada di [learned] terkunci.
-/// Sheet setinggi isinya dan digulir kalau tidak muat; bar atas layar
-/// level tetap terlihat di atasnya seperti desain.
+/// Isi sheet Aturan Oyen: judul, tombol tutup, dan lima kartu aturan urut
+/// cek per langkah. Kartu yang belum ada di [learned] terkunci.
 class RulesSheet extends StatefulWidget {
   const RulesSheet({super.key, required this.learned, required this.onClose});
 
   final Set<OyenRule> learned;
   final VoidCallback onClose;
 
-  /// Sheet naik [openRise] sambil muncul dalam [openTime] (`koSheet`).
-  static const openTime = Duration(milliseconds: 350);
-  static const double openRise = 60;
-
-  /// Tarikan ke bawah sejauh [closeDrag], atau lebih cepat dari
-  /// [closeFling] (px/detik), menutup sheet.
-  static const double closeDrag = 80;
-  static const double closeFling = 700;
-
   @override
   State<RulesSheet> createState() => _RulesSheetState();
 }
 
-class _RulesSheetState extends State<RulesSheet> with TickerProviderStateMixin {
+class _RulesSheetState extends State<RulesSheet>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _turn = AnimationController(
     vsync: this,
     duration: RuleArt.quarterTime,
   );
-
-  /// Sheet kembali ke tempatnya kalau tarikan kurang jauh.
-  late final AnimationController _settle = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 200),
-  )..addListener(_onSettle);
-
-  double _drag = 0;
-  double _settleFrom = 0;
 
   @override
   void didChangeDependencies() {
@@ -101,27 +51,7 @@ class _RulesSheetState extends State<RulesSheet> with TickerProviderStateMixin {
   @override
   void dispose() {
     _turn.dispose();
-    _settle.dispose();
     super.dispose();
-  }
-
-  void _onSettle() => setState(
-    () => _drag = _settleFrom * (1 - Curves.easeOut.transform(_settle.value)),
-  );
-
-  void _dragBy(DragUpdateDetails details) {
-    _settle.stop();
-    setState(() => _drag = math.max(0, _drag + details.delta.dy));
-  }
-
-  void _release(DragEndDetails details) {
-    final fling = details.primaryVelocity ?? 0;
-    if (_drag > RulesSheet.closeDrag || fling > RulesSheet.closeFling) {
-      widget.onClose();
-    } else {
-      _settleFrom = _drag;
-      _settle.forward(from: 0);
-    }
   }
 
   @override
@@ -130,120 +60,49 @@ class _RulesSheetState extends State<RulesSheet> with TickerProviderStateMixin {
     final t = context.koType;
     final space = context.koSpace;
     final s = context.koSize;
-    final media = MediaQuery.of(context);
-    // Bar atas layar level (desain: sheet mulai 18 px di bawahnya).
-    final top = media.padding.top + space.s8 + s.iconButton + space.s16;
-    final sheetRadius = Radius.circular(context.koRadius.sheet);
-
-    final header = GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onVerticalDragUpdate: _dragBy,
-      onVerticalDragEnd: _release,
-      child: Column(
+    return LevelSheet(
+      label: 'Aturan Oyen',
+      onClose: widget.onClose,
+      header: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: s.sheetHandle,
-            height: s.sheetHandleThickness,
-            decoration: BoxDecoration(
-              color: c.sheetHandle,
-              borderRadius: BorderRadius.circular(context.koRadius.pill),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text('Aturan Oyen', style: t.title),
+                ),
+                SizedBox(height: space.s2),
+                Text(
+                  'Tiap langkah dicek urut dari atas. Yang pertama '
+                  'cocok, itu yang dia lakukan.',
+                  style: t.bodySmall.copyWith(color: c.inkSoft),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: space.s10),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Semantics(
-                      header: true,
-                      child: Text('Aturan Oyen', style: t.title),
-                    ),
-                    SizedBox(height: space.s2),
-                    Text(
-                      'Tiap langkah dicek urut dari atas. Yang pertama '
-                      'cocok, itu yang dia lakukan.',
-                      style: t.bodySmall.copyWith(color: c.inkSoft),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: space.s12),
-              KoIconButton(
-                icon: KoIcons.close,
-                semanticLabel: 'Tutup',
-                tone: KoIconButtonTone.flat,
-                iconSize: s.iconSmall,
-                onPressed: widget.onClose,
-              ),
-            ],
+          SizedBox(width: space.s12),
+          KoIconButton(
+            icon: KoIcons.close,
+            semanticLabel: 'Tutup',
+            tone: KoIconButtonTone.flat,
+            iconSize: s.iconSmall,
+            onPressed: widget.onClose,
           ),
         ],
       ),
-    );
-
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: math.max(0, media.size.height - top),
-        ),
-        child: Transform.translate(
-          offset: Offset(0, _drag),
-          child: Material(
-            type: MaterialType.transparency,
-            child: Semantics(
-              scopesRoute: true,
-              namesRoute: true,
-              explicitChildNodes: true,
-              label: 'Aturan Oyen',
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: c.cream,
-                  borderRadius: BorderRadius.vertical(top: sheetRadius),
-                  boxShadow: context.koShadow.sheet,
-                ),
-                padding: EdgeInsets.fromLTRB(
-                  space.s16,
-                  space.s10,
-                  space.s16,
-                  space.s24 + media.padding.bottom,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    header,
-                    SizedBox(height: space.s10),
-                    Flexible(
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.only(top: space.s4),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            for (final rule in OyenRule.values) ...[
-                              if (rule != OyenRule.values.first)
-                                SizedBox(height: space.s10),
-                              RuleCard(
-                                rule: rule,
-                                learned: widget.learned.contains(rule),
-                                turn: _turn,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+      children: [
+        for (final rule in OyenRule.values) ...[
+          if (rule != OyenRule.values.first) SizedBox(height: space.s10),
+          RuleCard(
+            rule: rule,
+            learned: widget.learned.contains(rule),
+            turn: _turn,
           ),
-        ),
-      ),
+        ],
+      ],
     );
   }
 }

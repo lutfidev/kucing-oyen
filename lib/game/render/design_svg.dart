@@ -628,3 +628,15 @@ const tutorialHandSvg = r'''
     <path d="M14 8 a6 6 0 0 1 12 0 v18 h3 a5 5 0 0 1 5 5 v1 a5 5 0 0 1 6 4.5 v1 a5 5 0 0 1 5 5 v6 c0 10 -7 15 -16 15 h-5 c-8 0 -12 -4 -15 -10 l-6 -12 a4.5 4.5 0 0 1 7.5 -4.8 l3.5 5.3 z" fill="#FFE1C4" stroke="#3B2716" stroke-width="2.4" stroke-linejoin="round"></path>
     <path d="M26 26 v8 M34 32 v6 M40 37 v5" stroke="#3B2716" stroke-width="2" stroke-linecap="round" opacity="0.5"></path>
 ''';
+
+/// Koin di chip saldo (`01-beranda.html` 28 px, `10-petunjuk.html` 22 px),
+/// viewBox 28×28.
+const coinSvg = r'''
+<circle cx="14" cy="14" r="12" fill="#FFC83D"></circle><circle cx="14" cy="14" r="8.5" fill="none" stroke="#E0A100" stroke-width="2"></circle><path d="M11 10.5h5a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h5" fill="none" stroke="#B57F00" stroke-width="2" stroke-linecap="round"></path>
+''';
+
+/// Koin tanpa huruf di tombol bayar (`10-petunjuk.html`, 18 px), viewBox
+/// 28×28.
+const coinPlainSvg = r'''
+<circle cx="14" cy="14" r="12" fill="#FFC83D"></circle><circle cx="14" cy="14" r="8.5" fill="none" stroke="#E0A100" stroke-width="2"></circle>
+''';

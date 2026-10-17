@@ -27,6 +27,11 @@ abstract final class ItemArt {
   static const liftShadowOffset = Offset(0, 12);
   static const double liftShadowBlur = 10;
 
+  /// Opasitas benda petunjuk di petak papan (gambar bayangan slot baki).
+  /// Desain tidak punya; lebih tebal dari bayangan slot (0,28) supaya
+  /// jenisnya terbaca di papan.
+  static const double hintOpacity = 0.7;
+
   /// Benda pemain di petak papan: digambar dengan cincin oranye.
   static TileItem tileItem(Item item) => switch (item) {
     Item.fish => TileItem.fishP,

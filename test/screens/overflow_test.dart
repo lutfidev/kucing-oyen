@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
+import 'package:kucing_oren/screens/level/hint_sheet.dart';
 import 'package:kucing_oren/screens/level/rules_sheet.dart';
+import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
 import 'package:kucing_oren/screens/replay/replay_view.dart';
@@ -91,7 +93,7 @@ void main() {
             progress: testProgress(wonUpTo(id - 1)),
           );
           await tester.tap(find.text('Aturan'));
-          await pumpFor(tester, RulesSheet.openTime * 2);
+          await pumpFor(tester, LevelSheet.openTime * 2);
           expect(tester.takeException(), isNull);
           final last = find.byType(RuleCard).last;
           await tester.ensureVisible(last);
@@ -101,6 +103,62 @@ void main() {
           expect(tester.takeException(), isNull);
         });
       }
+    }
+  }
+
+  // Sheet Petunjuk: level 13 semua tertutup dengan koin cukup, koin kurang
+  // (label terpanjang), satu terbuka, dan ketiganya terbuka (digulir sampai
+  // kartu terakhir); level 1 tanpa benda. Beranda dengan saldo 5 digit.
+  final hintCases = <String, (int, int, Map<int, int>)>{
+    'level 13 tertutup': (13, 120, {}),
+    'level 13 koin kurang': (13, 0, {}),
+    'level 13 tingkat 1': (13, 120, {13: 1}),
+    'level 13 semua terbuka': (13, 120, {13: 3}),
+    'level 19 semua terbuka': (19, 120, {19: 3}),
+    'level 1': (1, 120, {}),
+  };
+  for (final size in sizes) {
+    for (final scale in textScales) {
+      final label = '${size.width.toInt()}×${size.height.toInt()}';
+      for (final MapEntry(key: name, value: (id, coins, hints))
+          in hintCases.entries) {
+        testWidgets('tanpa overflow: petunjuk $name @ $label, '
+            'teks ${scale * 100}%', (tester) async {
+          setScreenSize(tester, size);
+          setTextScale(tester, scale);
+          await pumpApp(
+            tester,
+            location: AppRoutes.level(id, chapter: levels[id - 1].chapter),
+            progress: testProgressWith(
+              best: wonUpTo(id - 1),
+              coins: coins,
+              hints: hints,
+            ),
+          );
+          await tester.tap(find.bySemanticsLabel('Petunjuk'));
+          await pumpFor(tester, LevelSheet.openTime * 2);
+          expect(tester.takeException(), isNull);
+          final cards = find.byType(HintTierCard);
+          if (cards.evaluate().isNotEmpty) {
+            await tester.ensureVisible(cards.last);
+            await pumpFor(tester, const Duration(milliseconds: 300));
+            expect(
+              tester.getRect(cards.last).bottom,
+              lessThanOrEqualTo(size.height),
+            );
+            expect(cards.last.hitTestable(), findsOneWidget);
+          }
+          expect(tester.takeException(), isNull);
+        });
+      }
+      testWidgets('tanpa overflow: Beranda saldo 99999 @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpApp(tester, progress: testProgressWith(coins: 99999));
+        expect(find.text('99999'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
     }
   }
 
@@ -133,7 +191,8 @@ void main() {
   }
 
   // Layar hasil langsung dari sesi: Berhasil 3 dan 2 bintang, vas pecah,
-  // mondar-mandir, dan kelamaan.
+  // mondar-mandir, dan kelamaan; dengan kotak "+30 koin" (deret angka
+  // terlebar).
   final results = <String, LevelSession Function()>{
     'Berhasil level 13': () => resultOf(levels[12], levels[12].solution),
     'Berhasil 2 bintang level 15': () => resultOf(levels[14], twoStars),
@@ -159,6 +218,7 @@ void main() {
                     onArrange: () {},
                     onRestart: () {},
                     onNext: () {},
+                    coins: 30,
                   ),
                 ),
               ),

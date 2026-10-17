@@ -8,6 +8,7 @@ import 'package:kucing_oren/game/kucing_game.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/screens/level/rules_sheet.dart';
+import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/run_panel.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
@@ -39,7 +40,7 @@ Future<ProgressController> _openLevel(
 
 Future<void> _openRules(WidgetTester tester) async {
   await tester.tap(find.text('Aturan'));
-  await _pumpFor(tester, RulesSheet.openTime * 2);
+  await _pumpFor(tester, LevelSheet.openTime * 2);
 }
 
 const _titles = {
@@ -129,7 +130,7 @@ void main() {
       await _openLevel(tester, 13);
       await _openRules(tester);
       await tester.tap(find.bySemanticsLabel('Tutup'));
-      await _pumpFor(tester, RulesSheet.openTime * 2);
+      await _pumpFor(tester, LevelSheet.openTime * 2);
       expect(find.text('Aturan Oyen'), findsNothing);
       expect(find.text('Level 13 · Vas Ibu'), findsOneWidget);
     });
@@ -140,7 +141,7 @@ void main() {
       await tester.tap(find.bySemanticsLabel('Tutup'));
       await tester.pump(const Duration(milliseconds: 50));
       await tester.tap(find.bySemanticsLabel('Tutup'), warnIfMissed: false);
-      await _pumpFor(tester, RulesSheet.openTime * 2);
+      await _pumpFor(tester, LevelSheet.openTime * 2);
       expect(find.text('Aturan Oyen'), findsNothing);
       expect(find.text('Level 13 · Vas Ibu'), findsOneWidget);
     });
@@ -149,7 +150,7 @@ void main() {
       await _openLevel(tester, 13);
       await _openRules(tester);
       await tester.tapAt(const Offset(195, 10));
-      await _pumpFor(tester, RulesSheet.openTime * 2);
+      await _pumpFor(tester, LevelSheet.openTime * 2);
       expect(find.text('Aturan Oyen'), findsNothing);
     });
 
@@ -159,7 +160,7 @@ void main() {
       await _openLevel(tester, 13);
       await _openRules(tester);
       await tester.binding.handlePopRoute();
-      await _pumpFor(tester, RulesSheet.openTime * 2);
+      await _pumpFor(tester, LevelSheet.openTime * 2);
       expect(find.text('Aturan Oyen'), findsNothing);
       expect(find.text('Level 13 · Vas Ibu'), findsOneWidget);
     });
@@ -181,7 +182,7 @@ void main() {
       expect(tester.getTopLeft(title), before);
 
       await tester.drag(title, const Offset(0, 200));
-      await _pumpFor(tester, RulesSheet.openTime * 2);
+      await _pumpFor(tester, LevelSheet.openTime * 2);
       expect(title, findsNothing);
     });
 

@@ -168,4 +168,22 @@ void main() {
     );
     expect(BoardScene.label, 'Papan permainan 7 kali 9 petak');
   });
+
+  test('benda petunjuk samar di petak kosong', () {
+    final scene = BoardScene.fromMap(
+      BoardScene.designMap,
+      ghosts: {const Pos(3, 3): Item.water, const Pos(2, 4): Item.fish},
+      glow: {const Pos(3, 3)},
+    );
+    expect(scene.tileAt(const Pos(3, 3)).ghost, Item.water);
+    expect(scene.tileAt(const Pos(3, 3)).glow, isTrue);
+    expect(scene.tileAt(const Pos(2, 4)).ghost, Item.fish);
+    expect(scene.tileAt(const Pos(1, 1)).ghost, isNull);
+    expect(
+      const Tile(ghost: Item.box),
+      isNot(const Tile()),
+      reason: 'ghost ikut ==',
+    );
+    expect(const Tile().copyWith(ghost: Item.box).ghost, Item.box);
+  });
 }
