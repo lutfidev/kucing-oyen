@@ -29,6 +29,7 @@ class TrayPanel extends StatelessWidget {
     required this.onDragStart,
     required this.onClear,
     this.dragging,
+    this.slotKeys = const {},
   });
 
   /// Angka yang tampil di tiap slot, urut seperti di baki level.
@@ -42,6 +43,9 @@ class TrayPanel extends StatelessWidget {
 
   /// Kosongkan papan; null = nonaktif.
   final VoidCallback? onClear;
+
+  /// Kunci slot per benda, untuk mengukur letaknya (sorotan tutorial).
+  final Map<Item, GlobalKey> slotKeys;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +81,7 @@ class TrayPanel extends StatelessWidget {
                         in counts.entries) ...[
                       if (item != counts.keys.first) SizedBox(width: gap),
                       _TrayItem(
+                        key: slotKeys[item],
                         item: item,
                         count: count,
                         dragging: item == dragging,
@@ -155,6 +160,7 @@ class _TrayHint extends StatelessWidget {
 /// menempel, sama seperti benda di papan.
 class _TrayItem extends StatelessWidget {
   const _TrayItem({
+    super.key,
     required this.item,
     required this.count,
     required this.dragging,

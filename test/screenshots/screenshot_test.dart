@@ -44,8 +44,16 @@ final _screens = <String, (String, Map<int, int>)>{
 };
 
 /// Aplikasi lengkap di [location] dengan progres [best], siap dipotret.
-Widget _app(String location, [Map<int, int> best = const {}]) => capturable(
-  KucingOrenApp(progress: testProgress(best), initialLocation: location),
+/// Semua tutorial sudah selesai kecuali [tutorialsDone] diberikan.
+Widget _app(
+  String location, [
+  Map<int, int> best = const {},
+  Set<int>? tutorialsDone,
+]) => capturable(
+  KucingOrenApp(
+    progress: testProgress(best, tutorialsDone),
+    initialLocation: location,
+  ),
 );
 
 /// Halaman galeri utuh dalam satu gambar panjang: rute dan tinggi layarnya.
@@ -334,6 +342,53 @@ void main() {
         for (var i = 0; i < steps; i++) {
           await tester.tap(find.bySemanticsLabel('Maju satu langkah'));
           await tester.pumpAndSettle();
+        }
+        await capture(tester, '$folder/$name');
+      });
+    }, skip: !screenshotsEnabled);
+  }
+
+  // Sheet Aturan (desain 05): level 13 dengan kardus terkunci seperti
+  // desain, dan semua kartu terbuka di layar kecil.
+  const rules = <String, (int, Size)>{
+    '05-kartu-aturan': (13, _size),
+    '05-kartu-aturan-semua-360x640': (20, Size(360, 640)),
+  };
+  for (final MapEntry(key: name, value: (id, size)) in rules.entries) {
+    testWidgets('$folder/$name', (tester) async {
+      setScreenSize(tester, size);
+      await withShadows(() async {
+        await tester.pumpWidget(
+          _app(AppRoutes.level(id, chapter: 2), wonUpTo(id - 1)),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Aturan'));
+        // Kucing kartu 4 berputar terus; potret saat masih diam.
+        for (var i = 0; i < 10; i++) {
+          await tester.pump(const Duration(milliseconds: 50));
+        }
+        await capture(tester, '$folder/$name');
+      });
+    }, skip: !screenshotsEnabled);
+  }
+
+  // Tutorial level 1 (desain 11), 3, dan 6.
+  const tutorials = <String, (int, Size)>{
+    '11-tutorial-level-1': (1, _size),
+    '11-tutorial-level-1-360x640': (1, Size(360, 640)),
+    '11-tutorial-level-3': (3, _size),
+    '11-tutorial-level-6': (6, _size),
+  };
+  for (final MapEntry(key: name, value: (id, size)) in tutorials.entries) {
+    testWidgets('$folder/$name', (tester) async {
+      setScreenSize(tester, size);
+      await withShadows(() async {
+        await tester.pumpWidget(
+          _app(AppRoutes.level(id, chapter: 1), wonUpTo(id - 1), {}),
+        );
+        // Cincin dan tangan bergerak terus.
+        for (var i = 0; i < 10; i++) {
+          await tester.pump(const Duration(milliseconds: 50));
         }
         await capture(tester, '$folder/$name');
       });

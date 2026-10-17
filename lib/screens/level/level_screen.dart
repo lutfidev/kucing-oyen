@@ -5,13 +5,16 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
+import '../../game/model/rules.dart';
 import '../../game/sim/level.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'level_view.dart';
+import 'tutorial.dart';
 
 /// Rute `/babak/:chapter/level/:id`: level dari [ProgressScope] di
-/// [LevelView]. Bintang dicatat saat layar hasil dibuka.
+/// [LevelView]. Bintang dicatat saat layar hasil dibuka. Kartu aturan
+/// mengikuti progres, dan tutorial level tampil sampai selesai sekali.
 class LevelScreen extends StatelessWidget {
   const LevelScreen({super.key, required this.chapter, required this.levelId});
 
@@ -46,6 +49,11 @@ class LevelScreen extends StatelessWidget {
       onBack: back,
       onNext: () => _next(context, progress.levels, level),
       onResult: (stars) => unawaited(progress.record(level.id, stars)),
+      rules: learnedRules(progress.progress, level.id),
+      tutorial: progress.isTutorialDone(level.id)
+          ? null
+          : tutorialFor(level.id),
+      onTutorialDone: () => unawaited(progress.finishTutorial(level.id)),
     );
   }
 

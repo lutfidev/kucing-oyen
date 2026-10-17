@@ -6,6 +6,8 @@ import 'package:flutter/scheduler.dart';
 
 import '../../game/kucing_game.dart';
 import '../../game/model/level_session.dart';
+import '../../game/model/progress.dart';
+import '../../game/model/rules.dart';
 import '../../game/model/run_caption.dart';
 import '../../game/model/run_clock.dart';
 import '../../game/model/run_frames.dart';
@@ -17,8 +19,10 @@ import '../replay/replay_view.dart';
 import '../result/result_view.dart';
 import 'level_bar.dart';
 import 'level_board.dart';
+import 'rules_sheet.dart';
 import 'run_panel.dart';
 import 'tray.dart';
+import 'tutorial.dart';
 
 /// Benda yang sedang diseret jari, dari baki atau dari papan.
 class _ItemDrag {
@@ -58,6 +62,10 @@ class _Run {
 /// ulang ([ReplayView]) menutupi layar hasil; tombol kembali (juga tombol
 /// kembali sistem) menutupnya lagi.
 ///
+/// Di fase atur, tombol Aturan membuka sheet kartu aturan ([rules]), dan
+/// [tutorial] (kalau ada) menutupi layar sampai yang disorotnya dipakai
+/// atau dilewati.
+///
 /// Aturan ada di [LevelSession]. Layar ini hanya menerjemahkan seretan:
 /// lepas di petak menyala = taruh atau pindah; benda dari papan yang
 /// dilepas di luar papan kembali ke baki; selain itu benda kembali ke
@@ -70,6 +78,9 @@ class LevelView extends StatefulWidget {
     required this.onBack,
     required this.onNext,
     this.onResult,
+    this.rules,
+    this.tutorial,
+    this.onTutorialDone,
   });
 
   final Level level;
@@ -84,6 +95,16 @@ class LevelView extends StatefulWidget {
   /// Dipanggil dengan bintang 0–3 setiap kali layar hasil dibuka.
   final ValueChanged<int>? onResult;
 
+  /// Kartu aturan yang terbuka; null = hanya dari nomor level (progres
+  /// kosong).
+  final Set<OyenRule>? rules;
+
+  /// Tutorial yang ditampilkan saat layar dibuka; null = tidak ada.
+  final Tutorial? tutorial;
+
+  /// Tutorial selesai (dipakai atau dilewati).
+  final VoidCallback? onTutorialDone;
+
   @override
   State<LevelView> createState() => _LevelViewState();
 }
@@ -95,7 +116,15 @@ class _LevelViewState extends State<LevelView>
   late final KucingGame _game = KucingGame(scene: _buildScene(), input: this);
   late final Ticker _ticker = createTicker(_onTick);
   final _stageKey = GlobalKey();
+  final _wakeKey = GlobalKey();
+
+  /// Kunci slot baki, tetap sepanjang layar: slot yang kuncinya berganti
+  /// dibuat ulang dan seretannya hilang.
+  final _slotKeys = {for (final item in Item.values) item: GlobalKey()};
   _ItemDrag? _drag;
+
+  /// Tutorial yang masih menutupi layar.
+  late Tutorial? _tutorial = widget.tutorial;
 
   /// Fase jalan dan layar hasil; null di fase atur.
   _Run? _run;
@@ -178,7 +207,11 @@ class _LevelViewState extends State<LevelView>
     return _HandDrag(this, drag);
   }
 
-  Drag? _startFromTray(Item item, Offset global) => _start(item, null, global);
+  Drag? _startFromTray(Item item, Offset global) {
+    final drag = _start(item, null, global);
+    if (drag != null && _tutorial?.item == item) _finishTutorial();
+    return drag;
+  }
 
   @override
   Drag? pickUp(Pos tile, Offset global) {
@@ -232,6 +265,7 @@ class _LevelViewState extends State<LevelView>
   void _wake() {
     // Ketukan kedua di bingkai yang sama sudah bukan fase atur.
     if (_session.phase != SessionPhase.arrange) return;
+    if (_tutorial != null && _tutorial!.item == null) _finishTutorial();
     _update(() {
       _drag = null;
       final board = _level.board;
@@ -303,6 +337,22 @@ class _LevelViewState extends State<LevelView>
   void _toggleFast() => _control((clock) => clock.toggleFast());
   void _stepOnce() => _control((clock) => clock.stepOnce());
 
+  /// Tombol Aturan. Seretan yang sedang berjalan dibatalkan dulu, seperti
+  /// tombol lain di fase atur.
+  void _openRules() {
+    if (_session.phase != SessionPhase.arrange) return;
+    if (_drag != null) _update(() => _drag = null);
+    showRulesSheet(
+      context,
+      learned: widget.rules ?? learnedRules(Progress.empty, _level.id),
+    );
+  }
+
+  void _finishTutorial() {
+    setState(() => _tutorial = null);
+    widget.onTutorialDone?.call();
+  }
+
   void _clear() => _update(() {
     _drag = null;
     _session.reset();
@@ -367,7 +417,7 @@ class _LevelViewState extends State<LevelView>
                               : widget.backLabel,
                           onBack: running ? _arrangeAgain : widget.onBack,
                           trailing: run == null
-                              ? const RulesButton(onPressed: null)
+                              ? RulesButton(onPressed: _openRules)
                               : StepCounter(step: run.clock.step),
                         ),
                         if (_level.inventory.isNotEmpty) ...[
@@ -424,6 +474,18 @@ class _LevelViewState extends State<LevelView>
                   onMap: widget.onBack,
                 ),
               ),
+            if (_tutorial case final tutorial?
+                when _session.phase == SessionPhase.arrange)
+              Positioned.fill(
+                child: TutorialOverlay(
+                  tutorial: tutorial,
+                  target: _slotKeys[tutorial.item] ?? _wakeKey,
+                  targetRadius: tutorial.item == null
+                      ? context.koRadius.primary
+                      : context.koRadius.slot,
+                  onSkip: _finishTutorial,
+                ),
+              ),
             if (drag != null) _lifted(drag),
           ],
         ),
@@ -471,6 +533,7 @@ class _LevelViewState extends State<LevelView>
             _tray(),
             SizedBox(height: space.s16),
             KoButton(
+              key: _wakeKey,
               label: 'Bangunkan Oyen',
               icon: KoIcons.wake,
               size: KoButtonSize.large,
@@ -504,6 +567,7 @@ class _LevelViewState extends State<LevelView>
       },
       dragging: fromTray,
       onDragStart: _startFromTray,
+      slotKeys: _slotKeys,
       onClear: _session.itemsUsed > 0 ? _clear : null,
     );
   }
