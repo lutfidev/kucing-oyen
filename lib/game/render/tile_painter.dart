@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/animation.dart' show Curves;
 
 import 'design_svg.dart';
+import 'item_art.dart';
 import 'svg_template.dart';
 import 'tile.dart';
 
@@ -41,12 +42,22 @@ Map<String, Object> tileVals(Tile tile) {
 /// Menggambar [tile] di kotak 0..50 kanvas. Skala dan posisi diatur
 /// pemanggil (`canvas.translate`/`canvas.scale`).
 ///
-/// [glowOpacity] untuk kedip petak menyala, lihat [tileGlowOpacity].
+/// [glowOpacity] untuk kedip petak menyala, lihat [tileGlowOpacity]. Benda
+/// petunjuk ([Tile.ghost]) digambar samar di bawah kotak menyala.
 void paintTile(Canvas canvas, Tile tile, {double glowOpacity = 1}) {
-  final base = tile.glow ? tile.copyWith(glow: false) : tile;
+  final base = Tile(kind: tile.kind, item: tile.item, alt: tile.alt);
   _cache
       .putIfAbsent(base, () => _template.render(tileVals(base)))
       .paint(canvas);
+  final ghost = tile.ghost;
+  if (ghost != null && tile.item == TileItem.none) {
+    canvas.saveLayer(
+      null,
+      Paint()..color = const Color.fromRGBO(0, 0, 0, ItemArt.hintOpacity),
+    );
+    paintItemArt(canvas, ghost, ghost: true);
+    canvas.restore();
+  }
   if (!tile.glow || glowOpacity <= 0) return;
   if (glowOpacity >= 1) return _glow.paint(canvas);
   canvas.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, glowOpacity));

@@ -123,4 +123,23 @@ void main() {
     expect(at(32, 70).a, greaterThan(0));
     expect(at(-15, -15), _transparent);
   });
+
+  group('koin (desain 01 dan 10)', () {
+    test('koin dengan huruf S', () async {
+      final at = await _render(paintCoin, size: CoinArt.viewBox);
+      expect(at(14, 4), _near(0xFFFFC83D));
+      expect(at(14, 5.5), _near(0xFFE0A100));
+      expect(at(14, 14.5), _near(0xFFB57F00));
+      expect(at(1, 1), _transparent);
+    });
+
+    test('koin polos tanpa huruf', () async {
+      final at = await _render(
+        (canvas) => paintCoin(canvas, plain: true),
+        size: CoinArt.viewBox,
+      );
+      expect(at(14, 14.5), _near(0xFFFFC83D));
+      expect(at(14, 5.5), _near(0xFFE0A100));
+    });
+  });
 }

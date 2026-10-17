@@ -1,3 +1,5 @@
+import '../sim/item.dart';
+
 /// Jenis petak di `Tile.dc.html` (prop `kind`).
 enum TileKind {
   floor,
@@ -33,6 +35,7 @@ class Tile {
     this.item = TileItem.none,
     this.alt = false,
     this.glow = false,
+    this.ghost,
   });
 
   final TileKind kind;
@@ -41,19 +44,30 @@ class Tile {
   /// Lantai warna selang-seling.
   final bool alt;
 
-  /// Petak menyala: boleh diisi benda yang sedang diseret.
+  /// Petak menyala: boleh diisi benda yang sedang diseret, atau ditunjuk
+  /// petunjuk.
   final bool glow;
+
+  /// Benda petunjuk yang digambar samar di petak kosong; tidak tampil kalau
+  /// petak sudah berisi [item].
+  final Item? ghost;
 
   /// Ukuran petak di koordinat desain.
   static const double size = 50;
 
-  Tile copyWith({TileKind? kind, TileItem? item, bool? alt, bool? glow}) =>
-      Tile(
-        kind: kind ?? this.kind,
-        item: item ?? this.item,
-        alt: alt ?? this.alt,
-        glow: glow ?? this.glow,
-      );
+  Tile copyWith({
+    TileKind? kind,
+    TileItem? item,
+    bool? alt,
+    bool? glow,
+    Item? ghost,
+  }) => Tile(
+    kind: kind ?? this.kind,
+    item: item ?? this.item,
+    alt: alt ?? this.alt,
+    glow: glow ?? this.glow,
+    ghost: ghost ?? this.ghost,
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -61,13 +75,15 @@ class Tile {
       other.kind == kind &&
       other.item == item &&
       other.alt == alt &&
-      other.glow == glow;
+      other.glow == glow &&
+      other.ghost == ghost;
 
   @override
-  int get hashCode => Object.hash(kind, item, alt, glow);
+  int get hashCode => Object.hash(kind, item, alt, glow, ghost);
 
   @override
   String toString() =>
       'Tile(${kind.name}, ${item.name}'
-      '${alt ? ', alt' : ''}${glow ? ', glow' : ''})';
+      '${alt ? ', alt' : ''}${glow ? ', glow' : ''}'
+      '${ghost == null ? '' : ', ghost ${ghost!.name}'})';
 }

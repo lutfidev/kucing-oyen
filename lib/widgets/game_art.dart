@@ -77,6 +77,37 @@ class _ItemArtPainter extends CustomPainter {
       old.item != item || old.ghost != ghost;
 }
 
+/// Koin seukuran [size] px (desain 18–28 px). [plain] = tanpa huruf S.
+/// Hiasan saja.
+class CoinView extends StatelessWidget {
+  const CoinView({super.key, this.size = CoinArt.viewBox, this.plain = false});
+
+  final double size;
+  final bool plain;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(
+      child: CustomPaint(size: Size.square(size), painter: _CoinPainter(plain)),
+    );
+  }
+}
+
+class _CoinPainter extends CustomPainter {
+  _CoinPainter(this.plain);
+
+  final bool plain;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.scale(size.width / CoinArt.viewBox);
+    paintCoin(canvas, plain: plain);
+  }
+
+  @override
+  bool shouldRepaint(_CoinPainter old) => old.plain != plain;
+}
+
 /// Benda yang sedang diseret jari: kotak 64 px, miring dan diperbesar
 /// dengan bayangan jatuh. Hiasan saja.
 class LiftedItemView extends StatelessWidget {
