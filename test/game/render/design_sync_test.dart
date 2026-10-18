@@ -131,6 +131,12 @@ void main() {
       });
     });
 
+    group('lemari kostum', () {
+      test('lemari disalin dari desain 12', () {
+        expect(_read('12-lemari-kostum.html'), contains(_lf(closetSvg)));
+      });
+    });
+
     group('layar hasil', () {
       test('sinar dan mangkuk disalin dari desain 06', () {
         final source = _read('06-hasil-berhasil.html');
