@@ -13,6 +13,7 @@ import 'package:kucing_oren/screens/level/level_bar.dart';
 import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/level/run_panel.dart';
+import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/level/tray.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/theme/theme.dart';
@@ -32,6 +33,8 @@ Future<void> _pumpLevel(
   Size size = const Size(390, 844),
   bool disableAnimations = false,
   HintSource? hints,
+  OyenCostume costume = OyenCostume.none,
+  Tutorial? tutorial,
 }) async {
   _nextTaps = 0;
   setScreenSize(tester, size);
@@ -49,11 +52,13 @@ Future<void> _pumpLevel(
         onBack: () {},
         onNext: () => _nextTaps++,
         hints: hints,
+        costume: costume,
+        tutorial: tutorial,
       ),
     ),
   );
-  // Petak petunjuk berkedip terus: tanpa pumpAndSettle.
-  if (hints == null) {
+  // Petak petunjuk dan tutorial bergerak terus: tanpa pumpAndSettle.
+  if (hints == null && tutorial == null) {
     await tester.pumpAndSettle();
   } else {
     await settle(tester, max: const Duration(milliseconds: 300));
@@ -1055,6 +1060,37 @@ void main() {
     testWidgets('tanpa sumber petunjuk tidak ada tombol', (tester) async {
       await _pumpLevel(tester, 13);
       expect(find.bySemanticsLabel('Petunjuk'), findsNothing);
+    });
+  });
+
+  group('kostum', () {
+    testWidgets('Oyen memakai kostum di fase atur dan fase jalan', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13, costume: OyenCostume.peci);
+      expect(_game(tester).scene.oyen!.look.costume, OyenCostume.peci);
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pump();
+      await tester.pump(RunClock.stepTime);
+      expect(_game(tester).scene.oyen!.look.pose, isNot(OyenPose.sleep));
+      expect(_game(tester).scene.oyen!.look.costume, OyenCostume.peci);
+    });
+
+    testWidgets('Oyen di kartu tutorial memakai kostum', (tester) async {
+      await _pumpLevel(
+        tester,
+        3,
+        costume: OyenCostume.koki,
+        tutorial: tutorialFor(3),
+      );
+      final oyen = tester.widget<OyenView>(
+        find.descendant(
+          of: find.byType(TutorialOverlay),
+          matching: find.byType(OyenView),
+        ),
+      );
+      expect(oyen.look.costume, OyenCostume.koki);
+      expect(oyen.look.pose, tutorialFor(3)!.look.pose);
     });
   });
 }

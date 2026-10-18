@@ -193,7 +193,10 @@ class _BowlPainter extends CustomPainter {
 
 /// Ilustrasi layar Berhasil: Oyen makan dengan bahagia di mangkuknya.
 class SuccessArt extends StatelessWidget {
-  const SuccessArt({super.key});
+  const SuccessArt({super.key, this.costume = OyenCostume.none});
+
+  /// Kostum Oyen dari Lemari Kostum.
+  final OyenCostume costume;
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +207,7 @@ class SuccessArt extends StatelessWidget {
         Positioned.fromRect(
           rect: ResultArt.successOyen,
           child: OyenView(
-            const OyenLook(pose: OyenPose.eat, dir: Direction.down),
+            OyenLook(pose: OyenPose.eat, dir: Direction.down, costume: costume),
             size: ResultArt.successOyen.width,
           ),
         ),
@@ -221,7 +224,10 @@ class SuccessArt extends StatelessWidget {
 /// pintu (`koPeek`), dan "PRANG!" bergoyang (`koShake`). Diam di keadaan
 /// akhir kalau animasi dimatikan.
 class VaseArt extends StatefulWidget {
-  const VaseArt({super.key});
+  const VaseArt({super.key, this.costume = OyenCostume.none});
+
+  /// Kostum Oyen dari Lemari Kostum.
+  final OyenCostume costume;
 
   /// Label pembaca layar, sama dengan `aria-label` di desain.
   static const label =
@@ -299,7 +305,11 @@ class _VaseArtState extends State<VaseArt> with TickerProviderStateMixin {
           Positioned.fromRect(
             rect: ResultArt.vaseOyen,
             child: OyenView(
-              const OyenLook(pose: OyenPose.eat, dir: Direction.down),
+              OyenLook(
+                pose: OyenPose.eat,
+                dir: Direction.down,
+                costume: widget.costume,
+              ),
               size: ResultArt.vaseOyen.width,
             ),
           ),
