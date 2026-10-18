@@ -180,17 +180,24 @@ class PrefsProgressStore implements ProgressStore {
     }),
   );
 
-  /// Nama kostum yang tidak dikenal dibuang; [Wardrobe] mengembalikan
-  /// kostum dipakai yang tidak dimiliki ke Polos.
+  /// Nama kostum yang tidak dikenal dan nilai bertipe salah dibuang;
+  /// [Wardrobe] mengembalikan kostum dipakai yang tidak dimiliki ke Polos.
   @override
   Future<Wardrobe> loadWardrobe() async {
     OyenCostume? parse(String? name) => OyenCostume.values.asNameMap()[name];
+    Future<T?> read<T>(Future<T?> Function() get) async {
+      try {
+        return await get();
+      } on TypeError {
+        return null;
+      }
+    }
+
+    final owned = await read(() => _prefs.getStringList(ownedKey));
+    final wearing = await read(() => _prefs.getString(wearingKey));
     return Wardrobe(
-      owned: [
-        for (final name in await _prefs.getStringList(ownedKey) ?? const [])
-          ?parse(name),
-      ],
-      wearing: parse(await _prefs.getString(wearingKey)) ?? OyenCostume.none,
+      owned: [for (final name in owned ?? const <String>[]) ?parse(name)],
+      wearing: parse(wearing) ?? OyenCostume.none,
     );
   }
 

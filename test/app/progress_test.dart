@@ -104,6 +104,13 @@ void main() {
       );
     });
 
+    test('kostum bertipe salah: Polos, aplikasi tetap terbuka', () async {
+      final prefs = SharedPreferencesAsync();
+      await prefs.setInt(PrefsProgressStore.ownedKey, 3);
+      await prefs.setBool(PrefsProgressStore.wearingKey, true);
+      expect(await PrefsProgressStore().loadWardrobe(), Wardrobe.initial);
+    });
+
     test('kostum: belum pernah disimpan = Polos', () async {
       expect(await PrefsProgressStore().loadWardrobe(), Wardrobe.initial);
     });
