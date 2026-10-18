@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
+import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/screens/level/hint_sheet.dart';
 import 'package:kucing_oren/screens/level/rules_sheet.dart';
 import 'package:kucing_oren/screens/level/level_sheet.dart';
@@ -10,6 +12,7 @@ import 'package:kucing_oren/screens/replay/replay_parts.dart';
 import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/theme/theme.dart';
+import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
 import 'result_fixtures.dart';
@@ -184,6 +187,51 @@ void main() {
         expect(find.text('Beli · 150 koin').hitTestable(), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
+      // Sheet Tambah Koin dari Beranda bersaldo 5 digit: siap semua, jatah
+      // habis (label terpanjang), dan pesan iklan gagal.
+      for (final state in ['siap', 'habis', 'iklan gagal']) {
+        testWidgets('tanpa overflow: Tambah Koin $state @ $label, '
+            'teks ${scale * 100}%', (tester) async {
+          setScreenSize(tester, size);
+          setTextScale(tester, scale);
+          final now = DateTime(2026, 10, 19, 9);
+          final today = dayNumber(now);
+          await pumpApp(
+            tester,
+            progress: testProgressWith(
+              coins: 99999,
+              clock: () => now,
+              rewards: switch (state) {
+                'siap' => DailyRewards.initial,
+                'habis' => DailyRewards(
+                  bonusDay: today,
+                  adDay: today,
+                  adsWatched: maxAdsPerDay,
+                ),
+                _ => DailyRewards(bonusDay: today),
+              },
+              ads: FakeRewardedAds(succeed: false),
+            ),
+          );
+          await tester.tap(find.byType(KoCoinChip));
+          await settle(tester);
+          if (state == 'iklan gagal') {
+            await tester.tap(find.text('+20 koin'));
+            await settle(tester);
+            expect(
+              find.text('Iklannya belum bisa diputar. Coba lagi nanti, ya.'),
+              findsOneWidget,
+            );
+          }
+          expect(tester.takeException(), isNull);
+          final last = find.byKey(const ValueKey('coin-ad'));
+          await tester.ensureVisible(last);
+          await settle(tester);
+          expect(tester.getRect(last).bottom, lessThanOrEqualTo(size.height));
+          expect(last.hitTestable(), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        });
+      }
     }
   }
 

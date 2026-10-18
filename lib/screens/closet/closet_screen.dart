@@ -7,6 +7,7 @@ import '../../game/model/costumes.dart';
 import '../../game/render/render.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../coins/coin_sheet.dart';
 import 'closet_parts.dart';
 
 /// Lemari Kostum (desain 12, rute `/kostum`): pratinjau Oyen di lemari,
@@ -53,7 +54,11 @@ class _ClosetScreenState extends State<ClosetScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(height: space.s8),
-              ClosetBar(coins: coins, onBack: () => context.go(AppRoutes.home)),
+              ClosetBar(
+                coins: coins,
+                onBack: () => context.go(AppRoutes.home),
+                onCoins: () => showCoinSheet(context, progress),
+              ),
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, box) {

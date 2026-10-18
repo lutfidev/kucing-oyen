@@ -9,9 +9,11 @@ import 'package:flame/game.dart' hide RouterComponent;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/app.dart';
+import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/kucing_game.dart';
 import 'package:kucing_oren/game/model/costumes.dart';
+import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/model/run_clock.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
@@ -469,6 +471,53 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('costume-peci')));
         await tester.pumpAndSettle();
+        await capture(tester, '$folder/$name');
+      });
+    }, skip: !screenshotsEnabled);
+  }
+
+  // Sheet Tambah Koin dari Beranda bersaldo 120: siap semua, bonus diambil
+  // dan jatah iklan habis, dan iklan gagal di layar kecil.
+  final now = DateTime(2026, 10, 19, 9);
+  final today = dayNumber(now);
+  final coinSheets = <String, (DailyRewards, bool, Size)>{
+    '14-tambah-koin': (DailyRewards.initial, false, _size),
+    '14-tambah-koin-habis': (
+      DailyRewards(bonusDay: today, adDay: today, adsWatched: maxAdsPerDay),
+      false,
+      _size,
+    ),
+    '14-tambah-koin-gagal-360x640': (
+      DailyRewards(bonusDay: today, adDay: today, adsWatched: 2),
+      true,
+      Size(360, 640),
+    ),
+  };
+  for (final MapEntry(key: name, value: (rewards, fail, size))
+      in coinSheets.entries) {
+    testWidgets('$folder/$name', (tester) async {
+      setScreenSize(tester, size);
+      await withShadows(() async {
+        await tester.pumpWidget(
+          capturable(
+            KucingOrenApp(
+              progress: testProgressWith(
+                coins: 120,
+                rewards: rewards,
+                clock: () => now,
+                ads: FakeRewardedAds(succeed: !fail),
+              ),
+              initialLocation: AppRoutes.home,
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byType(KoCoinChip));
+        await tester.pumpAndSettle();
+        if (fail) {
+          await tester.tap(find.text('+20 koin'));
+          await tester.pumpAndSettle();
+        }
         await capture(tester, '$folder/$name');
       });
     }, skip: !screenshotsEnabled);

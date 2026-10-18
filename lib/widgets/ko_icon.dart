@@ -264,6 +264,23 @@ abstract final class KoIcons {
     KoIconShape.path('M5 12.5l4.5 4.5L19 7.5'),
   ], strokeWidth: 3.6);
 
+  /// Tambah koin ("+" di chip koin). Tidak ada di desain; garis seperti
+  /// [checkBold].
+  static const plus = KoIconData([
+    KoIconShape.path('M12 5v14M5 12h14'),
+  ], strokeWidth: 3.6);
+
+  /// Bonus harian (kado) di sheet Tambah Koin. Tidak ada di desain; gaya
+  /// garis seperti [ad].
+  static const gift = KoIconData([
+    KoIconShape.rrect(Rect.fromLTWH(4, 11, 16, 9), 2),
+    KoIconShape.rrect(Rect.fromLTWH(3, 7.5, 18, 3.5), 1.5),
+    KoIconShape.path('M12 7.5V20'),
+    KoIconShape.path(
+      'M12 7.5C10.5 4.5 7 4 7 6.2c0 1.3 2.5 1.3 5 1.3zM12 7.5c1.5-3 5-3.5 5-1.3 0 1.3-2.5 1.3-5 1.3z',
+    ),
+  ], strokeWidth: 2.2);
+
   /// Panah →, ↻, dan ↺ di teks kartu aturan. Tidak ada di desain sebagai
   /// ikon (desain menulis karakternya), tapi font Fredoka dan Nunito yang
   /// dibundel tidak punya glyph itu.
