@@ -46,6 +46,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
        _hints = Map.unmodifiable(hints),
        _wardrobe = wardrobe ?? Wardrobe.initial,
        clock = clock ?? DateTime.now,
+       _seenDay = dayNumber((clock ?? DateTime.now)()),
        ads = ads ?? FakeRewardedAds(),
        chapters = List.unmodifiable(chaptersOf(levels));
 
@@ -211,6 +212,19 @@ class ProgressController extends ChangeNotifier implements HintSource {
   bool _watchingAd = false;
 
   int get _today => dayNumber(clock());
+
+  /// Hari saat pendengar terakhir diberi tahu soal hadiah harian (awalnya
+  /// hari controller dibuat).
+  int _seenDay;
+
+  /// Memberi tahu pendengar kalau hari sudah berganti (bonus dan jatah
+  /// iklan baru), mis. saat aplikasi kembali dari latar belakang esok hari.
+  void refreshDay() {
+    final today = _today;
+    if (today == _seenDay) return;
+    _seenDay = today;
+    notifyListeners();
+  }
 
   /// Bonus harian hari ini belum diambil.
   bool get canClaimBonus => _rewards.canClaimBonus(_today);

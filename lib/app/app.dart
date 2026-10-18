@@ -27,8 +27,21 @@ class _KucingOrenAppState extends State<KucingOrenApp> {
   );
   final ThemeData _theme = KoTheme.light();
 
+  /// Aplikasi yang kembali dari latar belakang esok hari menampilkan bonus
+  /// harian dan jatah iklan baru.
+  late final AppLifecycleListener _lifecycle = AppLifecycleListener(
+    onResume: () => widget.progress.refreshDay(),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycle;
+  }
+
   @override
   void dispose() {
+    _lifecycle.dispose();
     _router.dispose();
     super.dispose();
   }

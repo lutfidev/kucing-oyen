@@ -104,6 +104,40 @@ void main() {
     expect(find.bySemanticsLabel('25 koin, tambah koin'), findsOneWidget);
   });
 
+  testWidgets('kembali ke aplikasi esok hari: titik bonus muncul lagi', (
+    tester,
+  ) async {
+    var now = _now;
+    setScreenSize(tester, const Size(390, 844));
+    await pumpApp(
+      tester,
+      progress: testProgressWith(
+        rewards: DailyRewards(bonusDay: _today),
+        clock: () => now,
+      ),
+    );
+    expect(find.byKey(const ValueKey('coin-badge')), findsNothing);
+
+    // Ke latar belakang lalu kembali, urutan seperti di perangkat.
+    void lifecycle(List<AppLifecycleState> states) {
+      for (final state in states) {
+        tester.binding.handleAppLifecycleStateChanged(state);
+      }
+    }
+
+    final (inactive, hidden, paused, resumed) = (
+      AppLifecycleState.inactive,
+      AppLifecycleState.hidden,
+      AppLifecycleState.paused,
+      AppLifecycleState.resumed,
+    );
+    lifecycle([inactive, hidden, paused]);
+    now = _now.add(const Duration(days: 1));
+    lifecycle([hidden, inactive, resumed]);
+    await settle(tester);
+    expect(find.byKey(const ValueKey('coin-badge')), findsOneWidget);
+  });
+
   testWidgets('tonton iklan: +20, sisa berkurang', (tester) async {
     final progress = await _openFromHome(tester, _progress());
     await _tap(tester, find.text('+20 koin'));

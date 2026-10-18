@@ -468,6 +468,32 @@ void main() {
       expect(c.coins, 20);
     });
 
+    test('refreshDay memberi tahu hanya kalau hari berganti', () {
+      final c = testProgressWith(clock: clock);
+      var notified = 0;
+      c.addListener(() => notified++);
+      now = DateTime(2026, 10, 19, 23, 59);
+      c.refreshDay();
+      expect(notified, 0);
+      now = DateTime(2026, 10, 20, 7);
+      c.refreshDay();
+      expect(notified, 1);
+      c.refreshDay();
+      expect(notified, 1);
+    });
+
+    test(
+      'refreshDay pertama kali sesudah hari berganti tetap memberi tahu',
+      () {
+        final c = testProgressWith(clock: clock);
+        var notified = 0;
+        c.addListener(() => notified++);
+        now = DateTime(2026, 10, 20, 7);
+        c.refreshDay();
+        expect(notified, 1);
+      },
+    );
+
     test('memuat hadiah harian tersimpan', () async {
       final today = dayNumber(now);
       final store = MemoryProgressStore()
