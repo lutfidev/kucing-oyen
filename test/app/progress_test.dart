@@ -5,6 +5,7 @@ import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/progress.dart';
+import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/render/oyen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
@@ -129,6 +130,25 @@ void main() {
         expect(wardrobe.wearing, OyenCostume.none);
       },
     );
+    test('hadiah harian: simpan lalu muat', () async {
+      const rewards = DailyRewards(bonusDay: 3, adDay: 4, adsWatched: 2);
+      await PrefsProgressStore().saveRewards(rewards);
+      expect(await PrefsProgressStore().loadRewards(), rewards);
+    });
+
+    test('hadiah harian: belum pernah disimpan = awal', () async {
+      expect(await PrefsProgressStore().loadRewards(), DailyRewards.initial);
+    });
+
+    test('hadiah harian rusak atau bertipe salah: awal', () async {
+      final prefs = SharedPreferencesAsync();
+      await prefs.setString(PrefsProgressStore.rewardsKey, 'bukan json');
+      expect(await PrefsProgressStore().loadRewards(), DailyRewards.initial);
+      await prefs.setString(PrefsProgressStore.rewardsKey, '[1]');
+      expect(await PrefsProgressStore().loadRewards(), DailyRewards.initial);
+      await prefs.setInt(PrefsProgressStore.rewardsKey, 3);
+      expect(await PrefsProgressStore().loadRewards(), DailyRewards.initial);
+    });
   });
 
   group('ProgressController', () {
@@ -352,6 +372,113 @@ void main() {
       final store = MemoryProgressStore()..wardrobe = wardrobe;
       final c = await ProgressController.load(levels: testLevels, store: store);
       expect(c.wardrobe, wardrobe);
+    });
+  });
+  group('koin tambahan', () {
+    var now = DateTime(2026, 10, 19, 9);
+    DateTime clock() => now;
+    setUp(() => now = DateTime(2026, 10, 19, 9));
+
+    test('bonus harian: +20 sekali, tersimpan, besok bisa lagi', () async {
+      final c = testProgressWith(coins: 5, clock: clock);
+      var notified = 0;
+      c.addListener(() => notified++);
+      expect(c.canClaimBonus, isTrue);
+      expect(await c.claimDailyBonus(), isTrue);
+      expect(c.coins, 25);
+      expect(c.canClaimBonus, isFalse);
+      expect(notified, 1);
+      final store = c.store as MemoryProgressStore;
+      expect(store.coins, 25);
+      expect(store.rewards.canClaimBonus(dayNumber(now)), isFalse);
+
+      now = DateTime(2026, 10, 19, 23, 59);
+      expect(await c.claimDailyBonus(), isFalse);
+      expect(c.coins, 25);
+
+      now = DateTime(2026, 10, 20, 0, 1);
+      expect(c.canClaimBonus, isTrue);
+      expect(await c.claimDailyBonus(), isTrue);
+      expect(c.coins, 45);
+    });
+
+    test('bonus: dua ketukan bersamaan hanya +20 sekali', () async {
+      final c = testProgressWith(clock: clock);
+      final first = c.claimDailyBonus();
+      final second = c.claimDailyBonus();
+      expect([await first, await second], [true, false]);
+      expect(c.coins, 20);
+    });
+
+    test('iklan selesai: +20, sisa berkurang, tersimpan', () async {
+      final ads = FakeRewardedAds();
+      final c = testProgressWith(coins: 5, ads: ads, clock: clock);
+      expect(c.adsLeft, 5);
+      expect(await c.watchAdForCoins(), AdReward.rewarded);
+      expect(c.coins, 25);
+      expect(c.adsLeft, 4);
+      expect(ads.shown, 1);
+      final store = c.store as MemoryProgressStore;
+      expect(store.coins, 25);
+      expect(store.rewards.adsLeft(dayNumber(now)), 4);
+    });
+
+    test('iklan gagal: tidak menambah, tidak dihitung', () async {
+      final c = testProgressWith(
+        coins: 5,
+        ads: FakeRewardedAds(succeed: false),
+        clock: clock,
+      );
+      expect(await c.watchAdForCoins(), AdReward.failed);
+      expect(c.coins, 5);
+      expect(c.adsLeft, 5);
+      final store = c.store as MemoryProgressStore;
+      expect(store.coins, 5);
+      expect(store.rewards, DailyRewards.initial);
+    });
+
+    test('iklan yang error dianggap gagal', () async {
+      final c = testProgressWith(ads: _ThrowingAds(), clock: clock);
+      expect(await c.watchAdForCoins(), AdReward.failed);
+      expect(c.coins, 0);
+    });
+
+    test('lima iklan per hari, besok penuh lagi', () async {
+      final ads = FakeRewardedAds();
+      final c = testProgressWith(ads: ads, clock: clock);
+      for (var i = 0; i < 5; i++) {
+        expect(await c.watchAdForCoins(), AdReward.rewarded);
+      }
+      expect(c.coins, 100);
+      expect(await c.watchAdForCoins(), AdReward.limitReached);
+      expect(ads.shown, 5);
+      expect(c.coins, 100);
+      now = DateTime(2026, 10, 20, 8);
+      expect(c.adsLeft, 5);
+    });
+
+    test('iklan: ketukan kedua selama iklan diputar ditolak', () async {
+      final ads = FakeRewardedAds();
+      final c = testProgressWith(ads: ads, clock: clock);
+      final first = c.watchAdForCoins();
+      final second = c.watchAdForCoins();
+      expect(await second, AdReward.busy);
+      expect(await first, AdReward.rewarded);
+      expect(ads.shown, 1);
+      expect(c.coins, 20);
+    });
+
+    test('memuat hadiah harian tersimpan', () async {
+      final today = dayNumber(now);
+      final store = MemoryProgressStore()
+        ..rewards = DailyRewards(bonusDay: today, adDay: today, adsWatched: 3);
+      final c = await ProgressController.load(
+        levels: testLevels,
+        store: store,
+        clock: clock,
+      );
+      expect(c.canClaimBonus, isFalse);
+      expect(c.adsLeft, 2);
     });
   });
 }

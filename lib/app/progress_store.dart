@@ -5,11 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../game/model/costumes.dart';
 import '../game/model/hints.dart';
 import '../game/model/progress.dart';
+import '../game/model/rewards.dart';
 import '../game/render/oyen.dart';
 
 /// Tempat menyimpan [Progress], tutorial yang sudah selesai, saldo koin,
-/// tingkat petunjuk yang terbuka, dan kostum Oyen di perangkat. Antarmukanya kecil
-/// supaya test bisa memakai [MemoryProgressStore].
+/// tingkat petunjuk yang terbuka, kostum Oyen, dan hadiah harian di
+/// perangkat. Antarmukanya kecil supaya test bisa memakai
+/// [MemoryProgressStore].
 abstract interface class ProgressStore {
   Future<Progress> load();
   Future<void> save(Progress progress);
@@ -30,6 +32,11 @@ abstract interface class ProgressStore {
   /// pernah disimpan.
   Future<Wardrobe> loadWardrobe();
   Future<void> saveWardrobe(Wardrobe wardrobe);
+
+  /// Bonus harian dan iklan koin; [DailyRewards.initial] kalau belum pernah
+  /// disimpan atau rusak.
+  Future<DailyRewards> loadRewards();
+  Future<void> saveRewards(DailyRewards rewards);
 }
 
 /// Simpanan di memori (test, atau kalau penyimpanan perangkat tidak ada).
@@ -44,6 +51,9 @@ class MemoryProgressStore implements ProgressStore {
 
   /// Kostum yang terakhir disimpan.
   Wardrobe wardrobe = Wardrobe.initial;
+
+  /// Hadiah harian yang terakhir disimpan.
+  DailyRewards rewards = DailyRewards.initial;
 
   /// Progres yang terakhir disimpan.
   Progress saved;
@@ -87,12 +97,19 @@ class MemoryProgressStore implements ProgressStore {
   @override
   Future<void> saveWardrobe(Wardrobe wardrobe) async =>
       this.wardrobe = wardrobe;
+
+  @override
+  Future<DailyRewards> loadRewards() async => rewards;
+
+  @override
+  Future<void> saveRewards(DailyRewards rewards) async =>
+      this.rewards = rewards;
 }
 
 /// Simpanan lokal lewat `shared_preferences`: JSON `{"id level": bintang}`,
 /// daftar id level yang tutorialnya selesai, saldo koin, JSON
-/// `{"id level": tingkat petunjuk}`, dan nama kostum yang dimiliki dan
-/// dipakai.
+/// `{"id level": tingkat petunjuk}`, nama kostum yang dimiliki dan
+/// dipakai, dan JSON hadiah harian.
 class PrefsProgressStore implements ProgressStore {
   PrefsProgressStore([SharedPreferencesAsync? prefs])
     : _prefs = prefs ?? SharedPreferencesAsync();
@@ -103,6 +120,7 @@ class PrefsProgressStore implements ProgressStore {
   static const hintsKey = 'hints.tier';
   static const ownedKey = 'costume.owned';
   static const wearingKey = 'costume.wearing';
+  static const rewardsKey = 'rewards.daily';
 
   final SharedPreferencesAsync _prefs;
 
@@ -209,4 +227,24 @@ class PrefsProgressStore implements ProgressStore {
     ]),
     _prefs.setString(wearingKey, wardrobe.wearing.name),
   ]);
+
+  @override
+  Future<DailyRewards> loadRewards() async {
+    try {
+      final raw = await _prefs.getString(rewardsKey);
+      if (raw == null) return DailyRewards.initial;
+      final json = jsonDecode(raw);
+      return json is Map<String, dynamic>
+          ? DailyRewards.fromJson(json)
+          : DailyRewards.initial;
+    } on FormatException {
+      return DailyRewards.initial;
+    } on TypeError {
+      return DailyRewards.initial;
+    }
+  }
+
+  @override
+  Future<void> saveRewards(DailyRewards rewards) =>
+      _prefs.setString(rewardsKey, jsonEncode(rewards.toJson()));
 }

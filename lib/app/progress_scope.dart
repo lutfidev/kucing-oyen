@@ -4,15 +4,31 @@ import '../game/model/chapter.dart';
 import '../game/model/costumes.dart';
 import '../game/model/hints.dart';
 import '../game/model/progress.dart';
+import '../game/model/rewards.dart';
 import '../game/render/oyen.dart';
 import '../game/sim/sim.dart';
 import 'hint_source.dart';
 import 'progress_store.dart';
 import 'rewarded_ads.dart';
 
+/// Hasil [ProgressController.watchAdForCoins].
+enum AdReward {
+  /// Iklan selesai, koin ditambah.
+  rewarded,
+
+  /// Iklan gagal dimuat atau ditutup lebih dulu; tidak ada yang berubah.
+  failed,
+
+  /// Jatah iklan hari ini habis; iklan tidak diputar.
+  limitReached,
+
+  /// Iklan koin lain sedang diputar.
+  busy,
+}
+
 /// Data level dan progres pemain untuk semua layar: bintang, tutorial,
-/// koin, petunjuk, dan kostum Oyen. Dimuat sekali sebelum aplikasi jalan (`main`), lalu
-/// dibagikan lewat [ProgressScope].
+/// koin, petunjuk, kostum Oyen, dan hadiah harian. Dimuat sekali sebelum
+/// aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
 class ProgressController extends ChangeNotifier implements HintSource {
   ProgressController({
     required List<Level> levels,
@@ -22,21 +38,25 @@ class ProgressController extends ChangeNotifier implements HintSource {
     this._coins = 0,
     Map<int, int> hints = const {},
     Wardrobe? wardrobe,
+    this._rewards = DailyRewards.initial,
     RewardedAds? ads,
+    DateTime Function()? clock,
   }) : levels = List.unmodifiable(levels),
        _tutorialsDone = Set.unmodifiable(tutorialsDone),
        _hints = Map.unmodifiable(hints),
        _wardrobe = wardrobe ?? Wardrobe.initial,
+       clock = clock ?? DateTime.now,
        ads = ads ?? FakeRewardedAds(),
        chapters = List.unmodifiable(chaptersOf(levels));
 
-  /// Memuat progres, tutorial, koin, petunjuk, dan kostum dari [store]. Koin yang
-  /// belum pernah disimpan (progres dari sebelum ada koin) dihitung dari
-  /// total bintang.
+  /// Memuat progres, tutorial, koin, petunjuk, kostum, dan hadiah harian
+  /// dari [store]. Koin yang belum pernah disimpan (progres dari sebelum ada
+  /// koin) dihitung dari total bintang.
   static Future<ProgressController> load({
     required List<Level> levels,
     required ProgressStore store,
     RewardedAds? ads,
+    DateTime Function()? clock,
   }) async {
     final progress = await store.load();
     return ProgressController(
@@ -47,7 +67,9 @@ class ProgressController extends ChangeNotifier implements HintSource {
       coins: await store.loadCoins() ?? progress.totalStars * coinsPerStar,
       hints: await store.loadHints(),
       wardrobe: await store.loadWardrobe(),
+      rewards: await store.loadRewards(),
       ads: ads,
+      clock: clock,
     );
   }
 
@@ -55,8 +77,11 @@ class ProgressController extends ChangeNotifier implements HintSource {
   final List<Chapter> chapters;
   final ProgressStore store;
 
-  /// Iklan berhadiah untuk membuka petunjuk.
+  /// Iklan berhadiah untuk membuka petunjuk dan menambah koin.
   final RewardedAds ads;
+
+  /// Jam untuk bonus harian dan jatah iklan; diganti di test.
+  final DateTime Function() clock;
 
   Progress _progress;
   Progress get progress => _progress;
@@ -178,6 +203,55 @@ class ProgressController extends ChangeNotifier implements HintSource {
     notifyListeners();
     await store.saveWardrobe(_wardrobe);
     return true;
+  }
+
+  DailyRewards _rewards;
+
+  /// Iklan koin sedang diputar, supaya ketukan kedua tidak memutar dua iklan.
+  bool _watchingAd = false;
+
+  int get _today => dayNumber(clock());
+
+  /// Bonus harian hari ini belum diambil.
+  bool get canClaimBonus => _rewards.canClaimBonus(_today);
+
+  /// Sisa iklan koin hari ini.
+  int get adsLeft => _rewards.adsLeft(_today);
+
+  /// Mengambil bonus harian ([dailyBonusCoins]); false tanpa efek kalau
+  /// hari ini sudah diambil.
+  Future<bool> claimDailyBonus() async {
+    final today = _today;
+    if (!_rewards.canClaimBonus(today)) return false;
+    _rewards = _rewards.claimBonus(today);
+    _coins += dailyBonusCoins;
+    notifyListeners();
+    await Future.wait([store.saveRewards(_rewards), store.saveCoins(_coins)]);
+    return true;
+  }
+
+  /// Memutar satu iklan berhadiah; kalau selesai, menambah [adRewardCoins]
+  /// dan menghitungnya di jatah hari itu. Iklan yang selesai tetap diberi
+  /// hadiah walau hari berganti selama iklan.
+  Future<AdReward> watchAdForCoins() async {
+    if (_watchingAd) return AdReward.busy;
+    if (adsLeft == 0) return AdReward.limitReached;
+    _watchingAd = true;
+    bool watched;
+    try {
+      watched = await ads.show();
+    } on Object {
+      // SDK iklan yang gagal dimuat dengan error dianggap iklan gagal.
+      watched = false;
+    } finally {
+      _watchingAd = false;
+    }
+    if (!watched) return AdReward.failed;
+    _rewards = _rewards.watchedAd(_today);
+    _coins += adRewardCoins;
+    notifyListeners();
+    await Future.wait([store.saveRewards(_rewards), store.saveCoins(_coins)]);
+    return AdReward.rewarded;
   }
 
   /// Menandai tutorial level [id] selesai supaya tidak muncul lagi.

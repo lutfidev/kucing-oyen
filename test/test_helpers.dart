@@ -9,6 +9,7 @@ import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/game/level_loader.dart';
 import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/progress.dart';
+import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/theme/theme.dart';
@@ -32,14 +33,17 @@ ProgressController testProgress([
 ]) => testProgressWith(best: best, tutorialsDone: tutorialsDone);
 
 /// Seperti [testProgress], ditambah saldo [coins], tingkat petunjuk
-/// [hints] per level, kostum [wardrobe], dan iklan [ads] (default iklan palsu yang berhasil).
+/// [hints] per level, kostum [wardrobe], hadiah harian [rewards], iklan
+/// [ads] (default iklan palsu yang berhasil), dan jam [clock].
 ProgressController testProgressWith({
   Map<int, int> best = const {},
   Set<int>? tutorialsDone,
   int coins = 0,
   Map<int, int> hints = const {},
   Wardrobe? wardrobe,
+  DailyRewards rewards = DailyRewards.initial,
   RewardedAds? ads,
+  DateTime Function()? clock,
 }) {
   final progress = Progress(best);
   final tutorials = tutorialsDone ?? tutorialLevels;
@@ -48,13 +52,16 @@ ProgressController testProgressWith({
     store: MemoryProgressStore(progress, tutorials)
       ..coins = coins
       ..hints = hints
-      ..wardrobe = wardrobe ?? Wardrobe.initial,
+      ..wardrobe = wardrobe ?? Wardrobe.initial
+      ..rewards = rewards,
     progress: progress,
     tutorialsDone: tutorials,
     coins: coins,
     hints: hints,
     wardrobe: wardrobe,
+    rewards: rewards,
     ads: ads,
+    clock: clock,
   );
 }
 
