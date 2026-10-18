@@ -25,6 +25,7 @@ final routes = <String>[
   AppRoutes.gallery,
   AppRoutes.galleryBoard,
   AppRoutes.galleryOyen,
+  AppRoutes.closet,
   // Tanpa benda, dua jenis benda, dan tiga jenis benda (baki terlebar).
   AppRoutes.level(1, chapter: 1),
   AppRoutes.level(13, chapter: 2),
@@ -157,6 +158,30 @@ void main() {
         setTextScale(tester, scale);
         await pumpApp(tester, progress: testProgressWith(coins: 99999));
         expect(find.text('99999'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+      testWidgets('tanpa overflow: Lemari Kostum saldo 99999, Topi Koki '
+          'dipilih @ $label, teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpApp(
+          tester,
+          location: AppRoutes.closet,
+          progress: testProgressWith(coins: 99999),
+        );
+        final koki = find.byKey(const ValueKey('costume-koki'));
+        await tester.ensureVisible(koki);
+        await tester.tap(koki);
+        await settle(tester);
+        expect(find.text('Beli · 150 koin'), findsOneWidget);
+        // Semua kartu dan tombol aksi bisa dicapai.
+        for (final id in ['none', 'peci', 'sarung', 'koki', 'kacamata']) {
+          final card = find.byKey(ValueKey('costume-$id'));
+          await tester.ensureVisible(card);
+          expect(card.hitTestable(), findsOneWidget);
+        }
+        await tester.ensureVisible(find.text('Beli · 150 koin'));
+        expect(find.text('Beli · 150 koin').hitTestable(), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
     }

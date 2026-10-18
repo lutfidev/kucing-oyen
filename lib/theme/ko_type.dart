@@ -59,6 +59,8 @@ class KoType extends ThemeExtension<KoType> {
     required this.numberCoin,
     required this.numberTier,
     required this.hintReveal,
+    required this.numberCoinLarge,
+    required this.cardLabel,
   });
 
   static const standard = KoType(
@@ -314,6 +316,18 @@ class KoType extends ThemeExtension<KoType> {
       fontWeight: FontWeight.w800,
       height: 1.35,
     ),
+    numberCoinLarge: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 17,
+      fontWeight: FontWeight.w600,
+    ),
+    cardLabel: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+    ),
   );
 
   /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
@@ -445,6 +459,12 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 800/14, tinggi baris 1,35: teks petunjuk yang dibuka.
   final TextStyle hintReveal;
 
+  /// Fredoka 600/17: chip koin Lemari Kostum.
+  final TextStyle numberCoinLarge;
+
+  /// Fredoka 600/16: nama kostum di kartu Lemari Kostum.
+  final TextStyle cardLabel;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -489,6 +509,8 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? numberCoin,
     TextStyle? numberTier,
     TextStyle? hintReveal,
+    TextStyle? numberCoinLarge,
+    TextStyle? cardLabel,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -533,6 +555,8 @@ class KoType extends ThemeExtension<KoType> {
       numberCoin: numberCoin ?? this.numberCoin,
       numberTier: numberTier ?? this.numberTier,
       hintReveal: hintReveal ?? this.hintReveal,
+      numberCoinLarge: numberCoinLarge ?? this.numberCoinLarge,
+      cardLabel: cardLabel ?? this.cardLabel,
     );
   }
 
@@ -583,6 +607,8 @@ class KoType extends ThemeExtension<KoType> {
       numberCoin: s(numberCoin, other.numberCoin),
       numberTier: s(numberTier, other.numberTier),
       hintReveal: s(hintReveal, other.hintReveal),
+      numberCoinLarge: s(numberCoinLarge, other.numberCoinLarge),
+      cardLabel: s(cardLabel, other.cardLabel),
     );
   }
 }

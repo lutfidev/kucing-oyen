@@ -14,6 +14,9 @@ abstract final class AppRoutes {
   /// Galeri sprite Oyen (desain 14, 16).
   static const galleryOyen = '/galeri/oyen';
 
+  /// Lemari Kostum (desain 12), dibuka dari Beranda.
+  static const closet = '/kostum';
+
   /// Peta babak nomor [number] (desain 02).
   static String chapter(int number) => '/babak/$number';
 

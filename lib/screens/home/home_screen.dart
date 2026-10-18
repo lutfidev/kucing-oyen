@@ -9,8 +9,8 @@ import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
 /// Beranda (desain 01): Oyen tidur di atas logo, total bintang, tombol Main
-/// ke peta babak yang sedang dimainkan, serta Lemari Kostum dan Pengaturan
-/// yang belum berfungsi.
+/// ke peta babak yang sedang dimainkan, Lemari Kostum, dan Pengaturan yang
+/// belum berfungsi.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -66,15 +66,15 @@ class HomeScreen extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Lemari Kostum (langkah 13) dan Pengaturan (langkah
-                      // 15) belum berfungsi.
-                      const Expanded(
+                      Expanded(
                         child: _MenuButton(
                           icon: KoIcons.costume,
                           label: 'Lemari Kostum',
+                          onPressed: () => context.go(AppRoutes.closet),
                         ),
                       ),
                       SizedBox(width: space.s12),
+                      // Pengaturan belum berfungsi (langkah 15).
                       const Expanded(
                         child: _MenuButton(
                           icon: KoIcons.settings,
@@ -247,10 +247,13 @@ class _StarTotal extends StatelessWidget {
 /// Tombol krem kecil di bawah "Main". Belum berfungsi: tidak bisa ditekan,
 /// tampilannya tetap seperti desain.
 class _MenuButton extends StatelessWidget {
-  const _MenuButton({required this.icon, required this.label});
+  const _MenuButton({required this.icon, required this.label, this.onPressed});
 
   final KoIconData icon;
   final String label;
+
+  /// Null = belum bisa ditekan.
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +261,7 @@ class _MenuButton extends StatelessWidget {
     final space = context.koSpace;
     final s = context.koSize;
     return KoPressable(
-      onPressed: null,
+      onPressed: onPressed,
       semanticLabel: label,
       color: c.surface,
       edgeColor: c.lineDeep,

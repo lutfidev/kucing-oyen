@@ -83,6 +83,11 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.hintButton,
     required this.iconCompact,
     required this.lockedOpacity,
+    required this.costumeCard,
+    required this.costumeArt,
+    required this.oyenCostume,
+    required this.oyenCloset,
+    required this.closetMinScale,
   });
 
   static const standard = KoSize(
@@ -161,6 +166,11 @@ class KoSize extends ThemeExtension<KoSize> {
     hintButton: 46,
     iconCompact: 18,
     lockedOpacity: 0.75,
+    costumeCard: 104,
+    costumeArt: 64,
+    oyenCostume: 56,
+    oyenCloset: 168,
+    closetMinScale: 0.5,
   );
 
   /// Tombol "Main" di Beranda.
@@ -363,6 +373,21 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Opasitas kartu petunjuk yang belum bisa dibuka.
   final double lockedOpacity;
 
+  /// Kartu kostum di Lemari Kostum.
+  final double costumeCard;
+
+  /// Kotak Oyen kecil di kartu kostum.
+  final double costumeArt;
+
+  /// Oyen di kartu kostum.
+  final double oyenCostume;
+
+  /// Oyen pratinjau di Lemari Kostum.
+  final double oyenCloset;
+
+  /// Skala terkecil pratinjau lemari di layar pendek (selebihnya digulir).
+  final double closetMinScale;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -440,6 +465,11 @@ class KoSize extends ThemeExtension<KoSize> {
     double? hintButton,
     double? iconCompact,
     double? lockedOpacity,
+    double? costumeCard,
+    double? costumeArt,
+    double? oyenCostume,
+    double? oyenCloset,
+    double? closetMinScale,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -517,6 +547,11 @@ class KoSize extends ThemeExtension<KoSize> {
       hintButton: hintButton ?? this.hintButton,
       iconCompact: iconCompact ?? this.iconCompact,
       lockedOpacity: lockedOpacity ?? this.lockedOpacity,
+      costumeCard: costumeCard ?? this.costumeCard,
+      costumeArt: costumeArt ?? this.costumeArt,
+      oyenCostume: oyenCostume ?? this.oyenCostume,
+      oyenCloset: oyenCloset ?? this.oyenCloset,
+      closetMinScale: closetMinScale ?? this.closetMinScale,
     );
   }
 
@@ -600,6 +635,11 @@ class KoSize extends ThemeExtension<KoSize> {
       hintButton: d(hintButton, other.hintButton),
       iconCompact: d(iconCompact, other.iconCompact),
       lockedOpacity: d(lockedOpacity, other.lockedOpacity),
+      costumeCard: d(costumeCard, other.costumeCard),
+      costumeArt: d(costumeArt, other.costumeArt),
+      oyenCostume: d(oyenCostume, other.oyenCostume),
+      oyenCloset: d(oyenCloset, other.oyenCloset),
+      closetMinScale: d(closetMinScale, other.closetMinScale),
     );
   }
 }
