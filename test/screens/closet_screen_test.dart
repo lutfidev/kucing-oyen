@@ -63,7 +63,7 @@ void main() {
     expect(_action(tester).onPressed, isNull);
     expect(_preview(tester).look.costume, OyenCostume.none);
     expect(_preview(tester).look.pose, OyenPose.happy);
-    expect(find.bySemanticsLabel('0 koin'), findsOneWidget);
+    expect(find.bySemanticsLabel('0 koin, tambah koin'), findsOneWidget);
   });
 
   testWidgets('pilih kartu hanya pratinjau, beli memotong koin dan memakai', (
@@ -79,7 +79,7 @@ void main() {
     await _tap(tester, find.byType(KoButton));
     expect(progress.coins, 60);
     expect(progress.wardrobe.wearing, OyenCostume.peci);
-    expect(find.bySemanticsLabel('60 koin'), findsOneWidget);
+    expect(find.bySemanticsLabel('60 koin, tambah koin'), findsOneWidget);
     expect(_inCard(OyenCostume.peci, 'Dipakai'), findsOneWidget);
     expect(_inCard(OyenCostume.none, 'Punyamu'), findsOneWidget);
     expect(_action(tester).label, 'Sedang dipakai');
@@ -93,7 +93,7 @@ void main() {
     await _tap(tester, _card(OyenCostume.kacamata));
     expect(_action(tester).label, 'Beli · 45 koin');
     await _tap(tester, find.byType(KoButton));
-    expect(find.bySemanticsLabel('0 koin'), findsOneWidget);
+    expect(find.bySemanticsLabel('0 koin, tambah koin'), findsOneWidget);
     expect(_inCard(OyenCostume.kacamata, 'Dipakai'), findsOneWidget);
   });
 

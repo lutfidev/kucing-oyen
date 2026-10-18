@@ -6,12 +6,19 @@ import '../../game/sim/sim.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
-/// Bar atas Lemari Kostum: tombol kembali, judul, dan saldo koin.
+/// Bar atas Lemari Kostum: tombol kembali, judul, dan saldo koin yang
+/// membuka sheet Tambah Koin ([onCoins]).
 class ClosetBar extends StatelessWidget {
-  const ClosetBar({super.key, required this.coins, required this.onBack});
+  const ClosetBar({
+    super.key,
+    required this.coins,
+    required this.onBack,
+    required this.onCoins,
+  });
 
   final int coins;
   final VoidCallback onBack;
+  final VoidCallback onCoins;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +47,11 @@ class ClosetBar extends StatelessWidget {
           ),
         ),
         SizedBox(width: space.s10),
-        KoCoinChip(coins: coins, style: KoCoinChipStyle.outlined),
+        KoCoinChip(
+          coins: coins,
+          style: KoCoinChipStyle.outlined,
+          onPressed: onCoins,
+        ),
       ],
     );
   }

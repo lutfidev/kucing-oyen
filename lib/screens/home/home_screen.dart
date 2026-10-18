@@ -7,10 +7,12 @@ import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../coins/coin_sheet.dart';
 
-/// Beranda (desain 01): Oyen tidur di atas logo, total bintang, tombol Main
-/// ke peta babak yang sedang dimainkan, Lemari Kostum, dan Pengaturan yang
-/// belum berfungsi.
+/// Beranda (desain 01): chip koin yang membuka sheet Tambah Koin (bertitik
+/// selama bonus harian belum diambil), Oyen tidur di atas logo, total
+/// bintang, tombol Main ke peta babak yang sedang dimainkan, Lemari Kostum,
+/// dan Pengaturan yang belum berfungsi.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -37,7 +39,11 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: KoCoinChip(coins: progress.coins),
+                  child: KoCoinChip(
+                    coins: progress.coins,
+                    badge: progress.canClaimBonus,
+                    onPressed: () => showCoinSheet(context, progress),
+                  ),
                 ),
                 Expanded(
                   child: Center(

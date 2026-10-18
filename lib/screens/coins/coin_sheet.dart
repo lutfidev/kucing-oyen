@@ -1,0 +1,247 @@
+import 'package:flutter/material.dart';
+
+import '../../app/progress_scope.dart';
+import '../../game/model/rewards.dart';
+import '../../theme/theme.dart';
+import '../../widgets/widgets.dart';
+import '../level/level_sheet.dart';
+
+/// Membuka sheet Tambah Koin: bonus harian dan iklan berhadiah koin. Gaya
+/// mengikuti sheet Petunjuk (desain 10); sheet ini tidak ada di desain.
+Future<void> showCoinSheet(BuildContext context, ProgressController progress) =>
+    showLevelSheet(
+      context,
+      barrierLabel: 'Tutup tambah koin',
+      barrierColor: context.koColors.scrimLight,
+      builder: (context, onClose) =>
+          CoinSheet(progress: progress, onClose: onClose),
+    );
+
+/// Isi sheet Tambah Koin: koin, judul, saldo, tombol tutup, lalu kartu
+/// bonus harian dan kartu iklan. Dibangun ulang saat [progress] berubah.
+class CoinSheet extends StatefulWidget {
+  const CoinSheet({super.key, required this.progress, required this.onClose});
+
+  final ProgressController progress;
+  final VoidCallback onClose;
+
+  @override
+  State<CoinSheet> createState() => _CoinSheetState();
+}
+
+class _CoinSheetState extends State<CoinSheet> {
+  /// Iklan sedang diputar.
+  bool _waiting = false;
+
+  /// Iklan terakhir gagal.
+  bool _failed = false;
+
+  Future<void> _watch() async {
+    if (_waiting) return;
+    setState(() {
+      _waiting = true;
+      _failed = false;
+    });
+    final result = await widget.progress.watchAdForCoins();
+    if (!mounted) return;
+    setState(() {
+      _waiting = false;
+      _failed = result == AdReward.failed;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final t = context.koType;
+    final space = context.koSpace;
+    final s = context.koSize;
+    return ListenableBuilder(
+      listenable: widget.progress,
+      builder: (context, _) {
+        final progress = widget.progress;
+        final bonus = progress.canClaimBonus;
+        final adsLeft = progress.adsLeft;
+        final canWatch = adsLeft > 0 && !_waiting;
+        final header = Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                CoinView(size: s.iconButton),
+                SizedBox(width: space.s10),
+                Expanded(
+                  // Mengecil di layar sempit, tidak terpotong.
+                  child: Semantics(
+                    header: true,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Text('Tambah Koin', maxLines: 1, style: t.title),
+                    ),
+                  ),
+                ),
+                SizedBox(width: space.s10),
+                KoCoinChip(
+                  coins: progress.coins,
+                  style: KoCoinChipStyle.compact,
+                ),
+                SizedBox(width: space.s10),
+                KoIconButton(
+                  icon: KoIcons.close,
+                  semanticLabel: 'Tutup',
+                  tone: KoIconButtonTone.flat,
+                  iconSize: s.iconSmall,
+                  onPressed: widget.onClose,
+                ),
+              ],
+            ),
+            // Seperti sheet Petunjuk: jarak 12 dikurangi margin -4.
+            SizedBox(height: space.s8),
+            Text(
+              'Koin buat petunjuk dan kostum Oyen. '
+              'Ambil bonus tiap hari, atau tonton iklan.',
+              style: t.bodySmall.copyWith(color: c.inkSoft),
+            ),
+          ],
+        );
+        return LevelSheet(
+          label: 'Tambah Koin',
+          onClose: widget.onClose,
+          header: header,
+          children: [
+            RewardCard(
+              key: const ValueKey('coin-bonus'),
+              icon: KoIcons.gift,
+              title: 'Bonus harian',
+              status: bonus ? 'Sekali sehari' : 'Sudah diambil hari ini',
+              done: !bonus,
+              button: SheetButton(
+                label: bonus
+                    ? 'Ambil $dailyBonusCoins koin'
+                    : 'Ambil lagi besok',
+                icon: CoinView(size: s.iconCompact, plain: true),
+                color: c.orange,
+                line: c.orange,
+                edge: c.orangeDeep,
+                onPressed: bonus ? progress.claimDailyBonus : null,
+              ),
+            ),
+            SizedBox(height: space.s10),
+            RewardCard(
+              key: const ValueKey('coin-ad'),
+              icon: KoIcons.ad,
+              title: 'Tonton iklan',
+              status: adsLeft > 0
+                  ? 'Sisa $adsLeft kali hari ini'
+                  : 'Jatah hari ini habis',
+              done: adsLeft == 0,
+              button: SheetButton(
+                label: adsLeft > 0 ? '+$adRewardCoins koin' : 'Besok ada lagi',
+                icon: KoIcon(
+                  KoIcons.ad,
+                  size: s.iconCompact,
+                  color: canWatch ? c.ink : c.onLockedSoft,
+                ),
+                color: c.surface,
+                line: c.line,
+                edge: c.lineDeep,
+                onPressed: canWatch ? _watch : null,
+              ),
+              message: _failed
+                  ? 'Iklannya belum bisa diputar. Coba lagi nanti, ya.'
+                  : null,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Satu cara mendapat koin: ikon dalam lingkaran, judul, keadaan, tombol,
+/// dan pesan gagal. [done] = jatah hari ini sudah dipakai (lingkaran hijau
+/// bercentang).
+class RewardCard extends StatelessWidget {
+  const RewardCard({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.status,
+    required this.done,
+    required this.button,
+    this.message,
+  });
+
+  final KoIconData icon;
+  final String title;
+  final String status;
+  final bool done;
+  final Widget button;
+
+  /// Pesan merah bata di bawah tombol (iklan gagal).
+  final String? message;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final t = context.koType;
+    final space = context.koSpace;
+    final s = context.koSize;
+    final message = this.message;
+    return KoCard(
+      borderColor: done ? c.success : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: s.chipSmall,
+                height: s.chipSmall,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: done ? c.success : c.ink,
+                  shape: BoxShape.circle,
+                ),
+                child: KoIcon(
+                  done ? KoIcons.check : icon,
+                  size: s.iconCompact,
+                  color: done ? c.onSuccess : c.cream,
+                ),
+              ),
+              SizedBox(width: space.s10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: t.cardTitle),
+                    Semantics(
+                      liveRegion: true,
+                      child: Text(
+                        status,
+                        style: t.controlLabel.copyWith(color: c.inkSoft),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: space.s10),
+          button,
+          if (message != null) ...[
+            SizedBox(height: space.s8),
+            Semantics(
+              liveRegion: true,
+              child: Text(
+                message,
+                style: t.controlLabel.copyWith(color: c.brickDeep),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}

@@ -156,7 +156,10 @@ void main() {
     // Aplikasi dibuka ulang dengan progres yang sama: Beranda.
     await tester.pumpWidget(const SizedBox());
     await pumpApp(tester, progress: progress);
-    expect(find.bySemanticsLabel('30 koin'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('30 koin, tambah koin, bonus harian siap'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Lanjut sesudah level 20 kembali ke peta Babak 2', (

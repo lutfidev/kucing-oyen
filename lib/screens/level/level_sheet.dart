@@ -3,9 +3,10 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../theme/theme.dart';
+import '../../widgets/widgets.dart';
 
-/// Membuka sheet bawah di atas layar level (sheet Aturan desain 05, sheet
-/// Petunjuk desain 10): latar gelap, sheet naik sambil muncul. Ditutup
+/// Membuka sheet bawah (sheet Aturan desain 05 dan Petunjuk desain 10 di
+/// layar level, sheet Tambah Koin di Beranda dan Lemari Kostum): latar gelap, sheet naik sambil muncul. Ditutup
 /// dengan `onClose` dari [builder] (tombol tutup, tarik ke bawah), ketuk
 /// latar, atau tombol kembali sistem. [barrierColor] default
 /// [KoColors.scrim].
@@ -194,6 +195,66 @@ class _LevelSheetState extends State<LevelSheet>
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Tombol di kartu sheet ("Tonton iklan" dan bayar koin di sheet Petunjuk,
+/// tombol hadiah di sheet Tambah Koin). Nonaktif = abu-abu tanpa bayangan.
+class SheetButton extends StatelessWidget {
+  const SheetButton({
+    super.key,
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.line,
+    required this.edge,
+    required this.onPressed,
+  });
+
+  final String label;
+  final Widget icon;
+  final Color color;
+  final Color line;
+  final Color edge;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    final space = context.koSpace;
+    final enabled = onPressed != null;
+    return KoPressable(
+      onPressed: onPressed,
+      semanticLabel: label,
+      color: enabled ? color : c.disabled,
+      borderColor: enabled ? line : c.disabledLine,
+      borderWidth: s.border,
+      edgeColor: enabled ? edge : null,
+      depth: context.koShadow.pressIcon,
+      radius: context.koRadius.icon,
+      height: s.hintButton,
+      padding: EdgeInsets.symmetric(horizontal: space.s8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon,
+          SizedBox(width: space.s6),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                maxLines: 1,
+                style: context.koType.chipLabel.copyWith(
+                  color: enabled ? c.ink : c.onLockedSoft,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

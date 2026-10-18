@@ -254,7 +254,7 @@ class HintTierCard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _TierButton(
+                    child: SheetButton(
                       label: 'Tonton iklan',
                       icon: KoIcon(
                         KoIcons.ad,
@@ -269,7 +269,7 @@ class HintTierCard extends StatelessWidget {
                   ),
                   SizedBox(width: space.s8),
                   Expanded(
-                    child: _TierButton(
+                    child: SheetButton(
                       label: coins >= cost
                           ? '$cost koin'
                           : 'Koin kurang · $cost',
@@ -331,65 +331,6 @@ class _Reveal extends StatelessWidget {
       child: Text(
         text,
         style: context.koType.hintReveal.copyWith(color: c.onSuccess),
-      ),
-    );
-  }
-}
-
-/// Tombol "Tonton iklan" atau bayar koin di kartu tingkat. Nonaktif =
-/// abu-abu tanpa bayangan.
-class _TierButton extends StatelessWidget {
-  const _TierButton({
-    required this.label,
-    required this.icon,
-    required this.color,
-    required this.line,
-    required this.edge,
-    required this.onPressed,
-  });
-
-  final String label;
-  final Widget icon;
-  final Color color;
-  final Color line;
-  final Color edge;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.koColors;
-    final s = context.koSize;
-    final space = context.koSpace;
-    final enabled = onPressed != null;
-    return KoPressable(
-      onPressed: onPressed,
-      semanticLabel: label,
-      color: enabled ? color : c.disabled,
-      borderColor: enabled ? line : c.disabledLine,
-      borderWidth: s.border,
-      edgeColor: enabled ? edge : null,
-      depth: context.koShadow.pressIcon,
-      radius: context.koRadius.icon,
-      height: s.hintButton,
-      padding: EdgeInsets.symmetric(horizontal: space.s8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          icon,
-          SizedBox(width: space.s6),
-          Flexible(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                maxLines: 1,
-                style: context.koType.chipLabel.copyWith(
-                  color: enabled ? c.ink : c.onLockedSoft,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
