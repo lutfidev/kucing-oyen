@@ -101,7 +101,7 @@ class _HintSheetState extends State<HintSheet> {
                   ),
                 ),
                 SizedBox(width: space.s10),
-                _CoinChip(coins: coins),
+                KoCoinChip(coins: coins, style: KoCoinChipStyle.compact),
                 SizedBox(width: space.s10),
                 KoIconButton(
                   icon: KoIcons.close,
@@ -390,43 +390,6 @@ class _TierButton extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Saldo koin di kepala sheet: koin 22 px dan angka.
-class _CoinChip extends StatelessWidget {
-  const _CoinChip({required this.coins});
-
-  final int coins;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.koColors;
-    final s = context.koSize;
-    final space = context.koSpace;
-    return Semantics(
-      container: true,
-      liveRegion: true,
-      label: '$coins koin',
-      excludeSemantics: true,
-      child: Container(
-        height: s.chipMedium,
-        padding: EdgeInsetsDirectional.only(start: space.s6, end: space.s12),
-        decoration: BoxDecoration(
-          color: c.surface,
-          borderRadius: BorderRadius.circular(context.koRadius.pill),
-          border: Border.all(color: c.line, width: s.border),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CoinView(size: s.icon),
-            SizedBox(width: space.s6),
-            Text('$coins', maxLines: 1, style: context.koType.numberCoin),
-          ],
-        ),
       ),
     );
   }

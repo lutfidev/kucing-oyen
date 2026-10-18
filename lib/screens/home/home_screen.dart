@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: _CoinChip(coins: progress.coins),
+                  child: KoCoinChip(coins: progress.coins),
                 ),
                 Expanded(
                   child: Center(
@@ -87,42 +87,6 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Saldo koin di kiri atas (desain 01). Belum bisa ditekan.
-class _CoinChip extends StatelessWidget {
-  const _CoinChip({required this.coins});
-
-  final int coins;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.koColors;
-    final s = context.koSize;
-    final space = context.koSpace;
-    return Semantics(
-      container: true,
-      label: '$coins koin',
-      excludeSemantics: true,
-      child: Container(
-        height: s.chip,
-        padding: EdgeInsetsDirectional.only(start: space.s6, end: space.s14),
-        decoration: BoxDecoration(
-          color: c.surface,
-          borderRadius: BorderRadius.circular(context.koRadius.pill),
-          boxShadow: context.koShadow.coinChip,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CoinView(size: s.iconLarge),
-            SizedBox(width: space.s8),
-            Text('$coins', maxLines: 1, style: context.koType.chip),
-          ],
         ),
       ),
     );
