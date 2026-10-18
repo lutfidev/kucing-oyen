@@ -27,7 +27,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 11. Kartu aturan dan tutorial
 - [x] 12. Petunjuk dan koin
 - [x] 13. Lemari kostum
-- [ ] 14. Koin tambahan: tonton iklan dan bonus harian
+- [x] 14. Koin tambahan: tonton iklan dan bonus harian
 - [ ] 15. Polish dan rilis Android
 
 ---
@@ -138,9 +138,11 @@ Selesai: layar Lemari Kostum (desain 12, rute `/kostum`) dari tombol di Beranda,
 
 > Fitur ini tidak ada di daftar "Isi versi pertama" GDD, tapi tombolnya ada di Beranda dan desainnya sudah jadi. Baca `docs/design/source/12-lemari-kostum.html` dan `14-sprite-oyen-arah-pose.html`. Grid kostum (peci, sarung, koki, kacamata) dengan pratinjau Oyen, harga koin persis desain, beli, pakai, dan simpan pilihan. Oyen di papan dan di layar hasil memakai kostum terpilih (gambar Oyen dari langkah 5 sudah mendukung `costume`). Test: beli, pakai, koin tidak cukup.
 
-## 14. Koin tambahan: tonton iklan dan bonus harian
+## 14. Koin tambahan: tonton iklan dan bonus harian ✅
 
 **Hasil:** pemain bisa menambah koin dengan menonton iklan berhadiah dan mendapat bonus koin harian.
+
+Selesai: sheet "Tambah Koin" dari chip koin Beranda (bertitik selama bonus belum diambil) dan Lemari Kostum, dengan bonus harian 20 koin sekali per hari kalender dan iklan berhadiah +20 koin paling banyak 5 kali sehari (angka keputusan saya atas permintaan pemilik repo). Hari klaim dan jatah iklan tersimpan lewat `ProgressStore` (model Dart murni `DailyRewards` di `lib/game/model/rewards.dart`), jam bisa diganti di test (`ProgressController.clock`), iklan tetap lewat `RewardedAds` palsu. Ketiga chip koin disatukan menjadi `KoCoinChip`. Rencana di `docs/superpowers/plans/`; keputusan lain di `docs/DESIGN_NOTES.md`.
 
 > Disetujui pemilik repo saat brainstorming langkah 12. Baca `docs/superpowers/specs/2026-10-17-hints-coins-design.md`, `docs/DESIGN_NOTES.md` bagian langkah 12, dan kode koin yang ada (`ProgressController.coins`, `RewardedAds`, `FakeRewardedAds`, chip koin Beranda). Tanyakan dulu ke pemilik repo: berapa koin per iklan, batas iklan per hari (kalau ada), besar bonus harian, dan di mana tombolnya (mis. "Tonton iklan, koin ×2" di layar Berhasil, atau chip koin Beranda). Desainnya belum ada: buat dengan gaya desain yang ada (lihat sheet Petunjuk dan Lemari Kostum), cek lewat potret layar, dan catat. Iklan tetap lewat `RewardedAds` (palsu sampai langkah 15). Bonus harian butuh tanggal: simpan hari terakhir klaim lewat `ProgressStore` dan buat jam bisa diganti di test. Test: koin bertambah sekali per iklan yang selesai, iklan gagal tidak menambah, bonus hanya sekali per hari, saldo tersimpan.
 
@@ -148,4 +150,4 @@ Selesai: layar Lemari Kostum (desain 12, rute `/kostum`) dari tombol di Beranda,
 
 **Hasil:** app bundle release yang siap diunggah ke Play Console.
 
-> Tanyakan dulu ke pemilik repo: `applicationId` final (sekarang `com.example.kucing_oren`), ID AdMob, dan isi layar Pengaturan (GDD dan desain belum mengaturnya; minimal reset progres). Lalu: nama app "Kucing Oren", ikon launcher dan splash dari palet desain, layar Pengaturan, iklan berhadiah asli (`google_mobile_ads`) menggantikan implementasi palsu dari langkah 12 (dipakai petunjuk dan iklan koin langkah 14), signing release dengan keystore di luar repo, dan `flutter build appbundle`. Centang daftar "Isi versi pertama" di GDD. Bereskan juga temuan kecil review langkah 13: komentar `_MenuButton` di `home_screen.dart` yang masih bilang belum bisa ditekan; satukan dua `_CoinChip` (Lemari Kostum dan sheet Petunjuk) jadi satu widget dengan varian ukuran di `lib/widgets/`; di `buyCostume` simpan kostum dulu baru koin supaya kegagalan menguntungkan pemain; `unawaited(...)` untuk `buyCostume`/`wearCostume` di `ClosetScreen`; hitungan tinggi pratinjau Lemari Kostum (`rest`) yang mengulang jarak Column dan faktor 1,25; koin label harga kartu kostum memakai garis 2,4 seperti desain 12 (sekarang `coinPlainSvg` 2); komentar dokumentasi yang lewat 80 kolom di `progress_scope.dart` dan `test_helpers.dart`.
+> Tanyakan dulu ke pemilik repo: `applicationId` final (sekarang `com.example.kucing_oren`), ID AdMob, dan isi layar Pengaturan (GDD dan desain belum mengaturnya; minimal reset progres). Lalu: nama app "Kucing Oren", ikon launcher dan splash dari palet desain, layar Pengaturan, iklan berhadiah asli (`google_mobile_ads`) menggantikan implementasi palsu dari langkah 12 (dipakai petunjuk dan iklan koin langkah 14), signing release dengan keystore di luar repo, dan `flutter build appbundle`. Centang daftar "Isi versi pertama" di GDD. Bereskan juga temuan kecil review langkah 13: komentar `_MenuButton` di `home_screen.dart` yang masih bilang belum bisa ditekan; di `buyCostume` simpan kostum dulu baru koin supaya kegagalan menguntungkan pemain; `unawaited(...)` untuk `buyCostume`/`wearCostume` di `ClosetScreen`; hitungan tinggi pratinjau Lemari Kostum (`rest`) yang mengulang jarak Column dan faktor 1,25; koin label harga kartu kostum memakai garis 2,4 seperti desain 12 (sekarang `coinPlainSvg` 2); komentar dokumentasi yang lewat 80 kolom di `progress_scope.dart` dan `test_helpers.dart`.
