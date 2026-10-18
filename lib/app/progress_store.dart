@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/model/costumes.dart';
 import '../game/model/hints.dart';
 import '../game/model/progress.dart';
+import '../game/render/oyen.dart';
 
 /// Tempat menyimpan [Progress], tutorial yang sudah selesai, saldo koin,
-/// dan tingkat petunjuk yang terbuka di perangkat. Antarmukanya kecil
+/// tingkat petunjuk yang terbuka, dan kostum Oyen di perangkat. Antarmukanya kecil
 /// supaya test bisa memakai [MemoryProgressStore].
 abstract interface class ProgressStore {
   Future<Progress> load();
@@ -23,6 +25,11 @@ abstract interface class ProgressStore {
   /// Id level → tingkat petunjuk tertinggi yang terbuka (1–3).
   Future<Map<int, int>> loadHints();
   Future<void> saveHints(Map<int, int> tiers);
+
+  /// Kostum yang dimiliki dan dipakai; [Wardrobe.initial] kalau belum
+  /// pernah disimpan.
+  Future<Wardrobe> loadWardrobe();
+  Future<void> saveWardrobe(Wardrobe wardrobe);
 }
 
 /// Simpanan di memori (test, atau kalau penyimpanan perangkat tidak ada).
@@ -34,6 +41,9 @@ class MemoryProgressStore implements ProgressStore {
 
   /// Tingkat petunjuk yang terakhir disimpan.
   Map<int, int> hints = const {};
+
+  /// Kostum yang terakhir disimpan.
+  Wardrobe wardrobe = Wardrobe.initial;
 
   /// Progres yang terakhir disimpan.
   Progress saved;
@@ -70,11 +80,19 @@ class MemoryProgressStore implements ProgressStore {
 
   @override
   Future<void> saveHints(Map<int, int> tiers) async => hints = tiers;
+
+  @override
+  Future<Wardrobe> loadWardrobe() async => wardrobe;
+
+  @override
+  Future<void> saveWardrobe(Wardrobe wardrobe) async =>
+      this.wardrobe = wardrobe;
 }
 
 /// Simpanan lokal lewat `shared_preferences`: JSON `{"id level": bintang}`,
-/// daftar id level yang tutorialnya selesai, saldo koin, dan JSON
-/// `{"id level": tingkat petunjuk}`.
+/// daftar id level yang tutorialnya selesai, saldo koin, JSON
+/// `{"id level": tingkat petunjuk}`, dan nama kostum yang dimiliki dan
+/// dipakai.
 class PrefsProgressStore implements ProgressStore {
   PrefsProgressStore([SharedPreferencesAsync? prefs])
     : _prefs = prefs ?? SharedPreferencesAsync();
@@ -83,6 +101,8 @@ class PrefsProgressStore implements ProgressStore {
   static const tutorialsKey = 'tutorial.done';
   static const coinsKey = 'coins';
   static const hintsKey = 'hints.tier';
+  static const ownedKey = 'costume.owned';
+  static const wearingKey = 'costume.wearing';
 
   final SharedPreferencesAsync _prefs;
 
@@ -159,4 +179,27 @@ class PrefsProgressStore implements ProgressStore {
       for (final id in tiers.keys.toList()..sort()) '$id': tiers[id],
     }),
   );
+
+  /// Nama kostum yang tidak dikenal dibuang; [Wardrobe] mengembalikan
+  /// kostum dipakai yang tidak dimiliki ke Polos.
+  @override
+  Future<Wardrobe> loadWardrobe() async {
+    OyenCostume? parse(String? name) => OyenCostume.values.asNameMap()[name];
+    return Wardrobe(
+      owned: [
+        for (final name in await _prefs.getStringList(ownedKey) ?? const [])
+          ?parse(name),
+      ],
+      wearing: parse(await _prefs.getString(wearingKey)) ?? OyenCostume.none,
+    );
+  }
+
+  @override
+  Future<void> saveWardrobe(Wardrobe wardrobe) => Future.wait([
+    _prefs.setStringList(ownedKey, [
+      for (final c in OyenCostume.values)
+        if (wardrobe.owns(c)) c.name,
+    ]),
+    _prefs.setString(wearingKey, wardrobe.wearing.name),
+  ]);
 }

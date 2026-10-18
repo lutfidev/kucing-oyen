@@ -3,7 +3,9 @@ import 'package:kucing_oren/app/hint_source.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
+import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/progress.dart';
+import 'package:kucing_oren/game/render/oyen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
@@ -89,6 +91,37 @@ void main() {
         expect(await PrefsProgressStore().loadHints(), isEmpty);
       }
     });
+    test('kostum: simpan lalu muat', () async {
+      final wardrobe = Wardrobe(
+        owned: {OyenCostume.peci, OyenCostume.koki},
+        wearing: OyenCostume.koki,
+      );
+      await PrefsProgressStore().saveWardrobe(wardrobe);
+      expect(await PrefsProgressStore().loadWardrobe(), wardrobe);
+      expect(
+        await SharedPreferencesAsync().getString(PrefsProgressStore.wearingKey),
+        'koki',
+      );
+    });
+
+    test('kostum: belum pernah disimpan = Polos', () async {
+      expect(await PrefsProgressStore().loadWardrobe(), Wardrobe.initial);
+    });
+
+    test(
+      'kostum rusak: id tak dikenal dibuang, dipakai kembali ke Polos',
+      () async {
+        final prefs = SharedPreferencesAsync();
+        await prefs.setStringList(PrefsProgressStore.ownedKey, [
+          'peci',
+          'topi',
+        ]);
+        await prefs.setString(PrefsProgressStore.wearingKey, 'sarung');
+        final wardrobe = await PrefsProgressStore().loadWardrobe();
+        expect(wardrobe.owned, {OyenCostume.none, OyenCostume.peci});
+        expect(wardrobe.wearing, OyenCostume.none);
+      },
+    );
   });
 
   group('ProgressController', () {
@@ -253,6 +286,65 @@ void main() {
       expect(c.hintTier(3), 0);
       // Tidak macet: tingkat yang sama bisa dicoba lagi.
       expect(await c.unlockHint(3, 1, HintPay.ad), HintUnlock.adFailed);
+    });
+  });
+
+  group('kostum', () {
+    test(
+      'beli dengan koin cukup: dipotong, dimiliki, dipakai, disimpan',
+      () async {
+        final c = testProgressWith(coins: 100);
+        var notified = 0;
+        c.addListener(() => notified++);
+        expect(await c.buyCostume(OyenCostume.peci), isTrue);
+        expect(c.coins, 40);
+        expect(c.wardrobe.wearing, OyenCostume.peci);
+        expect(notified, 1);
+        final store = c.store as MemoryProgressStore;
+        expect(store.coins, 40);
+        expect(store.wardrobe.owns(OyenCostume.peci), isTrue);
+        expect(store.wardrobe.wearing, OyenCostume.peci);
+      },
+    );
+
+    test('koin kurang: tidak ada yang berubah', () async {
+      final c = testProgressWith(coins: 59);
+      expect(await c.buyCostume(OyenCostume.peci), isFalse);
+      expect(c.coins, 59);
+      expect(c.wardrobe, Wardrobe.initial);
+      final store = c.store as MemoryProgressStore;
+      expect(store.coins, 59);
+      expect(store.wardrobe, Wardrobe.initial);
+    });
+
+    test('dua ketukan bersamaan hanya memotong sekali', () async {
+      final c = testProgressWith(coins: 100);
+      final first = c.buyCostume(OyenCostume.peci);
+      final second = c.buyCostume(OyenCostume.peci);
+      expect(await first, isTrue);
+      expect(await second, isFalse);
+      expect(c.coins, 40);
+    });
+
+    test('pakai hanya kostum yang dimiliki', () async {
+      final c = testProgressWith(coins: 100);
+      expect(await c.wearCostume(OyenCostume.sarung), isFalse);
+      await c.buyCostume(OyenCostume.peci);
+      expect(await c.wearCostume(OyenCostume.none), isTrue);
+      expect(c.wardrobe.wearing, OyenCostume.none);
+      expect(c.wardrobe.owns(OyenCostume.peci), isTrue);
+      final store = c.store as MemoryProgressStore;
+      expect(store.wardrobe.wearing, OyenCostume.none);
+    });
+
+    test('memuat kostum tersimpan', () async {
+      final wardrobe = Wardrobe(
+        owned: {OyenCostume.kacamata},
+        wearing: OyenCostume.kacamata,
+      );
+      final store = MemoryProgressStore()..wardrobe = wardrobe;
+      final c = await ProgressController.load(levels: testLevels, store: store);
+      expect(c.wardrobe, wardrobe);
     });
   });
 }

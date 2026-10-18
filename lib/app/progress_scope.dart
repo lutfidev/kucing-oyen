@@ -1,15 +1,17 @@
 import 'package:flutter/widgets.dart';
 
 import '../game/model/chapter.dart';
+import '../game/model/costumes.dart';
 import '../game/model/hints.dart';
 import '../game/model/progress.dart';
+import '../game/render/oyen.dart';
 import '../game/sim/sim.dart';
 import 'hint_source.dart';
 import 'progress_store.dart';
 import 'rewarded_ads.dart';
 
 /// Data level dan progres pemain untuk semua layar: bintang, tutorial,
-/// koin, dan petunjuk. Dimuat sekali sebelum aplikasi jalan (`main`), lalu
+/// koin, petunjuk, dan kostum Oyen. Dimuat sekali sebelum aplikasi jalan (`main`), lalu
 /// dibagikan lewat [ProgressScope].
 class ProgressController extends ChangeNotifier implements HintSource {
   ProgressController({
@@ -19,14 +21,16 @@ class ProgressController extends ChangeNotifier implements HintSource {
     Set<int> tutorialsDone = const {},
     this._coins = 0,
     Map<int, int> hints = const {},
+    Wardrobe? wardrobe,
     RewardedAds? ads,
   }) : levels = List.unmodifiable(levels),
        _tutorialsDone = Set.unmodifiable(tutorialsDone),
        _hints = Map.unmodifiable(hints),
+       _wardrobe = wardrobe ?? Wardrobe.initial,
        ads = ads ?? FakeRewardedAds(),
        chapters = List.unmodifiable(chaptersOf(levels));
 
-  /// Memuat progres, tutorial, koin, dan petunjuk dari [store]. Koin yang
+  /// Memuat progres, tutorial, koin, petunjuk, dan kostum dari [store]. Koin yang
   /// belum pernah disimpan (progres dari sebelum ada koin) dihitung dari
   /// total bintang.
   static Future<ProgressController> load({
@@ -42,6 +46,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
       tutorialsDone: await store.loadTutorials(),
       coins: await store.loadCoins() ?? progress.totalStars * coinsPerStar,
       hints: await store.loadHints(),
+      wardrobe: await store.loadWardrobe(),
       ads: ads,
     );
   }
@@ -146,6 +151,33 @@ class ProgressController extends ChangeNotifier implements HintSource {
       if (pay == HintPay.coins) store.saveCoins(_coins),
     ]);
     return HintUnlock.opened;
+  }
+
+  Wardrobe _wardrobe;
+
+  /// Kostum yang dimiliki dan yang sedang dipakai Oyen.
+  Wardrobe get wardrobe => _wardrobe;
+
+  /// Membeli kostum [id] dengan koin lalu langsung memakainya. Gagal tanpa
+  /// efek kalau sudah dimiliki atau koin kurang. Semua perubahan terjadi
+  /// sebelum menyimpan, jadi ketukan kedua melihat kostumnya sudah dimiliki.
+  Future<bool> buyCostume(OyenCostume id) async {
+    if (!_wardrobe.canBuy(id, _coins)) return false;
+    _coins -= costumeOf(id).price;
+    _wardrobe = _wardrobe.buy(id);
+    notifyListeners();
+    await Future.wait([store.saveWardrobe(_wardrobe), store.saveCoins(_coins)]);
+    return true;
+  }
+
+  /// Memakai kostum [id]; gagal kalau belum dimiliki.
+  Future<bool> wearCostume(OyenCostume id) async {
+    if (!_wardrobe.owns(id)) return false;
+    if (_wardrobe.wearing == id) return true;
+    _wardrobe = _wardrobe.wear(id);
+    notifyListeners();
+    await store.saveWardrobe(_wardrobe);
+    return true;
   }
 
   /// Menandai tutorial level [id] selesai supaya tidak muncul lagi.
