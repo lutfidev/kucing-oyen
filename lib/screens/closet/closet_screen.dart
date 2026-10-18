@@ -47,81 +47,74 @@ class _ClosetScreenState extends State<ClosetScreen> {
     return Scaffold(
       backgroundColor: c.cream,
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, box) {
-            // Pratinjau mengisi sisa tempat (paling besar seukuran desain);
-            // di layar pendek berhenti di skala terkecil dan isinya digulir.
-            final scaler = MediaQuery.textScalerOf(context);
-            final rows = (costumes.length / CostumeGrid.columns).ceil();
-            final rest =
-                space.s8 +
-                s.iconButton +
-                space.s8 +
-                space.s6 +
-                scaler.scale(t.heading.fontSize!) * 1.25 +
-                space.s16 +
-                rows * s.costumeCard +
-                (rows - 1) * space.s10 +
-                space.s24 +
-                space.s4 +
-                s.button +
-                context.koShadow.press +
-                space.s32;
-            final art = ClosetArt.viewBox.height;
-            final preview = (box.maxHeight - rest).clamp(
-              art * s.closetMinScale,
-              art,
-            );
-
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: box.maxHeight),
-                child: IntrinsicHeight(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: space.gutter),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SizedBox(height: space.s8),
-                        ClosetBar(
-                          coins: coins,
-                          onBack: () => context.go(AppRoutes.home),
-                        ),
-                        SizedBox(height: space.s8),
-                        SizedBox(
-                          height: preview,
-                          child: ClosetPreview(costume: selected),
-                        ),
-                        SizedBox(height: space.s6),
-                        Semantics(
-                          liveRegion: true,
-                          child: Text(
-                            costume.name,
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            style: t.heading.copyWith(color: c.ink),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: space.gutter),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(height: space.s8),
+              ClosetBar(coins: coins, onBack: () => context.go(AppRoutes.home)),
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, box) {
+                    // Pratinjau mengisi sisa tempat (paling besar seukuran
+                    // desain); di layar pendek berhenti di skala terkecil
+                    // dan grid digulir, tombol aksi tetap terlihat.
+                    final scaler = MediaQuery.textScalerOf(context);
+                    final rows = (costumes.length / CostumeGrid.columns).ceil();
+                    final rest =
+                        space.s8 +
+                        space.s6 +
+                        scaler.scale(t.heading.fontSize!) * 1.25 +
+                        space.s16 +
+                        rows * s.costumeCard +
+                        (rows - 1) * space.s10 +
+                        space.s24 +
+                        space.s4;
+                    final art = ClosetArt.viewBox.height;
+                    final preview = (box.maxHeight - rest).clamp(
+                      art * s.closetMinScale,
+                      art,
+                    );
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(height: space.s8),
+                          SizedBox(
+                            height: preview,
+                            child: ClosetPreview(costume: selected),
                           ),
-                        ),
-                        SizedBox(height: space.s16),
-                        CostumeGrid(
-                          wardrobe: wardrobe,
-                          selected: selected,
-                          onSelect: (id) => setState(() => _selected = id),
-                        ),
-                        SizedBox(height: space.s24 + space.s4),
-                        const Spacer(),
-                        KoButton(
-                          label: closetActionLabel(action, costume),
-                          onPressed: enabled ? act : null,
-                        ),
-                        SizedBox(height: space.s32),
-                      ],
-                    ),
-                  ),
+                          SizedBox(height: space.s6),
+                          Semantics(
+                            liveRegion: true,
+                            child: Text(
+                              costume.name,
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              style: t.heading.copyWith(color: c.ink),
+                            ),
+                          ),
+                          SizedBox(height: space.s16),
+                          CostumeGrid(
+                            wardrobe: wardrobe,
+                            selected: selected,
+                            onSelect: (id) => setState(() => _selected = id),
+                          ),
+                          SizedBox(height: space.s24 + space.s4),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
-            );
-          },
+              KoButton(
+                label: closetActionLabel(action, costume),
+                onPressed: enabled ? act : null,
+              ),
+              SizedBox(height: space.s32),
+            ],
+          ),
         ),
       ),
     );
