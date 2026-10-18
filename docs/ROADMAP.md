@@ -26,7 +26,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 10. Putar ulang
 - [x] 11. Kartu aturan dan tutorial
 - [x] 12. Petunjuk dan koin
-- [ ] 13. Lemari kostum
+- [x] 13. Lemari kostum
 - [ ] 14. Koin tambahan: tonton iklan dan bonus harian
 - [ ] 15. Polish dan rilis Android
 
@@ -130,9 +130,11 @@ Selesai: 10 koin per bintang yang pertama kali didapat (sumber koin yang disepak
 
 > Baca `docs/design/source/10-petunjuk.html` dan GDD bagian "Petunjuk". GDD belum mengatur cara pemain mendapat koin: tanyakan ke pemilik repo di awal sesi sebelum menulis kode, lalu catat jawabannya. Tiga tingkat dibuka berurutan: (1) sorot petak benda pertama, (2) tunjukkan jenis benda untuk petak itu, (3) tampilkan solusi bintang 3 lengkap. Sumbernya `level.solution`, yang di langkah 2 sudah terbukti termasuk solusi minimum. Tiap tingkat dibuka dengan "Tonton iklan" atau koin, dengan harga persis seperti desain. Iklan lewat antarmuka `RewardedAds` dengan implementasi palsu yang selalu berhasil; SDK iklan asli dipasang di langkah 15. Koin dan petunjuk yang sudah terbuka disimpan per level. Test: urutan buka tingkat, koin berkurang, petunjuk tampil di papan.
 
-## 13. Lemari kostum
+## 13. Lemari kostum ✅
 
 **Hasil:** kostum bisa dibeli dengan koin dan dipakai Oyen.
+
+Selesai: layar Lemari Kostum (desain 12, rute `/kostum`) dari tombol di Beranda, dengan pratinjau Oyen di lemari, grid lima kostum dengan harga desain (Polos 0, Peci 60, Sarung 90, Topi Koki 150, Kacamata 45), serta tombol beli dan pakai. Kostum yang dimiliki dan dipakai tersimpan lewat `ProgressStore` (model Dart murni `Wardrobe` di `lib/game/model/costumes.dart`). Oyen memakai kostum terpilih di papan, putar ulang, layar hasil, dan tutorial. Desain dan rencana di `docs/superpowers/`; keputusan lain di `docs/DESIGN_NOTES.md`.
 
 > Fitur ini tidak ada di daftar "Isi versi pertama" GDD, tapi tombolnya ada di Beranda dan desainnya sudah jadi. Baca `docs/design/source/12-lemari-kostum.html` dan `14-sprite-oyen-arah-pose.html`. Grid kostum (peci, sarung, koki, kacamata) dengan pratinjau Oyen, harga koin persis desain, beli, pakai, dan simpan pilihan. Oyen di papan dan di layar hasil memakai kostum terpilih (gambar Oyen dari langkah 5 sudah mendukung `costume`). Test: beli, pakai, koin tidak cukup.
 

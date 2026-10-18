@@ -86,6 +86,7 @@ class LevelView extends StatefulWidget {
     this.tutorial,
     this.onTutorialDone,
     this.hints,
+    this.costume = OyenCostume.none,
   });
 
   final Level level;
@@ -113,6 +114,10 @@ class LevelView extends StatefulWidget {
 
   /// Saldo koin dan petunjuk yang terbuka; null = tanpa tombol Petunjuk.
   final HintSource? hints;
+
+  /// Kostum Oyen dari Lemari Kostum: di papan, layar hasil, putar ulang,
+  /// dan tutorial.
+  final OyenCostume costume;
 
   @override
   State<LevelView> createState() => _LevelViewState();
@@ -197,7 +202,9 @@ class _LevelViewState extends State<LevelView>
   /// diangkat dari papan), petak tujuan yang menyala, tanda petunjuk, dan
   /// Oyen tidur di petak awalnya. Fase jalan: keadaan papan di langkah yang
   /// tampil.
-  BoardScene _buildScene() {
+  BoardScene _buildScene() => _undressedScene().dressed(widget.costume);
+
+  BoardScene _undressedScene() {
     final run = _run;
     if (run != null) {
       return runScene(_level.map, _session.placed, run.frames, run.clock.step);
@@ -530,6 +537,7 @@ class _LevelViewState extends State<LevelView>
                       onNext: widget.onNext,
                       onReplay: _openReplay,
                       coins: _coinsEarned,
+                      costume: widget.costume,
                     ),
                   ),
                 ),
@@ -540,6 +548,7 @@ class _LevelViewState extends State<LevelView>
                   session: _session,
                   onBack: _closeReplay,
                   onMap: widget.onBack,
+                  costume: widget.costume,
                 ),
               ),
             if (_tutorial case final tutorial?
@@ -552,6 +561,7 @@ class _LevelViewState extends State<LevelView>
                       ? context.koRadius.primary
                       : context.koRadius.slot,
                   onSkip: _finishTutorial,
+                  costume: widget.costume,
                 ),
               ),
             if (drag != null) _lifted(drag),

@@ -79,6 +79,7 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.scrimLight,
     required this.successSoft,
     required this.disabledLine,
+    required this.priceTag,
   });
 
   static const standard = KoColors(
@@ -153,6 +154,7 @@ class KoColors extends ThemeExtension<KoColors> {
     scrimLight: Color(0x8C2E1E10), // rgba(46,30,16,.55),
     successSoft: Color(0xFFE3F5F1),
     disabledLine: Color(0xFFD8C3A2),
+    priceTag: Color(0xFFFFF1C9),
   );
 
   /// Latar semua layar.
@@ -340,6 +342,9 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Garis tombol nonaktif di kartu petunjuk yang terkunci.
   final Color disabledLine;
 
+  /// Label harga kostum yang belum dimiliki (desain 12).
+  final Color priceTag;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -413,6 +418,7 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? scrimLight,
     Color? successSoft,
     Color? disabledLine,
+    Color? priceTag,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -486,6 +492,7 @@ class KoColors extends ThemeExtension<KoColors> {
       scrimLight: scrimLight ?? this.scrimLight,
       successSoft: successSoft ?? this.successSoft,
       disabledLine: disabledLine ?? this.disabledLine,
+      priceTag: priceTag ?? this.priceTag,
     );
   }
 
@@ -565,6 +572,7 @@ class KoColors extends ThemeExtension<KoColors> {
       scrimLight: c(scrimLight, other.scrimLight),
       successSoft: c(successSoft, other.successSoft),
       disabledLine: c(disabledLine, other.disabledLine),
+      priceTag: c(priceTag, other.priceTag),
     );
   }
 }

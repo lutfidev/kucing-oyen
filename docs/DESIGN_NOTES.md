@@ -138,3 +138,14 @@ Keputusan saat desain (`docs/design/source/`), GDD, data level, dan roadmap tida
 - **"+N koin" di layar hasil** (tidak ada di desain 06 dan 07): kotak angka ketiga di samping langkah dan benda, dengan koin desain 01, hanya kalau ada koin baru (Berhasil dan vas pecah). Di layar 360 px label "benda dipakai" mengecil sedikit supaya tiga kotak muat.
 - **Token baru.** Warna `scrimLight` (55%), `successSoft` (`#E3F5F1`), `disabledLine` (`#D8C3A2`). Ukuran `hintButton` 46, `iconCompact` 18, `lockedOpacity` 0,75. Tipografi `numberCoin` (Fredoka 600/16), `numberTier` (Fredoka 700/16), `hintReveal` (Nunito 800/14, tinggi baris 1,35). Bayangan `coinChip` (garis padat 2 px + 0 6 14). Ikon `KoIcons.ad`. Koin disalin utuh dari desain (`coinSvg`, `coinPlainSvg`).
 - **Test.** Selama tanda petunjuk tampil, petak berkedip terus dan mesin Flame tidak berhenti, jadi test layar level dengan petunjuk terbuka memakai `settle` atau memajukan waktu per bingkai, bukan `pumpAndSettle`.
+
+## Langkah 13: lemari kostum
+
+- **Pilih, beli, pakai** mengikuti logika desain 12: menekan kartu hanya mengganti pratinjau, kostum yang dipakai baru berubah lewat tombol aksi. "Beli" langsung memotong koin dan memakai kostumnya, tanpa dialog konfirmasi (desain tidak punya). Keluar layar tanpa menekan tombol tidak mengubah apa pun.
+- **Kartu terpilih saat layar dibuka** = kostum yang sedang dipakai (contoh desain memilih Peci hanya untuk pamer).
+- **Simpanan**: kunci `costume.owned` (daftar nama kostum) dan `costume.wearing`. Nama yang tidak dikenal dibuang, Polos selalu dimiliki, dan kostum dipakai yang tidak dimiliki kembali ke Polos.
+- **Oyen berkostum** di papan fase atur dan fase jalan, putar ulang, layar Berhasil dan vas pecah, papan pudar layar Oyen bosan, dan kartu tutorial. Kartu aturan tetap polos karena isinya diagram aturan. Desain Oyen menyembunyikan peci, topi koki, dan kacamata saat tidur, dan sarung hanya tampil di pose normal, jadi Oyen tidur (Beranda, awal fase atur, layar Oyen bosan) tampak polos. Itu sesuai desain.
+- **Tombol aksi** memakai `KoButton` ukuran sedang (64 px, radius 20) supaya sama dengan tombol lain, bukan 66 px radius 22 seperti desain. Padding label kartu 8 px (desain 9; tidak ada token 9).
+- **Layar pendek**: tombol aksi tetap menempel di bawah. Pratinjau lemari mengecil sampai `closetMinScale` (0,5), lalu pratinjau dan grid di atas tombol bisa digulir. Nama kostum yang panjang di kartu mengecil sedikit di layar 360 px.
+- **Token baru.** Warna `priceTag` (`#FFF1C9`). Tipografi `numberCoinLarge` (Fredoka 600/17, chip koin) dan `cardLabel` (Fredoka 600/16, nama kostum). Ukuran `costumeCard` 104, `costumeArt` 64, `oyenCostume` 56, `oyenCloset` 168, `closetMinScale` 0,5. Lemari disalin utuh dari desain (`closetSvg`).
+

@@ -21,6 +21,7 @@ Future<void> pumpResult(
   Size size = const Size(390, 844),
   bool disableAnimations = false,
   int coins = 0,
+  OyenCostume costume = OyenCostume.none,
 }) async {
   _taps.clear();
   setScreenSize(tester, size);
@@ -39,6 +40,7 @@ Future<void> pumpResult(
           onRestart: () => _taps.add('ulangi'),
           onNext: () => _taps.add('lanjut'),
           coins: coins,
+          costume: costume,
         ),
       ),
     ),
@@ -326,6 +328,49 @@ void main() {
       await pumpResult(tester, resultOf(levels[12], fishOnly));
       await tester.pump();
       expect(tester.getSize(find.byType(VaseArt)), ResultArt.vaseCard);
+    });
+  });
+
+  group('kostum', () {
+    OyenLook eating(WidgetTester tester) => tester
+        .widget<OyenView>(
+          find.byWidgetPredicate(
+            (w) => w is OyenView && w.look.pose == OyenPose.eat,
+          ),
+        )
+        .look;
+
+    testWidgets('Berhasil: Oyen makan memakai kostum', (tester) async {
+      await pumpResult(
+        tester,
+        resultOf(levels[0]),
+        disableAnimations: true,
+        costume: OyenCostume.koki,
+      );
+      expect(find.byType(SuccessResult), findsOneWidget);
+      expect(eating(tester).costume, OyenCostume.koki);
+    });
+
+    testWidgets('vas pecah: Oyen makan memakai kostum', (tester) async {
+      await pumpResult(
+        tester,
+        resultOf(levels[12], fishOnly),
+        disableAnimations: true,
+        costume: OyenCostume.kacamata,
+      );
+      expect(find.byType(VaseResult), findsOneWidget);
+      expect(eating(tester).costume, OyenCostume.kacamata);
+    });
+
+    testWidgets('Oyen bosan: papan pudar memakai kostum', (tester) async {
+      await pumpResult(
+        tester,
+        resultOf(levels[12]),
+        disableAnimations: true,
+        costume: OyenCostume.sarung,
+      );
+      final board = tester.widget<RestBoard>(find.byType(RestBoard));
+      expect(board.scene.oyen!.look.costume, OyenCostume.sarung);
     });
   });
 }

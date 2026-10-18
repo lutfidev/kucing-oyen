@@ -5,6 +5,7 @@ import 'package:kucing_oren/gallery/gallery_board_screen.dart';
 import 'package:kucing_oren/gallery/gallery_oyen_screen.dart';
 import 'package:kucing_oren/gallery/gallery_screen.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
+import 'package:kucing_oren/screens/closet/closet_screen.dart';
 import 'package:kucing_oren/screens/home/home_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
@@ -136,6 +137,27 @@ void main() {
       await settle(tester);
       expect(find.text('Ruang Tamu'), findsOneWidget);
     });
+  });
+
+  testWidgets('Beranda → Lemari Kostum → kembali (tombol dan sistem)', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tester.tap(find.bySemanticsLabel('Lemari Kostum'));
+    await settle(tester);
+    expect(find.byType(ClosetScreen), findsOneWidget);
+
+    await tester.tap(_back('Kembali ke Beranda'));
+    await settle(tester);
+    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(ClosetScreen), findsNothing);
+
+    await tester.tap(find.bySemanticsLabel('Lemari Kostum'));
+    await settle(tester);
+    await tester.binding.handlePopRoute();
+    await settle(tester);
+    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(ClosetScreen), findsNothing);
   });
 
   testWidgets('galeri (tanpa tombol di Beranda) → kembali ke Beranda', (

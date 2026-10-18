@@ -213,6 +213,23 @@ class BoardScene {
 
   Tile tileAt(Pos p) => tiles[p.y * columns + p.x];
 
+  /// Papan yang sama dengan Oyen memakai [costume] (Lemari Kostum).
+  BoardScene dressed(OyenCostume costume) {
+    final oyen = this.oyen;
+    if (oyen == null || oyen.look.costume == costume) return this;
+    return BoardScene(
+      tiles: tiles,
+      oyen: BoardOyen(
+        col: oyen.col,
+        row: oyen.row,
+        look: oyen.look.copyWith(costume: costume),
+      ),
+      facing: facing,
+      path: path,
+      trail: trail,
+    );
+  }
+
   /// Panah arah hadap tampil hanya saat Oyen tidur.
   bool get showFacing =>
       oyen != null && facing && oyen!.look.pose == OyenPose.sleep;

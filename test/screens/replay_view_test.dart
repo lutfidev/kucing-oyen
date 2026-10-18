@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
+import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
@@ -20,6 +21,7 @@ Future<void> _pumpReplay(
   WidgetTester tester,
   LevelSession session, {
   bool disableAnimations = false,
+  OyenCostume costume = OyenCostume.none,
 }) async {
   _taps.clear();
   setScreenSize(tester, const Size(390, 844));
@@ -36,6 +38,7 @@ Future<void> _pumpReplay(
           session: session,
           onBack: () => _taps.add('hasil'),
           onMap: () => _taps.add('peta'),
+          costume: costume,
         ),
       ),
     ),
@@ -329,5 +332,17 @@ void main() {
       expect(find.text('Bangunkan Oyen'), findsOneWidget);
       expect(find.byType(ResultView), findsNothing);
     });
+  });
+
+  testWidgets('Oyen putar ulang memakai kostum', (tester) async {
+    await _pumpReplay(
+      tester,
+      resultOf(levels[0]),
+      costume: OyenCostume.kacamata,
+    );
+    ReplayBoard board() => tester.widget<ReplayBoard>(find.byType(ReplayBoard));
+    expect(board().scene.oyen!.look.costume, OyenCostume.kacamata);
+    await _tapStep(tester, 'Maju satu langkah');
+    expect(board().scene.oyen!.look.costume, OyenCostume.kacamata);
   });
 }

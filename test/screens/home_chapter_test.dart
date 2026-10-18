@@ -65,16 +65,15 @@ void main() {
       expect(_label('0 dari 60 bintang'), findsOneWidget);
     });
 
-    testWidgets('Lemari Kostum dan Pengaturan belum berfungsi', (tester) async {
+    testWidgets('Lemari Kostum bisa ditekan, Pengaturan belum', (tester) async {
       await pumpApp(tester);
-      for (final label in ['Lemari Kostum', 'Pengaturan']) {
-        final button = tester.widget<KoPressable>(
-          find.byWidgetPredicate(
-            (w) => w is KoPressable && w.semanticLabel == label,
-          ),
-        );
-        expect(button.onPressed, isNull, reason: label);
-      }
+      KoPressable button(String label) => tester.widget<KoPressable>(
+        find.byWidgetPredicate(
+          (w) => w is KoPressable && w.semanticLabel == label,
+        ),
+      );
+      expect(button('Lemari Kostum').onPressed, isNotNull);
+      expect(button('Pengaturan').onPressed, isNull);
     });
   });
 
