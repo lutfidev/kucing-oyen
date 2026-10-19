@@ -185,3 +185,33 @@ Diputuskan pemilik repo saat diskusi 19 Okt 2026, sebelum langkah 15 dikerjakan.
 - **Bahasa terpilih** disimpan di kunci `settings.language` (nama `AppLanguage`; rusak = ikuti HP). "Ikuti bahasa HP" mencocokkan kode bahasa pertama yang didukung di daftar bahasa HP, selain itu Inggris; aplikasi ikut berganti saat bahasa HP diganti.
 - **Layar Pengaturan** (`/pengaturan`, tidak ada di desain) memakai gaya Lemari Kostum dan sheet Petunjuk: bar kembali + judul `headingLarge`, empat bagian berjudul overline (Bahasa, Tutorial, Progres, Tentang) dalam `KoCard`. Bahasa = lima baris dengan lingkaran centang hijau seperti kartu petunjuk terbuka, nama bahasa dalam bahasanya sendiri, langsung berganti saat diketuk. Tombol memakai `SheetButton` (baru: `labelColor`); "Reset progres" berlabel merah bata dan membuka sheet konfirmasi dengan tombol Batal (krem) dan Hapus (bata, teks putih). Sesudah tombol ditekan muncul pesan hijau di bawahnya (seperti pesan iklan gagal). Tentang: nama game, versi dari `package_info_plus` (barisnya disembunyikan kalau tidak bisa dibaca), kredit font, dan tombol Lisensi (`showLicensePage`). Belum ada tempat musik/efek suara dan Privasi (langkah 16 dan 17). Tidak ada token baru.
 - **Reset progres** mengikuti keputusan "Sebelum langkah 15"; koin disimpan 0 (bukan kosong) supaya tidak dihitung ulang dari bintang saat aplikasi dibuka lagi.
+
+## Langkah 16: musik dan efek suara
+
+- **Sumber** (pilihan pemilik repo, 19 Okt 2026): efek suara dari bunyi CC0, musik dibuat sendiri, dua lagu. Kredit di `assets/audio/LICENSE-sfx.txt` (ikut halaman Lisensi) dan baris "Efek suara: Kenney dan OpenGameArt (CC0)" di kartu Tentang. Berkas dibuat ulang dengan `tool/audio/make_sfx.py <folder sumber>` dan `tool/audio/make_music.py` (numpy + soundfile; OGG ditulis per blok karena libsndfile di Windows kehabisan stack kalau satu blok Vorbis panjang).
+- **Asal tiap efek suara** (semua CC0; mono 44,1 kHz, dipotong, dinormalisasi):
+
+  | Suara | Berkas | Sumber |
+  |---|---|---|
+  | `tap` | `click_002.ogg` | Kenney, Interface Sounds |
+  | `pick_up` | `maximize_009.ogg` | Kenney, Interface Sounds |
+  | `place` | `drop_002.ogg` | Kenney, Interface Sounds |
+  | `back` | `minimize_009.ogg` | Kenney, Interface Sounds |
+  | `wake` | `Meow.ogg` | IgnasD, OpenGameArt "Meow" |
+  | `eat` | `confirmation_001.ogg` | Kenney, Interface Sounds |
+  | `scared` | `kitten_mew-1.wav` | AntumDeluge, OpenGameArt "Kitten Mew" |
+  | `box` | `impactSoft_medium_001.ogg` | Kenney, Impact Sounds |
+  | `glass` | `impactGeneric_light_002.ogg` | Kenney, Impact Sounds |
+  | `vase` | `impactGlass_heavy_001.ogg` + `impactPlate_light_000.ogg` + `impactGlass_light_002.ogg` (dicampur) | Kenney, Impact Sounds |
+  | `star` | `glass_001.ogg` | Kenney, Interface Sounds |
+  | `bored` | `cat_softmew.wav` | Kerzoven, OpenGameArt "Cat Purr & Meow" |
+  | `coin` | `handleCoins.ogg` | Kenney, RPG Audio |
+
+  Pilihan ini berdasarkan nama berkas dan analisis panjang/kecerahan, belum didengar pemilik repo; dengarkan di `/galeri/suara` dan ganti baris di `SOUNDS` (`make_sfx.py`) kalau ada yang kurang cocok.
+- **Musik** (`make_music.py`, buatan sendiri, deterministik): `home` F mayor 108 BPM, marimba + petikan Karplus-Strong + bas + perkusi lembut, 16 birama (35,6 detik); `level` C mayor 84 BPM, kalimba + pad + bas, melodi lonceng hanya di 8 birama kedua, 16 birama (45,7 detik). Melodi ditulis tangan. Ekor nada dan gema di akhir dibungkus ke awal, jadi sambungan ulangnya mulus. Mono 32 kHz OGG, 282 KB dan 227 KB.
+- **Lagu per layar**: `musicFor(path)` = lagu level di `/babak/:n/level/:id` (termasuk fase jalan, layar hasil, dan putar ulang di dalam rute itu), lagu Beranda di layar lain (peta, Lemari Kostum, Pengaturan, galeri). Berganti dengan crossfade 0,4 detik; musik di volume 0,5 di bawah efek suara. Semua suara bercampur (fokus audio `mixWithOthers`), jadi efek suara tidak memotong musik.
+- **Momen bersuara**: tombol (`KoPressable`, baris bahasa dan sakelar, kartu babak, "Tonton putar ulang", "Lewati" tutorial), angkat/taruh/kembali ke baki (juga Kosongkan papan dan seretan batal), Oyen bangun, langkah fase jalan per `StepKind` (`stepSound`), bintang satu per satu saat muncul di layar Berhasil, koin sesudah bintang terakhir kalau ada koin baru (juga bonus harian dan iklan koin), Oyen bosan saat layar gagal dibuka.
+- **Sengaja senyap**: langkah jalan, berputar, dan duduk (4 langkah per detik akan bising); lompatan ke akhir saat kurangi gerak; putar ulang (slider bisa digeser cepat), kecuali bunyi tombol; bintang layar vas pecah yang tidak muncul bergerak (desain 07), di layar itu hanya koin; bintang saat kurangi gerak (koin tetap berbunyi). Selama musik dijeda (latar belakang, iklan) efek suara juga senyap.
+- **Bangun dan langkah 1**: langkah 1 langsung tampil saat Oyen dibangunkan, jadi suara bangun diikuti suara langkah 1 (mis. kaget air di level 13).
+- **Sakelar Musik dan Efek suara** di bagian pertama Pengaturan ("Suara"), kunci `settings.music` dan `settings.sfx` (bool; rusak = menyala), terpisah dari progres sehingga reset progres tidak mengubahnya. Baris bergaya baris bahasa, sakelar pil digambar dari token yang ada: lintasan `iconButton` × `checkBadge` hijau `success` (menyala) atau `line` (mati), bulatan putih `iconCompact` dengan jarak `s4`. Tidak ada token baru.
+- **Jeda**: musik dijeda saat aplikasi tidak terlihat (`AppLifecycleListener.onHide`/`onShow`) dan selama iklan berhadiah diputar (`GameAudio.pauseDuringAds` membungkus `RewardedAds`; langkah 17 tinggal membungkus iklan asli).
