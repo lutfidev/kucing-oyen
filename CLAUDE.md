@@ -1,6 +1,6 @@
 # Kucing Oren
 
-Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kardus) di papan 7x9, lalu Oyen si kucing oren bergerak sendiri mengikuti aturan tetap. Semua teks di dalam game memakai Bahasa Indonesia santai.
+Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kardus) di papan 7x9, lalu Oyen si kucing oren bergerak sendiri mengikuti aturan tetap. Semua teks di dalam game sekarang memakai Bahasa Indonesia santai; mulai langkah 15 roadmap, bahasa utama Inggris dengan pilihan Indonesia, Portugis Brasil, dan Rusia (lihat `docs/DESIGN_NOTES.md`, "Sebelum langkah 15").
 
 ## Sumber kebenaran
 

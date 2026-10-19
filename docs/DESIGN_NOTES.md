@@ -158,3 +158,14 @@ Keputusan saat desain (`docs/design/source/`), GDD, data level, dan roadmap tida
 - **Ikon baru** (desain belum punya): `KoIcons.plus` (garis 3,6 seperti centang tebal) dan `KoIcons.gift` (kado, garis 2,2 seperti bohlam).
 - **Chip koin bersama.** Tiga chip koin (Beranda, Lemari Kostum, sheet Petunjuk) disatukan menjadi `KoCoinChip` dengan tiga gaya; tampilan tanpa tombol sama dengan sebelumnya. Ini juga mengerjakan butir "satukan dua `_CoinChip`" dari daftar temuan review langkah 13.
 - **Tanpa token baru**: ukuran dan warna memakai token yang ada (`iconSmall`, `iconTiny`, `dot`, `brick`, `orange`, `success`).
+
+## Sebelum langkah 15: pasar, bahasa, iklan, Pengaturan
+
+Diputuskan pemilik repo saat diskusi 19 Okt 2026, sebelum langkah 15 dikerjakan. Langkah "Polish dan rilis Android" dipecah menjadi langkah 15 (bahasa dan Pengaturan), 16 (musik dan efek suara), dan 17 (rilis).
+
+- **Pemain dan pasar.** Pemain pertama keluarga dan teman pemilik repo. Pasar utama AS, Kanada, dan negara lain; Indonesia tetap didukung tapi bukan pasar utama. Game tetap bisa dimainkan semua umur.
+- **Bahasa.** Inggris bahasa utama; Indonesia, Portugis Brasil, dan Rusia sebagai pilihan, bahasa lain bisa ditambah nanti. Bahasa awal mengikuti bahasa HP kalau didukung, selain itu Inggris. Pemain bisa memilih sendiri di Pengaturan. Ini menggantikan "Bahasa Indonesia santai" di GDD; nadanya tetap santai dan jenaka di semua bahasa.
+- **Font.** Fredoka (judul dan tombol) tidak punya huruf Sirilik; Nunito yang dibundel punya. Teks Rusia memakai Nunito tebal sebagai cadangan Fredoka (keputusan saya).
+- **Iklan tidak ditandai untuk anak** (keputusan pemilik repo, supaya pendapatan AdMob lebih besar). Konsekuensinya target audiens di Play Console 13+, bukan semua umur. Risiko: Google bisa menilai game ini menarik bagi anak (gambar imut, sasaran semua umur) dan meminta kepatuhan Families; kalau itu terjadi, permintaan iklan cukup diubah ke mode anak. Iklan yang dipersonalisasi butuh formulir persetujuan (UMP) di wilayah yang mewajibkan; dikerjakan di langkah 17.
+- **Isi Pengaturan.** Musik dan Efek suara (dua sakelar, langkah 16), Bahasa, Lihat tutorial lagi, Reset progres dengan konfirmasi, Privasi (kebijakan privasi dan "Atur persetujuan iklan", langkah 17), Tentang (versi, kredit, lisensi). Sengaja tidak ada: getar (game belum punya), kecepatan Oyen (sudah ada ×2), notifikasi dan simpan ke akun (butuh server), beri nilai (bisa ditambah setelah ada di Play Store).
+- **Reset progres** menghapus bintang, koin, kostum, petunjuk, dan tutorial. Koin ikut dihapus karena koin didapat dari bintang baru: tanpa itu reset lalu main ulang memberi koin tanpa batas. Jatah bonus harian dan iklan hari itu tetap, supaya tidak bisa diklaim ulang; pilihan bahasa dan suara juga tetap.
