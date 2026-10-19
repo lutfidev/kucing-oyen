@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/game_audio.dart';
 import '../../game/model/level_session.dart';
 import '../../game/model/run_frames.dart';
 import '../../game/render/render.dart';
@@ -259,17 +260,18 @@ class _ReplayLink extends StatelessWidget {
     final enabled = onPressed != null;
     final color = enabled ? c.ink : c.muted;
     final label = context.l10n.watchReplay;
+    final onTap = tapSound(context, onPressed);
     return Semantics(
       container: true,
       button: true,
       enabled: enabled,
       label: label,
-      onTap: onPressed,
+      onTap: onTap,
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         excludeFromSemantics: true,
-        onTap: onPressed,
+        onTap: onTap,
         child: Center(
           child: FittedBox(
             fit: BoxFit.scaleDown,

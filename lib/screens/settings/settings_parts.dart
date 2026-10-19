@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../app/game_audio.dart';
 import '../../app/language.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
@@ -125,6 +126,7 @@ class _LanguageRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
+    final tap = tapSound(context, onTap);
     final s = context.koSize;
     final space = context.koSpace;
     return Semantics(
@@ -132,11 +134,11 @@ class _LanguageRow extends StatelessWidget {
       selected: selected,
       inMutuallyExclusiveGroup: true,
       label: name,
-      onTap: onTap,
+      onTap: tap,
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: onTap,
+        onTap: tap,
         child: ConstrainedBox(
           constraints: BoxConstraints(minHeight: s.iconButton),
           child: Padding(

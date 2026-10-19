@@ -146,3 +146,13 @@ class AudioScope extends InheritedNotifier<GameAudio> {
   static GameAudio? maybeRead(BuildContext context) =>
       context.getInheritedWidgetOfExactType<AudioScope>()?.notifier;
 }
+
+/// [action] yang lebih dulu membunyikan [GameSound.tap]; null tetap null
+/// (tombol nonaktif senyap).
+VoidCallback? tapSound(BuildContext context, VoidCallback? action) =>
+    action == null
+    ? null
+    : () {
+        AudioScope.maybeRead(context)?.play(GameSound.tap);
+        action();
+      };

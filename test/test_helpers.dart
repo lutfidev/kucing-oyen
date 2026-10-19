@@ -152,25 +152,34 @@ final l10nId = lookupAppLocalizations(const Locale('id'));
 
 /// [MaterialApp] dengan tema dan teks aplikasi, untuk memompa satu layar
 /// tanpa rute. Bahasanya Indonesia kecuali [locale] diberikan.
-MaterialApp testApp({
+Widget testApp({
   Widget? home,
   TransitionBuilder? builder,
   Locale locale = const Locale('id'),
-}) => MaterialApp(
-  debugShowCheckedModeBanner: false,
-  theme: KoTheme.light(),
-  locale: locale,
-  localizationsDelegates: AppLocalizations.localizationsDelegates,
-  supportedLocales: AppLocalizations.supportedLocales,
-  builder: builder,
-  home: home,
-);
+  GameAudio? audio,
+}) {
+  final app = MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: KoTheme.light(),
+    locale: locale,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    builder: builder,
+    home: home,
+  );
+  return audio == null ? app : AudioScope(audio: audio, child: app);
+}
 
 /// Pompa satu widget dengan tema dan teks aplikasi.
-Future<void> pumpThemed(WidgetTester tester, Widget child) async {
+Future<void> pumpThemed(
+  WidgetTester tester,
+  Widget child, {
+  GameAudio? audio,
+}) async {
   await tester.pumpWidget(
     testApp(
       home: Scaffold(body: Center(child: child)),
+      audio: audio,
     ),
   );
 }
