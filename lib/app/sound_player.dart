@@ -61,6 +61,16 @@ class FakeSoundPlayer implements SoundPlayer {
 /// bercampur dengan musik (tidak saling merebut fokus audio). Error
 /// platform ditelan supaya game tetap jalan tanpa suara.
 class AudioplayersSoundPlayer implements SoundPlayer {
+  /// [newDeck] dan [setUpContext] hanya diganti di test, supaya crossfade
+  /// bisa diuji tanpa platform audio.
+  AudioplayersSoundPlayer({
+    MusicDeck Function()? newDeck,
+    this._setUpContext = true,
+  }) : _newDeck = newDeck ?? _AudioplayersDeck.new;
+
+  final MusicDeck Function() _newDeck;
+  final bool _setUpContext;
+
   /// Volume musik di bawah efek suara.
   static const musicVolume = 0.5;
   static const fadeTime = Duration(milliseconds: 400);
@@ -70,11 +80,11 @@ class AudioplayersSoundPlayer implements SoundPlayer {
   static const _maxOverlap = 3;
 
   final _pools = <GameSound, Future<AudioPool>>{};
-  AudioPlayer? _music;
+  MusicDeck? _music;
   MusicTrack? _track;
 
   /// Lagu lama yang sedang dipudarkan.
-  AudioPlayer? _fading;
+  MusicDeck? _fading;
   Timer? _fade;
   Future<void>? _context;
 
@@ -82,11 +92,14 @@ class AudioplayersSoundPlayer implements SoundPlayer {
   /// baru masih dimuat tidak terlewat.
   Future<void> _queue = Future.value();
 
-  Future<void> _ensureContext() => _context ??= _safe(
-    () => AudioPlayer.global.setAudioContext(
-      AudioContextConfig(focus: AudioContextConfigFocus.mixWithOthers).build(),
-    ),
-  );
+  Future<void> _ensureContext() => _context ??= _setUpContext
+      ? _safe(
+          () => AudioPlayer.global.setAudioContext(
+            AudioContextConfig(focus: AudioContextConfigFocus.mixWithOthers)
+                .build(),
+          ),
+        )
+      : Future.value();
 
   Future<void> _serial(Future<void> Function() action) =>
       _queue = _queue.then((_) => _safe(action));
@@ -106,12 +119,17 @@ class AudioplayersSoundPlayer implements SoundPlayer {
     if (track == _track && _music != null) return;
     await _ensureContext();
     await _finishFade();
-    _track = track;
     final old = _music;
-    final next = _music = AudioPlayer();
-    await next.setReleaseMode(ReleaseMode.loop);
-    await next.setVolume(old == null ? musicVolume : 0);
-    await next.play(AssetSource(track.asset));
+    final next = _newDeck();
+    try {
+      await next.start(track, old == null ? musicVolume : 0);
+    } on Object {
+      // Lagu lama tetap jalan dan tetap bisa dijeda atau dihentikan.
+      await _safe(next.dispose);
+      rethrow;
+    }
+    _music = next;
+    _track = track;
     if (old == null) return;
     _fading = old;
     var step = 0;
@@ -120,7 +138,12 @@ class AudioplayersSoundPlayer implements SoundPlayer {
       final t = step / _fadeSteps;
       unawaited(_safe(() => next.setVolume(musicVolume * t)));
       unawaited(_safe(() => old.setVolume(musicVolume * (1 - t))));
-      if (step == _fadeSteps) unawaited(_serial(_finishFade));
+      if (step == _fadeSteps) {
+        // Antrean bisa sibuk; jangan sampai volume lewat batas sambil
+        // menunggu lagu lama dibuang.
+        timer.cancel();
+        unawaited(_serial(_finishFade));
+      }
     });
   });
 
@@ -161,4 +184,38 @@ class AudioplayersSoundPlayer implements SoundPlayer {
       debugPrint('Suara gagal diputar: $error');
     }
   }
+}
+
+/// Satu pemutar lagu berulang. [AudioplayersSoundPlayer] memakai dua
+/// sekaligus saat crossfade.
+abstract interface class MusicDeck {
+  /// Memutar [track] berulang dari awal di [volume].
+  Future<void> start(MusicTrack track, double volume);
+  Future<void> setVolume(double volume);
+  Future<void> pause();
+  Future<void> resume();
+  Future<void> dispose();
+}
+
+class _AudioplayersDeck implements MusicDeck {
+  final _player = AudioPlayer();
+
+  @override
+  Future<void> start(MusicTrack track, double volume) async {
+    await _player.setReleaseMode(ReleaseMode.loop);
+    await _player.setVolume(volume);
+    await _player.play(AssetSource(track.asset));
+  }
+
+  @override
+  Future<void> setVolume(double volume) => _player.setVolume(volume);
+
+  @override
+  Future<void> pause() => _player.pause();
+
+  @override
+  Future<void> resume() => _player.resume();
+
+  @override
+  Future<void> dispose() => _player.dispose();
 }
