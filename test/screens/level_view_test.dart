@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:flame/game.dart' hide RouterComponent;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/hint_source.dart';
 import 'package:kucing_oren/game/kucing_game.dart';
 import 'package:kucing_oren/game/level_loader.dart';
 import 'package:kucing_oren/game/model/run_clock.dart';
+import 'package:kucing_oren/game/model/run_frames.dart';
+import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/l10n/names.dart';
@@ -34,6 +37,7 @@ Future<void> _pumpLevel(
   HintSource? hints,
   OyenCostume costume = OyenCostume.none,
   Tutorial? tutorial,
+  GameAudio? audio,
 }) async {
   _nextTaps = 0;
   setScreenSize(tester, size);
@@ -53,6 +57,7 @@ Future<void> _pumpLevel(
         costume: costume,
         tutorial: tutorial,
       ),
+      audio: audio,
     ),
   );
   // Petak petunjuk dan tutorial bergerak terus: tanpa pumpAndSettle.
@@ -1059,6 +1064,124 @@ void main() {
     testWidgets('tanpa sumber petunjuk tidak ada tombol', (tester) async {
       await _pumpLevel(tester, 13);
       expect(find.bySemanticsLabel('Petunjuk'), findsNothing);
+    });
+  });
+
+  group('suara', () {
+    testWidgets('angkat lalu taruh di petak menyala', (tester) async {
+      final audio = testAudio();
+      await _pumpLevel(tester, 13, audio: audio);
+      await _dragToTile(tester, Item.water, 3, 3);
+      expect(playedBy(audio), [GameSound.pickUp, GameSound.place]);
+    });
+
+    testWidgets('dilepas di luar papan dari baki: kembali', (tester) async {
+      final audio = testAudio();
+      await _pumpLevel(tester, 13, audio: audio);
+      await _drag(
+        tester,
+        tester.getCenter(_slot(Item.fish)),
+        tester.getCenter(find.text('Bangunkan Oyen')),
+      );
+      expect(playedBy(audio), [GameSound.pickUp, GameSound.back]);
+    });
+
+    testWidgets('dari papan ke luar papan: kembali ke baki', (tester) async {
+      final audio = testAudio();
+      await _pumpLevel(tester, 13, audio: audio);
+      await _dragToTile(tester, Item.water, 3, 3);
+      playedBy(audio).clear();
+      await _drag(
+        tester,
+        _tileCenter(tester, 3, 3),
+        tester.getCenter(_slot(Item.water)),
+      );
+      expect(playedBy(audio), [GameSound.pickUp, GameSound.back]);
+    });
+
+    testWidgets('Kosongkan papan: kembali', (tester) async {
+      final audio = testAudio();
+      await _pumpLevel(tester, 13, audio: audio);
+      await _dragToTile(tester, Item.water, 3, 3);
+      playedBy(audio).clear();
+      await tester.tap(find.bySemanticsLabel('Kosongkan papan'));
+      await tester.pump();
+      expect(playedBy(audio), [GameSound.tap, GameSound.back]);
+    });
+
+    for (final id in [13, 15]) {
+      testWidgets('level $id: bangun lalu suara tiap langkah', (tester) async {
+        final audio = testAudio();
+        final level = _levels[id - 1];
+        await _pumpLevel(tester, id, audio: audio);
+        for (final p in level.solution) {
+          await _dragToTile(tester, p.item, p.pos.x, p.pos.y);
+        }
+        playedBy(audio).clear();
+        await tester.tap(find.text('Bangunkan Oyen'));
+        await tester.pump();
+        final frames = runFrames(
+          level.board,
+          simulate(level.board, level.solution),
+        );
+        for (var i = 1; i < frames.length; i++) {
+          await tester.pump(RunClock.stepTime);
+        }
+        expect(playedBy(audio), [
+          GameSound.tap,
+          GameSound.wake,
+          for (final frame in frames) ?stepSound(frame),
+        ]);
+      });
+    }
+
+    testWidgets('maju satu langkah juga berbunyi', (tester) async {
+      final audio = testAudio();
+      final level = _levels[14];
+      await _pumpLevel(tester, 15, audio: audio);
+      for (final p in level.solution) {
+        await _dragToTile(tester, p.item, p.pos.x, p.pos.y);
+      }
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pump();
+      await tester.tap(find.text('Jeda'));
+      await tester.pump();
+      playedBy(audio).clear();
+      final frames = runFrames(
+        level.board,
+        simulate(level.board, level.solution),
+      );
+      for (var i = 2; i < frames.length; i++) {
+        await tester.tap(find.bySemanticsLabel('Maju satu langkah'));
+        await tester.pump();
+      }
+      final expected = [for (final frame in frames.skip(2)) ?stepSound(frame)];
+      expect(expected, isNotEmpty);
+      expect(playedBy(audio).where((s) => s != GameSound.tap), expected);
+    });
+
+    testWidgets('kurangi gerak: langsung ke akhir tanpa suara langkah', (
+      tester,
+    ) async {
+      final audio = testAudio();
+      final level = _levels[12];
+      await _pumpLevel(tester, 13, audio: audio, disableAnimations: true);
+      for (final p in level.solution) {
+        await _dragToTile(tester, p.item, p.pos.x, p.pos.y);
+      }
+      playedBy(audio).clear();
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pump();
+      expect(playedBy(audio), [GameSound.tap, GameSound.wake]);
+    });
+
+    testWidgets('efek suara mati: senyap', (tester) async {
+      final audio = testAudio(settings: const SoundSettings(effects: false));
+      await _pumpLevel(tester, 13, audio: audio);
+      await _dragToTile(tester, Item.water, 3, 3);
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pump(RunClock.stepTime);
+      expect(playedBy(audio), isEmpty);
     });
   });
 
