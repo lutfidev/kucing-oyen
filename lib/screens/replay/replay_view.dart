@@ -4,6 +4,8 @@ import '../../game/model/level_session.dart';
 import '../../game/model/replay.dart';
 import '../../game/model/run_frames.dart';
 import '../../game/render/render.dart';
+import '../../l10n/captions.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../result/result_parts.dart';
 import 'replay_parts.dart';
@@ -55,6 +57,8 @@ class _ReplayViewState extends State<ReplayView> {
   @override
   Widget build(BuildContext context) {
     final space = context.koSpace;
+    final l = context.l10n;
+    final captions = [for (final c in _captions) replayCaptionText(l, c)];
     return ResultPage(
       background: context.koColors.cream,
       children: [
@@ -78,11 +82,11 @@ class _ReplayViewState extends State<ReplayView> {
         LayoutBuilder(
           builder: (context, constraints) => ReplayCaption(
             step: _step,
-            text: _captions[_step],
+            text: captions[_step],
             lines: ReplayCaption.linesFor(
               context,
               constraints.maxWidth,
-              _captions,
+              captions,
             ),
           ),
         ),

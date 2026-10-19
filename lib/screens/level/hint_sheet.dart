@@ -6,6 +6,8 @@ import '../../game/sim/sim.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'level_sheet.dart';
+import '../../l10n/hint_texts.dart';
+import '../../l10n/l10n.dart';
 
 /// Membuka sheet Petunjuk (desain 10) untuk [level]. Ditutup dengan tombol
 /// tutup, ketuk latar gelap, tombol kembali sistem, atau tarik ke bawah.
@@ -123,7 +125,10 @@ class _HintSheetState extends State<HintSheet> {
         final List<Widget> cards;
         if (widget.level.solution.isEmpty) {
           cards = [
-            KoCard(borderColor: c.success, child: _Reveal(noItemsHintText)),
+            KoCard(
+              borderColor: c.success,
+              child: _Reveal(context.l10n.noItemsHint),
+            ),
           ];
         } else {
           cards = [
@@ -134,7 +139,7 @@ class _HintSheetState extends State<HintSheet> {
                 tier: tier,
                 open: tier <= opened,
                 ready: tier == opened + 1,
-                text: hintText(widget.level, tier),
+                text: hintTextFor(context.l10n, hintText(widget.level, tier)),
                 coins: coins,
                 waiting: _waiting == tier,
                 adFailed: _failed == tier,

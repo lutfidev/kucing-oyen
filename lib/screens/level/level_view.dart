@@ -15,6 +15,8 @@ import '../../game/model/run_clock.dart';
 import '../../game/model/run_frames.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/captions.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../replay/replay_view.dart';
@@ -325,8 +327,10 @@ class _LevelViewState extends State<LevelView>
       _drag = null;
       final board = _level.board;
       final frames = runFrames(board, _session.wake());
+      final l = context.l10n;
       final run = _Run(frames, [
-        for (var i = 0; i < frames.length; i++) runCaption(board, frames, i),
+        for (var i = 0; i < frames.length; i++)
+          runCaptionText(l, runCaption(board, frames, i)),
       ]);
       if (_reduceMotion) run.clock.skipToEnd();
       _run = run;
