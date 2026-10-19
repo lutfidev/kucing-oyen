@@ -33,6 +33,10 @@ flutter:
     # Lisensi font (ditampilkan di halaman lisensi aplikasi).
     - assets/fonts/OFL-Fredoka.txt
     - assets/fonts/OFL-Nunito.txt
+    # Musik (buatan sendiri) dan efek suara (CC0), lihat tool/audio/.
+    - assets/audio/music/
+    - assets/audio/sfx/
+    - assets/audio/LICENSE-sfx.txt
 
   # Font dibundel supaya tidak perlu diunduh saat aplikasi jalan.
   fonts:
