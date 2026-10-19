@@ -22,7 +22,7 @@ class GalleryScreen extends StatelessWidget {
       backLabel: 'Kembali ke Beranda',
       children: [
         GallerySection(
-          title: 'Gambar papan & Oyen',
+          title: 'Gambar papan, Oyen, dan suara',
           child: Wrap(
             spacing: space.s12,
             runSpacing: space.s16,
@@ -36,6 +36,11 @@ class GalleryScreen extends StatelessWidget {
                 label: 'Oyen',
                 kind: KoButtonKind.secondary,
                 onPressed: () => context.go(AppRoutes.galleryOyen),
+              ),
+              KoButton(
+                label: 'Suara',
+                kind: KoButtonKind.secondary,
+                onPressed: () => context.go(AppRoutes.gallerySound),
               ),
             ],
           ),

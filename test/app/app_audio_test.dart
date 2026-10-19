@@ -117,4 +117,24 @@ void main() {
     await settle(tester);
     expect(player.musicPaused, isFalse);
   });
+
+  testWidgets('galeri suara: kartu memutar suaranya tanpa bunyi tap', (
+    tester,
+  ) async {
+    final audio = testAudio();
+    final player = audio.player as FakeSoundPlayer;
+    await pumpApp(tester, location: AppRoutes.gallery, audio: audio);
+    await tester.tap(find.text('Suara'));
+    await tester.pumpAndSettle();
+    player.played.clear();
+
+    await tester.tap(find.byKey(const ValueKey('sound-vase')));
+    expect(player.played, [GameSound.vase]);
+
+    await tester.ensureVisible(find.byKey(const ValueKey('music-level')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('music-level')));
+    await tester.pump();
+    expect(player.music, MusicTrack.level);
+  });
 }

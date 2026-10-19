@@ -16,6 +16,9 @@ abstract final class AppRoutes {
   /// Galeri sprite Oyen (desain 14, 16).
   static const galleryOyen = '/galeri/oyen';
 
+  /// Galeri efek suara dan musik, untuk didengar di perangkat.
+  static const gallerySound = '/galeri/suara';
+
   /// Lemari Kostum (desain 12), dibuka dari Beranda.
   static const closet = '/kostum';
 

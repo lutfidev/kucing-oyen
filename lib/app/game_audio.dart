@@ -59,6 +59,8 @@ class GameAudio extends ChangeNotifier {
     unawaited(player.play(sound));
   }
 
+  /// Tidak memberi tahu pendengar: dipanggil dari pendengar router, yang
+  /// bisa jalan saat widget sedang dibangun.
   void setTrack(MusicTrack track) {
     if (track == _track) return;
     _track = track;
