@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/game_audio.dart';
 import '../../game/model/level_session.dart';
 import '../../game/model/run_frames.dart';
+import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/l10n.dart';
@@ -185,6 +186,7 @@ class SuccessResult extends StatelessWidget {
                   midStrokeWidth: ResultArt.successMidStarStroke,
                   shine: true,
                   pop: true,
+                  afterSound: coins > 0 ? GameSound.coin : null,
                 ),
               ],
             ),
@@ -355,6 +357,7 @@ class VaseResult extends StatelessWidget {
           midSize: s.partialStarMid,
           raise: space.s10,
           strokeWidth: ResultArt.vaseStarStroke,
+          afterSound: coins > 0 ? GameSound.coin : null,
         ),
         SizedBox(height: space.s6),
         Expanded(

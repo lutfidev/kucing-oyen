@@ -372,6 +372,8 @@ class _LevelViewState extends State<LevelView>
       _session.finish();
       _coinsEarned = widget.onResult?.call(_session.stars!) ?? 0;
     });
+    // Bintang dan koin berbunyi di layar hasil; gagal = Oyen bosan.
+    if (_session.stars == 0) _play(GameSound.bored);
   }
 
   // ── Fase jalan ──────────────────────────────────────────────────────

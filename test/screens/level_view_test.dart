@@ -1175,6 +1175,29 @@ void main() {
       expect(playedBy(audio), [GameSound.tap, GameSound.wake]);
     });
 
+    testWidgets('Oyen bosan: berbunyi saat layar hasil dibuka', (tester) async {
+      final audio = testAudio();
+      await _pumpLevel(tester, 13, audio: audio);
+      await _dragToTile(tester, Item.water, 1, 1);
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pumpAndSettle();
+      expect(playedBy(audio), isNot(contains(GameSound.bored)));
+      await tester.tap(find.text('Lihat hasil'));
+      await tester.pumpAndSettle();
+      expect(playedBy(audio).last, GameSound.bored);
+      expect(playedBy(audio).where((s) => s == GameSound.bored), hasLength(1));
+    });
+
+    testWidgets('berhasil: tanpa suara bosan', (tester) async {
+      final audio = testAudio();
+      await _pumpLevel(tester, 1, audio: audio);
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Lihat hasil'));
+      await tester.pump();
+      expect(playedBy(audio), isNot(contains(GameSound.bored)));
+    });
+
     testWidgets('efek suara mati: senyap', (tester) async {
       final audio = testAudio(settings: const SoundSettings(effects: false));
       await _pumpLevel(tester, 13, audio: audio);
