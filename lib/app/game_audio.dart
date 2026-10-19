@@ -24,8 +24,8 @@ class GameAudio extends ChangeNotifier {
   GameAudio({
     required this.player,
     required this.store,
-    SoundSettings settings = SoundSettings.on,
-  }) : _settings = settings;
+    this._settings = SoundSettings.on,
+  });
 
   static Future<GameAudio> load({
     required ProgressStore store,
