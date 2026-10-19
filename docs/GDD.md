@@ -13,7 +13,7 @@ Kucing Oren adalah game puzzle mobile untuk semua umur: pemain tidak mengendalik
 | Target | Semua umur, sesi 1–3 menit per level |
 | Platform | Android dulu, Flutter + Flame |
 | Orientasi | Portrait, grid 7 × 9 petak (area main 5 × 7) |
-| Bahasa | Bahasa Indonesia santai |
+| Bahasa | Inggris (utama), Indonesia, Portugis Brasil, Rusia; santai dan jenaka (lihat `docs/DESIGN_NOTES.md`, "Sebelum langkah 15") |
 | Versi pertama | Babak 1 Dapur + Babak 2 Ruang Tamu, 20 level |
 
 ## Aturan Oyen
