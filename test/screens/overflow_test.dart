@@ -17,6 +17,7 @@ import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/screens/settings/settings_parts.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../test_helpers.dart';
 import 'result_fixtures.dart';
@@ -455,11 +456,19 @@ void _cases(AppLanguage language) {
           'teks ${scale * 100}%', (tester) async {
         setScreenSize(tester, size);
         setTextScale(tester, scale);
+        PackageInfo.setMockInitialValues(
+          appName: appName,
+          packageName: 'com.example.kucing_oren',
+          version: '10.20.30',
+          buildNumber: '1',
+          buildSignature: '',
+        );
         await pumpApp(tester, location: AppRoutes.settings, progress: p());
         final about = find.byType(AboutCard);
         await tester.ensureVisible(about);
         await settle(tester);
         expect(about.hitTestable(), findsOneWidget);
+        expect(find.text(l.version('10.20.30')), findsOneWidget);
         final reset = find.text(l.resetProgress);
         await tester.ensureVisible(reset);
         await settle(tester);

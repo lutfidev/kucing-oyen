@@ -668,7 +668,7 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String hintSolution(String items, String tail) {
+  String hintSolution(String items, int count, String tail) {
     return '$items di petak yang menyala. $tail';
   }
 

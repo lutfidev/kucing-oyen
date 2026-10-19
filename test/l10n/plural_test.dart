@@ -29,6 +29,9 @@ void main() {
     expect(en.targetItems(2), 'use 2 items');
     expect(pt.coinsAmount(1), '1 moeda');
     expect(pt.costumeActionBuy(60), 'Comprar · 60 moedas');
+    // Harga, bukan kekurangan koin.
+    expect(en.notEnoughCoins(40), 'Not enough · 40');
+    expect(pt.notEnoughCoins(40), 'Moedas insuficientes · 40');
   });
 
   test('Indonesia tanpa bentuk jamak', () {

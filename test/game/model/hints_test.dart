@@ -148,6 +148,16 @@ void main() {
       text(byId(5), 3, en),
       'Two salted fish on the glowing tiles. 3 stars!',
     );
+    // Satu benda: petak tunggal.
+    expect(text(byId(3), 3, en), 'A salted fish on the glowing tile. 3 stars!');
+    expect(
+      text(byId(3), 3, pt),
+      'Um peixe salgado no quadrado aceso. 3 estrelas!',
+    );
+    expect(
+      text(byId(3), 3, ru),
+      'Поставь солёную рыбку на светящуюся клетку. 3 звезды!',
+    );
   });
 
   test('pesan level tanpa benda', () {

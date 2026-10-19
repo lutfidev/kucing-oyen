@@ -27,7 +27,8 @@ String hintTextFor(AppLocalizations l, HintText hint) {
         ),
       };
       final tail = hint.hasVase ? l.hintSolutionVaseSafe : l.hintSolutionStars;
-      final text = l.hintSolution(items, tail);
+      final count = hint.items.fold(0, (sum, item) => sum + item.$2);
+      final text = l.hintSolution(items, count, tail);
       return '${text[0].toUpperCase()}${text.substring(1)}';
   }
 }

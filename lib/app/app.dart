@@ -15,7 +15,9 @@ class KucingOrenApp extends StatefulWidget {
     this.initialLocation = AppRoutes.home,
   });
 
-  /// Data level dan progres pemain, dibagikan ke semua layar.
+  /// Data level dan progres pemain, dibagikan ke semua layar. Tidak boleh
+  /// diganti sesudah aplikasi dibuat (router, pendengar bahasa, dan
+  /// pendengar siklus hidup terikat ke controller pertama).
   final ProgressController progress;
   final String initialLocation;
 

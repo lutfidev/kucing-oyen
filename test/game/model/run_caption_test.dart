@@ -57,7 +57,7 @@ void main() {
   test('bahasa Rusia memakai bentuk arah yang berbeda', () {
     final ru = lookupAppLocalizations(const Locale('ru'));
     final c = captions(level(13), null, ru);
-    expect(c[2], 'Идёт прямо вправо, не спеша.');
+    expect(c[2], 'Идёт вправо, не спеша.');
     expect(c[4], 'Ого, слева пахнет солёной рыбкой!');
   });
 

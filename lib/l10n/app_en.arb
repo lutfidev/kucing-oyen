@@ -46,7 +46,7 @@
       }
     }
   },
-  "notEnoughCoins": "Need {n} coins",
+  "notEnoughCoins": "Not enough · {n}",
   "@notEnoughCoins": {
     "description": "Disabled pay button: not enough coins for the price.",
     "placeholders": {
@@ -874,12 +874,15 @@
       }
     }
   },
-  "hintSolution": "{items} on the glowing tiles. {tail}",
+  "hintSolution": "{items} on the glowing {count, plural, one{tile} other{tiles}}. {tail}",
   "@hintSolution": {
-    "description": "Unlocked hint tier 3 (first letter is capitalized in code).",
+    "description": "Unlocked hint tier 3 (first letter is capitalized in code); count = number of items.",
     "placeholders": {
       "items": {
         "type": "String"
+      },
+      "count": {
+        "type": "int"
       },
       "tail": {
         "type": "String"

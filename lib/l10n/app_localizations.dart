@@ -147,7 +147,7 @@ abstract class AppLocalizations {
   /// Disabled pay button: not enough coins for the price.
   ///
   /// In en, this message translates to:
-  /// **'Need {n} coins'**
+  /// **'Not enough · {n}'**
   String notEnoughCoins(int n);
 
   /// Button: watch a rewarded ad.
@@ -1038,11 +1038,11 @@ abstract class AppLocalizations {
   /// **'{rest}, and {last}'**
   String listLast(String rest, String last);
 
-  /// Unlocked hint tier 3 (first letter is capitalized in code).
+  /// Unlocked hint tier 3 (first letter is capitalized in code); count = number of items.
   ///
   /// In en, this message translates to:
-  /// **'{items} on the glowing tiles. {tail}'**
-  String hintSolution(String items, String tail);
+  /// **'{items} on the glowing {count, plural, one{tile} other{tiles}}. {tail}'**
+  String hintSolution(String items, int count, String tail);
 
   /// Tier 3 ending on levels with a vase.
   ///

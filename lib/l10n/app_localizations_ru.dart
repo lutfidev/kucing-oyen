@@ -369,7 +369,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'left': 'влево',
       'other': 'вправо',
     });
-    return 'Идёт прямо $_temp0, не спеша.';
+    return 'Идёт $_temp0, не спеша.';
   }
 
   @override
@@ -459,7 +459,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'left': 'влево',
       'other': 'вправо',
     });
-    return 'Идёт прямо $_temp0.';
+    return 'Идёт $_temp0.';
   }
 
   @override
@@ -486,7 +486,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'left': 'влево',
       'other': 'вправо',
     });
-    return 'Упёрся в $_temp0, повернулся $_temp1.';
+    return 'Упёрся в $_temp0, повернулся и смотрит $_temp1.';
   }
 
   @override
@@ -710,8 +710,14 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String hintSolution(String items, String tail) {
-    return 'Поставь $items на светящиеся клетки. $tail';
+  String hintSolution(String items, int count, String tail) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'на светящиеся клетки',
+      one: 'на светящуюся клетку',
+    );
+    return 'Поставь $items $_temp0. $tail';
   }
 
   @override

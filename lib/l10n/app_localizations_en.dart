@@ -50,7 +50,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String notEnoughCoins(int n) {
-    return 'Need $n coins';
+    return 'Not enough · $n';
   }
 
   @override
@@ -702,8 +702,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String hintSolution(String items, String tail) {
-    return '$items on the glowing tiles. $tail';
+  String hintSolution(String items, int count, String tail) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'tiles',
+      one: 'tile',
+    );
+    return '$items on the glowing $_temp0. $tail';
   }
 
   @override

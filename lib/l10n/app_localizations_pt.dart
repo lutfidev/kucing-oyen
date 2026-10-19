@@ -50,7 +50,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String notEnoughCoins(int n) {
-    return 'Faltam moedas · $n';
+    return 'Moedas insuficientes · $n';
   }
 
   @override
@@ -490,7 +490,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'left': 'a esquerda',
       'other': 'a direita',
     });
-    return 'Bate $_temp0, gira para $_temp1.';
+    return 'Bate $_temp0, gira e fica virado para $_temp1.';
   }
 
   @override
@@ -716,8 +716,14 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String hintSolution(String items, String tail) {
-    return '$items nos quadrados acesos. $tail';
+  String hintSolution(String items, int count, String tail) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'nos quadrados acesos',
+      one: 'no quadrado aceso',
+    );
+    return '$items $_temp0. $tail';
   }
 
   @override

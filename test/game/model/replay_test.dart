@@ -130,6 +130,17 @@ void main() {
         captions(level(15), null, ru).last,
         'В миске. Готово за 12 шагов.',
       );
+      // Berputar searah jarum jam: arah sesudahnya, bukan "belok kiri".
+      expect(
+        captions(level(13), null, ru)[3],
+        'Упёрся в стену, повернулся и смотрит вниз.',
+      );
+      final pt = lookupAppLocalizations(const Locale('pt'));
+      expect(
+        captions(level(13), null, pt)[3],
+        'Bate na parede, gira e fica virado para baixo.',
+      );
+      expect(captions(level(13), null, ru)[2], 'Идёт вправо.');
     });
 
     test('jalan, kejar ikan tanpa vas, makan, meja, dan kardus', () {
