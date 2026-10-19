@@ -1464,6 +1464,24 @@ abstract class AppLocalizations {
   /// **'daily bonus ready'**
   String get coinChipBonus;
 
+  /// Settings section: music and sound effects.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get soundSection;
+
+  /// Settings switch: background music.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get music;
+
+  /// Settings switch: sound effects.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound effects'**
+  String get soundEffects;
+
   /// Settings section: language.
   ///
   /// In en, this message translates to:
@@ -1565,6 +1583,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fonts: Fredoka and Nunito (SIL Open Font License).'**
   String get fontCredits;
+
+  /// About card: credits for sound effects (CC0 sources) and the original music.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound effects: Kenney and OpenGameArt (CC0). The music was made just for Ginger Logic.'**
+  String get soundCredits;
 
   /// Button: open the licenses page.
   ///

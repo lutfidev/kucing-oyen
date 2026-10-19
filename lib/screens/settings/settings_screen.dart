@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../app/game_audio.dart';
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../l10n/l10n.dart';
@@ -13,8 +14,8 @@ import '../level/level_sheet.dart';
 import 'settings_parts.dart';
 
 /// Pengaturan (rute `/pengaturan`, tidak ada di desain; gaya kartu Lemari
-/// Kostum dan sheet Petunjuk): bahasa, lihat tutorial lagi, reset progres
-/// dengan konfirmasi, dan tentang game.
+/// Kostum dan sheet Petunjuk): sakelar musik dan efek suara, bahasa, lihat
+/// tutorial lagi, reset progres dengan konfirmasi, dan tentang game.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -67,6 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final progress = ProgressScope.of(context);
+    final audio = AudioScope.of(context);
     final c = context.koColors;
     final space = context.koSpace;
     final l = context.l10n;
@@ -89,6 +91,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      SettingsSection(
+                        title: l.soundSection,
+                        child: SoundCard(
+                          music: audio.musicOn,
+                          effects: audio.effectsOn,
+                          onMusic: (on) => unawaited(audio.setMusicOn(on)),
+                          onEffects: (on) => unawaited(audio.setEffectsOn(on)),
+                        ),
+                      ),
+                      SizedBox(height: space.s16),
                       SettingsSection(
                         title: l.language,
                         child: LanguageCard(

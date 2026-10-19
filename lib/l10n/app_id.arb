@@ -227,6 +227,9 @@
   "adsTomorrow": "Besok ada lagi",
   "coinChipAdd": "tambah koin",
   "coinChipBonus": "bonus harian siap",
+  "soundSection": "Suara",
+  "music": "Musik",
+  "soundEffects": "Efek suara",
   "language": "Bahasa",
   "languageSystem": "Ikuti bahasa HP",
   "tutorialsSection": "Tutorial",
@@ -244,5 +247,6 @@
   "about": "Tentang",
   "version": "Versi {version}",
   "fontCredits": "Font: Fredoka dan Nunito (SIL Open Font License).",
+  "soundCredits": "Efek suara: Kenney dan OpenGameArt (CC0). Musiknya dibuat khusus untuk Ginger Logic.",
   "licenses": "Lisensi"
 }

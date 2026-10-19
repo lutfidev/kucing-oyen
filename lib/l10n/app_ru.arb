@@ -227,6 +227,9 @@
   "adsTomorrow": "Завтра ещё",
   "coinChipAdd": "добавить монеты",
   "coinChipBonus": "ежедневный бонус готов",
+  "soundSection": "Звук",
+  "music": "Музыка",
+  "soundEffects": "Звуковые эффекты",
   "language": "Язык",
   "languageSystem": "Язык телефона",
   "tutorialsSection": "Обучение",
@@ -244,5 +247,6 @@
   "about": "Об игре",
   "version": "Версия {version}",
   "fontCredits": "Шрифты: Fredoka и Nunito (SIL Open Font License).",
+  "soundCredits": "Звуки: Kenney и OpenGameArt (CC0). Музыку написали специально для Ginger Logic.",
   "licenses": "Лицензии"
 }

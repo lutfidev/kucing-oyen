@@ -77,6 +77,119 @@ class SettingsSection extends StatelessWidget {
   }
 }
 
+/// Sakelar Musik dan Efek suara.
+class SoundCard extends StatelessWidget {
+  const SoundCard({
+    super.key,
+    required this.music,
+    required this.effects,
+    required this.onMusic,
+    required this.onEffects,
+  });
+
+  final bool music;
+  final bool effects;
+  final ValueChanged<bool> onMusic;
+  final ValueChanged<bool> onEffects;
+
+  @override
+  Widget build(BuildContext context) {
+    final space = context.koSpace;
+    final l = context.l10n;
+    return KoCard(
+      padding: EdgeInsets.symmetric(horizontal: space.s12, vertical: space.s4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _SwitchRow(
+            key: const ValueKey('sound-music'),
+            label: l.music,
+            on: music,
+            onChanged: onMusic,
+          ),
+          _SwitchRow(
+            key: const ValueKey('sound-effects'),
+            label: l.soundEffects,
+            on: effects,
+            onChanged: onEffects,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Baris berlabel dengan sakelar pil di kanan: hijau dengan bulatan di
+/// kanan saat menyala, abu-abu dengan bulatan di kiri saat mati. Seluruh
+/// baris bisa diketuk.
+class _SwitchRow extends StatelessWidget {
+  const _SwitchRow({
+    super.key,
+    required this.label,
+    required this.on,
+    required this.onChanged,
+  });
+
+  final String label;
+  final bool on;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    final space = context.koSpace;
+    final tap = tapSound(context, () => onChanged(!on));
+    return Semantics(
+      toggled: on,
+      label: label,
+      onTap: tap,
+      excludeSemantics: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: tap,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: s.iconButton),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: space.s6),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    label,
+                    style: context.koType.cardLabel.copyWith(color: c.ink),
+                  ),
+                ),
+                SizedBox(width: space.s10),
+                Container(
+                  width: s.iconButton,
+                  height: s.checkBadge,
+                  padding: EdgeInsets.all(space.s4),
+                  alignment: on
+                      ? AlignmentDirectional.centerEnd
+                      : AlignmentDirectional.centerStart,
+                  decoration: BoxDecoration(
+                    color: on ? c.success : c.line,
+                    borderRadius: BorderRadius.circular(context.koRadius.pill),
+                  ),
+                  child: Container(
+                    width: s.iconCompact,
+                    height: s.iconCompact,
+                    decoration: BoxDecoration(
+                      color: c.surface,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Lima pilihan bahasa: ikuti HP lalu bahasa yang didukung, masing-masing
 /// ditulis dalam bahasanya sendiri. Pilihan yang aktif bercentang hijau
 /// seperti kartu petunjuk yang terbuka.
@@ -126,9 +239,9 @@ class _LanguageRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
-    final tap = tapSound(context, onTap);
     final s = context.koSize;
     final space = context.koSpace;
+    final tap = tapSound(context, onTap);
     return Semantics(
       button: true,
       selected: selected,
@@ -223,7 +336,8 @@ class ActionCard extends StatelessWidget {
   }
 }
 
-/// Tentang: nama game, versi, kredit font, dan tombol halaman lisensi.
+/// Tentang: nama game, versi, kredit font dan suara, dan tombol halaman
+/// lisensi.
 class AboutCard extends StatelessWidget {
   const AboutCard({super.key, required this.version, required this.onLicenses});
 
@@ -250,6 +364,8 @@ class AboutCard extends StatelessWidget {
             ),
           SizedBox(height: space.s6),
           Text(l.fontCredits, style: t.bodySmall.copyWith(color: c.inkSoft)),
+          SizedBox(height: space.s4),
+          Text(l.soundCredits, style: t.bodySmall.copyWith(color: c.inkSoft)),
           SizedBox(height: space.s10),
           SheetButton(
             label: l.licenses,

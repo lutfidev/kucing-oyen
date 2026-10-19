@@ -1235,6 +1235,18 @@
   "@coinChipBonus": {
     "description": "Screen reader: the daily bonus is ready."
   },
+  "soundSection": "Sound",
+  "@soundSection": {
+    "description": "Settings section: music and sound effects."
+  },
+  "music": "Music",
+  "@music": {
+    "description": "Settings switch: background music."
+  },
+  "soundEffects": "Sound effects",
+  "@soundEffects": {
+    "description": "Settings switch: sound effects."
+  },
   "language": "Language",
   "@language": {
     "description": "Settings section: language."
@@ -1307,6 +1319,10 @@
   "fontCredits": "Fonts: Fredoka and Nunito (SIL Open Font License).",
   "@fontCredits": {
     "description": "Font credits."
+  },
+  "soundCredits": "Sound effects: Kenney and OpenGameArt (CC0). The music was made just for Ginger Logic.",
+  "@soundCredits": {
+    "description": "About card: credits for sound effects (CC0 sources) and the original music."
   },
   "licenses": "Licenses",
   "@licenses": {

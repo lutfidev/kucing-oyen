@@ -1020,6 +1020,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get coinChipBonus => 'bônus diário pronto';
 
   @override
+  String get soundSection => 'Som';
+
+  @override
+  String get music => 'Música';
+
+  @override
+  String get soundEffects => 'Efeitos sonoros';
+
+  @override
   String get language => 'Idioma';
 
   @override
@@ -1074,6 +1083,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get fontCredits => 'Fontes: Fredoka e Nunito (SIL Open Font License).';
+
+  @override
+  String get soundCredits =>
+      'Efeitos sonoros: Kenney e OpenGameArt (CC0). A música foi feita especialmente para o Ginger Logic.';
 
   @override
   String get licenses => 'Licenças';
