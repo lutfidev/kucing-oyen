@@ -71,3 +71,30 @@ GameSound? stepSound(RunFrame frame) => switch (frame.action?.kind) {
   StepKind.knockVase => GameSound.vase,
   StepKind.sit || StepKind.turn || StepKind.walk || null => null,
 };
+
+/// Sakelar Musik dan Efek suara di Pengaturan; default keduanya menyala.
+class SoundSettings {
+  const SoundSettings({this.music = true, this.effects = true});
+
+  static const on = SoundSettings();
+
+  final bool music;
+  final bool effects;
+
+  SoundSettings copyWith({bool? music, bool? effects}) => SoundSettings(
+    music: music ?? this.music,
+    effects: effects ?? this.effects,
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      other is SoundSettings &&
+      other.music == music &&
+      other.effects == effects;
+
+  @override
+  int get hashCode => Object.hash(music, effects);
+
+  @override
+  String toString() => 'SoundSettings(music: $music, effects: $effects)';
+}
