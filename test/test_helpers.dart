@@ -3,14 +3,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/app.dart';
+import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
+import 'package:kucing_oren/app/sound_player.dart';
 import 'package:kucing_oren/game/level_loader.dart';
 import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
+import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
@@ -91,19 +94,36 @@ void setTextScale(WidgetTester tester, double scale) {
 }
 
 /// Pompa aplikasi lengkap di [location] dengan [progress] (default:
-/// progres kosong), lalu [settle]. Mengembalikan progres yang dipakai.
+/// progres kosong) dan [audio] (default: [testAudio]), lalu [settle].
+/// Mengembalikan progres yang dipakai.
 Future<ProgressController> pumpApp(
   WidgetTester tester, {
   String location = '/',
   ProgressController? progress,
+  GameAudio? audio,
 }) async {
   final controller = progress ?? testProgress();
   await tester.pumpWidget(
-    KucingOrenApp(progress: controller, initialLocation: location),
+    KucingOrenApp(
+      progress: controller,
+      audio: audio ?? testAudio(),
+      initialLocation: location,
+    ),
   );
   await settle(tester);
   return controller;
 }
+
+/// Suara dengan pemutar palsu ([FakeSoundPlayer] di `audio.player`).
+GameAudio testAudio({SoundSettings settings = SoundSettings.on}) => GameAudio(
+  player: FakeSoundPlayer(),
+  store: MemoryProgressStore(),
+  settings: settings,
+);
+
+/// Efek suara yang sudah diputar [audio] dari [testAudio].
+List<GameSound> playedBy(GameAudio audio) =>
+    (audio.player as FakeSoundPlayer).played;
 
 /// Seperti `pumpAndSettle`, tapi berhenti tanpa gagal setelah [max]: node
 /// level saat ini di peta babak berdenyut terus.

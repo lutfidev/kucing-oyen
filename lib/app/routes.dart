@@ -1,3 +1,5 @@
+import '../game/model/sounds.dart';
+
 /// Path semua layar. Rute bersarang supaya tombol kembali Android mengikuti
 /// alur layar: Beranda → peta babak → level.
 abstract final class AppRoutes {
@@ -28,3 +30,10 @@ abstract final class AppRoutes {
   static String level(int id, {required int chapter}) =>
       '/babak/$chapter/level/$id';
 }
+
+/// Musik latar di [path]: lagu level di layar level (termasuk hasil dan
+/// putar ulang yang ada di dalam rutenya), lagu Beranda di layar lain.
+MusicTrack musicFor(String path) =>
+    RegExp(r'^/babak/[^/]+/level/[^/]+/?$').hasMatch(path)
+    ? MusicTrack.level
+    : MusicTrack.home;
