@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
+import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
@@ -29,10 +31,11 @@ ProgressController _progress({
 /// Beranda 390×844 dengan [progress], lalu ketuk chip koin.
 Future<ProgressController> _openFromHome(
   WidgetTester tester,
-  ProgressController progress,
-) async {
+  ProgressController progress, {
+  GameAudio? audio,
+}) async {
   setScreenSize(tester, const Size(390, 844));
-  await pumpApp(tester, progress: progress);
+  await pumpApp(tester, progress: progress, audio: audio);
   await _tap(tester, find.byType(KoCoinChip));
   return progress;
 }
@@ -224,6 +227,43 @@ void main() {
       await settle(tester);
       expect(find.text('Tambah Koin'), findsNothing);
       expect(find.text('Main'), findsOneWidget);
+    });
+  });
+
+  group('suara', () {
+    List<GameSound> coinSounds(GameAudio audio) =>
+        playedBy(audio).where((s) => s != GameSound.tap).toList();
+
+    testWidgets('ambil bonus harian: koin berbunyi', (tester) async {
+      final audio = testAudio();
+      await _openFromHome(tester, _progress(), audio: audio);
+      await _tap(tester, find.text('+20 koin').first);
+      expect(coinSounds(audio), [GameSound.coin]);
+    });
+
+    testWidgets('iklan selesai: koin berbunyi', (tester) async {
+      final audio = testAudio();
+      await _openFromHome(
+        tester,
+        _progress(rewards: DailyRewards(bonusDay: _today)),
+        audio: audio,
+      );
+      await _tap(tester, find.text('+20 koin'));
+      expect(coinSounds(audio), [GameSound.coin]);
+    });
+
+    testWidgets('iklan gagal: senyap', (tester) async {
+      final audio = testAudio();
+      await _openFromHome(
+        tester,
+        _progress(
+          rewards: DailyRewards(bonusDay: _today),
+          ads: FakeRewardedAds(succeed: false),
+        ),
+        audio: audio,
+      );
+      await _tap(tester, find.text('+20 koin'));
+      expect(coinSounds(audio), isEmpty);
     });
   });
 }

@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../../app/game_audio.dart';
 import '../../app/progress_scope.dart';
 import '../../game/model/rewards.dart';
+import '../../game/model/sounds.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -49,7 +53,18 @@ class _CoinSheetState extends State<CoinSheet> {
       _waiting = false;
       _failed = result == AdReward.failed;
     });
+    if (result == AdReward.rewarded) _playCoin();
   }
+
+  /// Saldo bertambah langsung (sebelum disimpan), jadi suaranya juga.
+  void _claimBonus() {
+    final progress = widget.progress;
+    if (!progress.canClaimBonus) return;
+    unawaited(progress.claimDailyBonus());
+    _playCoin();
+  }
+
+  void _playCoin() => AudioScope.maybeRead(context)?.play(GameSound.coin);
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +135,7 @@ class _CoinSheetState extends State<CoinSheet> {
                 color: c.orange,
                 line: c.orange,
                 edge: c.orangeDeep,
-                onPressed: bonus ? progress.claimDailyBonus : null,
+                onPressed: bonus ? _claimBonus : null,
               ),
             ),
             SizedBox(height: space.s10),
