@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/hint_source.dart';
+import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
@@ -149,6 +150,26 @@ void main() {
       await prefs.setInt(PrefsProgressStore.rewardsKey, 3);
       expect(await PrefsProgressStore().loadRewards(), DailyRewards.initial);
     });
+
+    test(
+      'bahasa: simpan lalu muat, belum pernah atau rusak = ikuti HP',
+      () async {
+        expect(await PrefsProgressStore().loadLanguage(), AppLanguage.system);
+        await PrefsProgressStore().saveLanguage(AppLanguage.ru);
+        expect(await PrefsProgressStore().loadLanguage(), AppLanguage.ru);
+        expect(
+          await SharedPreferencesAsync().getString(
+            PrefsProgressStore.languageKey,
+          ),
+          'ru',
+        );
+        final prefs = SharedPreferencesAsync();
+        await prefs.setString(PrefsProgressStore.languageKey, 'klingon');
+        expect(await PrefsProgressStore().loadLanguage(), AppLanguage.system);
+        await prefs.setInt(PrefsProgressStore.languageKey, 3);
+        expect(await PrefsProgressStore().loadLanguage(), AppLanguage.system);
+      },
+    );
   });
 
   group('ProgressController', () {
@@ -505,6 +526,103 @@ void main() {
       );
       expect(c.canClaimBonus, isFalse);
       expect(c.adsLeft, 2);
+    });
+  });
+
+  group('bahasa dan pengaturan', () {
+    test('setLanguage: disimpan dan pendengar diberi tahu sekali', () async {
+      final store = MemoryProgressStore();
+      final c = ProgressController(levels: testLevels, store: store);
+      var notified = 0;
+      c.addListener(() => notified++);
+      expect(c.language, AppLanguage.system);
+
+      await c.setLanguage(AppLanguage.pt);
+      expect(c.language, AppLanguage.pt);
+      expect(store.language, AppLanguage.pt);
+      expect(notified, 1);
+
+      await c.setLanguage(AppLanguage.pt);
+      expect(notified, 1);
+    });
+
+    test('memuat bahasa tersimpan', () async {
+      final store = MemoryProgressStore()..language = AppLanguage.id;
+      final c = await ProgressController.load(levels: testLevels, store: store);
+      expect(c.language, AppLanguage.id);
+    });
+
+    test('replayTutorials: tutorial muncul lagi dan tersimpan', () async {
+      final store = MemoryProgressStore(Progress.empty, {1, 3, 6});
+      final c = ProgressController(
+        levels: testLevels,
+        store: store,
+        tutorialsDone: {1, 3, 6},
+      );
+      var notified = 0;
+      c.addListener(() => notified++);
+      await c.replayTutorials();
+      expect(c.tutorialsDone, isEmpty);
+      expect(store.tutorials, isEmpty);
+      expect(notified, 1);
+    });
+
+    test('resetProgress menghapus bintang, koin, petunjuk, kostum, dan '
+        'tutorial; hadiah harian dan bahasa tetap', () async {
+      final now = DateTime(2026, 10, 19, 9);
+      final today = dayNumber(now);
+      final rewards = DailyRewards(
+        bonusDay: today,
+        adDay: today,
+        adsWatched: 4,
+      );
+      final wardrobe = Wardrobe(
+        owned: {OyenCostume.peci},
+        wearing: OyenCostume.peci,
+      );
+      final store = MemoryProgressStore(Progress({1: 3, 2: 2}), {1, 3})
+        ..coins = 250
+        ..hints = {13: 2}
+        ..wardrobe = wardrobe
+        ..rewards = rewards
+        ..language = AppLanguage.ru;
+      final c = await ProgressController.load(
+        levels: testLevels,
+        store: store,
+        clock: () => now,
+      );
+      var notified = 0;
+      c.addListener(() => notified++);
+
+      await c.resetProgress();
+
+      expect(notified, 1);
+      expect(c.progress, Progress.empty);
+      expect(c.coins, 0);
+      expect(c.hintTier(13), 0);
+      expect(c.wardrobe.owned, {OyenCostume.none});
+      expect(c.wardrobe.wearing, OyenCostume.none);
+      expect(c.tutorialsDone, isEmpty);
+      expect(c.canClaimBonus, isFalse);
+      expect(c.adsLeft, maxAdsPerDay - 4);
+      expect(c.language, AppLanguage.ru);
+
+      expect(store.saved, Progress.empty);
+      expect(store.coins, 0);
+      expect(store.hints, isEmpty);
+      expect(store.wardrobe.owned, {OyenCostume.none});
+      expect(store.tutorials, isEmpty);
+      expect(store.rewards, rewards);
+      expect(store.language, AppLanguage.ru);
+
+      // Dibuka ulang: tetap kosong, koin tidak dihitung ulang dari bintang.
+      final again = await ProgressController.load(
+        levels: testLevels,
+        store: store,
+        clock: () => now,
+      );
+      expect(again.coins, 0);
+      expect(again.progress.totalStars, 0);
     });
   });
 }

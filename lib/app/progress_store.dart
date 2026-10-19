@@ -7,10 +7,11 @@ import '../game/model/hints.dart';
 import '../game/model/progress.dart';
 import '../game/model/rewards.dart';
 import '../game/render/oyen.dart';
+import 'language.dart';
 
 /// Tempat menyimpan [Progress], tutorial yang sudah selesai, saldo koin,
-/// tingkat petunjuk yang terbuka, kostum Oyen, dan hadiah harian di
-/// perangkat. Antarmukanya kecil supaya test bisa memakai
+/// tingkat petunjuk yang terbuka, kostum Oyen, hadiah harian, dan bahasa
+/// di perangkat. Antarmukanya kecil supaya test bisa memakai
 /// [MemoryProgressStore].
 abstract interface class ProgressStore {
   Future<Progress> load();
@@ -37,6 +38,11 @@ abstract interface class ProgressStore {
   /// disimpan atau rusak.
   Future<DailyRewards> loadRewards();
   Future<void> saveRewards(DailyRewards rewards);
+
+  /// Bahasa pilihan pemain; [AppLanguage.system] kalau belum pernah
+  /// disimpan atau rusak.
+  Future<AppLanguage> loadLanguage();
+  Future<void> saveLanguage(AppLanguage language);
 }
 
 /// Simpanan di memori (test, atau kalau penyimpanan perangkat tidak ada).
@@ -54,6 +60,9 @@ class MemoryProgressStore implements ProgressStore {
 
   /// Hadiah harian yang terakhir disimpan.
   DailyRewards rewards = DailyRewards.initial;
+
+  /// Bahasa yang terakhir disimpan.
+  AppLanguage language = AppLanguage.system;
 
   /// Progres yang terakhir disimpan.
   Progress saved;
@@ -104,12 +113,19 @@ class MemoryProgressStore implements ProgressStore {
   @override
   Future<void> saveRewards(DailyRewards rewards) async =>
       this.rewards = rewards;
+
+  @override
+  Future<AppLanguage> loadLanguage() async => language;
+
+  @override
+  Future<void> saveLanguage(AppLanguage language) async =>
+      this.language = language;
 }
 
 /// Simpanan lokal lewat `shared_preferences`: JSON `{"id level": bintang}`,
 /// daftar id level yang tutorialnya selesai, saldo koin, JSON
 /// `{"id level": tingkat petunjuk}`, nama kostum yang dimiliki dan
-/// dipakai, dan JSON hadiah harian.
+/// dipakai, JSON hadiah harian, dan nama bahasa.
 class PrefsProgressStore implements ProgressStore {
   PrefsProgressStore([SharedPreferencesAsync? prefs])
     : _prefs = prefs ?? SharedPreferencesAsync();
@@ -121,6 +137,7 @@ class PrefsProgressStore implements ProgressStore {
   static const ownedKey = 'costume.owned';
   static const wearingKey = 'costume.wearing';
   static const rewardsKey = 'rewards.daily';
+  static const languageKey = 'settings.language';
 
   final SharedPreferencesAsync _prefs;
 
@@ -247,4 +264,17 @@ class PrefsProgressStore implements ProgressStore {
   @override
   Future<void> saveRewards(DailyRewards rewards) =>
       _prefs.setString(rewardsKey, jsonEncode(rewards.toJson()));
+
+  @override
+  Future<AppLanguage> loadLanguage() async {
+    try {
+      return AppLanguage.parse(await _prefs.getString(languageKey));
+    } on TypeError {
+      return AppLanguage.system;
+    }
+  }
+
+  @override
+  Future<void> saveLanguage(AppLanguage language) =>
+      _prefs.setString(languageKey, language.name);
 }

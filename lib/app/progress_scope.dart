@@ -8,6 +8,7 @@ import '../game/model/rewards.dart';
 import '../game/render/oyen.dart';
 import '../game/sim/sim.dart';
 import 'hint_source.dart';
+import 'language.dart';
 import 'progress_store.dart';
 import 'rewarded_ads.dart';
 
@@ -27,7 +28,7 @@ enum AdReward {
 }
 
 /// Data level dan progres pemain untuk semua layar: bintang, tutorial,
-/// koin, petunjuk, kostum Oyen, dan hadiah harian. Dimuat sekali sebelum
+/// koin, petunjuk, kostum Oyen, hadiah harian, dan bahasa. Dimuat sekali sebelum
 /// aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
 class ProgressController extends ChangeNotifier implements HintSource {
   ProgressController({
@@ -39,6 +40,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     Map<int, int> hints = const {},
     Wardrobe? wardrobe,
     this._rewards = DailyRewards.initial,
+    this._language = AppLanguage.system,
     RewardedAds? ads,
     DateTime Function()? clock,
   }) : levels = List.unmodifiable(levels),
@@ -50,8 +52,8 @@ class ProgressController extends ChangeNotifier implements HintSource {
        ads = ads ?? FakeRewardedAds(),
        chapters = List.unmodifiable(chaptersOf(levels));
 
-  /// Memuat progres, tutorial, koin, petunjuk, kostum, dan hadiah harian
-  /// dari [store]. Koin yang belum pernah disimpan (progres dari sebelum ada
+  /// Memuat progres, tutorial, koin, petunjuk, kostum, hadiah harian, dan
+  /// bahasa dari [store]. Koin yang belum pernah disimpan (progres dari sebelum ada
   /// koin) dihitung dari total bintang.
   static Future<ProgressController> load({
     required List<Level> levels,
@@ -69,6 +71,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
       hints: await store.loadHints(),
       wardrobe: await store.loadWardrobe(),
       rewards: await store.loadRewards(),
+      language: await store.loadLanguage(),
       ads: ads,
       clock: clock,
     );
@@ -266,6 +269,45 @@ class ProgressController extends ChangeNotifier implements HintSource {
     notifyListeners();
     await Future.wait([store.saveRewards(_rewards), store.saveCoins(_coins)]);
     return AdReward.rewarded;
+  }
+
+  AppLanguage _language;
+
+  /// Bahasa pilihan pemain ([AppLanguage.system] = ikuti HP).
+  AppLanguage get language => _language;
+
+  Future<void> setLanguage(AppLanguage language) async {
+    if (language == _language) return;
+    _language = language;
+    notifyListeners();
+    await store.saveLanguage(language);
+  }
+
+  /// "Lihat tutorial lagi": tutorial level 1, 3, dan 6 muncul lagi.
+  Future<void> replayTutorials() async {
+    if (_tutorialsDone.isEmpty) return;
+    _tutorialsDone = const {};
+    notifyListeners();
+    await store.saveTutorials(_tutorialsDone);
+  }
+
+  /// "Reset progres": menghapus bintang, koin, petunjuk, kostum, dan
+  /// tutorial. Hadiah harian hari ini (supaya tidak bisa diklaim ulang) dan
+  /// bahasa tetap. Koin disimpan 0, bukan dihitung ulang dari bintang.
+  Future<void> resetProgress() async {
+    _progress = Progress.empty;
+    _coins = 0;
+    _hints = const {};
+    _wardrobe = Wardrobe.initial;
+    _tutorialsDone = const {};
+    notifyListeners();
+    await Future.wait([
+      store.save(_progress),
+      store.saveCoins(_coins),
+      store.saveHints(_hints),
+      store.saveWardrobe(_wardrobe),
+      store.saveTutorials(_tutorialsDone),
+    ]);
   }
 
   /// Menandai tutorial level [id] selesai supaya tidak muncul lagi.
