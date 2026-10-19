@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/app.dart';
+import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
@@ -11,6 +12,7 @@ import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
+import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/theme/theme.dart';
 
@@ -34,7 +36,9 @@ ProgressController testProgress([
 
 /// Seperti [testProgress], ditambah saldo [coins], tingkat petunjuk
 /// [hints] per level, kostum [wardrobe], hadiah harian [rewards], iklan
-/// [ads] (default iklan palsu yang berhasil), dan jam [clock].
+/// [ads] (default iklan palsu yang berhasil), jam [clock], dan bahasa
+/// [language] (default Indonesia, supaya test bisa mencari teks
+/// Indonesia; [AppLanguage.system] untuk menguji bahasa HP).
 ProgressController testProgressWith({
   Map<int, int> best = const {},
   Set<int>? tutorialsDone,
@@ -44,6 +48,7 @@ ProgressController testProgressWith({
   DailyRewards rewards = DailyRewards.initial,
   RewardedAds? ads,
   DateTime Function()? clock,
+  AppLanguage language = AppLanguage.id,
 }) {
   final progress = Progress(best);
   final tutorials = tutorialsDone ?? tutorialLevels;
@@ -53,13 +58,15 @@ ProgressController testProgressWith({
       ..coins = coins
       ..hints = hints
       ..wardrobe = wardrobe ?? Wardrobe.initial
-      ..rewards = rewards,
+      ..rewards = rewards
+      ..language = language,
     progress: progress,
     tutorialsDone: tutorials,
     coins: coins,
     hints: hints,
     wardrobe: wardrobe,
     rewards: rewards,
+    language: language,
     ads: ads,
     clock: clock,
   );
@@ -120,11 +127,29 @@ BoxDecoration decorationOf(WidgetTester tester, Finder of) {
   return box.decoration! as BoxDecoration;
 }
 
-/// Pompa satu widget dengan tema Kucing Oren.
+/// Teks Indonesia, untuk mencari teks di test yang berbahasa Indonesia.
+final l10nId = lookupAppLocalizations(const Locale('id'));
+
+/// [MaterialApp] dengan tema dan teks aplikasi, untuk memompa satu layar
+/// tanpa rute. Bahasanya Indonesia kecuali [locale] diberikan.
+MaterialApp testApp({
+  Widget? home,
+  TransitionBuilder? builder,
+  Locale locale = const Locale('id'),
+}) => MaterialApp(
+  debugShowCheckedModeBanner: false,
+  theme: KoTheme.light(),
+  locale: locale,
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  builder: builder,
+  home: home,
+);
+
+/// Pompa satu widget dengan tema dan teks aplikasi.
 Future<void> pumpThemed(WidgetTester tester, Widget child) async {
   await tester.pumpWidget(
-    MaterialApp(
-      theme: KoTheme.light(),
+    testApp(
       home: Scaffold(body: Center(child: child)),
     ),
   );

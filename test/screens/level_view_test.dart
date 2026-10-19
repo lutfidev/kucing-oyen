@@ -16,7 +16,6 @@ import 'package:kucing_oren/screens/level/run_panel.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/level/tray.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
-import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -39,8 +38,7 @@ Future<void> _pumpLevel(
   _nextTaps = 0;
   setScreenSize(tester, size);
   await tester.pumpWidget(
-    MaterialApp(
-      theme: KoTheme.light(),
+    testApp(
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context)
             .copyWith(disableAnimations: disableAnimations),

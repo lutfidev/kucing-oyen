@@ -6,7 +6,6 @@ import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/screens/result/result_art.dart';
 import 'package:kucing_oren/screens/result/result_parts.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
-import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -26,8 +25,7 @@ Future<void> pumpResult(
   _taps.clear();
   setScreenSize(tester, size);
   await tester.pumpWidget(
-    MaterialApp(
-      theme: KoTheme.light(),
+    testApp(
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context)
             .copyWith(disableAnimations: disableAnimations),

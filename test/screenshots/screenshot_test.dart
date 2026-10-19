@@ -18,7 +18,6 @@ import 'package:kucing_oren/game/model/run_clock.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
-import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -223,9 +222,7 @@ void main() {
     await withShadows(() async {
       await tester.pumpWidget(
         capturable(
-          MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: KoTheme.light(),
+          testApp(
             home: LevelView(
               level: level,
               backLabel: 'Kembali',

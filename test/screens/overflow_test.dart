@@ -11,7 +11,6 @@ import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
 import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
-import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -283,8 +282,7 @@ void main() {
             setScreenSize(tester, size);
             setTextScale(tester, scale);
             await tester.pumpWidget(
-              MaterialApp(
-                theme: KoTheme.light(),
+              testApp(
                 home: Scaffold(
                   body: ResultView(
                     session: session(),
@@ -322,8 +320,7 @@ void main() {
             setScreenSize(tester, size);
             setTextScale(tester, scale);
             await tester.pumpWidget(
-              MaterialApp(
-                theme: KoTheme.light(),
+              testApp(
                 home: Scaffold(
                   body: ReplayView(
                     session: session(),
