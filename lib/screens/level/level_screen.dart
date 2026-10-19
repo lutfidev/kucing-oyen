@@ -11,6 +11,7 @@ import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'level_view.dart';
 import 'tutorial.dart';
+import '../../l10n/l10n.dart';
 
 /// Rute `/babak/:chapter/level/:id`: level dari [ProgressScope] di
 /// [LevelView]. Bintang (dan koin bintang baru) dicatat saat layar hasil
@@ -25,8 +26,6 @@ class LevelScreen extends StatelessWidget {
   /// Nomor level; null kalau rutenya tidak berisi angka.
   final int? levelId;
 
-  static const _backLabel = 'Kembali ke peta';
-
   @override
   Widget build(BuildContext context) {
     final progress = ProgressScope.read(context);
@@ -37,16 +36,17 @@ class LevelScreen extends StatelessWidget {
     final backTo = level?.chapter ?? chapter;
     void back() =>
         context.go(backTo == null ? AppRoutes.home : AppRoutes.chapter(backTo));
+    final l = context.l10n;
     if (level == null) {
       return _NotFound(
-        backLabel: backTo == null ? 'Kembali ke Beranda' : _backLabel,
+        backLabel: backTo == null ? l.backToHome : l.backToMap,
         onBack: back,
       );
     }
     return LevelView(
       key: ValueKey(level.id),
       level: level,
-      backLabel: _backLabel,
+      backLabel: l.backToMap,
       onBack: back,
       onNext: () => _next(context, progress.levels, level),
       onResult: (stars) {
@@ -100,7 +100,7 @@ class _NotFound extends StatelessWidget {
               Expanded(
                 child: Center(
                   child: Text(
-                    'Level ini nggak ada.',
+                    context.l10n.levelMissing,
                     textAlign: TextAlign.center,
                     style: context.koType.body.copyWith(
                       color: context.koColors.inkSoft,

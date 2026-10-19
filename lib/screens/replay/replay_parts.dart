@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import '../../game/render/render.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../../l10n/l10n.dart';
 
 /// Gaya yang benar-benar dipakai `Text`: [style] di atas [DefaultTextStyle],
 /// supaya ukuran hasil hitung sama dengan layar.
@@ -24,7 +25,8 @@ Size _textSize(BuildContext context, String text, TextStyle style) {
 }
 
 /// Nomor langkah di caption dan pembaca layar: "Awal" untuk langkah 0.
-String replayStepLabel(int step) => step == 0 ? 'Awal' : '$step';
+String replayStepLabel(AppLocalizations l, int step) =>
+    step == 0 ? l.replayStart : '$step';
 
 /// Bar atas putar ulang: kembali ke hasil, "LEVEL 13 · VAS IBU" di atas
 /// judul "Putar Ulang", dan chip "Rekaman".
@@ -46,7 +48,7 @@ class ReplayBar extends StatelessWidget {
         children: [
           KoIconButton(
             icon: KoIcons.back,
-            semanticLabel: 'Kembali ke hasil',
+            semanticLabel: context.l10n.backToResult,
             onPressed: onBack,
           ),
           SizedBox(width: space.s10),
@@ -64,7 +66,11 @@ class ReplayBar extends StatelessWidget {
                       maxLines: 1,
                       style: t.overline.copyWith(color: c.inkSoft),
                     ),
-                    Text('Putar Ulang', maxLines: 1, style: t.headingLarge),
+                    Text(
+                      context.l10n.replay,
+                      maxLines: 1,
+                      style: t.headingLarge,
+                    ),
                   ],
                 ),
               ),
@@ -104,7 +110,7 @@ class RecordChip extends StatelessWidget {
           ),
           SizedBox(width: space.s6),
           Text(
-            'Rekaman',
+            context.l10n.recording,
             maxLines: 1,
             style: context.koType.labelSmall.copyWith(color: c.cream),
           ),
@@ -143,7 +149,7 @@ class ReplayBoard extends StatelessWidget {
         return Center(
           child: Semantics(
             image: true,
-            label: BoardScene.label,
+            label: context.l10n.boardLabel,
             child: TweenAnimationBuilder<Offset>(
               tween: Tween(
                 end: oyen == null ? Offset.zero : Offset(oyen.col, oyen.row),
@@ -227,7 +233,10 @@ class ReplayCaption extends StatelessWidget {
     final badge = math.max(
       s.stepBadge,
       2 * space.s8 +
-          [replayStepLabel(0), replayStepLabel(captions.length - 1)]
+          [
+                replayStepLabel(context.l10n, 0),
+                replayStepLabel(context.l10n, captions.length - 1),
+              ]
               .map((label) => _textSize(context, label, t.numberBadge).width)
               .reduce(math.max),
     );
@@ -254,11 +263,12 @@ class ReplayCaption extends StatelessWidget {
     final t = context.koType;
     final space = context.koSpace;
     final s = context.koSize;
-    final label = replayStepLabel(step);
+    final l = context.l10n;
+    final label = replayStepLabel(l, step);
     return Semantics(
       container: true,
       liveRegion: true,
-      label: step == 0 ? text : 'Langkah $step. $text',
+      label: step == 0 ? text : l.replayStepCaption(step, text),
       excludeSemantics: true,
       child: Container(
         height: heightFor(context, lines),
@@ -339,7 +349,8 @@ class ReplaySlider extends StatelessWidget {
     return ticks;
   }
 
-  String _valueOf(int step) => step == 0 ? replayStepLabel(0) : 'Langkah $step';
+  String _valueOf(AppLocalizations l, int step) =>
+      step == 0 ? replayStepLabel(l, 0) : l.stepNumber(step);
 
   @override
   Widget build(BuildContext context) {
@@ -348,6 +359,7 @@ class ReplaySlider extends StatelessWidget {
     final space = context.koSpace;
     final s = context.koSize;
     final radius = s.sliderThumb / 2;
+    final l = context.l10n;
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
@@ -369,7 +381,7 @@ class ReplaySlider extends StatelessWidget {
           children: [
             ExcludeSemantics(
               child: Text(
-                'WAKTU',
+                l.timeline.toUpperCase(),
                 maxLines: 1,
                 style: t.overline.copyWith(color: c.inkSoft),
               ),
@@ -377,10 +389,10 @@ class ReplaySlider extends StatelessWidget {
             SizedBox(height: space.s4),
             Semantics(
               slider: true,
-              label: 'Waktu',
-              value: _valueOf(value),
-              increasedValue: value < max ? _valueOf(value + 1) : null,
-              decreasedValue: value > 0 ? _valueOf(value - 1) : null,
+              label: l.timeline,
+              value: _valueOf(l, value),
+              increasedValue: value < max ? _valueOf(l, value + 1) : null,
+              decreasedValue: value > 0 ? _valueOf(l, value - 1) : null,
               onIncrease: value < max ? () => onChanged(value + 1) : null,
               onDecrease: value > 0 ? () => onChanged(value - 1) : null,
               child: GestureDetector(
@@ -496,17 +508,17 @@ class ReplayControls extends StatelessWidget {
       children: [
         _StepButton(
           icon: KoIcons.stepBack,
-          semanticLabel: 'Mundur satu langkah',
+          semanticLabel: context.l10n.stepBack,
           onPressed: onPrev,
         ),
         SizedBox(width: space.s12),
         Expanded(
-          child: KoButton(label: 'Kembali ke peta', onPressed: onMap),
+          child: KoButton(label: context.l10n.backToMap, onPressed: onMap),
         ),
         SizedBox(width: space.s12),
         _StepButton(
           icon: KoIcons.stepForward,
-          semanticLabel: 'Maju satu langkah',
+          semanticLabel: context.l10n.stepForward,
           onPressed: onNext,
         ),
       ],

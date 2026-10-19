@@ -4,6 +4,8 @@ import '../game/model/rules.dart';
 import '../game/render/render.dart';
 import '../game/sim/item.dart';
 import '../theme/theme.dart';
+import '../l10n/l10n.dart';
+import '../l10n/names.dart';
 
 /// Satu petak seukuran [size] px (desain 50 px). Hiasan saja.
 class TileView extends StatelessWidget {
@@ -175,7 +177,7 @@ class OyenView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       image: true,
-      label: look.label,
+      label: oyenLabel(context.l10n, look),
       child: CustomPaint(size: Size.square(size), painter: _OyenPainter(look)),
     );
   }
@@ -205,7 +207,7 @@ class BoardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       image: true,
-      label: BoardScene.label,
+      label: context.l10n.boardLabel,
       child: FittedBox(
         fit: BoxFit.scaleDown,
         child: CustomPaint(

@@ -14,12 +14,8 @@ void main() {
         OyenCostume.kacamata,
       ],
     );
-    expect(
-      [for (final c in costumes) c.name],
-      ['Polos', 'Peci', 'Sarung', 'Topi Koki', 'Kacamata'],
-    );
     expect([for (final c in costumes) c.price], [0, 60, 90, 150, 45]);
-    expect(costumeOf(OyenCostume.koki).name, 'Topi Koki');
+    expect(costumeOf(OyenCostume.koki).price, 150);
   });
 
   group('Wardrobe', () {

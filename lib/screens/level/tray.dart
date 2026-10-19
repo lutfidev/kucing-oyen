@@ -4,13 +4,8 @@ import 'package:flutter/widgets.dart';
 import '../../game/sim/item.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-
-/// Nama benda di baki untuk pembaca layar.
-String itemName(Item item) => switch (item) {
-  Item.fish => 'Ikan asin',
-  Item.water => 'Ember air',
-  Item.box => 'Kardus',
-};
+import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 
 /// Jari mulai menyeret [item] dari slot baki di posisi layar [global].
 /// Mengembalikan penerima seretan, atau null kalau ditolak.
@@ -63,7 +58,7 @@ class TrayPanel extends StatelessWidget {
           RotatedBox(
             quarterTurns: 3,
             child: Text(
-              'Benda'.toUpperCase(),
+              context.l10n.trayLabel.toUpperCase(),
               maxLines: 1,
               style: t.overline.copyWith(color: c.inkSoft),
             ),
@@ -115,7 +110,7 @@ class TrayPanel extends StatelessWidget {
           SizedBox(width: gap),
           KoIconButton(
             icon: KoIcons.reset,
-            semanticLabel: 'Kosongkan papan',
+            semanticLabel: context.l10n.clearBoard,
             tone: KoIconButtonTone.floor,
             iconSize: s.iconSmall,
             onPressed: onClear,
@@ -142,10 +137,10 @@ class _TrayHint extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Taruh di petak', maxLines: 1, style: t.labelSmall),
+            Text(context.l10n.trayHintTop, maxLines: 1, style: t.labelSmall),
             SizedBox(height: space.s2),
             Text(
-              'yang menyala',
+              context.l10n.trayHintBottom,
               maxLines: 1,
               style: t.caption.copyWith(color: context.koColors.inkSoft),
             ),
@@ -174,7 +169,8 @@ class _TrayItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = itemName(item);
+    final l = context.l10n;
+    final name = itemName(l, item);
     return RawGestureDetector(
       gestures: {
         ImmediateMultiDragGestureRecognizer:
@@ -190,8 +186,8 @@ class _TrayItem extends StatelessWidget {
       child: TraySlot(
         count: count,
         semanticLabel: dragging
-            ? '$name, sedang diseret, sisa $count'
-            : '$name, sisa $count',
+            ? l.traySlotDragging(name, count)
+            : l.traySlotLabel(name, count),
         child: ItemArtView(item, ghost: count == 0),
       ),
     );

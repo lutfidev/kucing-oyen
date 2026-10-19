@@ -9,6 +9,8 @@ import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../coins/coin_sheet.dart';
 import 'closet_parts.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 
 /// Lemari Kostum (desain 12, rute `/kostum`): pratinjau Oyen di lemari,
 /// grid kostum, dan tombol beli/pakai. Menekan kartu hanya memilih
@@ -94,7 +96,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
                           Semantics(
                             liveRegion: true,
                             child: Text(
-                              costume.name,
+                              costumeName(context.l10n, costume.id),
                               textAlign: TextAlign.center,
                               maxLines: 1,
                               style: t.heading.copyWith(color: c.ink),
@@ -114,7 +116,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
                 ),
               ),
               KoButton(
-                label: closetActionLabel(action, costume),
+                label: closetActionLabel(context.l10n, action, costume),
                 onPressed: enabled ? act : null,
               ),
               SizedBox(height: space.s32),

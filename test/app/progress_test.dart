@@ -184,7 +184,7 @@ void main() {
       expect(controller.maxStars, 60);
       expect(controller.levelById(13)?.name, 'Vas Ibu');
       expect(controller.levelById(99), isNull);
-      expect(controller.chapter(2)?.name, 'Ruang Tamu');
+      expect(controller.chapter(2)?.levels.first.id, 11);
       expect(controller.currentChapter.number, 1);
       expect(controller.isTutorialDone(1), isTrue);
       expect(controller.isTutorialDone(3), isFalse);

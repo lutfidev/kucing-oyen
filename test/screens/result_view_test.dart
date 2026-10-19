@@ -223,7 +223,7 @@ void main() {
       expect(find.text('Belum'), findsOneWidget);
       expect(_stat(tester, 'langkah'), '10 langkah');
       expect(_stat(tester, 'benda dipakai'), '1 benda dipakai');
-      expect(find.bySemanticsLabel(VaseArt.label), findsOneWidget);
+      expect(find.bySemanticsLabel(l10nId.vaseArtLabel), findsOneWidget);
       expect(find.byType(ResultRays), findsNothing);
       semantics.dispose();
     });

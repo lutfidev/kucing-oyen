@@ -10,11 +10,13 @@ import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
-import 'package:kucing_oren/screens/level/tray.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
 import 'result_fixtures.dart';
+
+import 'package:kucing_oren/l10n/names.dart';
+import 'package:kucing_oren/app/language.dart';
 
 /// Menaruh [placements] lewat seretan dari baki ke petaknya.
 Future<void> _place(WidgetTester tester, List<Placement> placements) async {
@@ -22,7 +24,9 @@ Future<void> _place(WidgetTester tester, List<Placement> placements) async {
   final scale = board.width / BoardScene.width;
   for (final Placement(:item, :pos) in placements) {
     final slot = find.byWidgetPredicate(
-      (w) => w is TraySlot && w.semanticLabel.startsWith('${itemName(item)},'),
+      (w) =>
+          w is TraySlot &&
+          w.semanticLabel.startsWith('${itemName(l10nId, item)},'),
     );
     final target =
         board.topLeft +
@@ -54,8 +58,12 @@ void main() {
   testWidgets('menang di level 1: tersimpan, Lanjut ke level 2 yang terbuka', (
     tester,
   ) async {
-    final store = MemoryProgressStore();
-    final progress = ProgressController(levels: testLevels, store: store);
+    final store = MemoryProgressStore()..language = AppLanguage.id;
+    final progress = ProgressController(
+      levels: testLevels,
+      store: store,
+      language: AppLanguage.id,
+    );
     await pumpApp(tester, location: AppRoutes.chapter(1), progress: progress);
     expect(find.bySemanticsLabel('Level 2, terkunci'), findsOneWidget);
 
@@ -80,7 +88,8 @@ void main() {
   testWidgets('Oyen bosan: tidak dicatat, level berikutnya tetap terkunci', (
     tester,
   ) async {
-    final store = MemoryProgressStore(testProgress(wonUpTo(12)).progress);
+    final store = MemoryProgressStore(testProgress(wonUpTo(12)).progress)
+      ..language = AppLanguage.id;
     final progress = await ProgressController.load(
       levels: testLevels,
       store: store,
@@ -204,11 +213,15 @@ void main() {
   });
 
   testWidgets('progres dimuat lagi saat aplikasi dibuka ulang', (tester) async {
-    final store = MemoryProgressStore();
+    final store = MemoryProgressStore()..language = AppLanguage.id;
     await pumpApp(
       tester,
       location: AppRoutes.level(1, chapter: 1),
-      progress: ProgressController(levels: testLevels, store: store),
+      progress: ProgressController(
+        levels: testLevels,
+        store: store,
+        language: AppLanguage.id,
+      ),
     );
     await _play(tester);
 

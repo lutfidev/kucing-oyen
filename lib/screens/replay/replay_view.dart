@@ -9,6 +9,7 @@ import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../result/result_parts.dart';
 import 'replay_parts.dart';
+import '../../l10n/names.dart';
 
 /// Putar ulang (desain 09) percobaan [session] yang sudah di layar hasil:
 /// papan di langkah mana pun dengan seluruh jalur dan nomor jejak, caption
@@ -62,10 +63,7 @@ class _ReplayViewState extends State<ReplayView> {
     return ResultPage(
       background: context.koColors.cream,
       children: [
-        ReplayBar(
-          kicker: 'Level ${_level.id} · ${_level.name}',
-          onBack: widget.onBack,
-        ),
+        ReplayBar(kicker: levelTitle(l, _level), onBack: widget.onBack),
         SizedBox(height: space.s24),
         Expanded(
           child: ReplayBoard(

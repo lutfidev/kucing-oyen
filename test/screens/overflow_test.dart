@@ -78,7 +78,9 @@ void main() {
               progress: testProgress(wonUpTo(id - 1), {}),
             );
             expect(tester.takeException(), isNull);
-            final title = tester.getRect(find.text(tutorialFor(id)!.title));
+            final title = tester.getRect(
+              find.text(tutorialTitle(l10nId, tutorialFor(id)!)),
+            );
             expect(title.top, greaterThanOrEqualTo(0));
             expect(title.right, lessThanOrEqualTo(size.width));
             expect(find.text('Lewati').hitTestable(), findsOneWidget);

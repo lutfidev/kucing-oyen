@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../../l10n/l10n.dart';
 
 /// Bar atas layar level: kembali, judul level, dan [trailing] (tombol
 /// Aturan di fase atur, penghitung langkah di fase jalan).
@@ -63,8 +64,8 @@ class RulesButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return KoIconButton(
       icon: KoIcons.rules,
-      semanticLabel: 'Aturan',
-      label: 'Aturan',
+      semanticLabel: context.l10n.rules,
+      label: context.l10n.rules,
       onPressed: onPressed,
     );
   }
@@ -82,10 +83,10 @@ class TargetChip extends StatelessWidget {
     final c = context.koColors;
     final space = context.koSpace;
     final s = context.koSize;
-    final text = 'pakai $items benda';
+    final text = context.l10n.targetItems(items);
     return Semantics(
       container: true,
-      label: 'Target 3 bintang: $text',
+      label: context.l10n.targetLabel(text),
       excludeSemantics: true,
       child: Container(
         height: s.chip,
@@ -119,7 +120,7 @@ class HintButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return KoIconButton(
       icon: KoIcons.hint,
-      semanticLabel: 'Petunjuk',
+      semanticLabel: context.l10n.hint,
       tone: KoIconButtonTone.hint,
       onPressed: onPressed,
     );

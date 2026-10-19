@@ -14,11 +14,12 @@ import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/level/run_panel.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
-import 'package:kucing_oren/screens/level/tray.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
+
+import 'package:kucing_oren/l10n/names.dart';
 
 /// Level dibaca langsung dari berkas, tanpa `rootBundle`.
 final _levels = parseLevels(File(chapter1to2Asset).readAsStringSync());
@@ -87,7 +88,8 @@ Offset _tileCenter(WidgetTester tester, int col, int row) {
 }
 
 Finder _slot(Item item) => find.byWidgetPredicate(
-  (w) => w is TraySlot && w.semanticLabel.startsWith('${itemName(item)},'),
+  (w) =>
+      w is TraySlot && w.semanticLabel.startsWith('${itemName(l10nId, item)},'),
 );
 
 TraySlot _slotOf(WidgetTester tester, Item item) =>

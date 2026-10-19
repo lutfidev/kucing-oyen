@@ -101,20 +101,15 @@ void main() {
       expect(chapters, hasLength(2));
       final [kitchen, livingRoom] = chapters;
       expect(kitchen.number, 1);
-      expect(kitchen.name, 'Dapur');
-      expect(kitchen.title, 'Babak 1 – Dapur');
       expect(kitchen.levels.map((l) => l.id), [
         for (var i = 1; i <= 10; i++) i,
       ]);
       expect(kitchen.boss.id, 10);
-      expect(kitchen.bossName, 'Pesta Ikan Asin');
       expect(kitchen.maxStars, 30);
 
       expect(livingRoom.number, 2);
-      expect(livingRoom.name, 'Ruang Tamu');
       expect(livingRoom.levels.first.id, 11);
       expect(livingRoom.boss.id, 20);
-      expect(livingRoom.bossName, 'Hari Lebaran');
     });
 
     test('level dari 1 sampai 20 berurutan (aturan buka kunci memakai id)', () {
@@ -147,7 +142,7 @@ void main() {
     });
 
     test('babak dari nomor dan dari level', () {
-      expect(chapterNumbered(chapters, 2)?.name, 'Ruang Tamu');
+      expect(chapterNumbered(chapters, 2)?.number, 2);
       expect(chapterNumbered(chapters, 3), isNull);
       expect(chapterOfLevel(chapters, 10)?.number, 1);
       expect(chapterOfLevel(chapters, 11)?.number, 2);

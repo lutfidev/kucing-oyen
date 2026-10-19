@@ -8,6 +8,8 @@ import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 
 /// Keadaan satu level di peta.
 enum NodeState {
@@ -163,18 +165,18 @@ class LevelNode extends StatelessWidget {
   final bool labelBelow;
 
   /// Label pembaca layar, sama dengan `aria-label` desain.
-  static String labelOf(Level level, NodeState state, int stars) =>
-      'Level ${level.id}, ${switch (state) {
-        NodeState.done => '$stars bintang',
-        NodeState.current => 'main sekarang',
-        NodeState.locked => 'terkunci',
-      }}';
+  static String labelOf(
+    AppLocalizations l,
+    Level level,
+    NodeState state,
+    int stars,
+  ) => l.levelNodeLabel(level.id, _status(l, state, stars));
 
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
     final s = context.koSize;
-    final label = labelOf(level, state, stars);
+    final label = labelOf(context.l10n, level, state, stars);
     final number = Text(
       '${level.id}',
       style: context.koType.numberMedium.copyWith(color: c.ink),
@@ -264,12 +266,12 @@ class BossNode extends StatelessWidget {
     final space = context.koSpace;
     final radius = context.koRadius;
     final locked = state == NodeState.locked;
-    final label =
-        'Level ${chapter.boss.id}, bos ${chapter.bossName}, ${switch (state) {
-          NodeState.done => '$stars bintang',
-          NodeState.current => 'main sekarang',
-          NodeState.locked => 'terkunci',
-        }}';
+    final l = context.l10n;
+    final label = l.bossNodeLabel(
+      chapter.boss.id,
+      bossName(l, chapter),
+      _status(l, state, stars),
+    );
     final art = CustomPaint(
       size: Size.square(s.bossArt),
       painter: _BossArt(chapter.number),
@@ -366,7 +368,7 @@ class BossNode extends StatelessWidget {
               ),
             ),
             child: Text(
-              'Bos · ${chapter.bossName}',
+              l.bossTag(bossName(l, chapter)),
               maxLines: 1,
               style: context.koType.badge.copyWith(color: c.onBrick),
             ),
@@ -421,7 +423,7 @@ class _Current extends StatelessWidget {
                   borderRadius: BorderRadius.circular(context.koRadius.pill),
                 ),
                 child: Text(
-                  'Main',
+                  context.l10n.play,
                   maxLines: 1,
                   style: context.koType.tagSmall.copyWith(color: c.cream),
                 ),
@@ -550,3 +552,11 @@ class _BossArea extends CustomPainter {
   @override
   bool shouldRepaint(_BossArea old) => false;
 }
+
+/// Keadaan node untuk pembaca layar: bintang, main sekarang, atau terkunci.
+String _status(AppLocalizations l, NodeState state, int stars) =>
+    switch (state) {
+      NodeState.done => l.nodeStars(stars),
+      NodeState.current => l.statusPlayNow,
+      NodeState.locked => l.statusLocked,
+    };

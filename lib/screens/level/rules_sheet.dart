@@ -5,6 +5,7 @@ import '../../game/render/render.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'level_sheet.dart';
+import '../../l10n/l10n.dart';
 
 /// Membuka sheet "Aturan Oyen" (desain 05) di atas layar level. Ditutup
 /// dengan tombol tutup, ketuk latar gelap, tombol kembali sistem, atau
@@ -14,7 +15,7 @@ Future<void> showRulesSheet(
   required Set<OyenRule> learned,
 }) => showLevelSheet(
   context,
-  barrierLabel: 'Tutup aturan',
+  barrierLabel: context.l10n.closeRules,
   builder: (context, onClose) => RulesSheet(learned: learned, onClose: onClose),
 );
 
@@ -61,7 +62,7 @@ class _RulesSheetState extends State<RulesSheet>
     final space = context.koSpace;
     final s = context.koSize;
     return LevelSheet(
-      label: 'Aturan Oyen',
+      label: context.l10n.rulesTitle,
       onClose: widget.onClose,
       header: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,12 +73,11 @@ class _RulesSheetState extends State<RulesSheet>
               children: [
                 Semantics(
                   header: true,
-                  child: Text('Aturan Oyen', style: t.title),
+                  child: Text(context.l10n.rulesTitle, style: t.title),
                 ),
                 SizedBox(height: space.s2),
                 Text(
-                  'Tiap langkah dicek urut dari atas. Yang pertama '
-                  'cocok, itu yang dia lakukan.',
+                  context.l10n.rulesIntro,
                   style: t.bodySmall.copyWith(color: c.inkSoft),
                 ),
               ],
@@ -86,7 +86,7 @@ class _RulesSheetState extends State<RulesSheet>
           SizedBox(width: space.s12),
           KoIconButton(
             icon: KoIcons.close,
-            semanticLabel: 'Tutup',
+            semanticLabel: context.l10n.close,
             tone: KoIconButtonTone.flat,
             iconSize: s.iconSmall,
             onPressed: widget.onClose,
@@ -157,6 +157,7 @@ class RuleCard extends StatelessWidget {
       ),
     );
 
+    final l = context.l10n;
     final List<Widget> lines;
     if (learned) {
       final body = t.cardBody.copyWith(color: c.inkSoft);
@@ -169,75 +170,57 @@ class RuleCard extends StatelessWidget {
         child: KoIcon(icon, size: arrowSize, color: color),
       );
       lines = [
-        Text(_title(rule), style: t.cardTitle),
+        Text(_title(l, rule), style: t.cardTitle),
         ...switch (rule) {
-          OyenRule.knock => [
-            Text(
-              'Ada gelas atau vas di meja sebelah? Disenggol. Pasti.',
-              style: body,
-            ),
-          ],
+          OyenRule.knock => [Text(l.ruleKnockBody, style: body)],
           OyenRule.fish => [
-            Text('Yang kelihatan lurus saja. Kalau seri:', style: body),
+            Text(l.ruleFishBody, style: body),
             Text.rich(
               TextSpan(
                 children: [
-                  const TextSpan(text: 'depan '),
+                  TextSpan(text: '${l.tieAhead} '),
                   arrow(KoIcons.arrowRight, c.ink),
-                  const TextSpan(text: ' searah jarum jam '),
+                  TextSpan(text: ' ${l.tieClockwise} '),
                   arrow(KoIcons.turnClockwise, c.turnClockwise),
                   const TextSpan(text: ' '),
                   arrow(KoIcons.arrowRight, c.ink),
-                  const TextSpan(text: ' berlawanan jarum jam '),
+                  TextSpan(text: ' ${l.tieCounterClockwise} '),
                   arrow(KoIcons.turnCounterClockwise, c.brickDeep),
                   const TextSpan(text: ' '),
                   arrow(KoIcons.arrowRight, c.ink),
-                  const TextSpan(text: ' belakang'),
+                  TextSpan(text: ' ${l.tieBehind}'),
                 ],
               ),
               style: strong,
-              semanticsLabel:
-                  'Urutan seri: depan, searah jarum jam, berlawanan jarum '
-                  'jam, belakang.',
+              semanticsLabel: l.tieOrderLabel,
             ),
           ],
-          OyenRule.water => [
-            Text(
-              'Ketemu genangan atau ember, Oyen kaget lalu balik badan.',
-              style: body,
-            ),
-          ],
+          OyenRule.water => [Text(l.ruleWaterBody, style: body)],
           OyenRule.wall => [
             Text.rich(
               TextSpan(
                 children: [
                   arrow(KoIcons.arrowRight, c.ink),
-                  const TextSpan(text: ' Oyen berputar searah jarum jam '),
+                  TextSpan(text: ' ${l.ruleWallTurn} '),
                   arrow(KoIcons.turnClockwise, c.ink),
                 ],
               ),
               style: strong,
-              semanticsLabel: 'Oyen berputar searah jarum jam.',
+              semanticsLabel: '${l.ruleWallTurn}.',
             ),
-            Text('Seperempat putaran, lalu jalan lagi.', style: body),
+            Text(l.ruleWallBody, style: body),
           ],
-          OyenRule.box => [
-            Text(
-              'Duduk 2 langkah sampai kardusnya penyok dan hilang. '
-              'Ikan di balik kardus nggak kelihatan.',
-              style: body,
-            ),
-          ],
+          OyenRule.box => [Text(l.ruleBoxBody, style: body)],
         },
       ];
     } else {
       lines = [
         Text(
-          '${_lockedName(rule)}: ???',
+          l.ruleLockedTitle(_lockedName(l, rule)),
           style: t.cardTitle.copyWith(color: c.onDisabled),
         ),
         Text(
-          'Belum dipelajari. Nanti juga kenalan sendiri.',
+          l.ruleLockedBody,
           style: t.cardBody.copyWith(color: c.onLockedSoft),
         ),
       ];
@@ -267,29 +250,30 @@ class RuleCard extends StatelessWidget {
     if (!learned) {
       return Semantics(
         container: true,
-        label: 'Aturan $n, terkunci, belum dipelajari',
+        label: l.ruleLockedLabel(n),
         excludeSemantics: true,
         child: card,
       );
     }
     return MergeSemantics(
-      child: Semantics(label: 'Aturan $n', child: card),
+      child: Semantics(label: l.ruleLabel(n), child: card),
     );
   }
 
-  static String _title(OyenRule rule) => switch (rule) {
-    OyenRule.knock => 'Jatuhkan barang di sebelahnya',
-    OyenRule.fish => 'Kejar ikan terdekat',
-    OyenRule.water => 'Air? Putar balik',
-    OyenRule.wall => 'Mentok tembok atau meja',
-    OyenRule.box => 'Kardus? Masuk, duduk',
+  static String _title(AppLocalizations l, OyenRule rule) => switch (rule) {
+    OyenRule.knock => l.ruleKnockTitle,
+    OyenRule.fish => l.ruleFishTitle,
+    OyenRule.water => l.ruleWaterTitle,
+    OyenRule.wall => l.ruleWallTitle,
+    OyenRule.box => l.ruleBoxTitle,
   };
 
-  static String _lockedName(OyenRule rule) => switch (rule) {
-    OyenRule.knock => 'Barang di meja',
-    OyenRule.fish => 'Ikan',
-    OyenRule.water => 'Air',
-    OyenRule.wall => 'Tembok',
-    OyenRule.box => 'Kardus',
-  };
+  static String _lockedName(AppLocalizations l, OyenRule rule) =>
+      switch (rule) {
+        OyenRule.knock => l.ruleKnockLocked,
+        OyenRule.fish => l.ruleFishLocked,
+        OyenRule.water => l.ruleWaterLocked,
+        OyenRule.wall => l.ruleWallLocked,
+        OyenRule.box => l.ruleBoxLocked,
+      };
 }

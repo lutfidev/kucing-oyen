@@ -7,6 +7,7 @@ import 'package:path_drawing/path_drawing.dart';
 import '../../game/render/render.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../../l10n/l10n.dart';
 
 /// Kerangka layar hasil: latar penuh, isi dari atas, dan tombol di bawah,
 /// dengan jarak tepi seperti layar level.
@@ -180,7 +181,7 @@ class _ResultStarsState extends State<ResultStars>
     return Semantics(
       container: true,
       image: true,
-      label: '${w.earned} dari ${ResultStars.total} bintang',
+      label: context.l10n.starsOf(w.earned, ResultStars.total),
       excludeSemantics: true,
       child: AnimatedBuilder(
         animation: _clock,
@@ -414,7 +415,7 @@ class _RuleRow extends StatelessWidget {
             SizedBox(width: space.s10),
             if (status == null)
               Semantics(
-                label: 'tercapai',
+                label: context.l10n.goalAchieved,
                 child: Container(
                   width: s.checkBadge,
                   height: s.checkBadge,

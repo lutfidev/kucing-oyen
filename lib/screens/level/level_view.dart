@@ -28,6 +28,7 @@ import 'rules_sheet.dart';
 import 'run_panel.dart';
 import 'tray.dart';
 import 'tutorial.dart';
+import '../../l10n/names.dart';
 
 /// Benda yang sedang diseret jari, dari baki atau dari papan.
 class _ItemDrag {
@@ -480,9 +481,9 @@ class _LevelViewState extends State<LevelView>
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         LevelTopBar(
-                          title: 'Level ${_level.id} · ${_level.name}',
+                          title: levelTitle(context.l10n, _level),
                           backLabel: running
-                              ? 'Kembali ke fase atur'
+                              ? context.l10n.backToArrange
                               : widget.backLabel,
                           onBack: running ? _arrangeAgain : widget.onBack,
                           trailing: run == null
@@ -616,7 +617,7 @@ class _LevelViewState extends State<LevelView>
             SizedBox(height: space.s16),
             KoButton(
               key: _wakeKey,
-              label: 'Bangunkan Oyen',
+              label: context.l10n.wakeOyen,
               icon: KoIcons.wake,
               size: KoButtonSize.large,
               onPressed: _wake,
@@ -637,7 +638,7 @@ class _LevelViewState extends State<LevelView>
   /// Baki fase atur.
   Widget _tray() {
     if (_level.inventory.isEmpty) {
-      return const TrayMessage('Level ini belum butuh benda.');
+      return TrayMessage(context.l10n.trayEmpty);
     }
     final drag = _drag;
     final remaining = _session.remaining;

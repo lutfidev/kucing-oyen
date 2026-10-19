@@ -37,9 +37,9 @@ void main() {
   group('Beranda', () {
     testWidgets('logo, Oyen tidur, tagline, dan total bintang', (tester) async {
       await pumpApp(tester, progress: testProgress(_design));
-      expect(find.text('Kucing'), findsOneWidget);
-      expect(find.text('Oren'), findsOneWidget);
-      expect(_label('Kucing Oren'), findsOneWidget);
+      expect(find.text('Ginger'), findsOneWidget);
+      expect(find.text('Logic'), findsOneWidget);
+      expect(_label('Ginger Logic'), findsOneWidget);
       expect(_label('Oyen tidur, menghadap bawah'), findsOneWidget);
       expect(
         find.text('Oyen nggak bisa disuruh. Kamu yang mikir.'),
@@ -62,7 +62,7 @@ void main() {
       );
       expect(chip.left, closeTo(24, 0.5));
       expect(chip.height, 40);
-      expect(chip.top, lessThan(tester.getRect(find.text('Kucing')).top));
+      expect(chip.top, lessThan(tester.getRect(find.text('Ginger')).top));
     });
 
     testWidgets('progres kosong: 0/60', (tester) async {

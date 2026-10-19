@@ -8,6 +8,7 @@ import '../../game/sim/sim.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../coins/coin_sheet.dart';
+import '../../l10n/l10n.dart';
 
 /// Beranda (desain 01): chip koin yang membuka sheet Tambah Koin (bertitik
 /// selama bonus harian belum diambil), Oyen tidur di atas logo, total
@@ -58,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 SizedBox(height: space.s16),
                 KoButton(
-                  label: 'Main',
+                  label: context.l10n.play,
                   size: KoButtonSize.hero,
                   icon: KoIcons.play,
                   onPressed: () => context.go(
@@ -75,16 +76,16 @@ class HomeScreen extends StatelessWidget {
                       Expanded(
                         child: _MenuButton(
                           icon: KoIcons.costume,
-                          label: 'Lemari Kostum',
+                          label: context.l10n.closet,
                           onPressed: () => context.go(AppRoutes.closet),
                         ),
                       ),
                       SizedBox(width: space.s12),
                       // Pengaturan belum berfungsi (langkah 15).
-                      const Expanded(
+                      Expanded(
                         child: _MenuButton(
                           icon: KoIcons.settings,
-                          label: 'Pengaturan',
+                          label: context.l10n.settings,
                         ),
                       ),
                     ],
@@ -130,13 +131,14 @@ class _Title extends StatelessWidget {
         SizedBox(height: space.s4),
         Semantics(
           header: true,
-          label: 'Kucing Oren',
+          label: appName,
           child: ExcludeSemantics(
             child: Column(
               children: [
-                Text('Kucing', style: t.logoSmall.copyWith(color: c.ink)),
+                // Merek sama di semua bahasa: "Ginger" kecil, "Logic" besar.
+                Text('Ginger', style: t.logoSmall.copyWith(color: c.ink)),
                 Text(
-                  'Oren',
+                  'Logic',
                   style: t.logo.copyWith(
                     color: c.logo,
                     shadows: context.koShadow.logo,
@@ -149,7 +151,7 @@ class _Title extends StatelessWidget {
         // Desain: jarak 4 + margin 18.
         SizedBox(height: space.s16 + space.s6),
         Text(
-          'Oyen nggak bisa disuruh. Kamu yang mikir.',
+          context.l10n.tagline,
           textAlign: TextAlign.center,
           style: t.bodyLarge.copyWith(color: c.inkSoft),
         ),
@@ -175,7 +177,7 @@ class _StarTotal extends StatelessWidget {
     final space = context.koSpace;
     final s = context.koSize;
     return Semantics(
-      label: '$stars dari $maxStars bintang',
+      label: context.l10n.starsOf(stars, maxStars),
       child: ExcludeSemantics(
         child: Container(
           padding: EdgeInsets.symmetric(
@@ -205,7 +207,10 @@ class _StarTotal extends StatelessWidget {
                 style: t.numberChip.copyWith(color: c.ink),
               ),
               SizedBox(width: space.s10),
-              Text('bintang', style: t.bodySmall.copyWith(color: c.inkSoft)),
+              Text(
+                context.l10n.starTotalUnit,
+                style: t.bodySmall.copyWith(color: c.inkSoft),
+              ),
             ],
           ),
         ),

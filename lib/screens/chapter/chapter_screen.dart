@@ -13,6 +13,7 @@ import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'chapter_header.dart';
 import 'chapter_map.dart';
+import '../../l10n/l10n.dart';
 
 /// Rute `/babak/:chapter`: peta babak dari [ProgressScope].
 class ChapterScreen extends StatelessWidget {
@@ -239,13 +240,13 @@ class _NotFound extends StatelessWidget {
             children: [
               KoIconButton(
                 icon: KoIcons.back,
-                semanticLabel: 'Kembali ke Beranda',
+                semanticLabel: context.l10n.backToHome,
                 onPressed: onBack,
               ),
               Expanded(
                 child: Center(
                   child: Text(
-                    'Babak ini nggak ada.',
+                    context.l10n.chapterMissing,
                     textAlign: TextAlign.center,
                     style: context.koType.body.copyWith(
                       color: context.koColors.inkSoft,

@@ -5,6 +5,8 @@ import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 
 /// Judul peta babak (desain 02): kembali, "BABAK 2 / Ruang Tamu", bintang
 /// babak, lalu kartu babak lain. Latarnya krem dan memudar setinggi
@@ -51,7 +53,7 @@ class ChapterHeader extends StatelessWidget {
               children: [
                 KoIconButton(
                   icon: KoIcons.back,
-                  semanticLabel: 'Kembali ke Beranda',
+                  semanticLabel: context.l10n.backToHome,
                   onPressed: onBack,
                 ),
                 SizedBox(width: space.s12),
@@ -63,14 +65,16 @@ class ChapterHeader extends StatelessWidget {
                       children: [
                         _FitStart(
                           Text(
-                            'Babak ${chapter.number}'.toUpperCase(),
+                            context.l10n
+                                .chapterNumber(chapter.number)
+                                .toUpperCase(),
                             maxLines: 1,
                             style: t.overline.copyWith(color: c.inkSoft),
                           ),
                         ),
                         _FitStart(
                           Text(
-                            chapter.name,
+                            chapterName(context.l10n, chapter),
                             maxLines: 1,
                             style: t.title.copyWith(color: c.ink),
                           ),
@@ -124,12 +128,17 @@ class ChapterCard extends StatelessWidget {
     final unlocked = chapter.isUnlocked(progress);
     final done = chapter.isDone(progress);
     final stars = chapter.stars(progress);
-    final status = done ? 'selesai, ' : (unlocked ? '' : 'terkunci, ');
+    final l = context.l10n;
+    final title = chapterTitle(l, chapter);
 
     return Semantics(
       button: unlocked,
       enabled: unlocked,
-      label: '${chapter.title}, $status$stars dari ${chapter.maxStars} bintang',
+      label: [
+        title,
+        if (done) l.statusDone else if (!unlocked) l.statusLocked,
+        l.starsOf(stars, chapter.maxStars),
+      ].join(', '),
       onTap: unlocked ? onOpen : null,
       excludeSemantics: true,
       child: GestureDetector(
@@ -153,7 +162,7 @@ class ChapterCard extends StatelessWidget {
               Expanded(
                 child: _FitStart(
                   Text(
-                    chapter.title,
+                    title,
                     maxLines: 1,
                     style: t.chipLabel.copyWith(color: c.ink),
                   ),
@@ -210,7 +219,7 @@ class _StatusBadge extends StatelessWidget {
           ),
           SizedBox(width: space.s4),
           Text(
-            done ? 'Selesai' : 'Terkunci',
+            done ? context.l10n.chapterDone : context.l10n.chapterLocked,
             maxLines: 1,
             style: context.koType.tag.copyWith(color: fg),
           ),
@@ -233,7 +242,7 @@ class _StarChip extends StatelessWidget {
     final s = context.koSize;
     final space = context.koSpace;
     return Semantics(
-      label: '$stars dari $maxStars bintang',
+      label: context.l10n.starsOf(stars, maxStars),
       excludeSemantics: true,
       child: Container(
         height: s.chip,

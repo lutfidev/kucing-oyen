@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import '../../game/kucing_game.dart';
 import '../../game/render/render.dart';
 import '../../theme/theme.dart';
+import '../../l10n/l10n.dart';
 
 /// Papan level: [KucingGame] dalam `GameWidget` dengan bingkai dan bayangan
 /// papan di belakangnya.
@@ -38,7 +39,7 @@ class LevelBoard extends StatelessWidget {
               painter: _FramePainter(scale),
               child: Semantics(
                 image: true,
-                label: BoardScene.label,
+                label: context.l10n.boardLabel,
                 child: ExcludeFocus(
                   child: GameWidget(game: game, autofocus: false),
                 ),
