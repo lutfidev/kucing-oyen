@@ -5,6 +5,8 @@ import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/costumes.dart';
 import '../../game/render/render.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../coins/coin_sheet.dart';
@@ -94,7 +96,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
                           Semantics(
                             liveRegion: true,
                             child: Text(
-                              costume.name,
+                              costumeName(context.l10n, costume.id),
                               textAlign: TextAlign.center,
                               maxLines: 1,
                               style: t.heading.copyWith(color: c.ink),
@@ -114,7 +116,7 @@ class _ClosetScreenState extends State<ClosetScreen> {
                 ),
               ),
               KoButton(
-                label: closetActionLabel(action, costume),
+                label: closetActionLabel(context.l10n, action, costume),
                 onPressed: enabled ? act : null,
               ),
               SizedBox(height: space.s32),

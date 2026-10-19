@@ -1,49 +1,107 @@
 import '../sim/sim.dart';
 import 'run_frames.dart';
 
-/// Caption langkah ke-[step] fase jalan (desain 04): bahasa santai dengan
-/// arah layar (atas, bawah, kiri, kanan).
+/// Penghalang di depan Oyen saat berputar.
+enum Obstacle { table, wall }
+
+/// Air yang membuat Oyen kaget: genangan bawaan peta atau ember pemain.
+enum WaterSource { puddle, bucket }
+
+/// Jenis caption fase jalan (desain 04).
+enum RunTextKind {
+  wake,
+  atBowl,
+  chase,
+  smellFish,
+  walk,
+  scared,
+  turn,
+  eat,
+  enterBox,
+  sit,
+  boxGone,
+  knockGlass,
+  knockVase,
+}
+
+/// Isi caption satu langkah fase jalan sebagai data; kalimatnya disusun
+/// per bahasa di lapisan teks (`runCaptionText`).
+class RunText {
+  const RunText(this.kind, {this.dir, this.obstacle});
+
+  final RunTextKind kind;
+
+  /// Arah layar yang disebut caption (hadap, jalan, kejar, bau ikan).
+  final Direction? dir;
+
+  /// Yang membuat Oyen berputar ([RunTextKind.turn]).
+  final Obstacle? obstacle;
+
+  @override
+  bool operator ==(Object other) =>
+      other is RunText &&
+      other.kind == kind &&
+      other.dir == dir &&
+      other.obstacle == obstacle;
+
+  @override
+  int get hashCode => Object.hash(kind, dir, obstacle);
+
+  @override
+  String toString() =>
+      'RunText(${kind.name}'
+      '${dir == null ? '' : ', ${dir!.name}'}'
+      '${obstacle == null ? '' : ', ${obstacle!.name}'})';
+}
+
+/// Caption langkah ke-[step] fase jalan (desain 04) dengan arah layar.
 ///
 /// [frames] dari `runFrames`; [board] dipakai untuk tahu Oyen mentok tembok
 /// atau meja.
-String runCaption(Board board, List<RunFrame> frames, int step) {
+RunText runCaption(Board board, List<RunFrame> frames, int step) {
   final frame = frames[step];
   final action = frame.action;
-  if (action == null) return 'Oyen bangun, menghadap ${frame.dir.label}.';
+  if (action == null) return RunText(RunTextKind.wake, dir: frame.dir);
   final dir = action.dir;
   switch (action.kind) {
     case StepKind.walk:
-      if (frame.atBowl) return 'Sampai di mangkuk! Nyam nyam.';
-      if (action.chasing != null) return 'Kejar ikan ke ${dir.label}.';
+      if (frame.atBowl) return const RunText(RunTextKind.atBowl);
+      if (action.chasing != null) return RunText(RunTextKind.chase, dir: dir);
       final next = step + 1 < frames.length ? frames[step + 1].action : null;
       final fish = next?.chasing;
       if (fish != null) {
-        return 'Eh, ada bau ikan asin di ${_toward(action.pos, fish).label}!';
+        return RunText(RunTextKind.smellFish, dir: toward(action.pos, fish));
       }
-      return 'Jalan lurus ke ${dir.label}, santai.';
+      return RunText(RunTextKind.walk, dir: dir);
     case StepKind.scared:
-      return 'Ada air! Oyen kaget, lalu putar balik.';
+      return const RunText(RunTextKind.scared);
     case StepKind.turn:
-      final ahead = board.cellAt(action.pos + dir.counterClockwise);
-      final what = ahead.isTable ? 'meja' : 'tembok';
-      return 'Mentok $what. Berputar, sekarang menghadap ${dir.label}.';
+      return RunText(
+        RunTextKind.turn,
+        dir: dir,
+        obstacle: obstacleAt(board, action.pos + dir.counterClockwise),
+      );
     case StepKind.eat:
-      return 'Hap! Ikan asinnya dimakan.';
+      return const RunText(RunTextKind.eat);
     case StepKind.enterBox:
-      return 'Ada kardus! Oyen masuk lalu duduk.';
+      return const RunText(RunTextKind.enterBox);
     case StepKind.sit:
-      return action.changed == null
-          ? 'Duduk manis di dalam kardus.'
-          : 'Kardusnya penyok, lalu hilang.';
+      return RunText(
+        action.changed == null ? RunTextKind.sit : RunTextKind.boxGone,
+      );
     case StepKind.knockGlass:
-      return 'Gelas didorong jatuh. Untung plastik!';
+      return const RunText(RunTextKind.knockGlass);
     case StepKind.knockVase:
-      return 'Waduh! Vas Ibu jatuh dan pecah.';
+      return const RunText(RunTextKind.knockVase);
   }
 }
 
+/// Penghalang di petak [pos]: meja, atau tembok untuk lainnya.
+Obstacle obstacleAt(Board board, Pos pos) =>
+    board.cellAt(pos).isTable ? Obstacle.table : Obstacle.wall;
+
 /// Arah dari [from] ke [to] yang sebaris atau sekolom.
-Direction _toward(Pos from, Pos to) {
+Direction toward(Pos from, Pos to) {
   if (to.x > from.x) return Direction.right;
   if (to.x < from.x) return Direction.left;
   return to.y > from.y ? Direction.down : Direction.up;

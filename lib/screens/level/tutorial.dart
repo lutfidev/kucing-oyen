@@ -4,21 +4,17 @@ import 'package:flutter/material.dart';
 
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
-/// Tutorial level pengenalan: teks kartu, Oyen di atas kartu, dan bagian
-/// layar yang disorot.
+/// Tutorial level pengenalan: Oyen di atas kartu dan bagian layar yang
+/// disorot. Teks kartunya per bahasa (`tutorialTitle`, `tutorialBody`).
 class Tutorial {
-  const Tutorial({
-    required this.title,
-    required this.body,
-    required this.look,
-    this.item,
-  });
+  const Tutorial({required this.levelId, required this.look, this.item});
 
-  final String title;
-  final String body;
+  /// Level yang memakai tutorial ini; menentukan teks kartunya.
+  final int levelId;
   final OyenLook look;
 
   /// Slot baki yang disorot; null = tombol "Bangunkan Oyen". Tutorial
@@ -31,26 +27,37 @@ class Tutorial {
 /// level 6 (ember). Level lain tidak punya tutorial.
 Tutorial? tutorialFor(int levelId) => switch (levelId) {
   1 => const Tutorial(
-    title: 'Oyen nggak bisa disuruh. Bangunkan saja dia!',
-    body: 'Dia jalan sendiri ke mangkuknya. Kamu tinggal nonton.',
+    levelId: 1,
     look: OyenLook(pose: OyenPose.sleep, bubble: OyenBubble.zzz),
   ),
   3 => const Tutorial(
-    title: 'Oyen nggak tahan bau ikan asin!',
-    body:
-        'Seret ikan ke lantai. Kalau kelihatan lurus, dia langsung '
-        'mengejarnya.',
+    levelId: 3,
     look: OyenLook(pose: OyenPose.sleep, bubble: OyenBubble.ikan),
     item: Item.fish,
   ),
   6 => const Tutorial(
-    title: 'Oyen takut air. Banget.',
-    body: 'Taruh ember di jalannya. Ketemu air, dia kaget lalu putar balik.',
+    levelId: 6,
     look: OyenLook(pose: OyenPose.shock, bubble: OyenBubble.kaget),
     item: Item.water,
   ),
   _ => null,
 };
+
+/// Teks besar kartu tutorial.
+String tutorialTitle(AppLocalizations l, Tutorial tutorial) =>
+    switch (tutorial.levelId) {
+      1 => l.tutorial1Title,
+      3 => l.tutorial3Title,
+      _ => l.tutorial6Title,
+    };
+
+/// Teks kecil kartu tutorial.
+String tutorialBody(AppLocalizations l, Tutorial tutorial) =>
+    switch (tutorial.levelId) {
+      1 => l.tutorial1Body,
+      3 => l.tutorial3Body,
+      _ => l.tutorial6Body,
+    };
 
 /// Overlay tutorial (desain 11): layar digelapkan kecuali [target] yang
 /// disorot dengan cincin berdenyut, tangan penunjuk di atasnya, kartu
@@ -245,7 +252,7 @@ class _TutorialCard extends StatelessWidget {
     final s = context.koSize;
     return Semantics(
       container: true,
-      label: 'Tutorial',
+      label: context.l10n.tutorialLabel,
       explicitChildNodes: true,
       child: Stack(
         alignment: Alignment.topCenter,
@@ -271,13 +278,13 @@ class _TutorialCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    tutorial.title,
+                    tutorialTitle(context.l10n, tutorial),
                     textAlign: TextAlign.center,
                     style: t.dialogTitle.copyWith(color: c.ink),
                   ),
                   SizedBox(height: space.s6),
                   Text(
-                    tutorial.body,
+                    tutorialBody(context.l10n, tutorial),
                     textAlign: TextAlign.center,
                     style: t.bodySmall.copyWith(color: c.inkSoft),
                   ),
@@ -310,7 +317,7 @@ class _SkipButton extends StatelessWidget {
     final s = context.koSize;
     return Semantics(
       button: true,
-      label: 'Lewati tutorial',
+      label: context.l10n.skipTutorial,
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -324,7 +331,7 @@ class _SkipButton extends StatelessWidget {
             border: Border.all(color: c.onScrimLine, width: s.border),
           ),
           child: Text(
-            'Lewati',
+            context.l10n.skip,
             maxLines: 1,
             style: context.koType.chipLabel.copyWith(color: c.cream),
           ),

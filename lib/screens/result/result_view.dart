@@ -4,6 +4,8 @@ import '../../game/model/level_session.dart';
 import '../../game/model/run_frames.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'result_art.dart';
@@ -49,7 +51,7 @@ class ResultView extends StatelessWidget {
   Widget build(BuildContext context) {
     final level = session.level;
     final result = session.result!;
-    final title = 'Level ${level.id} · ${level.name}';
+    final title = levelTitle(context.l10n, level);
     if (!result.win) {
       return BoredResult(
         levelId: level.id,
@@ -95,7 +97,7 @@ ResultStat _coinStat(BuildContext context, int coins, {bool compact = false}) =>
     ResultStat(
       value: coins,
       prefix: '+',
-      label: 'koin',
+      label: context.l10n.coinsUnit(coins),
       compact: compact,
       leading: CoinView(size: context.koSize.iconMedium),
     );
@@ -140,6 +142,7 @@ class SuccessResult extends StatelessWidget {
     final t = context.koType;
     final space = context.koSpace;
     final s = context.koSize;
+    final l = context.l10n;
     return ResultPage(
       background: c.cream,
       children: [
@@ -165,7 +168,7 @@ class SuccessResult extends StatelessWidget {
                   title: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      'Berhasil!',
+                      context.l10n.success,
                       maxLines: 1,
                       style: t.display.copyWith(color: c.successDeep),
                     ),
@@ -196,11 +199,15 @@ class SuccessResult extends StatelessWidget {
         SizedBox(height: space.s16),
         ResultStats(
           children: [
-            ResultStat(icon: KoIcons.steps, value: steps, label: 'langkah'),
+            ResultStat(
+              icon: KoIcons.steps,
+              value: steps,
+              label: l.stepsUnit(steps),
+            ),
             ResultStat(
               icon: KoIcons.items,
               value: itemsUsed,
-              label: 'benda dipakai',
+              label: l.itemsUsedUnit(itemsUsed),
             ),
             if (coins > 0) _coinStat(context, coins),
           ],
@@ -209,12 +216,12 @@ class SuccessResult extends StatelessWidget {
         ResultRules(
           padding: space.s6,
           rules: [
-            const ResultRule(stars: 1, text: 'Sampai mangkuk', status: null),
-            const ResultRule(stars: 2, text: 'Vas Ibu aman', status: null),
+            ResultRule(stars: 1, text: l.goalBowl, status: null),
+            ResultRule(stars: 2, text: l.goalVase, status: null),
             ResultRule(
               stars: 3,
-              text: 'Benda paling sedikit',
-              status: stars < 3 ? 'Belum' : null,
+              text: l.goalItems,
+              status: stars < 3 ? l.goalNotYet : null,
             ),
           ],
         ),
@@ -222,13 +229,13 @@ class SuccessResult extends StatelessWidget {
         ResultButtons(
           flex: (5, 7),
           first: KoButton(
-            label: 'Ulangi',
+            label: l.restart,
             kind: KoButtonKind.secondary,
             icon: KoIcons.restart,
             onPressed: onRestart,
           ),
           second: KoButton(
-            label: 'Lanjut',
+            label: l.next,
             trailingIcon: KoIcons.next,
             onPressed: onNext,
           ),
@@ -246,13 +253,12 @@ class _ReplayLink extends StatelessWidget {
 
   final VoidCallback? onPressed;
 
-  static const label = 'Tonton putar ulang';
-
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
     final enabled = onPressed != null;
     final color = enabled ? c.ink : c.muted;
+    final label = context.l10n.watchReplay;
     return Semantics(
       container: true,
       button: true,
@@ -319,6 +325,7 @@ class VaseResult extends StatelessWidget {
     final t = context.koType;
     final space = context.koSpace;
     final s = context.koSize;
+    final l = context.l10n;
     return ResultPage(
       background: c.cream,
       children: [
@@ -328,9 +335,9 @@ class VaseResult extends StatelessWidget {
           title: Text.rich(
             TextSpan(
               children: [
-                const TextSpan(text: 'Sampai sih...\n'),
+                TextSpan(text: '${l.vaseHeadlineTop}\n'),
                 TextSpan(
-                  text: 'tapi vas Ibu?',
+                  text: l.vaseHeadlineBottom,
                   style: TextStyle(color: c.brickDeep),
                 ),
               ],
@@ -359,23 +366,27 @@ class VaseResult extends StatelessWidget {
           padding: space.s4,
           rules: [
             ResultRule(
-              text: 'Sampai mangkuk',
-              status: 'Dapat',
+              text: l.goalBowl,
+              status: l.goalGot,
               statusColor: c.successText,
             ),
             ResultRule(
-              text: 'Vas Ibu aman',
-              status: 'Pecah di langkah $brokenAt',
+              text: l.goalVase,
+              status: l.brokenAtStep(brokenAt),
               statusColor: c.brickDeep,
             ),
-            const ResultRule(text: 'Benda paling sedikit', status: 'Belum'),
+            ResultRule(text: l.goalItems, status: l.goalNotYet),
           ],
         ),
         SizedBox(height: space.s12),
         ResultStats(
           children: [
-            ResultStat(value: steps, label: 'langkah', compact: true),
-            ResultStat(value: itemsUsed, label: 'benda dipakai', compact: true),
+            ResultStat(value: steps, label: l.stepsUnit(steps), compact: true),
+            ResultStat(
+              value: itemsUsed,
+              label: l.itemsUsedUnit(itemsUsed),
+              compact: true,
+            ),
             if (coins > 0) _coinStat(context, coins, compact: true),
           ],
         ),
@@ -383,12 +394,12 @@ class VaseResult extends StatelessWidget {
         ResultButtons(
           flex: (7, 5),
           first: KoButton(
-            label: 'Coba Lagi',
+            label: l.tryAgain,
             icon: KoIcons.retry,
             onPressed: onRetry,
           ),
           second: KoButton(
-            label: 'Lanjut Saja',
+            label: l.nextAnyway,
             kind: KoButtonKind.secondary,
             onPressed: onNext,
           ),
@@ -420,23 +431,18 @@ class BoredResult extends StatelessWidget {
   final VoidCallback? onReplay;
 
   /// Judul, chip di atas papan, dan pesan di kartu.
-  static (String, KoIconData, String, String) textsFor(FailReason reason) =>
-      switch (reason) {
-        FailReason.loop => (
-          'Oyen bosan mondar-mandir.',
-          KoIcons.loop,
-          'Muter terus',
-          'Jalannya muter-muter terus, nggak ketemu mangkuk. '
-              'Ya sudah, tidur lagi.',
-        ),
-        FailReason.tooManySteps => (
-          'Oyen bosan jalan terus.',
-          KoIcons.steps,
-          'Lewat $maxSteps langkah',
-          'Sudah $maxSteps langkah, mangkuknya belum ketemu juga. '
-              'Capek, ah. Tidur lagi.',
-        ),
-      };
+  static (String, KoIconData, String, String) textsFor(
+    AppLocalizations l,
+    FailReason reason,
+  ) => switch (reason) {
+    FailReason.loop => (l.loopTitle, KoIcons.loop, l.loopBadge, l.loopMessage),
+    FailReason.tooManySteps => (
+      l.tooLongTitle,
+      KoIcons.steps,
+      l.tooLongBadge(maxSteps),
+      l.tooLongMessage(maxSteps),
+    ),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -444,13 +450,14 @@ class BoredResult extends StatelessWidget {
     final t = context.koType;
     final space = context.koSpace;
     final s = context.koSize;
-    final (title, icon, badge, message) = textsFor(reason);
+    final l = context.l10n;
+    final (title, icon, badge, message) = textsFor(l, reason);
     final ring = context.koShadow.board.first.spreadRadius;
     return ResultPage(
       background: c.creamDim,
       children: [
         ResultHeader(
-          kicker: 'Level $levelId · Gagal',
+          kicker: l.failedKicker(levelId),
           gap: space.s4,
           // Satu baris seperti desain; mengecil kalau tidak muat.
           title: FittedBox(
@@ -496,13 +503,13 @@ class BoredResult extends StatelessWidget {
         SizedBox(height: space.s24),
         ResultButtons(
           first: KoButton(
-            label: 'Putar Ulang',
+            label: l.replay,
             kind: KoButtonKind.secondary,
             icon: KoIcons.replay,
             onPressed: onReplay,
           ),
           second: KoButton(
-            label: 'Atur Lagi',
+            label: l.arrangeAgain,
             icon: KoIcons.edit,
             onPressed: onArrange,
           ),

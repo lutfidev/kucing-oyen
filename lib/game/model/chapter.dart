@@ -1,31 +1,19 @@
 import '../sim/sim.dart';
 import 'progress.dart';
 
-/// Nama latar tiap babak (GDD). Data level hanya menyimpan nomor babak.
-const chapterNames = {1: 'Dapur', 2: 'Ruang Tamu'};
-
-/// Satu babak: latar dan level-levelnya, urut main. Level terakhir adalah
-/// bos.
+/// Satu babak: nomor dan level-levelnya, urut main. Level terakhir adalah
+/// bos. Nama latarnya per bahasa (`chapterName`).
 class Chapter {
-  Chapter({required this.number, required this.name, required this.levels})
+  Chapter({required this.number, required this.levels})
     : assert(levels.isNotEmpty);
 
   /// Awalan nama level bos di data level ("BOS: Hari Lebaran").
   static const bossPrefix = 'BOS: ';
 
   final int number;
-  final String name;
   final List<Level> levels;
 
-  /// "Babak 1 – Dapur".
-  String get title => 'Babak $number – $name';
-
   Level get boss => levels.last;
-
-  /// Nama bos tanpa awalan: "Hari Lebaran".
-  String get bossName => boss.name.startsWith(bossPrefix)
-      ? boss.name.substring(bossPrefix.length)
-      : boss.name;
 
   Iterable<int> get ids => levels.map((level) => level.id);
 
@@ -49,11 +37,7 @@ List<Chapter> chaptersOf(List<Level> levels) {
   final numbers = grouped.keys.toList()..sort();
   return [
     for (final number in numbers)
-      Chapter(
-        number: number,
-        name: chapterNames[number] ?? 'Babak $number',
-        levels: List.unmodifiable(grouped[number]!),
-      ),
+      Chapter(number: number, levels: List.unmodifiable(grouped[number]!)),
   ];
 }
 

@@ -3,6 +3,7 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/widgets.dart';
 
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -17,9 +18,9 @@ class StepCounter extends StatelessWidget {
     return Semantics(
       container: true,
       liveRegion: true,
-      label: 'Langkah $step',
+      label: context.l10n.stepNumber(step),
       excludeSemantics: true,
-      child: KoChip.dark(label: 'Langkah', text: '$step', large: true),
+      child: KoChip.dark(label: context.l10n.step, text: '$step', large: true),
     );
   }
 }
@@ -50,11 +51,11 @@ class RunStatus extends StatelessWidget {
           if (broken != null) ...[
             _StatusChip(
               dot: broken ? c.brick : c.success,
-              text: broken ? 'Vas pecah' : 'Vas aman',
+              text: broken ? context.l10n.vaseBroken : context.l10n.vaseSafe,
             ),
             SizedBox(width: context.koSpace.s8),
           ],
-          _StatusChip(text: '$itemsUsed benda dipakai'),
+          _StatusChip(text: context.l10n.itemsUsed(itemsUsed)),
         ],
       ),
     );
@@ -221,13 +222,11 @@ class RunControls extends StatelessWidget {
   final VoidCallback onTogglePlay;
   final VoidCallback onToggleFast;
 
-  static const _longestLabel = 'Lanjutkan';
-
   /// Tinggi tombol dan keterangannya.
   static double heightOf(BuildContext context) {
     final painter = TextPainter(
       text: TextSpan(
-        text: _longestLabel,
+        text: context.l10n.resume,
         style: _effective(context, context.koType.controlLabel),
       ),
       textDirection: Directionality.of(context),
@@ -244,7 +243,8 @@ class RunControls extends StatelessWidget {
     final t = context.koType;
     final space = context.koSpace;
     final s = context.koSize;
-    final label = playing ? 'Jeda' : _longestLabel;
+    final l = context.l10n;
+    final label = playing ? l.pause : l.resume;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -252,7 +252,7 @@ class RunControls extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _ControlButton(
-              semanticLabel: 'Maju satu langkah',
+              semanticLabel: l.stepForward,
               onPressed: onStepOnce,
               child: KoIcon(
                 KoIcons.stepForward,
@@ -281,7 +281,7 @@ class RunControls extends StatelessWidget {
             ),
             SizedBox(width: space.s16),
             _ControlButton(
-              semanticLabel: 'Percepat dua kali',
+              semanticLabel: l.doubleSpeed,
               toggled: fast,
               onPressed: onToggleFast,
               child: FittedBox(
@@ -371,7 +371,7 @@ class RunDoneButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final button = KoButton(
-      label: 'Lihat hasil',
+      label: context.l10n.seeResult,
       kind: KoButtonKind.success,
       onPressed: onPressed,
     );

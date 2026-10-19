@@ -1,22 +1,21 @@
 import '../render/oyen.dart';
 
-/// Kostum di Lemari Kostum (desain 12): id gambar Oyen, nama, dan harga
-/// dalam koin.
+/// Kostum di Lemari Kostum (desain 12): id gambar Oyen dan harga dalam
+/// koin. Namanya per bahasa (`costumeName`).
 class Costume {
-  const Costume(this.id, this.name, this.price);
+  const Costume(this.id, this.price);
 
   final OyenCostume id;
-  final String name;
   final int price;
 }
 
 /// Semua pilihan kostum, urutan dan harga persis desain 12.
 const costumes = [
-  Costume(OyenCostume.none, 'Polos', 0),
-  Costume(OyenCostume.peci, 'Peci', 60),
-  Costume(OyenCostume.sarung, 'Sarung', 90),
-  Costume(OyenCostume.koki, 'Topi Koki', 150),
-  Costume(OyenCostume.kacamata, 'Kacamata', 45),
+  Costume(OyenCostume.none, 0),
+  Costume(OyenCostume.peci, 60),
+  Costume(OyenCostume.sarung, 90),
+  Costume(OyenCostume.koki, 150),
+  Costume(OyenCostume.kacamata, 45),
 ];
 
 Costume costumeOf(OyenCostume id) => costumes.firstWhere((c) => c.id == id);

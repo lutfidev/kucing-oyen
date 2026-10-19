@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/theme/theme.dart';
@@ -116,6 +118,49 @@ void main() {
       widthOf(t.title),
       isNot(widthOf(t.title.copyWith(fontWeight: FontWeight.w500))),
     );
+  });
+
+  test('teks Rusia di gaya Fredoka memakai Nunito, bukan font sistem', () {
+    // Fredoka tidak punya huruf Sirilik. Dengan cadangan Nunito, lebarnya
+    // sama dengan teks Nunito (selisih kecil dari spasi Fredoka); tanpa
+    // cadangan, hurufnya jatuh ke font lain.
+    const text = 'Правила Ойена';
+    double widthOf(TextStyle style) {
+      final painter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      addTearDown(painter.dispose);
+      return painter.width;
+    }
+
+    const t = KoType.standard;
+    for (final style in [t.display, t.title, t.heading, t.number, t.logo]) {
+      expect(style.fontFamily, KoFonts.fredoka);
+      final nunito = widthOf(style.copyWith(fontFamily: KoFonts.nunito));
+      expect(widthOf(style), closeTo(nunito, nunito * 0.02));
+      expect(
+        widthOf(style.copyWith(fontFamilyFallback: const [])),
+        isNot(closeTo(nunito, nunito * 0.02)),
+      );
+    }
+    expect(t.body.fontFamily, KoFonts.nunito);
+  });
+
+  test('semua gaya Fredoka punya cadangan Nunito', () {
+    final source = File('lib/theme/ko_type.dart').readAsLinesSync();
+    var fredoka = 0;
+    for (var i = 0; i < source.length; i++) {
+      if (source[i].trim() != 'fontFamily: KoFonts.fredoka,') continue;
+      fredoka++;
+      expect(
+        source[i + 1].trim(),
+        'fontFamilyFallback: _fredokaFallback,',
+        reason: 'baris ${i + 1}',
+      );
+    }
+    expect(fredoka, greaterThan(20));
+    expect(source, contains('const _fredokaFallback = [KoFonts.nunito];'));
   });
 
   testWidgets('context tanpa tema Kucing Oren memakai nilai standar', (

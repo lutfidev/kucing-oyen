@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import '../../game/model/costumes.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -28,7 +30,7 @@ class ClosetBar extends StatelessWidget {
       children: [
         KoIconButton(
           icon: KoIcons.back,
-          semanticLabel: 'Kembali ke Beranda',
+          semanticLabel: context.l10n.backToHome,
           onPressed: onBack,
         ),
         SizedBox(width: space.s10),
@@ -39,7 +41,7 @@ class ClosetBar extends StatelessWidget {
               fit: BoxFit.scaleDown,
               alignment: AlignmentDirectional.centerStart,
               child: Text(
-                'Lemari Kostum',
+                context.l10n.closet,
                 maxLines: 1,
                 style: context.koType.headingLarge.copyWith(color: c.ink),
               ),
@@ -119,15 +121,17 @@ class CostumeCard extends StatelessWidget {
     final s = context.koSize;
     final space = context.koSpace;
     final radius = context.koRadius;
+    final l = context.l10n;
+    final name = costumeName(l, costume.id);
     final (String tag, String status) = wearing
-        ? ('Dipakai', 'dipakai')
+        ? (l.costumeWearingTag, l.costumeWearingStatus)
         : owned
-        ? ('Punyamu', 'punyamu')
-        : ('${costume.price}', '${costume.price} koin');
+        ? (l.costumeOwnedTag, l.costumeOwnedStatus)
+        : ('${costume.price}', l.coinsAmount(costume.price));
 
     return KoPressable(
       onPressed: onTap,
-      semanticLabel: '${costume.name}, $status',
+      semanticLabel: '$name, $status',
       toggled: selected,
       color: c.surface,
       edgeColor: selected ? c.orangeDeep : c.lineDeep,
@@ -162,7 +166,7 @@ class CostumeCard extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   alignment: AlignmentDirectional.centerStart,
                   child: Text(
-                    costume.name,
+                    name,
                     maxLines: 1,
                     style: context.koType.cardLabel.copyWith(color: c.ink),
                   ),
@@ -283,10 +287,13 @@ class CostumeGrid extends StatelessWidget {
 }
 
 /// Label tombol aksi untuk [action] pada [costume].
-String closetActionLabel(CostumeAction action, Costume costume) =>
-    switch (action) {
-      CostumeAction.wearing => 'Sedang dipakai',
-      CostumeAction.wear => 'Pakai',
-      CostumeAction.buy => 'Beli · ${costume.price} koin',
-      CostumeAction.notEnoughCoins => 'Koin kurang · ${costume.price}',
-    };
+String closetActionLabel(
+  AppLocalizations l,
+  CostumeAction action,
+  Costume costume,
+) => switch (action) {
+  CostumeAction.wearing => l.costumeActionWearing,
+  CostumeAction.wear => l.costumeActionWear,
+  CostumeAction.buy => l.costumeActionBuy(costume.price),
+  CostumeAction.notEnoughCoins => l.notEnoughCoins(costume.price),
+};

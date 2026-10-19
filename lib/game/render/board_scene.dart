@@ -197,9 +197,6 @@ class BoardScene {
     '#######',
   ];
 
-  /// Label pembaca layar, sama dengan `aria-label` di desain.
-  static const label = 'Papan permainan 7 kali 9 petak';
-
   final List<Tile> tiles;
   final BoardOyen? oyen;
   final bool facing;

@@ -8,7 +8,6 @@ import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
 import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
-import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -26,8 +25,7 @@ Future<void> _pumpReplay(
   _taps.clear();
   setScreenSize(tester, const Size(390, 844));
   await tester.pumpWidget(
-    MaterialApp(
-      theme: KoTheme.light(),
+    testApp(
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context)
             .copyWith(disableAnimations: disableAnimations),

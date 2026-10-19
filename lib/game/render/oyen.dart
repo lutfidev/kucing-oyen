@@ -1,21 +1,7 @@
 import '../sim/direction.dart';
 
 /// Pose Oyen di `Oyen.dc.html` (prop `pose`).
-enum OyenPose {
-  idle('diam'),
-  walk('jalan'),
-  sleep('tidur'),
-  shock('kaget'),
-  box('duduk dalam kardus'),
-  knock('menjatuhkan barang'),
-  eat('makan'),
-  happy('senang');
-
-  const OyenPose(this.label);
-
-  /// Untuk label pembaca layar.
-  final String label;
-}
+enum OyenPose { idle, walk, sleep, shock, box, knock, eat, happy }
 
 /// Kostum Oyen (prop `costume`).
 enum OyenCostume { none, peci, sarung, koki, kacamata }
@@ -47,9 +33,6 @@ class OyenLook {
   /// Sprite memakai viewBox 100×100 dan boleh menggambar di luarnya
   /// (gelembung, topi koki).
   static const double viewBox = 100;
-
-  /// Label pembaca layar, sama dengan `aria-label` di desain.
-  String get label => 'Oyen ${pose.label}, menghadap ${dir.label}';
 
   OyenLook copyWith({
     OyenPose? pose,

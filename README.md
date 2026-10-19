@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🐱 Kucing Oren
+# 🐱 Ginger Logic
 
-**Oyen nggak bisa disuruh. Kamu yang mikir.**
+**Oyen won't listen. You do the thinking.**
 
 Game puzzle mobile tentang kucing oren yang cuma mau ke mangkuknya kalau jalannya kamu atur.
 
@@ -29,7 +29,7 @@ Kamu tidak mengendalikan Oyen. Selagi Oyen tidur, kamu menaruh **ikan asin**, **
 - **Petunjuk** bertingkat yang dibuka dengan koin atau iklan, plus kartu aturan dan tutorial interaktif.
 - **Lemari Kostum**: peci, sarung, topi koki, dan kacamata untuk Oyen.
 - **Koin** dari bintang baru, bonus harian, dan iklan berhadiah.
-- Seluruh teks memakai Bahasa Indonesia santai.
+- **Empat bahasa**: Inggris, Indonesia, Portugis Brasil, dan Rusia, dengan nada santai yang sama. Bahasa awal mengikuti HP; bisa diganti di **Pengaturan** (juga lihat tutorial lagi dan reset progres).
 
 ## Aturan Oyen
 

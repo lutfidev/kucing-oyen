@@ -1,0 +1,1315 @@
+{
+  "@@locale": "en",
+  "backToHome": "Back to home",
+  "@backToHome": {
+    "description": "Back button to the home screen (screen reader)."
+  },
+  "backToMap": "Back to map",
+  "@backToMap": {
+    "description": "Back button to the chapter map."
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button of a sheet (screen reader)."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button."
+  },
+  "starsOf": "{stars} of {total} stars",
+  "@starsOf": {
+    "description": "Screen reader: earned stars out of a total.",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "coinsAmount": "{n, plural, one{{n} coin} other{{n} coins}}",
+  "@coinsAmount": {
+    "description": "An amount of coins (\"120 coins\").",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "coinsUnit": "{n, plural, one{coin} other{coins}}",
+  "@coinsUnit": {
+    "description": "Word after a big coin number on the result screen (\"+30 coins\").",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "notEnoughCoins": "Not enough · {n}",
+  "@notEnoughCoins": {
+    "description": "Disabled pay button: not enough coins for the price.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "watchAd": "Watch an ad",
+  "@watchAd": {
+    "description": "Button: watch a rewarded ad."
+  },
+  "adFailed": "The ad couldn't play. Try again later, okay?",
+  "@adFailed": {
+    "description": "The rewarded ad failed to load or was closed early."
+  },
+  "boardLabel": "Game board, 7 by 9 tiles",
+  "@boardLabel": {
+    "description": "Screen reader label of the 7×9 game board."
+  },
+  "play": "Play",
+  "@play": {
+    "description": "Big Play button on the home screen and the map node label."
+  },
+  "closet": "Wardrobe",
+  "@closet": {
+    "description": "Costume closet button and screen title."
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings button and screen title."
+  },
+  "tagline": "Oyen won't listen. You do the thinking.",
+  "@tagline": {
+    "description": "Tagline under the logo on the home screen."
+  },
+  "starTotalUnit": "stars",
+  "@starTotalUnit": {
+    "description": "Word after the star total on the home screen (\"31/60 stars\")."
+  },
+  "chapterNumber": "Chapter {n}",
+  "@chapterNumber": {
+    "description": "Chapter number above the chapter name (shown in capitals).",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "chapter1Name": "Kitchen",
+  "@chapter1Name": {
+    "description": "Name of chapter 1 (setting: kitchen)."
+  },
+  "chapter2Name": "Living Room",
+  "@chapter2Name": {
+    "description": "Name of chapter 2 (setting: living room)."
+  },
+  "chapterTitle": "Chapter {n} – {name}",
+  "@chapterTitle": {
+    "description": "Chapter title on chapter cards.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chapterDone": "Done",
+  "@chapterDone": {
+    "description": "Badge on a finished chapter card."
+  },
+  "chapterLocked": "Locked",
+  "@chapterLocked": {
+    "description": "Badge on a locked chapter card."
+  },
+  "statusDone": "done",
+  "@statusDone": {
+    "description": "Screen reader status of a finished chapter (lowercase)."
+  },
+  "statusLocked": "locked",
+  "@statusLocked": {
+    "description": "Screen reader status of a locked level or chapter (lowercase)."
+  },
+  "statusPlayNow": "play now",
+  "@statusPlayNow": {
+    "description": "Screen reader status of the level to play now."
+  },
+  "nodeStars": "{n, plural, one{{n} star} other{{n} stars}}",
+  "@nodeStars": {
+    "description": "Screen reader: stars earned on a level node.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "levelNodeLabel": "Level {id}, {status}",
+  "@levelNodeLabel": {
+    "description": "Screen reader label of a level node on the map.",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "bossNodeLabel": "Level {id}, boss {name}, {status}",
+  "@bossNodeLabel": {
+    "description": "Screen reader label of the boss level node.",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "bossTag": "Boss · {name}",
+  "@bossTag": {
+    "description": "Tag above the boss level on the map.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chapterMissing": "This chapter doesn't exist.",
+  "@chapterMissing": {
+    "description": "Shown when the chapter in the link does not exist."
+  },
+  "level1Name": "Wake Up Oyen",
+  "@level1Name": {
+    "description": "Name of level 1."
+  },
+  "level2Name": "Round the Corner",
+  "@level2Name": {
+    "description": "Name of level 2."
+  },
+  "level3Name": "First Fish",
+  "@level3Name": {
+    "description": "Name of level 3."
+  },
+  "level4Name": "Nearest Fish",
+  "@level4Name": {
+    "description": "Name of level 4."
+  },
+  "level5Name": "Two Fish",
+  "@level5Name": {
+    "description": "Name of level 5."
+  },
+  "level6Name": "First Bucket",
+  "@level6Name": {
+    "description": "Name of level 6."
+  },
+  "level7Name": "Puddle",
+  "@level7Name": {
+    "description": "Name of level 7."
+  },
+  "level8Name": "Fish and Bucket",
+  "@level8Name": {
+    "description": "Name of level 8."
+  },
+  "level9Name": "Tempting Fish",
+  "@level9Name": {
+    "description": "Name of level 9."
+  },
+  "level10Name": "Salted Fish Feast",
+  "@level10Name": {
+    "description": "Name of level 10. This is the boss level; the name is shown after the boss prefix."
+  },
+  "level11Name": "Coffee Table",
+  "@level11Name": {
+    "description": "Name of level 11."
+  },
+  "level12Name": "Falling Glass",
+  "@level12Name": {
+    "description": "Name of level 12."
+  },
+  "level13Name": "Mom's Vase",
+  "@level13Name": {
+    "description": "Name of level 13."
+  },
+  "level14Name": "Box in the Way",
+  "@level14Name": {
+    "description": "Name of level 14."
+  },
+  "level15Name": "Squashed Box",
+  "@level15Name": {
+    "description": "Name of level 15."
+  },
+  "level16Name": "The Long Way Round",
+  "@level16Name": {
+    "description": "Name of level 16."
+  },
+  "level17Name": "Two Vases",
+  "@level17Name": {
+    "description": "Name of level 17."
+  },
+  "level18Name": "Tight Squeeze",
+  "@level18Name": {
+    "description": "Name of level 18."
+  },
+  "level19Name": "All Together",
+  "@level19Name": {
+    "description": "Name of level 19."
+  },
+  "level20Name": "Eid Day",
+  "@level20Name": {
+    "description": "Name of level 20. This is the boss level; the name is shown after the boss prefix."
+  },
+  "bossLevelName": "BOSS: {name}",
+  "@bossLevelName": {
+    "description": "Full name of a boss level (\"BOSS: Eid Day\").",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTitle": "Level {id} · {name}",
+  "@levelTitle": {
+    "description": "Level number and name in the top bar and result screens.",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rules": "Rules",
+  "@rules": {
+    "description": "Rules button in the top bar."
+  },
+  "hint": "Hint",
+  "@hint": {
+    "description": "Hint button (screen reader)."
+  },
+  "targetItems": "{n, plural, one{use {n} item} other{use {n} items}}",
+  "@targetItems": {
+    "description": "Three-star goal chip: the most items allowed.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "targetLabel": "3-star goal: {text}",
+  "@targetLabel": {
+    "description": "Screen reader label of the three-star goal chip.",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "levelMissing": "This level doesn't exist.",
+  "@levelMissing": {
+    "description": "Shown when the level in the link does not exist."
+  },
+  "backToArrange": "Back to setup",
+  "@backToArrange": {
+    "description": "Back button while Oyen walks: return to placing items."
+  },
+  "wakeOyen": "Wake Oyen",
+  "@wakeOyen": {
+    "description": "Main button: start the run."
+  },
+  "trayEmpty": "No items needed here yet.",
+  "@trayEmpty": {
+    "description": "Tray text on levels without items."
+  },
+  "trayLabel": "Items",
+  "@trayLabel": {
+    "description": "Vertical label of the item tray (shown in capitals)."
+  },
+  "clearBoard": "Clear the board",
+  "@clearBoard": {
+    "description": "Button: return all placed items to the tray."
+  },
+  "trayHintTop": "Drop on a",
+  "@trayHintTop": {
+    "description": "Tray hint, first line: \"Place on a / glowing tile\"."
+  },
+  "trayHintBottom": "glowing tile",
+  "@trayHintBottom": {
+    "description": "Tray hint, second line."
+  },
+  "itemFish": "Salted fish",
+  "@itemFish": {
+    "description": "Item name: salted fish."
+  },
+  "itemWater": "Water bucket",
+  "@itemWater": {
+    "description": "Item name: water bucket."
+  },
+  "itemBox": "Box",
+  "@itemBox": {
+    "description": "Item name: cardboard box."
+  },
+  "traySlotLabel": "{name}, {n} left",
+  "@traySlotLabel": {
+    "description": "Screen reader label of a tray slot.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "traySlotDragging": "{name}, dragging, {n} left",
+  "@traySlotDragging": {
+    "description": "Screen reader label of a tray slot while dragging.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "step": "Step",
+  "@step": {
+    "description": "Step counter label (also above the number chip)."
+  },
+  "stepNumber": "Step {n}",
+  "@stepNumber": {
+    "description": "Step number (\"Step 4\").",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "vaseBroken": "Vase broken",
+  "@vaseBroken": {
+    "description": "Status chip: the vase broke."
+  },
+  "vaseSafe": "Vase safe",
+  "@vaseSafe": {
+    "description": "Status chip: the vase is fine."
+  },
+  "itemsUsed": "{n, plural, one{{n} item used} other{{n} items used}}",
+  "@itemsUsed": {
+    "description": "Status chip: number of items used.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pause": "Pause",
+  "@pause": {
+    "description": "Play/pause button while running."
+  },
+  "resume": "Resume",
+  "@resume": {
+    "description": "Play/pause button while paused."
+  },
+  "stepForward": "One step forward",
+  "@stepForward": {
+    "description": "Button: one step forward."
+  },
+  "stepBack": "One step back",
+  "@stepBack": {
+    "description": "Button: one step back (replay)."
+  },
+  "doubleSpeed": "Double speed",
+  "@doubleSpeed": {
+    "description": "Toggle: play twice as fast."
+  },
+  "seeResult": "See results",
+  "@seeResult": {
+    "description": "Button after the run: open the result screen."
+  },
+  "runWake": "Oyen wakes up, facing {dir, select, up{up} right{right} down{down} left{left} other{right}}.",
+  "@runWake": {
+    "description": "Run caption, step 0.",
+    "placeholders": {
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "runAtBowl": "Made it to the bowl! Nom nom.",
+  "@runAtBowl": {
+    "description": "Run caption: reached the bowl."
+  },
+  "chaseFish": "Chasing the fish {dir, select, up{up} right{to the right} down{down} left{to the left} other{to the right}}.",
+  "@chaseFish": {
+    "description": "Run and replay caption: chasing a fish.",
+    "placeholders": {
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "runSmellFish": "Hey, salted fish {dir, select, up{up there} right{to the right} down{down there} left{to the left} other{to the right}}!",
+  "@runSmellFish": {
+    "description": "Run caption: a fish comes into sight.",
+    "placeholders": {
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "runWalk": "Strolling {dir, select, up{up} right{to the right} down{down} left{to the left} other{to the right}}, no rush.",
+  "@runWalk": {
+    "description": "Run caption: walking straight.",
+    "placeholders": {
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "runScared": "Water! Oyen jumps and turns back.",
+  "@runScared": {
+    "description": "Run caption: water ahead."
+  },
+  "runTurn": "Hit {obstacle, select, table{a table} wall{a wall} other{a wall}}. Turned, now facing {dir, select, up{up} right{right} down{down} left{left} other{right}}.",
+  "@runTurn": {
+    "description": "Run caption: blocked by a table or wall, turned clockwise.",
+    "placeholders": {
+      "obstacle": {
+        "type": "String"
+      },
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "runEat": "Chomp! The salted fish is gone.",
+  "@runEat": {
+    "description": "Run caption: eats a fish."
+  },
+  "runEnterBox": "A box! Oyen climbs in and sits.",
+  "@runEnterBox": {
+    "description": "Run caption: gets into a box."
+  },
+  "runSit": "Sitting pretty in the box.",
+  "@runSit": {
+    "description": "Run caption: still sitting in the box."
+  },
+  "runBoxGone": "The box gets squashed, then vanishes.",
+  "@runBoxGone": {
+    "description": "Run caption: the box is squashed and disappears."
+  },
+  "runKnockGlass": "The glass gets pushed off. Lucky it's plastic!",
+  "@runKnockGlass": {
+    "description": "Run caption: pushes a glass off a table."
+  },
+  "runKnockVase": "Uh-oh! Mom's vase falls and breaks.",
+  "@runKnockVase": {
+    "description": "Run caption: pushes the vase off and it breaks."
+  },
+  "replayAsleep": "Start: Oyen asleep, facing {dir, select, up{up} right{right} down{down} left{left} other{right}}.",
+  "@replayAsleep": {
+    "description": "Replay caption, step 0.",
+    "placeholders": {
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "replayFinished": "Into the bowl. Done in {n, plural, one{{n} step} other{{n} steps}}.",
+  "@replayFinished": {
+    "description": "Replay caption: reached the bowl after n steps.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "replayChaseVaseSafe": "Chasing the fish. Vase still safe.",
+  "@replayChaseVaseSafe": {
+    "description": "Replay caption: chasing a fish, vase still fine."
+  },
+  "replaySeeFish": "Salted fish in sight, straight {dir, select, up{up} right{to the right} down{down} left{to the left} other{to the right}}.",
+  "@replaySeeFish": {
+    "description": "Replay caption: a fish in a straight line.",
+    "placeholders": {
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "replayWalk": "Walks straight {dir, select, up{up} right{to the right} down{down} left{to the left} other{to the right}}.",
+  "@replayWalk": {
+    "description": "Replay caption: walking straight.",
+    "placeholders": {
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "replayScared": "Meets {water, select, puddle{a puddle} bucket{a water bucket} other{water}}, jumps, turns back.",
+  "@replayScared": {
+    "description": "Replay caption: water ahead (puddle or bucket), turned back.",
+    "placeholders": {
+      "water": {
+        "type": "String"
+      }
+    }
+  },
+  "replayTurn": "Hits {obstacle, select, table{a table} wall{a wall} other{a wall}}, turns to face {dir, select, up{up} right{right} down{down} left{left} other{right}}.",
+  "@replayTurn": {
+    "description": "Replay caption: blocked, turned clockwise.",
+    "placeholders": {
+      "obstacle": {
+        "type": "String"
+      },
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "replayEat": "Chomp! Salted fish eaten.",
+  "@replayEat": {
+    "description": "Replay caption: eats a fish."
+  },
+  "replayEnterBox": "Into the box, time to sit.",
+  "@replayEnterBox": {
+    "description": "Replay caption: gets into a box."
+  },
+  "replaySit": "Still sitting in the box.",
+  "@replaySit": {
+    "description": "Replay caption: still in the box."
+  },
+  "replayBoxGone": "The box is squashed and gone.",
+  "@replayBoxGone": {
+    "description": "Replay caption: the box is gone."
+  },
+  "replayKnockGlass": "Glass pushed off. No harm, it's plastic.",
+  "@replayKnockGlass": {
+    "description": "Replay caption: glass pushed off."
+  },
+  "replayKnockVase": "Mom's vase pushed off. Smash!",
+  "@replayKnockVase": {
+    "description": "Replay caption: vase pushed off."
+  },
+  "replayLoopStart": "Back to how it started. Oyen keeps circling and gets bored.",
+  "@replayLoopStart": {
+    "description": "Replay caption, last step: same state as the start."
+  },
+  "replayLoopStep": "Back to how step {n} looked. Oyen keeps circling and gets bored.",
+  "@replayLoopStep": {
+    "description": "Replay caption, last step: same state as step n.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "replayTooManySteps": "Step {n} and still no bowl. Oyen is bored.",
+  "@replayTooManySteps": {
+    "description": "Replay caption, last step: hit the step limit.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "closeRules": "Close rules",
+  "@closeRules": {
+    "description": "Screen reader: close the rules sheet."
+  },
+  "rulesTitle": "Oyen's Rules",
+  "@rulesTitle": {
+    "description": "Rules sheet title."
+  },
+  "rulesIntro": "Each step is checked from the top. The first rule that fits is what Oyen does.",
+  "@rulesIntro": {
+    "description": "Rules sheet intro."
+  },
+  "ruleKnockTitle": "Knock over what's next door",
+  "@ruleKnockTitle": {
+    "description": "Rule card: knock things off the table next to Oyen."
+  },
+  "ruleKnockBody": "A glass or vase on the table next door? It gets bumped. Always.",
+  "@ruleKnockBody": {
+    "description": "Rule card body: knock."
+  },
+  "ruleFishTitle": "Chase the nearest fish",
+  "@ruleFishTitle": {
+    "description": "Rule card: chase the nearest fish."
+  },
+  "ruleFishBody": "Only fish in a straight line. If tied:",
+  "@ruleFishBody": {
+    "description": "Rule card body: fish, before the tie order."
+  },
+  "tieAhead": "ahead",
+  "@tieAhead": {
+    "description": "Tie order word 1 (followed by an arrow)."
+  },
+  "tieClockwise": "clockwise",
+  "@tieClockwise": {
+    "description": "Tie order word 2: clockwise (never \"right\")."
+  },
+  "tieCounterClockwise": "counterclockwise",
+  "@tieCounterClockwise": {
+    "description": "Tie order word 3: counterclockwise (never \"left\")."
+  },
+  "tieBehind": "behind",
+  "@tieBehind": {
+    "description": "Tie order word 4."
+  },
+  "tieOrderLabel": "Tie order: ahead, clockwise, counterclockwise, behind.",
+  "@tieOrderLabel": {
+    "description": "Screen reader text of the tie order."
+  },
+  "ruleWaterTitle": "Water? Turn back",
+  "@ruleWaterTitle": {
+    "description": "Rule card: water, turn back."
+  },
+  "ruleWaterBody": "Puddle or bucket ahead? Oyen gets spooked and turns around.",
+  "@ruleWaterBody": {
+    "description": "Rule card body: water."
+  },
+  "ruleWallTitle": "Blocked by a wall or table",
+  "@ruleWallTitle": {
+    "description": "Rule card: blocked by a wall or table."
+  },
+  "ruleWallTurn": "Oyen turns clockwise",
+  "@ruleWallTurn": {
+    "description": "Rule card: turns clockwise (never \"turns right\")."
+  },
+  "ruleWallBody": "A quarter turn, then off again.",
+  "@ruleWallBody": {
+    "description": "Rule card body: wall."
+  },
+  "ruleBoxTitle": "Box? Hop in, sit",
+  "@ruleBoxTitle": {
+    "description": "Rule card: box, get in and sit."
+  },
+  "ruleBoxBody": "Sits 2 steps until the box gets squashed and vanishes. Fish behind a box stay hidden.",
+  "@ruleBoxBody": {
+    "description": "Rule card body: box."
+  },
+  "ruleKnockLocked": "Things on tables",
+  "@ruleKnockLocked": {
+    "description": "Locked rule card name: knock."
+  },
+  "ruleFishLocked": "Fish",
+  "@ruleFishLocked": {
+    "description": "Locked rule card name: fish."
+  },
+  "ruleWaterLocked": "Water",
+  "@ruleWaterLocked": {
+    "description": "Locked rule card name: water."
+  },
+  "ruleWallLocked": "Wall",
+  "@ruleWallLocked": {
+    "description": "Locked rule card name: wall."
+  },
+  "ruleBoxLocked": "Box",
+  "@ruleBoxLocked": {
+    "description": "Locked rule card name: box."
+  },
+  "ruleLockedTitle": "{name}: ???",
+  "@ruleLockedTitle": {
+    "description": "Locked rule card title.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ruleLockedBody": "Not learned yet. You'll meet it soon.",
+  "@ruleLockedBody": {
+    "description": "Locked rule card body."
+  },
+  "ruleLabel": "Rule {n}",
+  "@ruleLabel": {
+    "description": "Screen reader label of rule card n.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "ruleLockedLabel": "Rule {n}, locked, not learned yet",
+  "@ruleLockedLabel": {
+    "description": "Screen reader label of a locked rule card.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "closeHints": "Close hints",
+  "@closeHints": {
+    "description": "Screen reader: close the hint sheet."
+  },
+  "hintsTitle": "Hints",
+  "@hintsTitle": {
+    "description": "Hint sheet title."
+  },
+  "hintsIntro": "Go slow. Maybe all you need is a little nudge.",
+  "@hintsIntro": {
+    "description": "Hint sheet intro."
+  },
+  "hintTier1Title": "Highlight the first tile",
+  "@hintTier1Title": {
+    "description": "Hint tier 1 title."
+  },
+  "hintTier2Title": "Show the item type",
+  "@hintTier2Title": {
+    "description": "Hint tier 2 title."
+  },
+  "hintTier3Title": "Show the full solution",
+  "@hintTier3Title": {
+    "description": "Hint tier 3 title."
+  },
+  "hintOpened": "Unlocked",
+  "@hintOpened": {
+    "description": "Hint tier status: already unlocked."
+  },
+  "hintTier": "Tier {n}",
+  "@hintTier": {
+    "description": "Hint tier status: ready to unlock.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "hintUnlockFirst": "Unlock tier {n} first",
+  "@hintUnlockFirst": {
+    "description": "Hint tier status: unlock the previous tier first.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "noItemsHint": "No items needed here. Just wake Oyen up!",
+  "@noItemsHint": {
+    "description": "Hint sheet card on levels without items."
+  },
+  "hintTier1Text": "See the glowing tile? Something needs to go there.",
+  "@hintTier1Text": {
+    "description": "Unlocked hint tier 1."
+  },
+  "hintPlaceFish": "Put a salted fish on the glowing tile. Oyen will chase it and eat it.",
+  "@hintPlaceFish": {
+    "description": "Unlocked hint tier 2: salted fish."
+  },
+  "hintPlaceWater": "Put a water bucket on the glowing tile. Oyen will get spooked and turn around.",
+  "@hintPlaceWater": {
+    "description": "Unlocked hint tier 2: water bucket."
+  },
+  "hintPlaceBox": "Put a box on the glowing tile. Oyen will climb in and sit there.",
+  "@hintPlaceBox": {
+    "description": "Unlocked hint tier 2: box."
+  },
+  "hintFishCount": "{count, select, one{a salted fish} two{two salted fish} three{three salted fish} other{{n} salted fish}}",
+  "@hintFishCount": {
+    "description": "Hint tier 3 list part (count = one/two/three/other, n = number): n salted fish.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "hintWaterCount": "{count, select, one{a water bucket} two{two water buckets} three{three water buckets} other{{n} water buckets}}",
+  "@hintWaterCount": {
+    "description": "Hint tier 3 list part (count = one/two/three/other, n = number): n water buckets.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "hintBoxCount": "{count, select, one{a box} two{two boxes} three{three boxes} other{{n} boxes}}",
+  "@hintBoxCount": {
+    "description": "Hint tier 3 list part (count = one/two/three/other, n = number): n boxes.",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "listPair": "{a} and {b}",
+  "@listPair": {
+    "description": "Joins two list parts.",
+    "placeholders": {
+      "a": {
+        "type": "String"
+      },
+      "b": {
+        "type": "String"
+      }
+    }
+  },
+  "listLast": "{rest}, and {last}",
+  "@listLast": {
+    "description": "Joins the comma-separated start of a list with its last part.",
+    "placeholders": {
+      "rest": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "hintSolution": "{items} on the glowing {count, plural, one{tile} other{tiles}}. {tail}",
+  "@hintSolution": {
+    "description": "Unlocked hint tier 3 (first letter is capitalized in code); count = number of items.",
+    "placeholders": {
+      "items": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "tail": {
+        "type": "String"
+      }
+    }
+  },
+  "hintSolutionVaseSafe": "Vase safe, 3 stars.",
+  "@hintSolutionVaseSafe": {
+    "description": "Tier 3 ending on levels with a vase."
+  },
+  "hintSolutionStars": "3 stars!",
+  "@hintSolutionStars": {
+    "description": "Tier 3 ending on levels without a vase."
+  },
+  "tutorial1Title": "You can't boss Oyen around. Just wake the cat up!",
+  "@tutorial1Title": {
+    "description": "Tutorial level 1, big text."
+  },
+  "tutorial1Body": "Oyen walks to the bowl alone. You just watch.",
+  "@tutorial1Body": {
+    "description": "Tutorial level 1, small text."
+  },
+  "tutorial3Title": "Oyen can't resist salted fish!",
+  "@tutorial3Title": {
+    "description": "Tutorial level 3 (fish), big text."
+  },
+  "tutorial3Body": "Drag a fish onto the floor. If Oyen sees it in a straight line, the chase is on.",
+  "@tutorial3Body": {
+    "description": "Tutorial level 3, small text."
+  },
+  "tutorial6Title": "Oyen hates water. Like, really.",
+  "@tutorial6Title": {
+    "description": "Tutorial level 6 (bucket), big text."
+  },
+  "tutorial6Body": "Put the bucket in the way. Water ahead means a spooked cat and a U-turn.",
+  "@tutorial6Body": {
+    "description": "Tutorial level 6, small text."
+  },
+  "tutorialLabel": "Tutorial",
+  "@tutorialLabel": {
+    "description": "Screen reader label of the tutorial card."
+  },
+  "skipTutorial": "Skip tutorial",
+  "@skipTutorial": {
+    "description": "Screen reader label of the Skip button."
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "Skip button of the tutorial."
+  },
+  "success": "Nailed it!",
+  "@success": {
+    "description": "Success screen headline."
+  },
+  "stepsUnit": "{n, plural, one{step} other{steps}}",
+  "@stepsUnit": {
+    "description": "Word under a step count (\"6 steps\").",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "itemsUsedUnit": "{n, plural, one{item used} other{items used}}",
+  "@itemsUsedUnit": {
+    "description": "Words under an item count (\"2 items used\").",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "goalBowl": "Reached the bowl",
+  "@goalBowl": {
+    "description": "Star rule 1."
+  },
+  "goalVase": "Mom's vase is safe",
+  "@goalVase": {
+    "description": "Star rule 2."
+  },
+  "goalItems": "Fewest items",
+  "@goalItems": {
+    "description": "Star rule 3."
+  },
+  "goalNotYet": "Not yet",
+  "@goalNotYet": {
+    "description": "Star rule status: not earned."
+  },
+  "goalGot": "Got it",
+  "@goalGot": {
+    "description": "Star rule status: earned (vase screen)."
+  },
+  "goalAchieved": "done",
+  "@goalAchieved": {
+    "description": "Screen reader: star rule earned (check mark)."
+  },
+  "restart": "Restart",
+  "@restart": {
+    "description": "Button: restart with an empty board."
+  },
+  "next": "Next",
+  "@next": {
+    "description": "Button: next level."
+  },
+  "watchReplay": "Watch the replay",
+  "@watchReplay": {
+    "description": "Link on the success screen."
+  },
+  "vaseHeadlineTop": "Made it...",
+  "@vaseHeadlineTop": {
+    "description": "Vase screen headline, line 1."
+  },
+  "vaseHeadlineBottom": "but Mom's vase?",
+  "@vaseHeadlineBottom": {
+    "description": "Vase screen headline, line 2."
+  },
+  "brokenAtStep": "Broke on step {n}",
+  "@brokenAtStep": {
+    "description": "Vase screen: the step the vase broke.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tryAgain": "Try Again",
+  "@tryAgain": {
+    "description": "Vase screen button: arrange again."
+  },
+  "nextAnyway": "Next Anyway",
+  "@nextAnyway": {
+    "description": "Vase screen button: next level anyway."
+  },
+  "vaseArtLabel": "The vase lies broken behind Oyen, and Mom pops in at the door, annoyed",
+  "@vaseArtLabel": {
+    "description": "Screen reader label of the vase screen picture."
+  },
+  "loopTitle": "Oyen got bored going in circles.",
+  "@loopTitle": {
+    "description": "Fail screen title: going in circles."
+  },
+  "loopBadge": "Going in circles",
+  "@loopBadge": {
+    "description": "Fail screen chip: going in circles."
+  },
+  "loopMessage": "Round and round, no bowl in sight. Oh well, back to sleep.",
+  "@loopMessage": {
+    "description": "Fail screen message: going in circles."
+  },
+  "tooLongTitle": "Oyen got tired of walking.",
+  "@tooLongTitle": {
+    "description": "Fail screen title: walked too long."
+  },
+  "tooLongBadge": "Over {n} steps",
+  "@tooLongBadge": {
+    "description": "Fail screen chip: over the step limit.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tooLongMessage": "{n} steps and still no bowl. Ugh, so tired. Back to sleep.",
+  "@tooLongMessage": {
+    "description": "Fail screen message: over the step limit.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "failedKicker": "Level {id} · Failed",
+  "@failedKicker": {
+    "description": "Fail screen line above the title.",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "replay": "Replay",
+  "@replay": {
+    "description": "Replay button and replay screen title."
+  },
+  "arrangeAgain": "Rearrange",
+  "@arrangeAgain": {
+    "description": "Fail screen button: back to arranging."
+  },
+  "replayStart": "Start",
+  "@replayStart": {
+    "description": "Replay: label of step 0."
+  },
+  "backToResult": "Back to results",
+  "@backToResult": {
+    "description": "Replay: back to the result screen."
+  },
+  "recording": "Recording",
+  "@recording": {
+    "description": "Replay: chip next to the title."
+  },
+  "replayStepCaption": "Step {n}. {text}",
+  "@replayStepCaption": {
+    "description": "Replay: screen reader caption of step n.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "timeline": "Time",
+  "@timeline": {
+    "description": "Replay: label of the time slider (shown in capitals)."
+  },
+  "oyenLabel": "Oyen {pose, select, idle{standing} walk{walking} sleep{asleep} shock{startled} box{sitting in a box} knock{knocking something over} eat{eating} happy{happy} other{standing}}, facing {dir, select, up{up} right{right} down{down} left{left} other{right}}",
+  "@oyenLabel": {
+    "description": "Screen reader label of Oyen: pose and facing (screen direction).",
+    "placeholders": {
+      "pose": {
+        "type": "String"
+      },
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "costumeNone": "Plain",
+  "@costumeNone": {
+    "description": "Costume: none."
+  },
+  "costumePeci": "Peci Cap",
+  "@costumePeci": {
+    "description": "Costume: peci (Indonesian cap)."
+  },
+  "costumeSarung": "Sarong",
+  "@costumeSarung": {
+    "description": "Costume: sarong."
+  },
+  "costumeKoki": "Chef Hat",
+  "@costumeKoki": {
+    "description": "Costume: chef hat."
+  },
+  "costumeKacamata": "Glasses",
+  "@costumeKacamata": {
+    "description": "Costume: glasses."
+  },
+  "costumeWearingTag": "Wearing",
+  "@costumeWearingTag": {
+    "description": "Costume card tag: being worn."
+  },
+  "costumeWearingStatus": "wearing",
+  "@costumeWearingStatus": {
+    "description": "Screen reader status: being worn."
+  },
+  "costumeOwnedTag": "Yours",
+  "@costumeOwnedTag": {
+    "description": "Costume card tag: owned."
+  },
+  "costumeOwnedStatus": "yours",
+  "@costumeOwnedStatus": {
+    "description": "Screen reader status: owned."
+  },
+  "costumeActionWearing": "Wearing now",
+  "@costumeActionWearing": {
+    "description": "Closet button: selected costume is worn."
+  },
+  "costumeActionWear": "Wear",
+  "@costumeActionWear": {
+    "description": "Closet button: wear the owned costume."
+  },
+  "costumeActionBuy": "{n, plural, one{Buy · {n} coin} other{Buy · {n} coins}}",
+  "@costumeActionBuy": {
+    "description": "Closet button: buy for n coins.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "closeCoins": "Close coins",
+  "@closeCoins": {
+    "description": "Screen reader: close the coin sheet."
+  },
+  "coinsTitle": "Get Coins",
+  "@coinsTitle": {
+    "description": "Coin sheet title."
+  },
+  "coinsIntro": "Coins buy hints and outfits for Oyen. Grab the daily bonus, or watch an ad.",
+  "@coinsIntro": {
+    "description": "Coin sheet intro."
+  },
+  "dailyBonus": "Daily bonus",
+  "@dailyBonus": {
+    "description": "Coin card title: daily bonus."
+  },
+  "dailyBonusReady": "Once a day",
+  "@dailyBonusReady": {
+    "description": "Daily bonus status: can claim."
+  },
+  "dailyBonusTaken": "Claimed today",
+  "@dailyBonusTaken": {
+    "description": "Daily bonus status: already claimed."
+  },
+  "claimCoins": "{n, plural, one{Claim {n} coin} other{Claim {n} coins}}",
+  "@claimCoins": {
+    "description": "Daily bonus button.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "claimTomorrow": "Back tomorrow",
+  "@claimTomorrow": {
+    "description": "Daily bonus button after claiming."
+  },
+  "adsLeftToday": "{n, plural, one{{n} left today} other{{n} left today}}",
+  "@adsLeftToday": {
+    "description": "Ad card status: ads left today.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adsUsedUp": "All used up today",
+  "@adsUsedUp": {
+    "description": "Ad card status: no ads left today."
+  },
+  "adRewardButton": "{n, plural, one{+{n} coin} other{+{n} coins}}",
+  "@adRewardButton": {
+    "description": "Ad card button: plus n coins.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adsTomorrow": "More tomorrow",
+  "@adsTomorrow": {
+    "description": "Ad card button when used up."
+  },
+  "coinChipAdd": "get coins",
+  "@coinChipAdd": {
+    "description": "Screen reader: the coin chip opens the coin sheet."
+  },
+  "coinChipBonus": "daily bonus ready",
+  "@coinChipBonus": {
+    "description": "Screen reader: the daily bonus is ready."
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Settings section: language."
+  },
+  "languageSystem": "Use phone language",
+  "@languageSystem": {
+    "description": "Language option: follow the phone language."
+  },
+  "tutorialsSection": "Tutorials",
+  "@tutorialsSection": {
+    "description": "Settings section: tutorials."
+  },
+  "replayTutorials": "Show tutorials again",
+  "@replayTutorials": {
+    "description": "Settings button: show the tutorials again."
+  },
+  "replayTutorialsInfo": "The tutorials on levels 1, 3, and 6 show up again next time you play them.",
+  "@replayTutorialsInfo": {
+    "description": "Settings text under the tutorials button."
+  },
+  "tutorialsBack": "Done! The tutorials are back.",
+  "@tutorialsBack": {
+    "description": "Confirmation after pressing \"show tutorials again\"."
+  },
+  "progressSection": "Progress",
+  "@progressSection": {
+    "description": "Settings section: progress."
+  },
+  "resetProgress": "Reset progress",
+  "@resetProgress": {
+    "description": "Settings button: reset progress."
+  },
+  "resetProgressInfo": "Erase stars, coins, outfits, hints, and tutorials, then start again from level 1.",
+  "@resetProgressInfo": {
+    "description": "Settings text under the reset button."
+  },
+  "resetConfirmTitle": "Erase all progress?",
+  "@resetConfirmTitle": {
+    "description": "Reset confirmation title."
+  },
+  "resetConfirmBody": "Stars, coins, outfits, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used.",
+  "@resetConfirmBody": {
+    "description": "Reset confirmation text."
+  },
+  "resetConfirm": "Erase",
+  "@resetConfirm": {
+    "description": "Reset confirmation button."
+  },
+  "closeReset": "Close reset",
+  "@closeReset": {
+    "description": "Screen reader: close the reset confirmation."
+  },
+  "resetDone": "Progress erased. Fresh start!",
+  "@resetDone": {
+    "description": "Message after resetting."
+  },
+  "about": "About",
+  "@about": {
+    "description": "Settings section: about the game."
+  },
+  "version": "Version {version}",
+  "@version": {
+    "description": "App version.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "fontCredits": "Fonts: Fredoka and Nunito (SIL Open Font License).",
+  "@fontCredits": {
+    "description": "Font credits."
+  },
+  "licenses": "Licenses",
+  "@licenses": {
+    "description": "Button: open the licenses page."
+  }
+}

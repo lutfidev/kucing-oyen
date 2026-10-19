@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:path_drawing/path_drawing.dart';
 
+import '../l10n/l10n.dart';
 import '../theme/theme.dart';
 
 /// Satu bintang (viewBox 24): kuning kalau [filled], krem pudar kalau belum
@@ -63,7 +64,7 @@ class KoStars extends StatelessWidget {
   Widget build(BuildContext context) {
     final gap = context.koSpace.s2;
     return Semantics(
-      label: '$earned dari $total bintang',
+      label: context.l10n.starsOf(earned, total),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

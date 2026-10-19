@@ -1,11 +1,15 @@
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/replay.dart';
 import 'package:kucing_oren/game/model/run_frames.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
+import 'package:kucing_oren/l10n/captions.dart';
+import 'package:kucing_oren/l10n/l10n.dart';
 
 import '../../screens/result_fixtures.dart' show longWalk;
+import '../../test_helpers.dart';
 
 void main() {
   final levels = parseLevels(
@@ -21,9 +25,16 @@ void main() {
     return (result: result, frames: runFrames(level.board, result));
   }
 
-  List<String> captions(Level level, [List<Placement>? placed]) {
+  List<String> captions(
+    Level level, [
+    List<Placement>? placed,
+    AppLocalizations? l,
+  ]) {
     final r = run(level, placed);
-    return replayCaptions(level.board, r.result, r.frames);
+    return [
+      for (final text in replayCaptions(level.board, r.result, r.frames))
+        replayCaptionText(l ?? l10nId, text),
+    ];
   }
 
   /// "(kolom,baris) nomor" tiap jejak.
@@ -102,6 +113,36 @@ void main() {
       ]);
     });
 
+    test('solusi level 13 dalam bahasa Inggris dan jamak Rusia', () {
+      final en = lookupAppLocalizations(const Locale('en'));
+      expect(captions(level(13), null, en), [
+        'Start: Oyen asleep, facing left.',
+        'Meets a water bucket, jumps, turns back.',
+        'Walks straight to the right.',
+        'Hits a wall, turns to face down.',
+        'Salted fish in sight, straight to the left.',
+        'Chasing the fish. Vase still safe.',
+        'Into the bowl. Done in 6 steps.',
+      ]);
+      final ru = lookupAppLocalizations(const Locale('ru'));
+      expect(captions(level(13), null, ru).last, 'В миске. Готово за 6 шагов.');
+      expect(
+        captions(level(15), null, ru).last,
+        'В миске. Готово за 12 шагов.',
+      );
+      // Berputar searah jarum jam: arah sesudahnya, bukan "belok kiri".
+      expect(
+        captions(level(13), null, ru)[3],
+        'Упёрся в стену, повернулся и смотрит вниз.',
+      );
+      final pt = lookupAppLocalizations(const Locale('pt'));
+      expect(
+        captions(level(13), null, pt)[3],
+        'Bate na parede, gira e fica virado para baixo.',
+      );
+      expect(captions(level(13), null, ru)[2], 'Идёт вправо.');
+    });
+
     test('jalan, kejar ikan tanpa vas, makan, meja, dan kardus', () {
       final c = captions(level(15));
       expect(c.sublist(0, 4), [
@@ -156,9 +197,12 @@ void main() {
             if (r.result.failReason != FailReason.loop) continue;
             loops++;
             final c = replayCaptions(l.board, r.result, r.frames).last;
-            final match = RegExp(r'seperti (awal|langkah (\d+))').firstMatch(c);
-            expect(match, isNotNull, reason: '$l $item $pos');
-            final step = int.parse(match!.group(2) ?? '0');
+            expect(
+              c.kind,
+              anyOf(ReplayTextKind.loopStart, ReplayTextKind.loopStep),
+              reason: '$l $item $pos',
+            );
+            final step = c.number ?? 0;
             final last = r.frames.last;
             final earlier = r.frames[step];
             expect(step, lessThan(r.result.steps));
@@ -181,7 +225,10 @@ void main() {
       for (final l in levels) {
         for (final placed in [l.solution, const <Placement>[]]) {
           final r = run(l, placed);
-          final c = replayCaptions(l.board, r.result, r.frames);
+          final c = [
+            for (final text in replayCaptions(l.board, r.result, r.frames))
+              replayCaptionText(l10nId, text),
+          ];
           expect(c, hasLength(r.frames.length));
           for (var i = 0; i < c.length; i++) {
             expect(c[i], isNotEmpty);

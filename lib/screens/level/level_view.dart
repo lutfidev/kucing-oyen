@@ -15,6 +15,9 @@ import '../../game/model/run_clock.dart';
 import '../../game/model/run_frames.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/captions.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../replay/replay_view.dart';
@@ -325,8 +328,10 @@ class _LevelViewState extends State<LevelView>
       _drag = null;
       final board = _level.board;
       final frames = runFrames(board, _session.wake());
+      final l = context.l10n;
       final run = _Run(frames, [
-        for (var i = 0; i < frames.length; i++) runCaption(board, frames, i),
+        for (var i = 0; i < frames.length; i++)
+          runCaptionText(l, runCaption(board, frames, i)),
       ]);
       if (_reduceMotion) run.clock.skipToEnd();
       _run = run;
@@ -476,9 +481,9 @@ class _LevelViewState extends State<LevelView>
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         LevelTopBar(
-                          title: 'Level ${_level.id} · ${_level.name}',
+                          title: levelTitle(context.l10n, _level),
                           backLabel: running
-                              ? 'Kembali ke fase atur'
+                              ? context.l10n.backToArrange
                               : widget.backLabel,
                           onBack: running ? _arrangeAgain : widget.onBack,
                           trailing: run == null
@@ -497,7 +502,17 @@ class _LevelViewState extends State<LevelView>
                               children: [
                                 if (_level.inventory.isNotEmpty)
                                   run == null
-                                      ? TargetChip(items: _level.starItems)
+                                      // Mengecil kalau teksnya panjang.
+                                      ? Flexible(
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            alignment: AlignmentDirectional
+                                                .centerStart,
+                                            child: TargetChip(
+                                              items: _level.starItems,
+                                            ),
+                                          ),
+                                        )
                                       : RunStatus(
                                           vaseBroken: _hasVase
                                               ? run.frame.vaseBroken
@@ -612,7 +627,7 @@ class _LevelViewState extends State<LevelView>
             SizedBox(height: space.s16),
             KoButton(
               key: _wakeKey,
-              label: 'Bangunkan Oyen',
+              label: context.l10n.wakeOyen,
               icon: KoIcons.wake,
               size: KoButtonSize.large,
               onPressed: _wake,
@@ -633,7 +648,7 @@ class _LevelViewState extends State<LevelView>
   /// Baki fase atur.
   Widget _tray() {
     if (_level.inventory.isEmpty) {
-      return const TrayMessage('Level ini belum butuh benda.');
+      return TrayMessage(context.l10n.trayEmpty);
     }
     final drag = _drag;
     final remaining = _session.remaining;

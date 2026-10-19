@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/progress_scope.dart';
 import '../../game/model/rewards.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../level/level_sheet.dart';
@@ -11,7 +12,7 @@ import '../level/level_sheet.dart';
 Future<void> showCoinSheet(BuildContext context, ProgressController progress) =>
     showLevelSheet(
       context,
-      barrierLabel: 'Tutup tambah koin',
+      barrierLabel: context.l10n.closeCoins,
       barrierColor: context.koColors.scrimLight,
       builder: (context, onClose) =>
           CoinSheet(progress: progress, onClose: onClose),
@@ -56,6 +57,7 @@ class _CoinSheetState extends State<CoinSheet> {
     final t = context.koType;
     final space = context.koSpace;
     final s = context.koSize;
+    final l = context.l10n;
     return ListenableBuilder(
       listenable: widget.progress,
       builder: (context, _) {
@@ -77,7 +79,7 @@ class _CoinSheetState extends State<CoinSheet> {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       alignment: AlignmentDirectional.centerStart,
-                      child: Text('Tambah Koin', maxLines: 1, style: t.title),
+                      child: Text(l.coinsTitle, maxLines: 1, style: t.title),
                     ),
                   ),
                 ),
@@ -89,7 +91,7 @@ class _CoinSheetState extends State<CoinSheet> {
                 SizedBox(width: space.s10),
                 KoIconButton(
                   icon: KoIcons.close,
-                  semanticLabel: 'Tutup',
+                  semanticLabel: l.close,
                   tone: KoIconButtonTone.flat,
                   iconSize: s.iconSmall,
                   onPressed: widget.onClose,
@@ -98,28 +100,22 @@ class _CoinSheetState extends State<CoinSheet> {
             ),
             // Seperti sheet Petunjuk: jarak 12 dikurangi margin -4.
             SizedBox(height: space.s8),
-            Text(
-              'Koin buat petunjuk dan kostum Oyen. '
-              'Ambil bonus tiap hari, atau tonton iklan.',
-              style: t.bodySmall.copyWith(color: c.inkSoft),
-            ),
+            Text(l.coinsIntro, style: t.bodySmall.copyWith(color: c.inkSoft)),
           ],
         );
         return LevelSheet(
-          label: 'Tambah Koin',
+          label: l.coinsTitle,
           onClose: widget.onClose,
           header: header,
           children: [
             RewardCard(
               key: const ValueKey('coin-bonus'),
               icon: KoIcons.gift,
-              title: 'Bonus harian',
-              status: bonus ? 'Sekali sehari' : 'Sudah diambil hari ini',
+              title: l.dailyBonus,
+              status: bonus ? l.dailyBonusReady : l.dailyBonusTaken,
               done: !bonus,
               button: SheetButton(
-                label: bonus
-                    ? 'Ambil $dailyBonusCoins koin'
-                    : 'Ambil lagi besok',
+                label: bonus ? l.claimCoins(dailyBonusCoins) : l.claimTomorrow,
                 icon: CoinView(size: s.iconCompact, plain: true),
                 color: c.orange,
                 line: c.orange,
@@ -131,13 +127,13 @@ class _CoinSheetState extends State<CoinSheet> {
             RewardCard(
               key: const ValueKey('coin-ad'),
               icon: KoIcons.ad,
-              title: 'Tonton iklan',
-              status: adsLeft > 0
-                  ? 'Sisa $adsLeft kali hari ini'
-                  : 'Jatah hari ini habis',
+              title: l.watchAd,
+              status: adsLeft > 0 ? l.adsLeftToday(adsLeft) : l.adsUsedUp,
               done: adsLeft == 0,
               button: SheetButton(
-                label: adsLeft > 0 ? '+$adRewardCoins koin' : 'Besok ada lagi',
+                label: adsLeft > 0
+                    ? l.adRewardButton(adRewardCoins)
+                    : l.adsTomorrow,
                 icon: KoIcon(
                   KoIcons.ad,
                   size: s.iconCompact,
@@ -148,9 +144,7 @@ class _CoinSheetState extends State<CoinSheet> {
                 edge: c.lineDeep,
                 onPressed: canWatch ? _watch : null,
               ),
-              message: _failed
-                  ? 'Iklannya belum bisa diputar. Coba lagi nanti, ya.'
-                  : null,
+              message: _failed ? l.adFailed : null,
             ),
           ],
         );

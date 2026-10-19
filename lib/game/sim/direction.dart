@@ -1,20 +1,17 @@
 /// Arah hadap Oyen. Urutan enum mengikuti jarum jam, mulai dari atas.
 enum Direction {
-  up(0, -1, '^', 'atas'),
-  right(1, 0, '>', 'kanan'),
-  down(0, 1, 'v', 'bawah'),
-  left(-1, 0, '<', 'kiri');
+  up(0, -1, '^'),
+  right(1, 0, '>'),
+  down(0, 1, 'v'),
+  left(-1, 0, '<');
 
-  const Direction(this.dx, this.dy, this.symbol, this.label);
+  const Direction(this.dx, this.dy, this.symbol);
 
   final int dx;
   final int dy;
 
   /// Huruf di peta: `^ > v <`.
   final String symbol;
-
-  /// Arah layar dalam teks cerita, caption, dan label pembaca layar.
-  final String label;
 
   Direction get clockwise => values[(index + 1) % 4];
   Direction get counterClockwise => values[(index + 3) % 4];

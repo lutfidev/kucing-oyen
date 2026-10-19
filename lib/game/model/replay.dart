@@ -1,4 +1,5 @@
 import '../sim/sim.dart';
+import 'run_caption.dart';
 import 'run_frames.dart';
 
 /// Nomor jejak di satu petak papan putar ulang (desain 09): langkah-langkah
@@ -54,12 +55,81 @@ List<TrailMark> replayTrail(List<RunFrame> frames) {
   ];
 }
 
+/// Jenis caption putar ulang (desain 09).
+enum ReplayTextKind {
+  asleep,
+  finished,
+  chase,
+  chaseVaseSafe,
+  seeFish,
+  walk,
+  scared,
+  turn,
+  eat,
+  enterBox,
+  sit,
+  boxGone,
+  knockGlass,
+  knockVase,
+  loopStart,
+  loopStep,
+  tooManySteps,
+}
+
+/// Isi caption satu langkah putar ulang sebagai data; kalimatnya disusun
+/// per bahasa di lapisan teks (`replayCaptionText`).
+class ReplayText {
+  const ReplayText(
+    this.kind, {
+    this.dir,
+    this.obstacle,
+    this.water,
+    this.number,
+  });
+
+  final ReplayTextKind kind;
+
+  /// Arah layar yang disebut caption.
+  final Direction? dir;
+
+  /// Yang membuat Oyen berputar ([ReplayTextKind.turn]).
+  final Obstacle? obstacle;
+
+  /// Air yang membuat Oyen kaget ([ReplayTextKind.scared]).
+  final WaterSource? water;
+
+  /// Jumlah langkah ([ReplayTextKind.finished]), langkah yang terulang
+  /// ([ReplayTextKind.loopStep]), atau batas langkah
+  /// ([ReplayTextKind.tooManySteps]).
+  final int? number;
+
+  @override
+  bool operator ==(Object other) =>
+      other is ReplayText &&
+      other.kind == kind &&
+      other.dir == dir &&
+      other.obstacle == obstacle &&
+      other.water == water &&
+      other.number == number;
+
+  @override
+  int get hashCode => Object.hash(kind, dir, obstacle, water, number);
+
+  @override
+  String toString() =>
+      'ReplayText(${kind.name}'
+      '${dir == null ? '' : ', ${dir!.name}'}'
+      '${obstacle == null ? '' : ', ${obstacle!.name}'}'
+      '${water == null ? '' : ', ${water!.name}'}'
+      '${number == null ? '' : ', $number'})';
+}
+
 /// Caption tiap langkah putar ulang (desain 09), langkah 0 sampai terakhir:
-/// rekap singkat dengan arah layar (atas, bawah, kiri, kanan).
+/// rekap singkat dengan arah layar.
 ///
 /// Langkah terakhir yang gagal menjelaskan sebabnya: keadaan yang sama
 /// dengan langkah sebelumnya (mondar-mandir) atau batas [maxSteps].
-List<String> replayCaptions(
+List<ReplayText> replayCaptions(
   Board board,
   SimResult result,
   List<RunFrame> frames,
@@ -71,13 +141,13 @@ List<String> replayCaptions(
       if (step == last && result.failReason == FailReason.loop)
         _loopCaption(frames)
       else if (step == last && result.failReason == FailReason.tooManySteps)
-        'Langkah ke-$maxSteps, mangkuknya belum ketemu. Oyen bosan.'
+        const ReplayText(ReplayTextKind.tooManySteps, number: maxSteps)
       else
         _caption(board, frames, step, hasVase: hasVase),
   ];
 }
 
-String _caption(
+ReplayText _caption(
   Board board,
   List<RunFrame> frames,
   int step, {
@@ -85,56 +155,64 @@ String _caption(
 }) {
   final frame = frames[step];
   final action = frame.action;
-  if (action == null) return 'Awal: Oyen tidur menghadap ${frame.dir.label}.';
+  if (action == null) return ReplayText(ReplayTextKind.asleep, dir: frame.dir);
   final dir = action.dir;
   switch (action.kind) {
     case StepKind.walk:
       if (frame.atBowl) {
-        return 'Masuk mangkuk. Selesai dalam ${frames.length - 1} langkah.';
+        return ReplayText(ReplayTextKind.finished, number: frames.length - 1);
       }
       if (action.chasing != null) {
         return hasVase && !frame.vaseBroken
-            ? 'Kejar ikan. Vas tetap aman.'
-            : 'Kejar ikan ke ${dir.label}.';
+            ? const ReplayText(ReplayTextKind.chaseVaseSafe)
+            : ReplayText(ReplayTextKind.chase, dir: dir);
       }
       final next = step + 1 < frames.length ? frames[step + 1].action : null;
       final fish = next?.chasing;
       if (fish != null) {
-        return 'Ikan asin kelihatan lurus di ${_toward(action.pos, fish).label}.';
+        return ReplayText(
+          ReplayTextKind.seeFish,
+          dir: toward(action.pos, fish),
+        );
       }
-      return 'Jalan lurus ke ${dir.label}.';
+      return ReplayText(ReplayTextKind.walk, dir: dir);
     case StepKind.scared:
       // Arah sesudah putar balik; airnya di belakang Oyen sekarang.
-      final water = board.cellAt(action.pos + dir.opposite) == Cell.water
-          ? 'genangan air'
-          : 'ember air';
-      return 'Ketemu $water, kaget, putar balik.';
+      return ReplayText(
+        ReplayTextKind.scared,
+        water: board.cellAt(action.pos + dir.opposite) == Cell.water
+            ? WaterSource.puddle
+            : WaterSource.bucket,
+      );
     case StepKind.turn:
-      final ahead = board.cellAt(action.pos + dir.counterClockwise);
-      final what = ahead.isTable ? 'meja' : 'tembok';
-      return 'Mentok $what, berputar menghadap ${dir.label}.';
+      return ReplayText(
+        ReplayTextKind.turn,
+        dir: dir,
+        obstacle: obstacleAt(board, action.pos + dir.counterClockwise),
+      );
     case StepKind.eat:
-      return 'Hap! Ikan asin dimakan.';
+      return const ReplayText(ReplayTextKind.eat);
     case StepKind.enterBox:
-      return 'Masuk kardus, duduk dulu.';
+      return const ReplayText(ReplayTextKind.enterBox);
     case StepKind.sit:
-      return action.changed == null
-          ? 'Masih duduk di kardus.'
-          : 'Kardusnya penyok dan hilang.';
+      return ReplayText(
+        action.changed == null ? ReplayTextKind.sit : ReplayTextKind.boxGone,
+      );
     case StepKind.knockGlass:
-      return 'Gelas didorong jatuh. Aman, plastik.';
+      return const ReplayText(ReplayTextKind.knockGlass);
     case StepKind.knockVase:
-      return 'Vas Ibu didorong jatuh. Pecah!';
+      return const ReplayText(ReplayTextKind.knockVase);
   }
 }
 
 /// Langkah terakhir mondar-mandir: keadaannya sama persis dengan langkah
 /// sebelumnya (posisi, arah, sisa duduk di kardus, benda, barang jatuh).
-String _loopCaption(List<RunFrame> frames) {
+ReplayText _loopCaption(List<RunFrame> frames) {
   final last = frames.last;
   final same = frames.indexWhere((f) => _sameState(f, last));
-  final when = same == 0 ? 'awal' : 'langkah $same';
-  return 'Balik lagi seperti $when. Oyen muter terus, jadi bosan.';
+  return same == 0
+      ? const ReplayText(ReplayTextKind.loopStart)
+      : ReplayText(ReplayTextKind.loopStep, number: same);
 }
 
 bool _sameState(RunFrame a, RunFrame b) =>
@@ -150,10 +228,3 @@ int _sitLeft(RunFrame frame) => switch (frame.action) {
   SimStep(kind: StepKind.sit, changed: null) => 1,
   _ => 0,
 };
-
-/// Arah dari [from] ke [to] yang sebaris atau sekolom.
-Direction _toward(Pos from, Pos to) {
-  if (to.x > from.x) return Direction.right;
-  if (to.x < from.x) return Direction.left;
-  return to.y > from.y ? Direction.down : Direction.up;
-}

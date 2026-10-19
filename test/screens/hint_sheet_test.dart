@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/hint_source.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/screens/level/hint_sheet.dart';
-import 'package:kucing_oren/theme/theme.dart';
 
 import '../test_helpers.dart';
 
@@ -20,8 +19,7 @@ Future<void> _open(WidgetTester tester, HintSource hints, {int id = 13}) async {
   setScreenSize(tester, const Size(390, 844));
   final level = testLevels.firstWhere((l) => l.id == id);
   await tester.pumpWidget(
-    MaterialApp(
-      theme: KoTheme.light(),
+    testApp(
       home: Builder(
         builder: (context) => Scaffold(
           body: Center(

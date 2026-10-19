@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -229,10 +230,6 @@ class VaseArt extends StatefulWidget {
   /// Kostum Oyen dari Lemari Kostum.
   final OyenCostume costume;
 
-  /// Label pembaca layar, sama dengan `aria-label` di desain.
-  static const label =
-      'Vas pecah di belakang Oyen, Ibu muncul dari pintu dengan wajah kesal';
-
   /// Sudut "PRANG!" di waktu [t] (0..1) satu goyangan: -4° → 4° → -4°,
   /// tiap potongan `ease-in-out`.
   static double swingAt(double t) {
@@ -287,7 +284,8 @@ class _VaseArtState extends State<VaseArt> with TickerProviderStateMixin {
     return Semantics(
       container: true,
       image: true,
-      label: VaseArt.label,
+      // Sama dengan `aria-label` di desain.
+      label: context.l10n.vaseArtLabel,
       excludeSemantics: true,
       child: ResultArtCard(
         size: ResultArt.vaseCard,

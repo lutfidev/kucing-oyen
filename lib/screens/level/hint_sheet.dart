@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../app/hint_source.dart';
 import '../../game/model/hints.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/hint_texts.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'level_sheet.dart';
@@ -15,7 +17,7 @@ Future<void> showHintSheet(
   required HintSource hints,
 }) => showLevelSheet(
   context,
-  barrierLabel: 'Tutup petunjuk',
+  barrierLabel: context.l10n.closeHints,
   barrierColor: context.koColors.scrimLight,
   builder: (context, onClose) =>
       HintSheet(level: level, hints: hints, onClose: onClose),
@@ -93,7 +95,7 @@ class _HintSheetState extends State<HintSheet> {
                   child: Semantics(
                     header: true,
                     child: Text(
-                      'Petunjuk',
+                      context.l10n.hintsTitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: t.title,
@@ -105,7 +107,7 @@ class _HintSheetState extends State<HintSheet> {
                 SizedBox(width: space.s10),
                 KoIconButton(
                   icon: KoIcons.close,
-                  semanticLabel: 'Tutup',
+                  semanticLabel: context.l10n.close,
                   tone: KoIconButtonTone.flat,
                   iconSize: s.iconSmall,
                   onPressed: widget.onClose,
@@ -115,7 +117,7 @@ class _HintSheetState extends State<HintSheet> {
             // Desain: jarak 12 dikurangi margin -4.
             SizedBox(height: space.s8),
             Text(
-              'Buka pelan-pelan. Siapa tahu kamu cuma butuh dorongan kecil.',
+              context.l10n.hintsIntro,
               style: t.bodySmall.copyWith(color: c.inkSoft),
             ),
           ],
@@ -123,7 +125,10 @@ class _HintSheetState extends State<HintSheet> {
         final List<Widget> cards;
         if (widget.level.solution.isEmpty) {
           cards = [
-            KoCard(borderColor: c.success, child: _Reveal(noItemsHintText)),
+            KoCard(
+              borderColor: c.success,
+              child: _Reveal(context.l10n.noItemsHint),
+            ),
           ];
         } else {
           cards = [
@@ -134,7 +139,7 @@ class _HintSheetState extends State<HintSheet> {
                 tier: tier,
                 open: tier <= opened,
                 ready: tier == opened + 1,
-                text: hintText(widget.level, tier),
+                text: hintTextFor(context.l10n, hintText(widget.level, tier)),
                 coins: coins,
                 waiting: _waiting == tier,
                 adFailed: _failed == tier,
@@ -145,7 +150,7 @@ class _HintSheetState extends State<HintSheet> {
           ];
         }
         return LevelSheet(
-          label: 'Petunjuk',
+          label: context.l10n.hintsTitle,
           onClose: widget.onClose,
           header: header,
           children: cards,
@@ -193,12 +198,6 @@ class HintTierCard extends StatelessWidget {
   /// Iklan tingkat ini terakhir gagal.
   final bool adFailed;
 
-  static const _titles = [
-    'Sorot petak pertama',
-    'Tunjukkan jenis benda',
-    'Tampilkan solusi lengkap',
-  ];
-
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
@@ -208,6 +207,12 @@ class HintTierCard extends StatelessWidget {
     final locked = !open && !ready;
     final cost = hintCost(tier);
     final enabled = ready && !waiting;
+    final l = context.l10n;
+    final title = switch (tier) {
+      1 => l.hintTier1Title,
+      2 => l.hintTier2Title,
+      _ => l.hintTier3Title,
+    };
 
     final head = Row(
       children: [
@@ -231,13 +236,13 @@ class HintTierCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(_titles[tier - 1], style: t.cardTitle),
+              Text(title, style: t.cardTitle),
               Text(
                 open
-                    ? 'Terbuka'
+                    ? l.hintOpened
                     : ready
-                    ? 'Tingkat $tier'
-                    : 'Buka tingkat ${tier - 1} dulu',
+                    ? l.hintTier(tier)
+                    : l.hintUnlockFirst(tier - 1),
                 style: t.controlLabel.copyWith(color: c.inkSoft),
               ),
             ],
@@ -255,7 +260,7 @@ class HintTierCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SheetButton(
-                      label: 'Tonton iklan',
+                      label: l.watchAd,
                       icon: KoIcon(
                         KoIcons.ad,
                         size: s.iconCompact,
@@ -271,8 +276,8 @@ class HintTierCard extends StatelessWidget {
                   Expanded(
                     child: SheetButton(
                       label: coins >= cost
-                          ? '$cost koin'
-                          : 'Koin kurang · $cost',
+                          ? l.coinsAmount(cost)
+                          : l.notEnoughCoins(cost),
                       icon: CoinView(size: s.iconCompact, plain: true),
                       color: c.orange,
                       line: c.orange,
@@ -287,7 +292,7 @@ class HintTierCard extends StatelessWidget {
                 Semantics(
                   liveRegion: true,
                   child: Text(
-                    'Iklannya belum bisa diputar. Coba lagi nanti, ya.',
+                    l.adFailed,
                     style: t.controlLabel.copyWith(color: c.brickDeep),
                   ),
                 ),

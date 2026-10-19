@@ -5,6 +5,9 @@ import 'package:kucing_oren/game/render/board_scene.dart';
 import 'package:kucing_oren/game/render/oyen.dart';
 import 'package:kucing_oren/game/render/tile.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
+import 'package:kucing_oren/l10n/names.dart';
+
+import '../../test_helpers.dart';
 
 /// Huruf ringkas untuk jenis petak supaya peta harapan mudah dibaca.
 const _codes = {
@@ -163,10 +166,13 @@ void main() {
 
   test('label Oyen dan papan sama dengan desain', () {
     expect(
-      const OyenLook(pose: OyenPose.box, dir: Direction.right).label,
+      oyenLabel(
+        l10nId,
+        const OyenLook(pose: OyenPose.box, dir: Direction.right),
+      ),
       'Oyen duduk dalam kardus, menghadap kanan',
     );
-    expect(BoardScene.label, 'Papan permainan 7 kali 9 petak');
+    expect(l10nId.boardLabel, 'Papan permainan 7 kali 9 petak');
   });
 
   test('benda petunjuk samar di petak kosong', () {

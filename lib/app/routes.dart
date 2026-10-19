@@ -17,6 +17,9 @@ abstract final class AppRoutes {
   /// Lemari Kostum (desain 12), dibuka dari Beranda.
   static const closet = '/kostum';
 
+  /// Pengaturan (tidak ada di desain), dibuka dari Beranda.
+  static const settings = '/pengaturan';
+
   /// Peta babak nomor [number] (desain 02).
   static String chapter(int number) => '/babak/$number';
 

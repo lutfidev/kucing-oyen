@@ -9,14 +9,13 @@ import 'package:kucing_oren/game/level_loader.dart';
 import 'package:kucing_oren/game/model/run_clock.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
+import 'package:kucing_oren/l10n/names.dart';
 import 'package:kucing_oren/screens/level/level_bar.dart';
 import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/level/run_panel.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
-import 'package:kucing_oren/screens/level/tray.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
-import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -39,8 +38,7 @@ Future<void> _pumpLevel(
   _nextTaps = 0;
   setScreenSize(tester, size);
   await tester.pumpWidget(
-    MaterialApp(
-      theme: KoTheme.light(),
+    testApp(
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context)
             .copyWith(disableAnimations: disableAnimations),
@@ -89,7 +87,8 @@ Offset _tileCenter(WidgetTester tester, int col, int row) {
 }
 
 Finder _slot(Item item) => find.byWidgetPredicate(
-  (w) => w is TraySlot && w.semanticLabel.startsWith('${itemName(item)},'),
+  (w) =>
+      w is TraySlot && w.semanticLabel.startsWith('${itemName(l10nId, item)},'),
 );
 
 TraySlot _slotOf(WidgetTester tester, Item item) =>

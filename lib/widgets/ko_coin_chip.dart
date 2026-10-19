@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../l10n/l10n.dart';
 import '../theme/theme.dart';
 import 'game_art.dart';
 import 'ko_icon.dart';
@@ -83,10 +84,11 @@ class KoCoinChip extends StatelessWidget {
 
     final border = raised ? null : c.line;
     final shadow = context.koShadow.coinChip;
+    final l = context.l10n;
     final label = [
-      '$coins koin',
-      if (pressable) 'tambah koin',
-      if (pressable && badge) 'bonus harian siap',
+      l.coinsAmount(coins),
+      if (pressable) l.coinChipAdd,
+      if (pressable && badge) l.coinChipBonus,
     ].join(', ');
     final Widget chip;
     if (pressable) {

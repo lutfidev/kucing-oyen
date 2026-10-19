@@ -1,9 +1,14 @@
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/run_caption.dart';
 import 'package:kucing_oren/game/model/run_frames.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
+import 'package:kucing_oren/l10n/captions.dart';
+import 'package:kucing_oren/l10n/l10n.dart';
+
+import '../../test_helpers.dart';
 
 void main() {
   final levels = parseLevels(
@@ -11,13 +16,50 @@ void main() {
   );
   Level level(int id) => levels.firstWhere((l) => l.id == id);
 
-  List<String> captions(Level level, [List<Placement>? placed]) {
+  List<RunText> texts(Level level, [List<Placement>? placed]) {
     final board = level.board;
     final frames = runFrames(board, simulate(board, placed ?? level.solution));
     return [
       for (var i = 0; i < frames.length; i++) runCaption(board, frames, i),
     ];
   }
+
+  List<String> captions(
+    Level level, [
+    List<Placement>? placed,
+    AppLocalizations? l,
+  ]) => [
+    for (final text in texts(level, placed)) runCaptionText(l ?? l10nId, text),
+  ];
+
+  test('caption sebagai data: arah dan penghalang', () {
+    expect(texts(level(13)).take(4), const [
+      RunText(RunTextKind.wake, dir: Direction.left),
+      RunText(RunTextKind.scared),
+      RunText(RunTextKind.walk, dir: Direction.right),
+      RunText(RunTextKind.turn, dir: Direction.down, obstacle: Obstacle.wall),
+    ]);
+  });
+
+  test('solusi level 13 dalam bahasa Inggris: arah layar, berputar', () {
+    final en = lookupAppLocalizations(const Locale('en'));
+    expect(captions(level(13), null, en), [
+      'Oyen wakes up, facing left.',
+      'Water! Oyen jumps and turns back.',
+      'Strolling to the right, no rush.',
+      'Hit a wall. Turned, now facing down.',
+      'Hey, salted fish to the left!',
+      'Chasing the fish to the left.',
+      'Made it to the bowl! Nom nom.',
+    ]);
+  });
+
+  test('bahasa Rusia memakai bentuk arah yang berbeda', () {
+    final ru = lookupAppLocalizations(const Locale('ru'));
+    final c = captions(level(13), null, ru);
+    expect(c[2], 'Идёт вправо, не спеша.');
+    expect(c[4], 'Ого, слева пахнет солёной рыбкой!');
+  });
 
   test('solusi level 13: caption desain 04', () {
     expect(captions(level(13)), [
