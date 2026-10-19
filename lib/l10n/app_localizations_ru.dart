@@ -230,8 +230,8 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'не больше $n предметов',
-      one: 'не больше $n предмета',
+      other: 'до $n предметов',
+      one: 'до $n предмета',
     );
     return '$_temp0';
   }

@@ -502,7 +502,17 @@ class _LevelViewState extends State<LevelView>
                               children: [
                                 if (_level.inventory.isNotEmpty)
                                   run == null
-                                      ? TargetChip(items: _level.starItems)
+                                      // Mengecil kalau teksnya panjang.
+                                      ? Flexible(
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            alignment: AlignmentDirectional
+                                                .centerStart,
+                                            child: TargetChip(
+                                              items: _level.starItems,
+                                            ),
+                                          ),
+                                        )
                                       : RunStatus(
                                           vaseBroken: _hasVase
                                               ? run.frame.vaseBroken

@@ -70,7 +70,7 @@ void main() {
       expect(_label('0 dari 60 bintang'), findsOneWidget);
     });
 
-    testWidgets('Lemari Kostum bisa ditekan, Pengaturan belum', (tester) async {
+    testWidgets('Lemari Kostum dan Pengaturan bisa ditekan', (tester) async {
       await pumpApp(tester);
       KoPressable button(String label) => tester.widget<KoPressable>(
         find.byWidgetPredicate(
@@ -78,7 +78,7 @@ void main() {
         ),
       );
       expect(button('Lemari Kostum').onPressed, isNotNull);
-      expect(button('Pengaturan').onPressed, isNull);
+      expect(button('Pengaturan').onPressed, isNotNull);
     });
   });
 

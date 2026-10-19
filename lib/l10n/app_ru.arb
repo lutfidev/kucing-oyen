@@ -54,7 +54,7 @@
   "levelTitle": "Уровень {id} · {name}",
   "rules": "Правила",
   "hint": "Подсказка",
-  "targetItems": "{n, plural, one{не больше {n} предмета} other{не больше {n} предметов}}",
+  "targetItems": "{n, plural, one{до {n} предмета} other{до {n} предметов}}",
   "targetLabel": "Цель на 3 звезды: {text}",
   "levelMissing": "Такого уровня нет.",
   "backToArrange": "Назад к расстановке",
