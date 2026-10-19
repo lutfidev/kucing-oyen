@@ -1,4 +1,4 @@
-# Kucing Oren — Dokumen Desain Game
+# Ginger Logic — Dokumen Desain Game
 
 Oct 15, 2026 · @Lutfi
 
@@ -8,7 +8,7 @@ Kucing Oren adalah game puzzle mobile untuk semua umur: pemain tidak mengendalik
 
 | Aspek | Keputusan |
 | --- | --- |
-| Judul kerja | Kucing Oren (karakter: Oyen) |
+| Judul | Ginger Logic (merek berbahasa Inggris, sama di semua bahasa; judul kerja lama "Kucing Oren"; karakter: Oyen) |
 | Genre | Puzzle kendali tidak langsung, berbasis giliran |
 | Target | Semua umur, sesi 1–3 menit per level |
 | Platform | Android dulu, Flutter + Flame |
