@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../../game/model/chapter.dart';
 import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
-import '../../theme/theme.dart';
-import '../../widgets/widgets.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
+import '../../theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Judul peta babak (desain 02): kembali, "BABAK 2 / Ruang Tamu", bintang
 /// babak, lalu kartu babak lain. Latarnya krem dan memudar setinggi

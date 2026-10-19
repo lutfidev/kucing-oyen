@@ -17,6 +17,7 @@ import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/captions.dart';
 import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../replay/replay_view.dart';
@@ -28,7 +29,6 @@ import 'rules_sheet.dart';
 import 'run_panel.dart';
 import 'tray.dart';
 import 'tutorial.dart';
-import '../../l10n/names.dart';
 
 /// Benda yang sedang diseret jari, dari baki atau dari papan.
 class _ItemDrag {

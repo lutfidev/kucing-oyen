@@ -1,22 +1,21 @@
 import 'package:flame/game.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/routes.dart';
-import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/kucing_game.dart';
+import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
+import 'package:kucing_oren/l10n/names.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
 import 'result_fixtures.dart';
-
-import 'package:kucing_oren/l10n/names.dart';
-import 'package:kucing_oren/app/language.dart';
 
 /// Menaruh [placements] lewat seretan dari baki ke petaknya.
 Future<void> _place(WidgetTester tester, List<Placement> placements) async {

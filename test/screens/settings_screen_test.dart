@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/app.dart';
 import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/progress_store.dart';
@@ -15,8 +16,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../test_helpers.dart';
 import 'result_fixtures.dart' show pumpFor;
-
-import 'package:kucing_oren/app/app.dart';
 
 Finder _language(AppLanguage language) =>
     find.byKey(ValueKey('language-${language.name}'));

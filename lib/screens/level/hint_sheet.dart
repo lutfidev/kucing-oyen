@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../app/hint_source.dart';
 import '../../game/model/hints.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/hint_texts.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'level_sheet.dart';
-import '../../l10n/hint_texts.dart';
-import '../../l10n/l10n.dart';
 
 /// Membuka sheet Petunjuk (desain 10) untuk [level]. Ditutup dengan tombol
 /// tutup, ketuk latar gelap, tombol kembali sistem, atau tarik ke bawah.

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../game/model/rules.dart';
 import '../../game/render/render.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'level_sheet.dart';
-import '../../l10n/l10n.dart';
 
 /// Membuka sheet "Aturan Oyen" (desain 05) di atas layar level. Ditutup
 /// dengan tombol tutup, ketuk latar gelap, tombol kembali sistem, atau

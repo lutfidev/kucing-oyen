@@ -7,11 +7,11 @@ import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/rules.dart';
 import '../../game/sim/level.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'level_view.dart';
 import 'tutorial.dart';
-import '../../l10n/l10n.dart';
 
 /// Rute `/babak/:chapter/level/:id`: level dari [ProgressScope] di
 /// [LevelView]. Bintang (dan koin bintang baru) dicatat saat layar hasil

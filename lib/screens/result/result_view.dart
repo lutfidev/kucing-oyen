@@ -4,12 +4,12 @@ import '../../game/model/level_session.dart';
 import '../../game/model/run_frames.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'result_art.dart';
 import 'result_parts.dart';
-import '../../l10n/l10n.dart';
-import '../../l10n/names.dart';
 
 /// Layar hasil satu percobaan dari [session] (fase hasil): Berhasil (desain
 /// 06), vas pecah (desain 07), atau Oyen bosan (desain 08).

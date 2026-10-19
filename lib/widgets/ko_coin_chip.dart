@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 
+import '../l10n/l10n.dart';
 import '../theme/theme.dart';
 import 'game_art.dart';
 import 'ko_icon.dart';
 import 'ko_pressable.dart';
-import '../l10n/l10n.dart';
 
 /// Gaya [KoCoinChip] per layar.
 enum KoCoinChipStyle {

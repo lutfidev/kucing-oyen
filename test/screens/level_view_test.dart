@@ -9,6 +9,7 @@ import 'package:kucing_oren/game/level_loader.dart';
 import 'package:kucing_oren/game/model/run_clock.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
+import 'package:kucing_oren/l10n/names.dart';
 import 'package:kucing_oren/screens/level/level_bar.dart';
 import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
@@ -18,8 +19,6 @@ import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
-
-import 'package:kucing_oren/l10n/names.dart';
 
 /// Level dibaca langsung dari berkas, tanpa `rootBundle`.
 final _levels = parseLevels(File(chapter1to2Asset).readAsStringSync());

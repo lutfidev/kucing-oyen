@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../../l10n/l10n.dart';
 
 /// Bar atas layar level: kembali, judul level, dan [trailing] (tombol
 /// Aturan di fase atur, penghitung langkah di fase jalan).

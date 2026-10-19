@@ -2,10 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../game/sim/item.dart';
-import '../../theme/theme.dart';
-import '../../widgets/widgets.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
+import '../../theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Jari mulai menyeret [item] dari slot baki di posisi layar [global].
 /// Mengembalikan penerima seretan, atau null kalau ditolak.

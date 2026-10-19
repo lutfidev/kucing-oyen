@@ -9,11 +9,11 @@ import '../../game/model/chapter.dart';
 import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'chapter_header.dart';
 import 'chapter_map.dart';
-import '../../l10n/l10n.dart';
 
 /// Rute `/babak/:chapter`: peta babak dari [ProgressScope].
 class ChapterScreen extends StatelessWidget {

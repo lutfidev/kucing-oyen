@@ -5,10 +5,10 @@ import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../coins/coin_sheet.dart';
-import '../../l10n/l10n.dart';
 
 /// Beranda (desain 01): chip koin yang membuka sheet Tambah Koin (bertitik
 /// selama bonus harian belum diambil), Oyen tidur di atas logo, total

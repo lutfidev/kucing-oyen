@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:path_drawing/path_drawing.dart';
 
-import '../theme/theme.dart';
 import '../l10n/l10n.dart';
+import '../theme/theme.dart';
 
 /// Satu bintang (viewBox 24): kuning kalau [filled], krem pudar kalau belum
 /// didapat.

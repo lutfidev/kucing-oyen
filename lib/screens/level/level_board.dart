@@ -5,8 +5,8 @@ import 'package:flutter/widgets.dart';
 
 import '../../game/kucing_game.dart';
 import '../../game/render/render.dart';
-import '../../theme/theme.dart';
 import '../../l10n/l10n.dart';
+import '../../theme/theme.dart';
 
 /// Papan level: [KucingGame] dalam `GameWidget` dengan bingkai dan bayangan
 /// papan di belakangnya.

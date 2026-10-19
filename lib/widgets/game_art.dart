@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 import '../game/model/rules.dart';
 import '../game/render/render.dart';
 import '../game/sim/item.dart';
-import '../theme/theme.dart';
 import '../l10n/l10n.dart';
 import '../l10n/names.dart';
+import '../theme/theme.dart';
 
 /// Satu petak seukuran [size] px (desain 50 px). Hiasan saja.
 class TileView extends StatelessWidget {

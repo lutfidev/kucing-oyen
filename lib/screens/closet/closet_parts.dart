@@ -3,10 +3,10 @@ import 'package:flutter/widgets.dart';
 import '../../game/model/costumes.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
-import '../../theme/theme.dart';
-import '../../widgets/widgets.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
+import '../../theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Bar atas Lemari Kostum: tombol kembali, judul, dan saldo koin yang
 /// membuka sheet Tambah Koin ([onCoins]).

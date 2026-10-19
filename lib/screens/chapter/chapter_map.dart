@@ -6,10 +6,10 @@ import '../../game/model/chapter.dart';
 import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
-import '../../theme/theme.dart';
-import '../../widgets/widgets.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
+import '../../theme/theme.dart';
+import '../../widgets/widgets.dart';
 
 /// Keadaan satu level di peta.
 enum NodeState {

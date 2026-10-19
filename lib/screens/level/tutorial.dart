@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../../l10n/l10n.dart';
 
 /// Tutorial level pengenalan: Oyen di atas kartu dan bagian layar yang
 /// disorot. Teks kartunya per bahasa (`tutorialTitle`, `tutorialBody`).

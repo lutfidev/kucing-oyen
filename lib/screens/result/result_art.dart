@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../../l10n/l10n.dart';
 
 /// Sinar berputar di belakang layar Berhasil, berpusat di (0, 0) kotaknya
 /// sendiri: taruh lewat `Positioned` dengan ukuran 0. Sinar digambar sekali

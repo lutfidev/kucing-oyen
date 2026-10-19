@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
 
 import '../../game/render/render.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../../l10n/l10n.dart';
 
 /// Kerangka layar hasil: latar penuh, isi dari atas, dan tombol di bawah,
 /// dengan jarak tepi seperti layar level.

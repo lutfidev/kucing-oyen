@@ -6,10 +6,10 @@ import '../../game/model/run_frames.dart';
 import '../../game/render/render.dart';
 import '../../l10n/captions.dart';
 import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../result/result_parts.dart';
 import 'replay_parts.dart';
-import '../../l10n/names.dart';
 
 /// Putar ulang (desain 09) percobaan [session] yang sudah di layar hasil:
 /// papan di langkah mana pun dengan seluruh jalur dan nomor jejak, caption

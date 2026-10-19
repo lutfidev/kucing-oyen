@@ -3,9 +3,9 @@ import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/widgets.dart';
 
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../../l10n/l10n.dart';
 
 /// Penghitung langkah di bar atas fase jalan: "Langkah 1" (desain 04).
 class StepCounter extends StatelessWidget {

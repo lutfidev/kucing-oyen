@@ -3,9 +3,9 @@ import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 
 import '../../game/render/render.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../../l10n/l10n.dart';
 
 /// Gaya yang benar-benar dipakai `Text`: [style] di atas [DefaultTextStyle],
 /// supaya ukuran hasil hitung sama dengan layar.

@@ -5,12 +5,12 @@ import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/costumes.dart';
 import '../../game/render/render.dart';
+import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../coins/coin_sheet.dart';
 import 'closet_parts.dart';
-import '../../l10n/l10n.dart';
-import '../../l10n/names.dart';
 
 /// Lemari Kostum (desain 12, rute `/kostum`): pratinjau Oyen di lemari,
 /// grid kostum, dan tombol beli/pakai. Menekan kartu hanya memilih

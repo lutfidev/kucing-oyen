@@ -9,6 +9,7 @@ import 'package:flame/game.dart' hide RouterComponent;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/app.dart';
+import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/kucing_game.dart';
@@ -17,8 +18,10 @@ import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/model/run_clock.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
+import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../test_helpers.dart';
 import 'capture.dart';
@@ -518,6 +521,54 @@ void main() {
         await capture(tester, '$folder/$name');
       });
     }, skip: !screenshotsEnabled);
+  }
+
+  // Beranda, fase atur level 13, dan Pengaturan di keempat bahasa
+  // (folder per bahasa); Rusia juga di layar kecil.
+  for (final language in AppLanguage.supported) {
+    final screens = <String, (String, Size)>{
+      '01-beranda': (AppRoutes.home, _size),
+      '03-fase-atur-level-13': (AppRoutes.level(13, chapter: 2), _size),
+      '15-pengaturan': (AppRoutes.settings, _size),
+      if (language == AppLanguage.ru) ...{
+        '01-beranda-360x640': (AppRoutes.home, const Size(360, 640)),
+        '03-fase-atur-level-13-360x640': (
+          AppRoutes.level(13, chapter: 2),
+          const Size(360, 640),
+        ),
+        '15-pengaturan-360x640': (AppRoutes.settings, const Size(360, 640)),
+      },
+    };
+    for (final MapEntry(key: name, value: (location, size))
+        in screens.entries) {
+      final path = '$folder/${language.name}/$name';
+      testWidgets(path, (tester) async {
+        setScreenSize(tester, size);
+        PackageInfo.setMockInitialValues(
+          appName: appName,
+          packageName: 'com.example.kucing_oren',
+          version: '0.1.0',
+          buildNumber: '1',
+          buildSignature: '',
+        );
+        await withShadows(() async {
+          await tester.pumpWidget(
+            capturable(
+              KucingOrenApp(
+                progress: testProgressWith(
+                  best: _designProgress,
+                  coins: 120,
+                  language: language,
+                ),
+                initialLocation: location,
+              ),
+            ),
+          );
+          await settle(tester);
+          await capture(tester, path);
+        });
+      }, skip: !screenshotsEnabled);
+    }
   }
 
   // Oyen berpeci di fase jalan level 13, langkah ke-2.

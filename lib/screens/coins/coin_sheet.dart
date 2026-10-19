@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../app/progress_scope.dart';
 import '../../game/model/rewards.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../level/level_sheet.dart';
-import '../../l10n/l10n.dart';
 
 /// Membuka sheet Tambah Koin: bonus harian dan iklan berhadiah koin. Gaya
 /// mengikuti sheet Petunjuk (desain 10); sheet ini tidak ada di desain.
