@@ -42,9 +42,8 @@ void main() {
     await pumpApp(tester, audio: audio);
     expect(player.music, MusicTrack.home);
 
-    GoRouter.of(
-      tester.element(find.byType(HomeScreen)),
-    ).go(AppRoutes.level(1, chapter: 1));
+    GoRouter.of(tester.element(find.byType(HomeScreen)))
+        .go(AppRoutes.level(1, chapter: 1));
     await tester.pumpAndSettle();
     expect(player.music, MusicTrack.level);
 
