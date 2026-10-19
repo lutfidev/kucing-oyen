@@ -211,6 +211,7 @@ class SheetButton extends StatelessWidget {
     required this.line,
     required this.edge,
     required this.onPressed,
+    this.labelColor,
   });
 
   final String label;
@@ -219,6 +220,9 @@ class SheetButton extends StatelessWidget {
   final Color line;
   final Color edge;
   final VoidCallback? onPressed;
+
+  /// Warna label saat aktif; default [KoColors.ink].
+  final Color? labelColor;
 
   @override
   Widget build(BuildContext context) {
@@ -249,7 +253,7 @@ class SheetButton extends StatelessWidget {
                 label,
                 maxLines: 1,
                 style: context.koType.chipLabel.copyWith(
-                  color: enabled ? c.ink : c.onLockedSoft,
+                  color: enabled ? labelColor ?? c.ink : c.onLockedSoft,
                 ),
               ),
             ),

@@ -13,7 +13,7 @@ import '../../l10n/l10n.dart';
 /// Beranda (desain 01): chip koin yang membuka sheet Tambah Koin (bertitik
 /// selama bonus harian belum diambil), Oyen tidur di atas logo, total
 /// bintang, tombol Main ke peta babak yang sedang dimainkan, Lemari Kostum,
-/// dan Pengaturan yang belum berfungsi.
+/// dan Pengaturan.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -81,11 +81,11 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: space.s12),
-                      // Pengaturan belum berfungsi (langkah 15).
                       Expanded(
                         child: _MenuButton(
                           icon: KoIcons.settings,
                           label: context.l10n.settings,
+                          onPressed: () => context.go(AppRoutes.settings),
                         ),
                       ),
                     ],
@@ -219,16 +219,17 @@ class _StarTotal extends StatelessWidget {
   }
 }
 
-/// Tombol krem kecil di bawah "Main". Belum berfungsi: tidak bisa ditekan,
-/// tampilannya tetap seperti desain.
+/// Tombol krem kecil di bawah "Main": Lemari Kostum dan Pengaturan.
 class _MenuButton extends StatelessWidget {
-  const _MenuButton({required this.icon, required this.label, this.onPressed});
+  const _MenuButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
 
   final KoIconData icon;
   final String label;
-
-  /// Null = belum bisa ditekan.
-  final VoidCallback? onPressed;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {

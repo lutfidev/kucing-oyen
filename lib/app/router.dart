@@ -7,6 +7,7 @@ import '../screens/chapter/chapter_screen.dart';
 import '../screens/closet/closet_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/level/level_screen.dart';
+import '../screens/settings/settings_screen.dart';
 import 'routes.dart';
 
 GoRouter createRouter({String initialLocation = AppRoutes.home}) {
@@ -34,6 +35,10 @@ GoRouter createRouter({String initialLocation = AppRoutes.home}) {
           GoRoute(
             path: 'kostum',
             builder: (context, state) => const ClosetScreen(),
+          ),
+          GoRoute(
+            path: 'pengaturan',
+            builder: (context, state) => const SettingsScreen(),
           ),
           GoRoute(
             path: 'babak/:chapter',

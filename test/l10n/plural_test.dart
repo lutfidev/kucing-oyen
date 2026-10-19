@@ -9,14 +9,12 @@ void main() {
   final ru = lookupAppLocalizations(const Locale('ru'));
 
   test('Rusia punya tiga bentuk jamak: 1 шаг, 2 шага, 5 шагов, 21 шаг', () {
-    expect([for (final n in [1, 2, 5, 21, 22, 11]) '$n ${ru.stepsUnit(n)}'], [
-      '1 шаг',
-      '2 шага',
-      '5 шагов',
-      '21 шаг',
-      '22 шага',
-      '11 шагов',
-    ]);
+    expect(
+      [
+        for (final n in [1, 2, 5, 21, 22, 11]) '$n ${ru.stepsUnit(n)}',
+      ],
+      ['1 шаг', '2 шага', '5 шагов', '21 шаг', '22 шага', '11 шагов'],
+    );
     expect(ru.coinsAmount(1), '1 монета');
     expect(ru.coinsAmount(3), '3 монеты');
     expect(ru.coinsAmount(120), '120 монет');
@@ -41,7 +39,10 @@ void main() {
 
   test('aturan memakai searah jarum jam, bukan belok kanan', () {
     for (final l in [en, id, pt, ru]) {
-      expect(l.ruleWallTurn, isNot(contains(RegExp('right|kanan|direita|право'))));
+      expect(
+        l.ruleWallTurn,
+        isNot(contains(RegExp('right|kanan|direita|право'))),
+      );
     }
     expect(en.ruleWallTurn, 'Oyen turns clockwise');
     expect(en.tieClockwise, 'clockwise');
