@@ -1,8 +1,11 @@
 import 'package:flutter/widgets.dart';
 
+import '../app/game_audio.dart';
+
 /// Permukaan tombol dengan bayangan padat di bawahnya ("press" di lembar
 /// token). Saat jari menempel, permukaan turun setinggi [depth] dan bayangan
-/// padatnya hilang; saat dilepas, kembali.
+/// padatnya hilang; saat dilepas, kembali. Ketukan berbunyi
+/// "tap" lewat [tapSound].
 ///
 /// Bayangan tidak memakan tempat di tata letak (sama seperti `box-shadow`
 /// CSS), jadi ukuran widget = [width] × [height].
@@ -74,6 +77,7 @@ class _KoPressableState extends State<KoPressable> {
   @override
   Widget build(BuildContext context) {
     final enabled = widget.onPressed != null;
+    final onTap = tapSound(context, widget.onPressed);
     final edge = widget.edgeColor;
     final depth = edge == null ? 0.0 : widget.depth;
     final shift = _pressed ? depth : 0.0;
@@ -85,7 +89,7 @@ class _KoPressableState extends State<KoPressable> {
       enabled: enabled,
       label: widget.semanticLabel,
       toggled: widget.toggled,
-      onTap: widget.onPressed,
+      onTap: onTap,
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -93,7 +97,7 @@ class _KoPressableState extends State<KoPressable> {
         onTapDown: enabled ? (_) => _setPressed(true) : null,
         onTapUp: enabled ? (_) => _setPressed(false) : null,
         onTapCancel: enabled ? () => _setPressed(false) : null,
-        onTap: widget.onPressed,
+        onTap: onTap,
         child: Transform.translate(
           offset: Offset(0, shift),
           child: Container(

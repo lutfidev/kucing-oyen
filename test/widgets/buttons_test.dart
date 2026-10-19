@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
@@ -23,6 +24,24 @@ void main() {
   const c = KoColors.standard;
 
   group('KoButton', () {
+    testWidgets('ketuk berbunyi tap; nonaktif senyap', (tester) async {
+      final audio = testAudio();
+      await pumpThemed(
+        tester,
+        Column(
+          children: [
+            KoButton(label: 'Lanjut', onPressed: () {}),
+            const KoButton(label: 'Mati', onPressed: null),
+          ],
+        ),
+        audio: audio,
+      );
+      await tester.tap(find.text('Mati'));
+      expect(playedBy(audio), isEmpty);
+      await tester.tap(find.text('Lanjut'));
+      expect(playedBy(audio), [GameSound.tap]);
+    });
+
     testWidgets('ketuk memanggil onPressed', (tester) async {
       var taps = 0;
       await pumpThemed(

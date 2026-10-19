@@ -4,6 +4,8 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
 
+import '../../app/game_audio.dart';
+import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
@@ -96,6 +98,7 @@ class ResultStars extends StatefulWidget {
     this.midStrokeWidth,
     this.shine = false,
     this.pop = false,
+    this.afterSound,
   });
 
   final int earned;
@@ -107,7 +110,15 @@ class ResultStars extends StatefulWidget {
   final double strokeWidth;
   final double? midStrokeWidth;
   final bool shine;
+
+  /// Bintang muncul satu per satu (`koStar`), masing-masing berbunyi
+  /// [GameSound.star]. Tanpa animasi (atau kurangi gerak) bintang langsung
+  /// tampil tanpa suara.
   final bool pop;
+
+  /// Suara sesudah bintang terakhir muncul (mis. koin), atau langsung kalau
+  /// bintang tidak dianimasikan.
+  final GameSound? afterSound;
 
   static const total = 3;
 
@@ -150,15 +161,46 @@ class _ResultStarsState extends State<ResultStars>
         ResultStars.popTime,
   );
 
+  /// Bintang yang suaranya sudah diputar.
+  int _starsHeard = 0;
+  bool _afterHeard = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _clock
+      ..addListener(_playStars)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) _playAfter();
+      });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final animate = widget.pop && !MediaQuery.disableAnimationsOf(context);
     if (!animate) {
+      _starsHeard = widget.earned;
       _clock.value = 1;
+      _playAfter();
     } else if (!_clock.isAnimating && _clock.value == 0) {
       _clock.forward();
     }
+  }
+
+  void _play(GameSound sound) => AudioScope.maybeRead(context)?.play(sound);
+
+  void _playStars() {
+    while (_starsHeard < widget.earned && _progress(_starsHeard) > 0) {
+      _starsHeard++;
+      _play(GameSound.star);
+    }
+  }
+
+  void _playAfter() {
+    if (_afterHeard) return;
+    _afterHeard = true;
+    if (widget.afterSound case final sound?) _play(sound);
   }
 
   @override

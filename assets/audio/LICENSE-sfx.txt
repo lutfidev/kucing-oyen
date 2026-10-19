@@ -1,0 +1,12 @@
+Sound effects in Ginger Logic are made from these CC0 (public domain) sounds:
+
+- Interface Sounds, Impact Sounds, RPG Audio
+  Created/distributed by Kenney (www.kenney.nl)
+- "Meow" by IgnasD (opengameart.org/content/meow)
+- "Kitten Mew" by AntumDeluge (opengameart.org/content/kitten-mew)
+- "Cat Purr & Meow" by Kerzoven (opengameart.org/content/cat-purr-meow)
+
+License: Creative Commons Zero, CC0
+http://creativecommons.org/publicdomain/zero/1.0/
+
+The music is original, made for Ginger Logic.

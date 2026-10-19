@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../app/game_audio.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/l10n.dart';
@@ -321,7 +322,7 @@ class _SkipButton extends StatelessWidget {
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: onPressed,
+        onTap: tapSound(context, onPressed),
         child: Container(
           height: s.chip,
           padding: EdgeInsets.symmetric(horizontal: space.s16),

@@ -45,6 +45,7 @@ final galleryRoutes = <String>[
   AppRoutes.gallery,
   AppRoutes.galleryBoard,
   AppRoutes.galleryOyen,
+  AppRoutes.gallerySound,
 ];
 
 const sizes = <Size>[
@@ -96,6 +97,7 @@ void main() {
   for (final (route, last) in [
     (AppRoutes.galleryBoard, find.text('Vas pecah')),
     (AppRoutes.galleryOyen, find.text('Kacamata')),
+    (AppRoutes.gallerySound, find.text('Lagu level')),
   ]) {
     testWidgets('$route bisa digulir sampai bawah di 360×640, teks 130%', (
       tester,

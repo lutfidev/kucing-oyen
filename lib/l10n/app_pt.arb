@@ -227,6 +227,9 @@
   "adsTomorrow": "Amanhã tem mais",
   "coinChipAdd": "mais moedas",
   "coinChipBonus": "bônus diário pronto",
+  "soundSection": "Som",
+  "music": "Música",
+  "soundEffects": "Efeitos sonoros",
   "language": "Idioma",
   "languageSystem": "Idioma do celular",
   "tutorialsSection": "Tutoriais",
@@ -244,5 +247,6 @@
   "about": "Sobre",
   "version": "Versão {version}",
   "fontCredits": "Fontes: Fredoka e Nunito (SIL Open Font License).",
+  "soundCredits": "Efeitos sonoros: Kenney e OpenGameArt (CC0). A música foi feita especialmente para o Ginger Logic.",
   "licenses": "Licenças"
 }

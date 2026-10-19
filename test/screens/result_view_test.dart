@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
+import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/screens/result/result_art.dart';
@@ -21,6 +23,7 @@ Future<void> pumpResult(
   bool disableAnimations = false,
   int coins = 0,
   OyenCostume costume = OyenCostume.none,
+  GameAudio? audio,
 }) async {
   _taps.clear();
   setScreenSize(tester, size);
@@ -41,6 +44,7 @@ Future<void> pumpResult(
           costume: costume,
         ),
       ),
+      audio: audio,
     ),
   );
 }
@@ -369,6 +373,67 @@ void main() {
       );
       final board = tester.widget<RestBoard>(find.byType(RestBoard));
       expect(board.scene.oyen!.look.costume, OyenCostume.sarung);
+    });
+  });
+
+  group('suara', () {
+    testWidgets('Berhasil 3 bintang: bintang satu per satu, lalu koin', (
+      tester,
+    ) async {
+      final audio = testAudio();
+      await pumpResult(
+        tester,
+        resultOf(levels[12], levels[12].solution),
+        coins: 30,
+        audio: audio,
+      );
+      await pumpFor(tester, const Duration(milliseconds: 200));
+      expect(playedBy(audio), [GameSound.star]);
+      await pumpFor(tester, const Duration(milliseconds: 300));
+      expect(playedBy(audio), [GameSound.star, GameSound.star]);
+      await pumpFor(tester, const Duration(seconds: 2));
+      expect(playedBy(audio), [
+        GameSound.star,
+        GameSound.star,
+        GameSound.star,
+        GameSound.coin,
+      ]);
+    });
+
+    testWidgets('2 bintang tanpa koin baru', (tester) async {
+      final audio = testAudio();
+      await pumpResult(tester, resultOf(levels[14], twoStars), audio: audio);
+      await pumpFor(tester, const Duration(seconds: 2));
+      expect(playedBy(audio), [GameSound.star, GameSound.star]);
+    });
+
+    testWidgets('vas pecah: bintangnya tidak muncul bergerak, hanya koin', (
+      tester,
+    ) async {
+      final audio = testAudio();
+      await pumpResult(
+        tester,
+        resultOf(levels[12], fishOnly),
+        coins: 10,
+        audio: audio,
+      );
+      await pumpFor(tester, const Duration(seconds: 2));
+      expect(playedBy(audio), [GameSound.coin]);
+    });
+
+    testWidgets('kurangi gerak: tanpa suara bintang, koin tetap', (
+      tester,
+    ) async {
+      final audio = testAudio();
+      await pumpResult(
+        tester,
+        resultOf(levels[12], levels[12].solution),
+        coins: 30,
+        disableAnimations: true,
+        audio: audio,
+      );
+      await tester.pump();
+      expect(playedBy(audio), [GameSound.coin]);
     });
   });
 }

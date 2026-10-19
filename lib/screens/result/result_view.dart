@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../app/game_audio.dart';
 import '../../game/model/level_session.dart';
 import '../../game/model/run_frames.dart';
+import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/l10n.dart';
@@ -184,6 +186,7 @@ class SuccessResult extends StatelessWidget {
                   midStrokeWidth: ResultArt.successMidStarStroke,
                   shine: true,
                   pop: true,
+                  afterSound: coins > 0 ? GameSound.coin : null,
                 ),
               ],
             ),
@@ -259,17 +262,18 @@ class _ReplayLink extends StatelessWidget {
     final enabled = onPressed != null;
     final color = enabled ? c.ink : c.muted;
     final label = context.l10n.watchReplay;
+    final onTap = tapSound(context, onPressed);
     return Semantics(
       container: true,
       button: true,
       enabled: enabled,
       label: label,
-      onTap: onPressed,
+      onTap: onTap,
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         excludeFromSemantics: true,
-        onTap: onPressed,
+        onTap: onTap,
         child: Center(
           child: FittedBox(
             fit: BoxFit.scaleDown,
@@ -353,6 +357,7 @@ class VaseResult extends StatelessWidget {
           midSize: s.partialStarMid,
           raise: space.s10,
           strokeWidth: ResultArt.vaseStarStroke,
+          afterSound: coins > 0 ? GameSound.coin : null,
         ),
         SizedBox(height: space.s6),
         Expanded(

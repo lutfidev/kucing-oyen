@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/app.dart';
+import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/routes.dart';
+import 'package:kucing_oren/app/sound_player.dart';
 import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
+import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/oyen.dart';
 import 'package:kucing_oren/screens/home/home_screen.dart';
 import 'package:kucing_oren/screens/level/level_sheet.dart';
@@ -49,6 +52,81 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Kembali ke Beranda'));
     await settle(tester);
     expect(find.byType(HomeScreen), findsOneWidget);
+  });
+
+  group('suara', () {
+    Finder sound(String name) => find.byKey(ValueKey('sound-$name'));
+
+    testWidgets('bagian Suara paling atas, dua sakelar menyala', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await pumpApp(tester, location: AppRoutes.settings);
+      expect(find.text('SUARA'), findsOneWidget);
+      expect(
+        tester.getTopLeft(find.text('SUARA')).dy,
+        lessThan(tester.getTopLeft(find.text('BAHASA')).dy),
+      );
+      for (final (name, label) in [
+        ('music', 'Musik'),
+        ('effects', 'Efek suara'),
+      ]) {
+        expect(
+          tester.getSemantics(sound(name)),
+          isSemantics(
+            label: label,
+            isToggled: true,
+            hasToggledState: true,
+            hasTapAction: true,
+          ),
+        );
+      }
+      semantics.dispose();
+    });
+
+    testWidgets('sakelar mematikan musik dan efek suara, tersimpan', (
+      tester,
+    ) async {
+      final store = MemoryProgressStore();
+      final player = FakeSoundPlayer();
+      final audio = GameAudio(player: player, store: store);
+      await pumpApp(tester, location: AppRoutes.settings, audio: audio);
+      expect(player.music, MusicTrack.home);
+
+      await tester.tap(sound('music'));
+      await settle(tester);
+      expect(audio.musicOn, isFalse);
+      expect(player.music, isNull);
+      expect(store.sound, const SoundSettings(music: false));
+      expect(
+        tester.getSemantics(sound('music')),
+        isSemantics(isToggled: false, hasToggledState: true),
+      );
+
+      await tester.tap(sound('effects'));
+      await settle(tester);
+      expect(audio.effectsOn, isFalse);
+      expect(store.sound, const SoundSettings(music: false, effects: false));
+
+      // Dinyalakan lagi.
+      player.played.clear();
+      await tester.tap(sound('music'));
+      await settle(tester);
+      expect(player.music, MusicTrack.home);
+      await tester.tap(sound('effects'));
+      await settle(tester);
+      expect(audio.effectsOn, isTrue);
+      expect(store.sound, SoundSettings.on);
+    });
+
+    testWidgets('memuat sakelar tersimpan saat dibuka', (tester) async {
+      final audio = testAudio(settings: const SoundSettings(effects: false));
+      await pumpApp(tester, location: AppRoutes.settings, audio: audio);
+      expect(
+        tester.getSemantics(sound('effects')),
+        isSemantics(isToggled: false, hasToggledState: true),
+      );
+    });
   });
 
   group('bahasa', () {
@@ -190,6 +268,13 @@ void main() {
       expect(find.text('Versi 1.2.3'), findsOneWidget);
       expect(
         find.text('Font: Fredoka dan Nunito (SIL Open Font License).'),
+        findsOneWidget,
+      );
+      expect(
+        find.text(
+          'Efek suara: Kenney dan OpenGameArt (CC0). Musiknya dibuat khusus '
+          'untuk Ginger Logic.',
+        ),
         findsOneWidget,
       );
     });

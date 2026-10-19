@@ -7,6 +7,7 @@ import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
+import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/oyen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
@@ -168,6 +169,29 @@ void main() {
         expect(await PrefsProgressStore().loadLanguage(), AppLanguage.system);
         await prefs.setInt(PrefsProgressStore.languageKey, 3);
         expect(await PrefsProgressStore().loadLanguage(), AppLanguage.system);
+      },
+    );
+
+    test(
+      'suara: simpan lalu muat, belum pernah atau rusak = menyala',
+      () async {
+        expect(await PrefsProgressStore().loadSound(), SoundSettings.on);
+        await PrefsProgressStore().saveSound(
+          const SoundSettings(music: false, effects: true),
+        );
+        expect(
+          await PrefsProgressStore().loadSound(),
+          const SoundSettings(music: false, effects: true),
+        );
+        final prefs = SharedPreferencesAsync();
+        expect(await prefs.getBool(PrefsProgressStore.musicKey), isFalse);
+        expect(await prefs.getBool(PrefsProgressStore.effectsKey), isTrue);
+        await prefs.setString(PrefsProgressStore.musicKey, 'mati');
+        await prefs.setBool(PrefsProgressStore.effectsKey, false);
+        expect(
+          await PrefsProgressStore().loadSound(),
+          const SoundSettings(music: true, effects: false),
+        );
       },
     );
   });
@@ -568,7 +592,7 @@ void main() {
     });
 
     test('resetProgress menghapus bintang, koin, petunjuk, kostum, dan '
-        'tutorial; hadiah harian dan bahasa tetap', () async {
+        'tutorial; hadiah harian, bahasa, dan suara tetap', () async {
       final now = DateTime(2026, 10, 19, 9);
       final today = dayNumber(now);
       final rewards = DailyRewards(
@@ -585,7 +609,8 @@ void main() {
         ..hints = {13: 2}
         ..wardrobe = wardrobe
         ..rewards = rewards
-        ..language = AppLanguage.ru;
+        ..language = AppLanguage.ru
+        ..sound = const SoundSettings(music: false, effects: false);
       final c = await ProgressController.load(
         levels: testLevels,
         store: store,
@@ -614,6 +639,7 @@ void main() {
       expect(store.tutorials, isEmpty);
       expect(store.rewards, rewards);
       expect(store.language, AppLanguage.ru);
+      expect(store.sound, const SoundSettings(music: false, effects: false));
 
       // Dibuka ulang: tetap kosong, koin tidak dihitung ulang dari bintang.
       final again = await ProgressController.load(

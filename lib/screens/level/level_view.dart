@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import '../../app/game_audio.dart';
 import '../../app/hint_source.dart';
 import '../../game/kucing_game.dart';
 import '../../game/model/hints.dart';
@@ -13,6 +14,7 @@ import '../../game/model/rules.dart';
 import '../../game/model/run_caption.dart';
 import '../../game/model/run_clock.dart';
 import '../../game/model/run_frames.dart';
+import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/captions.dart';
@@ -159,6 +161,11 @@ class _LevelViewState extends State<LevelView>
   /// Koin yang didapat percobaan terakhir, untuk layar hasil.
   int _coinsEarned = 0;
 
+  /// Langkah fase jalan terakhir yang suaranya sudah diputar.
+  int _heardStep = 0;
+
+  void _play(GameSound sound) => AudioScope.maybeRead(context)?.play(sound);
+
   @override
   void initState() {
     super.initState();
@@ -262,6 +269,7 @@ class _LevelViewState extends State<LevelView>
       ..local = _toStage(global)
       ..target = _targetAt(global);
     _update(() => _drag = drag);
+    _play(GameSound.pickUp);
     return _HandDrag(this, drag);
   }
 
@@ -296,6 +304,7 @@ class _LevelViewState extends State<LevelView>
 
   void _drop(_ItemDrag drag) {
     if (!_isCurrent(drag)) return;
+    _play(drag.target == null ? GameSound.back : GameSound.place);
     _update(() {
       _drag = null;
       final target = drag.target;
@@ -313,7 +322,9 @@ class _LevelViewState extends State<LevelView>
   }
 
   void _cancel(_ItemDrag drag) {
-    if (_isCurrent(drag)) _update(() => _drag = null);
+    if (!_isCurrent(drag)) return;
+    _play(GameSound.back);
+    _update(() => _drag = null);
   }
 
   // ── Fase ────────────────────────────────────────────────────────────
@@ -336,6 +347,9 @@ class _LevelViewState extends State<LevelView>
       if (_reduceMotion) run.clock.skipToEnd();
       _run = run;
     });
+    _play(GameSound.wake);
+    _heardStep = 0;
+    _playStep();
     _syncTicker();
   }
 
@@ -358,6 +372,8 @@ class _LevelViewState extends State<LevelView>
       _session.finish();
       _coinsEarned = widget.onResult?.call(_session.stars!) ?? 0;
     });
+    // Bintang dan koin berbunyi di layar hasil; gagal = Oyen bosan.
+    if (_session.stars == 0) _play(GameSound.bored);
   }
 
   // ── Fase jalan ──────────────────────────────────────────────────────
@@ -384,7 +400,10 @@ class _LevelViewState extends State<LevelView>
     if (clock == null) return;
     // Selama aplikasi di latar belakang atau rute tertutup, waktu ticker
     // tetap berjalan; jangan sampai Oyen melompati langkah sekaligus.
-    if (clock.tick(dt > clock.interval ? clock.interval : dt)) _update(() {});
+    if (clock.tick(dt > clock.interval ? clock.interval : dt)) {
+      _update(() {});
+      _playStep();
+    }
     if (!clock.playing) _ticker.stop();
   }
 
@@ -392,7 +411,20 @@ class _LevelViewState extends State<LevelView>
     final clock = _run?.clock;
     if (clock == null) return;
     _update(() => action(clock));
+    _playStep();
     _syncTicker();
+  }
+
+  /// Suara langkah yang baru tampil, hanya kalau maju tepat satu langkah:
+  /// lompatan ke akhir (kurangi gerak) senyap.
+  void _playStep() {
+    final run = _run;
+    if (run == null) return;
+    final step = run.clock.step;
+    if (step == _heardStep + 1) {
+      if (stepSound(run.frame) case final sound?) _play(sound);
+    }
+    _heardStep = step;
   }
 
   void _togglePause() => _control((clock) => clock.togglePause());
@@ -423,10 +455,13 @@ class _LevelViewState extends State<LevelView>
     widget.onTutorialDone?.call();
   }
 
-  void _clear() => _update(() {
-    _drag = null;
-    _session.reset();
-  });
+  void _clear() {
+    _play(GameSound.back);
+    _update(() {
+      _drag = null;
+      _session.reset();
+    });
+  }
 
   /// "Ulangi" di layar Berhasil: fase atur dengan papan kosong.
   void _restart() {

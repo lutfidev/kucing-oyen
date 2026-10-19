@@ -931,6 +931,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get coinChipBonus => 'bonus harian siap';
 
   @override
+  String get soundSection => 'Suara';
+
+  @override
+  String get music => 'Musik';
+
+  @override
+  String get soundEffects => 'Efek suara';
+
+  @override
   String get language => 'Bahasa';
 
   @override
@@ -985,6 +994,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get fontCredits => 'Font: Fredoka dan Nunito (SIL Open Font License).';
+
+  @override
+  String get soundCredits =>
+      'Efek suara: Kenney dan OpenGameArt (CC0). Musiknya dibuat khusus untuk Ginger Logic.';
 
   @override
   String get licenses => 'Lisensi';

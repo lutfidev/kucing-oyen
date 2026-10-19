@@ -6,12 +6,13 @@ import '../game/model/costumes.dart';
 import '../game/model/hints.dart';
 import '../game/model/progress.dart';
 import '../game/model/rewards.dart';
+import '../game/model/sounds.dart';
 import '../game/render/oyen.dart';
 import 'language.dart';
 
 /// Tempat menyimpan [Progress], tutorial yang sudah selesai, saldo koin,
-/// tingkat petunjuk yang terbuka, kostum Oyen, hadiah harian, dan bahasa
-/// di perangkat. Antarmukanya kecil supaya test bisa memakai
+/// tingkat petunjuk yang terbuka, kostum Oyen, hadiah harian, bahasa, dan
+/// sakelar suara di perangkat. Antarmukanya kecil supaya test bisa memakai
 /// [MemoryProgressStore].
 abstract interface class ProgressStore {
   Future<Progress> load();
@@ -43,6 +44,11 @@ abstract interface class ProgressStore {
   /// disimpan atau rusak.
   Future<AppLanguage> loadLanguage();
   Future<void> saveLanguage(AppLanguage language);
+
+  /// Sakelar Musik dan Efek suara; yang belum pernah disimpan atau rusak
+  /// dianggap menyala.
+  Future<SoundSettings> loadSound();
+  Future<void> saveSound(SoundSettings sound);
 }
 
 /// Simpanan di memori (test, atau kalau penyimpanan perangkat tidak ada).
@@ -63,6 +69,9 @@ class MemoryProgressStore implements ProgressStore {
 
   /// Bahasa yang terakhir disimpan.
   AppLanguage language = AppLanguage.system;
+
+  /// Sakelar suara yang terakhir disimpan.
+  SoundSettings sound = SoundSettings.on;
 
   /// Progres yang terakhir disimpan.
   Progress saved;
@@ -120,12 +129,18 @@ class MemoryProgressStore implements ProgressStore {
   @override
   Future<void> saveLanguage(AppLanguage language) async =>
       this.language = language;
+
+  @override
+  Future<SoundSettings> loadSound() async => sound;
+
+  @override
+  Future<void> saveSound(SoundSettings sound) async => this.sound = sound;
 }
 
 /// Simpanan lokal lewat `shared_preferences`: JSON `{"id level": bintang}`,
 /// daftar id level yang tutorialnya selesai, saldo koin, JSON
 /// `{"id level": tingkat petunjuk}`, nama kostum yang dimiliki dan
-/// dipakai, JSON hadiah harian, dan nama bahasa.
+/// dipakai, JSON hadiah harian, nama bahasa, dan sakelar suara.
 class PrefsProgressStore implements ProgressStore {
   PrefsProgressStore([SharedPreferencesAsync? prefs])
     : _prefs = prefs ?? SharedPreferencesAsync();
@@ -138,6 +153,8 @@ class PrefsProgressStore implements ProgressStore {
   static const wearingKey = 'costume.wearing';
   static const rewardsKey = 'rewards.daily';
   static const languageKey = 'settings.language';
+  static const musicKey = 'settings.music';
+  static const effectsKey = 'settings.sfx';
 
   final SharedPreferencesAsync _prefs;
 
@@ -277,4 +294,26 @@ class PrefsProgressStore implements ProgressStore {
   @override
   Future<void> saveLanguage(AppLanguage language) =>
       _prefs.setString(languageKey, language.name);
+
+  @override
+  Future<SoundSettings> loadSound() async {
+    Future<bool> read(String key) async {
+      try {
+        return await _prefs.getBool(key) ?? true;
+      } on TypeError {
+        return true;
+      }
+    }
+
+    return SoundSettings(
+      music: await read(musicKey),
+      effects: await read(effectsKey),
+    );
+  }
+
+  @override
+  Future<void> saveSound(SoundSettings sound) => Future.wait([
+    _prefs.setBool(musicKey, sound.music),
+    _prefs.setBool(effectsKey, sound.effects),
+  ]);
 }

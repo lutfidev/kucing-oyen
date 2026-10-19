@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/game_audio.dart';
 import '../../game/model/chapter.dart';
 import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
@@ -126,6 +127,7 @@ class ChapterCard extends StatelessWidget {
     final space = context.koSpace;
     final s = context.koSize;
     final unlocked = chapter.isUnlocked(progress);
+    final onTap = tapSound(context, unlocked ? onOpen : null);
     final done = chapter.isDone(progress);
     final stars = chapter.stars(progress);
     final l = context.l10n;
@@ -139,11 +141,11 @@ class ChapterCard extends StatelessWidget {
         if (done) l.statusDone else if (!unlocked) l.statusLocked,
         l.starsOf(stars, chapter.maxStars),
       ].join(', '),
-      onTap: unlocked ? onOpen : null,
+      onTap: onTap,
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: unlocked ? onOpen : null,
+        onTap: onTap,
         child: Container(
           height: s.chapterCard,
           padding: EdgeInsetsDirectional.only(start: space.s8, end: space.s12),

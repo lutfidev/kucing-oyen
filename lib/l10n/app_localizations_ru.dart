@@ -1031,6 +1031,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get coinChipBonus => 'ежедневный бонус готов';
 
   @override
+  String get soundSection => 'Звук';
+
+  @override
+  String get music => 'Музыка';
+
+  @override
+  String get soundEffects => 'Звуковые эффекты';
+
+  @override
   String get language => 'Язык';
 
   @override
@@ -1085,6 +1094,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get fontCredits => 'Шрифты: Fredoka и Nunito (SIL Open Font License).';
+
+  @override
+  String get soundCredits =>
+      'Звуки: Kenney и OpenGameArt (CC0). Музыку написали специально для Ginger Logic.';
 
   @override
   String get licenses => 'Лицензии';
