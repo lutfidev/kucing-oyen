@@ -56,8 +56,9 @@ class DailyRewards {
     if (adDay != null) 'ads': adsWatched,
   };
 
-  /// Field yang bukan angka, negatif, atau jumlah iklan di luar
-  /// 0–[maxAdsPerDay] dibuang.
+  /// Hari yang bukan angka atau negatif dibuang. Jumlah iklan yang rusak
+  /// atau di luar 0–[maxAdsPerDay] pada hari yang sah dianggap jatah habis,
+  /// supaya simpanan rusak tidak memberi iklan koin tambahan.
   factory DailyRewards.fromJson(Map<String, dynamic> json) {
     int? day(Object? value) => value is int && value >= 0 ? value : null;
     final adDay = day(json['adDay']);
@@ -65,9 +66,11 @@ class DailyRewards {
     return DailyRewards(
       bonusDay: day(json['bonusDay']),
       adDay: adDay,
-      adsWatched: adDay != null && ads is int && ads >= 0 && ads <= maxAdsPerDay
+      adsWatched: adDay == null
+          ? 0
+          : ads is int && ads >= 0 && ads <= maxAdsPerDay
           ? ads
-          : 0,
+          : maxAdsPerDay,
     );
   }
 

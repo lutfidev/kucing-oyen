@@ -190,12 +190,15 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// Membeli kostum [id] dengan koin lalu langsung memakainya. Gagal tanpa
   /// efek kalau sudah dimiliki atau koin kurang. Semua perubahan terjadi
   /// sebelum menyimpan, jadi ketukan kedua melihat kostumnya sudah dimiliki.
+  /// Kostum disimpan sebelum koin: kalau aplikasi mati di tengah, pemain
+  /// mendapat kostumnya tanpa kehilangan koin.
   Future<bool> buyCostume(OyenCostume id) async {
     if (!_wardrobe.canBuy(id, _coins)) return false;
     _coins -= costumeOf(id).price;
     _wardrobe = _wardrobe.buy(id);
     notifyListeners();
-    await Future.wait([store.saveWardrobe(_wardrobe), store.saveCoins(_coins)]);
+    await store.saveWardrobe(_wardrobe);
+    await store.saveCoins(_coins);
     return true;
   }
 

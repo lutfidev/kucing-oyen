@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -41,8 +43,8 @@ class _ClosetScreenState extends State<ClosetScreen> {
     final t = context.koType;
 
     void act() => switch (action) {
-      CostumeAction.buy => progress.buyCostume(selected),
-      CostumeAction.wear => progress.wearCostume(selected),
+      CostumeAction.buy => unawaited(progress.buyCostume(selected)),
+      CostumeAction.wear => unawaited(progress.wearCostume(selected)),
       CostumeAction.wearing || CostumeAction.notEnoughCoins => null,
     };
     final enabled = action == CostumeAction.buy || action == CostumeAction.wear;
