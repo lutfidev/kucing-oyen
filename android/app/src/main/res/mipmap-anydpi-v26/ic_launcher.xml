@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ikon adaptif (Android 8+): kepala Oyen di latar krem, plus siluet
+     monokrom untuk ikon tema Android 13+. PNG dibuat
+     test/screenshots/brand_test.dart. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/cream" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+    <monochrome android:drawable="@mipmap/ic_launcher_monochrome" />
+</adaptive-icon>
