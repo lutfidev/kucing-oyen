@@ -22,14 +22,23 @@ Widget capturable(Widget child) =>
 
 /// Menyimpan tampilan [capturable] sebagai `<screenshotDir>/<name>.png`
 /// dengan skala piksel 2.
-Future<void> capture(WidgetTester tester, String name) async {
+Future<void> capture(WidgetTester tester, String name) =>
+    captureFile(tester, '$screenshotDir/$name.png');
+
+/// Menyimpan tampilan [capturable] ke berkas PNG [path] dengan skala piksel
+/// [pixelRatio] (ukuran gambar = ukuran logis × [pixelRatio]).
+Future<void> captureFile(
+  WidgetTester tester,
+  String path, {
+  double pixelRatio = 2,
+}) async {
   await tester.runAsync(() async {
     final boundary =
         _boundaryKey.currentContext!.findRenderObject()!
             as RenderRepaintBoundary;
-    final image = await boundary.toImage(pixelRatio: 2);
+    final image = await boundary.toImage(pixelRatio: pixelRatio);
     final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    final file = File('$screenshotDir/$name.png');
+    final file = File(path);
     await file.parent.create(recursive: true);
     await file.writeAsBytes(bytes!.buffer.asUint8List());
   });
