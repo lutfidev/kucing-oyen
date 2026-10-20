@@ -335,6 +335,70 @@ class ActionCard extends StatelessWidget {
   }
 }
 
+/// Privasi: penjelasan singkat, tombol kebijakan privasi, tombol formulir
+/// persetujuan iklan (hanya kalau [onConsent] ada), dan pesan kalau browser
+/// gagal dibuka ([message]).
+class PrivacyCard extends StatelessWidget {
+  const PrivacyCard({
+    super.key,
+    required this.onPolicy,
+    this.onConsent,
+    this.message,
+  });
+
+  final VoidCallback onPolicy;
+  final VoidCallback? onConsent;
+  final String? message;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final t = context.koType;
+    final space = context.koSpace;
+    final l = context.l10n;
+    final onConsent = this.onConsent;
+    final message = this.message;
+    Widget button(
+      String name,
+      String label,
+      KoIconData icon,
+      VoidCallback on,
+    ) => SheetButton(
+      key: ValueKey('privacy-$name'),
+      label: label,
+      icon: KoIcon(icon, size: context.koSize.iconCompact, color: c.ink),
+      color: c.surface,
+      line: c.line,
+      edge: c.lineDeep,
+      onPressed: on,
+    );
+    return KoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(l.privacyInfo, style: t.bodySmall.copyWith(color: c.inkSoft)),
+          SizedBox(height: space.s10),
+          button('policy', l.privacyPolicy, KoIcons.rules, onPolicy),
+          if (onConsent != null) ...[
+            SizedBox(height: space.s8),
+            button('consent', l.adConsent, KoIcons.ad, onConsent),
+          ],
+          if (message != null) ...[
+            SizedBox(height: space.s8),
+            Semantics(
+              liveRegion: true,
+              child: Text(
+                message,
+                style: t.controlLabel.copyWith(color: c.brickDeep),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 /// Tentang: nama game, versi, kredit font dan suara, dan tombol halaman
 /// lisensi.
 class AboutCard extends StatelessWidget {

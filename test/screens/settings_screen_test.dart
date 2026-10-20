@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/ad_consent.dart';
 import 'package:kucing_oren/app/app.dart';
 import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
+import 'package:kucing_oren/app/privacy.dart';
 import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/app/sound_player.dart';
@@ -16,6 +19,9 @@ import 'package:kucing_oren/screens/home/home_screen.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:kucing_oren/screens/settings/settings_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:url_launcher_platform_interface/link.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../test_helpers.dart';
 import 'result_fixtures.dart' show pumpFor;
@@ -285,4 +291,104 @@ void main() {
       expect(find.byType(LicensePage), findsOneWidget);
     });
   });
+
+  group('privasi', () {
+    late _FakeLauncher launcher;
+
+    setUp(() {
+      launcher = _FakeLauncher();
+      UrlLauncherPlatform.instance = launcher;
+    });
+
+    Finder button(String name) => find.byKey(ValueKey('privacy-$name'));
+
+    testWidgets('bagian Privasi di antara Progres dan Tentang', (tester) async {
+      await pumpApp(tester, location: AppRoutes.settings);
+      // Judul bagian ditulis kapital.
+      double top(String title) =>
+          tester.getTopLeft(find.text(title.toUpperCase())).dy;
+      final privacy = top(l10nId.privacySection);
+      expect(privacy, greaterThan(top(l10nId.progressSection)));
+      expect(privacy, lessThan(top(l10nId.about)));
+      expect(find.text(l10nId.privacyInfo), findsOneWidget);
+    });
+
+    testWidgets('Kebijakan privasi membuka URL kebijakan di browser', (
+      tester,
+    ) async {
+      await pumpApp(tester, location: AppRoutes.settings);
+      await _tapText(tester, l10nId.privacyPolicy);
+      expect(launcher.launched, [privacyPolicyUrl]);
+      expect(
+        launcher.options.single.mode,
+        PreferredLaunchMode.externalApplication,
+      );
+      expect(find.text(l10nId.privacyLinkFailed), findsNothing);
+    });
+
+    testWidgets('browser gagal dibuka: pesan kecil', (tester) async {
+      launcher.succeed = false;
+      await pumpApp(tester, location: AppRoutes.settings);
+      await _tapText(tester, l10nId.privacyPolicy);
+      expect(find.text(l10nId.privacyLinkFailed), findsOneWidget);
+    });
+
+    testWidgets('launcher melempar: pesan kecil, tidak crash', (tester) async {
+      launcher.error = true;
+      await pumpApp(tester, location: AppRoutes.settings);
+      await _tapText(tester, l10nId.privacyPolicy);
+      expect(find.text(l10nId.privacyLinkFailed), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('tombol persetujuan hanya kalau UMP memintanya', (
+      tester,
+    ) async {
+      await pumpApp(
+        tester,
+        location: AppRoutes.settings,
+        consent: FakeAdConsent(),
+      );
+      expect(button('consent'), findsNothing);
+      expect(button('policy'), findsOneWidget);
+    });
+
+    testWidgets('Atur persetujuan iklan membuka formulir UMP', (tester) async {
+      final consent = FakeAdConsent(privacyOptionsRequired: true);
+      await pumpApp(tester, location: AppRoutes.settings, consent: consent);
+      await _tapText(tester, l10nId.adConsent);
+      expect(consent.optionsShown, 1);
+    });
+
+    testWidgets('persetujuan diwajibkan belakangan: tombol muncul', (
+      tester,
+    ) async {
+      final consent = FakeAdConsent();
+      await pumpApp(tester, location: AppRoutes.settings, consent: consent);
+      expect(button('consent'), findsNothing);
+      consent.privacyOptionsRequired = true;
+      await settle(tester);
+      expect(button('consent'), findsOneWidget);
+    });
+  });
+}
+
+/// Peluncur URL palsu: mencatat URL, hasilnya bisa diatur.
+class _FakeLauncher extends UrlLauncherPlatform
+    with MockPlatformInterfaceMixin {
+  final launched = <String>[];
+  final options = <LaunchOptions>[];
+  bool succeed = true;
+  bool error = false;
+
+  @override
+  LinkDelegate? get linkDelegate => null;
+
+  @override
+  Future<bool> launchUrl(String url, LaunchOptions options) async {
+    if (error) throw PlatformException(code: 'gagal');
+    launched.add(url);
+    this.options.add(options);
+    return succeed;
+  }
 }

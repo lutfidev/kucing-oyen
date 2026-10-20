@@ -1061,6 +1061,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetDone => 'Progress erased. Fresh start!';
 
   @override
+  String get privacySection => 'Privacy';
+
+  @override
+  String get privacyInfo =>
+      'Your progress stays on your phone. Ads come from Google AdMob.';
+
+  @override
+  String get privacyPolicy => 'Privacy policy';
+
+  @override
+  String get adConsent => 'Ad consent settings';
+
+  @override
+  String get privacyLinkFailed =>
+      'Couldn\'t open the browser. Try again later, okay?';
+
+  @override
   String get about => 'About';
 
   @override

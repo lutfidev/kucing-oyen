@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../l10n/l10n.dart';
 import '../theme/theme.dart';
+import 'ad_consent.dart';
 import 'game_audio.dart';
 import 'language.dart';
 import 'progress_scope.dart';
@@ -16,6 +17,7 @@ class KucingOrenApp extends StatefulWidget {
     super.key,
     required this.progress,
     this.audio,
+    this.consent,
     this.initialLocation = AppRoutes.home,
   });
 
@@ -27,6 +29,10 @@ class KucingOrenApp extends StatefulWidget {
   /// Musik dan efek suara; null = senyap ([FakeSoundPlayer]). Sama seperti
   /// [progress], tidak boleh diganti sesudah aplikasi dibuat.
   final GameAudio? audio;
+
+  /// Persetujuan iklan untuk bagian Privasi di Pengaturan; null = tombol
+  /// persetujuan tidak tampil.
+  final AdConsent? consent;
   final String initialLocation;
 
   @override
@@ -92,7 +98,8 @@ class _KucingOrenAppState extends State<KucingOrenApp>
 
   @override
   Widget build(BuildContext context) {
-    return AudioScope(
+    final consent = widget.consent;
+    final app = AudioScope(
       audio: _audio,
       child: ProgressScope(
         progress: widget.progress,
@@ -110,5 +117,6 @@ class _KucingOrenAppState extends State<KucingOrenApp>
         ),
       ),
     );
+    return consent == null ? app : AdConsentScope(consent: consent, child: app);
   }
 }

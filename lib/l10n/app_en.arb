@@ -1303,6 +1303,26 @@
   "@resetDone": {
     "description": "Message after resetting."
   },
+  "privacySection": "Privacy",
+  "@privacySection": {
+    "description": "Settings section: privacy (policy link and ad consent)."
+  },
+  "privacyInfo": "Your progress stays on your phone. Ads come from Google AdMob.",
+  "@privacyInfo": {
+    "description": "Settings, Privacy card: short explanation above the buttons."
+  },
+  "privacyPolicy": "Privacy policy",
+  "@privacyPolicy": {
+    "description": "Settings, Privacy: button that opens the privacy policy in the browser."
+  },
+  "adConsent": "Ad consent settings",
+  "@adConsent": {
+    "description": "Settings, Privacy: button that reopens the ad consent form (only where the law requires it)."
+  },
+  "privacyLinkFailed": "Couldn't open the browser. Try again later, okay?",
+  "@privacyLinkFailed": {
+    "description": "Settings, Privacy: small message when the browser could not be opened."
+  },
   "about": "About",
   "@about": {
     "description": "Settings section: about the game."

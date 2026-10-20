@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/ad_consent.dart';
 import 'package:kucing_oren/app/app.dart';
 import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/language.dart';
@@ -95,19 +96,22 @@ void setTextScale(WidgetTester tester, double scale) {
 }
 
 /// Pompa aplikasi lengkap di [location] dengan [progress] (default:
-/// progres kosong) dan [audio] (default: [testAudio]), lalu [settle].
-/// Mengembalikan progres yang dipakai.
+/// progres kosong), [audio] (default: [testAudio]), dan persetujuan iklan
+/// [consent] (default tidak ada), lalu [settle]. Mengembalikan progres yang
+/// dipakai.
 Future<ProgressController> pumpApp(
   WidgetTester tester, {
   String location = '/',
   ProgressController? progress,
   GameAudio? audio,
+  AdConsent? consent,
 }) async {
   final controller = progress ?? testProgress();
   await tester.pumpWidget(
     KucingOrenApp(
       progress: controller,
       audio: audio ?? testAudio(),
+      consent: consent,
       initialLocation: location,
     ),
   );

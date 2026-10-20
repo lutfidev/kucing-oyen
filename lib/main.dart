@@ -52,7 +52,7 @@ Future<void> main() async {
     hintAds: audio.pauseDuringAds(ads.hints),
     coinAds: audio.pauseDuringAds(ads.coins),
   );
-  runApp(KucingOrenApp(progress: progress, audio: audio));
+  runApp(KucingOrenApp(progress: progress, audio: audio, consent: ads.consent));
   // Formulir persetujuan muncul di atas layar pertama, tanpa menahannya.
   unawaited(ads.start());
 }

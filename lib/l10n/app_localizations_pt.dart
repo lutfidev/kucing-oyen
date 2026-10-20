@@ -1074,6 +1074,23 @@ class AppLocalizationsPt extends AppLocalizations {
   String get resetDone => 'Progresso apagado. Bora recomeçar!';
 
   @override
+  String get privacySection => 'Privacidade';
+
+  @override
+  String get privacyInfo =>
+      'Seu progresso fica no seu celular. Os anúncios vêm do Google AdMob.';
+
+  @override
+  String get privacyPolicy => 'Política de privacidade';
+
+  @override
+  String get adConsent => 'Consentimento de anúncios';
+
+  @override
+  String get privacyLinkFailed =>
+      'O navegador não abriu. Tenta de novo mais tarde, tá?';
+
+  @override
   String get about => 'Sobre';
 
   @override

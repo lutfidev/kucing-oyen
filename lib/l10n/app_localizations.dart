@@ -1566,6 +1566,36 @@ abstract class AppLocalizations {
   /// **'Progress erased. Fresh start!'**
   String get resetDone;
 
+  /// Settings section: privacy (policy link and ad consent).
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get privacySection;
+
+  /// Settings, Privacy card: short explanation above the buttons.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress stays on your phone. Ads come from Google AdMob.'**
+  String get privacyInfo;
+
+  /// Settings, Privacy: button that opens the privacy policy in the browser.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get privacyPolicy;
+
+  /// Settings, Privacy: button that reopens the ad consent form (only where the law requires it).
+  ///
+  /// In en, this message translates to:
+  /// **'Ad consent settings'**
+  String get adConsent;
+
+  /// Settings, Privacy: small message when the browser could not be opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the browser. Try again later, okay?'**
+  String get privacyLinkFailed;
+
   /// Settings section: about the game.
   ///
   /// In en, this message translates to:

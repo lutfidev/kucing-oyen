@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 /// Persetujuan iklan (formulir UMP Google di wilayah yang mewajibkan).
 /// Pendengar diberi tahu saat [canRequestAds] atau
@@ -54,4 +54,18 @@ class FakeAdConsent extends AdConsent {
 
   @override
   Future<void> showPrivacyOptions() async => optionsShown++;
+}
+
+/// Membagikan [AdConsent] ke Pengaturan. Tanpa scope (test, galeri) tombol
+/// persetujuan tidak tampil.
+class AdConsentScope extends InheritedNotifier<AdConsent> {
+  const AdConsentScope({
+    super.key,
+    required AdConsent consent,
+    required super.child,
+  }) : super(notifier: consent);
+
+  /// Persetujuan terdekat (ikut dibangun ulang saat berubah), atau null.
+  static AdConsent? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<AdConsentScope>()?.notifier;
 }
