@@ -99,6 +99,9 @@ class KoCoinChip extends StatelessWidget {
         // Bayangan `coinChip` = garis padat (turun saat ditekan) + lembut.
         edgeColor: raised ? shadow.first.color : null,
         depth: shadow.first.offset.dy,
+        // Tanpa bayangan padat (outlined, compact) chip tetap turun.
+        sink: shadow.first.offset.dy,
+        liveRegion: true,
         glow: raised ? shadow.skip(1).toList() : const [],
         borderColor: border,
         borderWidth: s.border,

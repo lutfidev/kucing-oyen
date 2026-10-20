@@ -27,6 +27,8 @@ class KoPressable extends StatefulWidget {
     this.height,
     this.padding,
     this.toggled,
+    this.sink = 0,
+    this.liveRegion = false,
   });
 
   /// Null = nonaktif: tidak bisa ditekan dan tidak turun.
@@ -35,9 +37,13 @@ class KoPressable extends StatefulWidget {
   final Color color;
 
   /// Tinggi dan warna bayangan padat. Tanpa [edgeColor], tidak ada bayangan
-  /// dan tombol tidak turun saat ditekan.
+  /// dan tombol turun setinggi [sink] saat ditekan.
   final double depth;
   final Color? edgeColor;
+
+  /// Seberapa jauh tombol tanpa [edgeColor] turun saat ditekan (default
+  /// tidak turun).
+  final double sink;
 
   final Color? borderColor;
   final double borderWidth;
@@ -56,6 +62,9 @@ class KoPressable extends StatefulWidget {
 
   /// Tombol nyala/mati untuk pembaca layar (mis. ×2); null = tombol biasa.
   final bool? toggled;
+
+  /// Label diumumkan ulang saat berubah (mis. saldo koin).
+  final bool liveRegion;
 
   @override
   State<KoPressable> createState() => _KoPressableState();
@@ -80,7 +89,7 @@ class _KoPressableState extends State<KoPressable> {
     final onTap = tapSound(context, widget.onPressed);
     final edge = widget.edgeColor;
     final depth = edge == null ? 0.0 : widget.depth;
-    final shift = _pressed ? depth : 0.0;
+    final shift = _pressed ? (edge == null ? widget.sink : depth) : 0.0;
     final border = widget.borderColor;
 
     return Semantics(
@@ -89,6 +98,7 @@ class _KoPressableState extends State<KoPressable> {
       enabled: enabled,
       label: widget.semanticLabel,
       toggled: widget.toggled,
+      liveRegion: widget.liveRegion,
       onTap: onTap,
       excludeSemantics: true,
       child: GestureDetector(

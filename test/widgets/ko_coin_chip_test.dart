@@ -53,6 +53,7 @@ void main() {
         hasEnabledState: true,
         isEnabled: true,
         hasTapAction: true,
+        isLiveRegion: true,
       ),
     );
     await tester.tap(find.byType(KoCoinChip));
@@ -80,5 +81,44 @@ void main() {
       find.bySemanticsLabel('120 koin, tambah koin, bonus harian siap'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('outlined yang bisa ditekan turun saat ditekan', (tester) async {
+    final shadow = KoTheme.light().extension<KoShadow>()!.coinChip;
+    await pumpThemed(
+      tester,
+      KoCoinChip(coins: 1, style: KoCoinChipStyle.outlined, onPressed: () {}),
+    );
+    final surface = find
+        .descendant(
+          of: find.byType(KoCoinChip),
+          matching: find.byType(Container),
+        )
+        .first;
+    final before = tester.getTopLeft(surface);
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.byType(KoCoinChip)),
+    );
+    await tester.pump();
+    expect(
+      tester.getTopLeft(surface),
+      before + Offset(0, shadow.first.offset.dy),
+    );
+    await gesture.up();
+    await tester.pump();
+    expect(tester.getTopLeft(surface), before);
+  });
+
+  testWidgets('chip yang bisa ditekan tetap live region', (tester) async {
+    for (final style in KoCoinChipStyle.values) {
+      await pumpThemed(
+        tester,
+        KoCoinChip(coins: 7, style: style, onPressed: () {}),
+      );
+      final data = tester
+          .getSemantics(find.bySemanticsLabel(RegExp('^7 koin')))
+          .getSemanticsData();
+      expect(data.flagsCollection.isLiveRegion, isTrue, reason: '$style');
+    }
   });
 }
