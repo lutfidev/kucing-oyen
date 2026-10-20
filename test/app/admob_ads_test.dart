@@ -204,6 +204,53 @@ void main() {
       expect(await first, isTrue);
     });
 
+    test(
+      'iklan siap yang sudah kedaluwarsa dibuang dan dimuat ulang',
+      () async {
+        var now = DateTime(2026, 10, 20, 9);
+        final loader = _FakeLoader();
+        final ads = AdMobRewardedAds(
+          unitId: 'unit',
+          canLoad: () => true,
+          load: loader.call,
+          clock: () => now,
+        )..preload();
+        final old = _FakeHandle();
+        await loader.finish(old);
+        // Pemain kembali esok hari: iklan lama sudah kedaluwarsa di AdMob.
+        now = now.add(AdMobRewardedAds.maxAdAge + const Duration(minutes: 1));
+        final result = ads.show();
+        await pumpEventQueue();
+        expect(old.disposed, isTrue);
+        expect(old.shown, 0);
+        expect(loader.calls, 2);
+        final fresh = _FakeHandle();
+        await loader.finish(fresh);
+        fresh.watchToEnd();
+        expect(await result, isTrue);
+      },
+    );
+
+    test('iklan siap yang masih baru dipakai tanpa memuat lagi', () async {
+      var now = DateTime(2026, 10, 20, 9);
+      final loader = _FakeLoader();
+      final ads = AdMobRewardedAds(
+        unitId: 'unit',
+        canLoad: () => true,
+        load: loader.call,
+        clock: () => now,
+      )..preload();
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      now = now.add(AdMobRewardedAds.maxAdAge - const Duration(minutes: 1));
+      final result = ads.show();
+      await pumpEventQueue();
+      expect(ad.shown, 1);
+      expect(loader.calls, 1);
+      ad.watchToEnd();
+      expect(await result, isTrue);
+    });
+
     test('canLoad false: show false dan preload tidak memuat', () async {
       final loader = _FakeLoader();
       final ads = _ads(loader, canLoad: () => false)..preload();
@@ -297,6 +344,47 @@ void main() {
       expect(await ads.hints.show(), isFalse);
     });
 
+    test(
+      'pertama kali offline: ketukan iklan mencoba persetujuan lagi',
+      () async {
+        var started = 0;
+        final consent = _OfflineFirstConsent();
+        final ads = GameAds(
+          consent: consent,
+          startSdk: () async => started++,
+          load: _FakeLoader().call,
+        );
+        await ads.start();
+        expect(ads.sdkReady, isFalse);
+        // Pemain kembali online lalu mengetuk iklan: ketukan ini gagal, tapi
+        // persetujuan diminta lagi dan SDK menyala untuk ketukan berikutnya.
+        expect(await ads.coins.show(), isFalse);
+        await pumpEventQueue();
+        expect(consent.gathered, 2);
+        expect(started, 1);
+        expect(ads.sdkReady, isTrue);
+      },
+    );
+
+    test('coba ulang tidak bertumpuk saat persetujuan masih diminta', () async {
+      final consent = _SlowConsent();
+      final ads = GameAds(
+        consent: consent,
+        startSdk: () async {},
+        load: _FakeLoader().call,
+      );
+      unawaited(ads.start());
+      await pumpEventQueue();
+      expect(await ads.hints.show(), isFalse);
+      expect(await ads.coins.show(), isFalse);
+      expect(consent.gathered, 1);
+      consent.done.complete();
+      await pumpEventQueue();
+      expect(await ads.hints.show(), isFalse);
+      await pumpEventQueue();
+      expect(consent.gathered, 2);
+    });
+
     test('release memakai ID tempelan per tempat', () async {
       final loader = _FakeLoader();
       await GameAds(
@@ -308,4 +396,28 @@ void main() {
       expect(loader.units, [hintRewardedUnit, coinRewardedUnit]);
     });
   });
+}
+
+/// Persetujuan yang gagal diperbarui saat pertama (offline), lalu berhasil.
+class _OfflineFirstConsent extends FakeAdConsent {
+  _OfflineFirstConsent() : super(canRequestAds: false);
+
+  @override
+  Future<void> gather() async {
+    gathered++;
+    if (gathered >= 2) canRequestAds = true;
+  }
+}
+
+/// Persetujuan yang `gather` pertamanya menunggu [done].
+class _SlowConsent extends FakeAdConsent {
+  _SlowConsent() : super(canRequestAds: false);
+
+  final done = Completer<void>();
+
+  @override
+  Future<void> gather() async {
+    gathered++;
+    if (gathered == 1) await done.future;
+  }
 }

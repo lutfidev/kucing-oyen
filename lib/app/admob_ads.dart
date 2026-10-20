@@ -28,23 +28,38 @@ class AdMobRewardedAds implements RewardedAds {
     required this._canLoad,
     required this._load,
     this.loadTimeout = defaultLoadTimeout,
-  });
+    DateTime Function()? clock,
+    this._onUnavailable,
+  }) : _clock = clock ?? DateTime.now;
 
   /// Batas tunggu [show] kalau iklan belum siap.
   static const defaultLoadTimeout = Duration(seconds: 10);
+
+  /// Umur maksimum iklan siap. Iklan berhadiah AdMob kedaluwarsa satu jam
+  /// sesudah dimuat; yang lebih tua dari ini dibuang dan dimuat ulang.
+  static const maxAdAge = Duration(minutes: 55);
 
   final String unitId;
   final Duration loadTimeout;
   final bool Function() _canLoad;
   final RewardedAdLoader _load;
+  final DateTime Function() _clock;
+
+  /// Dipanggil saat [show] ditolak karena iklan belum boleh dimuat (mis.
+  /// persetujuan atau SDK belum siap), supaya bisa dicoba lagi.
+  final VoidCallback? _onUnavailable;
 
   RewardedAdHandle? _ready;
+
+  /// Waktu [_ready] selesai dimuat.
+  DateTime? _readyAt;
   Future<void>? _loading;
   bool _showing = false;
 
   /// Memuat satu iklan kalau boleh, belum ada yang siap, dan tidak sedang
   /// memuat.
   void preload() {
+    _dropExpired();
     if (_canLoad() && _ready == null && _loading == null) {
       unawaited(_startLoad());
     }
@@ -60,22 +75,41 @@ class AdMobRewardedAds implements RewardedAds {
       ad = null;
     }
     _loading = null;
-    if (ad != null) _ready = ad;
+    if (ad != null) {
+      _ready = ad;
+      _readyAt = _clock();
+    }
   }();
+
+  /// Membuang iklan siap yang sudah lewat [maxAdAge].
+  void _dropExpired() {
+    final at = _readyAt;
+    if (_ready == null || at == null) return;
+    if (_clock().difference(at) < maxAdAge) return;
+    _ready!.dispose();
+    _ready = null;
+    _readyAt = null;
+  }
 
   /// True hanya kalau pemain menonton sampai hadiah. False kalau sedang
   /// menampilkan iklan lain, belum boleh memuat, gagal dimuat, habis waktu,
   /// ditutup lebih dulu, atau error. Tidak pernah melempar.
   @override
   Future<bool> show() async {
-    if (_showing || !_canLoad()) return false;
+    if (_showing) return false;
+    if (!_canLoad()) {
+      _onUnavailable?.call();
+      return false;
+    }
     _showing = true;
     try {
+      _dropExpired();
       if (_ready == null) {
         await (_loading ?? _startLoad()).timeout(loadTimeout, onTimeout: () {});
       }
       final ad = _ready;
       _ready = null;
+      _readyAt = null;
       if (ad == null) return false;
       return await _present(ad);
     } on Object {
@@ -118,6 +152,7 @@ class GameAds {
       unitId: rewardedUnitFor(placement, release: release),
       canLoad: () => _sdkReady,
       load: load,
+      onUnavailable: _retry,
     );
     hints = unit(AdPlacement.hint);
     coins = unit(AdPlacement.coin);
@@ -131,6 +166,7 @@ class GameAds {
 
   bool _sdkReady = false;
   bool _starting = false;
+  bool _gathering = false;
 
   /// SDK sudah dinyalakan dan iklan boleh dimuat.
   bool get sdkReady => _sdkReady;
@@ -140,12 +176,27 @@ class GameAds {
   /// boleh belakangan (formulir di Pengaturan), SDK dinyalakan saat itu.
   Future<void> start() async {
     consent.addListener(_onConsent);
+    await _gatherAndStart();
+  }
+
+  Future<void> _gatherAndStart() async {
+    if (_gathering) return;
+    _gathering = true;
     try {
       await consent.gather();
     } on Object {
-      // Formulir gagal: iklan menunggu persetujuan berikutnya.
+      // Formulir gagal: dicoba lagi saat pemain meminta iklan.
+    } finally {
+      _gathering = false;
     }
     await _startIfAllowed();
+  }
+
+  /// Iklan diminta sebelum SDK siap (mis. pembukaan pertama offline, atau
+  /// SDK gagal dinyalakan): minta persetujuan dan nyalakan SDK lagi, supaya
+  /// ketukan berikutnya bisa mendapat iklan tanpa membuka ulang aplikasi.
+  void _retry() {
+    if (!_sdkReady) unawaited(_gatherAndStart());
   }
 
   void _onConsent() => unawaited(_startIfAllowed());
@@ -159,7 +210,7 @@ class GameAds {
       hints.preload();
       coins.preload();
     } on Object {
-      // SDK gagal dinyalakan: iklan gagal sampai aplikasi dibuka lagi.
+      // SDK gagal dinyalakan: dicoba lagi saat pemain meminta iklan.
     } finally {
       _starting = false;
     }
