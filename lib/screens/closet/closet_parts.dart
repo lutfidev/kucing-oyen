@@ -222,7 +222,7 @@ class _Tag extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (coin) ...[
-              CoinView(size: s.iconTiny, plain: true),
+              CoinView(size: s.iconTiny, kind: CoinKind.price),
               SizedBox(width: space.s4),
             ],
             Text(
@@ -252,9 +252,17 @@ class CostumeGrid extends StatelessWidget {
 
   static const columns = 2;
 
+  static double _gap(BuildContext context) => context.koSpace.s10;
+
+  /// Tinggi grid: baris kartu setinggi tetap dan jarak di antaranya.
+  static double heightOf(BuildContext context) {
+    final rows = (costumes.length / columns).ceil();
+    return rows * context.koSize.costumeCard + (rows - 1) * _gap(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final gap = context.koSpace.s10;
+    final gap = _gap(context);
     Widget card(Costume costume) => CostumeCard(
       key: ValueKey('costume-${costume.id.name}'),
       costume: costume,

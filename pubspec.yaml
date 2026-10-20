@@ -1,7 +1,7 @@
 name: kucing_oren
 description: "Kucing Oren: game puzzle kucing oren (Flutter + Flame)."
 publish_to: 'none'
-version: 0.1.0+1
+version: 1.0.0+1
 
 environment:
   sdk: ^3.13.4
@@ -14,16 +14,20 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   go_router: ^18.1.0
+  google_mobile_ads: ^9.1.0
   intl: any
   package_info_plus: ^10.2.2
   path_drawing: ^1.0.1
   shared_preferences: ^2.5.6
+  url_launcher: ^6.3.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
   shared_preferences_platform_interface: ^2.4.2
+  url_launcher_platform_interface: ^2.3.2
+  plugin_platform_interface: ^2.1.8
 
 flutter:
   uses-material-design: true

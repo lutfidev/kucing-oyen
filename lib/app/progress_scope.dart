@@ -28,8 +28,8 @@ enum AdReward {
 }
 
 /// Data level dan progres pemain untuk semua layar: bintang, tutorial,
-/// koin, petunjuk, kostum Oyen, hadiah harian, dan bahasa. Dimuat sekali sebelum
-/// aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
+/// koin, petunjuk, kostum Oyen, hadiah harian, dan bahasa. Dimuat sekali
+/// sebelum aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
 class ProgressController extends ChangeNotifier implements HintSource {
   ProgressController({
     required List<Level> levels,
@@ -41,7 +41,8 @@ class ProgressController extends ChangeNotifier implements HintSource {
     Wardrobe? wardrobe,
     this._rewards = DailyRewards.initial,
     this._language = AppLanguage.system,
-    RewardedAds? ads,
+    RewardedAds? hintAds,
+    RewardedAds? coinAds,
     DateTime Function()? clock,
   }) : levels = List.unmodifiable(levels),
        _tutorialsDone = Set.unmodifiable(tutorialsDone),
@@ -49,16 +50,18 @@ class ProgressController extends ChangeNotifier implements HintSource {
        _wardrobe = wardrobe ?? Wardrobe.initial,
        clock = clock ?? DateTime.now,
        _seenDay = dayNumber((clock ?? DateTime.now)()),
-       ads = ads ?? FakeRewardedAds(),
+       hintAds = hintAds ?? FakeRewardedAds(),
+       coinAds = coinAds ?? FakeRewardedAds(),
        chapters = List.unmodifiable(chaptersOf(levels));
 
   /// Memuat progres, tutorial, koin, petunjuk, kostum, hadiah harian, dan
-  /// bahasa dari [store]. Koin yang belum pernah disimpan (progres dari sebelum ada
-  /// koin) dihitung dari total bintang.
+  /// bahasa dari [store]. Koin yang belum pernah disimpan (progres dari
+  /// sebelum ada koin) dihitung dari total bintang.
   static Future<ProgressController> load({
     required List<Level> levels,
     required ProgressStore store,
-    RewardedAds? ads,
+    RewardedAds? hintAds,
+    RewardedAds? coinAds,
     DateTime Function()? clock,
   }) async {
     final progress = await store.load();
@@ -72,7 +75,8 @@ class ProgressController extends ChangeNotifier implements HintSource {
       wardrobe: await store.loadWardrobe(),
       rewards: await store.loadRewards(),
       language: await store.loadLanguage(),
-      ads: ads,
+      hintAds: hintAds,
+      coinAds: coinAds,
       clock: clock,
     );
   }
@@ -81,8 +85,12 @@ class ProgressController extends ChangeNotifier implements HintSource {
   final List<Chapter> chapters;
   final ProgressStore store;
 
-  /// Iklan berhadiah untuk membuka petunjuk dan menambah koin.
-  final RewardedAds ads;
+  /// Iklan berhadiah untuk membuka petunjuk.
+  final RewardedAds hintAds;
+
+  /// Iklan berhadiah untuk koin tambahan (unit AdMob sendiri, supaya
+  /// laporannya terpisah).
+  final RewardedAds coinAds;
 
   /// Jam untuk bonus harian dan jatah iklan; diganti di test.
   final DateTime Function() clock;
@@ -163,7 +171,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
         _unlocking.add(levelId);
         bool watched;
         try {
-          watched = await ads.show();
+          watched = await hintAds.show();
         } on Object {
           // SDK iklan yang gagal dimuat dengan error dianggap iklan gagal.
           watched = false;
@@ -190,12 +198,15 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// Membeli kostum [id] dengan koin lalu langsung memakainya. Gagal tanpa
   /// efek kalau sudah dimiliki atau koin kurang. Semua perubahan terjadi
   /// sebelum menyimpan, jadi ketukan kedua melihat kostumnya sudah dimiliki.
+  /// Kostum disimpan sebelum koin: kalau aplikasi mati di tengah, pemain
+  /// mendapat kostumnya tanpa kehilangan koin.
   Future<bool> buyCostume(OyenCostume id) async {
     if (!_wardrobe.canBuy(id, _coins)) return false;
     _coins -= costumeOf(id).price;
     _wardrobe = _wardrobe.buy(id);
     notifyListeners();
-    await Future.wait([store.saveWardrobe(_wardrobe), store.saveCoins(_coins)]);
+    await store.saveWardrobe(_wardrobe);
+    await store.saveCoins(_coins);
     return true;
   }
 
@@ -256,7 +267,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     _watchingAd = true;
     bool watched;
     try {
-      watched = await ads.show();
+      watched = await coinAds.show();
     } on Object {
       // SDK iklan yang gagal dimuat dengan error dianggap iklan gagal.
       watched = false;

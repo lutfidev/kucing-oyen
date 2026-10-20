@@ -7,7 +7,6 @@ import '../../l10n/hint_texts.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import 'level_sheet.dart';
 
 /// Membuka sheet Petunjuk (desain 10) untuk [level]. Ditutup dengan tombol
 /// tutup, ketuk latar gelap, tombol kembali sistem, atau tarik ke bawah.
@@ -15,7 +14,7 @@ Future<void> showHintSheet(
   BuildContext context, {
   required Level level,
   required HintSource hints,
-}) => showLevelSheet(
+}) => showKoSheet(
   context,
   barrierLabel: context.l10n.closeHints,
   barrierColor: context.koColors.scrimLight,
@@ -149,7 +148,7 @@ class _HintSheetState extends State<HintSheet> {
             ],
           ];
         }
-        return LevelSheet(
+        return KoSheet(
           label: context.l10n.hintsTitle,
           onClose: widget.onClose,
           header: header,
@@ -278,7 +277,7 @@ class HintTierCard extends StatelessWidget {
                       label: coins >= cost
                           ? l.coinsAmount(cost)
                           : l.notEnoughCoins(cost),
-                      icon: CoinView(size: s.iconCompact, plain: true),
+                      icon: CoinView(size: s.iconCompact, kind: CoinKind.plain),
                       color: c.orange,
                       line: c.orange,
                       edge: c.orangeDeep,

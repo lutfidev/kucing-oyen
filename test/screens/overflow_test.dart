@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/ad_consent.dart';
 import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
@@ -9,7 +10,6 @@ import 'package:kucing_oren/game/model/level_session.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/screens/level/hint_sheet.dart';
-import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/rules_sheet.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
@@ -18,6 +18,9 @@ import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/screens/settings/settings_parts.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:url_launcher_platform_interface/link.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../test_helpers.dart';
 import 'result_fixtures.dart';
@@ -197,7 +200,7 @@ void _cases(AppLanguage language) {
             progress: p(best: wonUpTo(id - 1)),
           );
           await tester.tap(find.text(l.rules));
-          await pumpFor(tester, LevelSheet.openTime * 2);
+          await pumpFor(tester, KoSheet.openTime * 2);
           expect(tester.takeException(), isNull);
           final last = find.byType(RuleCard).last;
           await tester.ensureVisible(last);
@@ -236,7 +239,7 @@ void _cases(AppLanguage language) {
             progress: p(best: wonUpTo(id - 1), coins: coins, hints: hints),
           );
           await tester.tap(find.bySemanticsLabel(l.hint));
-          await pumpFor(tester, LevelSheet.openTime * 2);
+          await pumpFor(tester, KoSheet.openTime * 2);
           expect(tester.takeException(), isNull);
           final cards = find.byType(HintTierCard);
           if (cards.evaluate().isNotEmpty) {
@@ -475,7 +478,7 @@ void _cases(AppLanguage language) {
         await tester.ensureVisible(reset);
         await settle(tester);
         await tester.tap(reset);
-        await pumpFor(tester, LevelSheet.openTime * 2);
+        await pumpFor(tester, KoSheet.openTime * 2);
         final confirm = find.text(l.resetConfirm);
         expect(confirm.hitTestable(), findsOneWidget);
         expect(tester.getRect(confirm).bottom, lessThanOrEqualTo(size.height));
@@ -483,4 +486,50 @@ void _cases(AppLanguage language) {
       });
     }
   }
+
+  // Kartu Privasi dengan dan tanpa tombol persetujuan, plus pesan browser
+  // gagal dibuka.
+  for (final size in sizes) {
+    for (final scale in textScales) {
+      for (final required in [false, true]) {
+        final label = '${size.width.toInt()}×${size.height.toInt()}';
+        testWidgets('tanpa overflow: privasi @ $label, teks ${scale * 100}%, '
+            'persetujuan ${required ? 'ada' : 'tidak ada'}', (tester) async {
+          setScreenSize(tester, size);
+          setTextScale(tester, scale);
+          UrlLauncherPlatform.instance = _FailingLauncher();
+          await pumpApp(
+            tester,
+            location: AppRoutes.settings,
+            progress: p(),
+            consent: FakeAdConsent(privacyOptionsRequired: required),
+          );
+          final policy = find.text(l.privacyPolicy);
+          await tester.ensureVisible(policy);
+          await settle(tester);
+          await tester.tap(policy);
+          await settle(tester);
+          final failed = find.text(l.privacyLinkFailed);
+          await tester.ensureVisible(failed);
+          await settle(tester);
+          expect(failed.hitTestable(), findsOneWidget);
+          expect(
+            find.text(l.adConsent),
+            required ? findsOneWidget : findsNothing,
+          );
+          expect(tester.takeException(), isNull);
+        });
+      }
+    }
+  }
+}
+
+/// Peluncur URL yang selalu gagal (browser tidak bisa dibuka).
+class _FailingLauncher extends UrlLauncherPlatform
+    with MockPlatformInterfaceMixin {
+  @override
+  LinkDelegate? get linkDelegate => null;
+
+  @override
+  Future<bool> launchUrl(String url, LaunchOptions options) async => false;
 }

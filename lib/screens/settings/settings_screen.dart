@@ -4,18 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../app/ad_consent.dart';
 import '../../app/game_audio.dart';
+import '../../app/privacy.dart';
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../level/level_sheet.dart';
 import 'settings_parts.dart';
 
 /// Pengaturan (rute `/pengaturan`, tidak ada di desain; gaya kartu Lemari
 /// Kostum dan sheet Petunjuk): sakelar musik dan efek suara, bahasa, lihat
-/// tutorial lagi, reset progres dengan konfirmasi, dan tentang game.
+/// tutorial lagi, reset progres dengan konfirmasi, privasi (kebijakan dan
+/// persetujuan iklan), dan tentang game.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -24,7 +26,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 /// Pesan yang tampil di bawah tombol sesudah ditekan.
-enum _Notice { tutorials, reset }
+enum _Notice { tutorials, reset, privacyFailed }
 
 class _SettingsScreenState extends State<SettingsScreen> {
   /// Versi aplikasi; null selama dimuat atau kalau tidak bisa dibaca.
@@ -51,7 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _notice = _Notice.tutorials);
   }
 
-  Future<void> _confirmReset(ProgressController progress) => showLevelSheet(
+  Future<void> _confirmReset(ProgressController progress) => showKoSheet(
     context,
     barrierLabel: context.l10n.closeReset,
     barrierColor: context.koColors.scrimLight,
@@ -65,9 +67,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ),
   );
 
+  Future<void> _openPolicy() async {
+    final opened = await openPrivacyPolicy();
+    if (!mounted) return;
+    setState(() => _notice = opened ? null : _Notice.privacyFailed);
+  }
+
   @override
   Widget build(BuildContext context) {
     final progress = ProgressScope.of(context);
+    final consent = AdConsentScope.maybeOf(context);
     final audio = AudioScope.of(context);
     final c = context.koColors;
     final space = context.koSpace;
@@ -151,6 +160,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                           message: _notice == _Notice.reset
                               ? l.resetDone
+                              : null,
+                        ),
+                      ),
+                      SizedBox(height: space.s16),
+                      SettingsSection(
+                        title: l.privacySection,
+                        child: PrivacyCard(
+                          onPolicy: () => unawaited(_openPolicy()),
+                          onConsent:
+                              consent != null && consent.privacyOptionsRequired
+                              ? () => unawaited(consent.showPrivacyOptions())
+                              : null,
+                          message: _notice == _Notice.privacyFailed
+                              ? l.privacyLinkFailed
                               : null,
                         ),
                       ),

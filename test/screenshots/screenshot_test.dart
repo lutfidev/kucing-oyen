@@ -25,6 +25,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../test_helpers.dart';
 import 'capture.dart';
+import 'scenes.dart';
 
 /// Progres seperti contoh desain: Babak 1 selesai dengan 26 bintang, level
 /// 11 dan 12 menang (5 bintang), level 13 sedang dimainkan (total 31/60).
@@ -76,37 +77,6 @@ const _fullPages = <String, (String, double)>{
 };
 
 const _size = Size(390, 844);
-
-/// Menaruh benda (awalan nama slot baki, kolom, baris) lewat seretan.
-Future<void> _place(WidgetTester tester, List<(String, int, int)> items) async {
-  final board = tester.getRect(find.byType(GameWidget<KucingGame>));
-  final scale = board.width / 350;
-  for (final (slotName, col, row) in items) {
-    final slot = find.byWidgetPredicate(
-      (w) => w is TraySlot && w.semanticLabel.startsWith(slotName),
-    );
-    final target = board.topLeft + Offset(col * 50 + 25, row * 50 + 25) * scale;
-    final gesture = await tester.startGesture(tester.getCenter(slot));
-    await tester.pump();
-    await gesture.moveTo(target);
-    await tester.pump();
-    await gesture.up();
-    await tester.pumpAndSettle();
-  }
-}
-
-/// Membangunkan Oyen, memutar sampai selesai, lalu membuka layar hasil dan
-/// menunggu bintang dan Ibu selesai muncul. Sinar dan "PRANG!" bergerak
-/// terus, jadi tanpa `pumpAndSettle`.
-Future<void> _showResult(WidgetTester tester) async {
-  await tester.tap(find.text('Bangunkan Oyen'));
-  await tester.pump();
-  await tester.pumpAndSettle();
-  await tester.tap(find.text('Lihat hasil'));
-  for (var i = 0; i < 30; i++) {
-    await tester.pump(const Duration(milliseconds: 50));
-  }
-}
 
 void main() {
   final folder = '${_size.width.toInt()}x${_size.height.toInt()}';
@@ -191,8 +161,8 @@ void main() {
           _app(AppRoutes.level(id, chapter: testLevels[id - 1].chapter)),
         );
         await tester.pumpAndSettle();
-        await _place(tester, items);
-        await _showResult(tester);
+        await placeItems(tester, items);
+        await showResult(tester);
         await capture(tester, '$folder/$name');
       });
     }, skip: !screenshotsEnabled);
@@ -236,7 +206,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await _showResult(tester);
+      await showResult(tester);
       await capture(tester, '$folder/08-oyen-kelamaan');
     });
   }, skip: !screenshotsEnabled);
@@ -342,8 +312,8 @@ void main() {
           _app(AppRoutes.level(id, chapter: testLevels[id - 1].chapter)),
         );
         await tester.pumpAndSettle();
-        await _place(tester, items);
-        await _showResult(tester);
+        await placeItems(tester, items);
+        await showResult(tester);
         final open = find.text('Tonton putar ulang');
         await tester.tap(
           open.evaluate().isEmpty ? find.text('Putar Ulang') : open,

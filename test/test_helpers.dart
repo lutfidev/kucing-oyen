@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/ad_consent.dart';
 import 'package:kucing_oren/app/app.dart';
 import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/language.dart';
@@ -39,9 +40,9 @@ ProgressController testProgress([
 
 /// Seperti [testProgress], ditambah saldo [coins], tingkat petunjuk
 /// [hints] per level, kostum [wardrobe], hadiah harian [rewards], iklan
-/// [ads] (default iklan palsu yang berhasil), jam [clock], dan bahasa
-/// [language] (default Indonesia, supaya test bisa mencari teks
-/// Indonesia; [AppLanguage.system] untuk menguji bahasa HP).
+/// [ads] untuk petunjuk dan koin (default iklan palsu yang berhasil), jam
+/// [clock], dan bahasa [language] (default Indonesia, supaya test bisa
+/// mencari teks Indonesia; [AppLanguage.system] untuk menguji bahasa HP).
 ProgressController testProgressWith({
   Map<int, int> best = const {},
   Set<int>? tutorialsDone,
@@ -70,7 +71,8 @@ ProgressController testProgressWith({
     wardrobe: wardrobe,
     rewards: rewards,
     language: language,
-    ads: ads,
+    hintAds: ads,
+    coinAds: ads,
     clock: clock,
   );
 }
@@ -94,19 +96,22 @@ void setTextScale(WidgetTester tester, double scale) {
 }
 
 /// Pompa aplikasi lengkap di [location] dengan [progress] (default:
-/// progres kosong) dan [audio] (default: [testAudio]), lalu [settle].
-/// Mengembalikan progres yang dipakai.
+/// progres kosong), [audio] (default: [testAudio]), dan persetujuan iklan
+/// [consent] (default tidak ada), lalu [settle]. Mengembalikan progres yang
+/// dipakai.
 Future<ProgressController> pumpApp(
   WidgetTester tester, {
   String location = '/',
   ProgressController? progress,
   GameAudio? audio,
+  AdConsent? consent,
 }) async {
   final controller = progress ?? testProgress();
   await tester.pumpWidget(
     KucingOrenApp(
       progress: controller,
       audio: audio ?? testAudio(),
+      consent: consent,
       initialLocation: location,
     ),
   );

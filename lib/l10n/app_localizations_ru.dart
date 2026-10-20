@@ -85,6 +85,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tagline => 'Ойен не слушается. Думать тебе.';
 
   @override
+  String get splashTagline => 'Играем!';
+
+  @override
   String get starTotalUnit => 'звёзд';
 
   @override
@@ -1083,6 +1086,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get resetDone => 'Прогресс удалён. Начнём сначала!';
+
+  @override
+  String get privacySection => 'Конфиденциальность';
+
+  @override
+  String get privacyInfo =>
+      'Прогресс хранится на твоём телефоне. Реклама — от Google AdMob.';
+
+  @override
+  String get privacyPolicy => 'Политика конфиденциальности';
+
+  @override
+  String get adConsent => 'Согласие на рекламу';
+
+  @override
+  String get privacyLinkFailed => 'Браузер не открылся. Попробуй позже, ладно?';
 
   @override
   String get about => 'Об игре';

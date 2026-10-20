@@ -75,7 +75,16 @@ void main() {
       final r = DailyRewards.fromJson({'bonusDay': 5, 'adDay': 7, 'ads': 2});
       expect(r.adsLeft(7), 3);
       expect(r.canClaimBonus(5), isFalse);
-      expect(DailyRewards.fromJson({'adDay': 7, 'ads': 6}).adsLeft(7), 5);
+    });
+
+    test('jumlah iklan rusak di hari yang sah = jatah habis', () {
+      for (final ads in <Object?>['x', -1, 6, 99, null]) {
+        final r = DailyRewards.fromJson({'adDay': 7, 'ads': ads});
+        expect(r.adsWatched, maxAdsPerDay, reason: '$ads');
+        expect(r.adsLeft(7), 0, reason: '$ads');
+        // Hari berikutnya jatahnya penuh lagi.
+        expect(r.adsLeft(8), maxAdsPerDay, reason: '$ads');
+      }
     });
   });
 }

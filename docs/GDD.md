@@ -581,12 +581,12 @@ Versi pertama berisi 20 level di dokumen ini, gratis, dengan iklan berhadiah seb
 
 **Isi versi pertama:**
 
-- [ ] Simulasi Dart + unit test untuk 20 level (setiap solusi di dokumen ini harus menang tanpa vas pecah)
-- [ ] Layar Beranda, Peta Babak, Gameplay (fase atur dan fase jalan), Hasil, Gagal, Tutorial level 1, 3, dan 6
-- [ ] Animasi Oyen: jalan 4 arah, kaget, duduk di kardus, menjatuhkan barang, makan, senang di mangkuk
-- [ ] Putar ulang langkah demi langkah
-- [ ] Simpan progres bintang secara lokal
-- [ ] Iklan berhadiah untuk petunjuk
+- [x] Simulasi Dart + unit test untuk 20 level (setiap solusi di dokumen ini harus menang tanpa vas pecah)
+- [x] Layar Beranda, Peta Babak, Gameplay (fase atur dan fase jalan), Hasil, Gagal, Tutorial level 1, 3, dan 6
+- [x] Animasi Oyen: jalan 4 arah, kaget, duduk di kardus, menjatuhkan barang, makan, senang di mangkuk
+- [x] Putar ulang langkah demi langkah
+- [x] Simpan progres bintang secara lokal
+- [x] Iklan berhadiah untuk petunjuk
 
 ## Prompt Claude Design
 

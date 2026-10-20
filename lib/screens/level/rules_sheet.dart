@@ -5,7 +5,6 @@ import '../../game/render/render.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import 'level_sheet.dart';
 
 /// Membuka sheet "Aturan Oyen" (desain 05) di atas layar level. Ditutup
 /// dengan tombol tutup, ketuk latar gelap, tombol kembali sistem, atau
@@ -13,7 +12,7 @@ import 'level_sheet.dart';
 Future<void> showRulesSheet(
   BuildContext context, {
   required Set<OyenRule> learned,
-}) => showLevelSheet(
+}) => showKoSheet(
   context,
   barrierLabel: context.l10n.closeRules,
   builder: (context, onClose) => RulesSheet(learned: learned, onClose: onClose),
@@ -61,7 +60,7 @@ class _RulesSheetState extends State<RulesSheet>
     final t = context.koType;
     final space = context.koSpace;
     final s = context.koSize;
-    return LevelSheet(
+    return KoSheet(
       label: context.l10n.rulesTitle,
       onClose: widget.onClose,
       header: Row(

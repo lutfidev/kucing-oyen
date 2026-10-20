@@ -1,4 +1,4 @@
-package com.example.kucing_oren
+package com.gingerlogic.app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -5,6 +5,7 @@ import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/render/render.dart';
+import 'package:kucing_oren/screens/closet/closet_parts.dart';
 import 'package:kucing_oren/screens/closet/closet_screen.dart';
 import 'package:kucing_oren/screens/home/home_screen.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
@@ -152,5 +153,53 @@ void main() {
       tester.getSemantics(_card(OyenCostume.none)),
       isSemantics(isToggled: false, hasToggledState: true),
     );
+  });
+
+  testWidgets('pratinjau mengisi sisa tempat tanpa gulir atau celah', (
+    tester,
+  ) async {
+    for (final (size, scale) in [
+      (const Size(360, 640), 1.0),
+      (const Size(360, 740), 1.0),
+      (const Size(390, 720), 1.0),
+      (const Size(390, 780), 1.3),
+      (const Size(412, 915), 1.0),
+    ]) {
+      setScreenSize(tester, size);
+      setTextScale(tester, scale);
+      await pumpApp(tester, location: AppRoutes.closet);
+      final scroll = tester.state<ScrollableState>(
+        find.descendant(
+          of: find.byType(ClosetScreen),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      final art = ClosetArt.viewBox.height;
+      final preview = tester.getSize(find.byType(ClosetPreview)).height;
+      final position = scroll.position;
+      if (preview > art * 0.999) continue;
+      if (position.maxScrollExtent > 0) {
+        // Layar pendek: pratinjau berhenti di skala terkecil.
+        expect(preview, closeTo(art * 0.5, 2), reason: '$size $scale');
+      } else {
+        // Isi pas setinggi tempatnya: tidak ada celah di bawah grid.
+        final content = tester
+            .renderObject<RenderBox>(
+              find
+                  .descendant(
+                    of: find.byType(SingleChildScrollView),
+                    matching: find.byType(Column),
+                  )
+                  .first,
+            )
+            .size
+            .height;
+        expect(
+          content,
+          closeTo(position.viewportDimension, 0.5),
+          reason: '$size $scale',
+        );
+      }
+    }
   });
 }

@@ -129,25 +129,7 @@ class _Title extends StatelessWidget {
           child: OyenView(oyen, size: s.oyenHome),
         ),
         SizedBox(height: space.s4),
-        Semantics(
-          header: true,
-          label: appName,
-          child: ExcludeSemantics(
-            child: Column(
-              children: [
-                // Merek sama di semua bahasa: "Ginger" kecil, "Logic" besar.
-                Text('Ginger', style: t.logoSmall.copyWith(color: c.ink)),
-                Text(
-                  'Logic',
-                  style: t.logo.copyWith(
-                    color: c.logo,
-                    shadows: context.koShadow.logo,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        const GameLogo(),
         // Desain: jarak 4 + margin 18.
         SizedBox(height: space.s16 + space.s6),
         Text(

@@ -75,6 +75,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tagline => 'Oyen won\'t listen. You do the thinking.';
 
   @override
+  String get splashTagline => 'Let\'s play!';
+
+  @override
   String get starTotalUnit => 'stars';
 
   @override
@@ -1059,6 +1062,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetDone => 'Progress erased. Fresh start!';
+
+  @override
+  String get privacySection => 'Privacy';
+
+  @override
+  String get privacyInfo =>
+      'Your progress stays on your phone. Ads come from Google AdMob.';
+
+  @override
+  String get privacyPolicy => 'Privacy policy';
+
+  @override
+  String get adConsent => 'Ad consent settings';
+
+  @override
+  String get privacyLinkFailed =>
+      'Couldn\'t open the browser. Try again later, okay?';
 
   @override
   String get about => 'About';

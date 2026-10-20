@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/hint_source.dart';
 import 'package:kucing_oren/app/language.dart';
@@ -325,6 +327,21 @@ void main() {
       expect(fail.hintTier(3), 0);
     });
 
+    test('petunjuk dan koin memakai unit iklan masing-masing', () async {
+      final hintAds = FakeRewardedAds();
+      final coinAds = FakeRewardedAds();
+      final c = ProgressController(
+        levels: testLevels,
+        store: MemoryProgressStore(),
+        hintAds: hintAds,
+        coinAds: coinAds,
+      );
+      expect(await c.unlockHint(3, 1, HintPay.ad), HintUnlock.opened);
+      expect((hintAds.shown, coinAds.shown), (1, 0));
+      expect(await c.watchAdForCoins(), AdReward.rewarded);
+      expect((hintAds.shown, coinAds.shown), (1, 1));
+    });
+
     test('dua ketukan bersamaan hanya membuka sekali', () async {
       final c = testProgressWith(coins: 100);
       final coins = await Future.wait([
@@ -387,6 +404,24 @@ void main() {
       final store = c.store as MemoryProgressStore;
       expect(store.coins, 59);
       expect(store.wardrobe, Wardrobe.initial);
+    });
+
+    test('kostum disimpan dulu, baru koin', () async {
+      final store = _SlowWardrobeStore()..coins = 100;
+      final c = ProgressController(
+        levels: testLevels,
+        store: store,
+        coins: 100,
+      );
+      final bought = c.buyCostume(OyenCostume.peci);
+      await pumpEventQueue();
+      // Lemari belum selesai disimpan: koin lama masih di simpanan, jadi
+      // kalau aplikasi mati di sini pemain tidak rugi.
+      expect(store.coins, 100);
+      store.wardrobeSaved.complete();
+      expect(await bought, isTrue);
+      expect(store.coins, 40);
+      expect(store.wardrobe.owns(OyenCostume.peci), isTrue);
     });
 
     test('dua ketukan bersamaan hanya memotong sekali', () async {
@@ -657,4 +692,15 @@ void main() {
 class _ThrowingAds implements RewardedAds {
   @override
   Future<bool> show() async => throw StateError('iklan gagal dimuat');
+}
+
+/// Penyimpanan lemari yang menunggu [wardrobeSaved].
+class _SlowWardrobeStore extends MemoryProgressStore {
+  final wardrobeSaved = Completer<void>();
+
+  @override
+  Future<void> saveWardrobe(Wardrobe wardrobe) async {
+    await wardrobeSaved.future;
+    await super.saveWardrobe(wardrobe);
+  }
 }

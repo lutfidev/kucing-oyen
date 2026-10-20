@@ -63,6 +63,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get tagline => 'Oyen nggak bisa disuruh. Kamu yang mikir.';
 
   @override
+  String get splashTagline => 'Ayo main!';
+
+  @override
   String get starTotalUnit => 'bintang';
 
   @override
@@ -983,6 +986,23 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get resetDone => 'Progres dihapus. Mulai lagi, yuk!';
+
+  @override
+  String get privacySection => 'Privasi';
+
+  @override
+  String get privacyInfo =>
+      'Progresmu tersimpan di HP sendiri. Iklannya dari Google AdMob.';
+
+  @override
+  String get privacyPolicy => 'Kebijakan privasi';
+
+  @override
+  String get adConsent => 'Atur persetujuan iklan';
+
+  @override
+  String get privacyLinkFailed =>
+      'Browser-nya belum mau kebuka. Coba lagi nanti, ya.';
 
   @override
   String get about => 'Tentang';
