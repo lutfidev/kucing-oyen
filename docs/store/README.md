@@ -12,7 +12,7 @@ Build release tetap bisa dibuat tanpa langkah ini (untuk uji internal), tapi **j
 4. **Kebijakan privasi** diunggah ke https://yoluvy.my.id/ginger-logic/privacy/ (lihat `privacy/README.md`).
 5. Di AdMob, tautkan aplikasi ke listing Play Store setelah terbit, dan atur pesan persetujuan GDPR (Privasi & pesan → Eropa) supaya formulir UMP muncul di EEA, Inggris, dan Swiss.
 
-Gradle mencetak peringatan saat build release kalau `key.properties` tidak ada atau ID aplikasi AdMob masih ID uji; aplikasi juga mencetak peringatan di log kalau ID unit masih ID uji.
+Gradle mencetak peringatan "Ginger Logic: ..." saat build release kalau `key.properties` tidak ada atau ID aplikasi AdMob masih ID uji (Flutter hanya menampilkannya dengan `flutter build appbundle -v`); aplikasi juga mencetak peringatan di log kalau ID unit masih ID uji.
 
 ## Isi folder
 
