@@ -222,7 +222,7 @@ class _Tag extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (coin) ...[
-              CoinView(size: s.iconTiny, plain: true),
+              CoinView(size: s.iconTiny, kind: CoinKind.price),
               SizedBox(width: space.s4),
             ],
             Text(

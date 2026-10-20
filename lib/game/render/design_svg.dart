@@ -641,6 +641,12 @@ const coinPlainSvg = r'''
 <circle cx="14" cy="14" r="12" fill="#FFC83D"></circle><circle cx="14" cy="14" r="8.5" fill="none" stroke="#E0A100" stroke-width="2"></circle>
 ''';
 
+/// Koin label harga kartu kostum (`12-lemari-kostum.html`, 14 px), viewBox
+/// 28×28.
+const coinPriceSvg = r'''
+<circle cx="14" cy="14" r="12" fill="#FFC83D"></circle><circle cx="14" cy="14" r="8.5" fill="none" stroke="#E0A100" stroke-width="2.4"></circle>
+''';
+
 /// Lemari kayu di belakang pratinjau Oyen (`12-lemari-kostum.html`),
 /// viewBox 300×236.
 const closetSvg = r'''

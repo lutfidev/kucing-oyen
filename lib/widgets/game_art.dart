@@ -7,6 +7,8 @@ import '../l10n/l10n.dart';
 import '../l10n/names.dart';
 import '../theme/theme.dart';
 
+export '../game/render/coin_art.dart' show CoinKind;
+
 /// Satu petak seukuran [size] px (desain 50 px). Hiasan saja.
 class TileView extends StatelessWidget {
   const TileView(this.tile, {super.key, this.size = Tile.size});
@@ -79,35 +81,39 @@ class _ItemArtPainter extends CustomPainter {
       old.item != item || old.ghost != ghost;
 }
 
-/// Koin seukuran [size] px (desain 18–28 px). [plain] = tanpa huruf S.
+/// Koin seukuran [size] px (desain 14–28 px), gambar [kind].
 /// Hiasan saja.
 class CoinView extends StatelessWidget {
-  const CoinView({super.key, this.size = CoinArt.viewBox, this.plain = false});
+  const CoinView({
+    super.key,
+    this.size = CoinArt.viewBox,
+    this.kind = CoinKind.full,
+  });
 
   final double size;
-  final bool plain;
+  final CoinKind kind;
 
   @override
   Widget build(BuildContext context) {
     return ExcludeSemantics(
-      child: CustomPaint(size: Size.square(size), painter: _CoinPainter(plain)),
+      child: CustomPaint(size: Size.square(size), painter: _CoinPainter(kind)),
     );
   }
 }
 
 class _CoinPainter extends CustomPainter {
-  _CoinPainter(this.plain);
+  _CoinPainter(this.kind);
 
-  final bool plain;
+  final CoinKind kind;
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas.scale(size.width / CoinArt.viewBox);
-    paintCoin(canvas, plain: plain);
+    paintCoin(canvas, kind: kind);
   }
 
   @override
-  bool shouldRepaint(_CoinPainter old) => old.plain != plain;
+  bool shouldRepaint(_CoinPainter old) => old.kind != kind;
 }
 
 /// Lemari kayu di belakang pratinjau Oyen (desain 12). Hiasan saja.

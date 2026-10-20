@@ -47,7 +47,7 @@ void main() {
 
   testWidgets('CoinView hiasan saja, seukuran permintaan', (tester) async {
     final semantics = tester.ensureSemantics();
-    await pumpThemed(tester, const CoinView(size: 22, plain: true));
+    await pumpThemed(tester, const CoinView(size: 22, kind: CoinKind.plain));
     expect(tester.getSize(find.byType(CoinView)), const Size.square(22));
     expect(tester.getSemantics(find.byType(CoinView)).label, isEmpty);
     semantics.dispose();

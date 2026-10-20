@@ -278,7 +278,7 @@ class HintTierCard extends StatelessWidget {
                       label: coins >= cost
                           ? l.coinsAmount(cost)
                           : l.notEnoughCoins(cost),
-                      icon: CoinView(size: s.iconCompact, plain: true),
+                      icon: CoinView(size: s.iconCompact, kind: CoinKind.plain),
                       color: c.orange,
                       line: c.orange,
                       edge: c.orangeDeep,

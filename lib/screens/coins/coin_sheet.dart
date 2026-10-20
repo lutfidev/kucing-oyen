@@ -131,7 +131,7 @@ class _CoinSheetState extends State<CoinSheet> {
               done: !bonus,
               button: SheetButton(
                 label: bonus ? l.claimCoins(dailyBonusCoins) : l.claimTomorrow,
-                icon: CoinView(size: s.iconCompact, plain: true),
+                icon: CoinView(size: s.iconCompact, kind: CoinKind.plain),
                 color: c.orange,
                 line: c.orange,
                 edge: c.orangeDeep,

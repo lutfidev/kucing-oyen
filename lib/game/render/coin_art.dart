@@ -9,10 +9,24 @@ abstract final class CoinArt {
   static const double viewBox = 28;
 }
 
-final _coin = SvgTemplate(coinSvg).render(const {});
-final _plain = SvgTemplate(coinPlainSvg).render(const {});
+/// Gambar koin per tempat di desain.
+enum CoinKind {
+  /// Dengan huruf S (chip saldo, desain 01 dan 10).
+  full,
 
-/// Menggambar koin di kotak 0..28 kanvas. [plain] = tanpa huruf S, seperti
-/// di tombol bayar sheet Petunjuk.
-void paintCoin(Canvas canvas, {bool plain = false}) =>
-    (plain ? _plain : _coin).paint(canvas);
+  /// Tanpa huruf, garis 2 (tombol bayar sheet Petunjuk, desain 10).
+  plain,
+
+  /// Tanpa huruf, garis 2,4 (label harga kartu kostum, desain 12).
+  price,
+}
+
+final _drawings = {
+  CoinKind.full: SvgTemplate(coinSvg).render(const {}),
+  CoinKind.plain: SvgTemplate(coinPlainSvg).render(const {}),
+  CoinKind.price: SvgTemplate(coinPriceSvg).render(const {}),
+};
+
+/// Menggambar koin [kind] di kotak 0..28 kanvas.
+void paintCoin(Canvas canvas, {CoinKind kind = CoinKind.full}) =>
+    _drawings[kind]!.paint(canvas);
