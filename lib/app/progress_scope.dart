@@ -28,8 +28,8 @@ enum AdReward {
 }
 
 /// Data level dan progres pemain untuk semua layar: bintang, tutorial,
-/// koin, petunjuk, kostum Oyen, hadiah harian, dan bahasa. Dimuat sekali sebelum
-/// aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
+/// koin, petunjuk, kostum Oyen, hadiah harian, dan bahasa. Dimuat sekali
+/// sebelum aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
 class ProgressController extends ChangeNotifier implements HintSource {
   ProgressController({
     required List<Level> levels,
@@ -53,8 +53,8 @@ class ProgressController extends ChangeNotifier implements HintSource {
        chapters = List.unmodifiable(chaptersOf(levels));
 
   /// Memuat progres, tutorial, koin, petunjuk, kostum, hadiah harian, dan
-  /// bahasa dari [store]. Koin yang belum pernah disimpan (progres dari sebelum ada
-  /// koin) dihitung dari total bintang.
+  /// bahasa dari [store]. Koin yang belum pernah disimpan (progres dari
+  /// sebelum ada koin) dihitung dari total bintang.
   static Future<ProgressController> load({
     required List<Level> levels,
     required ProgressStore store,

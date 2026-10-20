@@ -10,7 +10,6 @@ import '../../app/routes.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../level/level_sheet.dart';
 import 'settings_parts.dart';
 
 /// Pengaturan (rute `/pengaturan`, tidak ada di desain; gaya kartu Lemari
@@ -51,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _notice = _Notice.tutorials);
   }
 
-  Future<void> _confirmReset(ProgressController progress) => showLevelSheet(
+  Future<void> _confirmReset(ProgressController progress) => showKoSheet(
     context,
     barrierLabel: context.l10n.closeReset,
     barrierColor: context.koColors.scrimLight,

@@ -13,7 +13,7 @@ import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/oyen.dart';
 import 'package:kucing_oren/screens/home/home_screen.dart';
-import 'package:kucing_oren/screens/level/level_sheet.dart';
+import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:kucing_oren/screens/settings/settings_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -219,7 +219,7 @@ void main() {
       await _tapText(tester, 'Reset progres');
       expect(find.text('Hapus semua progres?'), findsOneWidget);
       await tester.tap(find.text('Batal'));
-      await pumpFor(tester, LevelSheet.openTime * 2);
+      await pumpFor(tester, KoSheet.openTime * 2);
       expect(find.text('Hapus semua progres?'), findsNothing);
       expect(progress.progress.totalStars, 15);
       expect(progress.coins, 240);
@@ -234,7 +234,7 @@ void main() {
       );
       await _tapText(tester, 'Reset progres');
       await tester.tap(find.text('Hapus'));
-      await pumpFor(tester, LevelSheet.openTime * 2);
+      await pumpFor(tester, KoSheet.openTime * 2);
       expect(find.text('Hapus semua progres?'), findsNothing);
       expect(progress.progress, Progress.empty);
       expect(progress.coins, 0);
@@ -255,7 +255,7 @@ void main() {
       await pumpApp(tester, location: AppRoutes.settings, progress: filled());
       await _tapText(tester, 'Reset progres');
       await tester.binding.handlePopRoute();
-      await pumpFor(tester, LevelSheet.openTime * 2);
+      await pumpFor(tester, KoSheet.openTime * 2);
       expect(find.text('Hapus semua progres?'), findsNothing);
       expect(find.byType(SettingsScreen), findsOneWidget);
     });

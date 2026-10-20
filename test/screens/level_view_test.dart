@@ -14,7 +14,6 @@ import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/l10n/names.dart';
 import 'package:kucing_oren/screens/level/level_bar.dart';
-import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/level/run_panel.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
@@ -199,7 +198,7 @@ void main() {
       await tester.tap(find.text('Aturan'));
       // Kucing kartu 4 berputar terus: tanpa pumpAndSettle.
       await tester.pump();
-      await tester.pump(LevelSheet.openTime);
+      await tester.pump(KoSheet.openTime);
       expect(find.text('Aturan Oyen'), findsOneWidget);
       expect(find.text('Jatuhkan barang di sebelahnya'), findsOneWidget);
       expect(find.text('Kardus: ???'), findsOneWidget);
@@ -1000,11 +999,11 @@ void main() {
       await _pumpLevel(tester, 13, hints: hints);
       expect(_glowing(tester), isEmpty);
       await tester.tap(find.bySemanticsLabel('Petunjuk'));
-      await pumpFrames(tester, LevelSheet.openTime * 2);
+      await pumpFrames(tester, KoSheet.openTime * 2);
       await tester.tap(find.text('20 koin'));
       await tester.pump();
       await tester.tap(find.bySemanticsLabel('Tutup'));
-      await pumpFrames(tester, LevelSheet.openTime * 2);
+      await pumpFrames(tester, KoSheet.openTime * 2);
       expect(find.text('Petunjuk'), findsNothing);
       expect(hints.coins, 80);
       expect(_glowing(tester), [water]);

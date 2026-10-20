@@ -9,12 +9,11 @@ import '../../game/model/sounds.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../level/level_sheet.dart';
 
 /// Membuka sheet Tambah Koin: bonus harian dan iklan berhadiah koin. Gaya
 /// mengikuti sheet Petunjuk (desain 10); sheet ini tidak ada di desain.
 Future<void> showCoinSheet(BuildContext context, ProgressController progress) =>
-    showLevelSheet(
+    showKoSheet(
       context,
       barrierLabel: context.l10n.closeCoins,
       barrierColor: context.koColors.scrimLight,
@@ -118,7 +117,7 @@ class _CoinSheetState extends State<CoinSheet> {
             Text(l.coinsIntro, style: t.bodySmall.copyWith(color: c.inkSoft)),
           ],
         );
-        return LevelSheet(
+        return KoSheet(
           label: l.coinsTitle,
           onClose: widget.onClose,
           header: header,

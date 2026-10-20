@@ -2,15 +2,16 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../theme/theme.dart';
-import '../../widgets/widgets.dart';
+import '../theme/theme.dart';
+import 'ko_pressable.dart';
 
 /// Membuka sheet bawah (sheet Aturan desain 05 dan Petunjuk desain 10 di
-/// layar level, sheet Tambah Koin di Beranda dan Lemari Kostum): latar gelap, sheet naik sambil muncul. Ditutup
+/// layar level, sheet Tambah Koin di Beranda dan Lemari Kostum, konfirmasi
+/// reset di Pengaturan): latar gelap, sheet naik sambil muncul. Ditutup
 /// dengan `onClose` dari [builder] (tombol tutup, tarik ke bawah), ketuk
 /// latar, atau tombol kembali sistem. [barrierColor] default
 /// [KoColors.scrim].
-Future<void> showLevelSheet(
+Future<void> showKoSheet(
   BuildContext context, {
   required String barrierLabel,
   Color? barrierColor,
@@ -22,7 +23,7 @@ Future<void> showLevelSheet(
     barrierDismissible: true,
     barrierLabel: barrierLabel,
     barrierColor: barrierColor ?? context.koColors.scrim,
-    transitionDuration: reduceMotion ? Duration.zero : LevelSheet.openTime,
+    transitionDuration: reduceMotion ? Duration.zero : KoSheet.openTime,
     pageBuilder: (context, _, _) {
       final route = ModalRoute.of(context);
       // Hanya menutup sheet ini, walau dipanggil lagi saat sheet sedang
@@ -38,7 +39,7 @@ Future<void> showLevelSheet(
         builder: (context, child) => Opacity(
           opacity: t.value,
           child: Transform.translate(
-            offset: Offset(0, LevelSheet.openRise * (1 - t.value)),
+            offset: Offset(0, KoSheet.openRise * (1 - t.value)),
             child: child,
           ),
         ),
@@ -52,8 +53,8 @@ Future<void> showLevelSheet(
 /// kalau tidak muat. Pegangan dan [header] bisa ditarik ke bawah untuk
 /// menutup. Sheet setinggi isinya; bar atas layar level tetap terlihat di
 /// atasnya seperti desain.
-class LevelSheet extends StatefulWidget {
-  const LevelSheet({
+class KoSheet extends StatefulWidget {
+  const KoSheet({
     super.key,
     required this.label,
     required this.header,
@@ -77,11 +78,10 @@ class LevelSheet extends StatefulWidget {
   static const double closeFling = 700;
 
   @override
-  State<LevelSheet> createState() => _LevelSheetState();
+  State<KoSheet> createState() => _KoSheetState();
 }
 
-class _LevelSheetState extends State<LevelSheet>
-    with SingleTickerProviderStateMixin {
+class _KoSheetState extends State<KoSheet> with SingleTickerProviderStateMixin {
   /// Sheet kembali ke tempatnya kalau tarikan kurang jauh.
   late final AnimationController _settle = AnimationController(
     vsync: this,
@@ -108,7 +108,7 @@ class _LevelSheetState extends State<LevelSheet>
 
   void _release(DragEndDetails details) {
     final fling = details.primaryVelocity ?? 0;
-    if (_drag > LevelSheet.closeDrag || fling > LevelSheet.closeFling) {
+    if (_drag > KoSheet.closeDrag || fling > KoSheet.closeFling) {
       widget.onClose();
     } else {
       _settleFrom = _drag;

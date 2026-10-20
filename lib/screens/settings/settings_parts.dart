@@ -5,7 +5,6 @@ import '../../app/language.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../level/level_sheet.dart';
 
 /// Bar atas Pengaturan: tombol kembali dan judul, seperti bar Lemari
 /// Kostum tanpa chip koin.
@@ -400,7 +399,7 @@ class ResetSheet extends StatelessWidget {
     final space = context.koSpace;
     final s = context.koSize;
     final l = context.l10n;
-    return LevelSheet(
+    return KoSheet(
       label: l.resetConfirmTitle,
       onClose: onClose,
       header: Row(

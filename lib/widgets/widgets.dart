@@ -10,5 +10,6 @@ export 'ko_dashed_border.dart';
 export 'ko_icon.dart';
 export 'ko_icon_button.dart';
 export 'ko_pressable.dart';
+export 'ko_sheet.dart';
 export 'ko_star.dart';
 export 'tray_slot.dart';

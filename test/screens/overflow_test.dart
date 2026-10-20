@@ -9,7 +9,6 @@ import 'package:kucing_oren/game/model/level_session.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/screens/level/hint_sheet.dart';
-import 'package:kucing_oren/screens/level/level_sheet.dart';
 import 'package:kucing_oren/screens/level/rules_sheet.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
@@ -197,7 +196,7 @@ void _cases(AppLanguage language) {
             progress: p(best: wonUpTo(id - 1)),
           );
           await tester.tap(find.text(l.rules));
-          await pumpFor(tester, LevelSheet.openTime * 2);
+          await pumpFor(tester, KoSheet.openTime * 2);
           expect(tester.takeException(), isNull);
           final last = find.byType(RuleCard).last;
           await tester.ensureVisible(last);
@@ -236,7 +235,7 @@ void _cases(AppLanguage language) {
             progress: p(best: wonUpTo(id - 1), coins: coins, hints: hints),
           );
           await tester.tap(find.bySemanticsLabel(l.hint));
-          await pumpFor(tester, LevelSheet.openTime * 2);
+          await pumpFor(tester, KoSheet.openTime * 2);
           expect(tester.takeException(), isNull);
           final cards = find.byType(HintTierCard);
           if (cards.evaluate().isNotEmpty) {
@@ -475,7 +474,7 @@ void _cases(AppLanguage language) {
         await tester.ensureVisible(reset);
         await settle(tester);
         await tester.tap(reset);
-        await pumpFor(tester, LevelSheet.openTime * 2);
+        await pumpFor(tester, KoSheet.openTime * 2);
         final confirm = find.text(l.resetConfirm);
         expect(confirm.hitTestable(), findsOneWidget);
         expect(tester.getRect(confirm).bottom, lessThanOrEqualTo(size.height));
