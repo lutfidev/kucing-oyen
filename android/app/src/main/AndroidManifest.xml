@@ -30,6 +30,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- ID aplikasi AdMob dari android/app/build.gradle.kts (admobAppId).
+             Tanpa ini SDK iklan menghentikan aplikasi saat dibuka. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
@@ -40,6 +45,11 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Kebijakan privasi dibuka di browser (url_launcher). -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
         </intent>
     </queries>
 </manifest>
