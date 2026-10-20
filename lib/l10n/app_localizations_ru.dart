@@ -85,6 +85,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tagline => 'Ойен не слушается. Думать тебе.';
 
   @override
+  String get splashTagline => 'Играем!';
+
+  @override
   String get starTotalUnit => 'звёзд';
 
   @override

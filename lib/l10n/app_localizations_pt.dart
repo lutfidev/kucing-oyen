@@ -75,6 +75,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tagline => 'Oyen não obedece. Quem pensa é você.';
 
   @override
+  String get splashTagline => 'Bora jogar!';
+
+  @override
   String get starTotalUnit => 'estrelas';
 
   @override

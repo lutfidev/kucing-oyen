@@ -75,6 +75,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tagline => 'Oyen won\'t listen. You do the thinking.';
 
   @override
+  String get splashTagline => 'Let\'s play!';
+
+  @override
   String get starTotalUnit => 'stars';
 
   @override

@@ -2,6 +2,7 @@
 library;
 
 export 'game_art.dart';
+export 'game_logo.dart';
 export 'ko_button.dart';
 export 'ko_card.dart';
 export 'ko_chip.dart';

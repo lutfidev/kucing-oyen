@@ -83,6 +83,10 @@
   "@tagline": {
     "description": "Tagline under the logo on the home screen."
   },
+  "splashTagline": "Let's play!",
+  "@splashTagline": {
+    "description": "Short line under the logo on the Android splash screen (rendered into an image, keep it very short)."
+  },
   "starTotalUnit": "stars",
   "@starTotalUnit": {
     "description": "Word after the star total on the home screen (\"31/60 stars\")."

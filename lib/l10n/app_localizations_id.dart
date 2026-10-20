@@ -63,6 +63,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get tagline => 'Oyen nggak bisa disuruh. Kamu yang mikir.';
 
   @override
+  String get splashTagline => 'Ayo main!';
+
+  @override
   String get starTotalUnit => 'bintang';
 
   @override

@@ -192,6 +192,12 @@ abstract class AppLocalizations {
   /// **'Oyen won\'t listen. You do the thinking.'**
   String get tagline;
 
+  /// Short line under the logo on the Android splash screen (rendered into an image, keep it very short).
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s play!'**
+  String get splashTagline;
+
   /// Word after the star total on the home screen ("31/60 stars").
   ///
   /// In en, this message translates to:
