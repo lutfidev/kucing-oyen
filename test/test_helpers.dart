@@ -39,9 +39,9 @@ ProgressController testProgress([
 
 /// Seperti [testProgress], ditambah saldo [coins], tingkat petunjuk
 /// [hints] per level, kostum [wardrobe], hadiah harian [rewards], iklan
-/// [ads] (default iklan palsu yang berhasil), jam [clock], dan bahasa
-/// [language] (default Indonesia, supaya test bisa mencari teks
-/// Indonesia; [AppLanguage.system] untuk menguji bahasa HP).
+/// [ads] untuk petunjuk dan koin (default iklan palsu yang berhasil), jam
+/// [clock], dan bahasa [language] (default Indonesia, supaya test bisa
+/// mencari teks Indonesia; [AppLanguage.system] untuk menguji bahasa HP).
 ProgressController testProgressWith({
   Map<int, int> best = const {},
   Set<int>? tutorialsDone,
@@ -70,7 +70,8 @@ ProgressController testProgressWith({
     wardrobe: wardrobe,
     rewards: rewards,
     language: language,
-    ads: ads,
+    hintAds: ads,
+    coinAds: ads,
     clock: clock,
   );
 }

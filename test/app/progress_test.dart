@@ -327,6 +327,21 @@ void main() {
       expect(fail.hintTier(3), 0);
     });
 
+    test('petunjuk dan koin memakai unit iklan masing-masing', () async {
+      final hintAds = FakeRewardedAds();
+      final coinAds = FakeRewardedAds();
+      final c = ProgressController(
+        levels: testLevels,
+        store: MemoryProgressStore(),
+        hintAds: hintAds,
+        coinAds: coinAds,
+      );
+      expect(await c.unlockHint(3, 1, HintPay.ad), HintUnlock.opened);
+      expect((hintAds.shown, coinAds.shown), (1, 0));
+      expect(await c.watchAdForCoins(), AdReward.rewarded);
+      expect((hintAds.shown, coinAds.shown), (1, 1));
+    });
+
     test('dua ketukan bersamaan hanya membuka sekali', () async {
       final c = testProgressWith(coins: 100);
       final coins = await Future.wait([

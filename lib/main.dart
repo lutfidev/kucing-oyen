@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import 'app/ad_ids.dart';
+import 'app/admob_ads.dart';
+import 'app/admob_sdk.dart';
 import 'app/app.dart';
 import 'app/game_audio.dart';
 import 'app/progress_scope.dart';
 import 'app/progress_store.dart';
-import 'app/rewarded_ads.dart';
 import 'app/sound_player.dart';
 import 'game/level_loader.dart';
 import 'theme/theme.dart';
@@ -32,11 +36,23 @@ Future<void> main() async {
     store: store,
     player: AudioplayersSoundPlayer(),
   );
+  // Iklan berhadiah AdMob; SDK baru dinyalakan setelah persetujuan (UMP).
+  final ads = GameAds(
+    consent: UmpAdConsent(),
+    startSdk: startAdMob,
+    load: loadAdMobRewarded,
+  );
+  if (kReleaseMode && releaseUsesTestAds) {
+    debugPrint('Ginger Logic: build release masih memakai iklan uji.');
+  }
   final progress = await ProgressController.load(
     levels: await loadLevels(),
     store: store,
     // Musik dijeda selama iklan berhadiah diputar.
-    ads: audio.pauseDuringAds(FakeRewardedAds()),
+    hintAds: audio.pauseDuringAds(ads.hints),
+    coinAds: audio.pauseDuringAds(ads.coins),
   );
   runApp(KucingOrenApp(progress: progress, audio: audio));
+  // Formulir persetujuan muncul di atas layar pertama, tanpa menahannya.
+  unawaited(ads.start());
 }
