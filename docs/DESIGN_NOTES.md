@@ -232,3 +232,26 @@ Jawaban pemilik repo dan keputusan lengkap di `docs/superpowers/specs/2026-10-19
 - **Data safety.** Yang dideklarasikan hanya data dari SDK iklan (perkiraan lokasi dari IP, interaksi, diagnostik, ID iklan). Progres tidak dideklarasikan: hanya di perangkat; Auto Backup dikelola Google dan tidak bisa dibaca pengembang (panduan Play tidak membahasnya), tapi tetap disebut di kebijakan privasi. Kalau Google menilai lain, deklarasinya ditambah di Play Console.
 - **Polish langkah 13 dan 14.** Tinggi pratinjau Lemari Kostum ternyata meleset 4–5 px di layar 360×740 (faktor 1,25 ≠ tinggi baris yang diwarisi `Text` dari `DefaultTextStyle`); sekarang nama kostum diukur dengan gaya gabungan yang sama dan jarak diambil dari satu sumber, dijaga test "pratinjau mengisi sisa tempat". Sheet bawah pindah ke `lib/widgets/ko_sheet.dart` dan berganti nama `showKoSheet`/`KoSheet`. Koin label harga memakai `CoinKind.price` (garis 2,4 desain 12). Jumlah iklan rusak di simpanan = jatah habis.
 - **Belum dicek di perangkat** saat langkah ini dikerjakan (tidak ada HP atau emulator): ikon di launcher dan ikon tema, splash Android 12+ dan lama, formulir UMP, dan iklan uji. Lakukan sebelum rilis produksi.
+
+## Sebelum langkah 21: rumah Oyen
+
+Pemilik repo memutuskan ini saat brainstorming 26 Okt 2026. Alasannya: UI terasa hambar (masuk level lewat bulatan angka, bolak-balik peta–level, dan koin yang tidak punya banyak tujuan). Rincian lengkap, angka, dan model data ada di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`. Desainnya dibuat pemilik repo di Claude Design dengan `docs/design-brief/rumah-oyen.md` (halaman 19–24). Langkah 21–26 di roadmap dikerjakan sesudah langkah 18–20.
+
+**Keputusan pemilik repo:**
+- **Arah Talking Tom / Neko Atsume.** Beranda menjadi kamar Oyen yang bisa dihias, dengan kucing koleksi.
+- **Kucing koleksi** dibeli langsung di Toko dan hanya tinggal di kamar. Yang berjalan di puzzle tetap Oyen.
+- **Toko terpisah** dari Lemari Kostum.
+- **Barang diseret bebas** di kamar.
+- **Kamar hidup.** Kucing berjalan sendiri, punya kebutuhan, dan memberi bonus koin kalau dirawat. Tidak ada hukuman.
+- **Jatah iklan koin naik dari 5 jadi 10 per hari.** Ini menggantikan angka langkah 14.
+- **Peta bergambar.**
+
+**Keputusan saya** (ditandai [saya] di spesifikasi):
+- **Kebutuhan** berupa dua bar, Lapar (habis dalam 12 jam) dan Senang (16 jam).
+- **Makanan.** Mangkuk gratis tiap 4 jam (+40). Camilan dijual 10/15/30 koin.
+- **Hadiah** 10 koin per kucing per hari saat kedua bar ≥ 70.
+- **Kucing** Arang, Mendung, Telon, Salju seharga 300–800 koin. **Barang** ada 12, seharga 40–250 koin.
+- **Kamar** satu layar, dengan posisi barang disimpan sebagai pecahan.
+- **Oyen penghuni penuh kamar.** Dia punya kebutuhan dan ikut dapat hadiah.
+- **"Lanjut"** sesudah menang: Oyen berjalan di peta ke level berikutnya, lalu level itu terbuka sendiri. Pembukaan ini bisa dibatalkan, dan tidak terjadi sesudah level 10 dan 20.
+- **Gambar** tetap disalin dari `<svg>` desain lewat `SvgTemplate`, tanpa paket baru.
