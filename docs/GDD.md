@@ -588,6 +588,8 @@ Versi pertama berisi 20 level di dokumen ini, gratis, dengan iklan berhadiah seb
 - [x] Simpan progres bintang secara lokal
 - [x] Iklan berhadiah untuk petunjuk
 
+**Sesudah versi pertama: rumah Oyen** (langkah 21–26 roadmap, diputuskan 26 Okt 2026). Beranda menjadi kamar Oyen yang bisa dihias dengan barang dari Toko, berisi kucing koleksi (hanya di kamar, tidak ikut puzzle) yang punya kebutuhan dan memberi hadiah koin kalau dirawat. Peta babak menjadi ilustrasi ruangan. Koin tetap dari bintang, bonus harian, dan iklan berhadiah pilihan pemain (10 per hari). Aturan Oyen, level, dan bintang tidak berubah. Rinciannya di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`.
+
 ## Prompt Claude Design
 
 Salin seluruh blok di bawah ke Claude Design. Layar gameplay sengaja memakai peta Level 13 yang sudah dicek, supaya mockup cocok dengan data level yang nanti dibangun di Flutter.
