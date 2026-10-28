@@ -10,6 +10,7 @@ import '../screens/closet/closet_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/level/level_screen.dart';
 import '../screens/settings/settings_screen.dart';
+import '../screens/shop/shop_screen.dart';
 import 'routes.dart';
 
 GoRouter createRouter({String initialLocation = AppRoutes.home}) {
@@ -45,6 +46,12 @@ GoRouter createRouter({String initialLocation = AppRoutes.home}) {
           GoRoute(
             path: 'kostum',
             builder: (context, state) => const ClosetScreen(),
+          ),
+          GoRoute(
+            path: 'toko',
+            builder: (context, state) => ShopScreen(
+              initialTab: ShopTab.parse(state.uri.queryParameters['tab']),
+            ),
           ),
           GoRoute(
             path: 'pengaturan',

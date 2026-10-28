@@ -1,4 +1,5 @@
 import '../game/model/sounds.dart';
+import '../screens/shop/shop_tab.dart';
 
 /// Path semua layar. Rute bersarang supaya tombol kembali Android mengikuti
 /// alur layar: Beranda → peta babak → level.
@@ -25,6 +26,11 @@ abstract final class AppRoutes {
 
   /// Lemari Kostum (desain 12), dibuka dari Beranda.
   static const closet = '/kostum';
+
+  /// Toko (desain 20), dibuka dari Beranda. Dengan [tab] langsung membuka
+  /// tab itu (`/toko?tab=aksesoris`).
+  static String shop({ShopTab? tab}) =>
+      tab == null ? '/toko' : '/toko?tab=${tab.name}';
 
   /// Pengaturan (tidak ada di desain), dibuka dari Beranda.
   static const settings = '/pengaturan';

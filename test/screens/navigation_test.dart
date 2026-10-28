@@ -7,6 +7,7 @@ import 'package:kucing_oren/gallery/gallery_screen.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
 import 'package:kucing_oren/screens/closet/closet_screen.dart';
 import 'package:kucing_oren/screens/home/home_screen.dart';
+import 'package:kucing_oren/screens/shop/shop_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
@@ -40,6 +41,49 @@ void main() {
     await settle(tester);
     expect(find.byType(HomeScreen), findsOneWidget);
     expect(find.byType(ChapterView), findsNothing);
+  });
+
+  testWidgets('Beranda → Toko → kembali ke Beranda', (tester) async {
+    await pumpApp(tester);
+    await tester.tap(find.text('Toko'));
+    await settle(tester);
+    expect(find.byType(ShopScreen), findsOneWidget);
+    expect(find.byType(HomeScreen), findsNothing);
+
+    await tester.tap(_back('Kembali ke Beranda'));
+    await settle(tester);
+    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(ShopScreen), findsNothing);
+  });
+
+  testWidgets('rute Toko bisa dibuka langsung di tab Aksesoris', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await pumpApp(tester, location: AppRoutes.shop(tab: ShopTab.accessories));
+    await settle(tester);
+    expect(find.byType(ShopScreen), findsOneWidget);
+    // Tab terpilih memakai keadaan toggled KoPressable, seperti kartu
+    // kostum.
+    expect(
+      tester.getSemantics(find.text('Aksesoris')),
+      isSemantics(isToggled: true, hasToggledState: true),
+    );
+    expect(
+      tester.getSemantics(find.text('Barang')),
+      isSemantics(isToggled: false, hasToggledState: true),
+    );
+    semantics.dispose();
+  });
+
+  testWidgets('tombol kembali sistem di Toko kembali ke Beranda', (
+    tester,
+  ) async {
+    await pumpApp(tester, location: AppRoutes.shop());
+    expect(find.byType(ShopScreen), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await settle(tester);
+    expect(find.byType(HomeScreen), findsOneWidget);
   });
 
   testWidgets('tombol kembali sistem: level → peta → Beranda', (tester) async {
