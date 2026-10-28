@@ -240,7 +240,7 @@ Pemilik repo memutuskan ini saat brainstorming 26 Okt 2026. Alasannya: UI terasa
 **Keputusan pemilik repo:**
 - **Arah Talking Tom / Neko Atsume.** Beranda menjadi kamar Oyen yang bisa dihias, dengan kucing koleksi.
 - **Kucing koleksi** dibeli langsung di Toko dan hanya tinggal di kamar. Yang berjalan di puzzle tetap Oyen.
-- **Toko terpisah** dari Lemari Kostum.
+- **Toko terpisah** dari Lemari Kostum. (Diubah 28 Okt: Lemari Kostum dihapus, lihat di bawah.)
 - **Barang diseret bebas** di kamar.
 - **Kamar hidup.** Kucing berjalan sendiri, punya kebutuhan, dan memberi bonus koin kalau dirawat. Tidak ada hukuman.
 - **Jatah iklan koin naik dari 5 jadi 10 per hari.** Ini menggantikan angka langkah 14.
@@ -248,10 +248,34 @@ Pemilik repo memutuskan ini saat brainstorming 26 Okt 2026. Alasannya: UI terasa
 
 **Keputusan saya** (ditandai [saya] di spesifikasi):
 - **Kebutuhan** berupa dua bar, Lapar (habis dalam 12 jam) dan Senang (16 jam).
-- **Makanan.** Mangkuk gratis tiap 4 jam (+40). Camilan dijual 10/15/30 koin.
+- **Makanan.** Mangkuk gratis tiap 4 jam (+40). Harga dan efek camilan diambil dari desain (lihat di bawah).
 - **Hadiah** 10 koin per kucing per hari saat kedua bar ≥ 70.
-- **Kucing** Arang, Mendung, Telon, Salju seharga 300–800 koin. **Barang** ada 12, seharga 40–250 koin.
+- **Kucing** Arang, Mendung, Telon, Salju dan **12 barang**. Harganya diambil dari desain (lihat di bawah).
 - **Kamar** satu layar, dengan posisi barang disimpan sebagai pecahan.
 - **Oyen penghuni penuh kamar.** Dia punya kebutuhan dan ikut dapat hadiah.
 - **"Lanjut"** sesudah menang: Oyen berjalan di peta ke level berikutnya, lalu level itu terbuka sendiri. Pembukaan ini bisa dibatalkan, dan tidak terjadi sesudah level 10 dan 20.
 - **Gambar** tetap disalin dari `<svg>` desain lewat `SvgTemplate`, tanpa paket baru.
+
+**Sesudah desain (28 Okt 2026).** Desain diterima dari kanvas Claude Design "Ginger Logic – Rumah Oyen (19–24)". Linknya ada di spesifikasi, dan salinan lokalnya di `docs/design/rumah-oyen/project/` (tidak ikut repo). Desain ini dibuat dari brief, ditambah permintaan pemilik repo: atribut religius dihapus, ada toko aksesoris, dan ada animasi natural.
+
+**Keputusan pemilik repo:**
+- **Peci dan Sarung dihapus.** Lemari Kostum diganti tombol **Aksesoris**, yang membuka tab Aksesoris di Toko. Aksesoris juga bisa diganti dari kartu kucing.
+- **Kostum lama dihapus tanpa migrasi**, karena belum ada pemain asli.
+- **Kacamata** diganti **Kacamata Bulat** dari desain.
+- **Topi Koki** tetap ada sebagai aksesoris ke-8, dengan gambar baru (tambahan brief).
+- **Aksesoris dibeli sekali dan dipakai semua kucing.** Memasangnya gratis.
+
+**Harga dan angka dari desain:**
+- **Kucing:** Salju 300, Mendung 350, Arang 400, Telon 550.
+- **Barang:** 50–900 koin, total 3.040.
+- **Aksesoris:** 50–600 koin.
+- **Camilan:** Susu 15, Ikan Asin 20, Tuna 40. Lapar +15/+25/+40 dan Senang +5.
+- **Elus:** +10 Senang.
+- **Selesai menghias:** +5 Senang untuk semua kucing.
+- **Tanda lesu:** muncul di nilai ≤ 20.
+
+**Keputusan saya:**
+- **Topi Koki** seharga 200 koin, kelangkaan Langka, dipasang di kepala bagian atas.
+- **Batas Senang:** elus paling banyak +30 per jam, dan bonus selesai menghias paling banyak sekali per jam.
+- **Oyen di area puzzle** (papan, putar ulang, layar hasil, tutorial) tampil **tanpa aksesoris**. Desain hanya menggambar aksesoris di sprite kamar, dan sprite papan punya bentuk serta arah yang lain. Karena itu `OyenCostume` ikut dihapus di langkah 23.
+- **Iklan tetap +20 koin.** Angka "+50 koin iklan" di prototipe Kamar hanya peraga.
