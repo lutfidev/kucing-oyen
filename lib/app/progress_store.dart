@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/model/costumes.dart';
 import '../game/model/hints.dart';
+import '../game/model/home.dart';
+import '../game/model/needs.dart';
 import '../game/model/progress.dart';
 import '../game/model/rewards.dart';
 import '../game/model/sounds.dart';
@@ -11,8 +13,8 @@ import '../game/render/oyen.dart';
 import 'language.dart';
 
 /// Tempat menyimpan [Progress], tutorial yang sudah selesai, saldo koin,
-/// tingkat petunjuk yang terbuka, kostum Oyen, hadiah harian, bahasa, dan
-/// sakelar suara di perangkat. Antarmukanya kecil supaya test bisa memakai
+/// tingkat petunjuk yang terbuka, kostum Oyen, rumah Oyen dan kebutuhan
+/// kucingnya, hadiah harian, bahasa, dan sakelar suara di perangkat. Antarmukanya kecil supaya test bisa memakai
 /// [MemoryProgressStore].
 abstract interface class ProgressStore {
   Future<Progress> load();
@@ -34,6 +36,16 @@ abstract interface class ProgressStore {
   /// pernah disimpan.
   Future<Wardrobe> loadWardrobe();
   Future<void> saveWardrobe(Wardrobe wardrobe);
+
+  /// Barang, tata letak, kucing, aksesoris, dan stok camilan;
+  /// [Home.initial] kalau belum pernah disimpan atau rusak.
+  Future<Home> loadHome();
+  Future<void> saveHome(Home home);
+
+  /// Kebutuhan kucing, mangkuk, dan hari hadiah kucing; [HomeNeeds.empty]
+  /// kalau belum pernah disimpan atau rusak.
+  Future<HomeNeeds> loadNeeds();
+  Future<void> saveNeeds(HomeNeeds needs);
 
   /// Bonus harian dan iklan koin; [DailyRewards.initial] kalau belum pernah
   /// disimpan atau rusak.
@@ -63,6 +75,12 @@ class MemoryProgressStore implements ProgressStore {
 
   /// Kostum yang terakhir disimpan.
   Wardrobe wardrobe = Wardrobe.initial;
+
+  /// Rumah yang terakhir disimpan.
+  Home home = Home.initial;
+
+  /// Kebutuhan kucing yang terakhir disimpan.
+  HomeNeeds needs = HomeNeeds.empty;
 
   /// Hadiah harian yang terakhir disimpan.
   DailyRewards rewards = DailyRewards.initial;
@@ -117,6 +135,18 @@ class MemoryProgressStore implements ProgressStore {
       this.wardrobe = wardrobe;
 
   @override
+  Future<Home> loadHome() async => home;
+
+  @override
+  Future<void> saveHome(Home home) async => this.home = home;
+
+  @override
+  Future<HomeNeeds> loadNeeds() async => needs;
+
+  @override
+  Future<void> saveNeeds(HomeNeeds needs) async => this.needs = needs;
+
+  @override
   Future<DailyRewards> loadRewards() async => rewards;
 
   @override
@@ -140,7 +170,8 @@ class MemoryProgressStore implements ProgressStore {
 /// Simpanan lokal lewat `shared_preferences`: JSON `{"id level": bintang}`,
 /// daftar id level yang tutorialnya selesai, saldo koin, JSON
 /// `{"id level": tingkat petunjuk}`, nama kostum yang dimiliki dan
-/// dipakai, JSON hadiah harian, nama bahasa, dan sakelar suara.
+/// dipakai, JSON rumah dan kebutuhan kucing, JSON hadiah harian, nama
+/// bahasa, dan sakelar suara.
 class PrefsProgressStore implements ProgressStore {
   PrefsProgressStore([SharedPreferencesAsync? prefs])
     : _prefs = prefs ?? SharedPreferencesAsync();
@@ -151,6 +182,8 @@ class PrefsProgressStore implements ProgressStore {
   static const hintsKey = 'hints.tier';
   static const ownedKey = 'costume.owned';
   static const wearingKey = 'costume.wearing';
+  static const homeKey = 'home.state';
+  static const needsKey = 'home.needs';
   static const rewardsKey = 'rewards.daily';
   static const languageKey = 'settings.language';
   static const musicKey = 'settings.music';
@@ -262,21 +295,43 @@ class PrefsProgressStore implements ProgressStore {
     _prefs.setString(wearingKey, wardrobe.wearing.name),
   ]);
 
-  @override
-  Future<DailyRewards> loadRewards() async {
+  /// JSON di [key] lewat [parse]; [empty] kalau belum pernah disimpan,
+  /// bukan objek JSON, atau bertipe salah.
+  Future<T> _loadJson<T>(
+    String key,
+    T Function(Map<String, dynamic>) parse,
+    T empty,
+  ) async {
     try {
-      final raw = await _prefs.getString(rewardsKey);
-      if (raw == null) return DailyRewards.initial;
+      final raw = await _prefs.getString(key);
+      if (raw == null) return empty;
       final json = jsonDecode(raw);
-      return json is Map<String, dynamic>
-          ? DailyRewards.fromJson(json)
-          : DailyRewards.initial;
+      return json is Map<String, dynamic> ? parse(json) : empty;
     } on FormatException {
-      return DailyRewards.initial;
+      return empty;
     } on TypeError {
-      return DailyRewards.initial;
+      return empty;
     }
   }
+
+  @override
+  Future<Home> loadHome() => _loadJson(homeKey, Home.fromJson, Home.initial);
+
+  @override
+  Future<void> saveHome(Home home) =>
+      _prefs.setString(homeKey, jsonEncode(home.toJson()));
+
+  @override
+  Future<HomeNeeds> loadNeeds() =>
+      _loadJson(needsKey, HomeNeeds.fromJson, HomeNeeds.empty);
+
+  @override
+  Future<void> saveNeeds(HomeNeeds needs) =>
+      _prefs.setString(needsKey, jsonEncode(needs.toJson()));
+
+  @override
+  Future<DailyRewards> loadRewards() =>
+      _loadJson(rewardsKey, DailyRewards.fromJson, DailyRewards.initial);
 
   @override
   Future<void> saveRewards(DailyRewards rewards) =>

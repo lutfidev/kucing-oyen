@@ -216,6 +216,17 @@ void main() {
       expect(home.withKitties([KittyId.oyen], at(hour)), same(home));
     });
 
+    test(
+      'adopted: kucing yang baru dibeli penuh, juga kalau ada entri lama',
+      () {
+        final stale = home.withKitties([KittyId.salju], t0);
+        final later = at(hour * 10);
+        final adopted = stale.adopted(KittyId.salju, later);
+        expect(adopted.of(KittyId.salju, later), CatNeeds.full(later));
+        expect(adopted.of(KittyId.oyen, later), home.of(KittyId.oyen, later));
+      },
+    );
+
     test('of: tanpa entri = penuh sekarang', () {
       expect(HomeNeeds.empty.of(KittyId.bos, t0), CatNeeds.full(t0));
     });

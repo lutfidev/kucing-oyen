@@ -358,6 +358,11 @@ class HomeNeeds {
     );
   }
 
+  /// [kitty] baru dibeli: kedua bar penuh pada [now], menggantikan catatan
+  /// lama kalau ada.
+  HomeNeeds adopted(KittyId kitty, DateTime now) =>
+      _set(kitty, CatNeeds.full(now));
+
   HomeNeeds feed(KittyId kitty, Snack snack, DateTime now) =>
       _set(kitty, of(kitty, now).fed(snack, now));
 

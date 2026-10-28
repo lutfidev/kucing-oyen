@@ -12,6 +12,8 @@ import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/app/sound_player.dart';
 import 'package:kucing_oren/game/level_loader.dart';
 import 'package:kucing_oren/game/model/costumes.dart';
+import 'package:kucing_oren/game/model/home.dart';
+import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
@@ -39,7 +41,8 @@ ProgressController testProgress([
 ]) => testProgressWith(best: best, tutorialsDone: tutorialsDone);
 
 /// Seperti [testProgress], ditambah saldo [coins], tingkat petunjuk
-/// [hints] per level, kostum [wardrobe], hadiah harian [rewards], iklan
+/// [hints] per level, kostum [wardrobe], rumah [home] dan kebutuhan
+/// kucing [needs], hadiah harian [rewards], iklan
 /// [ads] untuk petunjuk dan koin (default iklan palsu yang berhasil), jam
 /// [clock], dan bahasa [language] (default Indonesia, supaya test bisa
 /// mencari teks Indonesia; [AppLanguage.system] untuk menguji bahasa HP).
@@ -49,6 +52,8 @@ ProgressController testProgressWith({
   int coins = 0,
   Map<int, int> hints = const {},
   Wardrobe? wardrobe,
+  Home? home,
+  HomeNeeds? needs,
   DailyRewards rewards = DailyRewards.initial,
   RewardedAds? ads,
   DateTime Function()? clock,
@@ -62,6 +67,8 @@ ProgressController testProgressWith({
       ..coins = coins
       ..hints = hints
       ..wardrobe = wardrobe ?? Wardrobe.initial
+      ..home = home ?? Home.initial
+      ..needs = needs ?? HomeNeeds.empty
       ..rewards = rewards
       ..language = language,
     progress: progress,
@@ -69,6 +76,8 @@ ProgressController testProgressWith({
     coins: coins,
     hints: hints,
     wardrobe: wardrobe,
+    home: home,
+    needs: needs,
     rewards: rewards,
     language: language,
     hintAds: ads,
@@ -228,6 +237,14 @@ class FailingProgressStore extends MemoryProgressStore {
   @override
   Future<void> saveWardrobe(Wardrobe wardrobe) =>
       _write('wardrobe', () => super.saveWardrobe(wardrobe));
+
+  @override
+  Future<void> saveHome(Home home) =>
+      _write('home', () => super.saveHome(home));
+
+  @override
+  Future<void> saveNeeds(HomeNeeds needs) =>
+      _write('needs', () => super.saveNeeds(needs));
 
   @override
   Future<void> saveRewards(DailyRewards rewards) =>

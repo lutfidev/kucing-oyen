@@ -1,10 +1,16 @@
 import 'package:flutter/widgets.dart';
 
+import '../game/model/accessories.dart';
 import '../game/model/chapter.dart';
 import '../game/model/costumes.dart';
 import '../game/model/hints.dart';
+import '../game/model/home.dart';
+import '../game/model/home_items.dart';
+import '../game/model/kitties.dart';
+import '../game/model/needs.dart';
 import '../game/model/progress.dart';
 import '../game/model/rewards.dart';
+import '../game/model/snacks.dart';
 import '../game/render/oyen.dart';
 import '../game/sim/sim.dart';
 import 'hint_source.dart';
@@ -28,13 +34,26 @@ enum AdReward {
 }
 
 /// Bagian progres yang disimpan terpisah, urut tulisnya. Urutan ini memihak
-/// pemain kalau aplikasi mati di tengah: petunjuk dan kostum sebelum koin
-/// yang membayarnya, koin sebelum bintang dan hadiah harian yang
-/// memberikannya (jadi paling buruk koin didapat lagi, tidak hilang).
-enum _Part { hints, wardrobe, coins, progress, rewards, tutorials, language }
+/// pemain kalau aplikasi mati di tengah: petunjuk, kostum, dan isi rumah
+/// sebelum koin yang membayarnya, koin sebelum bintang, hadiah harian, dan
+/// hari hadiah kucing yang memberikannya (jadi paling buruk koin didapat
+/// lagi, tidak hilang). Akibatnya stok camilan ditulis sebelum bar yang
+/// dinaikkannya.
+enum _Part {
+  hints,
+  wardrobe,
+  home,
+  coins,
+  needs,
+  progress,
+  rewards,
+  tutorials,
+  language,
+}
 
 /// Data level dan progres pemain untuk semua layar: bintang, tutorial,
-/// koin, petunjuk, kostum Oyen, hadiah harian, dan bahasa. Dimuat sekali
+/// koin, petunjuk, kostum Oyen, rumah Oyen dan kebutuhan kucingnya, hadiah
+/// harian, dan bahasa. Dimuat sekali
 /// sebelum aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
 class ProgressController extends ChangeNotifier implements HintSource {
   ProgressController({
@@ -45,6 +64,8 @@ class ProgressController extends ChangeNotifier implements HintSource {
     this._coins = 0,
     Map<int, int> hints = const {},
     Wardrobe? wardrobe,
+    Home? home,
+    HomeNeeds? needs,
     this._rewards = DailyRewards.initial,
     this._language = AppLanguage.system,
     RewardedAds? hintAds,
@@ -54,15 +75,23 @@ class ProgressController extends ChangeNotifier implements HintSource {
        _tutorialsDone = Set.unmodifiable(tutorialsDone),
        _hints = Map.unmodifiable(hints),
        _wardrobe = wardrobe ?? Wardrobe.initial,
+       _home = home ?? Home.initial,
+       _needs = (needs ?? HomeNeeds.empty).withKitties(
+         (home ?? Home.initial).kitties,
+         (clock ?? DateTime.now)(),
+       ),
        clock = clock ?? DateTime.now,
        _seenDay = dayNumber((clock ?? DateTime.now)()),
        hintAds = hintAds ?? FakeRewardedAds(),
        coinAds = coinAds ?? FakeRewardedAds(),
        chapters = List.unmodifiable(chaptersOf(levels));
 
-  /// Memuat progres, tutorial, koin, petunjuk, kostum, hadiah harian, dan
-  /// bahasa dari [store]. Koin yang belum pernah disimpan (progres dari
-  /// sebelum ada koin) dihitung dari total bintang.
+  /// Memuat progres, tutorial, koin, petunjuk, kostum, rumah, kebutuhan
+  /// kucing, hadiah harian, dan bahasa dari [store]. Koin yang belum pernah
+  /// disimpan (progres dari sebelum ada koin) dihitung dari total bintang.
+  /// Kucing yang kebutuhannya belum tercatat (pemain baru) mulai penuh pada
+  /// jam muat dan langsung disimpan, supaya bar tetap turun walau aplikasi
+  /// ditutup sebelum ada aksi.
   static Future<ProgressController> load({
     required List<Level> levels,
     required ProgressStore store,
@@ -71,7 +100,8 @@ class ProgressController extends ChangeNotifier implements HintSource {
     DateTime Function()? clock,
   }) async {
     final progress = await store.load();
-    return ProgressController(
+    final needs = await store.loadNeeds();
+    final controller = ProgressController(
       levels: levels,
       store: store,
       progress: progress,
@@ -79,12 +109,18 @@ class ProgressController extends ChangeNotifier implements HintSource {
       coins: await store.loadCoins() ?? progress.totalStars * coinsPerStar,
       hints: await store.loadHints(),
       wardrobe: await store.loadWardrobe(),
+      home: await store.loadHome(),
+      needs: needs,
       rewards: await store.loadRewards(),
       language: await store.loadLanguage(),
       hintAds: hintAds,
       coinAds: coinAds,
       clock: clock,
     );
+    if (!identical(controller._needs, needs)) {
+      await controller._save({_Part.needs});
+    }
+    return controller;
   }
 
   final List<Level> levels;
@@ -218,6 +254,172 @@ class ProgressController extends ChangeNotifier implements HintSource {
     return true;
   }
 
+  // ── Rumah Oyen ──────────────────────────────────────────────────────
+
+  Home _home;
+
+  /// Barang dan tata letak kamar, kucing, aksesoris, dan stok camilan.
+  Home get home => _home;
+
+  HomeNeeds _needs;
+
+  /// Kebutuhan kucing, mangkuk, dan hari hadiah kucing. Bar dibaca lewat
+  /// [catNeeds] supaya sudah diturunkan ke jam sekarang.
+  HomeNeeds get needs => _needs;
+
+  /// Lapar dan Senang [kitty] sekarang.
+  CatNeeds catNeeds(KittyId kitty) => _needs.of(kitty, clock());
+
+  /// [kitty] tinggal di kamar, belum makan dari isi mangkuk sekarang, dan
+  /// Lapar-nya di bawah [bowlHungerLimit].
+  bool canEatFromBowl(KittyId kitty) =>
+      _home.ownsKitty(kitty) && _needs.canEatFromBowl(kitty, clock());
+
+  /// Gelembung koin [kitty] boleh diambil.
+  bool canClaimKittyReward(KittyId kitty) =>
+      _home.ownsKitty(kitty) && _needs.canClaim(kitty, clock());
+
+  /// Menerapkan aksi rumah yang sudah lolos syaratnya. Keadaan berubah
+  /// sebelum `await` pertama, jadi ketukan kedua melihat hasil ketukan
+  /// pertama dan tidak membayar dua kali. [coins] negatif = membayar.
+  Future<bool> _changeHome(
+    Set<_Part> parts, {
+    Home? home,
+    HomeNeeds? needs,
+    int coins = 0,
+  }) async {
+    if (home != null) _home = home;
+    if (needs != null) _needs = needs;
+    _coins += coins;
+    notifyListeners();
+    await _save({...parts, if (coins != 0) _Part.coins});
+    return true;
+  }
+
+  /// Membeli barang [id]; langsung ditaruh di posisi bawaannya. Gagal tanpa
+  /// efek kalau sudah dimiliki atau koin kurang, begitu juga pembelian lain.
+  Future<bool> buyItem(RoomItemId id) async {
+    if (!_home.room.canBuy(id, _coins)) return false;
+    return _changeHome(
+      {_Part.home},
+      home: _home.copyWith(room: _home.room.buy(id)),
+      coins: -roomItemOf(id).price,
+    );
+  }
+
+  /// Membeli kucing [id]; bar-nya mulai penuh sekarang.
+  Future<bool> buyKitty(KittyId id) async {
+    if (!_home.canBuyKitty(id, _coins)) return false;
+    return _changeHome(
+      {_Part.home, _Part.needs},
+      home: _home.copyWith(kitties: {..._home.kitties, id}),
+      needs: _needs.adopted(id, clock()),
+      coins: -kittyOf(id).price,
+    );
+  }
+
+  /// Membeli aksesoris [id] untuk semua kucing; belum dipakai.
+  Future<bool> buyAccessory(AccessoryId id) async {
+    if (!_home.closet.canBuy(id, _coins)) return false;
+    return _changeHome(
+      {_Part.home},
+      home: _home.copyWith(closet: _home.closet.buy(id)),
+      coins: -accessoryOf(id).price,
+    );
+  }
+
+  /// Membeli satu camilan [id]; gagal kalau koin kurang atau stok penuh.
+  Future<bool> buySnack(SnackId id) async {
+    final price = snackOf(id).price;
+    if (_coins < price || !_home.pantry.canAdd(id)) return false;
+    return _changeHome(
+      {_Part.home},
+      home: _home.copyWith(pantry: _home.pantry.add(id)),
+      coins: -price,
+    );
+  }
+
+  /// [kitty] memakai aksesoris [id], atau melepasnya kalau [id] null.
+  /// Gagal kalau kucing atau aksesorisnya tidak dimiliki.
+  Future<bool> wearAccessory(KittyId kitty, AccessoryId? id) async {
+    if (!_home.ownsKitty(kitty)) return false;
+    if (id != null && !_home.closet.owns(id)) return false;
+    if (_home.closet.wearingOf(kitty) == id) return true;
+    return _changeHome({
+      _Part.home,
+    }, home: _home.copyWith(closet: _home.closet.wear(kitty, id)));
+  }
+
+  /// Menaruh barang [id] di [spot], juga dari Gudang.
+  Future<bool> placeItem(RoomItemId id, Spot spot) async {
+    if (!_home.room.owns(id)) return false;
+    if (_home.room.spotOf(id) == spot) return true;
+    return _changeHome({
+      _Part.home,
+    }, home: _home.copyWith(room: _home.room.place(id, spot)));
+  }
+
+  /// Memindahkan barang [id] ke Gudang; mangkuk tidak bisa.
+  Future<bool> storeItem(RoomItemId id) async {
+    final room = _home.room.store(id);
+    if (identical(room, _home.room)) return false;
+    return _changeHome({_Part.home}, home: _home.copyWith(room: room));
+  }
+
+  /// Memberi [kitty] satu camilan [snack] dari stok.
+  Future<bool> feed(KittyId kitty, SnackId snack) async {
+    final pantry = _home.pantry.take(snack);
+    if (!_home.ownsKitty(kitty) || pantry == null) return false;
+    return _changeHome(
+      {_Part.home, _Part.needs},
+      home: _home.copyWith(pantry: pantry),
+      needs: _needs.feed(kitty, snackOf(snack), clock()),
+    );
+  }
+
+  /// Mengelus [kitty]; gagal kalau batas elus jam ini habis.
+  Future<bool> pet(KittyId kitty) async {
+    final needs = _home.ownsKitty(kitty) ? _needs.pet(kitty, clock()) : null;
+    if (needs == null) return false;
+    return _changeHome({_Part.needs}, needs: needs);
+  }
+
+  /// [kitty] memakai mainan [item] yang ditaruh di kamar; gagal kalau
+  /// [item] bukan mainan, tidak ditaruh, atau [kitty] baru saja bermain.
+  Future<bool> play(KittyId kitty, RoomItemId item) async {
+    final usable =
+        _home.ownsKitty(kitty) &&
+        roomItemOf(item).toy &&
+        _home.room.isPlaced(item);
+    final needs = usable ? _needs.play(kitty, clock()) : null;
+    if (needs == null) return false;
+    return _changeHome({_Part.needs}, needs: needs);
+  }
+
+  /// Selesai menghias: Senang semua kucing naik, paling banyak sekali per
+  /// jam. Tata letaknya sudah tersimpan lewat [placeItem] dan [storeItem].
+  Future<bool> finishDecorating() async {
+    final needs = _needs.finishDecorating(_home.kitties, clock());
+    if (needs == null) return false;
+    return _changeHome({_Part.needs}, needs: needs);
+  }
+
+  /// [kitty] makan dari mangkuk.
+  Future<bool> eatFromBowl(KittyId kitty) async {
+    final needs = _home.ownsKitty(kitty)
+        ? _needs.eatFromBowl(kitty, clock())
+        : null;
+    if (needs == null) return false;
+    return _changeHome({_Part.needs}, needs: needs);
+  }
+
+  /// Mengambil gelembung koin [kitty] (+[kittyRewardCoins]).
+  Future<bool> claimKittyReward(KittyId kitty) async {
+    final needs = _home.ownsKitty(kitty) ? _needs.claim(kitty, clock()) : null;
+    if (needs == null) return false;
+    return _changeHome({_Part.needs}, needs: needs, coins: kittyRewardCoins);
+  }
+
   DailyRewards _rewards;
 
   /// Iklan koin sedang diputar, supaya ketukan kedua tidak memutar dua iklan.
@@ -300,14 +502,18 @@ class ProgressController extends ChangeNotifier implements HintSource {
     await _save({_Part.tutorials});
   }
 
-  /// "Reset progres": menghapus bintang, koin, petunjuk, kostum, dan
-  /// tutorial. Hadiah harian hari ini (supaya tidak bisa diklaim ulang) dan
-  /// bahasa tetap. Koin disimpan 0, bukan dihitung ulang dari bintang.
+  /// "Reset progres": menghapus bintang, koin, petunjuk, kostum, tutorial,
+  /// dan isi rumah (barang, tata letak, kucing, aksesoris, stok); bar Oyen
+  /// kembali penuh. Hadiah harian dan hadiah kucing hari ini (supaya tidak
+  /// bisa diklaim ulang) dan bahasa tetap. Koin disimpan 0, bukan dihitung
+  /// ulang dari bintang.
   Future<void> resetProgress() async {
     _progress = Progress.empty;
     _coins = 0;
     _hints = const {};
     _wardrobe = Wardrobe.initial;
+    _home = Home.initial;
+    _needs = _needs.reset(clock());
     _tutorialsDone = const {};
     notifyListeners();
     await _save({
@@ -315,6 +521,8 @@ class ProgressController extends ChangeNotifier implements HintSource {
       _Part.coins,
       _Part.hints,
       _Part.wardrobe,
+      _Part.home,
+      _Part.needs,
       _Part.tutorials,
     });
   }
@@ -378,6 +586,8 @@ class ProgressController extends ChangeNotifier implements HintSource {
     _Part.coins => store.saveCoins(_coins),
     _Part.hints => store.saveHints(_hints),
     _Part.wardrobe => store.saveWardrobe(_wardrobe),
+    _Part.home => store.saveHome(_home),
+    _Part.needs => store.saveNeeds(_needs),
     _Part.rewards => store.saveRewards(_rewards),
     _Part.language => store.saveLanguage(_language),
   };
