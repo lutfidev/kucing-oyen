@@ -55,19 +55,25 @@ class Tile {
   /// Ukuran petak di koordinat desain.
   static const double size = 50;
 
+  /// Salinan dengan field yang diberikan. `ghost: null` berarti tetap; pakai
+  /// [clearGhost] untuk menghapusnya.
   Tile copyWith({
     TileKind? kind,
     TileItem? item,
     bool? alt,
     bool? glow,
     Item? ghost,
-  }) => Tile(
-    kind: kind ?? this.kind,
-    item: item ?? this.item,
-    alt: alt ?? this.alt,
-    glow: glow ?? this.glow,
-    ghost: ghost ?? this.ghost,
-  );
+    bool clearGhost = false,
+  }) {
+    assert(!clearGhost || ghost == null, 'clearGhost dengan ghost baru');
+    return Tile(
+      kind: kind ?? this.kind,
+      item: item ?? this.item,
+      alt: alt ?? this.alt,
+      glow: glow ?? this.glow,
+      ghost: clearGhost ? null : ghost ?? this.ghost,
+    );
+  }
 
   @override
   bool operator ==(Object other) =>

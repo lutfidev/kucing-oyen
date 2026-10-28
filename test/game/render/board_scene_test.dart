@@ -193,6 +193,18 @@ void main() {
     expect(const Tile().copyWith(ghost: Item.box).ghost, Item.box);
   });
 
+  test('Tile.copyWith bisa menghapus ghost', () {
+    const tile = Tile(ghost: Item.box, glow: true);
+    expect(tile.copyWith(glow: false).ghost, Item.box);
+    final cleared = tile.copyWith(clearGhost: true);
+    expect(cleared.ghost, isNull);
+    expect(cleared.glow, isTrue);
+    expect(
+      () => tile.copyWith(clearGhost: true, ghost: Item.fish),
+      throwsAssertionError,
+    );
+  });
+
   group('dressed', () {
     test('Oyen memakai kostum, isi papan lain tetap', () {
       final scene = BoardScene.fromMap(BoardScene.designMap);
