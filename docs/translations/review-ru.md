@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-278 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+431 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -303,6 +303,159 @@ for the store listing at the end.
 | `fontCredits` | Fonts: Fredoka and Nunito (SIL Open Font License). | Шрифты: Fredoka и Nunito (SIL Open Font License). | Font credits. | |
 | `soundCredits` | Sound effects: Kenney and OpenGameArt (CC0). The music was made just for Ginger Logic. | Звуки: Kenney и OpenGameArt (CC0). Музыку написали специально для Ginger Logic. | About card: credits for sound effects (CC0 sources) and the original music. | |
 | `licenses` | Licenses | Лицензии | Button: open the licenses page. | |
+| `roomItemTikus` | Toy Mouse | Игрушечная мышка | Name of the room item "Toy Mouse". | |
+| `roomItemTikusDesc` | Never runs away, still gets chased. | Никуда не убегает, но за ней всё равно охотятся. | Shop description of the room item "Toy Mouse". | |
+| `roomItemAkuarium` | Aquarium | Аквариум | Name of the room item "Aquarium". | |
+| `roomItemAkuariumDesc` | All-day entertainment. The fish are a bit nervous. | Развлечение на весь день. Рыбки слегка нервничают. | Shop description of the room item "Aquarium". | |
+| `roomItemRumah` | Cat House | Домик для кота | Name of the room item "Cat House". | |
+| `roomItemRumahDesc` | Has its own house, still sleeps in the box. | Свой дом есть, а спит всё равно в коробке. | Shop description of the room item "Cat House". | |
+| `roomItemKasur` | Cushion Bed | Матрасик-подушка | Name of the room item "Cushion Bed". | |
+| `roomItemKasurDesc` | Soft. Used 60% of the time, the rest is box. | Мягкий. Используется 60% времени, остальное — коробка. | Shop description of the room item "Cushion Bed". | |
+| `roomItemCatnip` | Catnip Pot | Горшок с котовником | Name of the room item "Catnip Pot". | |
+| `roomItemCatnipDesc` | One sniff and the dancing starts. | Один вдох — и сразу танцы. | Shop description of the room item "Catnip Pot". | |
+| `roomItemJam` | Cat Clock | Часы-кот | Name of the room item "Cat Clock". | |
+| `roomItemJamDesc` | The tail swings every second. Hypnotic. | Хвост качается каждую секунду. Гипноз. | Shop description of the room item "Cat Clock". | |
+| `roomItemKardus` | Cozy Box | Уютная коробка | Name of the room item "Cozy Box". | |
+| `roomItemKardusDesc` | It's the box that gets picked, not what came in it. | Выбирают коробку, а не то, что в ней было. | Shop description of the room item "Cozy Box". | |
+| `roomItemBola` | Yarn Ball | Клубок пряжи | Name of the room item "Yarn Ball". | |
+| `roomItemBolaDesc` | Tangled in 3 seconds. That's the feature. | Запутается за 3 секунды. Это фича. | Shop description of the room item "Yarn Ball". | |
+| `roomItemKarpet` | Round Rug | Круглый коврик | Name of the room item "Round Rug". | |
+| `roomItemKarpetDesc` | The official rolling-around spot. | Официальное место для валяния. | Shop description of the room item "Round Rug". | |
+| `roomItemTiang` | Scratching Post | Когтеточка | Name of the room item "Scratching Post". | |
+| `roomItemTiangDesc` | So Mom's sofa survives. Hopefully. | Чтобы мамин диван выжил. Надеемся. | Shop description of the room item "Scratching Post". | |
+| `roomItemLukisan` | Fish Painting | Картина с рыбой | Name of the room item "Fish Painting". | |
+| `roomItemLukisanDesc` | Art that makes you hungry. | Искусство, от которого хочется есть. | Shop description of the room item "Fish Painting". | |
+| `roomItemRak` | Wall Shelf | Полка на стене | Name of the room item "Wall Shelf". | |
+| `roomItemRakDesc` | VIP seat for watching everyone. | VIP-место, чтобы следить за всеми. | Shop description of the room item "Wall Shelf". | |
+| `roomItemPancingan` | Feather Wand | Удочка с перьями | Name of the room item "Feather Wand". | |
+| `roomItemPancinganDesc` | Chases the feather, leaves its dignity behind. | За перышком бежит, достоинство остаётся позади. | Shop description of the room item "Feather Wand". | |
+| `roomItemLampuBulan` | Moon Lamp | Лампа-луна | Name of the room item "Moon Lamp". | |
+| `roomItemLampuBulanDesc` | A private moon, no need to wait for night. | Личная луна — ночи ждать не надо. | Shop description of the room item "Moon Lamp". | |
+| `roomItemBantalIkan` | Fish Pillow | Подушка-рыба | Name of the room item "Fish Pillow". | |
+| `roomItemBantalIkanDesc` | Soft, and fishy only to look at. | Мягкая, и рыбой пахнет только на вид. | Shop description of the room item "Fish Pillow". | |
+| `roomItemMonstera` | Monstera Plant | Монстера | Name of the room item "Monstera Plant". | |
+| `roomItemMonsteraDesc` | The leaves have holes. Not Oyen's doing. This time. | Листья в дырках. Ойен не виноват. На этот раз. | Shop description of the room item "Monstera Plant". | |
+| `roomItemTerowongan` | Cat Tunnel | Кошачий туннель | Name of the room item "Cat Tunnel". | |
+| `roomItemTerowonganDesc` | One cat goes in, style comes out. | Заходит кот — выходит со стилем. | Shop description of the room item "Cat Tunnel". | |
+| `roomItemHammock` | Window Hammock | Гамак на окно | Name of the room item "Window Hammock". | |
+| `roomItemHammockDesc` | Naps with a swing. Wake up and it's evening. | Сон с покачиванием. Проснулся — уже вечер. | Shop description of the room item "Window Hammock". | |
+| `roomItemSofaMini` | Mini Sofa | Мини-диван | Name of the room item "Mini Sofa". | |
+| `roomItemSofaMiniDesc` | Its own sofa, so Mom's is safe. Allegedly. | Свой диван — мамин в безопасности. Якобы. | Shop description of the room item "Mini Sofa". | |
+| `roomItemJendelaBurung` | Bird Window | Окно с птицами | Name of the room item "Bird Window". | |
+| `roomItemJendelaBurungDesc` | 24-hour cat TV, all birds, no ads. | Кошачье ТВ 24 часа: птицы без рекламы. | Shop description of the room item "Bird Window". | |
+| `roomItemMangkuk` | Food bowl | Миска с едой | Name of the room item "Food bowl". | |
+| `kittyOyen` | Oyen | Ойен | Name of the collection cat "Oyen". | |
+| `kittyOyenDesc` | The ginger cat you wake up every level. | Рыжий кот, которого ты будишь на каждом уровне. | Shop description of the collection cat "Oyen". | |
+| `kittySalju` | Snowy | Снежок | Name of the collection cat "Snowy". | |
+| `kittySaljuDesc` | Spotless white. Stays that way until it finds a box. | Белоснежный. Пока не найдёт коробку. | Shop description of the collection cat "Snowy". | |
+| `kittyTelon` | Patches | Тришка | Name of the collection cat "Patches". | |
+| `kittyTelonDesc` | Three colors, three moods a minute. | Три цвета, три настроения в минуту. | Shop description of the collection cat "Patches". | |
+| `kittyArang` | Charcoal | Уголёк | Name of the collection cat "Charcoal". | |
+| `kittyArangDesc` | Deep black, yellow eyes. Expert shadow hider. | Чёрный как уголь, глаза жёлтые. Мастер прятаться в тенях. | Shop description of the collection cat "Charcoal". | |
+| `kittyMendung` | Cloudy | Тучка | Name of the collection cat "Cloudy". | |
+| `kittyMendungDesc` | Looks sad, is just sleepy. | Выглядит грустным, а просто хочет спать. | Shop description of the collection cat "Cloudy". | |
+| `kittyKopiSusu` | Latte | Латте | Name of the collection cat "Latte". | |
+| `kittyKopiSusuDesc` | Sweet, a little bitter when woken up. | Сладкий, но горчит, если разбудить. | Shop description of the collection cat "Latte". | |
+| `kittyMochi` | Mochi | Моти | Name of the collection cat "Mochi". | |
+| `kittyMochiDesc` | Calm, squishy, face like it played in mud. | Спокойный, мягкий, морда как после игры в грязи. | Shop description of the collection cat "Mochi". | |
+| `kittyBos` | Boss | Босс | Name of the collection cat "Boss". | |
+| `kittyBosDesc` | Always in a suit. Meetings at every mealtime. | Всегда в костюме. Совещания в каждый приём пищи. | Shop description of the collection cat "Boss". | |
+| `kittyKembang` | Blossom | Цветик | Name of the collection cat "Blossom". | |
+| `kittyKembangDesc` | Abstract markings, abstract behavior. | Окрас абстрактный, поведение тоже. | Shop description of the collection cat "Blossom". | |
+| `accessoryPita` | Ribbon | Лента | Name of the accessory "Ribbon". | |
+| `accessoryPitaDesc` | Simple, sweet, easy to put on. | Просто, мило, надевается легко. | Shop description of the accessory "Ribbon". | |
+| `accessoryJepitBunga` | Flower Clip | Заколка-цветок | Name of the accessory "Flower Clip". | |
+| `accessoryJepitBungaDesc` | Always in bloom, never needs water. | Цветёт всегда, поливать не нужно. | Shop description of the accessory "Flower Clip". | |
+| `accessoryBandana` | Bandana | Бандана | Name of the accessory "Bandana". | |
+| `accessoryBandanaDesc` | Cowboy style, suburban edition. | Ковбойский стиль, спальный район. | Shop description of the accessory "Bandana". | |
+| `accessoryDasiKupu` | Bow Tie | Галстук-бабочка | Name of the accessory "Bow Tie". | |
+| `accessoryDasiKupuDesc` | Ready for the party, no invitation. | Готов к торжеству, приглашения нет. | Shop description of the accessory "Bow Tie". | |
+| `accessoryKalung` | Bell Collar | Ошейник с бубенчиком | Name of the accessory "Bell Collar". | |
+| `accessoryKalungDesc` | Jingle jingle. Busted on every fish heist. | Звяк-звяк. Попался на каждой краже рыбы. | Shop description of the accessory "Bell Collar". | |
+| `accessorySyal` | Knit Scarf | Вязаный шарф | Name of the accessory "Knit Scarf". | |
+| `accessorySyalDesc` | Warm. Knitted by an imaginary grandma. | Тёплый. Связан воображаемой бабушкой. | Shop description of the accessory "Knit Scarf". | |
+| `accessoryBeanie` | Beanie | Шапка-бини | Name of the accessory "Beanie". | |
+| `accessoryBeanieDesc` | Warm. Even though it's hot outside. | Тепло. Хотя на улице жара. | Shop description of the accessory "Beanie". | |
+| `accessoryTopiKoki` | Chef Hat | Колпак шефа | Name of the accessory "Chef Hat". | |
+| `accessoryTopiKokiDesc` | Cooking? No. Tasting? Always. | Готовить? Нет. Пробовать? Всегда. | Shop description of the accessory "Chef Hat". | |
+| `accessoryBaret` | Beret | Берет | Name of the accessory "Beret". | |
+| `accessoryBaretDesc` | Instant artist. Masterpiece: a torn pillow. | Внезапно художник. Шедевр — порванная подушка. | Shop description of the accessory "Beret". | |
+| `accessoryKacamata` | Round Glasses | Круглые очки | Name of the accessory "Round Glasses". | |
+| `accessoryKacamataDesc` | Looks smart. Still knocks the vase over. | Вид умный. Вазу всё равно уронит. | Shop description of the accessory "Round Glasses". | |
+| `accessoryHeadphone` | Headphones | Наушники | Name of the accessory "Headphones". | |
+| `accessoryHeadphoneDesc` | Lo-fi on, pretending to be busy. | Слушает лоу-фай, делает вид, что занят. | Shop description of the accessory "Headphones". | |
+| `accessoryTandukRusa` | Reindeer Antlers | Рога оленя | Name of the accessory "Reindeer Antlers". | |
+| `accessoryTandukRusaDesc` | A pretend reindeer. Still meows. | Олень ненастоящий. Мяукает по-прежнему. | Shop description of the accessory "Reindeer Antlers". | |
+| `accessoryTopiPesta` | Party Hat | Праздничный колпак | Name of the accessory "Party Hat". | |
+| `accessoryTopiPestaDesc` | Every day is a birthday when you're a cat. | Если ты кот, каждый день — день рождения. | Shop description of the accessory "Party Hat". | |
+| `accessoryTopiPenyihir` | Wizard Hat | Шляпа волшебника | Name of the accessory "Wizard Hat". | |
+| `accessoryTopiPenyihirDesc` | Can make fish appear. Allegedly. | Умеет доставать рыбу. Говорят. | Shop description of the accessory "Wizard Hat". | |
+| `accessoryMahkota` | Flower Crown | Венок из цветов | Name of the accessory "Flower Crown". | |
+| `accessoryMahkotaDesc` | Queen of the room. Don't eat the flowers. | Королева комнаты. Цветы не есть. | Shop description of the accessory "Flower Crown". | |
+| `accessoryMahkotaRaja` | King's Crown | Королевская корона | Name of the accessory "King's Crown". | |
+| `accessoryMahkotaRajaDesc` | King of the room. Taxes paid in head scratches. | Король комнаты. Налоги платят поглаживаниями. | Shop description of the accessory "King's Crown". | |
+| `snackIkanAsin` | Salted Fish | Солёная рыба | Name of the snack "Salted Fish". | |
+| `snackIkanAsinDesc` | Salty, savory, the neighbors can smell it. | Солёная, вкусная, запах слышен соседям. | Shop description of the snack "Salted Fish". | |
+| `snackSusu` | Milk | Молоко | Name of the snack "Milk". | |
+| `snackSusuDesc` | A small saucer. White whiskers guaranteed. | Маленькое блюдце. Усы становятся белыми. | Shop description of the snack "Milk". | |
+| `snackTuna` | Canned Tuna | Тунец в банке | Name of the snack "Canned Tuna". | |
+| `snackTunaDesc` | The can opening summons every cat. | Звук банки собирает всех кошек. | Shop description of the snack "Canned Tuna". | |
+| `snackBiskuit` | Cat Biscuits | Кошачье печенье | Name of the snack "Cat Biscuits". | |
+| `snackBiskuitDesc` | Crunchy and cheap. Not very filling. | Хрустит и дешёвое. Сытости мало. | Shop description of the snack "Cat Biscuits". | |
+| `snackPuding` | Fish Pudding | Рыбный пудинг | Name of the snack "Fish Pudding". | |
+| `snackPudingDesc` | Fancy. Very filling, very happy. | Шикарно. Очень сытно и очень радостно. | Shop description of the snack "Fish Pudding". | |
+| `rarityCommon` | Common | Обычный | Accessory rarity badge in the shop: common. | |
+| `rarityRare` | Rare | Редкий | Accessory rarity badge in the shop: rare. | |
+| `raritySpecial` | Special | Особый | Accessory rarity badge in the shop: special. | |
+| `shop` | Shop | Магазин | Shop screen title, and the menu button that opens it. | |
+| `shopTabItems` | Items | Вещи | Shop tab: room items. | |
+| `shopTabKitties` | Cats | Коты | Shop tab: collection cats. | |
+| `shopTabAccessories` | Accessories | Аксессуары | Shop tab: accessories. | |
+| `shopTabSnacks` | Food | Еда | Shop tab: snacks. | |
+| `shopKittyIntro` | Every cat shares the room with Oyen. Oyen agrees. Probably. | Все коты живут в комнате Ойена. Ойен согласен. Вроде бы. | Line above the cat cards in the shop. | |
+| `shopSnackIntro` | Snacks go into your stock. Hand them out from the cat card in the room. | Лакомства идут в запас. Угощай из карточки кота в комнате. | Line above the snack cards in the shop. | |
+| `shopOwnedTag` | Yours | Твоё | Shop card badge: already owned. | |
+| `shopLivesHere` | Lives in the room | Живёт в комнате | Shop card badge: this cat already lives in the room. | |
+| `shopNotEnoughTag` | Not enough coins | Мало монет | Shop card badge: the player cannot afford this yet. | |
+| `shopShortBy` | {n, plural, one{{n} coin short} other{{n} coins short}} | {n, plural, one{Не хватает {n} монеты} few{Не хватает {n} монет} many{Не хватает {n} монет} other{Не хватает {n} монеты}} | How many coins are still missing for this cat. Placeholders: `{n}`. | |
+| `shopAdopt` | Adopt · {n} | Взять · {n} | Shop cat card button: adopt for this many coins. Placeholders: `{n}`. | |
+| `shopBuyShort` | Buy · {n} | Купить · {n} | Shop snack card button: buy for this many coins. Placeholders: `{n}`. | |
+| `shopStock` | Stock: {n} | Запас: {n} | Shop snack card: how many are in stock. Placeholders: `{n}`. | |
+| `shopTryOn` | Try on: | Примерить на: | Label before the row of cats used for the accessory preview. | |
+| `shopPreviewOf` | Preview · {name} | Примерка · {name} | Accessory preview panel overline, with the cat name. Placeholders: `{name}`. | |
+| `shopWearFree` | Wear · Free | Надеть · Бесплатно | Button: put the owned accessory on the previewed cat, for free. | |
+| `shopRemoveFree` | Take off · Free | Снять · Бесплатно | Button: take the accessory off the previewed cat, for free. | |
+| `shopPlayFirst` | Play a puzzle first, the coins will follow. | Сначала головоломка — монеты придут. | Hint under the accessory button when coins are missing. | |
+| `shopWornBy` | Worn by {name} | Носит {name} | Accessory card note: which cats wear it (comma separated names). Placeholders: `{name}`. | |
+| `shopFlashNice` | Looking good! | Красота! | Cheer shown after putting an accessory on a cat. | |
+| `shopFlashRemoved` | Off, free of charge | Снято, бесплатно | Note shown after taking an accessory off. | |
+| `shopFlashSpent` | {n, plural, one{-{n} coin} other{-{n} coins}} | {n, plural, one{-{n} монета} few{-{n} монеты} many{-{n} монет} other{-{n} монеты}} | Floating note after buying a snack: coins spent. Placeholders: `{n}`. | |
+| `shopPreviewPickLabel` | Try the accessory on {name} | Примерить аксессуар на {name} | Screen reader label of a cat button in the preview row. Placeholders: `{name}`. | |
+| `shopCardBuyLabel` | {name}, {n, plural, one{{n} coin} other{{n} coins}} | {name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}} | Screen reader label of a shop card the player can afford. Placeholders: `{name}`, `{n}`. | |
+| `shopCardShortLabel` | {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | {name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}}, не хватает монет | Screen reader label of a shop card that costs more than the balance. Placeholders: `{name}`, `{n}`. | |
+| `shopCardOwnedLabel` | {name}, already yours | {name}, уже твоё | Screen reader label of a shop card for something already owned. Placeholders: `{name}`. | |
+| `shopCardLivesLabel` | {name}, already lives in the room | {name}, уже живёт в комнате | Screen reader label of a cat card for a cat already adopted. Placeholders: `{name}`. | |
+| `shopAccessoryViewLabel` | View {name} | Посмотреть {name} | Screen reader label of an accessory card (tapping only previews it). Placeholders: `{name}`. | |
+| `shopSnackBuyLabel` | Buy {name} for {n, plural, one{{n} coin} other{{n} coins}} | Купить {name} за {n, plural, one{{n} монету} few{{n} монеты} many{{n} монет} other{{n} монеты}} | Screen reader label of the snack buy button. Placeholders: `{name}`, `{n}`. | |
+| `shopSnackShortLabel` | Buy {name} for {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | Купить {name} за {n, plural, one{{n} монету} few{{n} монеты} many{{n} монет} other{{n} монеты}}, не хватает монет | Screen reader label of the snack buy button when coins are missing. Placeholders: `{name}`, `{n}`. | |
+| `buySheetLabel` | Buy {name} | Купить {name} | Screen reader label of the buy confirmation sheet. Placeholders: `{name}`. | |
+| `buySuccessOverline` | Success! | Готово! | Overline above the title after a successful purchase. | |
+| `buySuccessItem` | {name} is yours! | {name} теперь твой! | Buy sheet title after buying a room item. Placeholders: `{name}`. | |
+| `buySuccessItemBody` | It's in storage. Place it in decorate mode. | Лежит на складе. Поставь в режиме «Украшать». | Buy sheet body after buying a room item. | |
+| `buySuccessKitty` | {name} moved into the room! | {name} переехал в комнату! | Buy sheet title after adopting a cat. Placeholders: `{name}`. | |
+| `buySuccessKittyBody` | Say hi in the room. Expect some fake indifference first. | Поздоровайся в комнате. Сначала сделает вид, что ему всё равно. | Buy sheet body after adopting a cat. | |
+| `buySuccessAccessory` | {name} is yours forever! | {name} теперь твой навсегда! | Buy sheet title after buying an accessory. Placeholders: `{name}`. | |
+| `buySuccessAccessoryBody` | Put it on {name} now, or move it to another cat any time. | Надень на {name} сейчас или переставь другому коту когда захочешь. | Buy sheet body after buying an accessory, with the previewed cat name. Placeholders: `{name}`. | |
+| `buyAccessoryInfo` | Buy once, keep forever. Free to put on and take off, for every cat. | Покупаешь раз — остаётся навсегда. Надевать и снимать бесплатно, на любого кота. | Note in the accessory buy sheet before paying. | |
+| `buyPay` | Buy · {n, plural, one{{n} coin} other{{n} coins}} | Купить · {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}} | Buy sheet button: pay this many coins. Placeholders: `{n}`. | |
+| `buyLater` | Maybe later | Потом | Buy sheet button: close without buying. | |
+| `buyAgain` | Keep shopping | Купить ещё | Buy sheet button after a purchase: back to the shop. | |
+| `buySeeRoom` | See it in the room | Посмотреть в комнате | Buy sheet button after a purchase: open the room. | |
+| `buyWearOn` | Wear on {name} | Надеть на {name} | Buy sheet button after buying an accessory: put it on this cat. Placeholders: `{name}`. | |
+| `buyNotEnoughHelp` | Play a puzzle or watch a rewarded ad to get more coins. | Пройди головоломку или посмотри рекламу за награду, чтобы получить монеты. | Buy sheet hint when the player cannot afford the item. | |
+| `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} other{sitting still}} | {pose, select, idle{сидит спокойно} lick{облизывает лапку} walk1{идёт} walk2{идёт} sleep{спит свернувшись} eat{ест из миски} play{играет с игрушкой} scratch{точит когти о когтеточку} happy{радуется} lesu{вялый} rebah{лежит и отдыхает} petted{мурчит от поглаживаний} other{сидит спокойно}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
+| `kittyLabel` | {name} {pose} | {name} {pose} | Screen reader label of a room cat: name and what it is doing. Placeholders: `{name}`, `{pose}`. | |
+| `kittyLabelAccessory` | {name} {pose}, wearing a {accessory} | {name} {pose}, в {accessory} | Screen reader label of a room cat wearing an accessory. Placeholders: `{name}`, `{pose}`, `{accessory}`. | |
 
 ---
 

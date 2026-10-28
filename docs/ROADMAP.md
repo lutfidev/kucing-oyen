@@ -35,7 +35,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 19. Saran lama dari PR sebelumnya (aksesibilitas, navigasi, simpanan, suara)
 - [x] 20. Sisa saran: putar otomatis, terjemahan, dan rapi-rapi kecil
 - [x] 21. Rumah Oyen: model kamar, kucing, aksesoris, makanan, dan kebutuhan
-- [ ] 22. Toko dan aksesoris
+- [x] 22. Toko dan aksesoris
 - [ ] 23. Kamar Oyen sebagai Beranda, tanpa Lemari Kostum
 - [ ] 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
 - [ ] 25. Peta bergambar dan Oyen berjalan ke level berikutnya
@@ -279,9 +279,11 @@ Selesai: katalog (`home_items.dart`, `kitties.dart`, `accessories.dart`, `snacks
 >
 > Perbarui bagian "Struktur" di `CLAUDE.md`.
 
-## 22. Toko dan aksesoris
+## 22. Toko dan aksesoris ✅
 
 **Hasil:** layar Toko di rute `/toko` untuk membeli barang, kucing, aksesoris (dengan pratinjau langsung), dan camilan dengan koin.
+
+Selesai: sprite kucing kamar (`kitty.dart`, `kitty_painter.dart`: 9 kucing, 12 pose, 16 aksesoris, tanpa gerakan), gambar barang dan camilan (`room_item_art.dart`), ikon aksesoris, layar `lib/screens/shop/` dengan empat tab plus `showBuySheet`, tombol Toko sementara di Beranda, galeri `/galeri/kucing`, dan teks katalog di keempat ARB. Rencana di `docs/superpowers/plans/2026-10-28-toko-aksesoris.md`; keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 22".
 
 > **Baca dulu:**
 > - spesifikasi rumah Oyen bagian Toko dan Aksesoris

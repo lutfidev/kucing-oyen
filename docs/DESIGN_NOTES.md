@@ -344,3 +344,23 @@ Semua keputusan saya (spesifikasi menyerahkannya ke builder), kecuali yang diseb
 - **Kucing yang dibeli** mulai penuh di jam beli (`HomeNeeds.adopted`), juga kalau simpanan lama masih punya catatannya.
 - **Waktu tersimpan di luar 1970–3000 dianggap rusak** dan dibuang (temuan review: `DateTime` melempar `RangeError` untuk nilai sangat besar, dan aplikasi gagal dibuka). `PrefsProgressStore` juga menangkap `ArgumentError` saat membaca JSON.
 - **Untuk layar kamar (langkah 23–24):** model mengizinkan camilan dan elusan saat bar sudah 100 (stok dan jatah elus tetap terpakai), jadi layar sebaiknya menonaktifkan atau memperingatkannya. Gelembung hadiah dicek ulang saat diketuk (`canClaimKittyReward`), dan bar turun ±8,3 per jam, jadi layar perlu menyegarkan keadaan berkala.
+
+## Langkah 22: Toko dan aksesoris
+
+Layar Toko di rute `/toko` beserta gambar kucing kamar, barang, camilan, dan ikon aksesoris. Rencana di `docs/superpowers/plans/2026-10-28-toko-aksesoris.md`; pertanyaan yang dijawab pemilik repo ditandai **[pemilik]**.
+
+- **Nama katalog diterjemahkan artinya** di keempat bahasa [pemilik]: "Kardus Nyaman" → "Cozy Box"/"Caixa Confortável"/"Уютная коробка", "Salju" → "Snowy"/"Neve"/"Снежок", "Kopi Susu" → "Latte". Hanya "Oyen" yang sama di semua bahasa, kecuali bahasa Rusia yang menulisnya "Ойен" seperti tagline dan `oyenLabel` yang sudah ada.
+- **Sprite kucing diport penuh tanpa gerakan** [pemilik]: 9 kucing × 12 pose × 16 aksesoris sudah bisa digambar (`paintKitty`), tapi semua nilai gaya animasi desain diisi string kosong. `KittyLook.time` sudah ada supaya langkah 24 tinggal mengisi fungsi waktunya. Pose `walk` desain dipecah jadi `walk1`/`walk2`; pemanggil yang memilih.
+- **Varian "sedang dipakai" barang belum diport** [pemilik]: SVG-nya sudah ada di repo (`roomItemFrontSvgs` dan lapisan belakang), tapi `paintRoomItemArt` selalu menggambar keadaan diam. Langkah 23 memakai variannya beserta posisi kucing di tiap barang.
+- **Camilan dibeli langsung dari kartunya** [pemilik, ikut desain], tanpa sheet konfirmasi; barang, kucing, dan aksesoris lewat `showBuySheet`. Karena camilan boleh dibeli berulang, dua ketukan memang membeli dua camilan — yang dijaga adalah satu ketukan memotong koin sekali.
+- **"Lihat di kamar"** menuju Beranda sampai langkah 23 menggantinya dengan kamar.
+- **Tombol Toko sementara di Beranda** memakai `_MenuButton` yang sudah ada, jadi barisnya tiga tombol (Toko, Lemari Kostum, Pengaturan). Dilepas di langkah 23.
+- **SVG rumah Oyen ditaruh di `lib/game/render/design_svg_home.dart`**, bukan `design_svg.dart`, supaya satu berkas tidak jadi 1.700 baris. `design_sync_test` memeriksa keduanya (dan dilewati kalau `docs/design/` tidak ada).
+- **`SvgTemplate` diperluas** untuk nama bertitik (`{{c.fur}}`) dan `sc-for`, karena sprite kucing desain memakai keduanya. Tanpa itu isi `<svg>` tidak bisa disalin utuh.
+- **Label pembaca layar kucing** dipecah jadi `kittyPose` (ICU `select` 12 pose) plus `kittyLabel`/`kittyLabelAccessory`, supaya `select` panjangnya tidak ditulis dua kali.
+- **Tab terpilih memakai keadaan `toggled`** `KoPressable` (bukan `selected`), sama dengan kartu kostum dan sakelar Pengaturan.
+- **Kartu Toko disusun `ShopGrid`** (kolom berisi `IntrinsicHeight` + `Row`), bukan `GridView` dengan `childAspectRatio`: tinggi kartu ikut teks 130% tanpa overflow, dan kartu sebaris tetap sama tinggi.
+- **Pratinjau aksesoris**: aksesoris pertama katalog (Pita) dan Oyen dipilih lebih dulu; "Coba di:" hanya memuat kucing yang dimiliki. Panggung mengecil ke 0,82 di layar di bawah 380 px (catatan `n360`). Tombol panel memakai "Beli · N" tanpa kata koin seperti desain, sedangkan sheet memakai "Beli · N koin".
+- **Pesan reaksi** ("Cakep!", "-15 koin") muncul sebagai lapisan di atas daftar, hilang sendiri sesudah 1,3 detik, dan diumumkan pembaca layar (`liveRegion`).
+- **Deskripsi Oyen** di galeri ditulis sendiri ("Kucing oren yang kamu bangunkan tiap level."); desain tidak punya kartu Toko untuk Oyen.
+- **Ikon tab Toko, rumah, dan perisai** disalin dari `TabToko.dc.html`, `KartuToko.dc.html`, dan `SheetBeli.dc.html` ke `KoIcons`.

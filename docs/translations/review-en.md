@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-278 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+431 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -303,6 +303,159 @@ for the store listing at the end.
 | `fontCredits` | Fonts: Fredoka and Nunito (SIL Open Font License). | Font: Fredoka dan Nunito (SIL Open Font License). | Font credits. | |
 | `soundCredits` | Sound effects: Kenney and OpenGameArt (CC0). The music was made just for Ginger Logic. | Efek suara: Kenney dan OpenGameArt (CC0). Musiknya dibuat khusus untuk Ginger Logic. | About card: credits for sound effects (CC0 sources) and the original music. | |
 | `licenses` | Licenses | Lisensi | Button: open the licenses page. | |
+| `roomItemTikus` | Toy Mouse | Tikus Mainan | Name of the room item "Toy Mouse". | |
+| `roomItemTikusDesc` | Never runs away, still gets chased. | Tidak pernah lari, tapi tetap dikejar. | Shop description of the room item "Toy Mouse". | |
+| `roomItemAkuarium` | Aquarium | Akuarium | Name of the room item "Aquarium". | |
+| `roomItemAkuariumDesc` | All-day entertainment. The fish are a bit nervous. | Tontonan seharian. Ikannya agak gugup. | Shop description of the room item "Aquarium". | |
+| `roomItemRumah` | Cat House | Rumah Kucing | Name of the room item "Cat House". | |
+| `roomItemRumahDesc` | Has its own house, still sleeps in the box. | Punya rumah sendiri, tetap tidur di kardus. | Shop description of the room item "Cat House". | |
+| `roomItemKasur` | Cushion Bed | Kasur Bantal | Name of the room item "Cushion Bed". | |
+| `roomItemKasurDesc` | Soft. Used 60% of the time, the rest is box. | Empuk. Dipakai 60% waktunya, sisanya kardus. | Shop description of the room item "Cushion Bed". | |
+| `roomItemCatnip` | Catnip Pot | Pot Catnip | Name of the room item "Catnip Pot". | |
+| `roomItemCatnipDesc` | One sniff and the dancing starts. | Satu hirup, langsung joget. | Shop description of the room item "Catnip Pot". | |
+| `roomItemJam` | Cat Clock | Jam Kucing | Name of the room item "Cat Clock". | |
+| `roomItemJamDesc` | The tail swings every second. Hypnotic. | Ekornya goyang tiap detik. Hipnotis. | Shop description of the room item "Cat Clock". | |
+| `roomItemKardus` | Cozy Box | Kardus Nyaman | Name of the room item "Cozy Box". | |
+| `roomItemKardusDesc` | It's the box that gets picked, not what came in it. | Yang dipilih kardusnya, bukan isinya. | Shop description of the room item "Cozy Box". | |
+| `roomItemBola` | Yarn Ball | Bola Benang | Name of the room item "Yarn Ball". | |
+| `roomItemBolaDesc` | Tangled in 3 seconds. That's the feature. | Kusut dalam 3 detik. Itu fiturnya. | Shop description of the room item "Yarn Ball". | |
+| `roomItemKarpet` | Round Rug | Karpet Bulat | Name of the room item "Round Rug". | |
+| `roomItemKarpetDesc` | The official rolling-around spot. | Tempat resmi guling-guling. | Shop description of the room item "Round Rug". | |
+| `roomItemTiang` | Scratching Post | Tiang Garukan | Name of the room item "Scratching Post". | |
+| `roomItemTiangDesc` | So Mom's sofa survives. Hopefully. | Supaya sofa Ibu selamat. Semoga. | Shop description of the room item "Scratching Post". | |
+| `roomItemLukisan` | Fish Painting | Lukisan Ikan | Name of the room item "Fish Painting". | |
+| `roomItemLukisanDesc` | Art that makes you hungry. | Seni yang bikin lapar. | Shop description of the room item "Fish Painting". | |
+| `roomItemRak` | Wall Shelf | Rak Dinding | Name of the room item "Wall Shelf". | |
+| `roomItemRakDesc` | VIP seat for watching everyone. | Kursi VIP buat ngawasin semua orang. | Shop description of the room item "Wall Shelf". | |
+| `roomItemPancingan` | Feather Wand | Pancingan Bulu | Name of the room item "Feather Wand". | |
+| `roomItemPancinganDesc` | Chases the feather, leaves its dignity behind. | Bulunya dikejar, harga dirinya ketinggalan. | Shop description of the room item "Feather Wand". | |
+| `roomItemLampuBulan` | Moon Lamp | Lampu Bulan | Name of the room item "Moon Lamp". | |
+| `roomItemLampuBulanDesc` | A private moon, no need to wait for night. | Bulan pribadi, nggak perlu nunggu malam. | Shop description of the room item "Moon Lamp". | |
+| `roomItemBantalIkan` | Fish Pillow | Bantal Ikan | Name of the room item "Fish Pillow". | |
+| `roomItemBantalIkanDesc` | Soft, and fishy only to look at. | Empuk, dan amis secara visual saja. | Shop description of the room item "Fish Pillow". | |
+| `roomItemMonstera` | Monstera Plant | Tanaman Monstera | Name of the room item "Monstera Plant". | |
+| `roomItemMonsteraDesc` | The leaves have holes. Not Oyen's doing. This time. | Daunnya bolong-bolong. Bukan ulah Oyen. Kali ini. | Shop description of the room item "Monstera Plant". | |
+| `roomItemTerowongan` | Cat Tunnel | Terowongan Kucing | Name of the room item "Cat Tunnel". | |
+| `roomItemTerowonganDesc` | One cat goes in, style comes out. | Masuk satu kucing, keluar dengan gaya. | Shop description of the room item "Cat Tunnel". | |
+| `roomItemHammock` | Window Hammock | Hammock Jendela | Name of the room item "Window Hammock". | |
+| `roomItemHammockDesc` | Naps with a swing. Wake up and it's evening. | Tidur berayun. Bangun-bangun sudah sore. | Shop description of the room item "Window Hammock". | |
+| `roomItemSofaMini` | Mini Sofa | Sofa Mini | Name of the room item "Mini Sofa". | |
+| `roomItemSofaMiniDesc` | Its own sofa, so Mom's is safe. Allegedly. | Sofa sendiri, jadi sofa Ibu aman. Katanya. | Shop description of the room item "Mini Sofa". | |
+| `roomItemJendelaBurung` | Bird Window | Jendela Burung | Name of the room item "Bird Window". | |
+| `roomItemJendelaBurungDesc` | 24-hour cat TV, all birds, no ads. | TV kucing 24 jam, siaran burung tanpa iklan. | Shop description of the room item "Bird Window". | |
+| `roomItemMangkuk` | Food bowl | Mangkuk makan | Name of the room item "Food bowl". | |
+| `kittyOyen` | Oyen | Oyen | Name of the collection cat "Oyen". | |
+| `kittyOyenDesc` | The ginger cat you wake up every level. | Kucing oren yang kamu bangunkan tiap level. | Shop description of the collection cat "Oyen". | |
+| `kittySalju` | Snowy | Salju | Name of the collection cat "Snowy". | |
+| `kittySaljuDesc` | Spotless white. Stays that way until it finds a box. | Putih bersih. Bertahan bersih sampai ketemu kardus. | Shop description of the collection cat "Snowy". | |
+| `kittyTelon` | Patches | Telon | Name of the collection cat "Patches". | |
+| `kittyTelonDesc` | Three colors, three moods a minute. | Tiga warna, tiga mood dalam semenit. | Shop description of the collection cat "Patches". | |
+| `kittyArang` | Charcoal | Arang | Name of the collection cat "Charcoal". | |
+| `kittyArangDesc` | Deep black, yellow eyes. Expert shadow hider. | Hitam pekat, mata kuning. Jago ngumpet di bayangan. | Shop description of the collection cat "Charcoal". | |
+| `kittyMendung` | Cloudy | Mendung | Name of the collection cat "Cloudy". | |
+| `kittyMendungDesc` | Looks sad, is just sleepy. | Kelihatan sedih, padahal cuma ngantuk. | Shop description of the collection cat "Cloudy". | |
+| `kittyKopiSusu` | Latte | Kopi Susu | Name of the collection cat "Latte". | |
+| `kittyKopiSusuDesc` | Sweet, a little bitter when woken up. | Manis, sedikit pahit kalau dibangunin. | Shop description of the collection cat "Latte". | |
+| `kittyMochi` | Mochi | Mochi | Name of the collection cat "Mochi". | |
+| `kittyMochiDesc` | Calm, squishy, face like it played in mud. | Kalem, kenyal, mukanya kayak habis main lumpur. | Shop description of the collection cat "Mochi". | |
+| `kittyBos` | Boss | Bos | Name of the collection cat "Boss". | |
+| `kittyBosDesc` | Always in a suit. Meetings at every mealtime. | Selalu pakai jas. Rapat tiap jam makan. | Shop description of the collection cat "Boss". | |
+| `kittyKembang` | Blossom | Kembang | Name of the collection cat "Blossom". | |
+| `kittyKembangDesc` | Abstract markings, abstract behavior. | Coraknya abstrak, kelakuannya juga. | Shop description of the collection cat "Blossom". | |
+| `accessoryPita` | Ribbon | Pita | Name of the accessory "Ribbon". | |
+| `accessoryPitaDesc` | Simple, sweet, easy to put on. | Simpel, manis, gampang dipasang. | Shop description of the accessory "Ribbon". | |
+| `accessoryJepitBunga` | Flower Clip | Jepit Bunga | Name of the accessory "Flower Clip". | |
+| `accessoryJepitBungaDesc` | Always in bloom, never needs water. | Mekar terus, nggak perlu disiram. | Shop description of the accessory "Flower Clip". | |
+| `accessoryBandana` | Bandana | Bandana | Name of the accessory "Bandana". | |
+| `accessoryBandanaDesc` | Cowboy style, suburban edition. | Gaya koboi kompleks perumahan. | Shop description of the accessory "Bandana". | |
+| `accessoryDasiKupu` | Bow Tie | Dasi Kupu-kupu | Name of the accessory "Bow Tie". | |
+| `accessoryDasiKupuDesc` | Ready for the party, no invitation. | Siap kondangan, tanpa undangan. | Shop description of the accessory "Bow Tie". | |
+| `accessoryKalung` | Bell Collar | Kalung Lonceng | Name of the accessory "Bell Collar". | |
+| `accessoryKalungDesc` | Jingle jingle. Busted on every fish heist. | Kling-kling. Ketahuan tiap mau nyolong ikan. | Shop description of the accessory "Bell Collar". | |
+| `accessorySyal` | Knit Scarf | Syal Rajut | Name of the accessory "Knit Scarf". | |
+| `accessorySyalDesc` | Warm. Knitted by an imaginary grandma. | Hangat. Dirajut nenek imajiner. | Shop description of the accessory "Knit Scarf". | |
+| `accessoryBeanie` | Beanie | Beanie | Name of the accessory "Beanie". | |
+| `accessoryBeanieDesc` | Warm. Even though it's hot outside. | Hangat. Padahal di luar panas. | Shop description of the accessory "Beanie". | |
+| `accessoryTopiKoki` | Chef Hat | Topi Koki | Name of the accessory "Chef Hat". | |
+| `accessoryTopiKokiDesc` | Cooking? No. Tasting? Always. | Masak? Nggak. Cicip? Selalu. | Shop description of the accessory "Chef Hat". | |
+| `accessoryBaret` | Beret | Topi Baret | Name of the accessory "Beret". | |
+| `accessoryBaretDesc` | Instant artist. Masterpiece: a torn pillow. | Mendadak seniman. Karyanya: bantal sobek. | Shop description of the accessory "Beret". | |
+| `accessoryKacamata` | Round Glasses | Kacamata Bulat | Name of the accessory "Round Glasses". | |
+| `accessoryKacamataDesc` | Looks smart. Still knocks the vase over. | Kelihatan pintar. Tetap jatuhin vas. | Shop description of the accessory "Round Glasses". | |
+| `accessoryHeadphone` | Headphones | Headphone | Name of the accessory "Headphones". | |
+| `accessoryHeadphoneDesc` | Lo-fi on, pretending to be busy. | Dengar lo-fi, pura-pura sibuk. | Shop description of the accessory "Headphones". | |
+| `accessoryTandukRusa` | Reindeer Antlers | Tanduk Rusa | Name of the accessory "Reindeer Antlers". | |
+| `accessoryTandukRusaDesc` | A pretend reindeer. Still meows. | Rusa jadi-jadian. Meongnya tetap. | Shop description of the accessory "Reindeer Antlers". | |
+| `accessoryTopiPesta` | Party Hat | Topi Pesta | Name of the accessory "Party Hat". | |
+| `accessoryTopiPestaDesc` | Every day is a birthday when you're a cat. | Tiap hari ulang tahun kalau kamu kucing. | Shop description of the accessory "Party Hat". | |
+| `accessoryTopiPenyihir` | Wizard Hat | Topi Penyihir | Name of the accessory "Wizard Hat". | |
+| `accessoryTopiPenyihirDesc` | Can make fish appear. Allegedly. | Bisa bikin ikan muncul. Katanya. | Shop description of the accessory "Wizard Hat". | |
+| `accessoryMahkota` | Flower Crown | Mahkota Bunga | Name of the accessory "Flower Crown". | |
+| `accessoryMahkotaDesc` | Queen of the room. Don't eat the flowers. | Ratu kamar. Bunganya jangan dimakan. | Shop description of the accessory "Flower Crown". | |
+| `accessoryMahkotaRaja` | King's Crown | Mahkota Raja | Name of the accessory "King's Crown". | |
+| `accessoryMahkotaRajaDesc` | King of the room. Taxes paid in head scratches. | Raja kamar. Pajaknya dibayar pakai elusan. | Shop description of the accessory "King's Crown". | |
+| `snackIkanAsin` | Salted Fish | Ikan Asin | Name of the snack "Salted Fish". | |
+| `snackIkanAsinDesc` | Salty, savory, the neighbors can smell it. | Asin, gurih, baunya sampai tetangga. | Shop description of the snack "Salted Fish". | |
+| `snackSusu` | Milk | Susu | Name of the snack "Milk". | |
+| `snackSusuDesc` | A small saucer. White whiskers guaranteed. | Sepiring kecil. Kumis jadi putih. | Shop description of the snack "Milk". | |
+| `snackTuna` | Canned Tuna | Tuna Kaleng | Name of the snack "Canned Tuna". | |
+| `snackTunaDesc` | The can opening summons every cat. | Bunyi kalengnya bikin semua kucing datang. | Shop description of the snack "Canned Tuna". | |
+| `snackBiskuit` | Cat Biscuits | Biskuit Kucing | Name of the snack "Cat Biscuits". | |
+| `snackBiskuitDesc` | Crunchy and cheap. Not very filling. | Kriuk dan murah. Kenyangnya sedikit. | Shop description of the snack "Cat Biscuits". | |
+| `snackPuding` | Fish Pudding | Puding Ikan | Name of the snack "Fish Pudding". | |
+| `snackPudingDesc` | Fancy. Very filling, very happy. | Mewah. Kenyang banget, senang banget. | Shop description of the snack "Fish Pudding". | |
+| `rarityCommon` | Common | Biasa | Accessory rarity badge in the shop: common. | |
+| `rarityRare` | Rare | Langka | Accessory rarity badge in the shop: rare. | |
+| `raritySpecial` | Special | Spesial | Accessory rarity badge in the shop: special. | |
+| `shop` | Shop | Toko | Shop screen title, and the menu button that opens it. | |
+| `shopTabItems` | Items | Barang | Shop tab: room items. | |
+| `shopTabKitties` | Cats | Kucing | Shop tab: collection cats. | |
+| `shopTabAccessories` | Accessories | Aksesoris | Shop tab: accessories. | |
+| `shopTabSnacks` | Food | Makanan | Shop tab: snacks. | |
+| `shopKittyIntro` | Every cat shares the room with Oyen. Oyen agrees. Probably. | Semua kucing tinggal sekamar dengan Oyen. Oyen setuju. Kayaknya. | Line above the cat cards in the shop. | |
+| `shopSnackIntro` | Snacks go into your stock. Hand them out from the cat card in the room. | Camilan masuk stok. Kasih lewat kartu kucing di kamar. | Line above the snack cards in the shop. | |
+| `shopOwnedTag` | Yours | Punyamu | Shop card badge: already owned. | |
+| `shopLivesHere` | Lives in the room | Tinggal di kamar | Shop card badge: this cat already lives in the room. | |
+| `shopNotEnoughTag` | Not enough coins | Koin kurang | Shop card badge: the player cannot afford this yet. | |
+| `shopShortBy` | {n, plural, one{{n} coin short} other{{n} coins short}} | Kurang {n} koin | How many coins are still missing for this cat. Placeholders: `{n}`. | |
+| `shopAdopt` | Adopt · {n} | Adopsi · {n} | Shop cat card button: adopt for this many coins. Placeholders: `{n}`. | |
+| `shopBuyShort` | Buy · {n} | Beli · {n} | Shop snack card button: buy for this many coins. Placeholders: `{n}`. | |
+| `shopStock` | Stock: {n} | Stok: {n} | Shop snack card: how many are in stock. Placeholders: `{n}`. | |
+| `shopTryOn` | Try on: | Coba di: | Label before the row of cats used for the accessory preview. | |
+| `shopPreviewOf` | Preview · {name} | Pratinjau · {name} | Accessory preview panel overline, with the cat name. Placeholders: `{name}`. | |
+| `shopWearFree` | Wear · Free | Pakai · Gratis | Button: put the owned accessory on the previewed cat, for free. | |
+| `shopRemoveFree` | Take off · Free | Lepas · Gratis | Button: take the accessory off the previewed cat, for free. | |
+| `shopPlayFirst` | Play a puzzle first, the coins will follow. | Main puzzle dulu, koinnya nyusul. | Hint under the accessory button when coins are missing. | |
+| `shopWornBy` | Worn by {name} | Dipakai {name} | Accessory card note: which cats wear it (comma separated names). Placeholders: `{name}`. | |
+| `shopFlashNice` | Looking good! | Cakep! | Cheer shown after putting an accessory on a cat. | |
+| `shopFlashRemoved` | Off, free of charge | Lepas, gratis | Note shown after taking an accessory off. | |
+| `shopFlashSpent` | {n, plural, one{-{n} coin} other{-{n} coins}} | -{n} koin | Floating note after buying a snack: coins spent. Placeholders: `{n}`. | |
+| `shopPreviewPickLabel` | Try the accessory on {name} | Coba aksesoris di {name} | Screen reader label of a cat button in the preview row. Placeholders: `{name}`. | |
+| `shopCardBuyLabel` | {name}, {n, plural, one{{n} coin} other{{n} coins}} | {name}, {n} koin | Screen reader label of a shop card the player can afford. Placeholders: `{name}`, `{n}`. | |
+| `shopCardShortLabel` | {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | {name}, {n} koin, koin kurang | Screen reader label of a shop card that costs more than the balance. Placeholders: `{name}`, `{n}`. | |
+| `shopCardOwnedLabel` | {name}, already yours | {name}, sudah punyamu | Screen reader label of a shop card for something already owned. Placeholders: `{name}`. | |
+| `shopCardLivesLabel` | {name}, already lives in the room | {name}, sudah tinggal di kamar | Screen reader label of a cat card for a cat already adopted. Placeholders: `{name}`. | |
+| `shopAccessoryViewLabel` | View {name} | Lihat {name} | Screen reader label of an accessory card (tapping only previews it). Placeholders: `{name}`. | |
+| `shopSnackBuyLabel` | Buy {name} for {n, plural, one{{n} coin} other{{n} coins}} | Beli {name} seharga {n} koin | Screen reader label of the snack buy button. Placeholders: `{name}`, `{n}`. | |
+| `shopSnackShortLabel` | Buy {name} for {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | Beli {name} seharga {n} koin, koin kurang | Screen reader label of the snack buy button when coins are missing. Placeholders: `{name}`, `{n}`. | |
+| `buySheetLabel` | Buy {name} | Beli {name} | Screen reader label of the buy confirmation sheet. Placeholders: `{name}`. | |
+| `buySuccessOverline` | Success! | Berhasil! | Overline above the title after a successful purchase. | |
+| `buySuccessItem` | {name} is yours! | {name} jadi punyamu! | Buy sheet title after buying a room item. Placeholders: `{name}`. | |
+| `buySuccessItemBody` | It's in storage. Place it in decorate mode. | Sudah masuk Gudang. Taruh lewat mode Hias. | Buy sheet body after buying a room item. | |
+| `buySuccessKitty` | {name} moved into the room! | {name} pindah ke kamar! | Buy sheet title after adopting a cat. Placeholders: `{name}`. | |
+| `buySuccessKittyBody` | Say hi in the room. Expect some fake indifference first. | Sapa dia di kamar. Mungkin pura-pura cuek dulu. | Buy sheet body after adopting a cat. | |
+| `buySuccessAccessory` | {name} is yours forever! | {name} milikmu selamanya! | Buy sheet title after buying an accessory. Placeholders: `{name}`. | |
+| `buySuccessAccessoryBody` | Put it on {name} now, or move it to another cat any time. | Pasang di {name} sekarang, atau pindahkan ke kucing lain kapan saja. | Buy sheet body after buying an accessory, with the previewed cat name. Placeholders: `{name}`. | |
+| `buyAccessoryInfo` | Buy once, keep forever. Free to put on and take off, for every cat. | Sekali beli, milikmu selamanya. Pasang-lepas gratis, buat semua kucing. | Note in the accessory buy sheet before paying. | |
+| `buyPay` | Buy · {n, plural, one{{n} coin} other{{n} coins}} | Beli · {n} koin | Buy sheet button: pay this many coins. Placeholders: `{n}`. | |
+| `buyLater` | Maybe later | Nanti dulu | Buy sheet button: close without buying. | |
+| `buyAgain` | Keep shopping | Belanja lagi | Buy sheet button after a purchase: back to the shop. | |
+| `buySeeRoom` | See it in the room | Lihat di kamar | Buy sheet button after a purchase: open the room. | |
+| `buyWearOn` | Wear on {name} | Pakai di {name} | Buy sheet button after buying an accessory: put it on this cat. Placeholders: `{name}`. | |
+| `buyNotEnoughHelp` | Play a puzzle or watch a rewarded ad to get more coins. | Main puzzle atau tonton iklan berhadiah buat nambah koin. | Buy sheet hint when the player cannot afford the item. | |
+| `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} other{sitting still}} | {pose, select, idle{duduk diam} lick{menjilat kaki} walk1{jalan} walk2{jalan} sleep{tidur melingkar} eat{makan dari mangkuk} play{main menepuk mainan} scratch{menggaruk tiang} happy{senang} lesu{lesu} rebah{rebahan santai} petted{dielus dan mendengkur} other{duduk diam}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
+| `kittyLabel` | {name} {pose} | {name} {pose} | Screen reader label of a room cat: name and what it is doing. Placeholders: `{name}`, `{pose}`. | |
+| `kittyLabelAccessory` | {name} {pose}, wearing a {accessory} | {name} {pose}, memakai {accessory} | Screen reader label of a room cat wearing an accessory. Placeholders: `{name}`, `{pose}`, `{accessory}`. | |
 
 ---
 

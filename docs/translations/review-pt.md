@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-278 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+431 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -303,6 +303,159 @@ for the store listing at the end.
 | `fontCredits` | Fonts: Fredoka and Nunito (SIL Open Font License). | Fontes: Fredoka e Nunito (SIL Open Font License). | Font credits. | |
 | `soundCredits` | Sound effects: Kenney and OpenGameArt (CC0). The music was made just for Ginger Logic. | Efeitos sonoros: Kenney e OpenGameArt (CC0). A música foi feita especialmente para o Ginger Logic. | About card: credits for sound effects (CC0 sources) and the original music. | |
 | `licenses` | Licenses | Licenças | Button: open the licenses page. | |
+| `roomItemTikus` | Toy Mouse | Ratinho de Brinquedo | Name of the room item "Toy Mouse". | |
+| `roomItemTikusDesc` | Never runs away, still gets chased. | Nunca foge, mas é sempre caçado. | Shop description of the room item "Toy Mouse". | |
+| `roomItemAkuarium` | Aquarium | Aquário | Name of the room item "Aquarium". | |
+| `roomItemAkuariumDesc` | All-day entertainment. The fish are a bit nervous. | Diversão o dia inteiro. Os peixes ficam meio nervosos. | Shop description of the room item "Aquarium". | |
+| `roomItemRumah` | Cat House | Casinha de Gato | Name of the room item "Cat House". | |
+| `roomItemRumahDesc` | Has its own house, still sleeps in the box. | Tem a própria casa e dorme na caixa. | Shop description of the room item "Cat House". | |
+| `roomItemKasur` | Cushion Bed | Caminha Almofadada | Name of the room item "Cushion Bed". | |
+| `roomItemKasurDesc` | Soft. Used 60% of the time, the rest is box. | Fofa. Usada 60% do tempo, o resto é caixa. | Shop description of the room item "Cushion Bed". | |
+| `roomItemCatnip` | Catnip Pot | Vaso de Catnip | Name of the room item "Catnip Pot". | |
+| `roomItemCatnipDesc` | One sniff and the dancing starts. | Uma cheirada e já vem a dancinha. | Shop description of the room item "Catnip Pot". | |
+| `roomItemJam` | Cat Clock | Relógio de Gato | Name of the room item "Cat Clock". | |
+| `roomItemJamDesc` | The tail swings every second. Hypnotic. | A cauda balança a cada segundo. Hipnótico. | Shop description of the room item "Cat Clock". | |
+| `roomItemKardus` | Cozy Box | Caixa Confortável | Name of the room item "Cozy Box". | |
+| `roomItemKardusDesc` | It's the box that gets picked, not what came in it. | O escolhido é a caixa, não o que vinha dentro. | Shop description of the room item "Cozy Box". | |
+| `roomItemBola` | Yarn Ball | Bola de Lã | Name of the room item "Yarn Ball". | |
+| `roomItemBolaDesc` | Tangled in 3 seconds. That's the feature. | Embaraçada em 3 segundos. É recurso, não defeito. | Shop description of the room item "Yarn Ball". | |
+| `roomItemKarpet` | Round Rug | Tapete Redondo | Name of the room item "Round Rug". | |
+| `roomItemKarpetDesc` | The official rolling-around spot. | O lugar oficial para rolar. | Shop description of the room item "Round Rug". | |
+| `roomItemTiang` | Scratching Post | Arranhador | Name of the room item "Scratching Post". | |
+| `roomItemTiangDesc` | So Mom's sofa survives. Hopefully. | Para o sofá da mãe sobreviver. Tomara. | Shop description of the room item "Scratching Post". | |
+| `roomItemLukisan` | Fish Painting | Quadro de Peixe | Name of the room item "Fish Painting". | |
+| `roomItemLukisanDesc` | Art that makes you hungry. | Arte que dá fome. | Shop description of the room item "Fish Painting". | |
+| `roomItemRak` | Wall Shelf | Prateleira | Name of the room item "Wall Shelf". | |
+| `roomItemRakDesc` | VIP seat for watching everyone. | Assento VIP para vigiar todo mundo. | Shop description of the room item "Wall Shelf". | |
+| `roomItemPancingan` | Feather Wand | Varinha de Penas | Name of the room item "Feather Wand". | |
+| `roomItemPancinganDesc` | Chases the feather, leaves its dignity behind. | Corre atrás da pena e deixa a dignidade para trás. | Shop description of the room item "Feather Wand". | |
+| `roomItemLampuBulan` | Moon Lamp | Lâmpada Lua | Name of the room item "Moon Lamp". | |
+| `roomItemLampuBulanDesc` | A private moon, no need to wait for night. | Uma lua particular, sem esperar a noite. | Shop description of the room item "Moon Lamp". | |
+| `roomItemBantalIkan` | Fish Pillow | Almofada de Peixe | Name of the room item "Fish Pillow". | |
+| `roomItemBantalIkanDesc` | Soft, and fishy only to look at. | Fofa, e com cara de peixe só na aparência. | Shop description of the room item "Fish Pillow". | |
+| `roomItemMonstera` | Monstera Plant | Costela-de-Adão | Name of the room item "Monstera Plant". | |
+| `roomItemMonsteraDesc` | The leaves have holes. Not Oyen's doing. This time. | As folhas têm buracos. Não foi o Oyen. Dessa vez. | Shop description of the room item "Monstera Plant". | |
+| `roomItemTerowongan` | Cat Tunnel | Túnel de Gato | Name of the room item "Cat Tunnel". | |
+| `roomItemTerowonganDesc` | One cat goes in, style comes out. | Entra um gato, sai com estilo. | Shop description of the room item "Cat Tunnel". | |
+| `roomItemHammock` | Window Hammock | Rede de Janela | Name of the room item "Window Hammock". | |
+| `roomItemHammockDesc` | Naps with a swing. Wake up and it's evening. | Soneca balançando. Acorda e já é tarde. | Shop description of the room item "Window Hammock". | |
+| `roomItemSofaMini` | Mini Sofa | Sofá Mini | Name of the room item "Mini Sofa". | |
+| `roomItemSofaMiniDesc` | Its own sofa, so Mom's is safe. Allegedly. | Sofá próprio, então o da mãe está seguro. Dizem. | Shop description of the room item "Mini Sofa". | |
+| `roomItemJendelaBurung` | Bird Window | Janela dos Pássaros | Name of the room item "Bird Window". | |
+| `roomItemJendelaBurungDesc` | 24-hour cat TV, all birds, no ads. | TV de gato 24 horas, só pássaros, sem anúncios. | Shop description of the room item "Bird Window". | |
+| `roomItemMangkuk` | Food bowl | Comedouro | Name of the room item "Food bowl". | |
+| `kittyOyen` | Oyen | Oyen | Name of the collection cat "Oyen". | |
+| `kittyOyenDesc` | The ginger cat you wake up every level. | O gato laranja que você acorda em cada nível. | Shop description of the collection cat "Oyen". | |
+| `kittySalju` | Snowy | Neve | Name of the collection cat "Snowy". | |
+| `kittySaljuDesc` | Spotless white. Stays that way until it finds a box. | Branquinho. Continua assim até achar uma caixa. | Shop description of the collection cat "Snowy". | |
+| `kittyTelon` | Patches | Tricolor | Name of the collection cat "Patches". | |
+| `kittyTelonDesc` | Three colors, three moods a minute. | Três cores, três humores por minuto. | Shop description of the collection cat "Patches". | |
+| `kittyArang` | Charcoal | Carvão | Name of the collection cat "Charcoal". | |
+| `kittyArangDesc` | Deep black, yellow eyes. Expert shadow hider. | Preto profundo, olhos amarelos. Mestre em se esconder nas sombras. | Shop description of the collection cat "Charcoal". | |
+| `kittyMendung` | Cloudy | Nublado | Name of the collection cat "Cloudy". | |
+| `kittyMendungDesc` | Looks sad, is just sleepy. | Parece triste, só está com sono. | Shop description of the collection cat "Cloudy". | |
+| `kittyKopiSusu` | Latte | Latte | Name of the collection cat "Latte". | |
+| `kittyKopiSusuDesc` | Sweet, a little bitter when woken up. | Doce, meio amargo quando acordado. | Shop description of the collection cat "Latte". | |
+| `kittyMochi` | Mochi | Mochi | Name of the collection cat "Mochi". | |
+| `kittyMochiDesc` | Calm, squishy, face like it played in mud. | Calmo, fofinho, cara de quem brincou na lama. | Shop description of the collection cat "Mochi". | |
+| `kittyBos` | Boss | Chefe | Name of the collection cat "Boss". | |
+| `kittyBosDesc` | Always in a suit. Meetings at every mealtime. | Sempre de terno. Reunião em toda hora de comer. | Shop description of the collection cat "Boss". | |
+| `kittyKembang` | Blossom | Florzinha | Name of the collection cat "Blossom". | |
+| `kittyKembangDesc` | Abstract markings, abstract behavior. | Manchas abstratas, comportamento também. | Shop description of the collection cat "Blossom". | |
+| `accessoryPita` | Ribbon | Fitinha | Name of the accessory "Ribbon". | |
+| `accessoryPitaDesc` | Simple, sweet, easy to put on. | Simples, fofa, fácil de colocar. | Shop description of the accessory "Ribbon". | |
+| `accessoryJepitBunga` | Flower Clip | Presilha de Flor | Name of the accessory "Flower Clip". | |
+| `accessoryJepitBungaDesc` | Always in bloom, never needs water. | Sempre florida, nunca precisa de água. | Shop description of the accessory "Flower Clip". | |
+| `accessoryBandana` | Bandana | Bandana | Name of the accessory "Bandana". | |
+| `accessoryBandanaDesc` | Cowboy style, suburban edition. | Estilo caubói de condomínio. | Shop description of the accessory "Bandana". | |
+| `accessoryDasiKupu` | Bow Tie | Gravata-Borboleta | Name of the accessory "Bow Tie". | |
+| `accessoryDasiKupuDesc` | Ready for the party, no invitation. | Pronto para a festa, sem convite. | Shop description of the accessory "Bow Tie". | |
+| `accessoryKalung` | Bell Collar | Coleira com Sininho | Name of the accessory "Bell Collar". | |
+| `accessoryKalungDesc` | Jingle jingle. Busted on every fish heist. | Tlim-tlim. Flagrado em todo roubo de peixe. | Shop description of the accessory "Bell Collar". | |
+| `accessorySyal` | Knit Scarf | Cachecol de Tricô | Name of the accessory "Knit Scarf". | |
+| `accessorySyalDesc` | Warm. Knitted by an imaginary grandma. | Quentinho. Tricotado por uma vovó imaginária. | Shop description of the accessory "Knit Scarf". | |
+| `accessoryBeanie` | Beanie | Gorro | Name of the accessory "Beanie". | |
+| `accessoryBeanieDesc` | Warm. Even though it's hot outside. | Quentinho. Mesmo com calor lá fora. | Shop description of the accessory "Beanie". | |
+| `accessoryTopiKoki` | Chef Hat | Chapéu de Chef | Name of the accessory "Chef Hat". | |
+| `accessoryTopiKokiDesc` | Cooking? No. Tasting? Always. | Cozinhar? Não. Provar? Sempre. | Shop description of the accessory "Chef Hat". | |
+| `accessoryBaret` | Beret | Boina | Name of the accessory "Beret". | |
+| `accessoryBaretDesc` | Instant artist. Masterpiece: a torn pillow. | Artista instantâneo. Obra-prima: almofada rasgada. | Shop description of the accessory "Beret". | |
+| `accessoryKacamata` | Round Glasses | Óculos Redondos | Name of the accessory "Round Glasses". | |
+| `accessoryKacamataDesc` | Looks smart. Still knocks the vase over. | Parece inteligente. Ainda derruba o vaso. | Shop description of the accessory "Round Glasses". | |
+| `accessoryHeadphone` | Headphones | Fones de Ouvido | Name of the accessory "Headphones". | |
+| `accessoryHeadphoneDesc` | Lo-fi on, pretending to be busy. | Lo-fi ligado, fingindo estar ocupado. | Shop description of the accessory "Headphones". | |
+| `accessoryTandukRusa` | Reindeer Antlers | Chifres de Rena | Name of the accessory "Reindeer Antlers". | |
+| `accessoryTandukRusaDesc` | A pretend reindeer. Still meows. | Rena de mentirinha. Mia do mesmo jeito. | Shop description of the accessory "Reindeer Antlers". | |
+| `accessoryTopiPesta` | Party Hat | Chapéu de Festa | Name of the accessory "Party Hat". | |
+| `accessoryTopiPestaDesc` | Every day is a birthday when you're a cat. | Todo dia é aniversário quando você é gato. | Shop description of the accessory "Party Hat". | |
+| `accessoryTopiPenyihir` | Wizard Hat | Chapéu de Mago | Name of the accessory "Wizard Hat". | |
+| `accessoryTopiPenyihirDesc` | Can make fish appear. Allegedly. | Faz peixe aparecer. Dizem. | Shop description of the accessory "Wizard Hat". | |
+| `accessoryMahkota` | Flower Crown | Coroa de Flores | Name of the accessory "Flower Crown". | |
+| `accessoryMahkotaDesc` | Queen of the room. Don't eat the flowers. | Rainha do quarto. Não coma as flores. | Shop description of the accessory "Flower Crown". | |
+| `accessoryMahkotaRaja` | King's Crown | Coroa de Rei | Name of the accessory "King's Crown". | |
+| `accessoryMahkotaRajaDesc` | King of the room. Taxes paid in head scratches. | Rei do quarto. Impostos pagos em carinho. | Shop description of the accessory "King's Crown". | |
+| `snackIkanAsin` | Salted Fish | Peixe Salgado | Name of the snack "Salted Fish". | |
+| `snackIkanAsinDesc` | Salty, savory, the neighbors can smell it. | Salgado, saboroso, o vizinho sente o cheiro. | Shop description of the snack "Salted Fish". | |
+| `snackSusu` | Milk | Leite | Name of the snack "Milk". | |
+| `snackSusuDesc` | A small saucer. White whiskers guaranteed. | Um pratinho. O bigode fica branco. | Shop description of the snack "Milk". | |
+| `snackTuna` | Canned Tuna | Atum em Lata | Name of the snack "Canned Tuna". | |
+| `snackTunaDesc` | The can opening summons every cat. | O som da lata chama todos os gatos. | Shop description of the snack "Canned Tuna". | |
+| `snackBiskuit` | Cat Biscuits | Biscoitos de Gato | Name of the snack "Cat Biscuits". | |
+| `snackBiskuitDesc` | Crunchy and cheap. Not very filling. | Crocante e barato. Enche pouco. | Shop description of the snack "Cat Biscuits". | |
+| `snackPuding` | Fish Pudding | Pudim de Peixe | Name of the snack "Fish Pudding". | |
+| `snackPudingDesc` | Fancy. Very filling, very happy. | Chique. Enche muito, alegra muito. | Shop description of the snack "Fish Pudding". | |
+| `rarityCommon` | Common | Comum | Accessory rarity badge in the shop: common. | |
+| `rarityRare` | Rare | Raro | Accessory rarity badge in the shop: rare. | |
+| `raritySpecial` | Special | Especial | Accessory rarity badge in the shop: special. | |
+| `shop` | Shop | Loja | Shop screen title, and the menu button that opens it. | |
+| `shopTabItems` | Items | Objetos | Shop tab: room items. | |
+| `shopTabKitties` | Cats | Gatos | Shop tab: collection cats. | |
+| `shopTabAccessories` | Accessories | Acessórios | Shop tab: accessories. | |
+| `shopTabSnacks` | Food | Comida | Shop tab: snacks. | |
+| `shopKittyIntro` | Every cat shares the room with Oyen. Oyen agrees. Probably. | Todos os gatos moram no quarto do Oyen. O Oyen concorda. Acho. | Line above the cat cards in the shop. | |
+| `shopSnackIntro` | Snacks go into your stock. Hand them out from the cat card in the room. | Os petiscos vão para o estoque. Entregue pela ficha do gato no quarto. | Line above the snack cards in the shop. | |
+| `shopOwnedTag` | Yours | Seu | Shop card badge: already owned. | |
+| `shopLivesHere` | Lives in the room | Mora no quarto | Shop card badge: this cat already lives in the room. | |
+| `shopNotEnoughTag` | Not enough coins | Moedas de menos | Shop card badge: the player cannot afford this yet. | |
+| `shopShortBy` | {n, plural, one{{n} coin short} other{{n} coins short}} | {n, plural, one{Falta {n} moeda} other{Faltam {n} moedas}} | How many coins are still missing for this cat. Placeholders: `{n}`. | |
+| `shopAdopt` | Adopt · {n} | Adotar · {n} | Shop cat card button: adopt for this many coins. Placeholders: `{n}`. | |
+| `shopBuyShort` | Buy · {n} | Comprar · {n} | Shop snack card button: buy for this many coins. Placeholders: `{n}`. | |
+| `shopStock` | Stock: {n} | Estoque: {n} | Shop snack card: how many are in stock. Placeholders: `{n}`. | |
+| `shopTryOn` | Try on: | Testar em: | Label before the row of cats used for the accessory preview. | |
+| `shopPreviewOf` | Preview · {name} | Prévia · {name} | Accessory preview panel overline, with the cat name. Placeholders: `{name}`. | |
+| `shopWearFree` | Wear · Free | Usar · Grátis | Button: put the owned accessory on the previewed cat, for free. | |
+| `shopRemoveFree` | Take off · Free | Tirar · Grátis | Button: take the accessory off the previewed cat, for free. | |
+| `shopPlayFirst` | Play a puzzle first, the coins will follow. | Jogue um quebra-cabeça, as moedas vêm depois. | Hint under the accessory button when coins are missing. | |
+| `shopWornBy` | Worn by {name} | Usado por {name} | Accessory card note: which cats wear it (comma separated names). Placeholders: `{name}`. | |
+| `shopFlashNice` | Looking good! | Ficou lindo! | Cheer shown after putting an accessory on a cat. | |
+| `shopFlashRemoved` | Off, free of charge | Tirado, de graça | Note shown after taking an accessory off. | |
+| `shopFlashSpent` | {n, plural, one{-{n} coin} other{-{n} coins}} | {n, plural, one{-{n} moeda} other{-{n} moedas}} | Floating note after buying a snack: coins spent. Placeholders: `{n}`. | |
+| `shopPreviewPickLabel` | Try the accessory on {name} | Testar o acessório em {name} | Screen reader label of a cat button in the preview row. Placeholders: `{name}`. | |
+| `shopCardBuyLabel` | {name}, {n, plural, one{{n} coin} other{{n} coins}} | {name}, {n, plural, one{{n} moeda} other{{n} moedas}} | Screen reader label of a shop card the player can afford. Placeholders: `{name}`, `{n}`. | |
+| `shopCardShortLabel` | {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | {name}, {n, plural, one{{n} moeda} other{{n} moedas}}, moedas de menos | Screen reader label of a shop card that costs more than the balance. Placeholders: `{name}`, `{n}`. | |
+| `shopCardOwnedLabel` | {name}, already yours | {name}, já é seu | Screen reader label of a shop card for something already owned. Placeholders: `{name}`. | |
+| `shopCardLivesLabel` | {name}, already lives in the room | {name}, já mora no quarto | Screen reader label of a cat card for a cat already adopted. Placeholders: `{name}`. | |
+| `shopAccessoryViewLabel` | View {name} | Ver {name} | Screen reader label of an accessory card (tapping only previews it). Placeholders: `{name}`. | |
+| `shopSnackBuyLabel` | Buy {name} for {n, plural, one{{n} coin} other{{n} coins}} | Comprar {name} por {n, plural, one{{n} moeda} other{{n} moedas}} | Screen reader label of the snack buy button. Placeholders: `{name}`, `{n}`. | |
+| `shopSnackShortLabel` | Buy {name} for {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | Comprar {name} por {n, plural, one{{n} moeda} other{{n} moedas}}, moedas de menos | Screen reader label of the snack buy button when coins are missing. Placeholders: `{name}`, `{n}`. | |
+| `buySheetLabel` | Buy {name} | Comprar {name} | Screen reader label of the buy confirmation sheet. Placeholders: `{name}`. | |
+| `buySuccessOverline` | Success! | Sucesso! | Overline above the title after a successful purchase. | |
+| `buySuccessItem` | {name} is yours! | {name} agora é seu! | Buy sheet title after buying a room item. Placeholders: `{name}`. | |
+| `buySuccessItemBody` | It's in storage. Place it in decorate mode. | Está no depósito. Coloque no modo Decorar. | Buy sheet body after buying a room item. | |
+| `buySuccessKitty` | {name} moved into the room! | {name} se mudou para o quarto! | Buy sheet title after adopting a cat. Placeholders: `{name}`. | |
+| `buySuccessKittyBody` | Say hi in the room. Expect some fake indifference first. | Diga oi no quarto. Talvez finja não ligar no começo. | Buy sheet body after adopting a cat. | |
+| `buySuccessAccessory` | {name} is yours forever! | {name} é seu para sempre! | Buy sheet title after buying an accessory. Placeholders: `{name}`. | |
+| `buySuccessAccessoryBody` | Put it on {name} now, or move it to another cat any time. | Coloque no {name} agora, ou passe para outro gato quando quiser. | Buy sheet body after buying an accessory, with the previewed cat name. Placeholders: `{name}`. | |
+| `buyAccessoryInfo` | Buy once, keep forever. Free to put on and take off, for every cat. | Compre uma vez, é seu para sempre. Colocar e tirar é grátis, para todos os gatos. | Note in the accessory buy sheet before paying. | |
+| `buyPay` | Buy · {n, plural, one{{n} coin} other{{n} coins}} | Comprar · {n, plural, one{{n} moeda} other{{n} moedas}} | Buy sheet button: pay this many coins. Placeholders: `{n}`. | |
+| `buyLater` | Maybe later | Fica para depois | Buy sheet button: close without buying. | |
+| `buyAgain` | Keep shopping | Continuar comprando | Buy sheet button after a purchase: back to the shop. | |
+| `buySeeRoom` | See it in the room | Ver no quarto | Buy sheet button after a purchase: open the room. | |
+| `buyWearOn` | Wear on {name} | Usar no {name} | Buy sheet button after buying an accessory: put it on this cat. Placeholders: `{name}`. | |
+| `buyNotEnoughHelp` | Play a puzzle or watch a rewarded ad to get more coins. | Jogue um quebra-cabeça ou veja um anúncio premiado para ganhar moedas. | Buy sheet hint when the player cannot afford the item. | |
+| `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} other{sitting still}} | {pose, select, idle{sentado quietinho} lick{lambendo a patinha} walk1{andando} walk2{andando} sleep{dormindo enroladinho} eat{comendo da tigela} play{brincando com o brinquedo} scratch{arranhando o poste} happy{feliz} lesu{sem ânimo} rebah{deitado de boa} petted{recebendo carinho, ronronando} other{sentado quietinho}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
+| `kittyLabel` | {name} {pose} | {name} {pose} | Screen reader label of a room cat: name and what it is doing. Placeholders: `{name}`, `{pose}`. | |
+| `kittyLabelAccessory` | {name} {pose}, wearing a {accessory} | {name} {pose}, usando {accessory} | Screen reader label of a room cat wearing an accessory. Placeholders: `{name}`, `{pose}`, `{accessory}`. | |
 
 ---
 
