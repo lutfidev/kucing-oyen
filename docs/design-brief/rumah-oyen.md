@@ -4,7 +4,13 @@
 >
 > Pemilik repo juga meminta perubahan sendiri sesudah brief ini: Peci dan sarung dihapus, Lemari Kostum diganti tab Aksesoris di Toko, dan animasi natural ditambahkan. Lihat "Perubahan 28 Oktober" di spesifikasi.
 >
-> Yang masih kurang hanya **Topi Koki versi baru**. Tempel blok "Tambahan: Topi Koki" di bagian paling bawah ke kanvas yang sama.
+> **Status terbaru 28 Okt 2026: isi tambahan sudah masuk ke desain.** Isinya:
+> - Topi Koki versi baru dan 8 aksesoris lain
+> - 4 kucing
+> - 8 barang
+> - 2 camilan
+>
+> Isi ini dibuat dengan prompt yang lebih lengkap daripada blok "Tambahan: Topi Koki" di bawah. Blok itu disimpan hanya sebagai catatan dan tidak perlu ditempel lagi.
 
 Brief ini dipakai untuk menambah layar baru ke proyek Claude Design "Kucing Oren" yang sudah ada, yaitu proyek yang menghasilkan halaman 01–18 di `docs/design/source/`. Isi aturannya ada di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`.
 
@@ -88,4 +94,53 @@ Tambahkan aksesoris ke-8, "Topi Koki", ke sistem aksesoris yang sudah ada (kompo
 - Tambahkan sebagai opsi prop aksesoris "topiKoki" di Kucing.dc.html dan IkonAksesoris.dc.html, ikut semua pose (termasuk varian kecil saat tidur), dan baris barunya di halaman 21b.
 - Tambahkan kartunya di tab Aksesoris Toko (urut harga: setelah Beanie, sebelum Kacamata Bulat).
 Jangan mengubah hal lain.
+```
+
+## Tambahan isi (yang dipakai 28 Okt 2026)
+
+Prompt ini menggantikan blok "Tambahan: Topi Koki" di atas, dan sudah ditempel ke kanvas yang sama.
+
+```markdown
+Tambahkan isi baru ke Rumah Oyen. Pakai komponen yang sudah ada (Kucing, IkonAksesoris, Barang, KartuToko, Toko, AksesorisPreview 21b, BarangKamar 22, AnimasiKucing 21c), gaya dan palet yang sama. Jangan mengubah tata letak layar atau isi yang sudah ada.
+
+## Aksesoris baru (9)
+Aturan sama dengan aksesoris lama: digambar di grup kepala, ikut semua pose (termasuk varian kecil saat tidur), tidak menutupi mata atau ekspresi, tanpa atribut religius, tanpa merek nyata.
+- Topi Koki (kepala-atas): versi lebih bagus dari topi koki lama — putih tinggi menggembung lembut, lipatan di pangkal, sedikit miring. 200 koin, Langka.
+- Dasi Kupu-kupu (leher)
+- Syal Rajut (leher, ujung syal ikut bergoyang saat jalan)
+- Topi Baret (kepala-atas)
+- Jepit Bunga (kepala-samping)
+- Topi Penyihir (kepala-atas, ujungnya melengkung)
+- Headphone (kepala-atas, tidak menutupi telinga kucing; taruh di antara telinga)
+- Tanduk Rusa (kepala-atas)
+- Mahkota Raja (kepala-atas, Spesial, paling mahal)
+Beri harga 50–800 koin sesuai kelangkaan (Biasa/Langka/Spesial) dan deskripsi jenaka satu baris. Tambahkan sebagai opsi prop aksesoris di Kucing dan IkonAksesoris, baris baru di 21b, dan kartu di tab Aksesoris Toko (urut harga).
+
+## Kucing baru (4), bentuk sama dengan Oyen, hanya warna/corak
+- Kopi Susu: cokelat muda, perut krem
+- Mochi: krem dengan wajah, telinga, kaki, dan ekor cokelat tua (gaya siam)
+- Bos: hitam-putih seperti pakai jas, kaki putih seperti kaus kaki
+- Kembang: kulit kura-kura (hitam dan oranye bercampur)
+Harga 300–700 koin, deskripsi jenaka satu baris. Tambahkan ke prop kucing di Kucing.dc.html, ke halaman sprite 21, dan ke tab Kucing Toko.
+
+## Barang kamar baru (8)
+Tiap barang: keadaan diam, keadaan sedang dipakai kucing, dan satu animasi kecil kalau cocok.
+Lantai:
+- Terowongan Kucing (sembunyi, kepala nongol dari ujung)
+- Pancingan Bulu (main, bulunya bergoyang)
+- Bantal Ikan (tidur)
+- Sofa Mini (duduk/rebahan)
+- Tanaman Monstera (hiasan, daun bergoyang pelan)
+Dinding:
+- Jendela Burung (nonton, burung kecil lompat di luar)
+- Lampu Bulan (hiasan, cahaya berpendar pelan)
+- Hammock Jendela (tidur, berayun pelan)
+Harga 60–700 koin, deskripsi jenaka. Tambahkan ke komponen Barang, halaman 22, dan tab Barang Toko.
+
+## Makanan baru (2)
+- Biskuit Kucing (murah, sedikit kenyang)
+- Puding Ikan (mahal, kenyang banyak dan bikin senang)
+Tambahkan ke tab Makanan dan panel Camilan di kartu kucing.
+
+Perbarui halaman 21, 21b, 21c, 22, dan 24 supaya semua isi baru terlihat di sana.
 ```

@@ -250,7 +250,7 @@ Pemilik repo memutuskan ini saat brainstorming 26 Okt 2026. Alasannya: UI terasa
 - **Kebutuhan** berupa dua bar, Lapar (habis dalam 12 jam) dan Senang (16 jam).
 - **Makanan.** Mangkuk gratis tiap 4 jam (+40). Harga dan efek camilan diambil dari desain (lihat di bawah).
 - **Hadiah** 10 koin per kucing per hari saat kedua bar ≥ 70.
-- **Kucing** Arang, Mendung, Telon, Salju dan **12 barang**. Harganya diambil dari desain (lihat di bawah).
+- **Kucing koleksi dan barang**: jumlah dan harganya diambil dari desain (lihat di bawah).
 - **Kamar** satu layar, dengan posisi barang disimpan sebagai pecahan.
 - **Oyen penghuni penuh kamar.** Dia punya kebutuhan dan ikut dapat hadiah.
 - **"Lanjut"** sesudah menang: Oyen berjalan di peta ke level berikutnya, lalu level itu terbuka sendiri. Pembukaan ini bisa dibatalkan, dan tidak terjadi sesudah level 10 dan 20.
@@ -262,20 +262,28 @@ Pemilik repo memutuskan ini saat brainstorming 26 Okt 2026. Alasannya: UI terasa
 - **Peci dan Sarung dihapus.** Lemari Kostum diganti tombol **Aksesoris**, yang membuka tab Aksesoris di Toko. Aksesoris juga bisa diganti dari kartu kucing.
 - **Kostum lama dihapus tanpa migrasi**, karena belum ada pemain asli.
 - **Kacamata** diganti **Kacamata Bulat** dari desain.
-- **Topi Koki** tetap ada sebagai aksesoris ke-8, dengan gambar baru (tambahan brief).
+- **Topi Koki** tetap ada sebagai aksesoris, dengan gambar baru (sudah ada di desain).
 - **Aksesoris dibeli sekali dan dipakai semua kucing.** Memasangnya gratis.
 
 **Harga dan angka dari desain:**
-- **Kucing:** Salju 300, Mendung 350, Arang 400, Telon 550.
-- **Barang:** 50–900 koin, total 3.040.
-- **Aksesoris:** 50–600 koin.
-- **Camilan:** Susu 15, Ikan Asin 20, Tuna 40. Lapar +15/+25/+40 dan Senang +5.
+- **Kucing:** 8 kucing koleksi seharga 300–700 koin, total 3.650.
+- **Barang:** 20 barang seharga 50–900 koin, total 5.370.
+- **Aksesoris:** 16 aksesoris seharga 50–800 koin, total 4.260.
+- **Camilan:** 5 jenis seharga 10–90 koin. Lapar +10 sampai +60, Senang +2 sampai +15.
 - **Elus:** +10 Senang.
 - **Selesai menghias:** +5 Senang untuk semua kucing.
 - **Tanda lesu:** muncul di nilai ≤ 20.
 
 **Keputusan saya:**
-- **Topi Koki** seharga 200 koin, kelangkaan Langka, dipasang di kepala bagian atas.
 - **Batas Senang:** elus paling banyak +30 per jam, dan bonus selesai menghias paling banyak sekali per jam.
 - **Oyen di area puzzle** (papan, putar ulang, layar hasil, tutorial) tampil **tanpa aksesoris**. Desain hanya menggambar aksesoris di sprite kamar, dan sprite papan punya bentuk serta arah yang lain. Karena itu `OyenCostume` ikut dihapus di langkah 23.
 - **Iklan tetap +20 koin.** Angka "+50 koin iklan" di prototipe Kamar hanya peraga.
+
+**Isi tambahan (28 Okt 2026).** Pemilik repo meminta isi yang lebih banyak, dan isinya sudah masuk ke kanvas yang sama:
+- **Kucing baru:** Kopi Susu, Mochi, Bos, Kembang.
+- **Aksesoris baru (9):** Topi Koki versi baru, Jepit Bunga, Dasi Kupu-kupu, Syal Rajut, Topi Baret, Headphone, Tanduk Rusa, Topi Penyihir, Mahkota Raja.
+- **Barang baru (8):** Pancingan Bulu, Bantal Ikan, Monstera, Terowongan, Sofa Mini, Lampu Bulan, Hammock Jendela, Jendela Burung.
+- **Camilan baru:** Biskuit dan Puding Ikan.
+- **Pose baru:** rebahan.
+
+Total belanja jadi ±13.280 koin. Kalau pemain mengambil semua jatah koin harian, semuanya terbeli dalam sekitar 6 minggu. Ini sengaja jadi tujuan jangka panjang, dan angkanya bisa diseimbangkan sesudah dimainkan. Zona lantai atau dinding untuk barang baru ditentukan dari gambarnya (keputusan saya).
