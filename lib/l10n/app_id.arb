@@ -219,6 +219,7 @@
   "replay": "Putar Ulang",
   "arrangeAgain": "Atur Lagi",
   "replayStart": "Awal",
+  "replayPlay": "Putar otomatis",
   "backToResult": "Kembali ke hasil",
   "recording": "Rekaman",
   "replayStepCaption": "Langkah {n}. {text}",

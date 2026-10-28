@@ -975,6 +975,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get replayStart => 'Начало';
 
   @override
+  String get replayPlay => 'Автовоспроизведение';
+
+  @override
   String get backToResult => 'Назад к результату';
 
   @override

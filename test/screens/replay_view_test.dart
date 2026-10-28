@@ -229,6 +229,173 @@ void main() {
     });
   });
 
+  group('putar otomatis', () {
+    Future<void> tapPlay(WidgetTester tester, String label) async {
+      await tester.tap(_stepButton(label));
+      await tester.pump();
+    }
+
+    Rect track(WidgetTester tester) => tester.getRect(
+      find.descendant(
+        of: find.byType(ReplaySlider),
+        matching: find.byType(CustomPaint),
+      ),
+    );
+
+    testWidgets('maju sendiri per langkah lalu berhenti di akhir', (
+      tester,
+    ) async {
+      await _pumpReplay(tester, resultOf(levels[12], levels[12].solution));
+      await tapPlay(tester, 'Putar otomatis');
+      expect(_stepButton('Jeda'), findsOneWidget);
+      for (var i = 1; i <= 6; i++) {
+        await tester.pump(ReplayView.autoStepTime);
+        expect(_sliderValue(tester), i);
+        expect(_caption(tester).step, i);
+      }
+      await tester.pump(ReplayView.autoStepTime * 3);
+      expect(_sliderValue(tester), 6);
+      expect(_stepButton('Putar otomatis'), findsOneWidget);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('bingkai panjang hanya memajukan satu langkah', (tester) async {
+      await _pumpReplay(tester, resultOf(levels[12], levels[12].solution));
+      await tapPlay(tester, 'Putar otomatis');
+      await tester.pump(ReplayView.autoStepTime * 4);
+      expect(_sliderValue(tester), 1);
+      await tapPlay(tester, 'Jeda');
+    });
+
+    testWidgets('jeda', (tester) async {
+      await _pumpReplay(tester, resultOf(levels[12], levels[12].solution));
+      await tapPlay(tester, 'Putar otomatis');
+      await tester.pump(ReplayView.autoStepTime);
+      await tester.pump(ReplayView.autoStepTime);
+      expect(_sliderValue(tester), 2);
+      await tapPlay(tester, 'Jeda');
+      for (var i = 0; i < 3; i++) {
+        await tester.pump(ReplayView.autoStepTime);
+      }
+      expect(_sliderValue(tester), 2);
+      expect(_stepButton('Putar otomatis'), findsOneWidget);
+    });
+
+    testWidgets('slider dan tombol langkah menghentikan putar otomatis', (
+      tester,
+    ) async {
+      await _pumpReplay(tester, resultOf(levels[12], levels[12].solution));
+      await tapPlay(tester, 'Putar otomatis');
+      await tester.pump(ReplayView.autoStepTime);
+      await tester.pump(ReplayView.autoStepTime);
+      await tester.tapAt(track(tester).centerLeft + const Offset(2, 0));
+      await tester.pump();
+      for (var i = 0; i < 3; i++) {
+        await tester.pump(ReplayView.autoStepTime);
+      }
+      expect(_sliderValue(tester), 0);
+      expect(_stepButton('Putar otomatis'), findsOneWidget);
+
+      await tapPlay(tester, 'Putar otomatis');
+      await tester.pump(ReplayView.autoStepTime);
+      await tapPlay(tester, 'Maju satu langkah');
+      for (var i = 0; i < 3; i++) {
+        await tester.pump(ReplayView.autoStepTime);
+      }
+      expect(_sliderValue(tester), 2);
+      expect(_stepButton('Putar otomatis'), findsOneWidget);
+    });
+
+    testWidgets('di langkah terakhir mulai lagi dari awal', (tester) async {
+      await _pumpReplay(tester, resultOf(levels[12], levels[12].solution));
+      await tester.dragFrom(
+        track(tester).centerLeft,
+        Offset(track(tester).width, 0),
+      );
+      await tester.pumpAndSettle();
+      expect(_sliderValue(tester), 6);
+
+      await tapPlay(tester, 'Putar otomatis');
+      expect(_sliderValue(tester), 0);
+      await tester.pump(ReplayView.autoStepTime);
+      expect(_sliderValue(tester), 1);
+      await tapPlay(tester, 'Jeda');
+    });
+
+    testWidgets('kurangi gerak: tanpa tombol putar', (tester) async {
+      await _pumpReplay(
+        tester,
+        resultOf(levels[12], levels[12].solution),
+        disableAnimations: true,
+      );
+      expect(_stepButton('Putar otomatis'), findsNothing);
+      expect(find.byType(ReplayPlayButton), findsNothing);
+    });
+
+    testWidgets('kurangi gerak dinyalakan saat berputar: berhenti', (
+      tester,
+    ) async {
+      var still = false;
+      late StateSetter setOuter;
+      setScreenSize(tester, const Size(390, 844));
+      await tester.pumpWidget(
+        testApp(
+          home: StatefulBuilder(
+            builder: (context, setState) {
+              setOuter = setState;
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(disableAnimations: still),
+                child: Scaffold(
+                  body: ReplayView(
+                    session: resultOf(levels[12], levels[12].solution),
+                    onBack: () {},
+                    onMap: () {},
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tapPlay(tester, 'Putar otomatis');
+      await tester.pump(ReplayView.autoStepTime);
+      expect(_sliderValue(tester), 1);
+
+      setOuter(() => still = true);
+      await tester.pump();
+      for (var i = 0; i < 3; i++) {
+        await tester.pump(ReplayView.autoStepTime);
+      }
+      expect(_sliderValue(tester), 1);
+      expect(find.byType(ReplayPlayButton), findsNothing);
+    });
+
+    testWidgets('pembaca layar: label tombol dan caption', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await _pumpReplay(tester, resultOf(levels[12], levels[12].solution));
+      expect(find.bySemanticsLabel('Putar otomatis'), findsOneWidget);
+      expect(_caption(tester).announce, isTrue);
+
+      await tapPlay(tester, 'Putar otomatis');
+      expect(find.bySemanticsLabel('Jeda'), findsOneWidget);
+      expect(_caption(tester).announce, isFalse);
+
+      await tapPlay(tester, 'Jeda');
+      expect(_caption(tester).announce, isTrue);
+      semantics.dispose();
+    });
+
+    testWidgets('ditutup saat berputar tanpa error', (tester) async {
+      await _pumpReplay(tester, resultOf(levels[12], levels[12].solution));
+      await tapPlay(tester, 'Putar otomatis');
+      await tester.pump(ReplayView.autoStepTime);
+      await tester.pumpWidget(testApp(home: const SizedBox()));
+      await tester.pump(ReplayView.autoStepTime);
+      expect(tester.takeException(), isNull);
+    });
+  });
+
   group('angka slider', () {
     test('semua langkah kalau muat', () {
       expect(ReplaySlider.ticks(6, 310, 20), [0, 1, 2, 3, 4, 5, 6]);

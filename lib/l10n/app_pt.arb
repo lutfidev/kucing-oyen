@@ -219,6 +219,7 @@
   "replay": "Replay",
   "arrangeAgain": "Reorganizar",
   "replayStart": "Início",
+  "replayPlay": "Reprodução automática",
   "backToResult": "Voltar ao resultado",
   "recording": "Gravação",
   "replayStepCaption": "Passo {n}. {text}",
