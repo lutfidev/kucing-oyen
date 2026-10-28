@@ -1,6 +1,6 @@
 /// Iklan berhadiah: pemain menonton iklan sampai selesai lalu mendapat
-/// hadiah (membuka satu tingkat petunjuk, atau koin). SDK iklan asli
-/// dipasang di langkah rilis; sampai itu dipakai [FakeRewardedAds].
+/// hadiah (membuka satu tingkat petunjuk, atau koin). Aplikasi memakai
+/// iklan AdMob (`AdMobRewardedAds`); test memakai [FakeRewardedAds].
 abstract interface class RewardedAds {
   /// Menampilkan satu iklan. True kalau ditonton sampai hadiahnya boleh
   /// diberikan; false kalau gagal dimuat atau ditutup lebih dulu.

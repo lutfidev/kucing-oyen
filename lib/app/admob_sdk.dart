@@ -30,10 +30,17 @@ Future<RewardedAdHandle?> loadAdMobRewarded(String unitId) {
       adUnitId: unitId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) => loaded.complete(_AdMobHandle(ad)),
+        onAdLoaded: (ad) {
+          // Panggilan kedua (seharusnya tidak terjadi) dibuang, iklannya juga.
+          if (loaded.isCompleted) {
+            unawaited(ad.dispose());
+          } else {
+            loaded.complete(_AdMobHandle(ad));
+          }
+        },
         onAdFailedToLoad: (error) {
           debugPrint('Iklan berhadiah gagal dimuat: $error');
-          loaded.complete(null);
+          if (!loaded.isCompleted) loaded.complete(null);
         },
       ),
     ).catchError((Object error) {
