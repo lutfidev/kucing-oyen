@@ -342,6 +342,48 @@ void main() {
       expect(loader.calls, 0);
     });
 
+    test('SDK sedang menyala: show menunggu lalu memuat', () async {
+      final loader = _FakeLoader();
+      final sdk = Completer<void>();
+      var ready = false;
+      var unavailable = 0;
+      final ads = AdMobRewardedAds(
+        unitId: 'unit',
+        canLoad: () => ready,
+        load: loader.call,
+        starting: () => sdk.isCompleted ? null : sdk.future,
+        onUnavailable: () => unavailable++,
+      );
+      final result = ads.show();
+      await pumpEventQueue();
+      expect(loader.calls, 0);
+      ready = true;
+      sdk.complete();
+      await pumpEventQueue();
+      expect(loader.calls, 1);
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      ad.watchToEnd();
+      expect(await result, isTrue);
+      expect(unavailable, 0);
+    });
+
+    test('SDK tidak selesai menyala dalam batas tunggu = false', () async {
+      final loader = _FakeLoader();
+      var unavailable = 0;
+      final ads = AdMobRewardedAds(
+        unitId: 'unit',
+        canLoad: () => false,
+        load: loader.call,
+        loadTimeout: const Duration(milliseconds: 10),
+        starting: () => Completer<void>().future,
+        onUnavailable: () => unavailable++,
+      );
+      expect(await ads.show(), isFalse);
+      expect(loader.calls, 0);
+      expect(unavailable, 1);
+    });
+
     test('preload dua kali hanya memuat sekali', () async {
       final loader = _FakeLoader();
       _ads(loader)
@@ -469,6 +511,55 @@ void main() {
       expect(consent.gathered, 2);
     });
 
+    test('iklan diminta selagi SDK menyala: menunggu lalu tampil', () async {
+      final loader = _FakeLoader();
+      final sdk = Completer<void>();
+      final ads = GameAds(
+        consent: FakeAdConsent(),
+        startSdk: () => sdk.future,
+        load: loader.call,
+      );
+      unawaited(ads.start());
+      await pumpEventQueue();
+      final result = ads.coins.show();
+      await pumpEventQueue();
+      expect(loader.calls, 0);
+      sdk.complete();
+      await pumpEventQueue();
+      // Muatan petunjuk lalu koin; yang terakhir milik iklan koin.
+      expect(loader.calls, 2);
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      expect(ad.shown, 1);
+      ad.watchToEnd();
+      expect(await result, isTrue);
+    });
+
+    test(
+      'persetujuan sesi lalu sebelum gather selesai: SDK menyala sekali',
+      () async {
+        final loader = _FakeLoader();
+        var started = 0;
+        final consent = _RememberedConsent();
+        final ads = GameAds(
+          consent: consent,
+          startSdk: () async => started++,
+          load: loader.call,
+        );
+        final start = ads.start();
+        await pumpEventQueue();
+        // Formulir masih terbuka, tapi iklan sudah bisa dimuat.
+        expect(consent.gathered, 1);
+        expect(started, 1);
+        expect(ads.sdkReady, isTrue);
+        expect(loader.calls, 2);
+        consent.done.complete();
+        await start;
+        expect(started, 1);
+        expect(loader.calls, 2);
+      },
+    );
+
     test('release memakai ID tempelan per tempat', () async {
       final loader = _FakeLoader();
       await GameAds(
@@ -503,5 +594,20 @@ class _SlowConsent extends FakeAdConsent {
   Future<void> gather() async {
     gathered++;
     if (gathered == 1) await done.future;
+  }
+}
+
+/// Persetujuan sesi lalu sudah boleh (diberi tahu lebih dulu), lalu `gather`
+/// masih menunggu [done] (mis. info persetujuan diperbarui lewat jaringan).
+class _RememberedConsent extends FakeAdConsent {
+  _RememberedConsent() : super(canRequestAds: false);
+
+  final done = Completer<void>();
+
+  @override
+  Future<void> gather() async {
+    gathered++;
+    canRequestAds = true;
+    await done.future;
   }
 }
