@@ -41,6 +41,7 @@ class LevelTopBar extends StatelessWidget {
               header: true,
               child: FittedBox(
                 fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.centerStart,
                 child: Text(title, maxLines: 1, style: context.koType.heading),
               ),
             ),

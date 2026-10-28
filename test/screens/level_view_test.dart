@@ -18,6 +18,7 @@ import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/level/run_panel.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
+import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -178,6 +179,16 @@ void main() {
       expect(_tile(tester, 2, 3).kind, TileKind.tableVase);
       expect(_glowing(tester), isEmpty);
       expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('judul level rata kiri seperti desain 03 dan 04', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13);
+      final back = tester.getRect(find.bySemanticsLabel('Kembali'));
+      final title = tester.getRect(find.text('Level 13 · Vas Ibu'));
+      final gap = tester.element(find.text('Level 13 · Vas Ibu')).koSpace.s10;
+      expect(title.left, closeTo(back.right + gap, 0.5));
     });
 
     testWidgets('papan 350×450 penuh selebar konten di 390×844', (
