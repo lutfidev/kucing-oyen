@@ -80,19 +80,31 @@ class AdMobRewardedAds implements RewardedAds {
 
   /// Iklan yang selesai dimuat (juga sesudah [show] habis waktu) disimpan
   /// untuk [show] berikutnya.
-  Future<void> _startLoad() => _loading = () async {
+  Future<void> _startLoad() {
+    final loading = _loadOne();
+    _loading = loading;
+    // Dikosongkan sesudah dipasang, juga kalau pemuat melempar sinkron
+    // (muatan itu sudah selesai sebelum baris di atas berjalan).
+    unawaited(
+      loading.whenComplete(() {
+        if (identical(_loading, loading)) _loading = null;
+      }),
+    );
+    return loading;
+  }
+
+  Future<void> _loadOne() async {
     RewardedAdHandle? ad;
     try {
       ad = await _load(unitId);
     } on Object {
       ad = null;
     }
-    _loading = null;
     if (ad != null) {
       _ready = ad;
       _readyAt = _clock();
     }
-  }();
+  }
 
   /// Membuang iklan siap yang sudah lewat [maxAdAge].
   void _dropExpired() {

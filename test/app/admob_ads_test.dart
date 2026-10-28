@@ -224,6 +224,28 @@ void main() {
       expect(await ads.show(), isFalse);
     });
 
+    test('pemuat melempar sinkron tidak membuat iklan macet', () async {
+      final loader = _FakeLoader();
+      var calls = 0;
+      final ads = AdMobRewardedAds(
+        unitId: 'unit',
+        canLoad: () => true,
+        // Bukan async: lemparannya langsung, sebelum ada Future.
+        load: (unitId) {
+          if (calls++ == 0) throw StateError('SDK');
+          return loader(unitId);
+        },
+      );
+      expect(await ads.show(), isFalse);
+      final again = ads.show();
+      await pumpEventQueue();
+      expect(loader.calls, 1);
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      ad.watchToEnd();
+      expect(await again, isTrue);
+    });
+
     test('iklan melempar saat tampil = false dan di-dispose', () async {
       final loader = _FakeLoader();
       final ads = _ads(loader);
