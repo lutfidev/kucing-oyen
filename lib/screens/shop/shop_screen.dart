@@ -105,53 +105,57 @@ class _ShopScreenState extends State<ShopScreen> {
                 onPick: (tab) => setState(() => _tab = tab),
               ),
             ),
-            SizedBox(height: space.s8),
-            SizedBox(
-              height: context.koSize.chipSmall,
-              child: Center(
-                child: _flash == null
-                    ? const SizedBox.shrink()
-                    : ShopFlash(_flash!),
-              ),
-            ),
-            SizedBox(height: space.s4),
+            SizedBox(height: space.s12),
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(
-                  space.gutter,
-                  0,
-                  space.gutter,
-                  space.s32,
-                ),
-                child: switch (_tab) {
-                  ShopTab.items => _Items(progress: progress),
-                  ShopTab.kitties => _Kitties(progress: progress),
-                  ShopTab.snacks => _Snacks(
-                    progress: progress,
-                    onBuy: (id) => _buySnack(progress, id),
-                  ),
-                  ShopTab.accessories => _Accessories(
-                    progress: progress,
-                    preview: progress.home.ownsKitty(_preview)
-                        ? _preview
-                        : KittyId.oyen,
-                    selected: _selected,
-                    onPreview: (kitty) => setState(() => _preview = kitty),
-                    onSelect: (id) => setState(() => _selected = id),
-                    onBuy: () => showBuySheet(
-                      context,
-                      target: BuyAccessory(_selected),
-                      progress: progress,
-                      previewKitty: _preview,
-                      onWear: (id) {
-                        setState(() => _selected = id);
-                        _wear(progress, on: true);
-                      },
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(
+                      space.gutter,
+                      0,
+                      space.gutter,
+                      space.s32,
                     ),
-                    onWear: () => _wear(progress, on: true),
-                    onRemove: () => _wear(progress, on: false),
+                    child: switch (_tab) {
+                      ShopTab.items => _Items(progress: progress),
+                      ShopTab.kitties => _Kitties(progress: progress),
+                      ShopTab.snacks => _Snacks(
+                        progress: progress,
+                        onBuy: (id) => _buySnack(progress, id),
+                      ),
+                      ShopTab.accessories => _Accessories(
+                        progress: progress,
+                        preview: progress.home.ownsKitty(_preview)
+                            ? _preview
+                            : KittyId.oyen,
+                        selected: _selected,
+                        onPreview: (kitty) => setState(() => _preview = kitty),
+                        onSelect: (id) => setState(() => _selected = id),
+                        onBuy: () => showBuySheet(
+                          context,
+                          target: BuyAccessory(_selected),
+                          progress: progress,
+                          previewKitty: _preview,
+                          onWear: (id) {
+                            setState(() => _selected = id);
+                            _wear(progress, on: true);
+                          },
+                        ),
+                        onWear: () => _wear(progress, on: true),
+                        onRemove: () => _wear(progress, on: false),
+                      ),
+                    },
                   ),
-                },
+                  // Pesan mengapung menutupi daftar sebentar, tanpa
+                  // menggeser isinya (desain 20).
+                  if (_flash case final flash?)
+                    PositionedDirectional(
+                      top: 0,
+                      start: space.gutter,
+                      end: space.gutter,
+                      child: ShopFlash(flash),
+                    ),
+                ],
               ),
             ),
           ],

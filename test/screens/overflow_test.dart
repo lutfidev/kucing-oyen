@@ -16,6 +16,7 @@ import 'package:kucing_oren/screens/replay/replay_parts.dart';
 import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/screens/settings/settings_parts.dart';
+import 'package:kucing_oren/screens/shop/shop_screen.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -36,6 +37,7 @@ final routes = <String>[
   AppRoutes.chapter(1),
   AppRoutes.chapter(2),
   AppRoutes.closet,
+  AppRoutes.shop(),
   AppRoutes.settings,
   // Tanpa benda, dua jenis benda, dan tiga jenis benda (baki terlebar).
   AppRoutes.level(1, chapter: 1),
@@ -48,6 +50,7 @@ final galleryRoutes = <String>[
   AppRoutes.gallery,
   AppRoutes.galleryBoard,
   AppRoutes.galleryOyen,
+  AppRoutes.galleryKitty,
   AppRoutes.gallerySound,
 ];
 
@@ -100,6 +103,7 @@ void main() {
   for (final (route, last) in [
     (AppRoutes.galleryBoard, find.text('Vas pecah')),
     (AppRoutes.galleryOyen, find.text('Kacamata')),
+    (AppRoutes.galleryKitty, find.text('Puding Ikan')),
     (AppRoutes.gallerySound, find.text('Lagu level')),
   ]) {
     testWidgets('$route bisa digulir sampai bawah di 360×640, teks 130%', (
@@ -251,6 +255,70 @@ void _cases(AppLanguage language) {
             );
             expect(cards.last.hitTestable(), findsOneWidget);
           }
+          expect(tester.takeException(), isNull);
+        });
+      }
+      // Toko bersaldo 5 digit: keempat tab bisa digulir sampai kartu
+      // terakhir, dan pratinjau aksesoris muat berdampingan.
+      for (final tab in ShopTab.values) {
+        testWidgets('tanpa overflow: Toko ${tab.name} saldo 99999 @ $label, '
+            'teks ${scale * 100}%', (tester) async {
+          setScreenSize(tester, size);
+          setTextScale(tester, scale);
+          await pumpApp(
+            tester,
+            location: AppRoutes.shop(tab: tab),
+            progress: p(coins: 99999),
+          );
+          await settle(tester);
+          expect(find.text('99999'), findsOneWidget);
+          final last = switch (tab) {
+            ShopTab.items => const ValueKey('shop-item-jendelaBurung'),
+            ShopTab.kitties => const ValueKey('shop-kitty-kembang'),
+            ShopTab.accessories => const ValueKey('shop-accessory-mahkotaRaja'),
+            ShopTab.snacks => const ValueKey('shop-snack-puding'),
+          };
+          final card = find.byKey(last);
+          await tester.ensureVisible(card);
+          await settle(tester);
+          expect(card.hitTestable(), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        });
+      }
+      // Sheet konfirmasi beli: barang (gambar besar) dan aksesoris (catatan
+      // "milikmu selamanya" plus pratinjau).
+      for (final kind in ['barang', 'aksesoris']) {
+        testWidgets('tanpa overflow: sheet beli $kind @ $label, '
+            'teks ${scale * 100}%', (tester) async {
+          setScreenSize(tester, size);
+          setTextScale(tester, scale);
+          final accessory = kind == 'aksesoris';
+          await pumpApp(
+            tester,
+            location: AppRoutes.shop(
+              tab: accessory ? ShopTab.accessories : ShopTab.items,
+            ),
+            progress: p(coins: 99999),
+          );
+          await settle(tester);
+          if (accessory) {
+            final card = find.byKey(const ValueKey('shop-accessory-syal'));
+            await tester.ensureVisible(card);
+            await tester.tap(card);
+            await settle(tester);
+            final buy = find.byKey(const ValueKey('shop-preview-buy'));
+            await tester.ensureVisible(buy);
+            await tester.tap(buy);
+          } else {
+            final card = find.byKey(const ValueKey('shop-item-rumah'));
+            await tester.ensureVisible(card);
+            await tester.tap(card);
+          }
+          await settle(tester);
+          final confirm = find.byKey(const ValueKey('buy-confirm'));
+          await tester.ensureVisible(confirm);
+          expect(confirm.hitTestable(), findsOneWidget);
+          expect(find.text(l.buyLater).hitTestable(), findsOneWidget);
           expect(tester.takeException(), isNull);
         });
       }

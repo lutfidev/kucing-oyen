@@ -797,11 +797,13 @@ class _StockChip extends StatelessWidget {
         color: empty ? c.priceTag : c.tabTrack,
         borderRadius: BorderRadius.circular(context.koRadius.pill),
       ),
-      alignment: Alignment.center,
-      child: Text(
-        context.l10n.shopStock(stock),
-        style: context.koType.tagSmall.copyWith(
-          color: empty ? c.brickDeep : c.ink,
+      child: Center(
+        widthFactor: 1,
+        child: Text(
+          context.l10n.shopStock(stock),
+          style: context.koType.tagSmall.copyWith(
+            color: empty ? c.brickDeep : c.ink,
+          ),
         ),
       ),
     );
@@ -857,10 +859,12 @@ class RarityChip extends StatelessWidget {
         color: fill,
         borderRadius: BorderRadius.circular(context.koRadius.pill),
       ),
-      alignment: Alignment.center,
-      child: Text(
-        rarityName(context.l10n, rarity),
-        style: context.koType.tagTiny.copyWith(color: ink),
+      child: Center(
+        widthFactor: 1,
+        child: Text(
+          rarityName(context.l10n, rarity),
+          style: context.koType.tagTiny.copyWith(color: ink),
+        ),
       ),
     );
   }
@@ -1014,6 +1018,8 @@ class AccessoryPreview extends StatelessWidget {
                 Wrap(
                   spacing: space.s6,
                   runSpacing: space.s4,
+                  alignment: WrapAlignment.start,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     RarityChip(rarity: item.rarity, height: s.shopPreviewChip),
                     if (owned) ShopOwnedTag(text: l.shopOwnedTag),
