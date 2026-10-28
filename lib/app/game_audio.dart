@@ -30,11 +30,14 @@ class GameAudio extends ChangeNotifier {
   static Future<GameAudio> load({
     required ProgressStore store,
     required SoundPlayer player,
-  }) async => GameAudio(
-    player: player,
-    store: store,
-    settings: await store.loadSound(),
-  );
+  }) async {
+    unawaited(player.preload());
+    return GameAudio(
+      player: player,
+      store: store,
+      settings: await store.loadSound(),
+    );
+  }
 
   final SoundPlayer player;
   final ProgressStore store;

@@ -11,6 +11,10 @@ abstract interface class SoundPlayer {
   /// Memutar satu efek suara, boleh bertumpuk dengan yang lain.
   Future<void> play(GameSound sound);
 
+  /// Menyiapkan semua efek suara lebih dulu, supaya bunyi pertama tiap efek
+  /// tidak telat.
+  Future<void> preload();
+
   /// Memutar [track] berulang, menggantikan lagu yang sedang jalan.
   Future<void> playMusic(MusicTrack track);
 
@@ -32,8 +36,14 @@ class FakeSoundPlayer implements SoundPlayer {
   /// Berapa kali lagu mulai diputar ([playMusic]).
   int musicStarts = 0;
 
+  /// [preload] sudah dipanggil.
+  bool preloaded = false;
+
   @override
   Future<void> play(GameSound sound) async => played.add(sound);
+
+  @override
+  Future<void> preload() async => preloaded = true;
 
   @override
   Future<void> playMusic(MusicTrack track) async {
@@ -56,7 +66,8 @@ class FakeSoundPlayer implements SoundPlayer {
 }
 
 /// Pemutar asli lewat paket `audioplayers`. Efek suara memakai satu
-/// [AudioPool] per suara (dibuat saat pertama dibutuhkan); musik berulang
+/// [AudioPool] per suara (dibuat [preload] saat aplikasi dibuka, atau saat
+/// pertama dibutuhkan); musik berulang
 /// di satu [AudioPlayer] dan berganti lagu dengan crossfade. Semua suara
 /// bercampur dengan musik (tidak saling merebut fokus audio). Error
 /// platform ditelan supaya game tetap jalan tanpa suara.
@@ -104,15 +115,22 @@ class AudioplayersSoundPlayer implements SoundPlayer {
   Future<void> _serial(Future<void> Function() action) =>
       _queue = _queue.then((_) => _safe(action));
 
+  Future<AudioPool> _pool(GameSound sound) => _pools[sound] ??=
+      AudioPool.createFromAsset(path: sound.asset, maxPlayers: _maxOverlap);
+
   @override
   Future<void> play(GameSound sound) => _safe(() async {
     await _ensureContext();
-    final pool = await (_pools[sound] ??= AudioPool.createFromAsset(
-      path: sound.asset,
-      maxPlayers: _maxOverlap,
-    ));
-    await pool.start();
+    await (await _pool(sound)).start();
   });
+
+  @override
+  Future<void> preload() async {
+    await _ensureContext();
+    for (final sound in GameSound.values) {
+      await _safe(() => _pool(sound));
+    }
+  }
 
   @override
   Future<void> playMusic(MusicTrack track) => _serial(() async {

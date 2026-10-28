@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../app/game_audio.dart';
 import '../../app/language.dart';
+import '../../game/model/sounds.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -139,7 +140,13 @@ class _SwitchRow extends StatelessWidget {
     final c = context.koColors;
     final s = context.koSize;
     final space = context.koSpace;
-    final tap = tapSound(context, () => onChanged(!on));
+    // Bunyi sesudah sakelar berubah: sakelar Efek suara senyap saat
+    // dimatikan dan berbunyi saat dinyalakan.
+    void tap() {
+      onChanged(!on);
+      AudioScope.maybeRead(context)?.play(GameSound.tap);
+    }
+
     return Semantics(
       toggled: on,
       label: label,

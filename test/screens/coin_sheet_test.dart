@@ -237,8 +237,10 @@ void main() {
     testWidgets('ambil bonus harian: koin berbunyi', (tester) async {
       final audio = testAudio();
       await _openFromHome(tester, _progress(), audio: audio);
-      await _tap(tester, find.text('+20 koin').first);
-      expect(coinSounds(audio), [GameSound.coin]);
+      playedBy(audio).clear();
+      await _tap(tester, find.text('Ambil 20 koin'));
+      // Hanya bunyi koin, tanpa tap di depannya.
+      expect(playedBy(audio), [GameSound.coin]);
     });
 
     testWidgets('iklan selesai: koin berbunyi', (tester) async {

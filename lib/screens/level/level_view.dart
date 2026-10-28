@@ -672,6 +672,8 @@ class _LevelViewState extends State<LevelView>
               label: context.l10n.wakeOyen,
               icon: KoIcons.wake,
               size: KoButtonSize.large,
+              // Bunyi bangun menggantikan tap.
+              silent: true,
               onPressed: _wake,
             ),
           ];

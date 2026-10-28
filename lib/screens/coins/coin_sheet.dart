@@ -134,6 +134,8 @@ class _CoinSheetState extends State<CoinSheet> {
                 color: c.orange,
                 line: c.orange,
                 edge: c.orangeDeep,
+                // Bunyi koin menggantikan tap.
+                silent: true,
                 onPressed: bonus ? _claimBonus : null,
               ),
             ),

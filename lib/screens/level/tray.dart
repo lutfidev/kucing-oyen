@@ -113,6 +113,8 @@ class TrayPanel extends StatelessWidget {
             semanticLabel: context.l10n.clearBoard,
             tone: KoIconButtonTone.floor,
             iconSize: s.iconSmall,
+            // Bunyi benda kembali menggantikan tap.
+            silent: true,
             onPressed: onClear,
           ),
         ],

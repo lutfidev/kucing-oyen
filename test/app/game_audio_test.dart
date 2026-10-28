@@ -48,6 +48,12 @@ void main() {
     expect(a.musicOn, isFalse);
   });
 
+  test('load menyiapkan efek suara lebih dulu', () async {
+    expect(player.preloaded, isFalse);
+    await GameAudio.load(store: store, player: player);
+    expect(player.preloaded, isTrue);
+  });
+
   test('memuat sakelar tersimpan', () async {
     store.sound = const SoundSettings(music: false, effects: true);
     final a = await GameAudio.load(store: store, player: player);

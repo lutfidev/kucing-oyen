@@ -212,6 +212,7 @@ class SheetButton extends StatelessWidget {
     required this.edge,
     required this.onPressed,
     this.labelColor,
+    this.silent = false,
   });
 
   final String label;
@@ -220,6 +221,9 @@ class SheetButton extends StatelessWidget {
   final Color line;
   final Color edge;
   final VoidCallback? onPressed;
+
+  /// Lihat [KoPressable.silent].
+  final bool silent;
 
   /// Warna label saat aktif; default [KoColors.ink].
   final Color? labelColor;
@@ -232,6 +236,7 @@ class SheetButton extends StatelessWidget {
     final enabled = onPressed != null;
     return KoPressable(
       onPressed: onPressed,
+      silent: silent,
       semanticLabel: label,
       color: enabled ? color : c.disabled,
       borderColor: enabled ? line : c.disabledLine,

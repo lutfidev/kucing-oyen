@@ -128,6 +128,26 @@ void main() {
       expect(store.sound, SoundSettings.on);
     });
 
+    testWidgets('sakelar efek: senyap saat dimatikan, berbunyi saat '
+        'dinyalakan', (tester) async {
+      final audio = testAudio();
+      await pumpApp(tester, location: AppRoutes.settings, audio: audio);
+      playedBy(audio).clear();
+
+      await tester.tap(sound('effects'));
+      await settle(tester);
+      expect(playedBy(audio), isEmpty);
+
+      await tester.tap(sound('effects'));
+      await settle(tester);
+      expect(playedBy(audio), [GameSound.tap]);
+
+      // Sakelar musik tetap berbunyi tap seperti tombol lain.
+      await tester.tap(sound('music'));
+      await settle(tester);
+      expect(playedBy(audio), [GameSound.tap, GameSound.tap]);
+    });
+
     testWidgets('memuat sakelar tersimpan saat dibuka', (tester) async {
       final audio = testAudio(settings: const SoundSettings(effects: false));
       await pumpApp(tester, location: AppRoutes.settings, audio: audio);

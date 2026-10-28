@@ -29,6 +29,7 @@ class KoPressable extends StatefulWidget {
     this.toggled,
     this.sink = 0,
     this.liveRegion = false,
+    this.silent = false,
   });
 
   /// Null = nonaktif: tidak bisa ditekan dan tidak turun.
@@ -66,6 +67,10 @@ class KoPressable extends StatefulWidget {
   /// Label diumumkan ulang saat berubah (mis. saldo koin).
   final bool liveRegion;
 
+  /// Tanpa bunyi tap: tombol yang aksinya memutar bunyinya sendiri (mis.
+  /// Bangunkan Oyen), supaya tidak bertumpuk.
+  final bool silent;
+
   @override
   State<KoPressable> createState() => _KoPressableState();
 }
@@ -86,7 +91,9 @@ class _KoPressableState extends State<KoPressable> {
   @override
   Widget build(BuildContext context) {
     final enabled = widget.onPressed != null;
-    final onTap = tapSound(context, widget.onPressed);
+    final onTap = widget.silent
+        ? widget.onPressed
+        : tapSound(context, widget.onPressed);
     final edge = widget.edgeColor;
     final depth = edge == null ? 0.0 : widget.depth;
     final shift = _pressed ? (edge == null ? widget.sink : depth) : 0.0;

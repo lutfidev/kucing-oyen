@@ -1146,7 +1146,8 @@ void main() {
       playedBy(audio).clear();
       await tester.tap(find.bySemanticsLabel('Kosongkan papan'));
       await tester.pump();
-      expect(playedBy(audio), [GameSound.tap, GameSound.back]);
+      // Tanpa bunyi tap: tombol ini punya bunyinya sendiri.
+      expect(playedBy(audio), [GameSound.back]);
     });
 
     for (final id in [13, 15]) {
@@ -1168,7 +1169,6 @@ void main() {
           await tester.pump(RunClock.stepTime);
         }
         expect(playedBy(audio), [
-          GameSound.tap,
           GameSound.wake,
           for (final frame in frames) ?stepSound(frame),
         ]);
@@ -1212,7 +1212,7 @@ void main() {
       playedBy(audio).clear();
       await tester.tap(find.text('Bangunkan Oyen'));
       await tester.pump();
-      expect(playedBy(audio), [GameSound.tap, GameSound.wake]);
+      expect(playedBy(audio), [GameSound.wake]);
     });
 
     testWidgets('Oyen bosan: berbunyi saat layar hasil dibuka', (tester) async {

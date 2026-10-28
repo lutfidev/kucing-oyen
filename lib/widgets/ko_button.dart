@@ -40,6 +40,7 @@ class KoButton extends StatelessWidget {
     this.size = KoButtonSize.medium,
     this.icon,
     this.trailingIcon,
+    this.silent = false,
   });
 
   final String label;
@@ -54,6 +55,9 @@ class KoButton extends StatelessWidget {
 
   /// Ikon di kanan label (panah "Lanjut" di layar hasil).
   final KoIconData? trailingIcon;
+
+  /// Lihat [KoPressable.silent].
+  final bool silent;
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +113,7 @@ class KoButton extends StatelessWidget {
 
     return KoPressable(
       onPressed: onPressed,
+      silent: silent,
       semanticLabel: label,
       color: bg,
       edgeColor: edge,
