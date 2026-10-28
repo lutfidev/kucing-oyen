@@ -65,16 +65,15 @@ class KittyColors {
     this.maskOn = false,
     this.mask = 'none',
     this.blazeOn = false,
-    String? paw,
-    String? leg,
+    this.pawOverride,
+    this.legOverride,
     this.body = const [],
     this.scratch = const [],
     this.lie = const [],
     this.headPatches = const [],
     this.sleepBody = const [],
     this.sleepHead = const [],
-  }) : _paw = paw,
-       _leg = leg;
+  });
 
   final String fur;
   final String head;
@@ -105,8 +104,9 @@ class KittyColors {
   final String mask;
   final bool blazeOn;
 
-  final String? _paw;
-  final String? _leg;
+  /// Telapak dan kaki yang ditulis sendiri di palet desain.
+  final String? pawOverride;
+  final String? legOverride;
 
   final List<FurPatch> body;
   final List<FurPatch> scratch;
@@ -116,10 +116,10 @@ class KittyColors {
   final List<FurPatch> sleepHead;
 
   /// Telapak mengikuti perut kalau tidak ditulis sendiri (desain).
-  String get paw => _paw ?? belly;
+  String get paw => pawOverride ?? belly;
 
   /// Kaki mengikuti bulu kalau tidak ditulis sendiri (desain).
-  String get leg => _leg ?? fur;
+  String get leg => legOverride ?? fur;
 
   /// Warna iris: mata kalau kucingnya bermanik, selain itu warna garis.
   String get iris => pupil ? eye : line;
@@ -305,8 +305,8 @@ const kittyPalette = <KittyId, KittyColors>{
     whisker: '#F6EBDB',
     whiskerOp: 0.7,
     edge: '#E2D2BA',
-    paw: '#5C4033',
-    leg: '#5C4033',
+    pawOverride: '#5C4033',
+    legOverride: '#5C4033',
     maskOn: true,
     mask: '#7A5842',
   ),
@@ -331,7 +331,7 @@ const kittyPalette = <KittyId, KittyColors>{
     blushOp: 0.35,
     whisker: '#BFB6AC',
     whiskerOp: 0.8,
-    paw: '#FFFFFF',
+    pawOverride: '#FFFFFF',
     blazeOn: true,
   ),
   KittyId.kembang: KittyColors(
