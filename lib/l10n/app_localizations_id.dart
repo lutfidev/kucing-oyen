@@ -312,6 +312,16 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String tileHintSpot(String content) {
+    return '$content. Petunjuk: ada benda yang harus ditaruh di sini.';
+  }
+
+  @override
+  String tileHintItem(String content, String item) {
+    return '$content. Petunjuk: $item di sini.';
+  }
+
+  @override
   String get tilePlaceHint => 'menaruh di sini';
 
   @override

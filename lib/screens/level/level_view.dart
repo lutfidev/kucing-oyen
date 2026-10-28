@@ -423,21 +423,37 @@ class _LevelViewState extends State<LevelView>
   List<BoardTileSemantics> _tileSemantics() {
     final l = context.l10n;
     final board = _level.board;
+    final marks = hintMarks(_level, widget.hints?.hintTier(_level.id) ?? 0);
     return [
       for (var y = 0; y < board.height; y++)
-        for (var x = 0; x < board.width; x++) _tileSemantic(l, Pos(x, y)),
+        for (var x = 0; x < board.width; x++)
+          _tileSemantic(l, Pos(x, y), marks),
     ];
   }
 
-  BoardTileSemantics _tileSemantic(AppLocalizations l, Pos pos) {
+  BoardTileSemantics _tileSemantic(
+    AppLocalizations l,
+    Pos pos,
+    Map<Pos, Item?> marks,
+  ) {
     final board = _level.board;
     final picked = _picked;
     final item = _session.itemAt(pos);
-    final content = item != null
+    var content = item != null
         ? l.tilePlayerItem(itemName(l, item))
         : pos == board.start
         ? l.tileOyen(board.startDir.name)
         : cellName(l, board.cellAt(pos));
+    // Tanda petunjuk dibacakan selama tampil di papan (lihat
+    // [_undressedScene]): petak kosong, atau benda yang salah jenis.
+    if (marks.containsKey(pos)) {
+      final hinted = marks[pos];
+      if (item == null || (hinted != null && item != hinted)) {
+        content = hinted == null
+            ? l.tileHintSpot(content)
+            : l.tileHintItem(content, itemName(l, hinted));
+      }
+    }
     final label = l.tileLabel(pos.y + 1, pos.x + 1, content);
     if (picked != null && _session.canPlaceAt(pos)) {
       return BoardTileSemantics(

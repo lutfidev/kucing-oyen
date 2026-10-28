@@ -612,6 +612,18 @@ abstract class AppLocalizations {
   /// **'{item}, placed by you'**
   String tilePlayerItem(String item);
 
+  /// Board tile label suffix for screen readers: a tier 1 hint marks this tile (something must go here, type not revealed).
+  ///
+  /// In en, this message translates to:
+  /// **'{content}. Hint: something has to go here.'**
+  String tileHintSpot(String content);
+
+  /// Board tile label suffix for screen readers: a tier 2-3 hint shows which item goes on this tile.
+  ///
+  /// In en, this message translates to:
+  /// **'{content}. Hint: {item} goes here.'**
+  String tileHintItem(String content, String item);
+
   /// Screen reader hint for an empty tile while an item is picked up ("Double tap to ...").
   ///
   /// In en, this message translates to:

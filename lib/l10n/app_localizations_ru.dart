@@ -348,6 +348,16 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String tileHintSpot(String content) {
+    return '$content. Подсказка: сюда что-то нужно поставить.';
+  }
+
+  @override
+  String tileHintItem(String content, String item) {
+    return '$content. Подсказка: сюда — $item.';
+  }
+
+  @override
   String get tilePlaceHint => 'поставить сюда';
 
   @override

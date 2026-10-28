@@ -85,6 +85,8 @@
   "cellBox": "коробка",
   "tileOyen": "Ойен спит, смотрит {dir, select, up{вверх} right{вправо} down{вниз} left{влево} other{вправо}}",
   "tilePlayerItem": "{item}, ставил ты",
+  "tileHintSpot": "{content}. Подсказка: сюда что-то нужно поставить.",
+  "tileHintItem": "{content}. Подсказка: сюда — {item}.",
   "tilePlaceHint": "поставить сюда",
   "tilePickHint": "взять и переставить",
   "tileReturn": "Вернуть к вещам",

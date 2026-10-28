@@ -85,6 +85,8 @@
   "cellBox": "caixa",
   "tileOyen": "Oyen dormindo, virado para {dir, select, up{cima} right{a direita} down{baixo} left{a esquerda} other{a direita}}",
   "tilePlayerItem": "{item}, você que colocou",
+  "tileHintSpot": "{content}. Dica: algo tem que ir aqui.",
+  "tileHintItem": "{content}. Dica: {item} vai aqui.",
   "tilePlaceHint": "colocar aqui",
   "tilePickHint": "pegar para mudar de lugar",
   "tileReturn": "Devolver aos itens",

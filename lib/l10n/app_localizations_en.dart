@@ -336,6 +336,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String tileHintSpot(String content) {
+    return '$content. Hint: something has to go here.';
+  }
+
+  @override
+  String tileHintItem(String content, String item) {
+    return '$content. Hint: $item goes here.';
+  }
+
+  @override
   String get tilePlaceHint => 'put it here';
 
   @override

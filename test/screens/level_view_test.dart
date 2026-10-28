@@ -1403,6 +1403,36 @@ void main() {
       handle.dispose();
     });
 
+    testWidgets('tanda petunjuk ikut dibacakan di petaknya', (tester) async {
+      final handle = tester.ensureSemantics();
+      final hints = testProgressWith(hints: {13: 1}, coins: 100);
+      await _pumpLevel(tester, 13, hints: hints);
+      // Tingkat 1: petak solusi pertama (ember di 3,3) tanpa jenis.
+      expect(
+        node(
+          'Baris 4, kolom 4: lantai. '
+          'Petunjuk: ada benda yang harus ditaruh di sini.',
+        ).evaluate(),
+        hasLength(1),
+      );
+
+      await hints.unlockHint(13, 2, HintPay.coins);
+      await settle(tester, max: const Duration(milliseconds: 300));
+      expect(
+        node('Baris 4, kolom 4: lantai. Petunjuk: Ember air di sini.')
+            .evaluate(),
+        hasLength(1),
+      );
+
+      // Benda yang benar sudah ditaruh: petunjuknya tidak dibacakan lagi.
+      await _dragToTile(tester, Item.water, 3, 3);
+      expect(
+        node('Baris 4, kolom 4: Ember air, kamu yang taruh').evaluate(),
+        hasLength(1),
+      );
+      handle.dispose();
+    });
+
     testWidgets('fase jalan: papan kembali satu gambar', (tester) async {
       final handle = await open(tester);
       await tap(tester, 'Ikan asin, sisa 1');

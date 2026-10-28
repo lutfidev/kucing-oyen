@@ -85,6 +85,8 @@
   "cellBox": "kardus",
   "tileOyen": "Oyen tidur, menghadap {dir, select, up{atas} right{kanan} down{bawah} left{kiri} other{kanan}}",
   "tilePlayerItem": "{item}, kamu yang taruh",
+  "tileHintSpot": "{content}. Petunjuk: ada benda yang harus ditaruh di sini.",
+  "tileHintItem": "{content}. Petunjuk: {item} di sini.",
   "tilePlaceHint": "menaruh di sini",
   "tilePickHint": "mengambil untuk dipindah",
   "tileReturn": "Kembalikan ke baki",

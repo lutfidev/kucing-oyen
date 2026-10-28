@@ -473,6 +473,27 @@
       }
     }
   },
+  "tileHintSpot": "{content}. Hint: something has to go here.",
+  "@tileHintSpot": {
+    "description": "Board tile label suffix for screen readers: a tier 1 hint marks this tile (something must go here, type not revealed).",
+    "placeholders": {
+      "content": {
+        "type": "String"
+      }
+    }
+  },
+  "tileHintItem": "{content}. Hint: {item} goes here.",
+  "@tileHintItem": {
+    "description": "Board tile label suffix for screen readers: a tier 2-3 hint shows which item goes on this tile.",
+    "placeholders": {
+      "content": {
+        "type": "String"
+      },
+      "item": {
+        "type": "String"
+      }
+    }
+  },
   "tilePlaceHint": "put it here",
   "@tilePlaceHint": {
     "description": "Screen reader hint for an empty tile while an item is picked up (\"Double tap to ...\")."
