@@ -5,7 +5,7 @@ void main() {
   test('angka hadiah', () {
     expect(dailyBonusCoins, 20);
     expect(adRewardCoins, 20);
-    expect(maxAdsPerDay, 5);
+    expect(maxAdsPerDay, 10);
   });
 
   group('dayNumber', () {
@@ -25,9 +25,9 @@ void main() {
   group('DailyRewards', () {
     const initial = DailyRewards.initial;
 
-    test('awal: bonus siap, lima iklan', () {
+    test('awal: bonus siap, sepuluh iklan', () {
       expect(initial.canClaimBonus(100), isTrue);
-      expect(initial.adsLeft(100), 5);
+      expect(initial.adsLeft(100), 10);
     });
 
     test('bonus sekali sehari, tertahan kalau jam mundur', () {
@@ -37,25 +37,25 @@ void main() {
       expect(claimed.canClaimBonus(99), isFalse);
     });
 
-    test('lima iklan per hari, besok penuh lagi', () {
+    test('sepuluh iklan per hari, besok penuh lagi', () {
       var r = initial;
-      for (var i = 0; i < 5; i++) {
-        expect(r.adsLeft(100), 5 - i);
+      for (var i = 0; i < 10; i++) {
+        expect(r.adsLeft(100), 10 - i);
         r = r.watchedAd(100);
       }
       expect(r.adsLeft(100), 0);
       r = r.watchedAd(100);
       expect(r.adsLeft(100), 0);
-      expect(r.adsWatched, 5);
-      expect(r.adsLeft(101), 5);
+      expect(r.adsWatched, 10);
+      expect(r.adsLeft(101), 10);
       expect(r.adsLeft(99), 0);
-      expect(r.watchedAd(101).adsLeft(101), 4);
+      expect(r.watchedAd(101).adsLeft(101), 9);
     });
 
     test('bonus dan iklan tidak saling mengubah', () {
       final r = initial.claimBonus(100).watchedAd(100);
       expect(r.canClaimBonus(100), isFalse);
-      expect(r.adsLeft(100), 4);
+      expect(r.adsLeft(100), 9);
       expect(initial.watchedAd(100).canClaimBonus(100), isTrue);
     });
 
@@ -73,12 +73,12 @@ void main() {
       );
       expect(DailyRewards.fromJson({'ads': 3}), initial);
       final r = DailyRewards.fromJson({'bonusDay': 5, 'adDay': 7, 'ads': 2});
-      expect(r.adsLeft(7), 3);
+      expect(r.adsLeft(7), 8);
       expect(r.canClaimBonus(5), isFalse);
     });
 
     test('jumlah iklan rusak di hari yang sah = jatah habis', () {
-      for (final ads in <Object?>['x', -1, 6, 99, null]) {
+      for (final ads in <Object?>['x', -1, 11, 99, null]) {
         final r = DailyRewards.fromJson({'adDay': 7, 'ads': ads});
         expect(r.adsWatched, maxAdsPerDay, reason: '$ads');
         expect(r.adsLeft(7), 0, reason: '$ads');

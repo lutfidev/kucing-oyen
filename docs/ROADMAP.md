@@ -34,7 +34,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 18. Pengerasan iklan dan rilis (temuan kecil review langkah 17)
 - [x] 19. Saran lama dari PR sebelumnya (aksesibilitas, navigasi, simpanan, suara)
 - [x] 20. Sisa saran: putar otomatis, terjemahan, dan rapi-rapi kecil
-- [ ] 21. Rumah Oyen: model kamar, kucing, aksesoris, makanan, dan kebutuhan
+- [x] 21. Rumah Oyen: model kamar, kucing, aksesoris, makanan, dan kebutuhan
 - [ ] 22. Toko dan aksesoris
 - [ ] 23. Kamar Oyen sebagai Beranda, tanpa Lemari Kostum
 - [ ] 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
@@ -227,9 +227,11 @@ Sumber utama:
 - Aturan yang tidak tampak di desain ikut spesifikasi.
 - Catat keputusannya di `docs/DESIGN_NOTES.md`.
 
-## 21. Rumah Oyen: model kamar, kucing, aksesoris, makanan, dan kebutuhan
+## 21. Rumah Oyen: model kamar, kucing, aksesoris, makanan, dan kebutuhan ✅
 
 **Hasil:** data dan aturan rumah Oyen tersedia sebagai Dart murni yang tersimpan dan teruji: barang, kucing koleksi, aksesoris, camilan, tata letak, kebutuhan, mangkuk, dan hadiah. Belum ada layar baru.
+
+Selesai: katalog (`home_items.dart`, `kitties.dart`, `accessories.dart`, `snacks.dart`), `Room`, `Home` (`home.state`), `HomeNeeds` (`home.needs`), aksi rumah di `ProgressController`, dan 10 iklan koin per hari. Rencana di `docs/superpowers/plans/2026-10-28-rumah-oyen-model.md`; keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 21".
 
 > **Baca dulu:**
 > - spesifikasi rumah Oyen bagian Kebutuhan dan hadiah, Aksesoris, Toko, Koin, dan Model data

@@ -158,6 +158,7 @@ Keputusan saat desain (`docs/design/source/`), GDD, data level, dan roadmap tida
 - **Ikon baru** (desain belum punya): `KoIcons.plus` (garis 3,6 seperti centang tebal) dan `KoIcons.gift` (kado, garis 2,2 seperti bohlam).
 - **Chip koin bersama.** Tiga chip koin (Beranda, Lemari Kostum, sheet Petunjuk) disatukan menjadi `KoCoinChip` dengan tiga gaya; tampilan tanpa tombol sama dengan sebelumnya. Ini juga mengerjakan butir "satukan dua `_CoinChip`" dari daftar temuan review langkah 13.
 - **Tanpa token baru**: ukuran dan warna memakai token yang ada (`iconSmall`, `iconTiny`, `dot`, `brick`, `orange`, `success`).
+- **Diubah di langkah 21: 10 iklan per hari** (keputusan pemilik repo saat brainstorming rumah Oyen, lihat "Sebelum langkah 21"), jadi paling banyak 200 koin iklan per hari. Teks "Sisa N kali hari ini" sudah berparameter, jadi hanya angkanya yang berubah.
 
 ## Sebelum langkah 15: pasar, bahasa, iklan, Pengaturan
 
@@ -322,3 +323,24 @@ Pemilik repo memutuskan ini saat brainstorming 26 Okt 2026. Alasannya: UI terasa
 - **Pose baru:** rebahan.
 
 Total belanja jadi ±13.280 koin. Kalau pemain mengambil semua jatah koin harian, semuanya terbeli dalam sekitar 6 minggu. Ini sengaja jadi tujuan jangka panjang, dan angkanya bisa diseimbangkan sesudah dimainkan. Zona lantai atau dinding untuk barang baru ditentukan dari gambarnya (keputusan saya).
+
+## Langkah 21: model rumah Oyen
+
+Semua keputusan saya (spesifikasi menyerahkannya ke builder), kecuali yang disebut dari desain. Rencana di `docs/superpowers/plans/2026-10-28-rumah-oyen-model.md`.
+
+- **Mangkuk barang bawaan.** `RoomItemId.mangkuk` berharga 0: selalu dimiliki, selalu ditaruh (boleh digeser), tidak bisa ke Gudang, tidak dijual. `shopItems` = 20 barang lain, urut kartu tab Barang `Toko.dc.html`.
+- **Letak barang (`Spot`)** = pecahan 0–1 dari rentang pojok kiri-atas yang muat di area, memakai batas seret `Kamar.dc.html`: dinding x 14..376−lebar dan y 112..402−tinggi; lantai x 8..382−lebar dan tepi bawah 436..646. Jadi setiap `Spot` sah untuk barang itu, dan y lantai sekaligus urutan gambar. Nilai di luar 0–1 dijepit.
+- **Ukuran barang di kamar** = ukuran `Barang.dc.html` × skala `BASE` `Kamar.dc.html`; barang yang tidak ada di `BASE` memakai skala 1.
+- **Posisi bawaan.** Sembilan barang dan mangkuk dari `BASE` `Kamar.dc.html`. Kardus di sana melewati batas lantai 2 px, jadi dijepit. Sebelas barang lain (tikus, akuarium, rumah, pancingan, lampu bulan, bantal ikan, monstera, terowongan, hammock, sofa mini, jendela burung) saya taruh di tempat yang masih agak kosong; boleh tumpang tindih karena pemain bisa menata ulang. Diperiksa lagi saat kamar digambar di langkah 23.
+- **Cara dipakai** dari pose `dipakai` di `Barang.dc.html`. Karpet = tidur (desain), bukan rebahan seperti spesifikasi; rebahan hanya sofa mini. Monstera, rumah, kardus, dan terowongan = sembunyi; lukisan, akuarium, jendela burung = nonton; jam = main. **Mainan** (yang menaikkan Senang lewat `play`) mengikuti daftar spesifikasi: bola, tikus, tiang, catnip, akuarium, pancingan, terowongan, jendela burung.
+- **Jangkar aksesoris:** pita kepala-samping kanan, jepit bunga kiri (`AksesorisPreview.dc.html`).
+- **Aksesoris dibeli tidak langsung dipakai**, karena desain menampilkan tombol Pakai sesudah "Milikmu selamanya". Kostum lama di Lemari Kostum (`buy` = langsung dipakai) tetap sampai dihapus di langkah 23.
+- **Kebutuhan disimpan sebagai angka pecahan** (`double`) dengan waktu `at`, dan diturunkan saat dibaca (`HomeNeeds.of`). Turun lurus lalu dijepit di 0 memberi hasil yang sama dibaca sekaligus atau bertahap, jadi tidak perlu simpan berkala. Pemain baru (belum ada `home.needs`) mulai penuh di jam muat dan langsung disimpan, supaya bar tetap turun walau aplikasi ditutup tanpa aksi.
+- **Batas.** Elus: jendela 1 jam sejak elusan pertama di jendela itu, paling banyak +30. Main: 30 menit sejak main terakhir. Menghias: 1 jam sejak bonus terakhir. Jam yang mundur tidak membuka jendela baru. Batas elus yang rusak di simpanan dianggap habis.
+- **Mangkuk.** Satu isi dimulai saat kucing pertama makan darinya, dan isi berikutnya datang 4 jam sesudahnya. Mangkuk yang tidak disentuh tetap penuh, jadi hasilnya tidak bergantung kapan layar dibuka. "Terisi lagi N jam" = `Bowl.refillAt`.
+- **Hadiah kucing** memakai `dayNumber` seperti bonus harian; jam mundur menahannya.
+- **Urutan simpan** jadi `hints, wardrobe, home, coins, needs, progress, rewards, tutorials, language`: isi rumah sebelum koin yang membayarnya, koin hadiah kucing sebelum hari hadiahnya. Akibatnya memberi camilan menulis stok sebelum bar; kalau aplikasi mati tepat di antaranya, efek satu camilan hilang. Saya pilih begini supaya koin selalu memihak pemain.
+- **Reset progres** menghapus isi rumah (`Home.initial`) dan menyisakan Oyen penuh; mangkuk, hari hadiah kucing, dan waktu bonus menghias tetap, supaya hadiah hari itu tidak bisa diambil ulang.
+- **Kucing yang dibeli** mulai penuh di jam beli (`HomeNeeds.adopted`), juga kalau simpanan lama masih punya catatannya.
+- **Waktu tersimpan di luar 1970–3000 dianggap rusak** dan dibuang (temuan review: `DateTime` melempar `RangeError` untuk nilai sangat besar, dan aplikasi gagal dibuka). `PrefsProgressStore` juga menangkap `ArgumentError` saat membaca JSON.
+- **Untuk layar kamar (langkah 23–24):** model mengizinkan camilan dan elusan saat bar sudah 100 (stok dan jatah elus tetap terpakai), jadi layar sebaiknya menonaktifkan atau memperingatkannya. Gelembung hadiah dicek ulang saat diketuk (`canClaimKittyReward`), dan bar turun ±8,3 per jam, jadi layar perlu menyegarkan keadaan berkala.
