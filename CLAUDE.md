@@ -80,6 +80,7 @@ Pemilik repo biasanya `/clear` setelah tiap sesi, jadi aturan ini yang berlaku, 
 - **Selama langkah:** commit kecil, pesan bahasa Inggris singkat (`feat(sim): ...`, `fix: ...`, `test: ...`, `docs: ...`).
 - **Akhir langkah** (analyze bersih, test hijau, temuan review sudah diperbaiki, langkah sudah dicentang di `docs/ROADMAP.md`): `git push -u origin <branch>` lalu `gh pr create --base main` langsung, tanpa menu pilihan. Kirim link PR-nya. Judul PR `feat: <nama langkah>`. Badan PR berbahasa Indonesia: kalimat pembuka "Langkah N roadmap: ...", daftar perubahan, asumsi baru (kalau ada, juga dicatat di `docs/DESIGN_NOTES.md`), lalu baris "Verifikasi:" berisi hasil `flutter analyze`, jumlah test `flutter test` yang lulus, dan cek lain yang dijalankan.
 - **Merge PR** dilakukan pemilik repo di GitHub; jangan merge sendiri kecuali diminta.
+- **Tambahan ke PR yang sudah ada:** sebelum push, cek `gh pr view <nomor> --json state` masih `OPEN`. Kalau sudah di-merge, buat branch baru dari HEAD sekarang dan buka PR baru dengan judul dan badan lengkap. Jangan mengubah badan PR yang sudah di-merge.
 - **Atribusi:** commit dan PR atas nama akun git pemilik repo. Jangan tambahkan `Co-Authored-By: Claude`, "Generated with Claude Code", atau atribusi Claude lain di pesan commit maupun badan PR.
 - Kesepakatan baru soal alur kerja langsung dicatat di file ini, jangan hanya diucapkan di chat.
 
