@@ -199,9 +199,13 @@ class FailingProgressStore extends MemoryProgressStore {
   Set<String> failing;
   final writes = <String>[];
 
+  /// Tulisan bagian ini menunggu future-nya selesai (tulisan lambat).
+  final holds = <String, Future<void>>{};
+
   Future<void> _write(String part, Future<void> Function() save) async {
     if (failing.contains(part)) throw StateError('$part gagal disimpan');
     writes.add(part);
+    await holds[part];
     await save();
   }
 

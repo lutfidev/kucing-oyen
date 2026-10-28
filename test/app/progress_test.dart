@@ -652,6 +652,26 @@ void main() {
       expect(c.hasUnsavedChanges, isFalse);
     });
 
+    test('perubahan selama menulis tetap mengikuti urutan', () async {
+      final store = FailingProgressStore();
+      final slow = Completer<void>();
+      store.holds['wardrobe'] = slow.future;
+      final c = controller(store, coins: 200);
+
+      final first = c.buyCostume(OyenCostume.peci);
+      await Future<void>.delayed(Duration.zero);
+      expect(store.writes, ['wardrobe']);
+      // Kostum kedua dibeli selagi kostum pertama masih ditulis.
+      final second = c.buyCostume(OyenCostume.sarung);
+      slow.complete();
+      await Future.wait([first, second]);
+
+      // Kostum kedua tersimpan sebelum koin yang sudah dipotong untuknya.
+      expect(store.writes, ['wardrobe', 'wardrobe', 'coins']);
+      expect(store.wardrobe.owns(OyenCostume.sarung), isTrue);
+      expect(store.coins, 50);
+    });
+
     test('retrySaves menulis yang tertunda', () async {
       final store = FailingProgressStore(failing: {'wardrobe'});
       final c = controller(store, coins: 100);

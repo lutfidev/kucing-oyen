@@ -329,15 +329,16 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   // ── Simpanan ────────────────────────────────────────────────────────
 
-  /// Bagian yang berubah tapi belum tersimpan (sedang menunggu giliran atau
-  /// gagal ditulis).
+  /// Bagian yang berubah tapi belum tersimpan (menunggu giliran atau gagal
+  /// ditulis; bagian yang sedang ditulis tidak termasuk).
   final _unsaved = <_Part>{};
 
   /// Tulisan berjalan satu per satu, supaya tulisan lama yang lambat tidak
   /// menimpa yang baru.
   Future<void> _saving = Future.value();
 
-  /// Ada perubahan yang belum tersimpan, mis. penyimpanan perangkat gagal.
+  /// Ada perubahan yang menunggu atau gagal disimpan, mis. penyimpanan
+  /// perangkat gagal. Tulisan yang sedang berjalan tidak dihitung.
   bool get hasUnsavedChanges => _unsaved.isNotEmpty;
 
   /// Mencoba lagi menulis bagian yang gagal disimpan (mis. saat aplikasi
@@ -354,9 +355,13 @@ class ProgressController extends ChangeNotifier implements HintSource {
   }
 
   Future<void> _writeUnsaved() async {
-    for (final part in _Part.values) {
+    while (true) {
+      // Selalu bagian paling awal yang belum tersimpan, juga yang ditandai
+      // lagi selama tulisan sebelumnya berjalan, supaya urutan [_Part] tetap.
+      final part = _Part.values.where(_unsaved.contains).firstOrNull;
+      if (part == null) return;
       // Dihapus sebelum ditulis: perubahan selama menulis menandainya lagi.
-      if (!_unsaved.remove(part)) continue;
+      _unsaved.remove(part);
       try {
         await _write(part);
       } on Object catch (error) {
