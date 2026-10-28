@@ -187,6 +187,18 @@ void main() {
       expect(await PrefsProgressStore().loadNeeds(), HomeNeeds.empty);
     });
 
+    test(
+      'kebutuhan dengan waktu di luar jangkauan: awal, tidak melempar',
+      () async {
+        await SharedPreferencesAsync().setString(
+          PrefsProgressStore.needsKey,
+          '{"cats":{"oyen":{"hunger":50,"joy":50,"at":9000000000000000}},'
+          '"bowl":{"at":9000000000000000},"decoratedAt":9000000000000000}',
+        );
+        expect(await PrefsProgressStore().loadNeeds(), HomeNeeds.empty);
+      },
+    );
+
     test('rumah dan kebutuhan rusak atau bertipe salah: awal', () async {
       final prefs = SharedPreferencesAsync();
       for (final key in [

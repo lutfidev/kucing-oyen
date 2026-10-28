@@ -132,6 +132,21 @@ void main() {
       }
     });
 
+    test('JSON waktu di luar jangkauan dibuang tanpa melempar', () {
+      for (final ms in [9000000000000000, 8639999999999999, -1]) {
+        final json = {...full.toJson(), 'at': ms};
+        expect(CatNeeds.fromJson(json), isNull, reason: '$ms');
+        final odd = CatNeeds.fromJson({
+          ...full.toJson(),
+          'petAt': ms,
+          'playedAt': ms,
+        })!;
+        expect(odd.petWindowStart, isNull, reason: '$ms');
+        expect(odd.playedAt, isNull, reason: '$ms');
+        expect(odd.played(t0), isNotNull, reason: '$ms');
+      }
+    });
+
     test('JSON batas rusak = batasnya habis', () {
       final json = {
         ...full.toJson(),
@@ -332,6 +347,23 @@ void main() {
           .finishDecorating([KittyId.oyen], at(hour * 6))!;
       expect(HomeNeeds.fromJson(used.toJson()), used);
       expect(HomeNeeds.fromJson(HomeNeeds.empty.toJson()), HomeNeeds.empty);
+    });
+
+    test('JSON waktu di luar jangkauan dibuang tanpa melempar', () {
+      const huge = 8639999999999999;
+      final read = HomeNeeds.fromJson({
+        'cats': {
+          'oyen': {...CatNeeds.full(t0).toJson(), 'at': huge},
+        },
+        'bowl': {
+          'at': huge,
+          'eaten': ['oyen'],
+        },
+        'decoratedAt': huge,
+      });
+      expect(read, HomeNeeds.empty);
+      expect(read.canEatFromBowl(KittyId.oyen, t0), isFalse);
+      expect(read.finishDecorating([KittyId.oyen], t0), isNotNull);
     });
 
     test('JSON rusak dibuang per bagian tanpa melempar', () {

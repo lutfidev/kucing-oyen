@@ -311,6 +311,9 @@ class PrefsProgressStore implements ProgressStore {
       return empty;
     } on TypeError {
       return empty;
+    } on ArgumentError {
+      // Mis. waktu di luar jangkauan DateTime yang lolos dari pemeriksaan.
+      return empty;
     }
   }
 

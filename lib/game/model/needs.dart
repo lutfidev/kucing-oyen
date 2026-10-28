@@ -48,8 +48,15 @@ double _bar(double v) => v.isNaN ? 0 : v.clamp(0.0, maxNeed);
 
 int _ms(DateTime time) => time.millisecondsSinceEpoch;
 
-DateTime? _time(Object? json) =>
-    json is int ? DateTime.fromMillisecondsSinceEpoch(json) : null;
+/// Batas atas waktu tersimpan. Lebih jauh dari ini dianggap rusak, supaya
+/// `DateTime` tidak melempar saat dibaca atau saat ditambah durasi.
+final _latestMs = DateTime.utc(3000).millisecondsSinceEpoch;
+
+/// Waktu dari milidetik sejak 1970; null kalau bukan bilangan bulat atau di
+/// luar 1970–3000.
+DateTime? _time(Object? json) => json is int && json >= 0 && json <= _latestMs
+    ? DateTime.fromMillisecondsSinceEpoch(json)
+    : null;
 
 /// Lapar dan Senang satu kucing pada waktu [at], plus batas elus dan main.
 /// Keduanya turun lurus mengikuti jam ([decayed]), juga selama aplikasi
@@ -185,15 +192,17 @@ class CatNeeds {
         case {
           'hunger': final num hunger,
           'joy': final num joy,
-          'at': final int at,
+          'at': final int ms,
         }
         when hunger.isFinite && joy.isFinite) {
+      final at = _time(ms);
+      if (at == null) return null;
       final petAt = _time(json['petAt']);
       final petJoy = json['petJoy'];
       return CatNeeds(
         hunger: hunger.toDouble(),
         joy: joy.toDouble(),
-        at: DateTime.fromMillisecondsSinceEpoch(at),
+        at: at,
         petWindowStart: petAt,
         petWindowJoy: petAt == null
             ? 0
