@@ -233,10 +233,10 @@ Sumber utama:
 >
 > **Lalu buat:**
 > - **Katalog** dengan harga dari desain:
->   - 12 barang: zona lantai/dinding, cara dipakai, posisi bawaan
->   - kucing koleksi: Oyen + 4
->   - 8 aksesoris: harga, kelangkaan, jangkar; Topi Koki 200
->   - 3 camilan: Lapar dan Senang menurut spesifikasi, beserta `Pantry`
+>   - 20 barang: zona lantai/dinding, cara dipakai, posisi bawaan
+>   - kucing koleksi: Oyen + 8
+>   - 16 aksesoris: harga, kelangkaan, jangkar
+>   - 5 camilan: Lapar dan Senang menurut spesifikasi, beserta `Pantry`
 > - **`Room`**: barang dimiliki, posisi barang yang ditaruh (pecahan 0–1), dan Gudang.
 > - **`AccessoryCloset`**: aksesoris dimiliki, dan yang dipakai per kucing. Satu kucing satu aksesoris. Aksesoris yang sama boleh dipakai beberapa kucing.
 > - **`CatNeeds`**:
@@ -279,8 +279,6 @@ Sumber utama:
 > - spesifikasi rumah Oyen bagian Toko dan Aksesoris
 > - desain `Toko.dc.html`, `TabToko`, `KartuToko`, `SheetBeli`, `ChipKoin`, `IkonAksesoris`, `Kucing.dc.html` (sprite, warna, aksesoris), `AksesorisPreview.dc.html`, `Barang.dc.html`, dan artboard `Toko*.dc.html`
 > - `lib/screens/closet/` (pola layar beli), `lib/screens/coins/`, dan `lib/widgets/ko_sheet.dart`
->
-> **Gambar Topi Koki:** cek apakah desain sudah memuatnya (tambahan brief `docs/design-brief/rumah-oyen.md`). Kalau belum, gambar sendiri dengan palet dan aturan jangkar desain 21b, cek lewat potret layar, lalu catat.
 >
 > **Lalu buat:**
 > - **Gambar**: salin `<svg>` dari desain ke `lib/game/render/` lewat `SvgTemplate`. Jangan diketik ulang.
@@ -354,7 +352,7 @@ Sumber utama:
 >
 > **`overflow_test`**:
 > - kamar kosong
-> - kamar penuh: 12 barang dan 5 kucing beraksesoris
+> - kamar penuh: 20 barang dan 9 kucing beraksesoris
 > - mode hias
 > - kartu kucing dengan panel Camilan dan Aksesoris
 > - semuanya bersaldo 99999

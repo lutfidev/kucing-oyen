@@ -1,6 +1,6 @@
 # Rumah Oyen: kamar, Toko, kucing koleksi, aksesoris, peta bergambar (langkah 21–26)
 
-Dokumen ini dimulai dari brainstorming dengan pemilik repo pada 26 Oktober 2026, lalu diperbarui 28 Oktober 2026 sesudah desainnya jadi. Pekerjaannya dipecah menjadi langkah 21–26 di `docs/ROADMAP.md` dan baru dikerjakan **sesudah langkah 18–20** [pemilik].
+Dokumen ini dimulai dari brainstorming dengan pemilik repo pada 26 Oktober 2026, lalu diperbarui 28 Oktober 2026 sesudah desainnya jadi dan sesudah isi tambahan masuk ke desain (lihat "Isi tambahan 28 Oktober"). Pekerjaannya dipecah menjadi langkah 21–26 di `docs/ROADMAP.md` dan baru dikerjakan **sesudah langkah 18–20** [pemilik].
 
 ## Sumber desain
 
@@ -50,9 +50,19 @@ Arah yang dipilih adalah **Talking Tom / Neko Atsume** [pemilik]. Kucingnya menj
 - **Lemari Kostum dihapus.** Di kamar, tombolnya diganti **Aksesoris**, yang membuka tab Aksesoris di Toko. Aksesoris juga bisa diganti dari kartu kucing.
 - **Kostum lama dihapus tanpa migrasi** karena belum ada pemain asli. Simpanan `costume.owned` dan `costume.wearing` diabaikan, lalu dihapus saat dibaca. Koin yang dulu dipakai membeli kostum tidak dikembalikan.
   - **Kacamata** lama diganti **Kacamata Bulat** dari desain.
-  - **Topi Koki** tetap ada sebagai aksesoris, dengan gambar yang lebih bagus. Gambarnya diminta lewat tambahan brief di `docs/design-brief/rumah-oyen.md`.
+  - **Topi Koki** tetap ada sebagai aksesoris, dengan gambar baru yang lebih bagus (sudah ada di desain).
 - **Animasi natural**: berkedip, ekor bergerak, jalan, tidur, makan, main, menggaruk, dielus, plus barang yang bergerak (akuarium, bola benang, catnip, jam).
 - **Respons yang menyenangkan** saat memberi camilan, mengelus, membeli atau memasang aksesoris, dan selesai menghias.
+
+## Isi tambahan 28 Oktober [pemilik]
+
+Pemilik repo meminta isi yang lebih banyak, dan semuanya sudah masuk ke desain lewat prompt tambahan:
+
+- **4 kucing baru**: Kopi Susu, Mochi, Bos, Kembang. Bentuknya sama dengan Oyen; hanya warna dan coraknya beda. Mochi punya topeng wajah, dan Bos punya garis putih di wajah. Jumlah kucing jadi 9 termasuk Oyen.
+- **9 aksesoris baru**: Topi Koki, Jepit Bunga, Dasi Kupu-kupu, Syal Rajut, Topi Baret, Headphone, Tanduk Rusa, Topi Penyihir, Mahkota Raja. Totalnya jadi 16.
+- **8 barang baru**: Pancingan Bulu, Bantal Ikan, Tanaman Monstera, Terowongan Kucing, Sofa Mini, Lampu Bulan, Hammock Jendela, Jendela Burung. Totalnya jadi 20.
+- **2 camilan baru**: Biskuit Kucing dan Puding Ikan. Totalnya jadi 5.
+- **Pose baru "rebahan"** (`rebah`, dipakai di Sofa Mini dan Karpet), plus animasi untuk barang baru (lihat Kamar hidup).
 
 ## Tujuan
 
@@ -123,14 +133,16 @@ Arah yang dipilih adalah **Talking Tom / Neko Atsume** [pemilik]. Kucingnya menj
 
   | Camilan | Harga | Lapar | Senang |
   |---|---|---|---|
-  | Ikan Asin | 20 | +25 | +5 |
+  | Biskuit Kucing | 10 | +10 | +2 |
   | Susu | 15 | +15 | +5 |
+  | Ikan Asin | 20 | +25 | +5 |
   | Tuna Kaleng | 40 | +40 | +5 |
+  | Puding Ikan | 90 | +60 | +15 |
 
-  Harga dan Lapar dari desain; Senang +5 dari desain. Camilan diberikan lewat kartu kucing.
+  Semua angka dari desain (harga di `Toko.dc.html`, efek di `Kamar.dc.html`). Camilan diberikan lewat kartu kucing.
 - **Senang naik karena:**
   - **dielus**: +10 [desain], paling banyak +30 per jam per kucing [saya]
-  - **memakai mainan sendiri**: bola, tikus, garukan, catnip, akuarium; +10 per pemakaian, paling banyak sekali per 30 menit per kucing [saya]
+  - **memakai mainan sendiri**: bola, tikus, garukan, catnip, akuarium, pancingan, terowongan, jendela burung; +10 per pemakaian, paling banyak sekali per 30 menit per kucing [saya]
   - **selesai menghias** (lihat Mode hias)
 - **Hadiah**:
   - Kucing yang Lapar dan Senang-nya ≥ 70 memunculkan gelembung **10 koin**, paling banyak sekali per hari kalender (`dayNumber`) per kucing [saya; 10 dari desain].
@@ -141,16 +153,24 @@ Arah yang dipilih adalah **Talking Tom / Neko Atsume** [pemilik]. Kucingnya menj
 
 | Aksesoris | Harga | Kelangkaan | Jangkar |
 |---|---|---|---|
-| Pita | 50 | Biasa | kepala-samping |
+| Pita | 50 | Biasa | kepala-samping (kanan) |
+| Jepit Bunga | 60 | Biasa | kepala-samping (kiri) |
 | Bandana | 80 | Biasa | leher |
+| Dasi Kupu-kupu | 90 | Biasa | leher |
 | Kalung Lonceng | 120 | Biasa | leher |
+| Syal Rajut | 140 | Biasa | leher |
 | Beanie | 180 | Langka | kepala-atas |
 | Topi Koki | 200 | Langka | kepala-atas |
+| Topi Baret | 220 | Langka | kepala-atas |
 | Kacamata Bulat | 250 | Langka | wajah |
+| Headphone | 280 | Langka | kepala-atas |
+| Tanduk Rusa | 320 | Langka | kepala-atas |
 | Topi Pesta | 350 | Langka | kepala-atas |
+| Topi Penyihir | 520 | Spesial | kepala-atas |
 | Mahkota Bunga | 600 | Spesial | kepala-atas |
+| Mahkota Raja | 800 | Spesial | kepala-atas |
 
-Semua baris dari desain, kecuali **Topi Koki** (harga, kelangkaan, dan jangkarnya [saya]).
+Semua baris dari desain (`Toko.dc.html`, `AksesorisPreview.dc.html`).
 
 - **Aturan memakai** [pemilik + desain]:
   - Sekali beli, aksesoris jadi milik pemain dan bisa dipakai semua kucing.
@@ -162,8 +182,9 @@ Semua baris dari desain, kecuali **Topi Koki** (harga, kelangkaan, dan jangkarny
   - Koin kurang: `TokoAksesorisKurang`.
   - Sukses: `TokoAksesorisSukses`, "Milikmu selamanya", lalu bisa langsung dipakai.
 - **Posisi** mengikuti jangkar di desain 21b: aksesoris digambar di grup kepala sprite, jadi ikut setiap pose dan animasi.
-  - Pose tidur memakai varian kecil.
-  - Lonceng dan ujung bandana disembunyikan saat lesu.
+  - Pose tidur memakai varian kecil; aksesoris baru diskala 0,72 ke kepala yang melingkar.
+  - Lonceng dan ujung bandana disembunyikan saat lesu. Ujung syal disembunyikan saat rebahan dan tidur, dan berayun 0,44 detik saat jalan.
+  - Headphone hanya bando dan bantalan kecil di antara telinga; telinga kucing tetap terlihat.
   - Kacamata berlensa bening, dengan bingkai berwarna garis wajah kucing.
 - **Di puzzle** [saya]: Oyen di papan, putar ulang, layar hasil, dan tutorial tampil tanpa aksesoris. Aksesoris hanya digambar untuk sprite kamar (`Kucing.dc.html`). Sprite papan (desain 14) punya bentuk dan arah lain, dan desain tidak menggambarkan aksesoris di sana.
   - Akibatnya `OyenCostume`, prop `costume` di `OyenLook`/`BoardScene.dressed`, dan kostum di papan dihapus bersama Lemari Kostum.
@@ -171,7 +192,7 @@ Semua baris dari desain, kecuali **Topi Koki** (harga, kelangkaan, dan jangkarny
 
 ### Kamar hidup (`AnimasiKucing.dc.html`, `Kamar.dc.html`)
 
-- **Rutinitas per kucing**: diam (duduk/menjilat), jalan, memakai barang (main bola, makan, sembunyi di kardus, garuk tiang, tidur di kasur, duduk di rak), lesu, dan bereaksi.
+- **Rutinitas per kucing**: diam (duduk/menjilat), jalan, memakai barang (main bola atau pancingan, makan, sembunyi di kardus atau terowongan, garuk tiang, tidur di kasur, bantal ikan, atau hammock, rebahan di sofa mini atau karpet, duduk di rak, nonton jendela burung atau akuarium), lesu, dan bereaksi.
   - Contoh rutinitas Oyen ada di desain 21c.
   - Tujuan dipilih acak berbobot dari barang yang ada dan sedang tidak dipakai kucing lain [saya].
   - Kucing berjalan lurus di lantai dan boleh melewati barang.
@@ -187,6 +208,8 @@ Semua baris dari desain, kecuali **Topi Koki** (harga, kelangkaan, dan jangkarny
   - dielus: ±4° per 0,9 detik
   - senang: kilau 1,2 detik
   - barang: ikan akuarium 4–5 detik, bola ±10° per 2,8 detik, catnip 3,2 detik, pendulum jam 1,4 detik
+  - barang baru: bulu pancingan ±14° per 1,3 detik, burung jendela lompat 2,6 detik, lampu bulan berpendar 0,9→1,06 per 3 detik, hammock ±2,5° per 3,2 detik, daun monstera ±3° per 4,2 detik, puding goyang 2,2 detik
+  - rebahan: ekor ayun 3,4 detik; headphone: not musik melayang 2,2 detik
 - **Jeda**: rutinitas berhenti selama kartu kucing terbuka, mode hias aktif, atau ada reaksi, lalu lanjut dari langkah berikutnya [desain].
 - **Hemat**: kucing di luar layar tidak dianimasikan.
 - **Kurangi gerak** (`disableAnimations`): semua loop berhenti dan kucing tetap di pose diam. Kebutuhan dan hadiah tetap berjalan [desain].
@@ -202,13 +225,13 @@ Semua baris dari desain, kecuali **Topi Koki** (harga, kelangkaan, dan jangkarny
 
   | Tab | Isi |
   |---|---|
-  | Kucing | Salju 300, Mendung 350, Arang 400, Telon 550 |
-  | Barang lantai | Kardus Nyaman 50, Bola Benang 80, Tikus Mainan 120, Karpet Bulat 150, Pot Catnip 180, Kasur Bantal 200, Tiang Garukan 220, Akuarium 600, Rumah Kucing 900 |
-  | Barang dinding | Lukisan Ikan 140, Rak Dinding 160, Jam Kucing 240 |
+  | Kucing | Salju 300, Kopi Susu 300, Mendung 350, Arang 400, Mochi 450, Telon 550, Bos 600, Kembang 700 |
+  | Barang lantai | Kardus Nyaman 50, Pancingan Bulu 60, Bola Benang 80, Tikus Mainan 120, Karpet Bulat 150, Bantal Ikan 160, Pot Catnip 180, Kasur Bantal 200, Tanaman Monstera 200, Tiang Garukan 220, Terowongan Kucing 260, Sofa Mini 450, Akuarium 600, Rumah Kucing 900 |
+  | Barang dinding | Lampu Bulan 120, Lukisan Ikan 140, Rak Dinding 160, Jam Kucing 240, Hammock Jendela 380, Jendela Burung 700 |
   | Aksesoris | lihat tabel Aksesoris |
-  | Makanan | Susu 15, Ikan Asin 20, Tuna Kaleng 40 |
+  | Makanan | Biskuit Kucing 10, Susu 15, Ikan Asin 20, Tuna Kaleng 40, Puding Ikan 90 |
 
-  Deskripsi jenaka tiap barang ada di `Toko.dc.html`.
+  Deskripsi jenaka tiap barang ada di `Toko.dc.html`. Zona barang baru (lantai/dinding) adalah keputusan saya dari gambarnya; ikuti `Barang.dc.html` kalau berbeda.
 
 ### Koin
 
@@ -216,8 +239,11 @@ Semua baris dari desain, kecuali **Topi Koki** (harga, kelangkaan, dan jangkarny
   - 10 koin per bintang baru
   - bonus harian 20
   - iklan +20 koin, **10 kali per hari** [pemilik]
-  - hadiah kucing 10 per kucing per hari
-- **Total belanja**: barang 3.040, kucing 1.600, aksesoris 1.830, jadi ±6.470 koin, belum termasuk camilan. Sumber per hari paling banyak ±270 koin, ditambah 600 koin dari bintang. Semuanya terbeli dalam sekitar 3–5 minggu bermain santai. Angka bisa diseimbangkan lagi sesudah dimainkan.
+  - hadiah kucing 10 per kucing per hari (paling banyak 90 dengan 9 kucing)
+- **Total belanja**: barang 5.370, kucing 3.650, aksesoris 4.260, jadi ±13.280 koin, belum termasuk camilan.
+  - Sumber per hari paling banyak ±310 koin, ditambah 600 koin dari bintang.
+  - Pemain yang mengambil semua jatah tiap hari butuh sekitar 6 minggu untuk membeli semuanya; pemain santai butuh 2–3 bulan. Ini sengaja jadi tujuan jangka panjang.
+  - Angka bisa diseimbangkan lagi sesudah dimainkan.
 
 ### Peta bergambar (`PetaBergambar`, `PetaDapur`, `PetaJalan`, `PetaPindah`)
 
@@ -251,15 +277,15 @@ Semua baris dari desain, kecuali **Topi Koki** (harga, kelangkaan, dan jangkarny
 Nama kelas dan berkas adalah usulan. Kalau langkah sebelumnya memakai nama lain, ikuti kode.
 
 - **`home_items.dart`**:
-  - `RoomItemId` (12 barang)
+  - `RoomItemId` (20 barang)
   - `RoomItem`: `id`, `price`, `zone` lantai/dinding, `use` tidur/main/garuk/nonton/duduk/sembunyi/rebahan/hiasan, `toy`, `defaultSpot`
   - `roomItems`, `roomItemOf`
 - **`kitties.dart`**:
-  - `KittyId`: `oyen`, `salju`, `mendung`, `arang`, `telon`
+  - `KittyId`: `oyen`, `salju`, `mendung`, `arang`, `telon`, `kopiSusu`, `mochi`, `bos`, `kembang`
   - `Kitty`: `id`, `price`; Oyen berharga 0 dan selalu dimiliki
   - `kitties`
 - **`accessories.dart`**:
-  - `AccessoryId` (8 aksesoris)
+  - `AccessoryId` (16 aksesoris)
   - `Accessory`: `id`, `price`, `rarity`, `anchor`
   - `accessories`
   - `AccessoryCloset`: `owned`, `wearing` (`Map<KittyId, AccessoryId>`), `buy`, `wear(kitty, id?)`; JSON membuang entri rusak, termasuk aksesoris yang belum dimiliki
@@ -312,4 +338,3 @@ Teks Lemari Kostum dan kostum lama dihapus dari keempat ARB.
 - Bobot acak rutinitas, urutan gambar saat kucing bertumpuk, dan cara menyimpan berkala. Usulan untuk penyimpanan: simpan saat ada aksi pemain dan saat aplikasi masuk ke latar belakang.
 - Bentuk persis bagian yang tidak digambar desain. Pakai gaya `KoSheet` dan `KoCard`, lalu catat di `docs/DESIGN_NOTES.md`.
 - Cara galeri (`/galeri`) menampilkan sprite, aksesoris, dan barang baru.
-- Gambar Topi Koki, kalau tambahan brief belum dikerjakan saat langkah 22 dimulai. Gambar sendiri dengan palet dan aturan jangkar desain 21b, cek lewat potret layar, lalu catat.
