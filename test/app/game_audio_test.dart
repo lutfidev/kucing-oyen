@@ -22,6 +22,12 @@ class _BrokenAds implements RewardedAds {
   Future<bool> show() async => throw StateError('SDK');
 }
 
+class _BrokenSoundStore extends MemoryProgressStore {
+  @override
+  Future<void> saveSound(SoundSettings sound) async =>
+      throw StateError('penyimpanan rusak');
+}
+
 void main() {
   late FakeSoundPlayer player;
   late MemoryProgressStore store;
@@ -32,6 +38,20 @@ void main() {
   setUp(() {
     player = FakeSoundPlayer();
     store = MemoryProgressStore();
+  });
+
+  test('sakelar tetap berubah walau gagal disimpan', () async {
+    final a = GameAudio(player: player, store: _BrokenSoundStore());
+    await a.setEffectsOn(false);
+    await a.setMusicOn(false);
+    expect(a.effectsOn, isFalse);
+    expect(a.musicOn, isFalse);
+  });
+
+  test('load menyiapkan efek suara lebih dulu', () async {
+    expect(player.preloaded, isFalse);
+    await GameAudio.load(store: store, player: player);
+    expect(player.preloaded, isTrue);
   });
 
   test('memuat sakelar tersimpan', () async {

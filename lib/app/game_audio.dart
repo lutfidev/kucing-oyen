@@ -30,11 +30,14 @@ class GameAudio extends ChangeNotifier {
   static Future<GameAudio> load({
     required ProgressStore store,
     required SoundPlayer player,
-  }) async => GameAudio(
-    player: player,
-    store: store,
-    settings: await store.loadSound(),
-  );
+  }) async {
+    unawaited(player.preload());
+    return GameAudio(
+      player: player,
+      store: store,
+      settings: await store.loadSound(),
+    );
+  }
 
   final SoundPlayer player;
   final ProgressStore store;
@@ -78,7 +81,12 @@ class GameAudio extends ChangeNotifier {
     _settings = settings;
     _sync();
     notifyListeners();
-    await store.saveSound(settings);
+    try {
+      await store.saveSound(settings);
+    } on Object catch (error) {
+      // Sakelar tetap berlaku sampai aplikasi ditutup.
+      debugPrint('Sakelar suara gagal disimpan: $error');
+    }
   }
 
   void hold(AudioHold reason) {

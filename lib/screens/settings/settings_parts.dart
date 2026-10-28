@@ -1,7 +1,9 @@
+import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../app/game_audio.dart';
 import '../../app/language.dart';
+import '../../game/model/sounds.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -138,7 +140,13 @@ class _SwitchRow extends StatelessWidget {
     final c = context.koColors;
     final s = context.koSize;
     final space = context.koSpace;
-    final tap = tapSound(context, () => onChanged(!on));
+    // Bunyi sesudah sakelar berubah: sakelar Efek suara senyap saat
+    // dimatikan dan berbunyi saat dinyalakan.
+    void tap() {
+      onChanged(!on);
+      AudioScope.maybeRead(context)?.play(GameSound.tap);
+    }
+
     return Semantics(
       toggled: on,
       label: label,
@@ -214,6 +222,9 @@ class LanguageCard extends StatelessWidget {
             _LanguageRow(
               key: ValueKey('language-${language.name}'),
               name: language.nativeName ?? context.l10n.languageSystem,
+              locale: language == AppLanguage.system
+                  ? null
+                  : Locale(language.name),
               selected: language == selected,
               onTap: () => onSelect(language),
             ),
@@ -229,11 +240,16 @@ class _LanguageRow extends StatelessWidget {
     required this.name,
     required this.selected,
     required this.onTap,
+    this.locale,
   });
 
   final String name;
   final bool selected;
   final VoidCallback onTap;
+
+  /// Bahasa [name], supaya pembaca layar membacanya dengan suara bahasa itu
+  /// ("Русский" tidak dibaca dengan suara Inggris); null = bahasa aplikasi.
+  final Locale? locale;
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +261,16 @@ class _LanguageRow extends StatelessWidget {
       button: true,
       selected: selected,
       inMutuallyExclusiveGroup: true,
-      label: name,
+      attributedLabel: AttributedString(
+        name,
+        attributes: [
+          if (locale case final locale?)
+            LocaleStringAttribute(
+              range: TextRange(start: 0, end: name.length),
+              locale: locale,
+            ),
+        ],
+      ),
       onTap: tap,
       excludeSemantics: true,
       child: GestureDetector(

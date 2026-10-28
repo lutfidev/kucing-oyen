@@ -27,6 +27,12 @@ enum AdReward {
   busy,
 }
 
+/// Bagian progres yang disimpan terpisah, urut tulisnya. Urutan ini memihak
+/// pemain kalau aplikasi mati di tengah: petunjuk dan kostum sebelum koin
+/// yang membayarnya, koin sebelum bintang dan hadiah harian yang
+/// memberikannya (jadi paling buruk koin didapat lagi, tidak hilang).
+enum _Part { hints, wardrobe, coins, progress, rewards, tutorials, language }
+
 /// Data level dan progres pemain untuk semua layar: bintang, tutorial,
 /// koin, petunjuk, kostum Oyen, hadiah harian, dan bahasa. Dimuat sekali
 /// sebelum aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
@@ -135,10 +141,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     _progress = next;
     _coins += earned;
     notifyListeners();
-    await Future.wait([
-      store.save(next),
-      if (earned > 0) store.saveCoins(_coins),
-    ]);
+    await _save({_Part.progress, if (earned > 0) _Part.coins});
   }
 
   int _coins;
@@ -183,10 +186,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     }
     _hints = Map.unmodifiable({..._hints, levelId: tier});
     notifyListeners();
-    await Future.wait([
-      store.saveHints(_hints),
-      if (pay == HintPay.coins) store.saveCoins(_coins),
-    ]);
+    await _save({_Part.hints, if (pay == HintPay.coins) _Part.coins});
     return HintUnlock.opened;
   }
 
@@ -198,15 +198,13 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// Membeli kostum [id] dengan koin lalu langsung memakainya. Gagal tanpa
   /// efek kalau sudah dimiliki atau koin kurang. Semua perubahan terjadi
   /// sebelum menyimpan, jadi ketukan kedua melihat kostumnya sudah dimiliki.
-  /// Kostum disimpan sebelum koin: kalau aplikasi mati di tengah, pemain
-  /// mendapat kostumnya tanpa kehilangan koin.
+  /// Kostum disimpan sebelum koin (lihat [_Part]).
   Future<bool> buyCostume(OyenCostume id) async {
     if (!_wardrobe.canBuy(id, _coins)) return false;
     _coins -= costumeOf(id).price;
     _wardrobe = _wardrobe.buy(id);
     notifyListeners();
-    await store.saveWardrobe(_wardrobe);
-    await store.saveCoins(_coins);
+    await _save({_Part.wardrobe, _Part.coins});
     return true;
   }
 
@@ -216,7 +214,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     if (_wardrobe.wearing == id) return true;
     _wardrobe = _wardrobe.wear(id);
     notifyListeners();
-    await store.saveWardrobe(_wardrobe);
+    await _save({_Part.wardrobe});
     return true;
   }
 
@@ -254,7 +252,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     _rewards = _rewards.claimBonus(today);
     _coins += dailyBonusCoins;
     notifyListeners();
-    await Future.wait([store.saveRewards(_rewards), store.saveCoins(_coins)]);
+    await _save({_Part.rewards, _Part.coins});
     return true;
   }
 
@@ -278,7 +276,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     _rewards = _rewards.watchedAd(_today);
     _coins += adRewardCoins;
     notifyListeners();
-    await Future.wait([store.saveRewards(_rewards), store.saveCoins(_coins)]);
+    await _save({_Part.rewards, _Part.coins});
     return AdReward.rewarded;
   }
 
@@ -291,7 +289,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     if (language == _language) return;
     _language = language;
     notifyListeners();
-    await store.saveLanguage(language);
+    await _save({_Part.language});
   }
 
   /// "Lihat tutorial lagi": tutorial level 1, 3, dan 6 muncul lagi.
@@ -299,7 +297,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     if (_tutorialsDone.isEmpty) return;
     _tutorialsDone = const {};
     notifyListeners();
-    await store.saveTutorials(_tutorialsDone);
+    await _save({_Part.tutorials});
   }
 
   /// "Reset progres": menghapus bintang, koin, petunjuk, kostum, dan
@@ -312,13 +310,13 @@ class ProgressController extends ChangeNotifier implements HintSource {
     _wardrobe = Wardrobe.initial;
     _tutorialsDone = const {};
     notifyListeners();
-    await Future.wait([
-      store.save(_progress),
-      store.saveCoins(_coins),
-      store.saveHints(_hints),
-      store.saveWardrobe(_wardrobe),
-      store.saveTutorials(_tutorialsDone),
-    ]);
+    await _save({
+      _Part.progress,
+      _Part.coins,
+      _Part.hints,
+      _Part.wardrobe,
+      _Part.tutorials,
+    });
   }
 
   /// Menandai tutorial level [id] selesai supaya tidak muncul lagi.
@@ -326,8 +324,63 @@ class ProgressController extends ChangeNotifier implements HintSource {
     if (isTutorialDone(id)) return;
     _tutorialsDone = Set.unmodifiable({..._tutorialsDone, id});
     notifyListeners();
-    await store.saveTutorials(_tutorialsDone);
+    await _save({_Part.tutorials});
   }
+
+  // ── Simpanan ────────────────────────────────────────────────────────
+
+  /// Bagian yang berubah tapi belum tersimpan (menunggu giliran atau gagal
+  /// ditulis; bagian yang sedang ditulis tidak termasuk).
+  final _unsaved = <_Part>{};
+
+  /// Tulisan berjalan satu per satu, supaya tulisan lama yang lambat tidak
+  /// menimpa yang baru.
+  Future<void> _saving = Future.value();
+
+  /// Ada perubahan yang menunggu atau gagal disimpan, mis. penyimpanan
+  /// perangkat gagal. Tulisan yang sedang berjalan tidak dihitung.
+  bool get hasUnsavedChanges => _unsaved.isNotEmpty;
+
+  /// Mencoba lagi menulis bagian yang gagal disimpan (mis. saat aplikasi
+  /// ke latar belakang). Tidak pernah melempar.
+  Future<void> retrySaves() => _save(const {});
+
+  /// Menyimpan [parts] beserta bagian yang tertunda, urut [_Part], dengan
+  /// nilai terbaru saat ditulis. Kegagalan tidak dilempar: keadaan di
+  /// memori tetap, bagian yang gagal dan sesudahnya dicoba lagi di simpan
+  /// berikutnya.
+  Future<void> _save(Set<_Part> parts) {
+    _unsaved.addAll(parts);
+    return _saving = _saving.then((_) => _writeUnsaved());
+  }
+
+  Future<void> _writeUnsaved() async {
+    while (true) {
+      // Selalu bagian paling awal yang belum tersimpan, juga yang ditandai
+      // lagi selama tulisan sebelumnya berjalan, supaya urutan [_Part] tetap.
+      final part = _Part.values.where(_unsaved.contains).firstOrNull;
+      if (part == null) return;
+      // Dihapus sebelum ditulis: perubahan selama menulis menandainya lagi.
+      _unsaved.remove(part);
+      try {
+        await _write(part);
+      } on Object catch (error) {
+        _unsaved.add(part);
+        debugPrint('Progres gagal disimpan ($part): $error');
+        return;
+      }
+    }
+  }
+
+  Future<void> _write(_Part part) => switch (part) {
+    _Part.progress => store.save(_progress),
+    _Part.tutorials => store.saveTutorials(_tutorialsDone),
+    _Part.coins => store.saveCoins(_coins),
+    _Part.hints => store.saveHints(_hints),
+    _Part.wardrobe => store.saveWardrobe(_wardrobe),
+    _Part.rewards => store.saveRewards(_rewards),
+    _Part.language => store.saveLanguage(_language),
+  };
 }
 
 /// Membagikan [ProgressController] ke bawah; widget yang membacanya lewat

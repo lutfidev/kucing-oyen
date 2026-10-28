@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/ad_consent.dart';
@@ -127,6 +128,26 @@ void main() {
       expect(store.sound, SoundSettings.on);
     });
 
+    testWidgets('sakelar efek: senyap saat dimatikan, berbunyi saat '
+        'dinyalakan', (tester) async {
+      final audio = testAudio();
+      await pumpApp(tester, location: AppRoutes.settings, audio: audio);
+      playedBy(audio).clear();
+
+      await tester.tap(sound('effects'));
+      await settle(tester);
+      expect(playedBy(audio), isEmpty);
+
+      await tester.tap(sound('effects'));
+      await settle(tester);
+      expect(playedBy(audio), [GameSound.tap]);
+
+      // Sakelar musik tetap berbunyi tap seperti tombol lain.
+      await tester.tap(sound('music'));
+      await settle(tester);
+      expect(playedBy(audio), [GameSound.tap, GameSound.tap]);
+    });
+
     testWidgets('memuat sakelar tersimpan saat dibuka', (tester) async {
       final audio = testAudio(settings: const SoundSettings(effects: false));
       await pumpApp(tester, location: AppRoutes.settings, audio: audio);
@@ -159,6 +180,29 @@ void main() {
         tester.getSemantics(_language(AppLanguage.en)),
         isSemantics(isSelected: false, isButton: true),
       );
+    });
+
+    testWidgets('nama bahasa bertag bahasanya untuk pembaca layar', (
+      tester,
+    ) async {
+      await pumpApp(tester, location: AppRoutes.settings);
+      List<StringAttribute> attributes(AppLanguage language) => tester
+          .getSemantics(_language(language))
+          .getSemanticsData()
+          .attributedLabel
+          .attributes;
+      for (final language in AppLanguage.supported) {
+        final tags = attributes(language);
+        expect(tags, hasLength(1), reason: language.name);
+        final tag = tags.single as LocaleStringAttribute;
+        expect(tag.locale, Locale(language.name));
+        expect(
+          tag.range,
+          TextRange(start: 0, end: language.nativeName!.length),
+        );
+      }
+      // "Ikuti bahasa HP" ditulis dalam bahasa yang sedang dipakai.
+      expect(attributes(AppLanguage.system), isEmpty);
     });
 
     testWidgets('memilih bahasa langsung mengganti teks dan tersimpan', (

@@ -288,6 +288,95 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get traySlotSelectHint => 'pegar este item';
+
+  @override
+  String get traySlotUnselectHint => 'cancelar';
+
+  @override
+  String tileLabel(int row, int col, String content) {
+    return 'Linha $row, coluna $col: $content';
+  }
+
+  @override
+  String get cellWall => 'parede';
+
+  @override
+  String get cellFloor => 'chão';
+
+  @override
+  String get cellBowl => 'tigela do Oyen';
+
+  @override
+  String get cellTable => 'mesa';
+
+  @override
+  String get cellTableGlass => 'mesa com um copo';
+
+  @override
+  String get cellTableVase => 'mesa com um vaso';
+
+  @override
+  String get cellFish => 'peixe salgado';
+
+  @override
+  String get cellWater => 'poça d\'água';
+
+  @override
+  String get cellBox => 'caixa';
+
+  @override
+  String tileOyen(String dir) {
+    String _temp0 = intl.Intl.selectLogic(dir, {
+      'up': 'cima',
+      'right': 'a direita',
+      'down': 'baixo',
+      'left': 'a esquerda',
+      'other': 'a direita',
+    });
+    return 'Oyen dormindo, virado para $_temp0';
+  }
+
+  @override
+  String tilePlayerItem(String item) {
+    return '$item, foi você que colocou';
+  }
+
+  @override
+  String tileHintSpot(String content) {
+    return '$content. Dica: algo tem que ir aqui.';
+  }
+
+  @override
+  String tileHintItem(String content, String item) {
+    return '$content. Dica: $item vai aqui.';
+  }
+
+  @override
+  String get tilePlaceHint => 'colocar aqui';
+
+  @override
+  String get tilePickHint => 'pegar para mudar de lugar';
+
+  @override
+  String get tileReturn => 'Devolver aos itens';
+
+  @override
+  String itemPickedAnnounce(String item) {
+    return '$item na mão. Escolha um quadrado de chão vazio pra colocar.';
+  }
+
+  @override
+  String itemPlacedAnnounce(String item, int row, int col) {
+    return 'Pronto: $item na linha $row, coluna $col.';
+  }
+
+  @override
+  String itemReturnedAnnounce(String item) {
+    return '$item voltou para os itens.';
+  }
+
+  @override
   String get step => 'Passo';
 
   @override

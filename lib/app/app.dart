@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -51,9 +53,11 @@ class _KucingOrenAppState extends State<KucingOrenApp>
 
   /// Aplikasi yang kembali dari latar belakang esok hari menampilkan bonus
   /// harian dan jatah iklan baru. Musik dijeda selama aplikasi tidak
-  /// terlihat.
+  /// terlihat. Progres yang gagal disimpan dicoba lagi sebelum aplikasi
+  /// mungkin dimatikan sistem.
   late final AppLifecycleListener _lifecycle = AppLifecycleListener(
     onResume: () => widget.progress.refreshDay(),
+    onPause: () => unawaited(widget.progress.retrySaves()),
     onHide: () => _audio.hold(AudioHold.background),
     onShow: () => _audio.release(AudioHold.background),
   );

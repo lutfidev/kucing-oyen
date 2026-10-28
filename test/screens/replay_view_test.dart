@@ -298,11 +298,17 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(ReplayView), findsOneWidget);
 
-      // Tombol kembali sistem menutup putar ulang, lalu ke peta.
+      // Tombol kembali sistem menutup putar ulang, lalu ke fase atur, lalu
+      // ke peta.
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.byType(ReplayView), findsNothing);
       expect(find.byType(BoredResult), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.byType(BoredResult), findsNothing);
+      expect(find.text('Bangunkan Oyen'), findsOneWidget);
 
       await tester.binding.handlePopRoute();
       await settle(tester);

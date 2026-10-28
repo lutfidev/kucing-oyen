@@ -29,6 +29,7 @@ class KoIconButton extends StatelessWidget {
     this.tone = KoIconButtonTone.surface,
     this.label,
     this.iconSize,
+    this.silent = false,
   });
 
   final KoIconData icon;
@@ -41,6 +42,9 @@ class KoIconButton extends StatelessWidget {
 
   /// Default [KoSize.icon], atau [KoSize.iconSmall] kalau ada [label].
   final double? iconSize;
+
+  /// Lihat [KoPressable.silent].
+  final bool silent;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +66,7 @@ class KoIconButton extends StatelessWidget {
 
     return KoPressable(
       onPressed: onPressed,
+      silent: silent,
       semanticLabel: semanticLabel,
       color: bg,
       edgeColor: edge,

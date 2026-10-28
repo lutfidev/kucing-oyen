@@ -16,7 +16,8 @@ typedef TrayDragStart = Drag? Function(Item item, Offset global);
 /// papan.
 ///
 /// Slot yang angkanya 0 tidak bisa diseret. Kalau tempat kurang, slot
-/// mengecil dan petunjuk disembunyikan.
+/// mengecil dan petunjuk disembunyikan. Pembaca layar bisa memilih benda
+/// tanpa seret ([onSelect]), lalu menaruhnya lewat petak papan.
 class TrayPanel extends StatelessWidget {
   const TrayPanel({
     super.key,
@@ -25,6 +26,8 @@ class TrayPanel extends StatelessWidget {
     required this.onClear,
     this.dragging,
     this.slotKeys = const {},
+    this.selected,
+    this.onSelect,
   });
 
   /// Angka yang tampil di tiap slot, urut seperti di baki level.
@@ -41,6 +44,12 @@ class TrayPanel extends StatelessWidget {
 
   /// Kunci slot per benda, untuk mengukur letaknya (sorotan tutorial).
   final Map<Item, GlobalKey> slotKeys;
+
+  /// Benda baki yang sedang dipilih pembaca layar.
+  final Item? selected;
+
+  /// Ketuk dua kali di slot (pembaca layar): pilih atau batal pilih.
+  final ValueChanged<Item>? onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +89,9 @@ class TrayPanel extends StatelessWidget {
                         item: item,
                         count: count,
                         dragging: item == dragging,
+                        selected: item == selected,
                         onDragStart: onDragStart,
+                        onSelect: onSelect,
                       ),
                     ],
                   ],
@@ -113,6 +124,8 @@ class TrayPanel extends StatelessWidget {
             semanticLabel: context.l10n.clearBoard,
             tone: KoIconButtonTone.floor,
             iconSize: s.iconSmall,
+            // Bunyi benda kembali menggantikan tap.
+            silent: true,
             onPressed: onClear,
           ),
         ],
@@ -159,13 +172,17 @@ class _TrayItem extends StatelessWidget {
     required this.item,
     required this.count,
     required this.dragging,
+    required this.selected,
     required this.onDragStart,
+    required this.onSelect,
   });
 
   final Item item;
   final int count;
   final bool dragging;
+  final bool selected;
   final TrayDragStart onDragStart;
+  final ValueChanged<Item>? onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -185,9 +202,18 @@ class _TrayItem extends StatelessWidget {
       },
       child: TraySlot(
         count: count,
+        // Terpilih dibacakan dari [TraySlot.selected], tidak diulang di label.
         semanticLabel: dragging
             ? l.traySlotDragging(name, count)
             : l.traySlotLabel(name, count),
+        selected: selected,
+        onSemanticTap: switch (onSelect) {
+          final select? when count > 0 || selected => () => select(item),
+          _ => null,
+        },
+        semanticTapHint: selected
+            ? l.traySlotUnselectHint
+            : l.traySlotSelectHint,
         child: ItemArtView(item, ghost: count == 0),
       ),
     );
