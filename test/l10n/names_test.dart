@@ -70,6 +70,17 @@ void main() {
     );
   });
 
+  test('isi petak untuk pembaca layar: semua sel, keempat bahasa', () {
+    expect(cellName(l10nId, Cell.tableVase), 'meja dengan vas');
+    expect(cellName(en, Cell.bowl), "Oyen's bowl");
+    for (final locale in ['en', 'id', 'pt', 'ru']) {
+      final l = lookupAppLocalizations(Locale(locale));
+      final names = {for (final cell in Cell.values) cellName(l, cell)};
+      expect(names, hasLength(Cell.values.length), reason: locale);
+      expect(names.where((n) => n.trim().isEmpty), isEmpty, reason: locale);
+    }
+  });
+
   test('tutorial level 1, 3, 6', () {
     expect(
       tutorialTitle(l10nId, tutorialFor(1)!),

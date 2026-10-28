@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flame/game.dart' hide RouterComponent;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/hint_source.dart';
@@ -1245,6 +1246,180 @@ void main() {
       await tester.tap(find.text('Bangunkan Oyen'));
       await tester.pump(RunClock.stepTime);
       expect(playedBy(audio), isEmpty);
+    });
+  });
+
+  group('tanpa seret', () {
+    Future<SemanticsHandle> open(WidgetTester tester, {GameAudio? audio}) {
+      final handle = tester.ensureSemantics();
+      return _pumpLevel(tester, 13, audio: audio).then((_) => handle);
+    }
+
+    FinderBase<SemanticsNode> node(Pattern label) =>
+        find.semantics.byLabel(label);
+
+    Future<void> tap(WidgetTester tester, Pattern label) async {
+      tester.semantics.tap(node(label));
+      await tester.pump();
+    }
+
+    const toTray = CustomSemanticsAction(label: 'Kembalikan ke baki');
+
+    testWidgets('fase atur: 63 petak berlabel isi dan letaknya', (
+      tester,
+    ) async {
+      final handle = await open(tester);
+      expect(node(RegExp(r'^Baris \d, kolom \d: ')).evaluate(), hasLength(63));
+      expect(node('Baris 1, kolom 1: tembok').evaluate(), hasLength(1));
+      expect(node('Baris 2, kolom 2: lantai').evaluate(), hasLength(1));
+      expect(
+        node('Baris 4, kolom 3: meja dengan vas').evaluate(),
+        hasLength(1),
+      );
+      expect(
+        node('Baris 5, kolom 2: meja dengan gelas').evaluate(),
+        hasLength(1),
+      );
+      expect(node('Baris 5, kolom 4: mangkuk Oyen').evaluate(), hasLength(1));
+      expect(
+        node('Baris 4, kolom 5: Oyen tidur, menghadap kiri').evaluate(),
+        hasLength(1),
+      );
+      handle.dispose();
+    });
+
+    testWidgets('pilih dari baki lalu taruh di petak', (tester) async {
+      final audio = testAudio();
+      final handle = await open(tester, audio: audio);
+      expect(
+        tester.getSemantics(_slot(Item.water)),
+        isSemantics(hasTapAction: true, isSelected: false),
+      );
+
+      await tap(tester, 'Ember air, sisa 1');
+      expect(
+        tester.getSemantics(_slot(Item.water)),
+        isSemantics(
+          label: 'Ember air, dipilih, sisa 1',
+          hasTapAction: true,
+          isSelected: true,
+        ),
+      );
+      expect(tester.takeAnnouncements().map((a) => a.message), [
+        'Ember air diambil. Pilih petak lantai yang kosong untuk menaruhnya.',
+      ]);
+      // Petak yang boleh diisi menyala.
+      expect(_glowing(tester), contains(const Pos(3, 3)));
+      expect(_glowing(tester), isNot(contains(const Pos(3, 1))));
+
+      await tap(tester, 'Baris 4, kolom 4: lantai');
+      expect(_tile(tester, 3, 3).item, TileItem.bucketP);
+      expect(_slotOf(tester, Item.water).count, 0);
+      expect(_glowing(tester), isEmpty);
+      expect(
+        node('Baris 4, kolom 4: Ember air, kamu yang taruh').evaluate(),
+        hasLength(1),
+      );
+      expect(tester.takeAnnouncements().map((a) => a.message), [
+        'Ember air ditaruh di baris 4, kolom 4.',
+      ]);
+      expect(playedBy(audio), [GameSound.pickUp, GameSound.place]);
+      // Sisa 0: tidak bisa dipilih lagi.
+      expect(
+        tester.getSemantics(_slot(Item.water)),
+        isSemantics(hasTapAction: false),
+      );
+      handle.dispose();
+    });
+
+    testWidgets('ketuk slot yang dipilih lagi: batal', (tester) async {
+      final handle = await open(tester);
+      await tap(tester, 'Ikan asin, sisa 1');
+      await tap(tester, 'Ikan asin, dipilih, sisa 1');
+      expect(
+        tester.getSemantics(_slot(Item.fish)),
+        isSemantics(label: 'Ikan asin, sisa 1', isSelected: false),
+      );
+      expect(_glowing(tester), isEmpty);
+      handle.dispose();
+    });
+
+    testWidgets('petak tanpa pilihan tidak bisa diketuk', (tester) async {
+      final handle = await open(tester);
+      final data = node('Baris 4, kolom 4: lantai')
+          .evaluate()
+          .single
+          .getSemanticsData();
+      expect(data.hasAction(SemanticsAction.tap), isFalse);
+      handle.dispose();
+    });
+
+    testWidgets('pindah lalu kembalikan ke baki', (tester) async {
+      final audio = testAudio();
+      final handle = await open(tester, audio: audio);
+      await tap(tester, 'Ikan asin, sisa 1');
+      await tap(tester, 'Baris 5, kolom 3: lantai');
+      tester.takeAnnouncements();
+      playedBy(audio).clear();
+
+      await tap(tester, 'Baris 5, kolom 3: Ikan asin, kamu yang taruh');
+      expect(_glowing(tester), contains(const Pos(2, 5)));
+      await tap(tester, 'Baris 6, kolom 3: lantai');
+      expect(_tile(tester, 2, 4).item, isNot(TileItem.fishP));
+      expect(_tile(tester, 2, 5).item, TileItem.fishP);
+      expect(_slotOf(tester, Item.fish).count, 0);
+
+      tester.semantics.customAction(
+        node('Baris 6, kolom 3: Ikan asin, kamu yang taruh'),
+        toTray,
+      );
+      await tester.pump();
+      expect(_tile(tester, 2, 5).item, TileItem.none);
+      expect(_slotOf(tester, Item.fish).count, 1);
+      expect(tester.takeAnnouncements().map((a) => a.message), [
+        'Ikan asin diambil. Pilih petak lantai yang kosong untuk menaruhnya.',
+        'Ikan asin ditaruh di baris 6, kolom 3.',
+        'Ikan asin kembali ke baki.',
+      ]);
+      expect(playedBy(audio), [
+        GameSound.pickUp,
+        GameSound.place,
+        GameSound.back,
+      ]);
+      handle.dispose();
+    });
+
+    testWidgets('seret membatalkan pilihan', (tester) async {
+      final handle = await open(tester);
+      await tap(tester, 'Ikan asin, sisa 1');
+      await _dragToTile(tester, Item.water, 3, 3);
+      expect(_tile(tester, 3, 3).item, TileItem.bucketP);
+      expect(_slotOf(tester, Item.fish).count, 1);
+      expect(
+        tester.getSemantics(_slot(Item.fish)),
+        isSemantics(isSelected: false),
+      );
+      expect(_glowing(tester), isEmpty);
+      handle.dispose();
+    });
+
+    testWidgets('fase jalan: papan kembali satu gambar', (tester) async {
+      final handle = await open(tester);
+      await tap(tester, 'Ikan asin, sisa 1');
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pump();
+      expect(node(RegExp(r'^Baris \d, kolom \d: ')).evaluate(), isEmpty);
+      expect(node('Papan permainan 7 kali 9 petak').evaluate(), hasLength(1));
+
+      await tester.tap(find.bySemanticsLabel('Kembali ke fase atur'));
+      await tester.pump();
+      // Pilihan tidak tersisa dari sebelum Oyen dibangunkan.
+      expect(_glowing(tester), isEmpty);
+      expect(
+        tester.getSemantics(_slot(Item.fish)),
+        isSemantics(isSelected: false),
+      );
+      handle.dispose();
     });
   });
 

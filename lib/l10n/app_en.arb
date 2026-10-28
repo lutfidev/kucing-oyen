@@ -384,6 +384,140 @@
       }
     }
   },
+  "traySlotSelected": "{name}, picked up, {n} left",
+  "@traySlotSelected": {
+    "description": "Screen reader label of a tray slot picked up without dragging.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "traySlotSelectHint": "pick it up",
+  "@traySlotSelectHint": {
+    "description": "Screen reader hint for a tray slot: what a double tap does (\"Double tap to ...\")."
+  },
+  "traySlotUnselectHint": "put it back",
+  "@traySlotUnselectHint": {
+    "description": "Screen reader hint for a picked-up tray slot or board item: double tap puts it back down."
+  },
+  "tileLabel": "Row {row}, column {col}: {content}",
+  "@tileLabel": {
+    "description": "Screen reader label of one board tile: row and column (from 1, top left) and what is on it.",
+    "placeholders": {
+      "row": {
+        "type": "int"
+      },
+      "col": {
+        "type": "int"
+      },
+      "content": {
+        "type": "String"
+      }
+    }
+  },
+  "cellWall": "wall",
+  "@cellWall": {
+    "description": "Board tile content for screen readers: wall."
+  },
+  "cellFloor": "floor",
+  "@cellFloor": {
+    "description": "Board tile content for screen readers: empty floor."
+  },
+  "cellBowl": "Oyen's bowl",
+  "@cellBowl": {
+    "description": "Board tile content for screen readers: Oyen's food bowl (the goal)."
+  },
+  "cellTable": "table",
+  "@cellTable": {
+    "description": "Board tile content for screen readers: table."
+  },
+  "cellTableGlass": "table with a glass",
+  "@cellTableGlass": {
+    "description": "Board tile content for screen readers: table with a glass Oyen can knock off."
+  },
+  "cellTableVase": "table with a vase",
+  "@cellTableVase": {
+    "description": "Board tile content for screen readers: table with Mom's vase."
+  },
+  "cellFish": "salted fish",
+  "@cellFish": {
+    "description": "Board tile content for screen readers: salted fish that is part of the level."
+  },
+  "cellWater": "puddle",
+  "@cellWater": {
+    "description": "Board tile content for screen readers: water puddle that is part of the level."
+  },
+  "cellBox": "box",
+  "@cellBox": {
+    "description": "Board tile content for screen readers: box that is part of the level."
+  },
+  "tileOyen": "Oyen asleep, facing {dir, select, up{up} right{right} down{down} left{left} other{right}}",
+  "@tileOyen": {
+    "description": "Board tile content for screen readers: sleeping Oyen and the screen direction he faces.",
+    "placeholders": {
+      "dir": {
+        "type": "String"
+      }
+    }
+  },
+  "tilePlayerItem": "{item}, placed by you",
+  "@tilePlayerItem": {
+    "description": "Board tile content for screen readers: an item the player put there (item name first).",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "tilePlaceHint": "put it here",
+  "@tilePlaceHint": {
+    "description": "Screen reader hint for an empty tile while an item is picked up (\"Double tap to ...\")."
+  },
+  "tilePickHint": "pick it up to move it",
+  "@tilePickHint": {
+    "description": "Screen reader hint for a board item the player placed (\"Double tap to ...\")."
+  },
+  "tileReturn": "Back to the tray",
+  "@tileReturn": {
+    "description": "Screen reader custom action on a placed item: put it back in the tray."
+  },
+  "itemPickedAnnounce": "{item} picked up. Choose an empty floor tile to put it on.",
+  "@itemPickedAnnounce": {
+    "description": "Screen reader announcement after picking up an item without dragging.",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "itemPlacedAnnounce": "{item} placed at row {row}, column {col}.",
+  "@itemPlacedAnnounce": {
+    "description": "Screen reader announcement after an item is put on the board without dragging.",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "row": {
+        "type": "int"
+      },
+      "col": {
+        "type": "int"
+      }
+    }
+  },
+  "itemReturnedAnnounce": "{item} is back in the tray.",
+  "@itemReturnedAnnounce": {
+    "description": "Screen reader announcement after a placed item goes back to the tray.",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
   "step": "Step",
   "@step": {
     "description": "Step counter label (also above the number chip)."

@@ -252,6 +252,90 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String traySlotSelected(String name, int n) {
+    return '$name, dipilih, sisa $n';
+  }
+
+  @override
+  String get traySlotSelectHint => 'mengambil benda ini';
+
+  @override
+  String get traySlotUnselectHint => 'batal mengambil';
+
+  @override
+  String tileLabel(int row, int col, String content) {
+    return 'Baris $row, kolom $col: $content';
+  }
+
+  @override
+  String get cellWall => 'tembok';
+
+  @override
+  String get cellFloor => 'lantai';
+
+  @override
+  String get cellBowl => 'mangkuk Oyen';
+
+  @override
+  String get cellTable => 'meja';
+
+  @override
+  String get cellTableGlass => 'meja dengan gelas';
+
+  @override
+  String get cellTableVase => 'meja dengan vas';
+
+  @override
+  String get cellFish => 'ikan asin';
+
+  @override
+  String get cellWater => 'genangan air';
+
+  @override
+  String get cellBox => 'kardus';
+
+  @override
+  String tileOyen(String dir) {
+    String _temp0 = intl.Intl.selectLogic(dir, {
+      'up': 'atas',
+      'right': 'kanan',
+      'down': 'bawah',
+      'left': 'kiri',
+      'other': 'kanan',
+    });
+    return 'Oyen tidur, menghadap $_temp0';
+  }
+
+  @override
+  String tilePlayerItem(String item) {
+    return '$item, kamu yang taruh';
+  }
+
+  @override
+  String get tilePlaceHint => 'menaruh di sini';
+
+  @override
+  String get tilePickHint => 'mengambil untuk dipindah';
+
+  @override
+  String get tileReturn => 'Kembalikan ke baki';
+
+  @override
+  String itemPickedAnnounce(String item) {
+    return '$item diambil. Pilih petak lantai yang kosong untuk menaruhnya.';
+  }
+
+  @override
+  String itemPlacedAnnounce(String item, int row, int col) {
+    return '$item ditaruh di baris $row, kolom $col.';
+  }
+
+  @override
+  String itemReturnedAnnounce(String item) {
+    return '$item kembali ke baki.';
+  }
+
+  @override
   String get step => 'Langkah';
 
   @override

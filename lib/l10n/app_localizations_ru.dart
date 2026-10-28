@@ -288,6 +288,90 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String traySlotSelected(String name, int n) {
+    return '$name, в руке, осталось: $n';
+  }
+
+  @override
+  String get traySlotSelectHint => 'взять эту вещь';
+
+  @override
+  String get traySlotUnselectHint => 'положить обратно';
+
+  @override
+  String tileLabel(int row, int col, String content) {
+    return 'Ряд $row, столбец $col: $content';
+  }
+
+  @override
+  String get cellWall => 'стена';
+
+  @override
+  String get cellFloor => 'пол';
+
+  @override
+  String get cellBowl => 'миска Ойена';
+
+  @override
+  String get cellTable => 'стол';
+
+  @override
+  String get cellTableGlass => 'стол со стаканом';
+
+  @override
+  String get cellTableVase => 'стол с вазой';
+
+  @override
+  String get cellFish => 'солёная рыбка';
+
+  @override
+  String get cellWater => 'лужа';
+
+  @override
+  String get cellBox => 'коробка';
+
+  @override
+  String tileOyen(String dir) {
+    String _temp0 = intl.Intl.selectLogic(dir, {
+      'up': 'вверх',
+      'right': 'вправо',
+      'down': 'вниз',
+      'left': 'влево',
+      'other': 'вправо',
+    });
+    return 'Ойен спит, смотрит $_temp0';
+  }
+
+  @override
+  String tilePlayerItem(String item) {
+    return '$item, ставил ты';
+  }
+
+  @override
+  String get tilePlaceHint => 'поставить сюда';
+
+  @override
+  String get tilePickHint => 'взять и переставить';
+
+  @override
+  String get tileReturn => 'Вернуть к вещам';
+
+  @override
+  String itemPickedAnnounce(String item) {
+    return '$item в руке. Выбери пустую клетку пола.';
+  }
+
+  @override
+  String itemPlacedAnnounce(String item, int row, int col) {
+    return 'Готово: $item — ряд $row, столбец $col.';
+  }
+
+  @override
+  String itemReturnedAnnounce(String item) {
+    return '$item снова среди вещей.';
+  }
+
+  @override
   String get step => 'Шаг';
 
   @override

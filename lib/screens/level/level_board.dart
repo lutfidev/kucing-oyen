@@ -7,17 +7,22 @@ import '../../game/kucing_game.dart';
 import '../../game/render/render.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
+import 'board_semantics.dart';
 
 /// Papan level: [KucingGame] dalam `GameWidget` dengan bingkai dan bayangan
 /// papan di belakangnya.
 ///
 /// Papan mengisi kotak rasio 350×450 terbesar yang muat (bingkai 4 px di
 /// luarnya ikut dihitung), di tengah tempatnya. Papan tidak bisa difokus:
-/// hanya sentuhan.
+/// hanya sentuhan. Untuk pembaca layar papan berupa satu gambar, ditambah
+/// petak-petak [tiles] kalau ada (fase atur).
 class LevelBoard extends StatelessWidget {
-  const LevelBoard({super.key, required this.game});
+  const LevelBoard({super.key, required this.game, this.tiles});
 
   final KucingGame game;
+
+  /// Petak untuk pembaca layar, urut baris; null = hanya gambar papan.
+  final List<BoardTileSemantics>? tiles;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +42,19 @@ class LevelBoard extends StatelessWidget {
             height: BoardScene.height * scale,
             child: CustomPaint(
               painter: _FramePainter(scale),
-              child: Semantics(
-                image: true,
-                label: context.l10n.boardLabel,
-                child: ExcludeFocus(
-                  child: GameWidget(game: game, autofocus: false),
-                ),
+              // Susunan tetap di semua fase supaya game Flame tidak dilepas.
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Semantics(
+                    image: true,
+                    label: context.l10n.boardLabel,
+                    child: ExcludeFocus(
+                      child: GameWidget(game: game, autofocus: false),
+                    ),
+                  ),
+                  if (tiles case final tiles?) BoardSemantics(tiles: tiles),
+                ],
               ),
             ),
           ),

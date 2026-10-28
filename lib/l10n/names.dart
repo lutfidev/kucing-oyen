@@ -72,6 +72,19 @@ String itemName(AppLocalizations l, Item item) => switch (item) {
   Item.box => l.itemBox,
 };
 
+/// Isi petak peta untuk pembaca layar ("meja dengan vas").
+String cellName(AppLocalizations l, Cell cell) => switch (cell) {
+  Cell.wall => l.cellWall,
+  Cell.floor => l.cellFloor,
+  Cell.bowl => l.cellBowl,
+  Cell.table => l.cellTable,
+  Cell.tableGlass => l.cellTableGlass,
+  Cell.tableVase => l.cellTableVase,
+  Cell.fish => l.cellFish,
+  Cell.water => l.cellWater,
+  Cell.box => l.cellBox,
+};
+
 /// Nama kostum di Lemari Kostum.
 String costumeName(AppLocalizations l, OyenCostume costume) =>
     switch (costume) {

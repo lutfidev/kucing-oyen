@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/semantics.dart';
 
 import '../../app/game_audio.dart';
 import '../../app/hint_source.dart';
@@ -24,6 +26,7 @@ import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../replay/replay_view.dart';
 import '../result/result_view.dart';
+import 'board_semantics.dart';
 import 'hint_sheet.dart';
 import 'level_bar.dart';
 import 'level_board.dart';
@@ -50,6 +53,10 @@ class _ItemDrag {
   /// Petak di bawah jari yang boleh diisi (menyala), atau null.
   Pos? target;
 }
+
+/// Benda yang dipilih pembaca layar untuk ditaruh tanpa seret: dari baki
+/// ([from] null) atau dari petak [from] di papan.
+typedef _Pick = ({Item item, Pos? from});
 
 /// Keadaan fase jalan: langkah-langkah Oyen dan jam pemutarnya.
 class _Run {
@@ -78,7 +85,9 @@ class _Run {
 /// Aturan ada di [LevelSession]. Layar ini hanya menerjemahkan seretan:
 /// lepas di petak menyala = taruh atau pindah; benda dari papan yang
 /// dilepas di luar papan kembali ke baki; selain itu benda kembali ke
-/// tempat asalnya.
+/// tempat asalnya. Tanpa seret (pembaca layar): pilih slot baki atau benda
+/// di papan, lalu ketuk petak yang boleh diisi; benda di papan juga punya
+/// aksi "Kembalikan ke baki".
 class LevelView extends StatefulWidget {
   const LevelView({
     super.key,
@@ -141,6 +150,9 @@ class _LevelViewState extends State<LevelView>
   /// dibuat ulang dan seretannya hilang.
   final _slotKeys = {for (final item in Item.values) item: GlobalKey()};
   _ItemDrag? _drag;
+
+  /// Benda yang dipilih pembaca layar; null = tidak ada.
+  _Pick? _picked;
 
   /// Tutorial yang masih menutupi layar.
   late Tutorial? _tutorial = widget.tutorial;
@@ -232,13 +244,21 @@ class _LevelViewState extends State<LevelView>
       }
       if (value != null && placed == null) ghosts[pos] = value;
     }
+    // Benda dipilih tanpa seret: semua petak yang boleh diisi menyala.
+    final board = _level.board;
+    final targets = <Pos>{
+      if (_picked != null)
+        for (var y = 0; y < board.height; y++)
+          for (var x = 0; x < board.width; x++)
+            if (_session.canPlaceAt(Pos(x, y))) Pos(x, y),
+    };
     return BoardScene.fromMap(
       _level.map,
       items: {
         for (final p in _session.placed)
           if (p.pos != drag?.from) p.pos: ItemArt.tileItem(p.item),
       },
-      glow: {...hintGlow, ?drag?.target},
+      glow: {...hintGlow, ...targets, ?drag?.target},
       ghosts: ghosts,
     );
   }
@@ -268,7 +288,10 @@ class _LevelViewState extends State<LevelView>
     final drag = _ItemDrag(item: item, from: from, finger: global)
       ..local = _toStage(global)
       ..target = _targetAt(global);
-    _update(() => _drag = drag);
+    _update(() {
+      _drag = drag;
+      _picked = null;
+    });
     _play(GameSound.pickUp);
     return _HandDrag(this, drag);
   }
@@ -327,6 +350,114 @@ class _LevelViewState extends State<LevelView>
     _update(() => _drag = null);
   }
 
+  // ── Tanpa seret (pembaca layar) ─────────────────────────────────────
+
+  void _announce(String message) => unawaited(
+    SemanticsService.sendAnnouncement(
+      View.of(context),
+      message,
+      Directionality.of(context),
+    ),
+  );
+
+  /// Memilih [item] dari baki ([from] null) atau dari petak [from].
+  void _pick(Item item, Pos? from) {
+    if (_drag != null || _session.phase != SessionPhase.arrange) return;
+    _update(() => _picked = (item: item, from: from));
+    _play(GameSound.pickUp);
+    final l = context.l10n;
+    _announce(l.itemPickedAnnounce(itemName(l, item)));
+    if (from == null && _tutorial?.item == item) _finishTutorial();
+  }
+
+  /// Slot baki: pilih, atau batal kalau slot ini yang sedang dipilih.
+  void _pickFromTray(Item item) {
+    final picked = _picked;
+    if (picked != null && picked.from == null && picked.item == item) {
+      _unpick();
+    } else if ((_session.remaining[item] ?? 0) > 0) {
+      _pick(item, null);
+    }
+  }
+
+  void _unpick() {
+    if (_picked == null) return;
+    _play(GameSound.back);
+    _update(() => _picked = null);
+  }
+
+  /// Menaruh atau memindah benda yang dipilih ke petak [to].
+  void _dropPicked(Pos to) {
+    final picked = _picked;
+    if (picked == null) return;
+    final from = picked.from;
+    var done = false;
+    _update(() {
+      done = from == null
+          ? _session.place(picked.item, to)
+          : _session.move(from, to);
+      _picked = null;
+    });
+    if (!done) return;
+    _play(GameSound.place);
+    final l = context.l10n;
+    _announce(
+      l.itemPlacedAnnounce(itemName(l, picked.item), to.y + 1, to.x + 1),
+    );
+  }
+
+  /// "Kembalikan ke baki" untuk benda pemain di petak [pos].
+  void _returnToTray(Pos pos) {
+    final item = _session.itemAt(pos);
+    if (item == null || _drag != null) return;
+    _update(() {
+      _session.remove(pos);
+      if (_picked?.from == pos) _picked = null;
+    });
+    _play(GameSound.back);
+    final l = context.l10n;
+    _announce(l.itemReturnedAnnounce(itemName(l, item)));
+  }
+
+  /// Petak papan untuk pembaca layar di fase atur, urut baris.
+  List<BoardTileSemantics> _tileSemantics() {
+    final l = context.l10n;
+    final board = _level.board;
+    return [
+      for (var y = 0; y < board.height; y++)
+        for (var x = 0; x < board.width; x++) _tileSemantic(l, Pos(x, y)),
+    ];
+  }
+
+  BoardTileSemantics _tileSemantic(AppLocalizations l, Pos pos) {
+    final board = _level.board;
+    final picked = _picked;
+    final item = _session.itemAt(pos);
+    final content = item != null
+        ? l.tilePlayerItem(itemName(l, item))
+        : pos == board.start
+        ? l.tileOyen(board.startDir.name)
+        : cellName(l, board.cellAt(pos));
+    final label = l.tileLabel(pos.y + 1, pos.x + 1, content);
+    if (picked != null && _session.canPlaceAt(pos)) {
+      return BoardTileSemantics(
+        label: label,
+        onTap: () => _dropPicked(pos),
+        onTapHint: l.tilePlaceHint,
+      );
+    }
+    if (item == null) return BoardTileSemantics(label: label);
+    final isPicked = picked?.from == pos;
+    return BoardTileSemantics(
+      label: label,
+      selected: isPicked,
+      onTap: isPicked ? _unpick : () => _pick(item, pos),
+      onTapHint: isPicked ? l.traySlotUnselectHint : l.tilePickHint,
+      onReturn: () => _returnToTray(pos),
+      returnLabel: l.tileReturn,
+    );
+  }
+
   // ── Fase ────────────────────────────────────────────────────────────
 
   // Tombol tetap aktif selama benda diseret, seperti desain 03. Kalau
@@ -337,6 +468,7 @@ class _LevelViewState extends State<LevelView>
     if (_tutorial != null && _tutorial!.item == null) _finishTutorial();
     _update(() {
       _drag = null;
+      _picked = null;
       final board = _level.board;
       final frames = runFrames(board, _session.wake());
       final l = context.l10n;
@@ -459,6 +591,7 @@ class _LevelViewState extends State<LevelView>
     _play(GameSound.back);
     _update(() {
       _drag = null;
+      _picked = null;
       _session.reset();
     });
   }
@@ -569,7 +702,12 @@ class _LevelViewState extends State<LevelView>
                           ),
                         ],
                         SizedBox(height: space.s12),
-                        Expanded(child: LevelBoard(game: _game)),
+                        Expanded(
+                          child: LevelBoard(
+                            game: _game,
+                            tiles: run == null ? _tileSemantics() : null,
+                          ),
+                        ),
                         SizedBox(height: space.s14),
                         _bottom(),
                       ],
@@ -703,6 +841,8 @@ class _LevelViewState extends State<LevelView>
           item: remaining[item]! - (item == fromTray ? 1 : 0),
       },
       dragging: fromTray,
+      selected: _picked?.from == null ? _picked?.item : null,
+      onSelect: _pickFromTray,
       onDragStart: _startFromTray,
       slotKeys: _slotKeys,
       onClear: _session.itemsUsed > 0 ? _clear : null,

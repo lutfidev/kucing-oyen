@@ -13,6 +13,9 @@ class TraySlot extends StatelessWidget {
     required this.count,
     required this.semanticLabel,
     this.child,
+    this.onSemanticTap,
+    this.semanticTapHint,
+    this.selected = false,
   });
 
   final int count;
@@ -22,6 +25,14 @@ class TraySlot extends StatelessWidget {
 
   /// Gambar benda; diberi ruang [KoSize.slotItem] persegi.
   final Widget? child;
+
+  /// Aksi ketuk untuk pembaca layar saja (memilih benda tanpa seret); null
+  /// = tanpa aksi. [semanticTapHint] melengkapi "Ketuk dua kali untuk ...".
+  final VoidCallback? onSemanticTap;
+  final String? semanticTapHint;
+
+  /// Benda ini sedang dipilih lewat pembaca layar.
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +76,13 @@ class TraySlot extends StatelessWidget {
                 : SizedBox.square(dimension: s.slotItem, child: art),
           );
 
+    final tap = onSemanticTap;
     return Semantics(
       container: true,
       label: semanticLabel,
+      selected: tap == null ? null : selected,
+      onTap: tap,
+      onTapHint: tap == null ? null : semanticTapHint,
       excludeSemantics: true,
       child: Stack(
         clipBehavior: Clip.none,

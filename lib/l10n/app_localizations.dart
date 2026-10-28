@@ -522,6 +522,132 @@ abstract class AppLocalizations {
   /// **'{name}, dragging, {n} left'**
   String traySlotDragging(String name, int n);
 
+  /// Screen reader label of a tray slot picked up without dragging.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, picked up, {n} left'**
+  String traySlotSelected(String name, int n);
+
+  /// Screen reader hint for a tray slot: what a double tap does ("Double tap to ...").
+  ///
+  /// In en, this message translates to:
+  /// **'pick it up'**
+  String get traySlotSelectHint;
+
+  /// Screen reader hint for a picked-up tray slot or board item: double tap puts it back down.
+  ///
+  /// In en, this message translates to:
+  /// **'put it back'**
+  String get traySlotUnselectHint;
+
+  /// Screen reader label of one board tile: row and column (from 1, top left) and what is on it.
+  ///
+  /// In en, this message translates to:
+  /// **'Row {row}, column {col}: {content}'**
+  String tileLabel(int row, int col, String content);
+
+  /// Board tile content for screen readers: wall.
+  ///
+  /// In en, this message translates to:
+  /// **'wall'**
+  String get cellWall;
+
+  /// Board tile content for screen readers: empty floor.
+  ///
+  /// In en, this message translates to:
+  /// **'floor'**
+  String get cellFloor;
+
+  /// Board tile content for screen readers: Oyen's food bowl (the goal).
+  ///
+  /// In en, this message translates to:
+  /// **'Oyen\'s bowl'**
+  String get cellBowl;
+
+  /// Board tile content for screen readers: table.
+  ///
+  /// In en, this message translates to:
+  /// **'table'**
+  String get cellTable;
+
+  /// Board tile content for screen readers: table with a glass Oyen can knock off.
+  ///
+  /// In en, this message translates to:
+  /// **'table with a glass'**
+  String get cellTableGlass;
+
+  /// Board tile content for screen readers: table with Mom's vase.
+  ///
+  /// In en, this message translates to:
+  /// **'table with a vase'**
+  String get cellTableVase;
+
+  /// Board tile content for screen readers: salted fish that is part of the level.
+  ///
+  /// In en, this message translates to:
+  /// **'salted fish'**
+  String get cellFish;
+
+  /// Board tile content for screen readers: water puddle that is part of the level.
+  ///
+  /// In en, this message translates to:
+  /// **'puddle'**
+  String get cellWater;
+
+  /// Board tile content for screen readers: box that is part of the level.
+  ///
+  /// In en, this message translates to:
+  /// **'box'**
+  String get cellBox;
+
+  /// Board tile content for screen readers: sleeping Oyen and the screen direction he faces.
+  ///
+  /// In en, this message translates to:
+  /// **'Oyen asleep, facing {dir, select, up{up} right{right} down{down} left{left} other{right}}'**
+  String tileOyen(String dir);
+
+  /// Board tile content for screen readers: an item the player put there (item name first).
+  ///
+  /// In en, this message translates to:
+  /// **'{item}, placed by you'**
+  String tilePlayerItem(String item);
+
+  /// Screen reader hint for an empty tile while an item is picked up ("Double tap to ...").
+  ///
+  /// In en, this message translates to:
+  /// **'put it here'**
+  String get tilePlaceHint;
+
+  /// Screen reader hint for a board item the player placed ("Double tap to ...").
+  ///
+  /// In en, this message translates to:
+  /// **'pick it up to move it'**
+  String get tilePickHint;
+
+  /// Screen reader custom action on a placed item: put it back in the tray.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to the tray'**
+  String get tileReturn;
+
+  /// Screen reader announcement after picking up an item without dragging.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} picked up. Choose an empty floor tile to put it on.'**
+  String itemPickedAnnounce(String item);
+
+  /// Screen reader announcement after an item is put on the board without dragging.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} placed at row {row}, column {col}.'**
+  String itemPlacedAnnounce(String item, int row, int col);
+
+  /// Screen reader announcement after a placed item goes back to the tray.
+  ///
+  /// In en, this message translates to:
+  /// **'{item} is back in the tray.'**
+  String itemReturnedAnnounce(String item);
+
   /// Step counter label (also above the number chip).
   ///
   /// In en, this message translates to:

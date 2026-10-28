@@ -276,6 +276,90 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String traySlotSelected(String name, int n) {
+    return '$name, picked up, $n left';
+  }
+
+  @override
+  String get traySlotSelectHint => 'pick it up';
+
+  @override
+  String get traySlotUnselectHint => 'put it back';
+
+  @override
+  String tileLabel(int row, int col, String content) {
+    return 'Row $row, column $col: $content';
+  }
+
+  @override
+  String get cellWall => 'wall';
+
+  @override
+  String get cellFloor => 'floor';
+
+  @override
+  String get cellBowl => 'Oyen\'s bowl';
+
+  @override
+  String get cellTable => 'table';
+
+  @override
+  String get cellTableGlass => 'table with a glass';
+
+  @override
+  String get cellTableVase => 'table with a vase';
+
+  @override
+  String get cellFish => 'salted fish';
+
+  @override
+  String get cellWater => 'puddle';
+
+  @override
+  String get cellBox => 'box';
+
+  @override
+  String tileOyen(String dir) {
+    String _temp0 = intl.Intl.selectLogic(dir, {
+      'up': 'up',
+      'right': 'right',
+      'down': 'down',
+      'left': 'left',
+      'other': 'right',
+    });
+    return 'Oyen asleep, facing $_temp0';
+  }
+
+  @override
+  String tilePlayerItem(String item) {
+    return '$item, placed by you';
+  }
+
+  @override
+  String get tilePlaceHint => 'put it here';
+
+  @override
+  String get tilePickHint => 'pick it up to move it';
+
+  @override
+  String get tileReturn => 'Back to the tray';
+
+  @override
+  String itemPickedAnnounce(String item) {
+    return '$item picked up. Choose an empty floor tile to put it on.';
+  }
+
+  @override
+  String itemPlacedAnnounce(String item, int row, int col) {
+    return '$item placed at row $row, column $col.';
+  }
+
+  @override
+  String itemReturnedAnnounce(String item) {
+    return '$item is back in the tray.';
+  }
+
+  @override
   String get step => 'Step';
 
   @override
