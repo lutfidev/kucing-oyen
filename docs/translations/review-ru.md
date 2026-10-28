@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-431 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+436 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -435,13 +435,12 @@ for the store listing at the end.
 | `shopCardShortLabel` | {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | {name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}}, не хватает монет | Screen reader label of a shop card that costs more than the balance. Placeholders: `{name}`, `{n}`. | |
 | `shopCardOwnedLabel` | {name}, already yours | {name}, уже твоё | Screen reader label of a shop card for something already owned. Placeholders: `{name}`. | |
 | `shopCardLivesLabel` | {name}, already lives in the room | {name}, уже живёт в комнате | Screen reader label of a cat card for a cat already adopted. Placeholders: `{name}`. | |
-| `shopAccessoryViewLabel` | View {name} | Посмотреть {name} | Screen reader label of an accessory card (tapping only previews it). Placeholders: `{name}`. | |
 | `shopSnackBuyLabel` | Buy {name} for {n, plural, one{{n} coin} other{{n} coins}} | Купить {name} за {n, plural, one{{n} монету} few{{n} монеты} many{{n} монет} other{{n} монеты}} | Screen reader label of the snack buy button. Placeholders: `{name}`, `{n}`. | |
 | `shopSnackShortLabel` | Buy {name} for {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | Купить {name} за {n, plural, one{{n} монету} few{{n} монеты} many{{n} монет} other{{n} монеты}}, не хватает монет | Screen reader label of the snack buy button when coins are missing. Placeholders: `{name}`, `{n}`. | |
 | `buySheetLabel` | Buy {name} | Купить {name} | Screen reader label of the buy confirmation sheet. Placeholders: `{name}`. | |
 | `buySuccessOverline` | Success! | Готово! | Overline above the title after a successful purchase. | |
 | `buySuccessItem` | {name} is yours! | {name} теперь твой! | Buy sheet title after buying a room item. Placeholders: `{name}`. | |
-| `buySuccessItemBody` | It's in storage. Place it in decorate mode. | Лежит на складе. Поставь в режиме «Украшать». | Buy sheet body after buying a room item. | |
+| `buySuccessItemBody` | It's in the room already. Move it around in decorate mode. | Уже стоит в комнате. Переставить можно в режиме «Украшать». | Buy sheet body after buying a room item. | |
 | `buySuccessKitty` | {name} moved into the room! | {name} переехал в комнату! | Buy sheet title after adopting a cat. Placeholders: `{name}`. | |
 | `buySuccessKittyBody` | Say hi in the room. Expect some fake indifference first. | Поздоровайся в комнате. Сначала сделает вид, что ему всё равно. | Buy sheet body after adopting a cat. | |
 | `buySuccessAccessory` | {name} is yours forever! | {name} теперь твой навсегда! | Buy sheet title after buying an accessory. Placeholders: `{name}`. | |
@@ -456,6 +455,12 @@ for the store listing at the end.
 | `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} other{sitting still}} | {pose, select, idle{сидит спокойно} lick{облизывает лапку} walk1{идёт} walk2{идёт} sleep{спит свернувшись} eat{ест из миски} play{играет с игрушкой} scratch{точит когти о когтеточку} happy{радуется} lesu{вялый} rebah{лежит и отдыхает} petted{мурчит от поглаживаний} other{сидит спокойно}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
 | `kittyLabel` | {name} {pose} | {name} {pose} | Screen reader label of a room cat: name and what it is doing. Placeholders: `{name}`, `{pose}`. | |
 | `kittyLabelAccessory` | {name} {pose}, wearing a {accessory} | {name} {pose}, в {accessory} | Screen reader label of a room cat wearing an accessory. Placeholders: `{name}`, `{pose}`, `{accessory}`. | |
+| `shopSnackFullLabel` | Buy {name}, stock full | Купить {name}, запас полон | Screen reader label of the snack buy button when the stock is full. Placeholders: `{name}`. | |
+| `shopStockFull` | Stock full | Запас полон | Snack card chip when the stock is at the maximum. | |
+| `shopAccessoryBuyLabel` | View {name}, {n, plural, one{{n} coin} other{{n} coins}} | Посмотреть {name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}} | Screen reader label of an accessory card the player can afford. Placeholders: `{name}`, `{n}`. | |
+| `shopAccessoryShortLabel` | View {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | Посмотреть {name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}}, не хватает монет | Screen reader label of an accessory card that costs more than the balance. Placeholders: `{name}`, `{n}`. | |
+| `shopAccessoryOwnedLabel` | View {name}, yours | Посмотреть {name}, твоё | Screen reader label of an owned accessory card nobody wears. Placeholders: `{name}`. | |
+| `shopAccessoryWornLabel` | View {name}, yours, worn by {who} | Посмотреть {name}, твоё, носит {who} | Screen reader label of an owned accessory card with the cats wearing it. Placeholders: `{name}`, `{who}`. | |
 
 ---
 

@@ -410,13 +410,12 @@
   "shopCardShortLabel": "{name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}}, не хватает монет",
   "shopCardOwnedLabel": "{name}, уже твоё",
   "shopCardLivesLabel": "{name}, уже живёт в комнате",
-  "shopAccessoryViewLabel": "Посмотреть {name}",
   "shopSnackBuyLabel": "Купить {name} за {n, plural, one{{n} монету} few{{n} монеты} many{{n} монет} other{{n} монеты}}",
   "shopSnackShortLabel": "Купить {name} за {n, plural, one{{n} монету} few{{n} монеты} many{{n} монет} other{{n} монеты}}, не хватает монет",
   "buySheetLabel": "Купить {name}",
   "buySuccessOverline": "Готово!",
   "buySuccessItem": "{name} теперь твой!",
-  "buySuccessItemBody": "Лежит на складе. Поставь в режиме «Украшать».",
+  "buySuccessItemBody": "Уже стоит в комнате. Переставить можно в режиме «Украшать».",
   "buySuccessKitty": "{name} переехал в комнату!",
   "buySuccessKittyBody": "Поздоровайся в комнате. Сначала сделает вид, что ему всё равно.",
   "buySuccessAccessory": "{name} теперь твой навсегда!",
@@ -430,5 +429,11 @@
   "buyNotEnoughHelp": "Пройди головоломку или посмотри рекламу за награду, чтобы получить монеты.",
   "kittyPose": "{pose, select, idle{сидит спокойно} lick{облизывает лапку} walk1{идёт} walk2{идёт} sleep{спит свернувшись} eat{ест из миски} play{играет с игрушкой} scratch{точит когти о когтеточку} happy{радуется} lesu{вялый} rebah{лежит и отдыхает} petted{мурчит от поглаживаний} other{сидит спокойно}}",
   "kittyLabel": "{name} {pose}",
-  "kittyLabelAccessory": "{name} {pose}, в {accessory}"
+  "kittyLabelAccessory": "{name} {pose}, в {accessory}",
+  "shopSnackFullLabel": "Купить {name}, запас полон",
+  "shopStockFull": "Запас полон",
+  "shopAccessoryBuyLabel": "Посмотреть {name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}}",
+  "shopAccessoryShortLabel": "Посмотреть {name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}}, не хватает монет",
+  "shopAccessoryOwnedLabel": "Посмотреть {name}, твоё",
+  "shopAccessoryWornLabel": "Посмотреть {name}, твоё, носит {who}"
 }

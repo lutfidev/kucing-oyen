@@ -668,6 +668,7 @@ class SnackCard extends StatelessWidget {
     required this.id,
     required this.stock,
     required this.short,
+    required this.full,
     required this.onBuy,
   });
 
@@ -676,6 +677,9 @@ class SnackCard extends StatelessWidget {
 
   /// Koin tidak cukup: tombol beli mati.
   final bool short;
+
+  /// Stok sudah penuh (99): tombol beli mati juga.
+  final bool full;
   final VoidCallback onBuy;
 
   @override
@@ -734,20 +738,22 @@ class SnackCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: space.s6),
-                _StockChip(stock: stock),
+                _StockChip(stock: stock, full: full),
               ],
             ),
           ),
           SizedBox(width: space.s8),
           KoPressable(
             key: ValueKey('shop-snack-${id.name}'),
-            onPressed: short ? null : onBuy,
-            semanticLabel: short
+            onPressed: short || full ? null : onBuy,
+            semanticLabel: full
+                ? l.shopSnackFullLabel(name)
+                : short
                 ? l.shopSnackShortLabel(name, snack.price)
                 : l.shopSnackBuyLabel(name, snack.price),
-            color: short ? c.shortFill : c.orange,
-            edgeColor: short ? null : c.orangeDeep,
-            depth: short ? 0 : context.koShadow.pressSecondary,
+            color: short || full ? c.shortFill : c.orange,
+            edgeColor: short || full ? null : c.orangeDeep,
+            depth: short || full ? 0 : context.koShadow.pressSecondary,
             radius: context.koRadius.slot,
             height: s.shopSnackButton,
             padding: EdgeInsetsDirectional.only(
@@ -757,7 +763,7 @@ class SnackCard extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (short)
+                if (short || full)
                   Opacity(
                     opacity: s.lockedOpacity,
                     child: CoinView(kind: CoinKind.plain, size: s.iconSmall),
@@ -768,7 +774,7 @@ class SnackCard extends StatelessWidget {
                 Text(
                   l.shopBuyShort(snack.price),
                   style: context.koType.cardLabel.copyWith(
-                    color: short ? c.inkSoft : c.ink,
+                    color: short || full ? c.inkSoft : c.ink,
                   ),
                 ),
               ],
@@ -780,11 +786,13 @@ class SnackCard extends StatelessWidget {
   }
 }
 
-/// Chip stok camilan: krem kalau ada, merah muda kalau habis.
+/// Chip stok camilan: krem kalau ada, merah muda kalau habis, dan menyebut
+/// "Stok penuh" kalau sudah 99.
 class _StockChip extends StatelessWidget {
-  const _StockChip({required this.stock});
+  const _StockChip({required this.stock, required this.full});
 
   final int stock;
+  final bool full;
 
   @override
   Widget build(BuildContext context) {
@@ -800,7 +808,7 @@ class _StockChip extends StatelessWidget {
       child: Center(
         widthFactor: 1,
         child: Text(
-          context.l10n.shopStock(stock),
+          full ? context.l10n.shopStockFull : context.l10n.shopStock(stock),
           style: context.koType.tagSmall.copyWith(
             color: empty ? c.brickDeep : c.ink,
           ),
@@ -1255,7 +1263,13 @@ class AccessoryCard extends StatelessWidget {
     return KoPressable(
       key: ValueKey('shop-accessory-${id.name}'),
       onPressed: onPressed,
-      semanticLabel: l.shopAccessoryViewLabel(name),
+      semanticLabel: owned
+          ? (wornBy.isEmpty
+                ? l.shopAccessoryOwnedLabel(name)
+                : l.shopAccessoryWornLabel(name, wornBy))
+          : short
+          ? l.shopAccessoryShortLabel(name, item.price)
+          : l.shopAccessoryBuyLabel(name, item.price),
       toggled: selected,
       color: c.surface,
       edgeColor: c.lineDeep,

@@ -410,13 +410,12 @@
   "shopCardShortLabel": "{name}, {n} koin, koin kurang",
   "shopCardOwnedLabel": "{name}, sudah punyamu",
   "shopCardLivesLabel": "{name}, sudah tinggal di kamar",
-  "shopAccessoryViewLabel": "Lihat {name}",
   "shopSnackBuyLabel": "Beli {name} seharga {n} koin",
   "shopSnackShortLabel": "Beli {name} seharga {n} koin, koin kurang",
   "buySheetLabel": "Beli {name}",
   "buySuccessOverline": "Berhasil!",
   "buySuccessItem": "{name} jadi punyamu!",
-  "buySuccessItemBody": "Sudah masuk Gudang. Taruh lewat mode Hias.",
+  "buySuccessItemBody": "Sudah nongkrong di kamar. Geser lewat mode Hias kalau mau pindah.",
   "buySuccessKitty": "{name} pindah ke kamar!",
   "buySuccessKittyBody": "Sapa dia di kamar. Mungkin pura-pura cuek dulu.",
   "buySuccessAccessory": "{name} milikmu selamanya!",
@@ -430,5 +429,11 @@
   "buyNotEnoughHelp": "Main puzzle atau tonton iklan berhadiah buat nambah koin.",
   "kittyPose": "{pose, select, idle{duduk diam} lick{menjilat kaki} walk1{jalan} walk2{jalan} sleep{tidur melingkar} eat{makan dari mangkuk} play{main menepuk mainan} scratch{menggaruk tiang} happy{senang} lesu{lesu} rebah{rebahan santai} petted{dielus dan mendengkur} other{duduk diam}}",
   "kittyLabel": "{name} {pose}",
-  "kittyLabelAccessory": "{name} {pose}, memakai {accessory}"
+  "kittyLabelAccessory": "{name} {pose}, memakai {accessory}",
+  "shopSnackFullLabel": "Beli {name}, stok penuh",
+  "shopStockFull": "Stok penuh",
+  "shopAccessoryBuyLabel": "Lihat {name}, {n} koin",
+  "shopAccessoryShortLabel": "Lihat {name}, {n} koin, koin kurang",
+  "shopAccessoryOwnedLabel": "Lihat {name}, punyamu",
+  "shopAccessoryWornLabel": "Lihat {name}, punyamu, dipakai {who}"
 }

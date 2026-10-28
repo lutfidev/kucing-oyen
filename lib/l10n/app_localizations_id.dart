@@ -1549,11 +1549,6 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String shopAccessoryViewLabel(String name) {
-    return 'Lihat $name';
-  }
-
-  @override
   String shopSnackBuyLabel(String name, int n) {
     return 'Beli $name seharga $n koin';
   }
@@ -1577,7 +1572,8 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get buySuccessItemBody => 'Sudah masuk Gudang. Taruh lewat mode Hias.';
+  String get buySuccessItemBody =>
+      'Sudah nongkrong di kamar. Geser lewat mode Hias kalau mau pindah.';
 
   @override
   String buySuccessKitty(String name) {
@@ -1653,5 +1649,33 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String kittyLabelAccessory(String name, String pose, String accessory) {
     return '$name $pose, memakai $accessory';
+  }
+
+  @override
+  String shopSnackFullLabel(String name) {
+    return 'Beli $name, stok penuh';
+  }
+
+  @override
+  String get shopStockFull => 'Stok penuh';
+
+  @override
+  String shopAccessoryBuyLabel(String name, int n) {
+    return 'Lihat $name, $n koin';
+  }
+
+  @override
+  String shopAccessoryShortLabel(String name, int n) {
+    return 'Lihat $name, $n koin, koin kurang';
+  }
+
+  @override
+  String shopAccessoryOwnedLabel(String name) {
+    return 'Lihat $name, punyamu';
+  }
+
+  @override
+  String shopAccessoryWornLabel(String name, String who) {
+    return 'Lihat $name, punyamu, dipakai $who';
   }
 }

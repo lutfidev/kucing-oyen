@@ -1653,11 +1653,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String shopAccessoryViewLabel(String name) {
-    return 'View $name';
-  }
-
-  @override
   String shopSnackBuyLabel(String name, int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
@@ -1694,7 +1689,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get buySuccessItemBody =>
-      'It\'s in storage. Place it in decorate mode.';
+      'It\'s in the room already. Move it around in decorate mode.';
 
   @override
   String buySuccessKitty(String name) {
@@ -1776,5 +1771,45 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String kittyLabelAccessory(String name, String pose, String accessory) {
     return '$name $pose, wearing a $accessory';
+  }
+
+  @override
+  String shopSnackFullLabel(String name) {
+    return 'Buy $name, stock full';
+  }
+
+  @override
+  String get shopStockFull => 'Stock full';
+
+  @override
+  String shopAccessoryBuyLabel(String name, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n coins',
+      one: '$n coin',
+    );
+    return 'View $name, $_temp0';
+  }
+
+  @override
+  String shopAccessoryShortLabel(String name, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n coins',
+      one: '$n coin',
+    );
+    return 'View $name, $_temp0, not enough coins';
+  }
+
+  @override
+  String shopAccessoryOwnedLabel(String name) {
+    return 'View $name, yours';
+  }
+
+  @override
+  String shopAccessoryWornLabel(String name, String who) {
+    return 'View $name, yours, worn by $who';
   }
 }

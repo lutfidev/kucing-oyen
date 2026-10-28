@@ -2093,15 +2093,6 @@
       }
     }
   },
-  "shopAccessoryViewLabel": "View {name}",
-  "@shopAccessoryViewLabel": {
-    "description": "Screen reader label of an accessory card (tapping only previews it).",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "shopSnackBuyLabel": "Buy {name} for {n, plural, one{{n} coin} other{{n} coins}}",
   "@shopSnackBuyLabel": {
     "description": "Screen reader label of the snack buy button.",
@@ -2148,7 +2139,7 @@
       }
     }
   },
-  "buySuccessItemBody": "It's in storage. Place it in decorate mode.",
+  "buySuccessItemBody": "It's in the room already. Move it around in decorate mode.",
   "@buySuccessItemBody": {
     "description": "Buy sheet body after buying a room item."
   },
@@ -2253,6 +2244,64 @@
         "type": "String"
       },
       "accessory": {
+        "type": "String"
+      }
+    }
+  },
+  "shopSnackFullLabel": "Buy {name}, stock full",
+  "@shopSnackFullLabel": {
+    "description": "Screen reader label of the snack buy button when the stock is full.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopStockFull": "Stock full",
+  "@shopStockFull": {
+    "description": "Snack card chip when the stock is at the maximum."
+  },
+  "shopAccessoryBuyLabel": "View {name}, {n, plural, one{{n} coin} other{{n} coins}}",
+  "@shopAccessoryBuyLabel": {
+    "description": "Screen reader label of an accessory card the player can afford.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopAccessoryShortLabel": "View {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins",
+  "@shopAccessoryShortLabel": {
+    "description": "Screen reader label of an accessory card that costs more than the balance.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopAccessoryOwnedLabel": "View {name}, yours",
+  "@shopAccessoryOwnedLabel": {
+    "description": "Screen reader label of an owned accessory card nobody wears.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopAccessoryWornLabel": "View {name}, yours, worn by {who}",
+  "@shopAccessoryWornLabel": {
+    "description": "Screen reader label of an owned accessory card with the cats wearing it.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "who": {
         "type": "String"
       }
     }

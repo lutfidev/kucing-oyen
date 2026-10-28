@@ -28,7 +28,7 @@ abstract final class AppRoutes {
   static const closet = '/kostum';
 
   /// Toko (desain 20), dibuka dari Beranda. Dengan [tab] langsung membuka
-  /// tab itu (`/toko?tab=aksesoris`).
+  /// tab itu (`/toko?tab=accessories`).
   static String shop({ShopTab? tab}) =>
       tab == null ? '/toko' : '/toko?tab=${tab.name}';
 

@@ -410,13 +410,12 @@
   "shopCardShortLabel": "{name}, {n, plural, one{{n} moeda} other{{n} moedas}}, moedas de menos",
   "shopCardOwnedLabel": "{name}, já é seu",
   "shopCardLivesLabel": "{name}, já mora no quarto",
-  "shopAccessoryViewLabel": "Ver {name}",
   "shopSnackBuyLabel": "Comprar {name} por {n, plural, one{{n} moeda} other{{n} moedas}}",
   "shopSnackShortLabel": "Comprar {name} por {n, plural, one{{n} moeda} other{{n} moedas}}, moedas de menos",
   "buySheetLabel": "Comprar {name}",
   "buySuccessOverline": "Sucesso!",
   "buySuccessItem": "{name} agora é seu!",
-  "buySuccessItemBody": "Está no depósito. Coloque no modo Decorar.",
+  "buySuccessItemBody": "Já está no quarto. Mude de lugar no modo Decorar.",
   "buySuccessKitty": "{name} se mudou para o quarto!",
   "buySuccessKittyBody": "Diga oi no quarto. Talvez finja não ligar no começo.",
   "buySuccessAccessory": "{name} é seu para sempre!",
@@ -430,5 +429,11 @@
   "buyNotEnoughHelp": "Jogue um quebra-cabeça ou veja um anúncio premiado para ganhar moedas.",
   "kittyPose": "{pose, select, idle{sentado quietinho} lick{lambendo a patinha} walk1{andando} walk2{andando} sleep{dormindo enroladinho} eat{comendo da tigela} play{brincando com o brinquedo} scratch{arranhando o poste} happy{feliz} lesu{sem ânimo} rebah{deitado de boa} petted{recebendo carinho, ronronando} other{sentado quietinho}}",
   "kittyLabel": "{name} {pose}",
-  "kittyLabelAccessory": "{name} {pose}, usando {accessory}"
+  "kittyLabelAccessory": "{name} {pose}, usando {accessory}",
+  "shopSnackFullLabel": "Comprar {name}, estoque cheio",
+  "shopStockFull": "Estoque cheio",
+  "shopAccessoryBuyLabel": "Ver {name}, {n, plural, one{{n} moeda} other{{n} moedas}}",
+  "shopAccessoryShortLabel": "Ver {name}, {n, plural, one{{n} moeda} other{{n} moedas}}, moedas de menos",
+  "shopAccessoryOwnedLabel": "Ver {name}, seu",
+  "shopAccessoryWornLabel": "Ver {name}, seu, usado por {who}"
 }

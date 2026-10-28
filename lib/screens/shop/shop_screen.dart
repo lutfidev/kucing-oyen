@@ -110,6 +110,9 @@ class _ShopScreenState extends State<ShopScreen> {
               child: Stack(
                 children: [
                   SingleChildScrollView(
+                    // Kunci per tab: tiap tab terbuka dari atas, tidak
+                    // mewarisi posisi gulir tab sebelumnya.
+                    key: ValueKey(_tab),
                     padding: EdgeInsets.fromLTRB(
                       space.gutter,
                       0,
@@ -261,6 +264,7 @@ class _Snacks extends StatelessWidget {
             id: snack.id,
             stock: pantry.countOf(snack.id),
             short: coins < snack.price,
+            full: !pantry.canAdd(snack.id),
             onBuy: () => onBuy(snack.id),
           ),
         ],

@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-431 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+436 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -435,13 +435,12 @@ for the store listing at the end.
 | `shopCardShortLabel` | {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | {name}, {n} koin, koin kurang | Screen reader label of a shop card that costs more than the balance. Placeholders: `{name}`, `{n}`. | |
 | `shopCardOwnedLabel` | {name}, already yours | {name}, sudah punyamu | Screen reader label of a shop card for something already owned. Placeholders: `{name}`. | |
 | `shopCardLivesLabel` | {name}, already lives in the room | {name}, sudah tinggal di kamar | Screen reader label of a cat card for a cat already adopted. Placeholders: `{name}`. | |
-| `shopAccessoryViewLabel` | View {name} | Lihat {name} | Screen reader label of an accessory card (tapping only previews it). Placeholders: `{name}`. | |
 | `shopSnackBuyLabel` | Buy {name} for {n, plural, one{{n} coin} other{{n} coins}} | Beli {name} seharga {n} koin | Screen reader label of the snack buy button. Placeholders: `{name}`, `{n}`. | |
 | `shopSnackShortLabel` | Buy {name} for {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | Beli {name} seharga {n} koin, koin kurang | Screen reader label of the snack buy button when coins are missing. Placeholders: `{name}`, `{n}`. | |
 | `buySheetLabel` | Buy {name} | Beli {name} | Screen reader label of the buy confirmation sheet. Placeholders: `{name}`. | |
 | `buySuccessOverline` | Success! | Berhasil! | Overline above the title after a successful purchase. | |
 | `buySuccessItem` | {name} is yours! | {name} jadi punyamu! | Buy sheet title after buying a room item. Placeholders: `{name}`. | |
-| `buySuccessItemBody` | It's in storage. Place it in decorate mode. | Sudah masuk Gudang. Taruh lewat mode Hias. | Buy sheet body after buying a room item. | |
+| `buySuccessItemBody` | It's in the room already. Move it around in decorate mode. | Sudah nongkrong di kamar. Geser lewat mode Hias kalau mau pindah. | Buy sheet body after buying a room item. | |
 | `buySuccessKitty` | {name} moved into the room! | {name} pindah ke kamar! | Buy sheet title after adopting a cat. Placeholders: `{name}`. | |
 | `buySuccessKittyBody` | Say hi in the room. Expect some fake indifference first. | Sapa dia di kamar. Mungkin pura-pura cuek dulu. | Buy sheet body after adopting a cat. | |
 | `buySuccessAccessory` | {name} is yours forever! | {name} milikmu selamanya! | Buy sheet title after buying an accessory. Placeholders: `{name}`. | |
@@ -456,6 +455,12 @@ for the store listing at the end.
 | `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} other{sitting still}} | {pose, select, idle{duduk diam} lick{menjilat kaki} walk1{jalan} walk2{jalan} sleep{tidur melingkar} eat{makan dari mangkuk} play{main menepuk mainan} scratch{menggaruk tiang} happy{senang} lesu{lesu} rebah{rebahan santai} petted{dielus dan mendengkur} other{duduk diam}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
 | `kittyLabel` | {name} {pose} | {name} {pose} | Screen reader label of a room cat: name and what it is doing. Placeholders: `{name}`, `{pose}`. | |
 | `kittyLabelAccessory` | {name} {pose}, wearing a {accessory} | {name} {pose}, memakai {accessory} | Screen reader label of a room cat wearing an accessory. Placeholders: `{name}`, `{pose}`, `{accessory}`. | |
+| `shopSnackFullLabel` | Buy {name}, stock full | Beli {name}, stok penuh | Screen reader label of the snack buy button when the stock is full. Placeholders: `{name}`. | |
+| `shopStockFull` | Stock full | Stok penuh | Snack card chip when the stock is at the maximum. | |
+| `shopAccessoryBuyLabel` | View {name}, {n, plural, one{{n} coin} other{{n} coins}} | Lihat {name}, {n} koin | Screen reader label of an accessory card the player can afford. Placeholders: `{name}`, `{n}`. | |
+| `shopAccessoryShortLabel` | View {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | Lihat {name}, {n} koin, koin kurang | Screen reader label of an accessory card that costs more than the balance. Placeholders: `{name}`, `{n}`. | |
+| `shopAccessoryOwnedLabel` | View {name}, yours | Lihat {name}, punyamu | Screen reader label of an owned accessory card nobody wears. Placeholders: `{name}`. | |
+| `shopAccessoryWornLabel` | View {name}, yours, worn by {who} | Lihat {name}, punyamu, dipakai {who} | Screen reader label of an owned accessory card with the cats wearing it. Placeholders: `{name}`, `{who}`. | |
 
 ---
 

@@ -149,4 +149,12 @@ void main() {
       expect(vals[key], '', reason: key);
     }
   });
+
+  test('waktu belum mengubah gambar, jadi aman jadi kunci cache', () {
+    const look = KittyLook(kitty: KittyId.oyen, pose: KittyPose.walk1);
+    expect(
+      kittyVals(look.copyWith(time: 3.5)).toString(),
+      kittyVals(look).toString(),
+    );
+  });
 }

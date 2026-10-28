@@ -229,8 +229,11 @@ void paintKitty(
   KittyLook look, {
   double size = KittyLook.viewBox,
 }) {
+  // Kunci cache tanpa waktu: `kittyVals` belum memakai `time`, jadi satu
+  // gambar berlaku untuk semua waktu dan cache tidak tumbuh per bingkai.
+  // Langkah 24 yang membuat nilainya bergantung waktu harus mengubah ini.
   final drawing = _cache.putIfAbsent(
-    look,
+    look.copyWith(time: 0),
     () => _template.render(kittyVals(look)),
   );
   canvas.save();

@@ -415,8 +415,97 @@ void main() {
         tab: ShopTab.accessories,
       );
       expect(find.bySemanticsLabel('Coba aksesoris di Oyen'), findsOneWidget);
-      expect(find.bySemanticsLabel('Lihat Pita'), findsOneWidget);
-      expect(find.bySemanticsLabel('Lihat Bandana'), findsOneWidget);
+      expect(find.bySemanticsLabel('Lihat Pita, punyamu'), findsOneWidget);
+      expect(find.bySemanticsLabel('Lihat Bandana, 80 koin'), findsOneWidget);
+      semantics.dispose();
+    });
+  });
+
+  group('temuan review', () {
+    testWidgets('barang yang dibeli langsung ditaruh di kamar, bukan Gudang', (
+      tester,
+    ) async {
+      final progress = await pumpShop(tester, coins: 100);
+      await tapCard(tester, 'shop-item-kardus');
+      await tapCard(tester, 'buy-confirm');
+      expect(progress.home.room.isPlaced(RoomItemId.kardus), isTrue);
+      expect(progress.home.room.stored, isEmpty);
+      expect(
+        find.text(
+          'Sudah nongkrong di kamar. Geser lewat mode Hias kalau mau '
+          'pindah.',
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('stok camilan penuh: tombol beli mati dan menyebutkannya', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      final progress = await pumpShop(
+        tester,
+        coins: 100,
+        home: Home(pantry: Pantry(const {SnackId.susu: maxSnackStock})),
+        tab: ShopTab.snacks,
+      );
+      expect(find.bySemanticsLabel('Beli Susu, stok penuh'), findsOneWidget);
+      expect(
+        tester.getSemantics(find.byKey(const ValueKey('shop-snack-susu'))),
+        isSemantics(hasEnabledState: true, isEnabled: false),
+      );
+      await tester.tap(find.byKey(const ValueKey('shop-snack-susu')));
+      await settle(tester);
+      expect(progress.coins, 100);
+      semantics.dispose();
+    });
+
+    testWidgets('ganti tab membuka daftar dari atas', (tester) async {
+      await pumpShop(tester, coins: 99999);
+      final last = find.byKey(const ValueKey('shop-item-jendelaBurung'));
+      await tester.ensureVisible(last);
+      await settle(tester);
+
+      // Tab Kucing sama panjangnya, jadi posisi gulir lama tidak terjepit
+      // ke nol dengan sendirinya.
+      await tester.tap(find.text('Kucing'));
+      await settle(tester);
+      expect(
+        find
+            .text(
+              'Semua kucing tinggal sekamar dengan Oyen. Oyen setuju. '
+              'Kayaknya.',
+            )
+            .hitTestable(),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('pembaca layar: kartu aksesoris menyebut harga dan keadaan', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await pumpShop(
+        tester,
+        coins: 100,
+        home: Home(
+          kitties: const [KittyId.salju],
+          closet: AccessoryCloset(
+            owned: const [AccessoryId.pita],
+            wearing: const {KittyId.salju: AccessoryId.pita},
+          ),
+        ),
+        tab: ShopTab.accessories,
+      );
+      expect(
+        find.bySemanticsLabel('Lihat Pita, punyamu, dipakai Salju'),
+        findsOneWidget,
+      );
+      expect(find.bySemanticsLabel('Lihat Bandana, 80 koin'), findsOneWidget);
+      expect(
+        find.bySemanticsLabel('Lihat Mahkota Raja, 800 koin, koin kurang'),
+        findsOneWidget,
+      );
       semantics.dispose();
     });
   });

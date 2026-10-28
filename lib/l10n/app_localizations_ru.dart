@@ -1683,11 +1683,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String shopAccessoryViewLabel(String name) {
-    return 'Посмотреть $name';
-  }
-
-  @override
   String shopSnackBuyLabel(String name, int n) {
     String _temp0 = intl.Intl.pluralLogic(
       n,
@@ -1728,7 +1723,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get buySuccessItemBody =>
-      'Лежит на складе. Поставь в режиме «Украшать».';
+      'Уже стоит в комнате. Переставить можно в режиме «Украшать».';
 
   @override
   String buySuccessKitty(String name) {
@@ -1812,5 +1807,49 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String kittyLabelAccessory(String name, String pose, String accessory) {
     return '$name $pose, в $accessory';
+  }
+
+  @override
+  String shopSnackFullLabel(String name) {
+    return 'Купить $name, запас полон';
+  }
+
+  @override
+  String get shopStockFull => 'Запас полон';
+
+  @override
+  String shopAccessoryBuyLabel(String name, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n монеты',
+      many: '$n монет',
+      few: '$n монеты',
+      one: '$n монета',
+    );
+    return 'Посмотреть $name, $_temp0';
+  }
+
+  @override
+  String shopAccessoryShortLabel(String name, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n монеты',
+      many: '$n монет',
+      few: '$n монеты',
+      one: '$n монета',
+    );
+    return 'Посмотреть $name, $_temp0, не хватает монет';
+  }
+
+  @override
+  String shopAccessoryOwnedLabel(String name) {
+    return 'Посмотреть $name, твоё';
+  }
+
+  @override
+  String shopAccessoryWornLabel(String name, String who) {
+    return 'Посмотреть $name, твоё, носит $who';
   }
 }

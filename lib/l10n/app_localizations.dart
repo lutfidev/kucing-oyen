@@ -2562,12 +2562,6 @@ abstract class AppLocalizations {
   /// **'{name}, already lives in the room'**
   String shopCardLivesLabel(String name);
 
-  /// Screen reader label of an accessory card (tapping only previews it).
-  ///
-  /// In en, this message translates to:
-  /// **'View {name}'**
-  String shopAccessoryViewLabel(String name);
-
   /// Screen reader label of the snack buy button.
   ///
   /// In en, this message translates to:
@@ -2601,7 +2595,7 @@ abstract class AppLocalizations {
   /// Buy sheet body after buying a room item.
   ///
   /// In en, this message translates to:
-  /// **'It\'s in storage. Place it in decorate mode.'**
+  /// **'It\'s in the room already. Move it around in decorate mode.'**
   String get buySuccessItemBody;
 
   /// Buy sheet title after adopting a cat.
@@ -2687,6 +2681,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} {pose}, wearing a {accessory}'**
   String kittyLabelAccessory(String name, String pose, String accessory);
+
+  /// Screen reader label of the snack buy button when the stock is full.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy {name}, stock full'**
+  String shopSnackFullLabel(String name);
+
+  /// Snack card chip when the stock is at the maximum.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock full'**
+  String get shopStockFull;
+
+  /// Screen reader label of an accessory card the player can afford.
+  ///
+  /// In en, this message translates to:
+  /// **'View {name}, {n, plural, one{{n} coin} other{{n} coins}}'**
+  String shopAccessoryBuyLabel(String name, int n);
+
+  /// Screen reader label of an accessory card that costs more than the balance.
+  ///
+  /// In en, this message translates to:
+  /// **'View {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins'**
+  String shopAccessoryShortLabel(String name, int n);
+
+  /// Screen reader label of an owned accessory card nobody wears.
+  ///
+  /// In en, this message translates to:
+  /// **'View {name}, yours'**
+  String shopAccessoryOwnedLabel(String name);
+
+  /// Screen reader label of an owned accessory card with the cats wearing it.
+  ///
+  /// In en, this message translates to:
+  /// **'View {name}, yours, worn by {who}'**
+  String shopAccessoryWornLabel(String name, String who);
 }
 
 class _AppLocalizationsDelegate
