@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/render/design_svg.dart';
+import 'package:kucing_oren/game/render/design_svg_home.dart';
 import 'package:kucing_oren/game/render/map_art.dart';
 import 'package:kucing_oren/game/render/result_art.dart';
 
@@ -10,10 +11,24 @@ import 'package:kucing_oren/game/render/result_art.dart';
 /// punya ekspor desainnya.
 const _source = 'docs/design/source';
 
+/// Desain rumah Oyen (langkah 21-26) ada di folder sendiri.
+const _home = 'docs/design/rumah-oyen/project';
+
 /// Akhir baris disamakan (checkout Windows bisa CRLF), tepi dibuang.
 String _lf(String s) => s.replaceAll('\r\n', '\n').trim();
 
 String _read(String name) => _lf(File('$_source/$name').readAsStringSync());
+
+String _readHome(String name) => _lf(File('$_home/$name').readAsStringSync());
+
+/// Isi `<svg>` pertama di komponen desain rumah Oyen (penutupnya bisa
+/// menjorok).
+String _innerHome(String name) => _lf(
+  RegExp(
+    r'<svg\b[^>]*>\n(.*?)\n\s*</svg>',
+    dotAll: true,
+  ).firstMatch(_readHome(name))![1]!,
+);
 
 /// Isi `<svg>` pertama di komponen desain.
 String _inner(String name) => _lf(
@@ -247,4 +262,60 @@ void main() {
       });
     });
   }, skip: missing);
+
+  final homeMissing = !Directory(_home).existsSync()
+      ? '$_home tidak ada (desain tidak ikut repo)'
+      : null;
+
+  group('isi SVG sama dengan desain rumah Oyen', () {
+    test('Kucing.dc.html', () {
+      expect(_lf(kittySvg), _innerHome('Kucing.dc.html'));
+    });
+
+    test('IkonAksesoris.dc.html', () {
+      expect(_lf(accessoryIconSvg), _innerHome('IkonAksesoris.dc.html'));
+    });
+
+    test('Barang.dc.html: dua lapisan tiap barang dan camilan', () {
+      final source = _readHome('Barang.dc.html');
+      final cut = source.indexOf('sc-if value="{{pakai}}"');
+      expect(cut, greaterThan(0));
+      final back = <String, String>{};
+      final front = <String, String>{};
+      final boxes = <String, String>{};
+      final pattern = RegExp(
+        r'<sc-if value="\{\{v\.(\w+)\}\}"[^>]*>\s*<svg\b([^>]*)>\n'
+        r'(.*?)\n\s*</svg>\s*</sc-if>',
+        dotAll: true,
+      );
+      for (final m in pattern.allMatches(source)) {
+        final code = m[1]!;
+        (m.start < cut ? back : front)[code] = _lf(m[3]!);
+        boxes.putIfAbsent(
+          code,
+          () => RegExp(r'viewBox="([-\d. ]+)"').firstMatch(m[2]!)![1]!,
+        );
+      }
+      expect(back, hasLength(24));
+      expect(front, hasLength(8));
+      expect(roomItemBackSvgs.keys, back.keys.toSet());
+      expect(roomItemFrontSvgs.keys, front.keys.toSet());
+      for (final MapEntry(:key, :value) in roomItemBackSvgs.entries) {
+        expect(_lf(value), back[key], reason: key);
+      }
+      for (final MapEntry(:key, :value) in roomItemFrontSvgs.entries) {
+        expect(_lf(value), front[key], reason: key);
+      }
+      expect(roomItemViewBoxes.keys, boxes.keys.toSet());
+      for (final MapEntry(:key, :value) in roomItemViewBoxes.entries) {
+        final (x, y, w, h) = value;
+        expect(boxes[key]!.split(' ').map(double.parse).toList(), [
+          x,
+          y,
+          w,
+          h,
+        ], reason: key);
+      }
+    });
+  }, skip: homeMissing);
 }
