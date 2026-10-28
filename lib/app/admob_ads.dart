@@ -28,6 +28,8 @@ class AdMobRewardedAds implements RewardedAds {
     required this._canLoad,
     required this._load,
     this.loadTimeout = defaultLoadTimeout,
+    this.rewardGrace = defaultRewardGrace,
+    this.showTimeout = defaultShowTimeout,
     DateTime Function()? clock,
     this._onUnavailable,
   }) : _clock = clock ?? DateTime.now;
@@ -39,8 +41,19 @@ class AdMobRewardedAds implements RewardedAds {
   /// sesudah dimuat; yang lebih tua dari ini dibuang dan dimuat ulang.
   static const maxAdAge = Duration(minutes: 55);
 
+  /// Jeda sesudah iklan ditutup untuk hadiah yang datang belakangan
+  /// (sebagian SDK dan mediasi memberi hadiah sesudah ditutup).
+  static const defaultRewardGrace = Duration(milliseconds: 400);
+
+  /// Batas pengaman satu iklan tampil, kalau SDK tidak pernah memberi tahu
+  /// iklan ditutup atau gagal tampil. Cukup panjang untuk pemain yang
+  /// membuka toko dari iklan lalu kembali.
+  static const defaultShowTimeout = Duration(minutes: 10);
+
   final String unitId;
   final Duration loadTimeout;
+  final Duration rewardGrace;
+  final Duration showTimeout;
   final bool Function() _canLoad;
   final RewardedAdLoader _load;
   final DateTime Function() _clock;
@@ -120,19 +133,36 @@ class AdMobRewardedAds implements RewardedAds {
   }
 
   Future<bool> _present(RewardedAdHandle ad) async {
-    final closed = Completer<bool>();
+    final done = Completer<bool>();
     var earned = false;
+    var closed = false;
+    Timer? grace;
+    void finish(bool rewarded) {
+      grace?.cancel();
+      if (!done.isCompleted) done.complete(rewarded);
+    }
+
     try {
       ad.show(
-        onReward: () => earned = true,
+        onReward: () {
+          earned = true;
+          if (closed) finish(true);
+        },
         onClosed: () {
-          if (!closed.isCompleted) closed.complete(earned);
+          if (closed) return;
+          closed = true;
+          if (earned) {
+            finish(true);
+          } else {
+            grace = Timer(rewardGrace, () => finish(false));
+          }
         },
       );
-      return await closed.future;
+      return await done.future.timeout(showTimeout, onTimeout: () => earned);
     } on Object {
       return false;
     } finally {
+      grace?.cancel();
       ad.dispose();
       preload();
     }

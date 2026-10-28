@@ -60,11 +60,15 @@ AdMobRewardedAds _ads(
   _FakeLoader loader, {
   bool Function()? canLoad,
   Duration loadTimeout = AdMobRewardedAds.defaultLoadTimeout,
+  Duration rewardGrace = AdMobRewardedAds.defaultRewardGrace,
+  Duration showTimeout = AdMobRewardedAds.defaultShowTimeout,
 }) => AdMobRewardedAds(
   unitId: 'unit',
   canLoad: canLoad ?? () => true,
   load: loader.call,
   loadTimeout: loadTimeout,
+  rewardGrace: rewardGrace,
+  showTimeout: showTimeout,
 );
 
 /// Persetujuan yang `gather`-nya error.
@@ -101,6 +105,64 @@ void main() {
       await loader.finish(ad);
       ad.onClosed!();
       expect(await result, isFalse);
+    });
+
+    test('hadiah sesudah ditutup dalam jeda = true', () async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader);
+      final result = ads.show();
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      // Sebagian SDK (dan mediasi) memberi hadiah sesudah iklan ditutup.
+      ad.onClosed!();
+      await pumpEventQueue();
+      ad.onReward!();
+      expect(await result, isTrue);
+      expect(ad.disposed, isTrue);
+    });
+
+    test('hadiah sesudah jeda lewat = false', () async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader, rewardGrace: const Duration(milliseconds: 10));
+      var done = false;
+      final result = ads.show().whenComplete(() => done = true);
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      ad.onClosed!();
+      await pumpEventQueue();
+      // Menunggu jeda dulu, tidak langsung selesai.
+      expect(done, isFalse);
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      ad.onReward!();
+      expect(await result, isFalse);
+    });
+
+    test('tidak pernah ditutup: berhenti di batas pengaman', () async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader, showTimeout: const Duration(milliseconds: 20));
+      final result = ads.show();
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      expect(await result, isFalse);
+      expect(ad.disposed, isTrue);
+      // Tidak tertahan: show berikutnya memakai iklan yang sudah dimuat lagi.
+      final next = _FakeHandle();
+      await loader.finish(next);
+      final again = ads.show();
+      await pumpEventQueue();
+      expect(next.shown, 1);
+      next.watchToEnd();
+      expect(await again, isTrue);
+    });
+
+    test('hadiah tanpa ditutup: batas pengaman tetap memberi hadiah', () async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader, showTimeout: const Duration(milliseconds: 20));
+      final result = ads.show();
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      ad.onReward!();
+      expect(await result, isTrue);
     });
 
     test('gagal tampil (hanya onClosed) = false', () async {
