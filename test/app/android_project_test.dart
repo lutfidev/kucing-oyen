@@ -58,6 +58,18 @@ void main() {
       expect(_read('android/.gitignore'), contains('key.properties'));
     });
 
+    test('app bundle tanpa key.properties ditolak dengan pesan jelas', () {
+      final gradle = _read('$_app/build.gradle.kts');
+      // Bundle bertanda tangan debug ditolak Play Console; APK release dan
+      // `flutter run --release` tetap boleh memakai debug key.
+      expect(
+        RegExp(
+          r'bundleRelease[\s\S]*?!hasReleaseKey[\s\S]*?throw GradleException',
+        ).hasMatch(gradle),
+        isTrue,
+      );
+    });
+
     test('versi 1.0.0+1', () {
       expect(
         _read('pubspec.yaml'),
@@ -155,6 +167,14 @@ void main() {
       expect(v31, contains('@drawable/splash_icon'));
       expect(v31, contains('android:windowSplashScreenBrandingImage'));
       expect(v31, contains('@drawable/splash_branding'));
+      // Pembukaan yang melewati splash sistem tetap krem, bukan putih.
+      expect(
+        RegExp(
+          r'name="LaunchTheme"[\s\S]*?android:windowBackground">@color/cream'
+          r'[\s\S]*?name="NormalTheme"',
+        ).hasMatch(v31),
+        isTrue,
+      );
       final launch = _read('$res/drawable/launch_background.xml');
       expect(launch, contains('@color/cream'));
       expect(launch, contains('@drawable/splash_icon'));

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -360,6 +362,18 @@ void main() {
       expect(consent.optionsShown, 1);
     });
 
+    testWidgets('dua ketukan cepat membuka formulir sekali', (tester) async {
+      final consent = _SlowConsent();
+      await pumpApp(tester, location: AppRoutes.settings, consent: consent);
+      await _tapText(tester, l10nId.adConsent);
+      await _tapText(tester, l10nId.adConsent);
+      expect(consent.optionsShown, 1);
+      consent.close();
+      await tester.pump();
+      await _tapText(tester, l10nId.adConsent);
+      expect(consent.optionsShown, 2);
+    });
+
     testWidgets('persetujuan diwajibkan belakangan: tombol muncul', (
       tester,
     ) async {
@@ -390,5 +404,20 @@ class _FakeLauncher extends UrlLauncherPlatform
     launched.add(url);
     this.options.add(options);
     return succeed;
+  }
+}
+
+/// Persetujuan yang formulirnya tetap terbuka sampai [close].
+class _SlowConsent extends FakeAdConsent {
+  _SlowConsent() : super(privacyOptionsRequired: true);
+
+  Completer<void>? _open;
+
+  void close() => _open?.complete();
+
+  @override
+  Future<void> showPrivacyOptions() {
+    optionsShown++;
+    return (_open = Completer<void>()).future;
   }
 }

@@ -33,6 +33,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _version;
   _Notice? _notice;
 
+  /// Formulir persetujuan sedang terbuka: ketukan berikutnya diabaikan.
+  bool _consentOpen = false;
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +48,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (mounted) setState(() => _version = info.version);
     } on Object {
       // Versi tidak bisa dibaca (mis. di test): barisnya tidak ditampilkan.
+    }
+  }
+
+  Future<void> _showConsent(AdConsent consent) async {
+    if (_consentOpen) return;
+    _consentOpen = true;
+    try {
+      await consent.showPrivacyOptions();
+    } finally {
+      _consentOpen = false;
     }
   }
 
@@ -170,7 +183,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           onPolicy: () => unawaited(_openPolicy()),
                           onConsent:
                               consent != null && consent.privacyOptionsRequired
-                              ? () => unawaited(consent.showPrivacyOptions())
+                              ? () => unawaited(_showConsent(consent))
                               : null,
                           message: _notice == _Notice.privacyFailed
                               ? l.privacyLinkFailed

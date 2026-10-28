@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Splash Android 12+: latar krem, kepala Oyen (isi di lingkaran 192 dp
-         dari 288 dp), dan logo + tagline per bahasa di bawah. -->
+         dari 288 dp), dan logo + tagline per bahasa di bawah. Latar jendela
+         krem polos untuk pembukaan yang melewati splash sistem (dan sebelum
+         bingkai Flutter pertama), supaya tidak sempat putih. -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@color/cream</item>
         <item name="android:windowSplashScreenBackground">@color/cream</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_icon</item>
         <item name="android:windowSplashScreenBrandingImage">@drawable/splash_branding</item>

@@ -12,7 +12,8 @@ class _FakeHandle implements RewardedAdHandle {
 
   final bool throwOnShow;
   int shown = 0;
-  bool disposed = false;
+  int disposals = 0;
+  bool get disposed => disposals > 0;
   VoidCallback? onReward;
   VoidCallback? onClosed;
 
@@ -25,7 +26,7 @@ class _FakeHandle implements RewardedAdHandle {
   }
 
   @override
-  void dispose() => disposed = true;
+  void dispose() => disposals++;
 
   /// Penonton menonton sampai hadiah lalu menutup iklan.
   void watchToEnd() {
@@ -60,11 +61,15 @@ AdMobRewardedAds _ads(
   _FakeLoader loader, {
   bool Function()? canLoad,
   Duration loadTimeout = AdMobRewardedAds.defaultLoadTimeout,
+  Duration rewardGrace = AdMobRewardedAds.defaultRewardGrace,
+  Duration showTimeout = AdMobRewardedAds.defaultShowTimeout,
 }) => AdMobRewardedAds(
   unitId: 'unit',
   canLoad: canLoad ?? () => true,
   load: loader.call,
   loadTimeout: loadTimeout,
+  rewardGrace: rewardGrace,
+  showTimeout: showTimeout,
 );
 
 /// Persetujuan yang `gather`-nya error.
@@ -101,6 +106,95 @@ void main() {
       await loader.finish(ad);
       ad.onClosed!();
       expect(await result, isFalse);
+    });
+
+    test('hadiah sesudah ditutup dalam jeda = true', () async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader);
+      final result = ads.show();
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      // Sebagian SDK (dan mediasi) memberi hadiah sesudah iklan ditutup.
+      ad.onClosed!();
+      await pumpEventQueue();
+      ad.onReward!();
+      expect(await result, isTrue);
+      expect(ad.disposed, isTrue);
+    });
+
+    test('ditutup, hadiah, lalu ditutup lagi = true, dispose sekali', () async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader);
+      final result = ads.show();
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      ad.onClosed!();
+      ad.onReward!();
+      ad.onClosed!();
+      expect(await result, isTrue);
+      expect(ad.disposals, 1);
+    });
+
+    testWidgets('callback sesudah batas pengaman tidak memasang timer', (
+      tester,
+    ) async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader, showTimeout: const Duration(seconds: 1));
+      bool? result;
+      unawaited(ads.show().then((value) => result = value));
+      await tester.pump();
+      final ad = _FakeHandle();
+      loader.pending.last.complete(ad);
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      expect(result, isFalse);
+      // SDK baru memberi tahu jauh sesudahnya. testWidgets gagal kalau ada
+      // Timer yang masih menunggu di akhir test.
+      ad.onClosed!();
+    });
+
+    test('hadiah sesudah jeda lewat = false', () async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader, rewardGrace: const Duration(milliseconds: 10));
+      var done = false;
+      final result = ads.show().whenComplete(() => done = true);
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      ad.onClosed!();
+      await pumpEventQueue();
+      // Menunggu jeda dulu, tidak langsung selesai.
+      expect(done, isFalse);
+      await Future<void>.delayed(const Duration(milliseconds: 30));
+      ad.onReward!();
+      expect(await result, isFalse);
+    });
+
+    test('tidak pernah ditutup: berhenti di batas pengaman', () async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader, showTimeout: const Duration(milliseconds: 20));
+      final result = ads.show();
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      expect(await result, isFalse);
+      expect(ad.disposed, isTrue);
+      // Tidak tertahan: show berikutnya memakai iklan yang sudah dimuat lagi.
+      final next = _FakeHandle();
+      await loader.finish(next);
+      final again = ads.show();
+      await pumpEventQueue();
+      expect(next.shown, 1);
+      next.watchToEnd();
+      expect(await again, isTrue);
+    });
+
+    test('hadiah tanpa ditutup: batas pengaman tetap memberi hadiah', () async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader, showTimeout: const Duration(milliseconds: 20));
+      final result = ads.show();
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      ad.onReward!();
+      expect(await result, isTrue);
     });
 
     test('gagal tampil (hanya onClosed) = false', () async {
@@ -160,6 +254,28 @@ void main() {
         load: (_) async => throw StateError('SDK'),
       );
       expect(await ads.show(), isFalse);
+    });
+
+    test('pemuat melempar sinkron tidak membuat iklan macet', () async {
+      final loader = _FakeLoader();
+      var calls = 0;
+      final ads = AdMobRewardedAds(
+        unitId: 'unit',
+        canLoad: () => true,
+        // Bukan async: lemparannya langsung, sebelum ada Future.
+        load: (unitId) {
+          if (calls++ == 0) throw StateError('SDK');
+          return loader(unitId);
+        },
+      );
+      expect(await ads.show(), isFalse);
+      final again = ads.show();
+      await pumpEventQueue();
+      expect(loader.calls, 1);
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      ad.watchToEnd();
+      expect(await again, isTrue);
     });
 
     test('iklan melempar saat tampil = false dan di-dispose', () async {
@@ -256,6 +372,48 @@ void main() {
       final ads = _ads(loader, canLoad: () => false)..preload();
       expect(await ads.show(), isFalse);
       expect(loader.calls, 0);
+    });
+
+    test('SDK sedang menyala: show menunggu lalu memuat', () async {
+      final loader = _FakeLoader();
+      final sdk = Completer<void>();
+      var ready = false;
+      var unavailable = 0;
+      final ads = AdMobRewardedAds(
+        unitId: 'unit',
+        canLoad: () => ready,
+        load: loader.call,
+        starting: () => sdk.isCompleted ? null : sdk.future,
+        onUnavailable: () => unavailable++,
+      );
+      final result = ads.show();
+      await pumpEventQueue();
+      expect(loader.calls, 0);
+      ready = true;
+      sdk.complete();
+      await pumpEventQueue();
+      expect(loader.calls, 1);
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      ad.watchToEnd();
+      expect(await result, isTrue);
+      expect(unavailable, 0);
+    });
+
+    test('SDK tidak selesai menyala dalam batas tunggu = false', () async {
+      final loader = _FakeLoader();
+      var unavailable = 0;
+      final ads = AdMobRewardedAds(
+        unitId: 'unit',
+        canLoad: () => false,
+        load: loader.call,
+        loadTimeout: const Duration(milliseconds: 10),
+        starting: () => Completer<void>().future,
+        onUnavailable: () => unavailable++,
+      );
+      expect(await ads.show(), isFalse);
+      expect(loader.calls, 0);
+      expect(unavailable, 1);
     });
 
     test('preload dua kali hanya memuat sekali', () async {
@@ -385,6 +543,79 @@ void main() {
       expect(consent.gathered, 2);
     });
 
+    test('SDK gagal menyala saat iklan menunggu: dicoba lagi', () async {
+      final loader = _FakeLoader();
+      final consent = FakeAdConsent();
+      final sdk = Completer<void>();
+      var starts = 0;
+      final ads = GameAds(
+        consent: consent,
+        startSdk: () => starts++ == 0 ? sdk.future : Future.value(),
+        load: loader.call,
+      );
+      unawaited(ads.start());
+      await pumpEventQueue();
+      final result = ads.coins.show();
+      await pumpEventQueue();
+      sdk.completeError(StateError('SDK'));
+      expect(await result, isFalse);
+      await pumpEventQueue();
+      // Ketukan itu gagal, tapi persetujuan diminta lagi dan SDK menyala.
+      expect(consent.gathered, 2);
+      expect(starts, 2);
+      expect(ads.sdkReady, isTrue);
+      expect(loader.calls, 2);
+    });
+
+    test('iklan diminta selagi SDK menyala: menunggu lalu tampil', () async {
+      final loader = _FakeLoader();
+      final sdk = Completer<void>();
+      final ads = GameAds(
+        consent: FakeAdConsent(),
+        startSdk: () => sdk.future,
+        load: loader.call,
+      );
+      unawaited(ads.start());
+      await pumpEventQueue();
+      final result = ads.coins.show();
+      await pumpEventQueue();
+      expect(loader.calls, 0);
+      sdk.complete();
+      await pumpEventQueue();
+      // Muatan petunjuk lalu koin; yang terakhir milik iklan koin.
+      expect(loader.calls, 2);
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      expect(ad.shown, 1);
+      ad.watchToEnd();
+      expect(await result, isTrue);
+    });
+
+    test(
+      'persetujuan sesi lalu sebelum gather selesai: SDK menyala sekali',
+      () async {
+        final loader = _FakeLoader();
+        var started = 0;
+        final consent = _RememberedConsent();
+        final ads = GameAds(
+          consent: consent,
+          startSdk: () async => started++,
+          load: loader.call,
+        );
+        final start = ads.start();
+        await pumpEventQueue();
+        // Formulir masih terbuka, tapi iklan sudah bisa dimuat.
+        expect(consent.gathered, 1);
+        expect(started, 1);
+        expect(ads.sdkReady, isTrue);
+        expect(loader.calls, 2);
+        consent.done.complete();
+        await start;
+        expect(started, 1);
+        expect(loader.calls, 2);
+      },
+    );
+
     test('release memakai ID tempelan per tempat', () async {
       final loader = _FakeLoader();
       await GameAds(
@@ -419,5 +650,20 @@ class _SlowConsent extends FakeAdConsent {
   Future<void> gather() async {
     gathered++;
     if (gathered == 1) await done.future;
+  }
+}
+
+/// Persetujuan sesi lalu sudah boleh (diberi tahu lebih dulu), lalu `gather`
+/// masih menunggu [done] (mis. info persetujuan diperbarui lewat jaringan).
+class _RememberedConsent extends FakeAdConsent {
+  _RememberedConsent() : super(canRequestAds: false);
+
+  final done = Completer<void>();
+
+  @override
+  Future<void> gather() async {
+    gathered++;
+    canRequestAds = true;
+    await done.future;
   }
 }

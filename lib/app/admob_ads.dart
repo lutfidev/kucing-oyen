@@ -28,8 +28,11 @@ class AdMobRewardedAds implements RewardedAds {
     required this._canLoad,
     required this._load,
     this.loadTimeout = defaultLoadTimeout,
+    this.rewardGrace = defaultRewardGrace,
+    this.showTimeout = defaultShowTimeout,
     DateTime Function()? clock,
     this._onUnavailable,
+    this._starting,
   }) : _clock = clock ?? DateTime.now;
 
   /// Batas tunggu [show] kalau iklan belum siap.
@@ -39,8 +42,19 @@ class AdMobRewardedAds implements RewardedAds {
   /// sesudah dimuat; yang lebih tua dari ini dibuang dan dimuat ulang.
   static const maxAdAge = Duration(minutes: 55);
 
+  /// Jeda sesudah iklan ditutup untuk hadiah yang datang belakangan
+  /// (sebagian SDK dan mediasi memberi hadiah sesudah ditutup).
+  static const defaultRewardGrace = Duration(milliseconds: 400);
+
+  /// Batas pengaman satu iklan tampil, kalau SDK tidak pernah memberi tahu
+  /// iklan ditutup atau gagal tampil. Cukup panjang untuk pemain yang
+  /// membuka toko dari iklan lalu kembali.
+  static const defaultShowTimeout = Duration(minutes: 10);
+
   final String unitId;
   final Duration loadTimeout;
+  final Duration rewardGrace;
+  final Duration showTimeout;
   final bool Function() _canLoad;
   final RewardedAdLoader _load;
   final DateTime Function() _clock;
@@ -48,6 +62,10 @@ class AdMobRewardedAds implements RewardedAds {
   /// Dipanggil saat [show] ditolak karena iklan belum boleh dimuat (mis.
   /// persetujuan atau SDK belum siap), supaya bisa dicoba lagi.
   final VoidCallback? _onUnavailable;
+
+  /// SDK yang sedang dinyalakan (null kalau tidak sedang dinyalakan):
+  /// [show] menunggunya dalam batas [loadTimeout] sebelum menyerah.
+  final Future<void>? Function()? _starting;
 
   RewardedAdHandle? _ready;
 
@@ -67,19 +85,31 @@ class AdMobRewardedAds implements RewardedAds {
 
   /// Iklan yang selesai dimuat (juga sesudah [show] habis waktu) disimpan
   /// untuk [show] berikutnya.
-  Future<void> _startLoad() => _loading = () async {
+  Future<void> _startLoad() {
+    final loading = _loadOne();
+    _loading = loading;
+    // Dikosongkan sesudah dipasang: muatan bisa selesai sebelum baris di
+    // atas berjalan (mis. pemuat melempar sinkron).
+    unawaited(
+      loading.whenComplete(() {
+        if (identical(_loading, loading)) _loading = null;
+      }),
+    );
+    return loading;
+  }
+
+  Future<void> _loadOne() async {
     RewardedAdHandle? ad;
     try {
       ad = await _load(unitId);
     } on Object {
       ad = null;
     }
-    _loading = null;
     if (ad != null) {
       _ready = ad;
       _readyAt = _clock();
     }
-  }();
+  }
 
   /// Membuang iklan siap yang sudah lewat [maxAdAge].
   void _dropExpired() {
@@ -97,15 +127,13 @@ class AdMobRewardedAds implements RewardedAds {
   @override
   Future<bool> show() async {
     if (_showing) return false;
-    if (!_canLoad()) {
-      _onUnavailable?.call();
-      return false;
-    }
     _showing = true;
     try {
       _dropExpired();
-      if (_ready == null) {
-        await (_loading ?? _startLoad()).timeout(loadTimeout, onTimeout: () {});
+      await _waitForAd().timeout(loadTimeout, onTimeout: () {});
+      if (!_canLoad()) {
+        _onUnavailable?.call();
+        return false;
       }
       final ad = _ready;
       _ready = null;
@@ -119,20 +147,52 @@ class AdMobRewardedAds implements RewardedAds {
     }
   }
 
+  /// Menunggu SDK yang sedang dinyalakan, lalu iklan kalau belum siap.
+  Future<void> _waitForAd() async {
+    if (!_canLoad()) {
+      final starting = _starting?.call();
+      if (starting == null) return;
+      await starting;
+      if (!_canLoad()) return;
+    }
+    if (_ready == null) await (_loading ?? _startLoad());
+  }
+
   Future<bool> _present(RewardedAdHandle ad) async {
-    final closed = Completer<bool>();
+    final done = Completer<bool>();
     var earned = false;
+    var closed = false;
+    // Sudah selesai (juga lewat batas pengaman): callback SDK yang datang
+    // sesudahnya diabaikan.
+    var settled = false;
+    Timer? grace;
+    void finish(bool rewarded) {
+      grace?.cancel();
+      if (!done.isCompleted) done.complete(rewarded);
+    }
+
     try {
       ad.show(
-        onReward: () => earned = true,
+        onReward: () {
+          earned = true;
+          if (closed) finish(true);
+        },
         onClosed: () {
-          if (!closed.isCompleted) closed.complete(earned);
+          if (closed || settled) return;
+          closed = true;
+          if (earned) {
+            finish(true);
+          } else {
+            grace = Timer(rewardGrace, () => finish(false));
+          }
         },
       );
-      return await closed.future;
+      return await done.future.timeout(showTimeout, onTimeout: () => earned);
     } on Object {
       return false;
     } finally {
+      settled = true;
+      grace?.cancel();
       ad.dispose();
       preload();
     }
@@ -153,6 +213,7 @@ class GameAds {
       canLoad: () => _sdkReady,
       load: load,
       onUnavailable: _retry,
+      starting: () => _startingSdk,
     );
     hints = unit(AdPlacement.hint);
     coins = unit(AdPlacement.coin);
@@ -165,8 +226,10 @@ class GameAds {
   late final AdMobRewardedAds coins;
 
   bool _sdkReady = false;
-  bool _starting = false;
   bool _gathering = false;
+
+  /// SDK yang sedang dinyalakan; iklan yang diminta saat itu menunggunya.
+  Future<void>? _startingSdk;
 
   /// SDK sudah dinyalakan dan iklan boleh dimuat.
   bool get sdkReady => _sdkReady;
@@ -201,9 +264,23 @@ class GameAds {
 
   void _onConsent() => unawaited(_startIfAllowed());
 
-  Future<void> _startIfAllowed() async {
-    if (_sdkReady || _starting || !consent.canRequestAds) return;
-    _starting = true;
+  Future<void> _startIfAllowed() {
+    if (_sdkReady || !consent.canRequestAds) return Future.value();
+    final pending = _startingSdk;
+    if (pending != null) return pending;
+    final starting = _startSdkOnce();
+    _startingSdk = starting;
+    // Dikosongkan sesudah dipasang: bisa selesai sebelum dipasang (mis.
+    // SDK melempar sinkron).
+    unawaited(
+      starting.whenComplete(() {
+        if (identical(_startingSdk, starting)) _startingSdk = null;
+      }),
+    );
+    return starting;
+  }
+
+  Future<void> _startSdkOnce() async {
     try {
       await _startSdk();
       _sdkReady = true;
@@ -211,8 +288,6 @@ class GameAds {
       coins.preload();
     } on Object {
       // SDK gagal dinyalakan: dicoba lagi saat pemain meminta iklan.
-    } finally {
-      _starting = false;
     }
   }
 }

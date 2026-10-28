@@ -233,6 +233,19 @@ Jawaban pemilik repo dan keputusan lengkap di `docs/superpowers/specs/2026-10-19
 - **Polish langkah 13 dan 14.** Tinggi pratinjau Lemari Kostum ternyata meleset 4–5 px di layar 360×740 (faktor 1,25 ≠ tinggi baris yang diwarisi `Text` dari `DefaultTextStyle`); sekarang nama kostum diukur dengan gaya gabungan yang sama dan jarak diambil dari satu sumber, dijaga test "pratinjau mengisi sisa tempat". Sheet bawah pindah ke `lib/widgets/ko_sheet.dart` dan berganti nama `showKoSheet`/`KoSheet`. Koin label harga memakai `CoinKind.price` (garis 2,4 desain 12). Jumlah iklan rusak di simpanan = jatah habis.
 - **Belum dicek di perangkat** saat langkah ini dikerjakan (tidak ada HP atau emulator): ikon di launcher dan ikon tema, splash Android 12+ dan lama, formulir UMP, dan iklan uji. Lakukan sebelum rilis produksi.
 
+## Langkah 18: pengerasan iklan dan rilis
+
+Temuan kecil review langkah 17 (PR #19). Perilaku yang sudah dites tidak berubah, kecuali yang disebut di bawah.
+
+- **Hadiah sesudah ditutup.** Iklan yang ditutup tanpa hadiah menunggu 400 ms (`AdMobRewardedAds.defaultRewardGrace`, tengah rentang usulan 300–500 ms) sebelum dianggap gagal; hadiah yang datang di jeda itu langsung memberi true. Iklan yang ditutup tanpa hadiah jadi selesai 400 ms lebih lambat, tidak terasa karena layar iklan baru saja tertutup.
+- **Batas pengaman tampil** 10 menit (`defaultShowTimeout`): cukup panjang untuk pemain yang membuka toko dari iklan lalu kembali. Kalau habis, hasilnya mengikuti hadiah yang sudah datang (hadiah tidak hilang), lalu iklan dibuang dan iklan berikutnya dimuat. Callback SDK yang datang sesudahnya diabaikan.
+- **SDK sedang dinyalakan.** `show()` menunggu SDK yang sedang dinyalakan (`GameAds` memberi future-nya lewat `starting:`) lalu memuat iklan, semuanya dalam satu batas `loadTimeout` 10 detik. Yang ditunggu hanya SDK yang sedang dinyalakan; formulir persetujuan yang masih terbuka tidak ditunggu, jadi ketukan itu tetap gagal seperti sebelumnya.
+- **Pemuat atau SDK yang melempar sinkron** tidak lagi membuat muatan macet: future muatan (juga future SDK di `GameAds`) dikosongkan sesudah dipasang dan hanya kalau masih yang sama.
+- **Splash Android 12+**: `LaunchTheme` memakai latar `@color/cream` polos, bukan `launch_background` (kepala Oyen dan logo), supaya gambar tidak melompat kalau letaknya berbeda dari ikon splash sistem.
+- **Formulir persetujuan** dijaga di Pengaturan (`_consentOpen`), bukan di `UmpAdConsent`, supaya bisa dites dengan persetujuan palsu.
+- **App bundle tanpa `key.properties`** gagal di Gradle (`bundleRelease`) dengan pesan yang menunjuk `docs/store/README.md`, kecuali kunci diberikan wizard "Generate Signed Bundle" Android Studio (`android.injected.signing.store.file`, temuan review). APK release dan `flutter run --release` tetap memakai debug key dengan peringatan. Dicek dengan `gradlew bundleRelease --dry-run` (gagal berpesan) dan `gradlew assembleRelease --dry-run` (jalan).
+- **Belum dicek di perangkat** (masih tanpa HP atau emulator): splash krem dan iklan uji.
+
 ## Sebelum langkah 21: rumah Oyen
 
 Pemilik repo memutuskan ini saat brainstorming 26 Okt 2026. Alasannya: UI terasa hambar (masuk level lewat bulatan angka, bolak-balik peta–level, dan koin yang tidak punya banyak tujuan). Rincian lengkap, angka, dan model data ada di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`. Desainnya dibuat pemilik repo di Claude Design dengan `docs/design-brief/rumah-oyen.md` (halaman 19–24). Langkah 21–26 di roadmap dikerjakan sesudah langkah 18–20.
