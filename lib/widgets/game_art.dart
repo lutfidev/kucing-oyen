@@ -1,6 +1,9 @@
 import 'package:flutter/widgets.dart';
 
+import '../game/model/accessories.dart';
+import '../game/model/home_items.dart';
 import '../game/model/rules.dart';
+import '../game/model/snacks.dart';
 import '../game/render/render.dart';
 import '../game/sim/item.dart';
 import '../l10n/l10n.dart';
@@ -283,4 +286,138 @@ class _RuleArtPainter extends CustomPainter {
   @override
   bool shouldRepaint(_RuleArtPainter old) =>
       old.rule != rule || old.learned != learned || old.turn != turn;
+}
+
+/// Kucing kamar seukuran [size] px (desain 100 px). Topi dan mainan boleh
+/// keluar dari kotaknya, seperti sprite di desain.
+class KittyView extends StatelessWidget {
+  const KittyView({super.key, required this.look, required this.size});
+
+  final KittyLook look;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      image: true,
+      label: kittyLabel(context.l10n, look),
+      child: CustomPaint(size: Size.square(size), painter: _KittyPainter(look)),
+    );
+  }
+}
+
+class _KittyPainter extends CustomPainter {
+  _KittyPainter(this.look);
+
+  final KittyLook look;
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      paintKitty(canvas, look, size: size.width);
+
+  @override
+  bool shouldRepaint(_KittyPainter old) => old.look != look;
+}
+
+/// Barang kamar yang diskalakan supaya muat dan dipusatkan di [box].
+/// [full] = isi mangkuk.
+class RoomItemView extends StatelessWidget {
+  const RoomItemView({
+    super.key,
+    required this.id,
+    required this.box,
+    this.full = true,
+  });
+
+  final RoomItemId id;
+  final Size box;
+  final bool full;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      image: true,
+      label: roomItemName(context.l10n, id),
+      child: CustomPaint(size: box, painter: _RoomItemPainter(id, full)),
+    );
+  }
+}
+
+class _RoomItemPainter extends CustomPainter {
+  _RoomItemPainter(this.id, this.full);
+
+  final RoomItemId id;
+  final bool full;
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      paintRoomItemArt(canvas, id, box: size, full: full);
+
+  @override
+  bool shouldRepaint(_RoomItemPainter old) => old.id != id || old.full != full;
+}
+
+/// Camilan yang diskalakan supaya muat dan dipusatkan di [box].
+class SnackView extends StatelessWidget {
+  const SnackView({super.key, required this.id, required this.box});
+
+  final SnackId id;
+  final Size box;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      image: true,
+      label: snackName(context.l10n, id),
+      child: CustomPaint(size: box, painter: _SnackPainter(id)),
+    );
+  }
+}
+
+class _SnackPainter extends CustomPainter {
+  _SnackPainter(this.id);
+
+  final SnackId id;
+
+  @override
+  void paint(Canvas canvas, Size size) => paintSnackArt(canvas, id, box: size);
+
+  @override
+  bool shouldRepaint(_SnackPainter old) => old.id != id;
+}
+
+/// Ikon aksesoris seukuran [size] px (desain 48 px); null = ikon "tanpa
+/// aksesoris". Hiasan saja: namanya ditulis di sebelahnya.
+class AccessoryIconView extends StatelessWidget {
+  const AccessoryIconView({
+    super.key,
+    required this.id,
+    this.size = AccessoryIconArt.viewBox,
+  });
+
+  final AccessoryId? id;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(
+      child: CustomPaint(
+        size: Size.square(size),
+        painter: _AccessoryIconPainter(id),
+      ),
+    );
+  }
+}
+
+class _AccessoryIconPainter extends CustomPainter {
+  _AccessoryIconPainter(this.id);
+
+  final AccessoryId? id;
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      paintAccessoryIcon(canvas, id, size: size.width);
+
+  @override
+  bool shouldRepaint(_AccessoryIconPainter old) => old.id != id;
 }

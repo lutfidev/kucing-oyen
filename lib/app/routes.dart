@@ -16,6 +16,10 @@ abstract final class AppRoutes {
   /// Galeri sprite Oyen (desain 14, 16).
   static const galleryOyen = '/galeri/oyen';
 
+  /// Galeri sprite kucing kamar, aksesoris, barang, dan camilan
+  /// (desain 21, 22).
+  static const galleryKitty = '/galeri/kucing';
+
   /// Galeri efek suara dan musik, untuk didengar di perangkat.
   static const gallerySound = '/galeri/suara';
 

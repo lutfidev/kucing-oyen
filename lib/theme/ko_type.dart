@@ -61,6 +61,12 @@ class KoType extends ThemeExtension<KoType> {
     required this.hintReveal,
     required this.numberCoinLarge,
     required this.cardLabel,
+    required this.cardName,
+    required this.tagTiny,
+    required this.cardText,
+    required this.cardTextSmall,
+    required this.headingStrong,
+    required this.buttonSoft,
   });
 
   static const standard = KoType(
@@ -328,6 +334,42 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 16,
       fontWeight: FontWeight.w600,
     ),
+    cardName: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontWeight: FontWeight.w800,
+      fontSize: 15,
+      height: 1.2,
+    ),
+    tagTiny: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontWeight: FontWeight.w800,
+      fontSize: 11,
+    ),
+    cardText: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontWeight: FontWeight.w700,
+      fontSize: 13,
+      height: 1.35,
+    ),
+    cardTextSmall: TextStyle(
+      fontFamily: KoFonts.nunito,
+      fontWeight: FontWeight.w700,
+      fontSize: 12.5,
+      height: 1.3,
+    ),
+    headingStrong: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w700,
+      fontSize: 20,
+      height: 1.05,
+    ),
+    buttonSoft: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w600,
+      fontSize: 19,
+    ),
   );
 
   /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
@@ -465,6 +507,24 @@ class KoType extends ThemeExtension<KoType> {
   /// Fredoka 600/16: nama kostum di kartu Lemari Kostum.
   final TextStyle cardLabel;
 
+  /// Nama barang di kartu Toko (desain 20).
+  final TextStyle cardName;
+
+  /// Badge kelangkaan aksesoris (desain 20).
+  final TextStyle tagTiny;
+
+  /// Deskripsi kucing di kartu Toko (desain 20).
+  final TextStyle cardText;
+
+  /// Deskripsi aksesoris dan camilan di kartu Toko (desain 20).
+  final TextStyle cardTextSmall;
+
+  /// Nama aksesoris di panel pratinjau Toko (desain 20).
+  final TextStyle headingStrong;
+
+  /// Tombol tutup di sheet beli (desain 20).
+  final TextStyle buttonSoft;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -511,6 +571,12 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? hintReveal,
     TextStyle? numberCoinLarge,
     TextStyle? cardLabel,
+    TextStyle? cardName,
+    TextStyle? tagTiny,
+    TextStyle? cardText,
+    TextStyle? cardTextSmall,
+    TextStyle? headingStrong,
+    TextStyle? buttonSoft,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -557,6 +623,12 @@ class KoType extends ThemeExtension<KoType> {
       hintReveal: hintReveal ?? this.hintReveal,
       numberCoinLarge: numberCoinLarge ?? this.numberCoinLarge,
       cardLabel: cardLabel ?? this.cardLabel,
+      cardName: cardName ?? this.cardName,
+      tagTiny: tagTiny ?? this.tagTiny,
+      cardText: cardText ?? this.cardText,
+      cardTextSmall: cardTextSmall ?? this.cardTextSmall,
+      headingStrong: headingStrong ?? this.headingStrong,
+      buttonSoft: buttonSoft ?? this.buttonSoft,
     );
   }
 
@@ -609,6 +681,12 @@ class KoType extends ThemeExtension<KoType> {
       hintReveal: s(hintReveal, other.hintReveal),
       numberCoinLarge: s(numberCoinLarge, other.numberCoinLarge),
       cardLabel: s(cardLabel, other.cardLabel),
+      cardName: s(cardName, other.cardName),
+      tagTiny: s(tagTiny, other.tagTiny),
+      cardText: s(cardText, other.cardText),
+      cardTextSmall: s(cardTextSmall, other.cardTextSmall),
+      headingStrong: s(headingStrong, other.headingStrong),
+      buttonSoft: s(buttonSoft, other.buttonSoft),
     );
   }
 }

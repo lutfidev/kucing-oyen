@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../gallery/gallery_board_screen.dart';
+import '../gallery/gallery_kitty_screen.dart';
 import '../gallery/gallery_oyen_screen.dart';
 import '../gallery/gallery_screen.dart';
 import '../gallery/gallery_sound_screen.dart';
@@ -30,6 +31,10 @@ GoRouter createRouter({String initialLocation = AppRoutes.home}) {
               GoRoute(
                 path: 'oyen',
                 builder: (context, state) => const GalleryOyenScreen(),
+              ),
+              GoRoute(
+                path: 'kucing',
+                builder: (context, state) => const GalleryKittyScreen(),
               ),
               GoRoute(
                 path: 'suara',

@@ -88,6 +88,32 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.oyenCostume,
     required this.oyenCloset,
     required this.closetMinScale,
+    required this.shopTab,
+    required this.shopTabBar,
+    required this.shopItemWell,
+    required this.shopItemArtWidth,
+    required this.shopItemArtHeight,
+    required this.shopKittyWell,
+    required this.shopKittyArt,
+    required this.shopAccessoryWell,
+    required this.shopAccessoryArt,
+    required this.shopSnackWell,
+    required this.shopSnackArtWidth,
+    required this.shopSnackArtHeight,
+    required this.shopPreviewWidth,
+    required this.shopPreviewHeight,
+    required this.shopPreviewArt,
+    required this.shopPreviewFloor,
+    required this.shopPick,
+    required this.shopPickArt,
+    required this.shopPreviewMinScale,
+    required this.buyWell,
+    required this.buyKittyArt,
+    required this.buyAccessoryArt,
+    required this.buyItemArtWidth,
+    required this.buyItemArtHeight,
+    required this.buyButton,
+    required this.buyClose,
   });
 
   static const standard = KoSize(
@@ -171,6 +197,32 @@ class KoSize extends ThemeExtension<KoSize> {
     oyenCostume: 56,
     oyenCloset: 168,
     closetMinScale: 0.5,
+    shopTab: 48,
+    shopTabBar: 56,
+    shopItemWell: 100,
+    shopItemArtWidth: 128,
+    shopItemArtHeight: 80,
+    shopKittyWell: 108,
+    shopKittyArt: 94,
+    shopAccessoryWell: 104,
+    shopAccessoryArt: 84,
+    shopSnackWell: 68,
+    shopSnackArtWidth: 52,
+    shopSnackArtHeight: 40,
+    shopPreviewWidth: 146,
+    shopPreviewHeight: 176,
+    shopPreviewArt: 126,
+    shopPreviewFloor: 104,
+    shopPick: 52,
+    shopPickArt: 40,
+    shopPreviewMinScale: 0.82,
+    buyWell: 168,
+    buyKittyArt: 140,
+    buyAccessoryArt: 136,
+    buyItemArtWidth: 220,
+    buyItemArtHeight: 130,
+    buyButton: 64,
+    buyClose: 52,
   );
 
   /// Tombol "Main" di Beranda.
@@ -388,6 +440,84 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Skala terkecil pratinjau lemari di layar pendek (selebihnya digulir).
   final double closetMinScale;
 
+  /// Tinggi satu tab Toko (desain 20).
+  final double shopTab;
+
+  /// Tinggi baris tab Toko beserta bantalannya.
+  final double shopTabBar;
+
+  /// Kotak gambar di kartu barang (desain 20).
+  final double shopItemWell;
+
+  /// Lebar muat gambar barang di kartunya.
+  final double shopItemArtWidth;
+
+  /// Tinggi muat gambar barang di kartunya.
+  final double shopItemArtHeight;
+
+  /// Kotak gambar di kartu kucing (desain 20).
+  final double shopKittyWell;
+
+  /// Sprite kucing di kartu kucing.
+  final double shopKittyArt;
+
+  /// Kotak gambar di kartu aksesoris (desain 20).
+  final double shopAccessoryWell;
+
+  /// Sprite kucing di kartu aksesoris.
+  final double shopAccessoryArt;
+
+  /// Kotak gambar di kartu camilan (desain 20).
+  final double shopSnackWell;
+
+  /// Lebar muat gambar camilan di kartunya.
+  final double shopSnackArtWidth;
+
+  /// Tinggi muat gambar camilan di kartunya.
+  final double shopSnackArtHeight;
+
+  /// Lebar panggung pratinjau aksesoris.
+  final double shopPreviewWidth;
+
+  /// Tinggi panggung pratinjau aksesoris.
+  final double shopPreviewHeight;
+
+  /// Sprite kucing di panggung pratinjau.
+  final double shopPreviewArt;
+
+  /// Garis lantai di panggung pratinjau, dari atas.
+  final double shopPreviewFloor;
+
+  /// Tombol pilih kucing di baris "Coba di:".
+  final double shopPick;
+
+  /// Sprite kucing di tombol pilih.
+  final double shopPickArt;
+
+  /// Skala terkecil panggung pratinjau di layar 360 px (catatan n360).
+  final double shopPreviewMinScale;
+
+  /// Kotak ilustrasi di sheet beli (desain 20).
+  final double buyWell;
+
+  /// Sprite kucing di sheet beli.
+  final double buyKittyArt;
+
+  /// Sprite kucing beraksesoris di sheet beli.
+  final double buyAccessoryArt;
+
+  /// Lebar muat gambar barang di sheet beli.
+  final double buyItemArtWidth;
+
+  /// Tinggi muat gambar barang di sheet beli.
+  final double buyItemArtHeight;
+
+  /// Tombol beli di sheet (desain 20).
+  final double buyButton;
+
+  /// Tombol tutup di sheet beli.
+  final double buyClose;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -470,6 +600,32 @@ class KoSize extends ThemeExtension<KoSize> {
     double? oyenCostume,
     double? oyenCloset,
     double? closetMinScale,
+    double? shopTab,
+    double? shopTabBar,
+    double? shopItemWell,
+    double? shopItemArtWidth,
+    double? shopItemArtHeight,
+    double? shopKittyWell,
+    double? shopKittyArt,
+    double? shopAccessoryWell,
+    double? shopAccessoryArt,
+    double? shopSnackWell,
+    double? shopSnackArtWidth,
+    double? shopSnackArtHeight,
+    double? shopPreviewWidth,
+    double? shopPreviewHeight,
+    double? shopPreviewArt,
+    double? shopPreviewFloor,
+    double? shopPick,
+    double? shopPickArt,
+    double? shopPreviewMinScale,
+    double? buyWell,
+    double? buyKittyArt,
+    double? buyAccessoryArt,
+    double? buyItemArtWidth,
+    double? buyItemArtHeight,
+    double? buyButton,
+    double? buyClose,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -552,6 +708,32 @@ class KoSize extends ThemeExtension<KoSize> {
       oyenCostume: oyenCostume ?? this.oyenCostume,
       oyenCloset: oyenCloset ?? this.oyenCloset,
       closetMinScale: closetMinScale ?? this.closetMinScale,
+      shopTab: shopTab ?? this.shopTab,
+      shopTabBar: shopTabBar ?? this.shopTabBar,
+      shopItemWell: shopItemWell ?? this.shopItemWell,
+      shopItemArtWidth: shopItemArtWidth ?? this.shopItemArtWidth,
+      shopItemArtHeight: shopItemArtHeight ?? this.shopItemArtHeight,
+      shopKittyWell: shopKittyWell ?? this.shopKittyWell,
+      shopKittyArt: shopKittyArt ?? this.shopKittyArt,
+      shopAccessoryWell: shopAccessoryWell ?? this.shopAccessoryWell,
+      shopAccessoryArt: shopAccessoryArt ?? this.shopAccessoryArt,
+      shopSnackWell: shopSnackWell ?? this.shopSnackWell,
+      shopSnackArtWidth: shopSnackArtWidth ?? this.shopSnackArtWidth,
+      shopSnackArtHeight: shopSnackArtHeight ?? this.shopSnackArtHeight,
+      shopPreviewWidth: shopPreviewWidth ?? this.shopPreviewWidth,
+      shopPreviewHeight: shopPreviewHeight ?? this.shopPreviewHeight,
+      shopPreviewArt: shopPreviewArt ?? this.shopPreviewArt,
+      shopPreviewFloor: shopPreviewFloor ?? this.shopPreviewFloor,
+      shopPick: shopPick ?? this.shopPick,
+      shopPickArt: shopPickArt ?? this.shopPickArt,
+      shopPreviewMinScale: shopPreviewMinScale ?? this.shopPreviewMinScale,
+      buyWell: buyWell ?? this.buyWell,
+      buyKittyArt: buyKittyArt ?? this.buyKittyArt,
+      buyAccessoryArt: buyAccessoryArt ?? this.buyAccessoryArt,
+      buyItemArtWidth: buyItemArtWidth ?? this.buyItemArtWidth,
+      buyItemArtHeight: buyItemArtHeight ?? this.buyItemArtHeight,
+      buyButton: buyButton ?? this.buyButton,
+      buyClose: buyClose ?? this.buyClose,
     );
   }
 
@@ -640,6 +822,32 @@ class KoSize extends ThemeExtension<KoSize> {
       oyenCostume: d(oyenCostume, other.oyenCostume),
       oyenCloset: d(oyenCloset, other.oyenCloset),
       closetMinScale: d(closetMinScale, other.closetMinScale),
+      shopTab: d(shopTab, other.shopTab),
+      shopTabBar: d(shopTabBar, other.shopTabBar),
+      shopItemWell: d(shopItemWell, other.shopItemWell),
+      shopItemArtWidth: d(shopItemArtWidth, other.shopItemArtWidth),
+      shopItemArtHeight: d(shopItemArtHeight, other.shopItemArtHeight),
+      shopKittyWell: d(shopKittyWell, other.shopKittyWell),
+      shopKittyArt: d(shopKittyArt, other.shopKittyArt),
+      shopAccessoryWell: d(shopAccessoryWell, other.shopAccessoryWell),
+      shopAccessoryArt: d(shopAccessoryArt, other.shopAccessoryArt),
+      shopSnackWell: d(shopSnackWell, other.shopSnackWell),
+      shopSnackArtWidth: d(shopSnackArtWidth, other.shopSnackArtWidth),
+      shopSnackArtHeight: d(shopSnackArtHeight, other.shopSnackArtHeight),
+      shopPreviewWidth: d(shopPreviewWidth, other.shopPreviewWidth),
+      shopPreviewHeight: d(shopPreviewHeight, other.shopPreviewHeight),
+      shopPreviewArt: d(shopPreviewArt, other.shopPreviewArt),
+      shopPreviewFloor: d(shopPreviewFloor, other.shopPreviewFloor),
+      shopPick: d(shopPick, other.shopPick),
+      shopPickArt: d(shopPickArt, other.shopPickArt),
+      shopPreviewMinScale: d(shopPreviewMinScale, other.shopPreviewMinScale),
+      buyWell: d(buyWell, other.buyWell),
+      buyKittyArt: d(buyKittyArt, other.buyKittyArt),
+      buyAccessoryArt: d(buyAccessoryArt, other.buyAccessoryArt),
+      buyItemArtWidth: d(buyItemArtWidth, other.buyItemArtWidth),
+      buyItemArtHeight: d(buyItemArtHeight, other.buyItemArtHeight),
+      buyButton: d(buyButton, other.buyButton),
+      buyClose: d(buyClose, other.buyClose),
     );
   }
 }
