@@ -1769,6 +1769,924 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Licenses'**
   String get licenses;
+
+  /// Name of the room item "Toy Mouse".
+  ///
+  /// In en, this message translates to:
+  /// **'Toy Mouse'**
+  String get roomItemTikus;
+
+  /// Shop description of the room item "Toy Mouse".
+  ///
+  /// In en, this message translates to:
+  /// **'Never runs away, still gets chased.'**
+  String get roomItemTikusDesc;
+
+  /// Name of the room item "Aquarium".
+  ///
+  /// In en, this message translates to:
+  /// **'Aquarium'**
+  String get roomItemAkuarium;
+
+  /// Shop description of the room item "Aquarium".
+  ///
+  /// In en, this message translates to:
+  /// **'All-day entertainment. The fish are a bit nervous.'**
+  String get roomItemAkuariumDesc;
+
+  /// Name of the room item "Cat House".
+  ///
+  /// In en, this message translates to:
+  /// **'Cat House'**
+  String get roomItemRumah;
+
+  /// Shop description of the room item "Cat House".
+  ///
+  /// In en, this message translates to:
+  /// **'Has its own house, still sleeps in the box.'**
+  String get roomItemRumahDesc;
+
+  /// Name of the room item "Cushion Bed".
+  ///
+  /// In en, this message translates to:
+  /// **'Cushion Bed'**
+  String get roomItemKasur;
+
+  /// Shop description of the room item "Cushion Bed".
+  ///
+  /// In en, this message translates to:
+  /// **'Soft. Used 60% of the time, the rest is box.'**
+  String get roomItemKasurDesc;
+
+  /// Name of the room item "Catnip Pot".
+  ///
+  /// In en, this message translates to:
+  /// **'Catnip Pot'**
+  String get roomItemCatnip;
+
+  /// Shop description of the room item "Catnip Pot".
+  ///
+  /// In en, this message translates to:
+  /// **'One sniff and the dancing starts.'**
+  String get roomItemCatnipDesc;
+
+  /// Name of the room item "Cat Clock".
+  ///
+  /// In en, this message translates to:
+  /// **'Cat Clock'**
+  String get roomItemJam;
+
+  /// Shop description of the room item "Cat Clock".
+  ///
+  /// In en, this message translates to:
+  /// **'The tail swings every second. Hypnotic.'**
+  String get roomItemJamDesc;
+
+  /// Name of the room item "Cozy Box".
+  ///
+  /// In en, this message translates to:
+  /// **'Cozy Box'**
+  String get roomItemKardus;
+
+  /// Shop description of the room item "Cozy Box".
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s the box that gets picked, not what came in it.'**
+  String get roomItemKardusDesc;
+
+  /// Name of the room item "Yarn Ball".
+  ///
+  /// In en, this message translates to:
+  /// **'Yarn Ball'**
+  String get roomItemBola;
+
+  /// Shop description of the room item "Yarn Ball".
+  ///
+  /// In en, this message translates to:
+  /// **'Tangled in 3 seconds. That\'s the feature.'**
+  String get roomItemBolaDesc;
+
+  /// Name of the room item "Round Rug".
+  ///
+  /// In en, this message translates to:
+  /// **'Round Rug'**
+  String get roomItemKarpet;
+
+  /// Shop description of the room item "Round Rug".
+  ///
+  /// In en, this message translates to:
+  /// **'The official rolling-around spot.'**
+  String get roomItemKarpetDesc;
+
+  /// Name of the room item "Scratching Post".
+  ///
+  /// In en, this message translates to:
+  /// **'Scratching Post'**
+  String get roomItemTiang;
+
+  /// Shop description of the room item "Scratching Post".
+  ///
+  /// In en, this message translates to:
+  /// **'So Mom\'s sofa survives. Hopefully.'**
+  String get roomItemTiangDesc;
+
+  /// Name of the room item "Fish Painting".
+  ///
+  /// In en, this message translates to:
+  /// **'Fish Painting'**
+  String get roomItemLukisan;
+
+  /// Shop description of the room item "Fish Painting".
+  ///
+  /// In en, this message translates to:
+  /// **'Art that makes you hungry.'**
+  String get roomItemLukisanDesc;
+
+  /// Name of the room item "Wall Shelf".
+  ///
+  /// In en, this message translates to:
+  /// **'Wall Shelf'**
+  String get roomItemRak;
+
+  /// Shop description of the room item "Wall Shelf".
+  ///
+  /// In en, this message translates to:
+  /// **'VIP seat for watching everyone.'**
+  String get roomItemRakDesc;
+
+  /// Name of the room item "Feather Wand".
+  ///
+  /// In en, this message translates to:
+  /// **'Feather Wand'**
+  String get roomItemPancingan;
+
+  /// Shop description of the room item "Feather Wand".
+  ///
+  /// In en, this message translates to:
+  /// **'Chases the feather, leaves its dignity behind.'**
+  String get roomItemPancinganDesc;
+
+  /// Name of the room item "Moon Lamp".
+  ///
+  /// In en, this message translates to:
+  /// **'Moon Lamp'**
+  String get roomItemLampuBulan;
+
+  /// Shop description of the room item "Moon Lamp".
+  ///
+  /// In en, this message translates to:
+  /// **'A private moon, no need to wait for night.'**
+  String get roomItemLampuBulanDesc;
+
+  /// Name of the room item "Fish Pillow".
+  ///
+  /// In en, this message translates to:
+  /// **'Fish Pillow'**
+  String get roomItemBantalIkan;
+
+  /// Shop description of the room item "Fish Pillow".
+  ///
+  /// In en, this message translates to:
+  /// **'Soft, and fishy only to look at.'**
+  String get roomItemBantalIkanDesc;
+
+  /// Name of the room item "Monstera Plant".
+  ///
+  /// In en, this message translates to:
+  /// **'Monstera Plant'**
+  String get roomItemMonstera;
+
+  /// Shop description of the room item "Monstera Plant".
+  ///
+  /// In en, this message translates to:
+  /// **'The leaves have holes. Not Oyen\'s doing. This time.'**
+  String get roomItemMonsteraDesc;
+
+  /// Name of the room item "Cat Tunnel".
+  ///
+  /// In en, this message translates to:
+  /// **'Cat Tunnel'**
+  String get roomItemTerowongan;
+
+  /// Shop description of the room item "Cat Tunnel".
+  ///
+  /// In en, this message translates to:
+  /// **'One cat goes in, style comes out.'**
+  String get roomItemTerowonganDesc;
+
+  /// Name of the room item "Window Hammock".
+  ///
+  /// In en, this message translates to:
+  /// **'Window Hammock'**
+  String get roomItemHammock;
+
+  /// Shop description of the room item "Window Hammock".
+  ///
+  /// In en, this message translates to:
+  /// **'Naps with a swing. Wake up and it\'s evening.'**
+  String get roomItemHammockDesc;
+
+  /// Name of the room item "Mini Sofa".
+  ///
+  /// In en, this message translates to:
+  /// **'Mini Sofa'**
+  String get roomItemSofaMini;
+
+  /// Shop description of the room item "Mini Sofa".
+  ///
+  /// In en, this message translates to:
+  /// **'Its own sofa, so Mom\'s is safe. Allegedly.'**
+  String get roomItemSofaMiniDesc;
+
+  /// Name of the room item "Bird Window".
+  ///
+  /// In en, this message translates to:
+  /// **'Bird Window'**
+  String get roomItemJendelaBurung;
+
+  /// Shop description of the room item "Bird Window".
+  ///
+  /// In en, this message translates to:
+  /// **'24-hour cat TV, all birds, no ads.'**
+  String get roomItemJendelaBurungDesc;
+
+  /// Name of the room item "Food bowl".
+  ///
+  /// In en, this message translates to:
+  /// **'Food bowl'**
+  String get roomItemMangkuk;
+
+  /// Name of the collection cat "Oyen".
+  ///
+  /// In en, this message translates to:
+  /// **'Oyen'**
+  String get kittyOyen;
+
+  /// Shop description of the collection cat "Oyen".
+  ///
+  /// In en, this message translates to:
+  /// **'The ginger cat you wake up every level.'**
+  String get kittyOyenDesc;
+
+  /// Name of the collection cat "Snowy".
+  ///
+  /// In en, this message translates to:
+  /// **'Snowy'**
+  String get kittySalju;
+
+  /// Shop description of the collection cat "Snowy".
+  ///
+  /// In en, this message translates to:
+  /// **'Spotless white. Stays that way until it finds a box.'**
+  String get kittySaljuDesc;
+
+  /// Name of the collection cat "Patches".
+  ///
+  /// In en, this message translates to:
+  /// **'Patches'**
+  String get kittyTelon;
+
+  /// Shop description of the collection cat "Patches".
+  ///
+  /// In en, this message translates to:
+  /// **'Three colors, three moods a minute.'**
+  String get kittyTelonDesc;
+
+  /// Name of the collection cat "Charcoal".
+  ///
+  /// In en, this message translates to:
+  /// **'Charcoal'**
+  String get kittyArang;
+
+  /// Shop description of the collection cat "Charcoal".
+  ///
+  /// In en, this message translates to:
+  /// **'Deep black, yellow eyes. Expert shadow hider.'**
+  String get kittyArangDesc;
+
+  /// Name of the collection cat "Cloudy".
+  ///
+  /// In en, this message translates to:
+  /// **'Cloudy'**
+  String get kittyMendung;
+
+  /// Shop description of the collection cat "Cloudy".
+  ///
+  /// In en, this message translates to:
+  /// **'Looks sad, is just sleepy.'**
+  String get kittyMendungDesc;
+
+  /// Name of the collection cat "Latte".
+  ///
+  /// In en, this message translates to:
+  /// **'Latte'**
+  String get kittyKopiSusu;
+
+  /// Shop description of the collection cat "Latte".
+  ///
+  /// In en, this message translates to:
+  /// **'Sweet, a little bitter when woken up.'**
+  String get kittyKopiSusuDesc;
+
+  /// Name of the collection cat "Mochi".
+  ///
+  /// In en, this message translates to:
+  /// **'Mochi'**
+  String get kittyMochi;
+
+  /// Shop description of the collection cat "Mochi".
+  ///
+  /// In en, this message translates to:
+  /// **'Calm, squishy, face like it played in mud.'**
+  String get kittyMochiDesc;
+
+  /// Name of the collection cat "Boss".
+  ///
+  /// In en, this message translates to:
+  /// **'Boss'**
+  String get kittyBos;
+
+  /// Shop description of the collection cat "Boss".
+  ///
+  /// In en, this message translates to:
+  /// **'Always in a suit. Meetings at every mealtime.'**
+  String get kittyBosDesc;
+
+  /// Name of the collection cat "Blossom".
+  ///
+  /// In en, this message translates to:
+  /// **'Blossom'**
+  String get kittyKembang;
+
+  /// Shop description of the collection cat "Blossom".
+  ///
+  /// In en, this message translates to:
+  /// **'Abstract markings, abstract behavior.'**
+  String get kittyKembangDesc;
+
+  /// Name of the accessory "Ribbon".
+  ///
+  /// In en, this message translates to:
+  /// **'Ribbon'**
+  String get accessoryPita;
+
+  /// Shop description of the accessory "Ribbon".
+  ///
+  /// In en, this message translates to:
+  /// **'Simple, sweet, easy to put on.'**
+  String get accessoryPitaDesc;
+
+  /// Name of the accessory "Flower Clip".
+  ///
+  /// In en, this message translates to:
+  /// **'Flower Clip'**
+  String get accessoryJepitBunga;
+
+  /// Shop description of the accessory "Flower Clip".
+  ///
+  /// In en, this message translates to:
+  /// **'Always in bloom, never needs water.'**
+  String get accessoryJepitBungaDesc;
+
+  /// Name of the accessory "Bandana".
+  ///
+  /// In en, this message translates to:
+  /// **'Bandana'**
+  String get accessoryBandana;
+
+  /// Shop description of the accessory "Bandana".
+  ///
+  /// In en, this message translates to:
+  /// **'Cowboy style, suburban edition.'**
+  String get accessoryBandanaDesc;
+
+  /// Name of the accessory "Bow Tie".
+  ///
+  /// In en, this message translates to:
+  /// **'Bow Tie'**
+  String get accessoryDasiKupu;
+
+  /// Shop description of the accessory "Bow Tie".
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for the party, no invitation.'**
+  String get accessoryDasiKupuDesc;
+
+  /// Name of the accessory "Bell Collar".
+  ///
+  /// In en, this message translates to:
+  /// **'Bell Collar'**
+  String get accessoryKalung;
+
+  /// Shop description of the accessory "Bell Collar".
+  ///
+  /// In en, this message translates to:
+  /// **'Jingle jingle. Busted on every fish heist.'**
+  String get accessoryKalungDesc;
+
+  /// Name of the accessory "Knit Scarf".
+  ///
+  /// In en, this message translates to:
+  /// **'Knit Scarf'**
+  String get accessorySyal;
+
+  /// Shop description of the accessory "Knit Scarf".
+  ///
+  /// In en, this message translates to:
+  /// **'Warm. Knitted by an imaginary grandma.'**
+  String get accessorySyalDesc;
+
+  /// Name of the accessory "Beanie".
+  ///
+  /// In en, this message translates to:
+  /// **'Beanie'**
+  String get accessoryBeanie;
+
+  /// Shop description of the accessory "Beanie".
+  ///
+  /// In en, this message translates to:
+  /// **'Warm. Even though it\'s hot outside.'**
+  String get accessoryBeanieDesc;
+
+  /// Name of the accessory "Chef Hat".
+  ///
+  /// In en, this message translates to:
+  /// **'Chef Hat'**
+  String get accessoryTopiKoki;
+
+  /// Shop description of the accessory "Chef Hat".
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking? No. Tasting? Always.'**
+  String get accessoryTopiKokiDesc;
+
+  /// Name of the accessory "Beret".
+  ///
+  /// In en, this message translates to:
+  /// **'Beret'**
+  String get accessoryBaret;
+
+  /// Shop description of the accessory "Beret".
+  ///
+  /// In en, this message translates to:
+  /// **'Instant artist. Masterpiece: a torn pillow.'**
+  String get accessoryBaretDesc;
+
+  /// Name of the accessory "Round Glasses".
+  ///
+  /// In en, this message translates to:
+  /// **'Round Glasses'**
+  String get accessoryKacamata;
+
+  /// Shop description of the accessory "Round Glasses".
+  ///
+  /// In en, this message translates to:
+  /// **'Looks smart. Still knocks the vase over.'**
+  String get accessoryKacamataDesc;
+
+  /// Name of the accessory "Headphones".
+  ///
+  /// In en, this message translates to:
+  /// **'Headphones'**
+  String get accessoryHeadphone;
+
+  /// Shop description of the accessory "Headphones".
+  ///
+  /// In en, this message translates to:
+  /// **'Lo-fi on, pretending to be busy.'**
+  String get accessoryHeadphoneDesc;
+
+  /// Name of the accessory "Reindeer Antlers".
+  ///
+  /// In en, this message translates to:
+  /// **'Reindeer Antlers'**
+  String get accessoryTandukRusa;
+
+  /// Shop description of the accessory "Reindeer Antlers".
+  ///
+  /// In en, this message translates to:
+  /// **'A pretend reindeer. Still meows.'**
+  String get accessoryTandukRusaDesc;
+
+  /// Name of the accessory "Party Hat".
+  ///
+  /// In en, this message translates to:
+  /// **'Party Hat'**
+  String get accessoryTopiPesta;
+
+  /// Shop description of the accessory "Party Hat".
+  ///
+  /// In en, this message translates to:
+  /// **'Every day is a birthday when you\'re a cat.'**
+  String get accessoryTopiPestaDesc;
+
+  /// Name of the accessory "Wizard Hat".
+  ///
+  /// In en, this message translates to:
+  /// **'Wizard Hat'**
+  String get accessoryTopiPenyihir;
+
+  /// Shop description of the accessory "Wizard Hat".
+  ///
+  /// In en, this message translates to:
+  /// **'Can make fish appear. Allegedly.'**
+  String get accessoryTopiPenyihirDesc;
+
+  /// Name of the accessory "Flower Crown".
+  ///
+  /// In en, this message translates to:
+  /// **'Flower Crown'**
+  String get accessoryMahkota;
+
+  /// Shop description of the accessory "Flower Crown".
+  ///
+  /// In en, this message translates to:
+  /// **'Queen of the room. Don\'t eat the flowers.'**
+  String get accessoryMahkotaDesc;
+
+  /// Name of the accessory "King's Crown".
+  ///
+  /// In en, this message translates to:
+  /// **'King\'s Crown'**
+  String get accessoryMahkotaRaja;
+
+  /// Shop description of the accessory "King's Crown".
+  ///
+  /// In en, this message translates to:
+  /// **'King of the room. Taxes paid in head scratches.'**
+  String get accessoryMahkotaRajaDesc;
+
+  /// Name of the snack "Salted Fish".
+  ///
+  /// In en, this message translates to:
+  /// **'Salted Fish'**
+  String get snackIkanAsin;
+
+  /// Shop description of the snack "Salted Fish".
+  ///
+  /// In en, this message translates to:
+  /// **'Salty, savory, the neighbors can smell it.'**
+  String get snackIkanAsinDesc;
+
+  /// Name of the snack "Milk".
+  ///
+  /// In en, this message translates to:
+  /// **'Milk'**
+  String get snackSusu;
+
+  /// Shop description of the snack "Milk".
+  ///
+  /// In en, this message translates to:
+  /// **'A small saucer. White whiskers guaranteed.'**
+  String get snackSusuDesc;
+
+  /// Name of the snack "Canned Tuna".
+  ///
+  /// In en, this message translates to:
+  /// **'Canned Tuna'**
+  String get snackTuna;
+
+  /// Shop description of the snack "Canned Tuna".
+  ///
+  /// In en, this message translates to:
+  /// **'The can opening summons every cat.'**
+  String get snackTunaDesc;
+
+  /// Name of the snack "Cat Biscuits".
+  ///
+  /// In en, this message translates to:
+  /// **'Cat Biscuits'**
+  String get snackBiskuit;
+
+  /// Shop description of the snack "Cat Biscuits".
+  ///
+  /// In en, this message translates to:
+  /// **'Crunchy and cheap. Not very filling.'**
+  String get snackBiskuitDesc;
+
+  /// Name of the snack "Fish Pudding".
+  ///
+  /// In en, this message translates to:
+  /// **'Fish Pudding'**
+  String get snackPuding;
+
+  /// Shop description of the snack "Fish Pudding".
+  ///
+  /// In en, this message translates to:
+  /// **'Fancy. Very filling, very happy.'**
+  String get snackPudingDesc;
+
+  /// Accessory rarity badge in the shop: common.
+  ///
+  /// In en, this message translates to:
+  /// **'Common'**
+  String get rarityCommon;
+
+  /// Accessory rarity badge in the shop: rare.
+  ///
+  /// In en, this message translates to:
+  /// **'Rare'**
+  String get rarityRare;
+
+  /// Accessory rarity badge in the shop: special.
+  ///
+  /// In en, this message translates to:
+  /// **'Special'**
+  String get raritySpecial;
+
+  /// Shop screen title, and the menu button that opens it.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop'**
+  String get shop;
+
+  /// Shop tab: room items.
+  ///
+  /// In en, this message translates to:
+  /// **'Items'**
+  String get shopTabItems;
+
+  /// Shop tab: collection cats.
+  ///
+  /// In en, this message translates to:
+  /// **'Cats'**
+  String get shopTabKitties;
+
+  /// Shop tab: accessories.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessories'**
+  String get shopTabAccessories;
+
+  /// Shop tab: snacks.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get shopTabSnacks;
+
+  /// Line above the cat cards in the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Every cat shares the room with Oyen. Oyen agrees. Probably.'**
+  String get shopKittyIntro;
+
+  /// Line above the snack cards in the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Snacks go into your stock. Hand them out from the cat card in the room.'**
+  String get shopSnackIntro;
+
+  /// Shop card badge: already owned.
+  ///
+  /// In en, this message translates to:
+  /// **'Yours'**
+  String get shopOwnedTag;
+
+  /// Shop card badge: this cat already lives in the room.
+  ///
+  /// In en, this message translates to:
+  /// **'Lives in the room'**
+  String get shopLivesHere;
+
+  /// Shop card badge: the player cannot afford this yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough coins'**
+  String get shopNotEnoughTag;
+
+  /// How many coins are still missing for this cat.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, one{{n} coin short} other{{n} coins short}}'**
+  String shopShortBy(int n);
+
+  /// Shop cat card button: adopt for this many coins.
+  ///
+  /// In en, this message translates to:
+  /// **'Adopt · {n}'**
+  String shopAdopt(int n);
+
+  /// Shop snack card button: buy for this many coins.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy · {n}'**
+  String shopBuyShort(int n);
+
+  /// Shop snack card: how many are in stock.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock: {n}'**
+  String shopStock(int n);
+
+  /// Label before the row of cats used for the accessory preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Try on:'**
+  String get shopTryOn;
+
+  /// Accessory preview panel overline, with the cat name.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview · {name}'**
+  String shopPreviewOf(String name);
+
+  /// Button: put the owned accessory on the previewed cat, for free.
+  ///
+  /// In en, this message translates to:
+  /// **'Wear · Free'**
+  String get shopWearFree;
+
+  /// Button: take the accessory off the previewed cat, for free.
+  ///
+  /// In en, this message translates to:
+  /// **'Take off · Free'**
+  String get shopRemoveFree;
+
+  /// Hint under the accessory button when coins are missing.
+  ///
+  /// In en, this message translates to:
+  /// **'Play a puzzle first, the coins will follow.'**
+  String get shopPlayFirst;
+
+  /// Accessory card note: which cats wear it (comma separated names).
+  ///
+  /// In en, this message translates to:
+  /// **'Worn by {name}'**
+  String shopWornBy(String name);
+
+  /// Cheer shown after putting an accessory on a cat.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking good!'**
+  String get shopFlashNice;
+
+  /// Note shown after taking an accessory off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off, free of charge'**
+  String get shopFlashRemoved;
+
+  /// Floating note after buying a snack: coins spent.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, one{-{n} coin} other{-{n} coins}}'**
+  String shopFlashSpent(int n);
+
+  /// Screen reader label of a cat button in the preview row.
+  ///
+  /// In en, this message translates to:
+  /// **'Try the accessory on {name}'**
+  String shopPreviewPickLabel(String name);
+
+  /// Screen reader label of a shop card the player can afford.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {n, plural, one{{n} coin} other{{n} coins}}'**
+  String shopCardBuyLabel(String name, int n);
+
+  /// Screen reader label of a shop card that costs more than the balance.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins'**
+  String shopCardShortLabel(String name, int n);
+
+  /// Screen reader label of a shop card for something already owned.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, already yours'**
+  String shopCardOwnedLabel(String name);
+
+  /// Screen reader label of a cat card for a cat already adopted.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, already lives in the room'**
+  String shopCardLivesLabel(String name);
+
+  /// Screen reader label of an accessory card (tapping only previews it).
+  ///
+  /// In en, this message translates to:
+  /// **'View {name}'**
+  String shopAccessoryViewLabel(String name);
+
+  /// Screen reader label of the snack buy button.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy {name} for {n, plural, one{{n} coin} other{{n} coins}}'**
+  String shopSnackBuyLabel(String name, int n);
+
+  /// Screen reader label of the snack buy button when coins are missing.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy {name} for {n, plural, one{{n} coin} other{{n} coins}}, not enough coins'**
+  String shopSnackShortLabel(String name, int n);
+
+  /// Screen reader label of the buy confirmation sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy {name}'**
+  String buySheetLabel(String name);
+
+  /// Overline above the title after a successful purchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Success!'**
+  String get buySuccessOverline;
+
+  /// Buy sheet title after buying a room item.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is yours!'**
+  String buySuccessItem(String name);
+
+  /// Buy sheet body after buying a room item.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s in storage. Place it in decorate mode.'**
+  String get buySuccessItemBody;
+
+  /// Buy sheet title after adopting a cat.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} moved into the room!'**
+  String buySuccessKitty(String name);
+
+  /// Buy sheet body after adopting a cat.
+  ///
+  /// In en, this message translates to:
+  /// **'Say hi in the room. Expect some fake indifference first.'**
+  String get buySuccessKittyBody;
+
+  /// Buy sheet title after buying an accessory.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is yours forever!'**
+  String buySuccessAccessory(String name);
+
+  /// Buy sheet body after buying an accessory, with the previewed cat name.
+  ///
+  /// In en, this message translates to:
+  /// **'Put it on {name} now, or move it to another cat any time.'**
+  String buySuccessAccessoryBody(String name);
+
+  /// Note in the accessory buy sheet before paying.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy once, keep forever. Free to put on and take off, for every cat.'**
+  String get buyAccessoryInfo;
+
+  /// Buy sheet button: pay this many coins.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy · {n, plural, one{{n} coin} other{{n} coins}}'**
+  String buyPay(int n);
+
+  /// Buy sheet button: close without buying.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe later'**
+  String get buyLater;
+
+  /// Buy sheet button after a purchase: back to the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep shopping'**
+  String get buyAgain;
+
+  /// Buy sheet button after a purchase: open the room.
+  ///
+  /// In en, this message translates to:
+  /// **'See it in the room'**
+  String get buySeeRoom;
+
+  /// Buy sheet button after buying an accessory: put it on this cat.
+  ///
+  /// In en, this message translates to:
+  /// **'Wear on {name}'**
+  String buyWearOn(String name);
+
+  /// Buy sheet hint when the player cannot afford the item.
+  ///
+  /// In en, this message translates to:
+  /// **'Play a puzzle or watch a rewarded ad to get more coins.'**
+  String get buyNotEnoughHelp;
+
+  /// What a room cat is doing, for its screen reader label.
+  ///
+  /// In en, this message translates to:
+  /// **'{pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} other{sitting still}}'**
+  String kittyPose(String pose);
+
+  /// Screen reader label of a room cat: name and what it is doing.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} {pose}'**
+  String kittyLabel(String name, String pose);
+
+  /// Screen reader label of a room cat wearing an accessory.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} {pose}, wearing a {accessory}'**
+  String kittyLabelAccessory(String name, String pose, String accessory);
 }
 
 class _AppLocalizationsDelegate
