@@ -87,7 +87,7 @@ void main() {
     expect(_inCard('bonus', 'Sekali sehari'), findsOneWidget);
     expect(_inCard('bonus', 'Ambil 20 koin'), findsOneWidget);
     expect(_inCard('ad', 'Tonton iklan'), findsOneWidget);
-    expect(_inCard('ad', 'Sisa 5 kali hari ini'), findsOneWidget);
+    expect(_inCard('ad', 'Sisa 10 kali hari ini'), findsOneWidget);
     expect(_inCard('ad', '+20 koin'), findsOneWidget);
   });
 
@@ -145,7 +145,7 @@ void main() {
     final progress = await _openFromHome(tester, _progress());
     await _tap(tester, find.text('+20 koin'));
     expect(progress.coins, 20);
-    expect(_inCard('ad', 'Sisa 4 kali hari ini'), findsOneWidget);
+    expect(_inCard('ad', 'Sisa 9 kali hari ini'), findsOneWidget);
   });
 
   testWidgets('iklan gagal: saldo tetap, ada pesan', (tester) async {
@@ -156,7 +156,7 @@ void main() {
     await _tap(tester, find.text('+20 koin'));
     expect(progress.coins, 0);
     expect(_inCard('ad', _adFailed), findsOneWidget);
-    expect(_inCard('ad', 'Sisa 5 kali hari ini'), findsOneWidget);
+    expect(_inCard('ad', 'Sisa 10 kali hari ini'), findsOneWidget);
   });
 
   testWidgets('jatah iklan habis: tombol mati', (tester) async {

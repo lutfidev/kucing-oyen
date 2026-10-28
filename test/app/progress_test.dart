@@ -494,14 +494,14 @@ void main() {
     test('iklan selesai: +20, sisa berkurang, tersimpan', () async {
       final ads = FakeRewardedAds();
       final c = testProgressWith(coins: 5, ads: ads, clock: clock);
-      expect(c.adsLeft, 5);
+      expect(c.adsLeft, 10);
       expect(await c.watchAdForCoins(), AdReward.rewarded);
       expect(c.coins, 25);
-      expect(c.adsLeft, 4);
+      expect(c.adsLeft, 9);
       expect(ads.shown, 1);
       final store = c.store as MemoryProgressStore;
       expect(store.coins, 25);
-      expect(store.rewards.adsLeft(dayNumber(now)), 4);
+      expect(store.rewards.adsLeft(dayNumber(now)), 9);
     });
 
     test('iklan gagal: tidak menambah, tidak dihitung', () async {
@@ -512,7 +512,7 @@ void main() {
       );
       expect(await c.watchAdForCoins(), AdReward.failed);
       expect(c.coins, 5);
-      expect(c.adsLeft, 5);
+      expect(c.adsLeft, 10);
       final store = c.store as MemoryProgressStore;
       expect(store.coins, 5);
       expect(store.rewards, DailyRewards.initial);
@@ -524,18 +524,18 @@ void main() {
       expect(c.coins, 0);
     });
 
-    test('lima iklan per hari, besok penuh lagi', () async {
+    test('sepuluh iklan per hari, besok penuh lagi', () async {
       final ads = FakeRewardedAds();
       final c = testProgressWith(ads: ads, clock: clock);
-      for (var i = 0; i < 5; i++) {
+      for (var i = 0; i < 10; i++) {
         expect(await c.watchAdForCoins(), AdReward.rewarded);
       }
-      expect(c.coins, 100);
+      expect(c.coins, 200);
       expect(await c.watchAdForCoins(), AdReward.limitReached);
-      expect(ads.shown, 5);
-      expect(c.coins, 100);
+      expect(ads.shown, 10);
+      expect(c.coins, 200);
       now = DateTime(2026, 10, 20, 8);
-      expect(c.adsLeft, 5);
+      expect(c.adsLeft, 10);
     });
 
     test('iklan: ketukan kedua selama iklan diputar ditolak', () async {
@@ -585,7 +585,7 @@ void main() {
         clock: clock,
       );
       expect(c.canClaimBonus, isFalse);
-      expect(c.adsLeft, 2);
+      expect(c.adsLeft, 7);
     });
   });
 

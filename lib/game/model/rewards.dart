@@ -7,7 +7,7 @@ const dailyBonusCoins = 20;
 const adRewardCoins = 20;
 
 /// Iklan berhadiah koin paling banyak per hari.
-const maxAdsPerDay = 5;
+const maxAdsPerDay = 10;
 
 /// Nomor hari tanggal kalender [time] sejak 1970-01-01. Jamnya diabaikan,
 /// jadi pergantian jam musim panas tidak menggeser hari.

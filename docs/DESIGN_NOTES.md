@@ -158,6 +158,7 @@ Keputusan saat desain (`docs/design/source/`), GDD, data level, dan roadmap tida
 - **Ikon baru** (desain belum punya): `KoIcons.plus` (garis 3,6 seperti centang tebal) dan `KoIcons.gift` (kado, garis 2,2 seperti bohlam).
 - **Chip koin bersama.** Tiga chip koin (Beranda, Lemari Kostum, sheet Petunjuk) disatukan menjadi `KoCoinChip` dengan tiga gaya; tampilan tanpa tombol sama dengan sebelumnya. Ini juga mengerjakan butir "satukan dua `_CoinChip`" dari daftar temuan review langkah 13.
 - **Tanpa token baru**: ukuran dan warna memakai token yang ada (`iconSmall`, `iconTiny`, `dot`, `brick`, `orange`, `success`).
+- **Diubah di langkah 21: 10 iklan per hari** (keputusan pemilik repo saat brainstorming rumah Oyen, lihat "Sebelum langkah 21"), jadi paling banyak 200 koin iklan per hari. Teks "Sisa N kali hari ini" sudah berparameter, jadi hanya angkanya yang berubah.
 
 ## Sebelum langkah 15: pasar, bahasa, iklan, Pengaturan
 
