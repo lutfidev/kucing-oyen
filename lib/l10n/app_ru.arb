@@ -219,6 +219,7 @@
   "replay": "Повтор",
   "arrangeAgain": "Переставить",
   "replayStart": "Начало",
+  "replayPlay": "Автовоспроизведение",
   "backToResult": "Назад к результату",
   "recording": "Запись",
   "replayStepCaption": "Шаг {n}. {text}",

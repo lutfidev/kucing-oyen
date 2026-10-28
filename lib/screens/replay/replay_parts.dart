@@ -196,11 +196,16 @@ class ReplayCaption extends StatelessWidget {
     required this.step,
     required this.text,
     required this.lines,
+    this.announce = true,
   });
 
   final int step;
   final String text;
   final int lines;
+
+  /// Dibacakan pembaca layar tiap berganti. False selama putar otomatis
+  /// supaya caption tidak saling memotong.
+  final bool announce;
 
   /// Caption desain 09 paling panjang satu baris; disiapkan dua seperti
   /// fase jalan.
@@ -267,7 +272,7 @@ class ReplayCaption extends StatelessWidget {
     final label = replayStepLabel(l, step);
     return Semantics(
       container: true,
-      liveRegion: true,
+      liveRegion: announce,
       label: step == 0 ? text : l.replayStepCaption(step, text),
       excludeSemantics: true,
       child: Container(
@@ -522,6 +527,43 @@ class ReplayControls extends StatelessWidget {
           onPressed: onNext,
         ),
       ],
+    );
+  }
+}
+
+/// Tombol bulat oranye putar otomatis/jeda di kiri slider, gaya tombol main
+/// fase jalan (desain 04) seukuran tombol kontrol.
+class ReplayPlayButton extends StatelessWidget {
+  const ReplayPlayButton({
+    super.key,
+    required this.playing,
+    required this.onPressed,
+  });
+
+  final bool playing;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    final l = context.l10n;
+    return KoPressable(
+      onPressed: onPressed,
+      semanticLabel: playing ? l.pause : l.replayPlay,
+      color: c.orange,
+      edgeColor: c.orangeDeep,
+      depth: context.koShadow.press,
+      circle: true,
+      width: s.control,
+      height: s.control,
+      child: Center(
+        child: KoIcon(
+          playing ? KoIcons.pause : KoIcons.resume,
+          size: s.iconMedium,
+          color: c.ink,
+        ),
+      ),
     );
   }
 }

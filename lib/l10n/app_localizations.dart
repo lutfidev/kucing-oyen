@@ -1416,6 +1416,12 @@ abstract class AppLocalizations {
   /// **'Start'**
   String get replayStart;
 
+  /// Replay: button that plays the steps by itself (screen reader label; the pause state uses "pause").
+  ///
+  /// In en, this message translates to:
+  /// **'Autoplay'**
+  String get replayPlay;
+
   /// Replay: back to the result screen.
   ///
   /// In en, this message translates to:

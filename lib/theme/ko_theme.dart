@@ -28,14 +28,28 @@ abstract final class KoTheme {
       outlineVariant: c.lineDeep,
       shadow: c.ink,
     );
+    // Setiap gaya menulis jarak hurufnya sendiri (0 kalau desain tidak
+    // menulis). Tanpa itu, gaya yang null diisi jarak huruf Material (0,25 di
+    // bodyMedium) dan diwariskan ke semua teks lewat DefaultTextStyle.
+    TextStyle flat(TextStyle style) =>
+        style.letterSpacing == null ? style.copyWith(letterSpacing: 0) : style;
+    const none = TextStyle(letterSpacing: 0);
     final textTheme = TextTheme(
-      displayLarge: t.display,
-      displayMedium: t.number,
-      headlineMedium: t.title,
-      titleLarge: t.heading,
-      bodyMedium: t.body,
-      labelLarge: t.label,
-      labelSmall: t.overline,
+      displayLarge: flat(t.display),
+      displayMedium: flat(t.number),
+      displaySmall: none,
+      headlineLarge: none,
+      headlineMedium: flat(t.title),
+      headlineSmall: none,
+      titleLarge: flat(t.heading),
+      titleMedium: none,
+      titleSmall: none,
+      bodyLarge: none,
+      bodyMedium: flat(t.body),
+      bodySmall: none,
+      labelLarge: flat(t.label),
+      labelMedium: none,
+      labelSmall: flat(t.overline),
     ).apply(bodyColor: c.ink, displayColor: c.ink);
 
     return ThemeData(

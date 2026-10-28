@@ -964,6 +964,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get replayStart => 'Início';
 
   @override
+  String get replayPlay => 'Reprodução automática';
+
+  @override
   String get backToResult => 'Voltar ao resultado';
 
   @override

@@ -1222,6 +1222,10 @@
   "@replayStart": {
     "description": "Replay: label of step 0."
   },
+  "replayPlay": "Autoplay",
+  "@replayPlay": {
+    "description": "Replay: button that plays the steps by itself (screen reader label; the pause state uses \"pause\")."
+  },
   "backToResult": "Back to results",
   "@backToResult": {
     "description": "Replay: back to the result screen."

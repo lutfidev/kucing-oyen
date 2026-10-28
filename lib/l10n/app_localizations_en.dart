@@ -951,6 +951,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get replayStart => 'Start';
 
   @override
+  String get replayPlay => 'Autoplay';
+
+  @override
   String get backToResult => 'Back to results';
 
   @override

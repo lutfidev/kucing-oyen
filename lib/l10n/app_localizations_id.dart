@@ -899,6 +899,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get replayStart => 'Awal';
 
   @override
+  String get replayPlay => 'Putar otomatis';
+
+  @override
   String get backToResult => 'Kembali ke hasil';
 
   @override

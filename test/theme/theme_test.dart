@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/theme/theme.dart';
 
+import '../test_helpers.dart';
+
 void main() {
   final theme = KoTheme.light();
 
@@ -177,5 +179,43 @@ void main() {
     );
     expect(captured.koColors, KoColors.standard);
     expect(captured.koSize.button, 64);
+  });
+
+  testWidgets('teks tanpa jarak huruf eksplisit tidak mendapat jarak huruf '
+      'Material', (tester) async {
+    await tester.pumpWidget(testApp(home: const Scaffold(body: Text('x'))));
+    final context = tester.element(find.text('x'));
+    final inherited = DefaultTextStyle.of(context).style;
+    expect(inherited.letterSpacing, 0);
+    const t = KoType.standard;
+    expect(inherited.merge(t.body).letterSpacing, 0);
+    expect(inherited.merge(t.overline).letterSpacing, t.overline.letterSpacing);
+
+    final text = Theme.of(context).textTheme;
+    final mapped = {
+      'displayLarge': (text.displayLarge, t.display),
+      'displayMedium': (text.displayMedium, t.number),
+      'headlineMedium': (text.headlineMedium, t.title),
+      'titleLarge': (text.titleLarge, t.heading),
+      'bodyMedium': (text.bodyMedium, t.body),
+      'labelLarge': (text.labelLarge, t.label),
+      'labelSmall': (text.labelSmall, t.overline),
+    };
+    for (final MapEntry(key: name, value: (style, ko)) in mapped.entries) {
+      expect(style!.letterSpacing, ko.letterSpacing ?? 0, reason: name);
+    }
+    final others = {
+      'displaySmall': text.displaySmall,
+      'headlineLarge': text.headlineLarge,
+      'headlineSmall': text.headlineSmall,
+      'titleMedium': text.titleMedium,
+      'titleSmall': text.titleSmall,
+      'bodyLarge': text.bodyLarge,
+      'bodySmall': text.bodySmall,
+      'labelMedium': text.labelMedium,
+    };
+    for (final MapEntry(key: name, value: style) in others.entries) {
+      expect(style!.letterSpacing, 0, reason: name);
+    }
   });
 }
