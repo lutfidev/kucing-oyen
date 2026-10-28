@@ -22,7 +22,7 @@ class GalleryScreen extends StatelessWidget {
       backLabel: 'Kembali ke Beranda',
       children: [
         GallerySection(
-          title: 'Gambar papan, Oyen, dan suara',
+          title: 'Gambar papan, Oyen, kucing kamar, dan suara',
           child: Wrap(
             spacing: space.s12,
             runSpacing: space.s16,

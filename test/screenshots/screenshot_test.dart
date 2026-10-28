@@ -13,6 +13,13 @@ import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/kucing_game.dart';
+import 'package:kucing_oren/game/model/accessories.dart';
+import 'package:kucing_oren/game/model/home.dart';
+import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/room.dart';
+import 'package:kucing_oren/game/model/snacks.dart';
+import 'package:kucing_oren/screens/shop/shop_screen.dart';
 import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/model/run_clock.dart';
@@ -49,6 +56,7 @@ final _screens = <String, (String, Map<int, int>)>{
   'galeri': (AppRoutes.gallery, const {}),
   'galeri-papan': (AppRoutes.galleryBoard, const {}),
   'galeri-oyen': (AppRoutes.galleryOyen, const {}),
+  'galeri-kucing': (AppRoutes.galleryKitty, const {}),
 };
 
 /// Aplikasi lengkap di [location] dengan progres [best], siap dipotret.
@@ -74,6 +82,7 @@ const _fullPages = <String, (String, double)>{
   'galeri-penuh': (AppRoutes.gallery, 4800),
   'galeri-papan-penuh': (AppRoutes.galleryBoard, 3150),
   'galeri-oyen-penuh': (AppRoutes.galleryOyen, 1900),
+  'galeri-kucing-penuh': (AppRoutes.galleryKitty, 5200),
 };
 
 const _size = Size(390, 844);
@@ -569,4 +578,114 @@ void main() {
       await capture(tester, '$folder/04-fase-jalan-kostum-peci');
     });
   }, skip: !screenshotsEnabled);
+
+  // Toko seperti contoh desain 20: saldo 480, Arang dan Mendung sudah
+  // tinggal di kamar, beberapa barang dan dua aksesoris sudah dimiliki.
+  final shopHome = Home(
+    room: Room(
+      owned: const [
+        RoomItemId.lukisan,
+        RoomItemId.rak,
+        RoomItemId.tiang,
+        RoomItemId.kasur,
+        RoomItemId.karpet,
+        RoomItemId.bola,
+        RoomItemId.jam,
+        RoomItemId.catnip,
+        RoomItemId.kardus,
+      ],
+    ),
+    kitties: const [KittyId.arang, KittyId.mendung],
+    closet: AccessoryCloset(
+      owned: const [AccessoryId.pita, AccessoryId.kalung],
+      wearing: const {KittyId.arang: AccessoryId.kalung},
+    ),
+    pantry: Pantry(const {
+      SnackId.ikanAsin: 3,
+      SnackId.susu: 1,
+      SnackId.biskuit: 5,
+      SnackId.puding: 1,
+    }),
+  );
+
+  Widget shopApp(ShopTab tab, {AppLanguage language = AppLanguage.id}) =>
+      capturable(
+        KucingOrenApp(
+          progress: testProgressWith(
+            best: _designProgress,
+            coins: 480,
+            home: shopHome,
+            language: language,
+          ),
+          initialLocation: AppRoutes.shop(tab: tab),
+        ),
+      );
+
+  for (final MapEntry(key: name, value: tab) in const {
+    '20-toko-barang': ShopTab.items,
+    '20-toko-kucing': ShopTab.kitties,
+    '20-toko-makanan': ShopTab.snacks,
+    '20-toko-aksesoris': ShopTab.accessories,
+  }.entries) {
+    for (final small in [false, true]) {
+      final path = '$folder/$name${small ? '-360x640' : ''}';
+      testWidgets(path, (tester) async {
+        setScreenSize(tester, small ? const Size(360, 640) : _size);
+        await withShadows(() async {
+          await tester.pumpWidget(shopApp(tab));
+          await settle(tester);
+          await capture(tester, path);
+        });
+      }, skip: !screenshotsEnabled);
+    }
+  }
+
+  // Sheet beli: konfirmasi barang, berhasil, dan aksesoris.
+  const sheets = <String, (ShopTab, String, bool)>{
+    '20-toko-beli': (ShopTab.items, 'shop-item-rumah', false),
+    '20-toko-sukses': (ShopTab.items, 'shop-item-tikus', true),
+    '20-toko-beli-aksesoris': (
+      ShopTab.accessories,
+      'shop-accessory-topiPesta',
+      false,
+    ),
+  };
+  for (final MapEntry(key: name, value: (tab, key, buy)) in sheets.entries) {
+    testWidgets('$folder/$name', (tester) async {
+      setScreenSize(tester, _size);
+      await withShadows(() async {
+        await tester.pumpWidget(shopApp(tab));
+        await settle(tester);
+        final card = find.byKey(ValueKey(key));
+        await tester.ensureVisible(card);
+        await settle(tester);
+        await tester.tap(card);
+        await settle(tester);
+        if (tab == ShopTab.accessories) {
+          final open = find.byKey(const ValueKey('shop-preview-buy'));
+          await tester.ensureVisible(open);
+          await tester.tap(open);
+          await settle(tester);
+        }
+        if (buy) {
+          await tester.tap(find.byKey(const ValueKey('buy-confirm')));
+          await settle(tester);
+        }
+        await capture(tester, '$folder/$name');
+      });
+    }, skip: !screenshotsEnabled);
+  }
+
+  // Toko tab Barang per bahasa, dan galeri kucing.
+  for (final language in AppLanguage.supported) {
+    final path = '$folder/${language.name}/20-toko-barang';
+    testWidgets(path, (tester) async {
+      setScreenSize(tester, _size);
+      await withShadows(() async {
+        await tester.pumpWidget(shopApp(ShopTab.items, language: language));
+        await settle(tester);
+        await capture(tester, path);
+      });
+    }, skip: !screenshotsEnabled);
+  }
 }

@@ -23,8 +23,11 @@ class SvgTemplate {
 
   final List<_Element> _nodes;
 
-  /// [vals] berisi nilai `{{nama}}`. Blok `sc-if` tampil kalau nilainya
-  /// `true`; nama yang tidak ada dianggap `false`.
+  /// [vals] berisi nilai `{{nama}}`, juga bersarang lewat titik
+  /// (`{{c.fur}}` = `vals['c']['fur']`). Blok `sc-if` tampil kalau nilainya
+  /// `true`; nama yang tidak ada dianggap `false`. Blok
+  /// `<sc-for list="{{c.p}}" as="q">` mengulang anaknya sekali per elemen
+  /// daftar, dengan elemen itu sebagai nilai `q`.
   SvgDrawing render(Map<String, Object> vals) {
     final ops = <_Op>[];
     _emit(_nodes, vals, const {}, _Affine.identity, ops);
@@ -127,11 +130,21 @@ const _inherited = {
   'text-anchor',
 };
 
-final _placeholder = RegExp(r'\{\{\s*(\w+)\s*\}\}');
+final _placeholder = RegExp(r'\{\{\s*(\w+(?:\.\w+)*)\s*\}\}');
+
+/// Nilai `{{a.b}}`: `vals['a']['b']`, atau null kalau salah satu tidak ada.
+Object? _lookup(String path, Map<String, Object> vals) {
+  Object? value = vals;
+  for (final key in path.split('.')) {
+    if (value is! Map) return null;
+    value = value[key];
+  }
+  return value;
+}
 
 String _resolve(String raw, Map<String, Object> vals) =>
     raw.replaceAllMapped(_placeholder, (m) {
-      final value = vals[m[1]];
+      final value = _lookup(m[1]!, vals);
       if (value == null) throw ArgumentError('Nilai {{${m[1]}}} tidak ada');
       return '$value';
     });
@@ -139,8 +152,19 @@ String _resolve(String raw, Map<String, Object> vals) =>
 bool _condition(String raw, Map<String, Object> vals) {
   final key = _placeholder.firstMatch(raw)?[1];
   if (key == null) throw FormatException('sc-if tanpa {{nama}}', raw);
-  final value = vals[key] ?? false;
+  final value = _lookup(key, vals) ?? false;
   if (value is! bool) throw ArgumentError('{{$key}} harus bool: $value');
+  return value;
+}
+
+/// Daftar `sc-for`: elemennya jadi nilai nama `as` di tiap putaran.
+List<Object?> _list(_Element el, Map<String, Object> vals) {
+  final key = _placeholder.firstMatch(el.attrs['list'] ?? '')?[1];
+  if (key == null) {
+    throw FormatException('sc-for tanpa list="{{nama}}"', el.name);
+  }
+  final value = _lookup(key, vals);
+  if (value is! List) throw ArgumentError('{{$key}} harus List: $value');
   return value;
 }
 
@@ -155,6 +179,15 @@ void _emit(
     if (el.name == 'sc-if') {
       if (_condition(el.attrs['value'] ?? '', vals)) {
         _emit(el.children, vals, inherited, matrix, ops);
+      }
+      continue;
+    }
+    if (el.name == 'sc-for') {
+      final name = el.attrs['as'];
+      if (name == null) throw FormatException('sc-for tanpa as', el.name);
+      for (final item in _list(el, vals)) {
+        if (item == null) continue;
+        _emit(el.children, {...vals, name: item}, inherited, matrix, ops);
       }
       continue;
     }

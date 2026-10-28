@@ -80,6 +80,14 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.successSoft,
     required this.disabledLine,
     required this.priceTag,
+    required this.ownedChip,
+    required this.rareChip,
+    required this.onRareChip,
+    required this.specialChip,
+    required this.onSpecialChip,
+    required this.tabTrack,
+    required this.shortFill,
+    required this.priceMuted,
   });
 
   static const standard = KoColors(
@@ -155,6 +163,14 @@ class KoColors extends ThemeExtension<KoColors> {
     successSoft: Color(0xFFE3F5F1),
     disabledLine: Color(0xFFD8C3A2),
     priceTag: Color(0xFFFFF1C9),
+    ownedChip: Color(0xFFD4F1EB),
+    rareChip: Color(0xFFD6ECF7),
+    onRareChip: Color(0xFF1F5E80),
+    specialChip: Color(0xFFF6DDF0),
+    onSpecialChip: Color(0xFF84336F),
+    tabTrack: Color(0xFFF3E3C6),
+    shortFill: Color(0xFFEADBC2),
+    priceMuted: Color(0xFF8A7259),
   );
 
   /// Latar semua layar.
@@ -345,6 +361,30 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Label harga kostum yang belum dimiliki (desain 12).
   final Color priceTag;
 
+  /// Latar badge "Punyamu" dan "Tinggal di kamar" di Toko (desain 20).
+  final Color ownedChip;
+
+  /// Latar badge aksesoris langka (desain 20).
+  final Color rareChip;
+
+  /// Tulisan di badge langka.
+  final Color onRareChip;
+
+  /// Latar badge aksesoris spesial (desain 20).
+  final Color specialChip;
+
+  /// Tulisan di badge spesial.
+  final Color onSpecialChip;
+
+  /// Latar baris tab Toko dan badge kelangkaan biasa (desain 20).
+  final Color tabTrack;
+
+  /// Tombol beli yang koinnya kurang (desain 20).
+  final Color shortFill;
+
+  /// Angka harga di kartu yang koinnya kurang (desain 20).
+  final Color priceMuted;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -419,6 +459,14 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? successSoft,
     Color? disabledLine,
     Color? priceTag,
+    Color? ownedChip,
+    Color? rareChip,
+    Color? onRareChip,
+    Color? specialChip,
+    Color? onSpecialChip,
+    Color? tabTrack,
+    Color? shortFill,
+    Color? priceMuted,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -493,6 +541,14 @@ class KoColors extends ThemeExtension<KoColors> {
       successSoft: successSoft ?? this.successSoft,
       disabledLine: disabledLine ?? this.disabledLine,
       priceTag: priceTag ?? this.priceTag,
+      ownedChip: ownedChip ?? this.ownedChip,
+      rareChip: rareChip ?? this.rareChip,
+      onRareChip: onRareChip ?? this.onRareChip,
+      specialChip: specialChip ?? this.specialChip,
+      onSpecialChip: onSpecialChip ?? this.onSpecialChip,
+      tabTrack: tabTrack ?? this.tabTrack,
+      shortFill: shortFill ?? this.shortFill,
+      priceMuted: priceMuted ?? this.priceMuted,
     );
   }
 
@@ -573,6 +629,14 @@ class KoColors extends ThemeExtension<KoColors> {
       successSoft: c(successSoft, other.successSoft),
       disabledLine: c(disabledLine, other.disabledLine),
       priceTag: c(priceTag, other.priceTag),
+      ownedChip: c(ownedChip, other.ownedChip),
+      rareChip: c(rareChip, other.rareChip),
+      onRareChip: c(onRareChip, other.onRareChip),
+      specialChip: c(specialChip, other.specialChip),
+      onSpecialChip: c(onSpecialChip, other.onSpecialChip),
+      tabTrack: c(tabTrack, other.tabTrack),
+      shortFill: c(shortFill, other.shortFill),
+      priceMuted: c(priceMuted, other.priceMuted),
     );
   }
 }

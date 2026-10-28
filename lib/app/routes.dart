@@ -1,4 +1,5 @@
 import '../game/model/sounds.dart';
+import '../screens/shop/shop_tab.dart';
 
 /// Path semua layar. Rute bersarang supaya tombol kembali Android mengikuti
 /// alur layar: Beranda → peta babak → level.
@@ -16,11 +17,20 @@ abstract final class AppRoutes {
   /// Galeri sprite Oyen (desain 14, 16).
   static const galleryOyen = '/galeri/oyen';
 
+  /// Galeri sprite kucing kamar, aksesoris, barang, dan camilan
+  /// (desain 21, 22).
+  static const galleryKitty = '/galeri/kucing';
+
   /// Galeri efek suara dan musik, untuk didengar di perangkat.
   static const gallerySound = '/galeri/suara';
 
   /// Lemari Kostum (desain 12), dibuka dari Beranda.
   static const closet = '/kostum';
+
+  /// Toko (desain 20), dibuka dari Beranda. Dengan [tab] langsung membuka
+  /// tab itu (`/toko?tab=accessories`).
+  static String shop({ShopTab? tab}) =>
+      tab == null ? '/toko' : '/toko?tab=${tab.name}';
 
   /// Pengaturan (tidak ada di desain), dibuka dari Beranda.
   static const settings = '/pengaturan';

@@ -297,6 +297,46 @@ abstract final class KoIcons {
     KoIconShape.path('M8.5 5.94A7 7 0 1 0 15.5 5.94'),
     KoIconShape.path('M17.46 10.54 15.5 5.94 20.46 5.34'),
   ], strokeWidth: 2.6);
+
+  /// Tab Toko (desain 20, `TabToko.dc.html`): barang, kucing, aksesoris,
+  /// dan makanan.
+  static const shop = KoIconData([
+    KoIconShape.path('M5 11V8a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v3'),
+    KoIconShape.path('M3 13a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3z'),
+    KoIconShape.path('M6 18v2M18 18v2'),
+  ], strokeWidth: 2.2);
+
+  static const kitty = KoIconData([
+    KoIconShape.path(
+      'M5 9 4.5 3.5 9 6.5h6l4.5-3L19 9c1.3 1.4 2 3 2 4.8C21 17.8 17 20.5 12 '
+      '20.5S3 17.8 3 13.8C3 12 3.7 10.4 5 9z',
+    ),
+    KoIconShape.path('M9 13h.01M15 13h.01M11 16.2l1 .8 1-.8'),
+  ], strokeWidth: 2.2);
+
+  static const accessory = KoIconData([
+    KoIconShape.path('M12 12 4 7v10z'),
+    KoIconShape.path('M12 12l8-5v10z'),
+    KoIconShape.circle(Offset(12, 12), 2.2),
+  ], strokeWidth: 2.2);
+
+  static const snack = KoIconData([
+    KoIconShape.path('M3 12c3-5 9-6 14-2l4-3v10l-4-3c-5 4-11 3-14-2z'),
+    KoIconShape.circle(Offset(8, 11), 0.8),
+  ], strokeWidth: 2.2);
+
+  /// "Lihat di kamar" di sheet beli dan badge "Tinggal di kamar"
+  /// (desain 20).
+  static const house = KoIconData([
+    KoIconShape.path('M4 11 12 4l8 7v9H4z'),
+    KoIconShape.path('M10 20v-5h4v5'),
+  ], strokeWidth: 2.4);
+
+  /// Catatan "milikmu selamanya" di sheet beli aksesoris (desain 20).
+  static const shield = KoIconData([
+    KoIconShape.path('M12 3 4 7v5c0 5 3.4 8 8 9 4.6-1 8-4 8-9V7z'),
+    KoIconShape.path('M8.5 12l2.5 2.5 4.5-5'),
+  ], strokeWidth: 2.4);
 }
 
 /// Menggambar [KoIconData] seukuran [size] dengan warna [color]. Hiasan

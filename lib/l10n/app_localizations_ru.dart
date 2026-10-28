@@ -1212,4 +1212,644 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get licenses => 'Лицензии';
+
+  @override
+  String get roomItemTikus => 'Игрушечная мышка';
+
+  @override
+  String get roomItemTikusDesc =>
+      'Никуда не убегает, но за ней всё равно охотятся.';
+
+  @override
+  String get roomItemAkuarium => 'Аквариум';
+
+  @override
+  String get roomItemAkuariumDesc =>
+      'Развлечение на весь день. Рыбки слегка нервничают.';
+
+  @override
+  String get roomItemRumah => 'Домик для кота';
+
+  @override
+  String get roomItemRumahDesc => 'Свой дом есть, а спит всё равно в коробке.';
+
+  @override
+  String get roomItemKasur => 'Матрасик-подушка';
+
+  @override
+  String get roomItemKasurDesc =>
+      'Мягкий. Используется 60% времени, остальное — коробка.';
+
+  @override
+  String get roomItemCatnip => 'Горшок с котовником';
+
+  @override
+  String get roomItemCatnipDesc => 'Один вдох — и сразу танцы.';
+
+  @override
+  String get roomItemJam => 'Часы-кот';
+
+  @override
+  String get roomItemJamDesc => 'Хвост качается каждую секунду. Гипноз.';
+
+  @override
+  String get roomItemKardus => 'Уютная коробка';
+
+  @override
+  String get roomItemKardusDesc => 'Выбирают коробку, а не то, что в ней было.';
+
+  @override
+  String get roomItemBola => 'Клубок пряжи';
+
+  @override
+  String get roomItemBolaDesc => 'Запутается за 3 секунды. Это фича.';
+
+  @override
+  String get roomItemKarpet => 'Круглый коврик';
+
+  @override
+  String get roomItemKarpetDesc => 'Официальное место для валяния.';
+
+  @override
+  String get roomItemTiang => 'Когтеточка';
+
+  @override
+  String get roomItemTiangDesc => 'Чтобы мамин диван выжил. Надеемся.';
+
+  @override
+  String get roomItemLukisan => 'Картина с рыбой';
+
+  @override
+  String get roomItemLukisanDesc => 'Искусство, от которого хочется есть.';
+
+  @override
+  String get roomItemRak => 'Полка на стене';
+
+  @override
+  String get roomItemRakDesc => 'VIP-место, чтобы следить за всеми.';
+
+  @override
+  String get roomItemPancingan => 'Удочка с перьями';
+
+  @override
+  String get roomItemPancinganDesc =>
+      'За перышком бежит, достоинство остаётся позади.';
+
+  @override
+  String get roomItemLampuBulan => 'Лампа-луна';
+
+  @override
+  String get roomItemLampuBulanDesc => 'Личная луна — ночи ждать не надо.';
+
+  @override
+  String get roomItemBantalIkan => 'Подушка-рыба';
+
+  @override
+  String get roomItemBantalIkanDesc => 'Мягкая, и рыбой пахнет только на вид.';
+
+  @override
+  String get roomItemMonstera => 'Монстера';
+
+  @override
+  String get roomItemMonsteraDesc =>
+      'Листья в дырках. Ойен не виноват. На этот раз.';
+
+  @override
+  String get roomItemTerowongan => 'Кошачий туннель';
+
+  @override
+  String get roomItemTerowonganDesc => 'Заходит кот — выходит со стилем.';
+
+  @override
+  String get roomItemHammock => 'Гамак на окно';
+
+  @override
+  String get roomItemHammockDesc =>
+      'Сон с покачиванием. Проснулся — уже вечер.';
+
+  @override
+  String get roomItemSofaMini => 'Мини-диван';
+
+  @override
+  String get roomItemSofaMiniDesc =>
+      'Свой диван — мамин в безопасности. Якобы.';
+
+  @override
+  String get roomItemJendelaBurung => 'Окно с птицами';
+
+  @override
+  String get roomItemJendelaBurungDesc =>
+      'Кошачье ТВ 24 часа: птицы без рекламы.';
+
+  @override
+  String get roomItemMangkuk => 'Миска с едой';
+
+  @override
+  String get kittyOyen => 'Ойен';
+
+  @override
+  String get kittyOyenDesc => 'Рыжий кот, которого ты будишь на каждом уровне.';
+
+  @override
+  String get kittySalju => 'Снежок';
+
+  @override
+  String get kittySaljuDesc => 'Белоснежный. Пока не найдёт коробку.';
+
+  @override
+  String get kittyTelon => 'Тришка';
+
+  @override
+  String get kittyTelonDesc => 'Три цвета, три настроения в минуту.';
+
+  @override
+  String get kittyArang => 'Уголёк';
+
+  @override
+  String get kittyArangDesc =>
+      'Чёрный как уголь, глаза жёлтые. Мастер прятаться в тенях.';
+
+  @override
+  String get kittyMendung => 'Тучка';
+
+  @override
+  String get kittyMendungDesc => 'Выглядит грустным, а просто хочет спать.';
+
+  @override
+  String get kittyKopiSusu => 'Латте';
+
+  @override
+  String get kittyKopiSusuDesc => 'Сладкий, но горчит, если разбудить.';
+
+  @override
+  String get kittyMochi => 'Моти';
+
+  @override
+  String get kittyMochiDesc =>
+      'Спокойный, мягкий, морда как после игры в грязи.';
+
+  @override
+  String get kittyBos => 'Босс';
+
+  @override
+  String get kittyBosDesc => 'Всегда в костюме. Совещания в каждый приём пищи.';
+
+  @override
+  String get kittyKembang => 'Цветик';
+
+  @override
+  String get kittyKembangDesc => 'Окрас абстрактный, поведение тоже.';
+
+  @override
+  String get accessoryPita => 'Лента';
+
+  @override
+  String get accessoryPitaDesc => 'Просто, мило, надевается легко.';
+
+  @override
+  String get accessoryJepitBunga => 'Заколка-цветок';
+
+  @override
+  String get accessoryJepitBungaDesc => 'Цветёт всегда, поливать не нужно.';
+
+  @override
+  String get accessoryBandana => 'Бандана';
+
+  @override
+  String get accessoryBandanaDesc => 'Ковбойский стиль, спальный район.';
+
+  @override
+  String get accessoryDasiKupu => 'Галстук-бабочка';
+
+  @override
+  String get accessoryDasiKupuDesc => 'Готов к торжеству, приглашения нет.';
+
+  @override
+  String get accessoryKalung => 'Ошейник с бубенчиком';
+
+  @override
+  String get accessoryKalungDesc => 'Звяк-звяк. Попался на каждой краже рыбы.';
+
+  @override
+  String get accessorySyal => 'Вязаный шарф';
+
+  @override
+  String get accessorySyalDesc => 'Тёплый. Связан воображаемой бабушкой.';
+
+  @override
+  String get accessoryBeanie => 'Шапка-бини';
+
+  @override
+  String get accessoryBeanieDesc => 'Тепло. Хотя на улице жара.';
+
+  @override
+  String get accessoryTopiKoki => 'Колпак шефа';
+
+  @override
+  String get accessoryTopiKokiDesc => 'Готовить? Нет. Пробовать? Всегда.';
+
+  @override
+  String get accessoryBaret => 'Берет';
+
+  @override
+  String get accessoryBaretDesc =>
+      'Внезапно художник. Шедевр — порванная подушка.';
+
+  @override
+  String get accessoryKacamata => 'Круглые очки';
+
+  @override
+  String get accessoryKacamataDesc => 'Вид умный. Вазу всё равно уронит.';
+
+  @override
+  String get accessoryHeadphone => 'Наушники';
+
+  @override
+  String get accessoryHeadphoneDesc =>
+      'Слушает лоу-фай, делает вид, что занят.';
+
+  @override
+  String get accessoryTandukRusa => 'Рога оленя';
+
+  @override
+  String get accessoryTandukRusaDesc =>
+      'Олень ненастоящий. Мяукает по-прежнему.';
+
+  @override
+  String get accessoryTopiPesta => 'Праздничный колпак';
+
+  @override
+  String get accessoryTopiPestaDesc =>
+      'Если ты кот, каждый день — день рождения.';
+
+  @override
+  String get accessoryTopiPenyihir => 'Шляпа волшебника';
+
+  @override
+  String get accessoryTopiPenyihirDesc => 'Умеет доставать рыбу. Говорят.';
+
+  @override
+  String get accessoryMahkota => 'Венок из цветов';
+
+  @override
+  String get accessoryMahkotaDesc => 'Королева комнаты. Цветы не есть.';
+
+  @override
+  String get accessoryMahkotaRaja => 'Королевская корона';
+
+  @override
+  String get accessoryMahkotaRajaDesc =>
+      'Король комнаты. Налоги платят поглаживаниями.';
+
+  @override
+  String get snackIkanAsin => 'Солёная рыба';
+
+  @override
+  String get snackIkanAsinDesc => 'Солёная, вкусная, запах слышен соседям.';
+
+  @override
+  String get snackSusu => 'Молоко';
+
+  @override
+  String get snackSusuDesc => 'Маленькое блюдце. Усы становятся белыми.';
+
+  @override
+  String get snackTuna => 'Тунец в банке';
+
+  @override
+  String get snackTunaDesc => 'Звук банки собирает всех кошек.';
+
+  @override
+  String get snackBiskuit => 'Кошачье печенье';
+
+  @override
+  String get snackBiskuitDesc => 'Хрустит и дешёвое. Сытости мало.';
+
+  @override
+  String get snackPuding => 'Рыбный пудинг';
+
+  @override
+  String get snackPudingDesc => 'Шикарно. Очень сытно и очень радостно.';
+
+  @override
+  String get rarityCommon => 'Обычный';
+
+  @override
+  String get rarityRare => 'Редкий';
+
+  @override
+  String get raritySpecial => 'Особый';
+
+  @override
+  String get shop => 'Магазин';
+
+  @override
+  String get shopTabItems => 'Вещи';
+
+  @override
+  String get shopTabKitties => 'Коты';
+
+  @override
+  String get shopTabAccessories => 'Аксессуары';
+
+  @override
+  String get shopTabSnacks => 'Еда';
+
+  @override
+  String get shopKittyIntro =>
+      'Все коты живут в комнате Ойена. Ойен согласен. Вроде бы.';
+
+  @override
+  String get shopSnackIntro =>
+      'Лакомства идут в запас. Угощай из карточки кота в комнате.';
+
+  @override
+  String get shopOwnedTag => 'Твоё';
+
+  @override
+  String get shopLivesHere => 'Живёт в комнате';
+
+  @override
+  String get shopNotEnoughTag => 'Мало монет';
+
+  @override
+  String shopShortBy(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Не хватает $n монеты',
+      many: 'Не хватает $n монет',
+      few: 'Не хватает $n монет',
+      one: 'Не хватает $n монеты',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String shopAdopt(int n) {
+    return 'Взять · $n';
+  }
+
+  @override
+  String shopBuyShort(int n) {
+    return 'Купить · $n';
+  }
+
+  @override
+  String shopStock(int n) {
+    return 'Запас: $n';
+  }
+
+  @override
+  String get shopTryOn => 'Примерить на:';
+
+  @override
+  String shopPreviewOf(String name) {
+    return 'Примерка · $name';
+  }
+
+  @override
+  String get shopWearFree => 'Надеть · Бесплатно';
+
+  @override
+  String get shopRemoveFree => 'Снять · Бесплатно';
+
+  @override
+  String get shopPlayFirst => 'Сначала головоломка — монеты придут.';
+
+  @override
+  String shopWornBy(String name) {
+    return 'Носит $name';
+  }
+
+  @override
+  String get shopFlashNice => 'Красота!';
+
+  @override
+  String get shopFlashRemoved => 'Снято, бесплатно';
+
+  @override
+  String shopFlashSpent(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '-$n монеты',
+      many: '-$n монет',
+      few: '-$n монеты',
+      one: '-$n монета',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String shopPreviewPickLabel(String name) {
+    return 'Примерить аксессуар на $name';
+  }
+
+  @override
+  String shopCardBuyLabel(String name, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n монеты',
+      many: '$n монет',
+      few: '$n монеты',
+      one: '$n монета',
+    );
+    return '$name, $_temp0';
+  }
+
+  @override
+  String shopCardShortLabel(String name, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n монеты',
+      many: '$n монет',
+      few: '$n монеты',
+      one: '$n монета',
+    );
+    return '$name, $_temp0, не хватает монет';
+  }
+
+  @override
+  String shopCardOwnedLabel(String name) {
+    return '$name, уже твоё';
+  }
+
+  @override
+  String shopCardLivesLabel(String name) {
+    return '$name, уже живёт в комнате';
+  }
+
+  @override
+  String shopSnackBuyLabel(String name, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n монеты',
+      many: '$n монет',
+      few: '$n монеты',
+      one: '$n монету',
+    );
+    return 'Купить $name за $_temp0';
+  }
+
+  @override
+  String shopSnackShortLabel(String name, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n монеты',
+      many: '$n монет',
+      few: '$n монеты',
+      one: '$n монету',
+    );
+    return 'Купить $name за $_temp0, не хватает монет';
+  }
+
+  @override
+  String buySheetLabel(String name) {
+    return 'Купить $name';
+  }
+
+  @override
+  String get buySuccessOverline => 'Готово!';
+
+  @override
+  String buySuccessItem(String name) {
+    return '$name теперь твой!';
+  }
+
+  @override
+  String get buySuccessItemBody =>
+      'Уже стоит в комнате. Переставить можно в режиме «Украшать».';
+
+  @override
+  String buySuccessKitty(String name) {
+    return '$name переехал в комнату!';
+  }
+
+  @override
+  String get buySuccessKittyBody =>
+      'Поздоровайся в комнате. Сначала сделает вид, что ему всё равно.';
+
+  @override
+  String buySuccessAccessory(String name) {
+    return '$name теперь твой навсегда!';
+  }
+
+  @override
+  String buySuccessAccessoryBody(String name) {
+    return 'Надень на $name сейчас или переставь другому коту когда захочешь.';
+  }
+
+  @override
+  String get buyAccessoryInfo =>
+      'Покупаешь раз — остаётся навсегда. Надевать и снимать бесплатно, на любого кота.';
+
+  @override
+  String buyPay(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n монеты',
+      many: '$n монет',
+      few: '$n монеты',
+      one: '$n монета',
+    );
+    return 'Купить · $_temp0';
+  }
+
+  @override
+  String get buyLater => 'Потом';
+
+  @override
+  String get buyAgain => 'Купить ещё';
+
+  @override
+  String get buySeeRoom => 'Посмотреть в комнате';
+
+  @override
+  String buyWearOn(String name) {
+    return 'Надеть на $name';
+  }
+
+  @override
+  String get buyNotEnoughHelp =>
+      'Пройди головоломку или посмотри рекламу за награду, чтобы получить монеты.';
+
+  @override
+  String kittyPose(String pose) {
+    String _temp0 = intl.Intl.selectLogic(pose, {
+      'idle': 'сидит спокойно',
+      'lick': 'облизывает лапку',
+      'walk1': 'идёт',
+      'walk2': 'идёт',
+      'sleep': 'спит свернувшись',
+      'eat': 'ест из миски',
+      'play': 'играет с игрушкой',
+      'scratch': 'точит когти о когтеточку',
+      'happy': 'радуется',
+      'lesu': 'вялый',
+      'rebah': 'лежит и отдыхает',
+      'petted': 'мурчит от поглаживаний',
+      'other': 'сидит спокойно',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String kittyLabel(String name, String pose) {
+    return '$name $pose';
+  }
+
+  @override
+  String kittyLabelAccessory(String name, String pose, String accessory) {
+    return '$name $pose, в $accessory';
+  }
+
+  @override
+  String shopSnackFullLabel(String name) {
+    return 'Купить $name, запас полон';
+  }
+
+  @override
+  String get shopStockFull => 'Запас полон';
+
+  @override
+  String shopAccessoryBuyLabel(String name, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n монеты',
+      many: '$n монет',
+      few: '$n монеты',
+      one: '$n монета',
+    );
+    return 'Посмотреть $name, $_temp0';
+  }
+
+  @override
+  String shopAccessoryShortLabel(String name, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n монеты',
+      many: '$n монет',
+      few: '$n монеты',
+      one: '$n монета',
+    );
+    return 'Посмотреть $name, $_temp0, не хватает монет';
+  }
+
+  @override
+  String shopAccessoryOwnedLabel(String name) {
+    return 'Посмотреть $name, твоё';
+  }
+
+  @override
+  String shopAccessoryWornLabel(String name, String who) {
+    return 'Посмотреть $name, твоё, носит $who';
+  }
 }

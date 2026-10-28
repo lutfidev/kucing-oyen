@@ -1498,5 +1498,812 @@
   "licenses": "Licenses",
   "@licenses": {
     "description": "Button: open the licenses page."
+  },
+  "roomItemTikus": "Toy Mouse",
+  "@roomItemTikus": {
+    "description": "Name of the room item \"Toy Mouse\"."
+  },
+  "roomItemTikusDesc": "Never runs away, still gets chased.",
+  "@roomItemTikusDesc": {
+    "description": "Shop description of the room item \"Toy Mouse\"."
+  },
+  "roomItemAkuarium": "Aquarium",
+  "@roomItemAkuarium": {
+    "description": "Name of the room item \"Aquarium\"."
+  },
+  "roomItemAkuariumDesc": "All-day entertainment. The fish are a bit nervous.",
+  "@roomItemAkuariumDesc": {
+    "description": "Shop description of the room item \"Aquarium\"."
+  },
+  "roomItemRumah": "Cat House",
+  "@roomItemRumah": {
+    "description": "Name of the room item \"Cat House\"."
+  },
+  "roomItemRumahDesc": "Has its own house, still sleeps in the box.",
+  "@roomItemRumahDesc": {
+    "description": "Shop description of the room item \"Cat House\"."
+  },
+  "roomItemKasur": "Cushion Bed",
+  "@roomItemKasur": {
+    "description": "Name of the room item \"Cushion Bed\"."
+  },
+  "roomItemKasurDesc": "Soft. Used 60% of the time, the rest is box.",
+  "@roomItemKasurDesc": {
+    "description": "Shop description of the room item \"Cushion Bed\"."
+  },
+  "roomItemCatnip": "Catnip Pot",
+  "@roomItemCatnip": {
+    "description": "Name of the room item \"Catnip Pot\"."
+  },
+  "roomItemCatnipDesc": "One sniff and the dancing starts.",
+  "@roomItemCatnipDesc": {
+    "description": "Shop description of the room item \"Catnip Pot\"."
+  },
+  "roomItemJam": "Cat Clock",
+  "@roomItemJam": {
+    "description": "Name of the room item \"Cat Clock\"."
+  },
+  "roomItemJamDesc": "The tail swings every second. Hypnotic.",
+  "@roomItemJamDesc": {
+    "description": "Shop description of the room item \"Cat Clock\"."
+  },
+  "roomItemKardus": "Cozy Box",
+  "@roomItemKardus": {
+    "description": "Name of the room item \"Cozy Box\"."
+  },
+  "roomItemKardusDesc": "It's the box that gets picked, not what came in it.",
+  "@roomItemKardusDesc": {
+    "description": "Shop description of the room item \"Cozy Box\"."
+  },
+  "roomItemBola": "Yarn Ball",
+  "@roomItemBola": {
+    "description": "Name of the room item \"Yarn Ball\"."
+  },
+  "roomItemBolaDesc": "Tangled in 3 seconds. That's the feature.",
+  "@roomItemBolaDesc": {
+    "description": "Shop description of the room item \"Yarn Ball\"."
+  },
+  "roomItemKarpet": "Round Rug",
+  "@roomItemKarpet": {
+    "description": "Name of the room item \"Round Rug\"."
+  },
+  "roomItemKarpetDesc": "The official rolling-around spot.",
+  "@roomItemKarpetDesc": {
+    "description": "Shop description of the room item \"Round Rug\"."
+  },
+  "roomItemTiang": "Scratching Post",
+  "@roomItemTiang": {
+    "description": "Name of the room item \"Scratching Post\"."
+  },
+  "roomItemTiangDesc": "So Mom's sofa survives. Hopefully.",
+  "@roomItemTiangDesc": {
+    "description": "Shop description of the room item \"Scratching Post\"."
+  },
+  "roomItemLukisan": "Fish Painting",
+  "@roomItemLukisan": {
+    "description": "Name of the room item \"Fish Painting\"."
+  },
+  "roomItemLukisanDesc": "Art that makes you hungry.",
+  "@roomItemLukisanDesc": {
+    "description": "Shop description of the room item \"Fish Painting\"."
+  },
+  "roomItemRak": "Wall Shelf",
+  "@roomItemRak": {
+    "description": "Name of the room item \"Wall Shelf\"."
+  },
+  "roomItemRakDesc": "VIP seat for watching everyone.",
+  "@roomItemRakDesc": {
+    "description": "Shop description of the room item \"Wall Shelf\"."
+  },
+  "roomItemPancingan": "Feather Wand",
+  "@roomItemPancingan": {
+    "description": "Name of the room item \"Feather Wand\"."
+  },
+  "roomItemPancinganDesc": "Chases the feather, leaves its dignity behind.",
+  "@roomItemPancinganDesc": {
+    "description": "Shop description of the room item \"Feather Wand\"."
+  },
+  "roomItemLampuBulan": "Moon Lamp",
+  "@roomItemLampuBulan": {
+    "description": "Name of the room item \"Moon Lamp\"."
+  },
+  "roomItemLampuBulanDesc": "A private moon, no need to wait for night.",
+  "@roomItemLampuBulanDesc": {
+    "description": "Shop description of the room item \"Moon Lamp\"."
+  },
+  "roomItemBantalIkan": "Fish Pillow",
+  "@roomItemBantalIkan": {
+    "description": "Name of the room item \"Fish Pillow\"."
+  },
+  "roomItemBantalIkanDesc": "Soft, and fishy only to look at.",
+  "@roomItemBantalIkanDesc": {
+    "description": "Shop description of the room item \"Fish Pillow\"."
+  },
+  "roomItemMonstera": "Monstera Plant",
+  "@roomItemMonstera": {
+    "description": "Name of the room item \"Monstera Plant\"."
+  },
+  "roomItemMonsteraDesc": "The leaves have holes. Not Oyen's doing. This time.",
+  "@roomItemMonsteraDesc": {
+    "description": "Shop description of the room item \"Monstera Plant\"."
+  },
+  "roomItemTerowongan": "Cat Tunnel",
+  "@roomItemTerowongan": {
+    "description": "Name of the room item \"Cat Tunnel\"."
+  },
+  "roomItemTerowonganDesc": "One cat goes in, style comes out.",
+  "@roomItemTerowonganDesc": {
+    "description": "Shop description of the room item \"Cat Tunnel\"."
+  },
+  "roomItemHammock": "Window Hammock",
+  "@roomItemHammock": {
+    "description": "Name of the room item \"Window Hammock\"."
+  },
+  "roomItemHammockDesc": "Naps with a swing. Wake up and it's evening.",
+  "@roomItemHammockDesc": {
+    "description": "Shop description of the room item \"Window Hammock\"."
+  },
+  "roomItemSofaMini": "Mini Sofa",
+  "@roomItemSofaMini": {
+    "description": "Name of the room item \"Mini Sofa\"."
+  },
+  "roomItemSofaMiniDesc": "Its own sofa, so Mom's is safe. Allegedly.",
+  "@roomItemSofaMiniDesc": {
+    "description": "Shop description of the room item \"Mini Sofa\"."
+  },
+  "roomItemJendelaBurung": "Bird Window",
+  "@roomItemJendelaBurung": {
+    "description": "Name of the room item \"Bird Window\"."
+  },
+  "roomItemJendelaBurungDesc": "24-hour cat TV, all birds, no ads.",
+  "@roomItemJendelaBurungDesc": {
+    "description": "Shop description of the room item \"Bird Window\"."
+  },
+  "roomItemMangkuk": "Food bowl",
+  "@roomItemMangkuk": {
+    "description": "Name of the room item \"Food bowl\"."
+  },
+  "kittyOyen": "Oyen",
+  "@kittyOyen": {
+    "description": "Name of the collection cat \"Oyen\"."
+  },
+  "kittyOyenDesc": "The ginger cat you wake up every level.",
+  "@kittyOyenDesc": {
+    "description": "Shop description of the collection cat \"Oyen\"."
+  },
+  "kittySalju": "Snowy",
+  "@kittySalju": {
+    "description": "Name of the collection cat \"Snowy\"."
+  },
+  "kittySaljuDesc": "Spotless white. Stays that way until it finds a box.",
+  "@kittySaljuDesc": {
+    "description": "Shop description of the collection cat \"Snowy\"."
+  },
+  "kittyTelon": "Patches",
+  "@kittyTelon": {
+    "description": "Name of the collection cat \"Patches\"."
+  },
+  "kittyTelonDesc": "Three colors, three moods a minute.",
+  "@kittyTelonDesc": {
+    "description": "Shop description of the collection cat \"Patches\"."
+  },
+  "kittyArang": "Charcoal",
+  "@kittyArang": {
+    "description": "Name of the collection cat \"Charcoal\"."
+  },
+  "kittyArangDesc": "Deep black, yellow eyes. Expert shadow hider.",
+  "@kittyArangDesc": {
+    "description": "Shop description of the collection cat \"Charcoal\"."
+  },
+  "kittyMendung": "Cloudy",
+  "@kittyMendung": {
+    "description": "Name of the collection cat \"Cloudy\"."
+  },
+  "kittyMendungDesc": "Looks sad, is just sleepy.",
+  "@kittyMendungDesc": {
+    "description": "Shop description of the collection cat \"Cloudy\"."
+  },
+  "kittyKopiSusu": "Latte",
+  "@kittyKopiSusu": {
+    "description": "Name of the collection cat \"Latte\"."
+  },
+  "kittyKopiSusuDesc": "Sweet, a little bitter when woken up.",
+  "@kittyKopiSusuDesc": {
+    "description": "Shop description of the collection cat \"Latte\"."
+  },
+  "kittyMochi": "Mochi",
+  "@kittyMochi": {
+    "description": "Name of the collection cat \"Mochi\"."
+  },
+  "kittyMochiDesc": "Calm, squishy, face like it played in mud.",
+  "@kittyMochiDesc": {
+    "description": "Shop description of the collection cat \"Mochi\"."
+  },
+  "kittyBos": "Boss",
+  "@kittyBos": {
+    "description": "Name of the collection cat \"Boss\"."
+  },
+  "kittyBosDesc": "Always in a suit. Meetings at every mealtime.",
+  "@kittyBosDesc": {
+    "description": "Shop description of the collection cat \"Boss\"."
+  },
+  "kittyKembang": "Blossom",
+  "@kittyKembang": {
+    "description": "Name of the collection cat \"Blossom\"."
+  },
+  "kittyKembangDesc": "Abstract markings, abstract behavior.",
+  "@kittyKembangDesc": {
+    "description": "Shop description of the collection cat \"Blossom\"."
+  },
+  "accessoryPita": "Ribbon",
+  "@accessoryPita": {
+    "description": "Name of the accessory \"Ribbon\"."
+  },
+  "accessoryPitaDesc": "Simple, sweet, easy to put on.",
+  "@accessoryPitaDesc": {
+    "description": "Shop description of the accessory \"Ribbon\"."
+  },
+  "accessoryJepitBunga": "Flower Clip",
+  "@accessoryJepitBunga": {
+    "description": "Name of the accessory \"Flower Clip\"."
+  },
+  "accessoryJepitBungaDesc": "Always in bloom, never needs water.",
+  "@accessoryJepitBungaDesc": {
+    "description": "Shop description of the accessory \"Flower Clip\"."
+  },
+  "accessoryBandana": "Bandana",
+  "@accessoryBandana": {
+    "description": "Name of the accessory \"Bandana\"."
+  },
+  "accessoryBandanaDesc": "Cowboy style, suburban edition.",
+  "@accessoryBandanaDesc": {
+    "description": "Shop description of the accessory \"Bandana\"."
+  },
+  "accessoryDasiKupu": "Bow Tie",
+  "@accessoryDasiKupu": {
+    "description": "Name of the accessory \"Bow Tie\"."
+  },
+  "accessoryDasiKupuDesc": "Ready for the party, no invitation.",
+  "@accessoryDasiKupuDesc": {
+    "description": "Shop description of the accessory \"Bow Tie\"."
+  },
+  "accessoryKalung": "Bell Collar",
+  "@accessoryKalung": {
+    "description": "Name of the accessory \"Bell Collar\"."
+  },
+  "accessoryKalungDesc": "Jingle jingle. Busted on every fish heist.",
+  "@accessoryKalungDesc": {
+    "description": "Shop description of the accessory \"Bell Collar\"."
+  },
+  "accessorySyal": "Knit Scarf",
+  "@accessorySyal": {
+    "description": "Name of the accessory \"Knit Scarf\"."
+  },
+  "accessorySyalDesc": "Warm. Knitted by an imaginary grandma.",
+  "@accessorySyalDesc": {
+    "description": "Shop description of the accessory \"Knit Scarf\"."
+  },
+  "accessoryBeanie": "Beanie",
+  "@accessoryBeanie": {
+    "description": "Name of the accessory \"Beanie\"."
+  },
+  "accessoryBeanieDesc": "Warm. Even though it's hot outside.",
+  "@accessoryBeanieDesc": {
+    "description": "Shop description of the accessory \"Beanie\"."
+  },
+  "accessoryTopiKoki": "Chef Hat",
+  "@accessoryTopiKoki": {
+    "description": "Name of the accessory \"Chef Hat\"."
+  },
+  "accessoryTopiKokiDesc": "Cooking? No. Tasting? Always.",
+  "@accessoryTopiKokiDesc": {
+    "description": "Shop description of the accessory \"Chef Hat\"."
+  },
+  "accessoryBaret": "Beret",
+  "@accessoryBaret": {
+    "description": "Name of the accessory \"Beret\"."
+  },
+  "accessoryBaretDesc": "Instant artist. Masterpiece: a torn pillow.",
+  "@accessoryBaretDesc": {
+    "description": "Shop description of the accessory \"Beret\"."
+  },
+  "accessoryKacamata": "Round Glasses",
+  "@accessoryKacamata": {
+    "description": "Name of the accessory \"Round Glasses\"."
+  },
+  "accessoryKacamataDesc": "Looks smart. Still knocks the vase over.",
+  "@accessoryKacamataDesc": {
+    "description": "Shop description of the accessory \"Round Glasses\"."
+  },
+  "accessoryHeadphone": "Headphones",
+  "@accessoryHeadphone": {
+    "description": "Name of the accessory \"Headphones\"."
+  },
+  "accessoryHeadphoneDesc": "Lo-fi on, pretending to be busy.",
+  "@accessoryHeadphoneDesc": {
+    "description": "Shop description of the accessory \"Headphones\"."
+  },
+  "accessoryTandukRusa": "Reindeer Antlers",
+  "@accessoryTandukRusa": {
+    "description": "Name of the accessory \"Reindeer Antlers\"."
+  },
+  "accessoryTandukRusaDesc": "A pretend reindeer. Still meows.",
+  "@accessoryTandukRusaDesc": {
+    "description": "Shop description of the accessory \"Reindeer Antlers\"."
+  },
+  "accessoryTopiPesta": "Party Hat",
+  "@accessoryTopiPesta": {
+    "description": "Name of the accessory \"Party Hat\"."
+  },
+  "accessoryTopiPestaDesc": "Every day is a birthday when you're a cat.",
+  "@accessoryTopiPestaDesc": {
+    "description": "Shop description of the accessory \"Party Hat\"."
+  },
+  "accessoryTopiPenyihir": "Wizard Hat",
+  "@accessoryTopiPenyihir": {
+    "description": "Name of the accessory \"Wizard Hat\"."
+  },
+  "accessoryTopiPenyihirDesc": "Can make fish appear. Allegedly.",
+  "@accessoryTopiPenyihirDesc": {
+    "description": "Shop description of the accessory \"Wizard Hat\"."
+  },
+  "accessoryMahkota": "Flower Crown",
+  "@accessoryMahkota": {
+    "description": "Name of the accessory \"Flower Crown\"."
+  },
+  "accessoryMahkotaDesc": "Queen of the room. Don't eat the flowers.",
+  "@accessoryMahkotaDesc": {
+    "description": "Shop description of the accessory \"Flower Crown\"."
+  },
+  "accessoryMahkotaRaja": "King's Crown",
+  "@accessoryMahkotaRaja": {
+    "description": "Name of the accessory \"King's Crown\"."
+  },
+  "accessoryMahkotaRajaDesc": "King of the room. Taxes paid in head scratches.",
+  "@accessoryMahkotaRajaDesc": {
+    "description": "Shop description of the accessory \"King's Crown\"."
+  },
+  "snackIkanAsin": "Salted Fish",
+  "@snackIkanAsin": {
+    "description": "Name of the snack \"Salted Fish\"."
+  },
+  "snackIkanAsinDesc": "Salty, savory, the neighbors can smell it.",
+  "@snackIkanAsinDesc": {
+    "description": "Shop description of the snack \"Salted Fish\"."
+  },
+  "snackSusu": "Milk",
+  "@snackSusu": {
+    "description": "Name of the snack \"Milk\"."
+  },
+  "snackSusuDesc": "A small saucer. White whiskers guaranteed.",
+  "@snackSusuDesc": {
+    "description": "Shop description of the snack \"Milk\"."
+  },
+  "snackTuna": "Canned Tuna",
+  "@snackTuna": {
+    "description": "Name of the snack \"Canned Tuna\"."
+  },
+  "snackTunaDesc": "The can opening summons every cat.",
+  "@snackTunaDesc": {
+    "description": "Shop description of the snack \"Canned Tuna\"."
+  },
+  "snackBiskuit": "Cat Biscuits",
+  "@snackBiskuit": {
+    "description": "Name of the snack \"Cat Biscuits\"."
+  },
+  "snackBiskuitDesc": "Crunchy and cheap. Not very filling.",
+  "@snackBiskuitDesc": {
+    "description": "Shop description of the snack \"Cat Biscuits\"."
+  },
+  "snackPuding": "Fish Pudding",
+  "@snackPuding": {
+    "description": "Name of the snack \"Fish Pudding\"."
+  },
+  "snackPudingDesc": "Fancy. Very filling, very happy.",
+  "@snackPudingDesc": {
+    "description": "Shop description of the snack \"Fish Pudding\"."
+  },
+  "rarityCommon": "Common",
+  "@rarityCommon": {
+    "description": "Accessory rarity badge in the shop: common."
+  },
+  "rarityRare": "Rare",
+  "@rarityRare": {
+    "description": "Accessory rarity badge in the shop: rare."
+  },
+  "raritySpecial": "Special",
+  "@raritySpecial": {
+    "description": "Accessory rarity badge in the shop: special."
+  },
+  "shop": "Shop",
+  "@shop": {
+    "description": "Shop screen title, and the menu button that opens it."
+  },
+  "shopTabItems": "Items",
+  "@shopTabItems": {
+    "description": "Shop tab: room items."
+  },
+  "shopTabKitties": "Cats",
+  "@shopTabKitties": {
+    "description": "Shop tab: collection cats."
+  },
+  "shopTabAccessories": "Accessories",
+  "@shopTabAccessories": {
+    "description": "Shop tab: accessories."
+  },
+  "shopTabSnacks": "Food",
+  "@shopTabSnacks": {
+    "description": "Shop tab: snacks."
+  },
+  "shopKittyIntro": "Every cat shares the room with Oyen. Oyen agrees. Probably.",
+  "@shopKittyIntro": {
+    "description": "Line above the cat cards in the shop."
+  },
+  "shopSnackIntro": "Snacks go into your stock. Hand them out from the cat card in the room.",
+  "@shopSnackIntro": {
+    "description": "Line above the snack cards in the shop."
+  },
+  "shopOwnedTag": "Yours",
+  "@shopOwnedTag": {
+    "description": "Shop card badge: already owned."
+  },
+  "shopLivesHere": "Lives in the room",
+  "@shopLivesHere": {
+    "description": "Shop card badge: this cat already lives in the room."
+  },
+  "shopNotEnoughTag": "Not enough coins",
+  "@shopNotEnoughTag": {
+    "description": "Shop card badge: the player cannot afford this yet."
+  },
+  "shopShortBy": "{n, plural, one{{n} coin short} other{{n} coins short}}",
+  "@shopShortBy": {
+    "description": "How many coins are still missing for this cat.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopAdopt": "Adopt · {n}",
+  "@shopAdopt": {
+    "description": "Shop cat card button: adopt for this many coins.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopBuyShort": "Buy · {n}",
+  "@shopBuyShort": {
+    "description": "Shop snack card button: buy for this many coins.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopStock": "Stock: {n}",
+  "@shopStock": {
+    "description": "Shop snack card: how many are in stock.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopTryOn": "Try on:",
+  "@shopTryOn": {
+    "description": "Label before the row of cats used for the accessory preview."
+  },
+  "shopPreviewOf": "Preview · {name}",
+  "@shopPreviewOf": {
+    "description": "Accessory preview panel overline, with the cat name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopWearFree": "Wear · Free",
+  "@shopWearFree": {
+    "description": "Button: put the owned accessory on the previewed cat, for free."
+  },
+  "shopRemoveFree": "Take off · Free",
+  "@shopRemoveFree": {
+    "description": "Button: take the accessory off the previewed cat, for free."
+  },
+  "shopPlayFirst": "Play a puzzle first, the coins will follow.",
+  "@shopPlayFirst": {
+    "description": "Hint under the accessory button when coins are missing."
+  },
+  "shopWornBy": "Worn by {name}",
+  "@shopWornBy": {
+    "description": "Accessory card note: which cats wear it (comma separated names).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopFlashNice": "Looking good!",
+  "@shopFlashNice": {
+    "description": "Cheer shown after putting an accessory on a cat."
+  },
+  "shopFlashRemoved": "Off, free of charge",
+  "@shopFlashRemoved": {
+    "description": "Note shown after taking an accessory off."
+  },
+  "shopFlashSpent": "{n, plural, one{-{n} coin} other{-{n} coins}}",
+  "@shopFlashSpent": {
+    "description": "Floating note after buying a snack: coins spent.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopPreviewPickLabel": "Try the accessory on {name}",
+  "@shopPreviewPickLabel": {
+    "description": "Screen reader label of a cat button in the preview row.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopCardBuyLabel": "{name}, {n, plural, one{{n} coin} other{{n} coins}}",
+  "@shopCardBuyLabel": {
+    "description": "Screen reader label of a shop card the player can afford.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopCardShortLabel": "{name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins",
+  "@shopCardShortLabel": {
+    "description": "Screen reader label of a shop card that costs more than the balance.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopCardOwnedLabel": "{name}, already yours",
+  "@shopCardOwnedLabel": {
+    "description": "Screen reader label of a shop card for something already owned.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopCardLivesLabel": "{name}, already lives in the room",
+  "@shopCardLivesLabel": {
+    "description": "Screen reader label of a cat card for a cat already adopted.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopSnackBuyLabel": "Buy {name} for {n, plural, one{{n} coin} other{{n} coins}}",
+  "@shopSnackBuyLabel": {
+    "description": "Screen reader label of the snack buy button.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopSnackShortLabel": "Buy {name} for {n, plural, one{{n} coin} other{{n} coins}}, not enough coins",
+  "@shopSnackShortLabel": {
+    "description": "Screen reader label of the snack buy button when coins are missing.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "buySheetLabel": "Buy {name}",
+  "@buySheetLabel": {
+    "description": "Screen reader label of the buy confirmation sheet.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "buySuccessOverline": "Success!",
+  "@buySuccessOverline": {
+    "description": "Overline above the title after a successful purchase."
+  },
+  "buySuccessItem": "{name} is yours!",
+  "@buySuccessItem": {
+    "description": "Buy sheet title after buying a room item.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "buySuccessItemBody": "It's in the room already. Move it around in decorate mode.",
+  "@buySuccessItemBody": {
+    "description": "Buy sheet body after buying a room item."
+  },
+  "buySuccessKitty": "{name} moved into the room!",
+  "@buySuccessKitty": {
+    "description": "Buy sheet title after adopting a cat.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "buySuccessKittyBody": "Say hi in the room. Expect some fake indifference first.",
+  "@buySuccessKittyBody": {
+    "description": "Buy sheet body after adopting a cat."
+  },
+  "buySuccessAccessory": "{name} is yours forever!",
+  "@buySuccessAccessory": {
+    "description": "Buy sheet title after buying an accessory.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "buySuccessAccessoryBody": "Put it on {name} now, or move it to another cat any time.",
+  "@buySuccessAccessoryBody": {
+    "description": "Buy sheet body after buying an accessory, with the previewed cat name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "buyAccessoryInfo": "Buy once, keep forever. Free to put on and take off, for every cat.",
+  "@buyAccessoryInfo": {
+    "description": "Note in the accessory buy sheet before paying."
+  },
+  "buyPay": "Buy · {n, plural, one{{n} coin} other{{n} coins}}",
+  "@buyPay": {
+    "description": "Buy sheet button: pay this many coins.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "buyLater": "Maybe later",
+  "@buyLater": {
+    "description": "Buy sheet button: close without buying."
+  },
+  "buyAgain": "Keep shopping",
+  "@buyAgain": {
+    "description": "Buy sheet button after a purchase: back to the shop."
+  },
+  "buySeeRoom": "See it in the room",
+  "@buySeeRoom": {
+    "description": "Buy sheet button after a purchase: open the room."
+  },
+  "buyWearOn": "Wear on {name}",
+  "@buyWearOn": {
+    "description": "Buy sheet button after buying an accessory: put it on this cat.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "buyNotEnoughHelp": "Play a puzzle or watch a rewarded ad to get more coins.",
+  "@buyNotEnoughHelp": {
+    "description": "Buy sheet hint when the player cannot afford the item."
+  },
+  "kittyPose": "{pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} other{sitting still}}",
+  "@kittyPose": {
+    "description": "What a room cat is doing, for its screen reader label.",
+    "placeholders": {
+      "pose": {
+        "type": "String"
+      }
+    }
+  },
+  "kittyLabel": "{name} {pose}",
+  "@kittyLabel": {
+    "description": "Screen reader label of a room cat: name and what it is doing.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "pose": {
+        "type": "String"
+      }
+    }
+  },
+  "kittyLabelAccessory": "{name} {pose}, wearing a {accessory}",
+  "@kittyLabelAccessory": {
+    "description": "Screen reader label of a room cat wearing an accessory.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "pose": {
+        "type": "String"
+      },
+      "accessory": {
+        "type": "String"
+      }
+    }
+  },
+  "shopSnackFullLabel": "Buy {name}, stock full",
+  "@shopSnackFullLabel": {
+    "description": "Screen reader label of the snack buy button when the stock is full.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopStockFull": "Stock full",
+  "@shopStockFull": {
+    "description": "Snack card chip when the stock is at the maximum."
+  },
+  "shopAccessoryBuyLabel": "View {name}, {n, plural, one{{n} coin} other{{n} coins}}",
+  "@shopAccessoryBuyLabel": {
+    "description": "Screen reader label of an accessory card the player can afford.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopAccessoryShortLabel": "View {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins",
+  "@shopAccessoryShortLabel": {
+    "description": "Screen reader label of an accessory card that costs more than the balance.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopAccessoryOwnedLabel": "View {name}, yours",
+  "@shopAccessoryOwnedLabel": {
+    "description": "Screen reader label of an owned accessory card nobody wears.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shopAccessoryWornLabel": "View {name}, yours, worn by {who}",
+  "@shopAccessoryWornLabel": {
+    "description": "Screen reader label of an owned accessory card with the cats wearing it.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "who": {
+        "type": "String"
+      }
+    }
   }
 }

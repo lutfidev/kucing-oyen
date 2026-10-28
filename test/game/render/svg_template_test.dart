@@ -180,4 +180,89 @@ void main() {
       throwsFormatException,
     );
   });
+
+  test('nama bertitik dibaca dari map bersarang', () {
+    final template = SvgTemplate(
+      '<circle cx="{{p.x}}" cy="10" r="1" fill="{{c.fur}}"></circle>',
+    );
+    final drawing = template.render({
+      'p': {'x': 5},
+      'c': {'fur': '#112233'},
+    });
+    expect(drawing.length, 1);
+    expect(drawing.bounds.center, const Offset(5, 10));
+    final paint = _paints(_record(drawing)).single;
+    expect(paint.color.toARGB32(), 0xFF112233);
+  });
+
+  test('sc-if bertitik mengikuti bool di map; tanpa kunci = false', () {
+    final template = SvgTemplate(
+      '<sc-if value="{{a.pita}}" hint-placeholder-val="{{ false }}">'
+      '<circle cx="5" cy="5" r="2" fill="#F07F9A"></circle>'
+      '</sc-if>',
+    );
+    expect(
+      template.render({
+        'a': {'pita': true},
+      }).length,
+      1,
+    );
+    expect(
+      template.render({
+        'a': {'pita': false},
+      }).length,
+      0,
+    );
+    expect(template.render({'a': const <String, Object>{}}).length, 0);
+    expect(template.render({}).length, 0);
+  });
+
+  test('sc-for mengulang anaknya sekali per elemen daftar', () {
+    final template = SvgTemplate(
+      '<sc-for list="{{c.p}}" as="q" hint-placeholder-count="0">'
+      '<ellipse cx="{{q.cx}}" cy="{{q.cy}}" rx="1" ry="1" fill="{{q.f}}">'
+      '</ellipse>'
+      '</sc-for>',
+    );
+    final drawing = template.render({
+      'c': {
+        'p': [
+          {'cx': 10, 'cy': 20, 'f': '#AABBCC'},
+          {'cx': 30, 'cy': 40, 'f': '#DDEEFF'},
+        ],
+      },
+    });
+    expect(drawing.length, 2);
+    expect(drawing.bounds, const Rect.fromLTRB(9, 19, 31, 41));
+    expect(_paints(_record(drawing)).map((p) => p.color.toARGB32()), [
+      0xFFAABBCC,
+      0xFFDDEEFF,
+    ]);
+  });
+
+  test('sc-for daftar kosong tidak menggambar apa pun', () {
+    final template = SvgTemplate(
+      '<sc-for list="{{c.p}}" as="q">'
+      '<circle cx="{{q.cx}}" cy="1" r="1"></circle>'
+      '</sc-for>',
+    );
+    expect(
+      template.render({
+        'c': {'p': const <Object>[]},
+      }).length,
+      0,
+    );
+  });
+
+  test('nama bertitik yang tidak ada tetap ditolak', () {
+    final template = SvgTemplate(
+      '<circle cx="1" cy="1" r="1" fill="{{c.tidakAda}}"></circle>',
+    );
+    expect(
+      () => template.render({
+        'c': {'fur': '#112233'},
+      }),
+      throwsArgumentError,
+    );
+  });
 }

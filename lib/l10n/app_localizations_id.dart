@@ -1113,4 +1113,569 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get licenses => 'Lisensi';
+
+  @override
+  String get roomItemTikus => 'Tikus Mainan';
+
+  @override
+  String get roomItemTikusDesc => 'Tidak pernah lari, tapi tetap dikejar.';
+
+  @override
+  String get roomItemAkuarium => 'Akuarium';
+
+  @override
+  String get roomItemAkuariumDesc => 'Tontonan seharian. Ikannya agak gugup.';
+
+  @override
+  String get roomItemRumah => 'Rumah Kucing';
+
+  @override
+  String get roomItemRumahDesc => 'Punya rumah sendiri, tetap tidur di kardus.';
+
+  @override
+  String get roomItemKasur => 'Kasur Bantal';
+
+  @override
+  String get roomItemKasurDesc =>
+      'Empuk. Dipakai 60% waktunya, sisanya kardus.';
+
+  @override
+  String get roomItemCatnip => 'Pot Catnip';
+
+  @override
+  String get roomItemCatnipDesc => 'Satu hirup, langsung joget.';
+
+  @override
+  String get roomItemJam => 'Jam Kucing';
+
+  @override
+  String get roomItemJamDesc => 'Ekornya goyang tiap detik. Hipnotis.';
+
+  @override
+  String get roomItemKardus => 'Kardus Nyaman';
+
+  @override
+  String get roomItemKardusDesc => 'Yang dipilih kardusnya, bukan isinya.';
+
+  @override
+  String get roomItemBola => 'Bola Benang';
+
+  @override
+  String get roomItemBolaDesc => 'Kusut dalam 3 detik. Itu fiturnya.';
+
+  @override
+  String get roomItemKarpet => 'Karpet Bulat';
+
+  @override
+  String get roomItemKarpetDesc => 'Tempat resmi guling-guling.';
+
+  @override
+  String get roomItemTiang => 'Tiang Garukan';
+
+  @override
+  String get roomItemTiangDesc => 'Supaya sofa Ibu selamat. Semoga.';
+
+  @override
+  String get roomItemLukisan => 'Lukisan Ikan';
+
+  @override
+  String get roomItemLukisanDesc => 'Seni yang bikin lapar.';
+
+  @override
+  String get roomItemRak => 'Rak Dinding';
+
+  @override
+  String get roomItemRakDesc => 'Kursi VIP buat ngawasin semua orang.';
+
+  @override
+  String get roomItemPancingan => 'Pancingan Bulu';
+
+  @override
+  String get roomItemPancinganDesc =>
+      'Bulunya dikejar, harga dirinya ketinggalan.';
+
+  @override
+  String get roomItemLampuBulan => 'Lampu Bulan';
+
+  @override
+  String get roomItemLampuBulanDesc =>
+      'Bulan pribadi, nggak perlu nunggu malam.';
+
+  @override
+  String get roomItemBantalIkan => 'Bantal Ikan';
+
+  @override
+  String get roomItemBantalIkanDesc => 'Empuk, dan amis secara visual saja.';
+
+  @override
+  String get roomItemMonstera => 'Tanaman Monstera';
+
+  @override
+  String get roomItemMonsteraDesc =>
+      'Daunnya bolong-bolong. Bukan ulah Oyen. Kali ini.';
+
+  @override
+  String get roomItemTerowongan => 'Terowongan Kucing';
+
+  @override
+  String get roomItemTerowonganDesc => 'Masuk satu kucing, keluar dengan gaya.';
+
+  @override
+  String get roomItemHammock => 'Hammock Jendela';
+
+  @override
+  String get roomItemHammockDesc => 'Tidur berayun. Bangun-bangun sudah sore.';
+
+  @override
+  String get roomItemSofaMini => 'Sofa Mini';
+
+  @override
+  String get roomItemSofaMiniDesc =>
+      'Sofa sendiri, jadi sofa Ibu aman. Katanya.';
+
+  @override
+  String get roomItemJendelaBurung => 'Jendela Burung';
+
+  @override
+  String get roomItemJendelaBurungDesc =>
+      'TV kucing 24 jam, siaran burung tanpa iklan.';
+
+  @override
+  String get roomItemMangkuk => 'Mangkuk makan';
+
+  @override
+  String get kittyOyen => 'Oyen';
+
+  @override
+  String get kittyOyenDesc => 'Kucing oren yang kamu bangunkan tiap level.';
+
+  @override
+  String get kittySalju => 'Salju';
+
+  @override
+  String get kittySaljuDesc =>
+      'Putih bersih. Bertahan bersih sampai ketemu kardus.';
+
+  @override
+  String get kittyTelon => 'Telon';
+
+  @override
+  String get kittyTelonDesc => 'Tiga warna, tiga mood dalam semenit.';
+
+  @override
+  String get kittyArang => 'Arang';
+
+  @override
+  String get kittyArangDesc =>
+      'Hitam pekat, mata kuning. Jago ngumpet di bayangan.';
+
+  @override
+  String get kittyMendung => 'Mendung';
+
+  @override
+  String get kittyMendungDesc => 'Kelihatan sedih, padahal cuma ngantuk.';
+
+  @override
+  String get kittyKopiSusu => 'Kopi Susu';
+
+  @override
+  String get kittyKopiSusuDesc => 'Manis, sedikit pahit kalau dibangunin.';
+
+  @override
+  String get kittyMochi => 'Mochi';
+
+  @override
+  String get kittyMochiDesc =>
+      'Kalem, kenyal, mukanya kayak habis main lumpur.';
+
+  @override
+  String get kittyBos => 'Bos';
+
+  @override
+  String get kittyBosDesc => 'Selalu pakai jas. Rapat tiap jam makan.';
+
+  @override
+  String get kittyKembang => 'Kembang';
+
+  @override
+  String get kittyKembangDesc => 'Coraknya abstrak, kelakuannya juga.';
+
+  @override
+  String get accessoryPita => 'Pita';
+
+  @override
+  String get accessoryPitaDesc => 'Simpel, manis, gampang dipasang.';
+
+  @override
+  String get accessoryJepitBunga => 'Jepit Bunga';
+
+  @override
+  String get accessoryJepitBungaDesc => 'Mekar terus, nggak perlu disiram.';
+
+  @override
+  String get accessoryBandana => 'Bandana';
+
+  @override
+  String get accessoryBandanaDesc => 'Gaya koboi kompleks perumahan.';
+
+  @override
+  String get accessoryDasiKupu => 'Dasi Kupu-kupu';
+
+  @override
+  String get accessoryDasiKupuDesc => 'Siap kondangan, tanpa undangan.';
+
+  @override
+  String get accessoryKalung => 'Kalung Lonceng';
+
+  @override
+  String get accessoryKalungDesc =>
+      'Kling-kling. Ketahuan tiap mau nyolong ikan.';
+
+  @override
+  String get accessorySyal => 'Syal Rajut';
+
+  @override
+  String get accessorySyalDesc => 'Hangat. Dirajut nenek imajiner.';
+
+  @override
+  String get accessoryBeanie => 'Beanie';
+
+  @override
+  String get accessoryBeanieDesc => 'Hangat. Padahal di luar panas.';
+
+  @override
+  String get accessoryTopiKoki => 'Topi Koki';
+
+  @override
+  String get accessoryTopiKokiDesc => 'Masak? Nggak. Cicip? Selalu.';
+
+  @override
+  String get accessoryBaret => 'Topi Baret';
+
+  @override
+  String get accessoryBaretDesc => 'Mendadak seniman. Karyanya: bantal sobek.';
+
+  @override
+  String get accessoryKacamata => 'Kacamata Bulat';
+
+  @override
+  String get accessoryKacamataDesc => 'Kelihatan pintar. Tetap jatuhin vas.';
+
+  @override
+  String get accessoryHeadphone => 'Headphone';
+
+  @override
+  String get accessoryHeadphoneDesc => 'Dengar lo-fi, pura-pura sibuk.';
+
+  @override
+  String get accessoryTandukRusa => 'Tanduk Rusa';
+
+  @override
+  String get accessoryTandukRusaDesc => 'Rusa jadi-jadian. Meongnya tetap.';
+
+  @override
+  String get accessoryTopiPesta => 'Topi Pesta';
+
+  @override
+  String get accessoryTopiPestaDesc =>
+      'Tiap hari ulang tahun kalau kamu kucing.';
+
+  @override
+  String get accessoryTopiPenyihir => 'Topi Penyihir';
+
+  @override
+  String get accessoryTopiPenyihirDesc => 'Bisa bikin ikan muncul. Katanya.';
+
+  @override
+  String get accessoryMahkota => 'Mahkota Bunga';
+
+  @override
+  String get accessoryMahkotaDesc => 'Ratu kamar. Bunganya jangan dimakan.';
+
+  @override
+  String get accessoryMahkotaRaja => 'Mahkota Raja';
+
+  @override
+  String get accessoryMahkotaRajaDesc =>
+      'Raja kamar. Pajaknya dibayar pakai elusan.';
+
+  @override
+  String get snackIkanAsin => 'Ikan Asin';
+
+  @override
+  String get snackIkanAsinDesc => 'Asin, gurih, baunya sampai tetangga.';
+
+  @override
+  String get snackSusu => 'Susu';
+
+  @override
+  String get snackSusuDesc => 'Sepiring kecil. Kumis jadi putih.';
+
+  @override
+  String get snackTuna => 'Tuna Kaleng';
+
+  @override
+  String get snackTunaDesc => 'Bunyi kalengnya bikin semua kucing datang.';
+
+  @override
+  String get snackBiskuit => 'Biskuit Kucing';
+
+  @override
+  String get snackBiskuitDesc => 'Kriuk dan murah. Kenyangnya sedikit.';
+
+  @override
+  String get snackPuding => 'Puding Ikan';
+
+  @override
+  String get snackPudingDesc => 'Mewah. Kenyang banget, senang banget.';
+
+  @override
+  String get rarityCommon => 'Biasa';
+
+  @override
+  String get rarityRare => 'Langka';
+
+  @override
+  String get raritySpecial => 'Spesial';
+
+  @override
+  String get shop => 'Toko';
+
+  @override
+  String get shopTabItems => 'Barang';
+
+  @override
+  String get shopTabKitties => 'Kucing';
+
+  @override
+  String get shopTabAccessories => 'Aksesoris';
+
+  @override
+  String get shopTabSnacks => 'Makanan';
+
+  @override
+  String get shopKittyIntro =>
+      'Semua kucing tinggal sekamar dengan Oyen. Oyen setuju. Kayaknya.';
+
+  @override
+  String get shopSnackIntro =>
+      'Camilan masuk stok. Kasih lewat kartu kucing di kamar.';
+
+  @override
+  String get shopOwnedTag => 'Punyamu';
+
+  @override
+  String get shopLivesHere => 'Tinggal di kamar';
+
+  @override
+  String get shopNotEnoughTag => 'Koin kurang';
+
+  @override
+  String shopShortBy(int n) {
+    return 'Kurang $n koin';
+  }
+
+  @override
+  String shopAdopt(int n) {
+    return 'Adopsi · $n';
+  }
+
+  @override
+  String shopBuyShort(int n) {
+    return 'Beli · $n';
+  }
+
+  @override
+  String shopStock(int n) {
+    return 'Stok: $n';
+  }
+
+  @override
+  String get shopTryOn => 'Coba di:';
+
+  @override
+  String shopPreviewOf(String name) {
+    return 'Pratinjau · $name';
+  }
+
+  @override
+  String get shopWearFree => 'Pakai · Gratis';
+
+  @override
+  String get shopRemoveFree => 'Lepas · Gratis';
+
+  @override
+  String get shopPlayFirst => 'Main puzzle dulu, koinnya nyusul.';
+
+  @override
+  String shopWornBy(String name) {
+    return 'Dipakai $name';
+  }
+
+  @override
+  String get shopFlashNice => 'Cakep!';
+
+  @override
+  String get shopFlashRemoved => 'Lepas, gratis';
+
+  @override
+  String shopFlashSpent(int n) {
+    return '-$n koin';
+  }
+
+  @override
+  String shopPreviewPickLabel(String name) {
+    return 'Coba aksesoris di $name';
+  }
+
+  @override
+  String shopCardBuyLabel(String name, int n) {
+    return '$name, $n koin';
+  }
+
+  @override
+  String shopCardShortLabel(String name, int n) {
+    return '$name, $n koin, koin kurang';
+  }
+
+  @override
+  String shopCardOwnedLabel(String name) {
+    return '$name, sudah punyamu';
+  }
+
+  @override
+  String shopCardLivesLabel(String name) {
+    return '$name, sudah tinggal di kamar';
+  }
+
+  @override
+  String shopSnackBuyLabel(String name, int n) {
+    return 'Beli $name seharga $n koin';
+  }
+
+  @override
+  String shopSnackShortLabel(String name, int n) {
+    return 'Beli $name seharga $n koin, koin kurang';
+  }
+
+  @override
+  String buySheetLabel(String name) {
+    return 'Beli $name';
+  }
+
+  @override
+  String get buySuccessOverline => 'Berhasil!';
+
+  @override
+  String buySuccessItem(String name) {
+    return '$name jadi punyamu!';
+  }
+
+  @override
+  String get buySuccessItemBody =>
+      'Sudah nongkrong di kamar. Geser lewat mode Hias kalau mau pindah.';
+
+  @override
+  String buySuccessKitty(String name) {
+    return '$name pindah ke kamar!';
+  }
+
+  @override
+  String get buySuccessKittyBody =>
+      'Sapa dia di kamar. Mungkin pura-pura cuek dulu.';
+
+  @override
+  String buySuccessAccessory(String name) {
+    return '$name milikmu selamanya!';
+  }
+
+  @override
+  String buySuccessAccessoryBody(String name) {
+    return 'Pasang di $name sekarang, atau pindahkan ke kucing lain kapan saja.';
+  }
+
+  @override
+  String get buyAccessoryInfo =>
+      'Sekali beli, milikmu selamanya. Pasang-lepas gratis, buat semua kucing.';
+
+  @override
+  String buyPay(int n) {
+    return 'Beli · $n koin';
+  }
+
+  @override
+  String get buyLater => 'Nanti dulu';
+
+  @override
+  String get buyAgain => 'Belanja lagi';
+
+  @override
+  String get buySeeRoom => 'Lihat di kamar';
+
+  @override
+  String buyWearOn(String name) {
+    return 'Pakai di $name';
+  }
+
+  @override
+  String get buyNotEnoughHelp =>
+      'Main puzzle atau tonton iklan berhadiah buat nambah koin.';
+
+  @override
+  String kittyPose(String pose) {
+    String _temp0 = intl.Intl.selectLogic(pose, {
+      'idle': 'duduk diam',
+      'lick': 'menjilat kaki',
+      'walk1': 'jalan',
+      'walk2': 'jalan',
+      'sleep': 'tidur melingkar',
+      'eat': 'makan dari mangkuk',
+      'play': 'main menepuk mainan',
+      'scratch': 'menggaruk tiang',
+      'happy': 'senang',
+      'lesu': 'lesu',
+      'rebah': 'rebahan santai',
+      'petted': 'dielus dan mendengkur',
+      'other': 'duduk diam',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String kittyLabel(String name, String pose) {
+    return '$name $pose';
+  }
+
+  @override
+  String kittyLabelAccessory(String name, String pose, String accessory) {
+    return '$name $pose, memakai $accessory';
+  }
+
+  @override
+  String shopSnackFullLabel(String name) {
+    return 'Beli $name, stok penuh';
+  }
+
+  @override
+  String get shopStockFull => 'Stok penuh';
+
+  @override
+  String shopAccessoryBuyLabel(String name, int n) {
+    return 'Lihat $name, $n koin';
+  }
+
+  @override
+  String shopAccessoryShortLabel(String name, int n) {
+    return 'Lihat $name, $n koin, koin kurang';
+  }
+
+  @override
+  String shopAccessoryOwnedLabel(String name) {
+    return 'Lihat $name, punyamu';
+  }
+
+  @override
+  String shopAccessoryWornLabel(String name, String who) {
+    return 'Lihat $name, punyamu, dipakai $who';
+  }
 }

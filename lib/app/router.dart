@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../gallery/gallery_board_screen.dart';
+import '../gallery/gallery_kitty_screen.dart';
 import '../gallery/gallery_oyen_screen.dart';
 import '../gallery/gallery_screen.dart';
 import '../gallery/gallery_sound_screen.dart';
@@ -9,6 +10,7 @@ import '../screens/closet/closet_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/level/level_screen.dart';
 import '../screens/settings/settings_screen.dart';
+import '../screens/shop/shop_screen.dart';
 import 'routes.dart';
 
 GoRouter createRouter({String initialLocation = AppRoutes.home}) {
@@ -32,6 +34,10 @@ GoRouter createRouter({String initialLocation = AppRoutes.home}) {
                 builder: (context, state) => const GalleryOyenScreen(),
               ),
               GoRoute(
+                path: 'kucing',
+                builder: (context, state) => const GalleryKittyScreen(),
+              ),
+              GoRoute(
                 path: 'suara',
                 builder: (context, state) => const GallerySoundScreen(),
               ),
@@ -40,6 +46,12 @@ GoRouter createRouter({String initialLocation = AppRoutes.home}) {
           GoRoute(
             path: 'kostum',
             builder: (context, state) => const ClosetScreen(),
+          ),
+          GoRoute(
+            path: 'toko',
+            builder: (context, state) => ShopScreen(
+              initialTab: ShopTab.parse(state.uri.queryParameters['tab']),
+            ),
           ),
           GoRoute(
             path: 'pengaturan',

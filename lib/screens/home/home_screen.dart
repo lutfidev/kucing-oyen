@@ -73,6 +73,16 @@ class HomeScreen extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      // Tombol Toko sementara: Beranda jadi kamar Oyen di
+                      // langkah 23, dan tombol ini ikut dirapikan.
+                      Expanded(
+                        child: _MenuButton(
+                          icon: KoIcons.shop,
+                          label: context.l10n.shop,
+                          onPressed: () => context.go(AppRoutes.shop()),
+                        ),
+                      ),
+                      SizedBox(width: space.s12),
                       Expanded(
                         child: _MenuButton(
                           icon: KoIcons.costume,
