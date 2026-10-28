@@ -78,7 +78,12 @@ class GameAudio extends ChangeNotifier {
     _settings = settings;
     _sync();
     notifyListeners();
-    await store.saveSound(settings);
+    try {
+      await store.saveSound(settings);
+    } on Object catch (error) {
+      // Sakelar tetap berlaku sampai aplikasi ditutup.
+      debugPrint('Sakelar suara gagal disimpan: $error');
+    }
   }
 
   void hold(AudioHold reason) {

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/hint_source.dart';
 import 'package:kucing_oren/app/language.dart';
@@ -585,6 +586,137 @@ void main() {
       );
       expect(c.canClaimBonus, isFalse);
       expect(c.adsLeft, 2);
+    });
+  });
+
+  group('simpanan gagal', () {
+    ProgressController controller(
+      FailingProgressStore store, {
+      int coins = 0,
+      DateTime Function()? clock,
+    }) => ProgressController(
+      levels: testLevels,
+      store: store,
+      coins: coins,
+      hintAds: FakeRewardedAds(),
+      coinAds: FakeRewardedAds(),
+      clock: clock,
+    );
+
+    test('urutan tulis memihak pemain', () async {
+      final store = FailingProgressStore();
+      final c = controller(store, coins: 100);
+
+      await c.record(1, 3);
+      expect(store.writes, ['coins', 'progress']);
+
+      store.writes.clear();
+      await c.unlockHint(13, 1, HintPay.coins);
+      expect(store.writes, ['hints', 'coins']);
+
+      store.writes.clear();
+      await c.claimDailyBonus();
+      expect(store.writes, ['coins', 'rewards']);
+
+      store.writes.clear();
+      expect(await c.watchAdForCoins(), AdReward.rewarded);
+      expect(store.writes, ['coins', 'rewards']);
+    });
+
+    test('simpan gagal tidak melempar; keadaan di memori tetap', () async {
+      final store = FailingProgressStore(failing: {'coins'});
+      final c = controller(store);
+
+      await c.record(1, 3);
+      expect(c.progress.starsOf(1), 3);
+      expect(c.coins, 30);
+      expect(c.hasUnsavedChanges, isTrue);
+      // Koin gagal: progres tidak ditulis supaya bintang yang tersimpan
+      // tidak lebih dulu dari koinnya.
+      expect(store.writes, isEmpty);
+      expect(store.saved, Progress.empty);
+    });
+
+    test('menulis ulang yang tertunda di simpan berikutnya', () async {
+      final store = FailingProgressStore(failing: {'coins'});
+      final c = controller(store);
+      await c.record(1, 3);
+      await c.record(2, 2);
+
+      store.failing = {};
+      await c.setLanguage(AppLanguage.ru);
+      expect(store.language, AppLanguage.ru);
+      expect(store.coins, 50);
+      expect(store.saved.starsOf(1), 3);
+      expect(store.saved.starsOf(2), 2);
+      expect(c.hasUnsavedChanges, isFalse);
+    });
+
+    test('retrySaves menulis yang tertunda', () async {
+      final store = FailingProgressStore(failing: {'wardrobe'});
+      final c = controller(store, coins: 100);
+      expect(await c.buyCostume(OyenCostume.peci), isTrue);
+      expect(c.hasUnsavedChanges, isTrue);
+      expect(store.coins, isNull, reason: 'kostum gagal, koin belum ditulis');
+
+      await c.retrySaves();
+      expect(c.hasUnsavedChanges, isTrue, reason: 'masih gagal');
+
+      store.failing = {};
+      await c.retrySaves();
+      expect(c.hasUnsavedChanges, isFalse);
+      expect(store.wardrobe.owns(OyenCostume.peci), isTrue);
+      expect(store.coins, 40);
+    });
+
+    testWidgets('ke latar belakang menulis ulang yang tertunda', (
+      tester,
+    ) async {
+      final store = FailingProgressStore(failing: {'coins'});
+      final c = controller(store);
+      await pumpApp(tester, progress: c);
+      await c.record(1, 3);
+      expect(c.hasUnsavedChanges, isTrue);
+
+      store.failing = {};
+      for (final state in [
+        AppLifecycleState.inactive,
+        AppLifecycleState.hidden,
+        AppLifecycleState.paused,
+      ]) {
+        tester.binding.handleAppLifecycleStateChanged(state);
+      }
+      await tester.pump();
+      expect(c.hasUnsavedChanges, isFalse);
+      expect(store.coins, 30);
+      expect(store.saved.starsOf(1), 3);
+    });
+
+    test('semua aksi selesai tanpa error walau simpanan rusak', () async {
+      final store = FailingProgressStore(
+        failing: {
+          'progress',
+          'tutorials',
+          'coins',
+          'hints',
+          'wardrobe',
+          'rewards',
+          'language',
+        },
+      );
+      final c = controller(store, coins: 500);
+      await c.record(1, 3);
+      await c.unlockHint(13, 1, HintPay.coins);
+      await c.buyCostume(OyenCostume.peci);
+      await c.wearCostume(OyenCostume.none);
+      await c.claimDailyBonus();
+      await c.watchAdForCoins();
+      await c.setLanguage(AppLanguage.en);
+      await c.finishTutorial(1);
+      await c.replayTutorials();
+      await c.resetProgress();
+      expect(c.hasUnsavedChanges, isTrue);
+      expect(store.writes, isEmpty);
     });
   });
 

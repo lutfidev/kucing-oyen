@@ -188,3 +188,52 @@ Future<void> pumpThemed(
     ),
   );
 }
+
+/// Simpanan di memori yang mencatat urutan tulisan ([writes], nama bagian:
+/// `progress`, `tutorials`, `coins`, `hints`, `wardrobe`, `rewards`,
+/// `language`, `sound`) dan melempar untuk bagian di [failing], seperti
+/// penyimpanan perangkat yang gagal (I/O).
+class FailingProgressStore extends MemoryProgressStore {
+  FailingProgressStore({this.failing = const {}});
+
+  Set<String> failing;
+  final writes = <String>[];
+
+  Future<void> _write(String part, Future<void> Function() save) async {
+    if (failing.contains(part)) throw StateError('$part gagal disimpan');
+    writes.add(part);
+    await save();
+  }
+
+  @override
+  Future<void> save(Progress progress) =>
+      _write('progress', () => super.save(progress));
+
+  @override
+  Future<void> saveTutorials(Set<int> levels) =>
+      _write('tutorials', () => super.saveTutorials(levels));
+
+  @override
+  Future<void> saveCoins(int coins) =>
+      _write('coins', () => super.saveCoins(coins));
+
+  @override
+  Future<void> saveHints(Map<int, int> tiers) =>
+      _write('hints', () => super.saveHints(tiers));
+
+  @override
+  Future<void> saveWardrobe(Wardrobe wardrobe) =>
+      _write('wardrobe', () => super.saveWardrobe(wardrobe));
+
+  @override
+  Future<void> saveRewards(DailyRewards rewards) =>
+      _write('rewards', () => super.saveRewards(rewards));
+
+  @override
+  Future<void> saveLanguage(AppLanguage language) =>
+      _write('language', () => super.saveLanguage(language));
+
+  @override
+  Future<void> saveSound(SoundSettings sound) =>
+      _write('sound', () => super.saveSound(sound));
+}
