@@ -1,5 +1,11 @@
 # Brief Claude Design: Rumah Oyen (halaman 19–24)
 
+> **Status 28 Okt 2026: desain sudah jadi.** Hasilnya ada di kanvas https://claude.ai/code/artifact/d25a6575-3d34-4887-9de4-18435367bf86. Salinan lokalnya di `docs/design/rumah-oyen/project/`, dengan daftar berkas di bagian "Sumber desain" spesifikasi.
+>
+> Pemilik repo juga meminta perubahan sendiri sesudah brief ini: Peci dan sarung dihapus, Lemari Kostum diganti tab Aksesoris di Toko, dan animasi natural ditambahkan. Lihat "Perubahan 28 Oktober" di spesifikasi.
+>
+> Yang masih kurang hanya **Topi Koki versi baru**. Tempel blok "Tambahan: Topi Koki" di bagian paling bawah ke kanvas yang sama.
+
 Brief ini dipakai untuk menambah layar baru ke proyek Claude Design "Kucing Oren" yang sudah ada, yaitu proyek yang menghasilkan halaman 01–18 di `docs/design/source/`. Isi aturannya ada di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`.
 
 ## Cara memakai
@@ -69,4 +75,17 @@ Kamar → Toko → beli kucing → "Lihat di kamar" → kucing baru di kamar.
 Kamar → ketuk kucing → kartu kucing → beri camilan.
 Kamar → Hias → seret barang → Selesai.
 Kamar → Main → Peta Babak 2 → level 13 → (Berhasil) Lanjut → Oyen berjalan ke 14.
+```
+
+## Tambahan: Topi Koki
+
+Tempel ke kanvas "Ginger Logic – Rumah Oyen (19–24)" yang sama.
+
+```markdown
+Tambahkan aksesoris ke-8, "Topi Koki", ke sistem aksesoris yang sudah ada (komponen Kucing, IkonAksesoris, AksesorisPreview 21b, tab Aksesoris di Toko). Buat versi yang lebih bagus dari topi koki lama di Lemari Kostum: topi koki putih tinggi yang menggembung lembut, pita lipatan di pangkalnya, sedikit miring dan lucu, gaya vektor dan garis yang sama dengan aksesoris lain.
+- Jangkar kepala-atas (seperti Topi Pesta, Beanie, Mahkota), di antara telinga, tidak menutupi mata atau ekspresi.
+- Harga 200 koin, kelangkaan Langka, deskripsi jenaka satu baris (misalnya soal Oyen yang merasa paling jago masak padahal cuma makan).
+- Tambahkan sebagai opsi prop aksesoris "topiKoki" di Kucing.dc.html dan IkonAksesoris.dc.html, ikut semua pose (termasuk varian kecil saat tidur), dan baris barunya di halaman 21b.
+- Tambahkan kartunya di tab Aksesoris Toko (urut harga: setelah Beanie, sebelum Kacamata Bulat).
+Jangan mengubah hal lain.
 ```
