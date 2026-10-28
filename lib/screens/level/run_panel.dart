@@ -9,15 +9,19 @@ import '../../widgets/widgets.dart';
 
 /// Penghitung langkah di bar atas fase jalan: "Langkah 1" (desain 04).
 class StepCounter extends StatelessWidget {
-  const StepCounter({super.key, required this.step});
+  const StepCounter({super.key, required this.step, this.announce = true});
 
   final int step;
+
+  /// Pembaca layar mengumumkan langkah baru. Mati selama Oyen berjalan
+  /// sendiri: empat langkah per detik terlalu ramai.
+  final bool announce;
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
       container: true,
-      liveRegion: true,
+      liveRegion: announce,
       label: context.l10n.stepNumber(step),
       excludeSemantics: true,
       child: KoChip.dark(label: context.l10n.step, text: '$step', large: true),

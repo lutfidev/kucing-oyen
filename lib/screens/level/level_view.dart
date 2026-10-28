@@ -523,7 +523,10 @@ class _LevelViewState extends State<LevelView>
                           onBack: running ? _arrangeAgain : widget.onBack,
                           trailing: run == null
                               ? RulesButton(onPressed: _openRules)
-                              : StepCounter(step: run.clock.step),
+                              : StepCounter(
+                                  step: run.clock.step,
+                                  announce: !run.clock.playing,
+                                ),
                         ),
                         // Target dan tombol Petunjuk (desain 03). Barisnya
                         // tetap ada di fase jalan supaya papan tidak berubah

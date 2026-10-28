@@ -775,6 +775,36 @@ void main() {
       expect(step(tester), 2);
     });
 
+    testWidgets('chip Langkah diumumkan hanya saat dijeda atau selesai', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      bool live() => tester
+          .getSemantics(find.bySemanticsLabel(RegExp(r'^Langkah \d+$')))
+          .flagsCollection
+          .isLiveRegion;
+      await _pumpLevel(tester, 13);
+      await placeSolution(tester, 13);
+      await wake(tester);
+      expect(live(), isFalse, reason: 'berputar 4 langkah per detik');
+
+      await tester.tap(find.bySemanticsLabel('Jeda'));
+      await tester.pump();
+      expect(live(), isTrue, reason: 'dijeda');
+
+      await tester.tap(find.bySemanticsLabel('Maju satu langkah'));
+      await tester.pump();
+      expect(live(), isTrue, reason: 'maju satu langkah');
+
+      await tester.tap(find.bySemanticsLabel('Lanjutkan'));
+      await tester.pump();
+      expect(live(), isFalse);
+      await pumpFrames(tester, const Duration(seconds: 3));
+      expect(find.text('Lihat hasil'), findsOneWidget);
+      expect(live(), isTrue, reason: 'selesai');
+      handle.dispose();
+    });
+
     testWidgets('Maju satu langkah: jeda lalu langkah berikutnya', (
       tester,
     ) async {
