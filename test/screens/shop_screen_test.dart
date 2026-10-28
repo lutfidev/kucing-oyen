@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/routes.dart';
+import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
@@ -29,7 +30,7 @@ Future<ProgressController> pumpShop(
   return progress;
 }
 
-/// Menggulir kartu [key] ke layar lalu mengetuknya.
+/// Menggulir widget berkunci [key] ke layar lalu mengetuknya.
 Future<void> tapCard(WidgetTester tester, String key) async {
   final card = find.byKey(ValueKey(key));
   await tester.ensureVisible(card);
@@ -184,8 +185,7 @@ void main() {
       expect(progress.coins, 100);
       expect(progress.home.ownsKitty(KittyId.salju), isTrue);
 
-      await tester.tap(find.byKey(const ValueKey('buy-close')));
-      await settle(tester);
+      await tapCard(tester, 'buy-close');
       expect(find.text('Tinggal di kamar'), findsOneWidget);
     });
 
@@ -267,6 +267,156 @@ void main() {
       await settle(tester);
       expect(progress.coins, 5);
       expect(progress.home.pantry.countOf(SnackId.susu), 0);
+      semantics.dispose();
+    });
+  });
+
+  group('tab Aksesoris', () {
+    testWidgets('kartu hanya mengganti pratinjau, tidak membeli', (
+      tester,
+    ) async {
+      final progress = await pumpShop(
+        tester,
+        coins: 300,
+        tab: ShopTab.accessories,
+      );
+      expect(find.text('Pratinjau · Oyen'), findsOneWidget);
+      expect(find.text('Pita'), findsWidgets);
+
+      await tapCard(tester, 'shop-accessory-beanie');
+      expect(find.text('Beanie'), findsWidgets);
+      expect(find.text('Hangat. Padahal di luar panas.'), findsOneWidget);
+      expect(find.text('Nanti dulu'), findsNothing);
+      expect(progress.coins, 300);
+    });
+
+    testWidgets('beli aksesoris lalu pakai dari sheet', (tester) async {
+      final progress = await pumpShop(
+        tester,
+        coins: 200,
+        tab: ShopTab.accessories,
+      );
+      await tapCard(tester, 'shop-accessory-beanie');
+      await tapCard(tester, 'shop-preview-buy');
+      expect(
+        find.text(
+          'Sekali beli, milikmu selamanya. Pasang-lepas gratis, buat semua '
+          'kucing.',
+        ),
+        findsOneWidget,
+      );
+
+      await tapCard(tester, 'buy-confirm');
+      expect(find.text('Beanie milikmu selamanya!'), findsOneWidget);
+      expect(progress.coins, 20);
+      expect(progress.home.closet.owns(AccessoryId.beanie), isTrue);
+      expect(progress.home.closet.wearingOf(KittyId.oyen), isNull);
+
+      await tapCard(tester, 'buy-wear');
+      expect(progress.home.closet.wearingOf(KittyId.oyen), AccessoryId.beanie);
+      expect(find.text('Cakep!'), findsOneWidget);
+    });
+
+    testWidgets('pakai dan lepas aksesoris yang dimiliki gratis', (
+      tester,
+    ) async {
+      final progress = await pumpShop(
+        tester,
+        coins: 0,
+        home: Home(closet: AccessoryCloset(owned: const [AccessoryId.pita])),
+        tab: ShopTab.accessories,
+      );
+      expect(find.text('Punyamu'), findsWidgets);
+      await tapCard(tester, 'shop-preview-wear');
+      expect(progress.home.closet.wearingOf(KittyId.oyen), AccessoryId.pita);
+      expect(progress.coins, 0);
+
+      await tapCard(tester, 'shop-preview-remove');
+      expect(progress.home.closet.wearingOf(KittyId.oyen), isNull);
+      expect(progress.coins, 0);
+    });
+
+    testWidgets('aksesoris yang sama boleh dipakai dua kucing', (tester) async {
+      final progress = await pumpShop(
+        tester,
+        coins: 0,
+        home: Home(
+          kitties: const [KittyId.salju],
+          closet: AccessoryCloset(
+            owned: const [AccessoryId.pita],
+            wearing: const {KittyId.salju: AccessoryId.pita},
+          ),
+        ),
+        tab: ShopTab.accessories,
+      );
+      expect(find.text('Dipakai Salju'), findsOneWidget);
+
+      await tapCard(tester, 'shop-preview-wear');
+      expect(progress.home.closet.wearingOf(KittyId.oyen), AccessoryId.pita);
+      expect(progress.home.closet.wearingOf(KittyId.salju), AccessoryId.pita);
+      expect(find.text('Dipakai Oyen, Salju'), findsOneWidget);
+    });
+
+    testWidgets('kucing yang baru dibeli muncul di "Coba di:"', (tester) async {
+      await pumpShop(tester, coins: 300, tab: ShopTab.accessories);
+      expect(find.byKey(const ValueKey('shop-preview-oyen')), findsOneWidget);
+      expect(find.byKey(const ValueKey('shop-preview-salju')), findsNothing);
+
+      await tester.tap(find.text('Kucing'));
+      await settle(tester);
+      await tapCard(tester, 'shop-kitty-salju');
+      await tester.tap(find.text('Beli · 300 koin'));
+      await settle(tester);
+      await tapCard(tester, 'buy-close');
+      await tester.tap(find.text('Aksesoris'));
+      await settle(tester);
+      expect(find.byKey(const ValueKey('shop-preview-salju')), findsOneWidget);
+    });
+
+    testWidgets('pratinjau pindah ke kucing yang dipilih', (tester) async {
+      final progress = await pumpShop(
+        tester,
+        coins: 0,
+        home: Home(
+          kitties: const [KittyId.arang],
+          closet: AccessoryCloset(owned: const [AccessoryId.pita]),
+        ),
+        tab: ShopTab.accessories,
+      );
+      await tester.tap(find.byKey(const ValueKey('shop-preview-arang')));
+      await settle(tester);
+      expect(find.text('Pratinjau · Arang'), findsOneWidget);
+
+      await tapCard(tester, 'shop-preview-wear');
+      expect(progress.home.closet.wearingOf(KittyId.arang), AccessoryId.pita);
+      expect(progress.home.closet.wearingOf(KittyId.oyen), isNull);
+    });
+
+    testWidgets('koin kurang: tombol koin kurang dan pesannya', (tester) async {
+      final progress = await pumpShop(
+        tester,
+        coins: 10,
+        tab: ShopTab.accessories,
+      );
+      await tapCard(tester, 'shop-accessory-mahkotaRaja');
+      expect(find.text('Koin kurang · 790'), findsOneWidget);
+      expect(find.text('Main puzzle dulu, koinnya nyusul.'), findsOneWidget);
+      expect(progress.coins, 10);
+    });
+
+    testWidgets('pembaca layar: tombol pratinjau dan kartu aksesoris', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await pumpShop(
+        tester,
+        coins: 100,
+        home: Home(closet: AccessoryCloset(owned: const [AccessoryId.pita])),
+        tab: ShopTab.accessories,
+      );
+      expect(find.bySemanticsLabel('Coba aksesoris di Oyen'), findsOneWidget);
+      expect(find.bySemanticsLabel('Lihat Pita'), findsOneWidget);
+      expect(find.bySemanticsLabel('Lihat Bandana'), findsOneWidget);
       semantics.dispose();
     });
   });

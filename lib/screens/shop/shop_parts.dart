@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../../game/model/accessories.dart';
 import '../../game/model/home_items.dart';
 import '../../game/render/render.dart';
 import '../../game/model/kitties.dart';
@@ -827,6 +828,486 @@ class ShopFlash extends StatelessWidget {
         style: context.koType.cardLabel.copyWith(
           color: context.koColors.orangeDeep,
         ),
+      ),
+    );
+  }
+}
+
+/// Badge kelangkaan aksesoris: biasa, langka, atau spesial.
+class RarityChip extends StatelessWidget {
+  const RarityChip({super.key, required this.rarity, this.height});
+
+  final Rarity rarity;
+
+  /// Tinggi badge; default badge kartu (desain 20).
+  final double? height;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final (Color fill, Color ink) = switch (rarity) {
+      Rarity.common => (c.surface, c.inkSoft),
+      Rarity.rare => (c.rareChip, c.onRareChip),
+      Rarity.special => (c.specialChip, c.onSpecialChip),
+    };
+    return Container(
+      height: height ?? context.koSize.shopRarityChip,
+      padding: EdgeInsets.symmetric(horizontal: context.koSpace.s8),
+      decoration: BoxDecoration(
+        color: fill,
+        borderRadius: BorderRadius.circular(context.koRadius.pill),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        rarityName(context.l10n, rarity),
+        style: context.koType.tagTiny.copyWith(color: ink),
+      ),
+    );
+  }
+}
+
+/// Panggung pratinjau aksesoris: kucing terpilih memakai aksesoris yang
+/// sedang dilihat, di depan dinding dan lantai (desain 20g).
+class AccessoryStage extends StatelessWidget {
+  const AccessoryStage({
+    super.key,
+    required this.kitty,
+    required this.accessory,
+    required this.scale,
+  });
+
+  final KittyId kitty;
+  final AccessoryId accessory;
+
+  /// Skala panggung (1 = ukuran desain; mengecil di layar 360 px).
+  final double scale;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    return SizedBox(
+      width: s.shopPreviewWidth * scale,
+      height: s.shopPreviewHeight * scale,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(context.koRadius.control),
+        child: Stack(
+          children: [
+            Positioned.fill(child: ColoredBox(color: c.floor)),
+            Positioned(
+              top: s.shopPreviewFloor * scale,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: ColoredBox(color: c.floorAlt),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: context.koSpace.s6 * scale),
+                child: KittyView(
+                  look: KittyLook(kitty: kitty, accessory: accessory),
+                  size: s.shopPreviewArt * scale,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Aksi di panel pratinjau aksesoris.
+enum AccessoryAction {
+  /// Belum dimiliki dan koinnya cukup.
+  buy,
+
+  /// Belum dimiliki dan koinnya kurang.
+  short,
+
+  /// Dimiliki dan belum dipakai kucing ini.
+  wear,
+
+  /// Dipakai kucing ini.
+  remove,
+}
+
+/// Panel pratinjau aksesoris: panggung kucing, nama, kelangkaan,
+/// deskripsi, dan tombol beli, pakai, atau lepas (desain 20g).
+class AccessoryPreview extends StatelessWidget {
+  const AccessoryPreview({
+    super.key,
+    required this.kitty,
+    required this.accessory,
+    required this.action,
+    required this.coins,
+    required this.onBuy,
+    required this.onWear,
+    required this.onRemove,
+  });
+
+  final KittyId kitty;
+  final AccessoryId accessory;
+  final AccessoryAction action;
+  final int coins;
+  final VoidCallback onBuy;
+  final VoidCallback onWear;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final space = context.koSpace;
+    final s = context.koSize;
+    final l = context.l10n;
+    final item = accessoryOf(accessory);
+    final name = accessoryName(l, accessory);
+    final owned =
+        action == AccessoryAction.wear || action == AccessoryAction.remove;
+    // Panggung mengecil di layar sempit (catatan n360 di desain).
+    final scale = MediaQuery.sizeOf(context).width < 380
+        ? s.shopPreviewMinScale
+        : 1.0;
+    return Container(
+      padding: EdgeInsets.all(space.s12),
+      decoration: BoxDecoration(
+        color: c.surface,
+        border: Border.all(color: c.line, width: s.border),
+        borderRadius: BorderRadius.circular(context.koRadius.art),
+        boxShadow: context.koShadow.card,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AccessoryStage(kitty: kitty, accessory: accessory, scale: scale),
+          SizedBox(width: space.s12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l.shopPreviewOf(kittyName(l, kitty)),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.koType.overline.copyWith(color: c.inkSoft),
+                ),
+                SizedBox(height: space.s6),
+                Row(
+                  children: [
+                    AccessoryIconView(id: accessory, size: s.iconCompact),
+                    SizedBox(width: space.s6),
+                    Expanded(
+                      child: Text(
+                        name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.koType.headingStrong.copyWith(
+                          color: c.ink,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: space.s6),
+                Wrap(
+                  spacing: space.s6,
+                  runSpacing: space.s4,
+                  children: [
+                    RarityChip(rarity: item.rarity, height: s.shopPreviewChip),
+                    if (owned) ShopOwnedTag(text: l.shopOwnedTag),
+                  ],
+                ),
+                SizedBox(height: space.s6),
+                Text(
+                  accessoryDesc(l, accessory),
+                  style: context.koType.cardTextSmall.copyWith(
+                    color: c.inkSoft,
+                  ),
+                ),
+                SizedBox(height: space.s10),
+                switch (action) {
+                  AccessoryAction.buy => _PreviewButton(
+                    key: const ValueKey('shop-preview-buy'),
+                    label: l.shopBuyShort(item.price),
+                    color: c.orange,
+                    edge: c.orangeDeep,
+                    ink: c.ink,
+                    icon: CoinView(kind: CoinKind.plain, size: s.iconCompact),
+                    onPressed: onBuy,
+                  ),
+                  AccessoryAction.short => Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _PreviewButton(
+                        key: const ValueKey('shop-preview-short'),
+                        label: l.notEnoughCoins(item.price - coins),
+                        color: c.shortFill,
+                        edge: null,
+                        ink: c.inkSoft,
+                        icon: KoIcon(
+                          KoIcons.lock,
+                          size: s.iconCompact,
+                          color: c.inkSoft,
+                        ),
+                        onPressed: null,
+                      ),
+                      SizedBox(height: space.s4),
+                      Text(
+                        l.shopPlayFirst,
+                        style: context.koType.tag.copyWith(color: c.brickDeep),
+                      ),
+                    ],
+                  ),
+                  AccessoryAction.wear => _PreviewButton(
+                    key: const ValueKey('shop-preview-wear'),
+                    label: l.shopWearFree,
+                    color: c.success,
+                    edge: c.successDeep,
+                    ink: c.onSuccess,
+                    onPressed: onWear,
+                  ),
+                  AccessoryAction.remove => _PreviewButton(
+                    key: const ValueKey('shop-preview-remove'),
+                    label: l.shopRemoveFree,
+                    color: c.surface,
+                    edge: c.lineDeep,
+                    ink: c.ink,
+                    border: true,
+                    onPressed: onRemove,
+                  ),
+                },
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PreviewButton extends StatelessWidget {
+  const _PreviewButton({
+    super.key,
+    required this.label,
+    required this.color,
+    required this.edge,
+    required this.ink,
+    required this.onPressed,
+    this.icon,
+    this.border = false,
+  });
+
+  final String label;
+  final Color color;
+  final Color? edge;
+  final Color ink;
+  final VoidCallback? onPressed;
+  final Widget? icon;
+  final bool border;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final space = context.koSpace;
+    final s = context.koSize;
+    return KoPressable(
+      onPressed: onPressed,
+      semanticLabel: label,
+      color: color,
+      edgeColor: edge,
+      depth: edge == null ? 0 : context.koShadow.pressSecondary,
+      borderColor: border ? c.line : null,
+      borderWidth: border ? s.border : 0,
+      radius: context.koRadius.slot,
+      height: s.shopPreviewButton,
+      padding: EdgeInsets.symmetric(horizontal: space.s8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[icon!, SizedBox(width: space.s6)],
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: context.koType.cardLabel.copyWith(color: ink),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Baris "Coba di:": kucing yang dimiliki, yang terpilih berbingkai
+/// oranye (desain 20g).
+class KittyPicker extends StatelessWidget {
+  const KittyPicker({
+    super.key,
+    required this.kitties,
+    required this.active,
+    required this.wearing,
+    required this.onPick,
+  });
+
+  final List<KittyId> kitties;
+  final KittyId active;
+
+  /// Aksesoris yang sedang dipakai tiap kucing.
+  final Map<KittyId, AccessoryId> wearing;
+  final ValueChanged<KittyId> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final space = context.koSpace;
+    final s = context.koSize;
+    final l = context.l10n;
+    return Row(
+      children: [
+        Text(
+          l.shopTryOn,
+          style: context.koType.labelSmall.copyWith(color: c.inkSoft),
+        ),
+        SizedBox(width: space.s8),
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final kitty in kitties) ...[
+                  if (kitty != kitties.first) SizedBox(width: space.s8),
+                  KoPressable(
+                    key: ValueKey('shop-preview-${kitty.name}'),
+                    onPressed: () => onPick(kitty),
+                    semanticLabel: l.shopPreviewPickLabel(kittyName(l, kitty)),
+                    toggled: kitty == active,
+                    color: c.surface,
+                    depth: 0,
+                    circle: true,
+                    borderColor: kitty == active ? c.orange : c.line,
+                    borderWidth: kitty == active ? s.artBorder : s.border,
+                    width: s.shopPick,
+                    height: s.shopPick,
+                    child: Center(
+                      child: KittyView(
+                        look: KittyLook(
+                          kitty: kitty,
+                          accessory: wearing[kitty],
+                        ),
+                        size: s.shopPickArt,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Kartu satu aksesoris: kucing pratinjau memakainya, badge kelangkaan,
+/// ikon dan nama, lalu harga atau "Punyamu" beserta pemakainya.
+class AccessoryCard extends StatelessWidget {
+  const AccessoryCard({
+    super.key,
+    required this.id,
+    required this.preview,
+    required this.state,
+    required this.selected,
+    required this.wornBy,
+    required this.onPressed,
+  });
+
+  final AccessoryId id;
+
+  /// Kucing yang dipakai untuk menggambar kartunya.
+  final KittyId preview;
+  final ShopCardState state;
+  final bool selected;
+
+  /// Nama kucing yang memakainya, dipisah koma; kosong = tidak dipakai.
+  final String wornBy;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final space = context.koSpace;
+    final s = context.koSize;
+    final l = context.l10n;
+    final item = accessoryOf(id);
+    final name = accessoryName(l, id);
+    final short = state == ShopCardState.short;
+    final owned = state == ShopCardState.owned;
+    return KoPressable(
+      key: ValueKey('shop-accessory-${id.name}'),
+      onPressed: onPressed,
+      semanticLabel: l.shopAccessoryViewLabel(name),
+      toggled: selected,
+      color: c.surface,
+      edgeColor: c.lineDeep,
+      depth: context.koShadow.pressSecondary,
+      borderColor: selected ? c.orange : c.line,
+      borderWidth: selected ? s.artBorder : s.border,
+      radius: context.koRadius.card,
+      padding: EdgeInsets.all(space.s10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ShopWell(
+            height: s.shopAccessoryWell,
+            owned: owned,
+            alignBottom: true,
+            badge: RarityChip(rarity: item.rarity),
+            child: Opacity(
+              opacity: short ? s.lockedOpacity : 1,
+              child: KittyView(
+                look: KittyLook(kitty: preview, accessory: id),
+                size: s.shopAccessoryArt,
+              ),
+            ),
+          ),
+          SizedBox(height: space.s8),
+          Row(
+            children: [
+              AccessoryIconView(id: id, size: s.iconSmall),
+              SizedBox(width: space.s6),
+              Expanded(
+                child: Text(
+                  name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.koType.cardName.copyWith(color: c.ink),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: space.s8),
+          if (owned)
+            Wrap(
+              spacing: space.s6,
+              runSpacing: space.s4,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                ShopOwnedTag(text: l.shopOwnedTag),
+                if (wornBy.isNotEmpty)
+                  Text(
+                    l.shopWornBy(wornBy),
+                    style: context.koType.tag.copyWith(color: c.successDeep),
+                  ),
+              ],
+            )
+          else
+            ShopPrice(price: item.price, short: short),
+        ],
       ),
     );
   }

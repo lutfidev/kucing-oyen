@@ -5,10 +5,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
+import '../../game/model/accessories.dart';
 import '../../game/model/home_items.dart';
 import '../../game/model/kitties.dart';
 import '../../game/model/snacks.dart';
 import '../../l10n/l10n.dart';
+import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../coins/coin_sheet.dart';
 import 'buy_sheet.dart';
@@ -37,6 +39,10 @@ class _ShopScreenState extends State<ShopScreen> {
   String? _flash;
   Timer? _flashTimer;
 
+  /// Kucing dan aksesoris yang sedang dipratinjau di tab Aksesoris.
+  KittyId _preview = KittyId.oyen;
+  AccessoryId _selected = accessories.first.id;
+
   @override
   void dispose() {
     _flashTimer?.cancel();
@@ -50,6 +56,16 @@ class _ShopScreenState extends State<ShopScreen> {
     _flashTimer = Timer(ShopFlash.duration, () {
       if (mounted) setState(() => _flash = null);
     });
+  }
+
+  /// Memasang aksesoris terpilih di kucing pratinjau, atau melepasnya.
+  Future<void> _wear(ProgressController progress, {required bool on}) async {
+    final ok = await progress.wearAccessory(_preview, on ? _selected : null);
+    if (ok && mounted) {
+      _showFlash(
+        on ? context.l10n.shopFlashNice : context.l10n.shopFlashRemoved,
+      );
+    }
   }
 
   Future<void> _buySnack(ProgressController progress, SnackId id) async {
@@ -114,7 +130,27 @@ class _ShopScreenState extends State<ShopScreen> {
                     progress: progress,
                     onBuy: (id) => _buySnack(progress, id),
                   ),
-                  ShopTab.accessories => const SizedBox.shrink(),
+                  ShopTab.accessories => _Accessories(
+                    progress: progress,
+                    preview: progress.home.ownsKitty(_preview)
+                        ? _preview
+                        : KittyId.oyen,
+                    selected: _selected,
+                    onPreview: (kitty) => setState(() => _preview = kitty),
+                    onSelect: (id) => setState(() => _selected = id),
+                    onBuy: () => showBuySheet(
+                      context,
+                      target: BuyAccessory(_selected),
+                      progress: progress,
+                      previewKitty: _preview,
+                      onWear: (id) {
+                        setState(() => _selected = id);
+                        _wear(progress, on: true);
+                      },
+                    ),
+                    onWear: () => _wear(progress, on: true),
+                    onRemove: () => _wear(progress, on: false),
+                  ),
                 },
               ),
             ),
@@ -224,6 +260,91 @@ class _Snacks extends StatelessWidget {
             onBuy: () => onBuy(snack.id),
           ),
         ],
+      ],
+    );
+  }
+}
+
+/// Tab Aksesoris: panel pratinjau, baris "Coba di:", lalu kisi kartu.
+/// Mengetuk kartu hanya mengganti pratinjau; membeli lewat panel.
+class _Accessories extends StatelessWidget {
+  const _Accessories({
+    required this.progress,
+    required this.preview,
+    required this.selected,
+    required this.onPreview,
+    required this.onSelect,
+    required this.onBuy,
+    required this.onWear,
+    required this.onRemove,
+  });
+
+  final ProgressController progress;
+  final KittyId preview;
+  final AccessoryId selected;
+  final ValueChanged<KittyId> onPreview;
+  final ValueChanged<AccessoryId> onSelect;
+  final VoidCallback onBuy;
+  final VoidCallback onWear;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final space = context.koSpace;
+    final l = context.l10n;
+    final home = progress.home;
+    final closet = home.closet;
+    final coins = progress.coins;
+    final owned = closet.owns(selected);
+    final worn = closet.wearingOf(preview) == selected;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AccessoryPreview(
+          kitty: preview,
+          accessory: selected,
+          coins: coins,
+          action: owned
+              ? (worn ? AccessoryAction.remove : AccessoryAction.wear)
+              : coins >= accessoryOf(selected).price
+              ? AccessoryAction.buy
+              : AccessoryAction.short,
+          onBuy: onBuy,
+          onWear: onWear,
+          onRemove: onRemove,
+        ),
+        SizedBox(height: space.s12),
+        KittyPicker(
+          kitties: [
+            for (final kitty in kitties)
+              if (home.ownsKitty(kitty.id)) kitty.id,
+          ],
+          active: preview,
+          wearing: closet.wearing,
+          onPick: onPreview,
+        ),
+        SizedBox(height: space.s12),
+        ShopGrid(
+          children: [
+            for (final accessory in accessories)
+              AccessoryCard(
+                id: accessory.id,
+                preview: preview,
+                selected: accessory.id == selected,
+                state: closet.owns(accessory.id)
+                    ? ShopCardState.owned
+                    : coins >= accessory.price
+                    ? ShopCardState.buy
+                    : ShopCardState.short,
+                wornBy: [
+                  for (final kitty in kitties)
+                    if (closet.wearingOf(kitty.id) == accessory.id)
+                      kittyName(l, kitty.id),
+                ].join(', '),
+                onPressed: () => onSelect(accessory.id),
+              ),
+          ],
+        ),
       ],
     );
   }
