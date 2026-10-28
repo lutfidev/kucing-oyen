@@ -759,6 +759,20 @@ void main() {
       expect(oyen(tester).row, 7);
     });
 
+    testWidgets('kembali sistem: fase atur dengan susunan tetap', (
+      tester,
+    ) async {
+      await _pumpLevel(tester, 13);
+      await placeSolution(tester, 13);
+      await wake(tester);
+      await tester.binding.handlePopRoute();
+      await tester.pump();
+      expect(find.text('Bangunkan Oyen'), findsOneWidget);
+      expect(_tile(tester, 3, 3).item, TileItem.bucketP);
+      expect(_tile(tester, 2, 4).item, TileItem.fishP);
+      expect(_slotOf(tester, Item.water).count, 0);
+    });
+
     testWidgets('Jeda menahan langkah; Lanjutkan meneruskan', (tester) async {
       await _pumpLevel(tester, 13);
       await wake(tester);
