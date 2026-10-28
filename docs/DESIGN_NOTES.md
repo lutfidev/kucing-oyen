@@ -238,12 +238,12 @@ Jawaban pemilik repo dan keputusan lengkap di `docs/superpowers/specs/2026-10-19
 Temuan kecil review langkah 17 (PR #19). Perilaku yang sudah dites tidak berubah, kecuali yang disebut di bawah.
 
 - **Hadiah sesudah ditutup.** Iklan yang ditutup tanpa hadiah menunggu 400 ms (`AdMobRewardedAds.defaultRewardGrace`, tengah rentang usulan 300–500 ms) sebelum dianggap gagal; hadiah yang datang di jeda itu langsung memberi true. Iklan yang ditutup tanpa hadiah jadi selesai 400 ms lebih lambat, tidak terasa karena layar iklan baru saja tertutup.
-- **Batas pengaman tampil** 10 menit (`defaultShowTimeout`): cukup panjang untuk pemain yang membuka toko dari iklan lalu kembali. Kalau habis, hasilnya mengikuti hadiah yang sudah datang (hadiah tidak hilang), lalu iklan dibuang dan iklan berikutnya dimuat.
+- **Batas pengaman tampil** 10 menit (`defaultShowTimeout`): cukup panjang untuk pemain yang membuka toko dari iklan lalu kembali. Kalau habis, hasilnya mengikuti hadiah yang sudah datang (hadiah tidak hilang), lalu iklan dibuang dan iklan berikutnya dimuat. Callback SDK yang datang sesudahnya diabaikan.
 - **SDK sedang dinyalakan.** `show()` menunggu SDK yang sedang dinyalakan (`GameAds` memberi future-nya lewat `starting:`) lalu memuat iklan, semuanya dalam satu batas `loadTimeout` 10 detik. Yang ditunggu hanya SDK yang sedang dinyalakan; formulir persetujuan yang masih terbuka tidak ditunggu, jadi ketukan itu tetap gagal seperti sebelumnya.
 - **Pemuat atau SDK yang melempar sinkron** tidak lagi membuat muatan macet: future muatan (juga future SDK di `GameAds`) dikosongkan sesudah dipasang dan hanya kalau masih yang sama.
 - **Splash Android 12+**: `LaunchTheme` memakai latar `@color/cream` polos, bukan `launch_background` (kepala Oyen dan logo), supaya gambar tidak melompat kalau letaknya berbeda dari ikon splash sistem.
 - **Formulir persetujuan** dijaga di Pengaturan (`_consentOpen`), bukan di `UmpAdConsent`, supaya bisa dites dengan persetujuan palsu.
-- **App bundle tanpa `key.properties`** gagal di Gradle (`bundleRelease`) dengan pesan yang menunjuk `docs/store/README.md`. APK release dan `flutter run --release` tetap memakai debug key dengan peringatan. Dicek dengan `gradlew bundleRelease --dry-run` (gagal berpesan) dan `gradlew assembleRelease --dry-run` (jalan).
+- **App bundle tanpa `key.properties`** gagal di Gradle (`bundleRelease`) dengan pesan yang menunjuk `docs/store/README.md`, kecuali kunci diberikan wizard "Generate Signed Bundle" Android Studio (`android.injected.signing.store.file`, temuan review). APK release dan `flutter run --release` tetap memakai debug key dengan peringatan. Dicek dengan `gradlew bundleRelease --dry-run` (gagal berpesan) dan `gradlew assembleRelease --dry-run` (jalan).
 - **Belum dicek di perangkat** (masih tanpa HP atau emulator): splash krem dan iklan uji.
 
 ## Sebelum langkah 21: rumah Oyen

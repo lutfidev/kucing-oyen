@@ -88,8 +88,8 @@ class AdMobRewardedAds implements RewardedAds {
   Future<void> _startLoad() {
     final loading = _loadOne();
     _loading = loading;
-    // Dikosongkan sesudah dipasang, juga kalau pemuat melempar sinkron
-    // (muatan itu sudah selesai sebelum baris di atas berjalan).
+    // Dikosongkan sesudah dipasang: muatan bisa selesai sebelum baris di
+    // atas berjalan (mis. pemuat melempar sinkron).
     unawaited(
       loading.whenComplete(() {
         if (identical(_loading, loading)) _loading = null;
@@ -162,6 +162,9 @@ class AdMobRewardedAds implements RewardedAds {
     final done = Completer<bool>();
     var earned = false;
     var closed = false;
+    // Sudah selesai (juga lewat batas pengaman): callback SDK yang datang
+    // sesudahnya diabaikan.
+    var settled = false;
     Timer? grace;
     void finish(bool rewarded) {
       grace?.cancel();
@@ -175,7 +178,7 @@ class AdMobRewardedAds implements RewardedAds {
           if (closed) finish(true);
         },
         onClosed: () {
-          if (closed) return;
+          if (closed || settled) return;
           closed = true;
           if (earned) {
             finish(true);
@@ -188,6 +191,7 @@ class AdMobRewardedAds implements RewardedAds {
     } on Object {
       return false;
     } finally {
+      settled = true;
       grace?.cancel();
       ad.dispose();
       preload();
@@ -266,7 +270,8 @@ class GameAds {
     if (pending != null) return pending;
     final starting = _startSdkOnce();
     _startingSdk = starting;
-    // Dikosongkan sesudah dipasang, juga kalau SDK melempar sinkron.
+    // Dikosongkan sesudah dipasang: bisa selesai sebelum dipasang (mis.
+    // SDK melempar sinkron).
     unawaited(
       starting.whenComplete(() {
         if (identical(_startingSdk, starting)) _startingSdk = null;

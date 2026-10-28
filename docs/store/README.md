@@ -8,11 +8,11 @@ Build release tetap bisa dibuat tanpa langkah ini (untuk uji internal), tapi **j
 
 1. **ID aplikasi AdMob asli** di `android/app/build.gradle.kts`, baris `val admobAppId = ...` (bertanda `TEMPEL ID ASLI DI SINI`). Sekarang masih ID aplikasi uji Google `ca-app-pub-3940256099942544~3347511713`.
 2. **ID unit iklan berhadiah asli** di `lib/app/ad_ids.dart`: `hintRewardedUnit` (petunjuk) dan `coinRewardedUnit` (koin tambahan). Kalau hanya satu unit dibuat di AdMob, tempel ID yang sama di keduanya. Sekarang masih ID unit uji `ca-app-pub-3940256099942544/5224354917`, jadi build release menampilkan iklan uji dan tidak menghasilkan uang.
-3. **Keystore upload** dan `android/key.properties` (lihat "Signing" di bawah). Tanpa itu, `flutter build appbundle` gagal dengan pesan "Ginger Logic: android/key.properties tidak ada ..."; APK release (`flutter build apk --release`, `flutter run --release`) tetap bisa dibuat dengan debug key untuk dicoba di HP.
+3. **Keystore upload** dan `android/key.properties` (lihat "Signing" di bawah). Tanpa itu (dan tanpa wizard "Generate Signed Bundle" Android Studio), `flutter build appbundle` gagal dengan pesan "Ginger Logic: android/key.properties tidak ada ..."; APK release (`flutter build apk --release`, `flutter run --release`) tetap bisa dibuat dengan debug key untuk dicoba di HP.
 4. **Kebijakan privasi** diunggah ke https://yoluvy.my.id/ginger-logic/privacy/ (lihat `privacy/README.md`).
 5. Di AdMob, tautkan aplikasi ke listing Play Store setelah terbit, dan atur pesan persetujuan GDPR (Privasi & pesan → Eropa) supaya formulir UMP muncul di EEA, Inggris, dan Swiss.
 
-Gradle mencetak peringatan "Ginger Logic: ..." saat build release kalau ID aplikasi AdMob masih ID uji, atau kalau APK release dibuat tanpa `key.properties` (Flutter hanya menampilkan peringatan dengan `-v`, mis. `flutter build appbundle -v`); aplikasi juga mencetak peringatan di log kalau ID unit masih ID uji.
+Gradle mencetak peringatan "Ginger Logic: ..." saat build release kalau ID aplikasi AdMob masih ID uji, atau kalau APK release dibuat tanpa `key.properties` (Flutter hanya menampilkan peringatan dengan `-v`, mis. `flutter build apk --release -v`); aplikasi juga mencetak peringatan di log kalau ID unit masih ID uji.
 
 ## Isi folder
 

@@ -22,6 +22,10 @@ val keyProperties = Properties().apply {
 }
 val hasReleaseKey = keyProperties.getProperty("storeFile") != null
 
+// Kunci dari wizard "Generate Signed Bundle" Android Studio (tanpa
+// key.properties).
+val hasInjectedKey = project.hasProperty("android.injected.signing.store.file")
+
 android {
     namespace = "com.gingerlogic.app"
     compileSdk = flutter.compileSdkVersion
@@ -72,7 +76,7 @@ android {
 // App bundle tanpa upload key ditolak (Play Console juga menolaknya);
 // build release lain yang belum siap diunggah hanya diberi peringatan.
 gradle.taskGraph.whenReady {
-    if (allTasks.any { it.name == "bundleRelease" } && !hasReleaseKey) {
+    if (allTasks.any { it.name == "bundleRelease" } && !hasReleaseKey && !hasInjectedKey) {
         throw GradleException(
             "Ginger Logic: android/key.properties tidak ada, jadi app bundle release tidak bisa ditandatangani upload key. " +
                 "Buat keystore dan key.properties dulu (docs/store/README.md, bagian Signing). " +

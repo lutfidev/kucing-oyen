@@ -12,7 +12,8 @@ class _FakeHandle implements RewardedAdHandle {
 
   final bool throwOnShow;
   int shown = 0;
-  bool disposed = false;
+  int disposals = 0;
+  bool get disposed => disposals > 0;
   VoidCallback? onReward;
   VoidCallback? onClosed;
 
@@ -25,7 +26,7 @@ class _FakeHandle implements RewardedAdHandle {
   }
 
   @override
-  void dispose() => disposed = true;
+  void dispose() => disposals++;
 
   /// Penonton menonton sampai hadiah lalu menutup iklan.
   void watchToEnd() {
@@ -119,6 +120,37 @@ void main() {
       ad.onReward!();
       expect(await result, isTrue);
       expect(ad.disposed, isTrue);
+    });
+
+    test('ditutup, hadiah, lalu ditutup lagi = true, dispose sekali', () async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader);
+      final result = ads.show();
+      final ad = _FakeHandle();
+      await loader.finish(ad);
+      ad.onClosed!();
+      ad.onReward!();
+      ad.onClosed!();
+      expect(await result, isTrue);
+      expect(ad.disposals, 1);
+    });
+
+    testWidgets('callback sesudah batas pengaman tidak memasang timer', (
+      tester,
+    ) async {
+      final loader = _FakeLoader();
+      final ads = _ads(loader, showTimeout: const Duration(seconds: 1));
+      bool? result;
+      unawaited(ads.show().then((value) => result = value));
+      await tester.pump();
+      final ad = _FakeHandle();
+      loader.pending.last.complete(ad);
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      expect(result, isFalse);
+      // SDK baru memberi tahu jauh sesudahnya. testWidgets gagal kalau ada
+      // Timer yang masih menunggu di akhir test.
+      ad.onClosed!();
     });
 
     test('hadiah sesudah jeda lewat = false', () async {
@@ -509,6 +541,30 @@ void main() {
       expect(await ads.hints.show(), isFalse);
       await pumpEventQueue();
       expect(consent.gathered, 2);
+    });
+
+    test('SDK gagal menyala saat iklan menunggu: dicoba lagi', () async {
+      final loader = _FakeLoader();
+      final consent = FakeAdConsent();
+      final sdk = Completer<void>();
+      var starts = 0;
+      final ads = GameAds(
+        consent: consent,
+        startSdk: () => starts++ == 0 ? sdk.future : Future.value(),
+        load: loader.call,
+      );
+      unawaited(ads.start());
+      await pumpEventQueue();
+      final result = ads.coins.show();
+      await pumpEventQueue();
+      sdk.completeError(StateError('SDK'));
+      expect(await result, isFalse);
+      await pumpEventQueue();
+      // Ketukan itu gagal, tapi persetujuan diminta lagi dan SDK menyala.
+      expect(consent.gathered, 2);
+      expect(starts, 2);
+      expect(ads.sdkReady, isTrue);
+      expect(loader.calls, 2);
     });
 
     test('iklan diminta selagi SDK menyala: menunggu lalu tampil', () async {
