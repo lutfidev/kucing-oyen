@@ -34,16 +34,16 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [ ] 18. Pengerasan iklan dan rilis (temuan kecil review langkah 17)
 - [ ] 19. Saran lama dari PR sebelumnya (aksesibilitas, navigasi, simpanan, suara)
 - [ ] 20. Sisa saran: putar otomatis, terjemahan, dan rapi-rapi kecil
-- [ ] 21. Rumah Oyen: model kamar, kucing, makanan, dan kebutuhan
-- [ ] 22. Toko
-- [ ] 23. Kamar Oyen sebagai Beranda
-- [ ] 24. Kamar hidup: kucing berjalan, kebutuhan, dan hadiah
+- [ ] 21. Rumah Oyen: model kamar, kucing, aksesoris, makanan, dan kebutuhan
+- [ ] 22. Toko dan aksesoris
+- [ ] 23. Kamar Oyen sebagai Beranda, tanpa Lemari Kostum
+- [ ] 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
 - [ ] 25. Peta bergambar dan Oyen berjalan ke level berikutnya
 - [ ] 26. Potret toko dan rapi-rapi rumah Oyen
 
 Langkah 15–17 dipecah dari "Polish dan rilis Android" lama (diskusi dengan pemilik repo, 19 Okt 2026). Keputusan pasar, bahasa, iklan, dan isi Pengaturan dicatat di `docs/DESIGN_NOTES.md` bagian "Sebelum langkah 15"; prompt di bawah tidak perlu menanyakannya lagi.
 
-Langkah 21–26 (rumah Oyen) diputuskan saat brainstorming 26 Okt 2026 dan dikerjakan sesudah langkah 18–20. Desainnya dibuat pemilik repo di Claude Design lebih dulu; lihat bagian "Sebelum langkah 21" di bawah.
+Langkah 21–26 (rumah Oyen) diputuskan saat brainstorming 26 Okt 2026 dan dikerjakan sesudah langkah 18–20. Desainnya sudah dibuat pemilik repo di Claude Design (28 Okt 2026); lihat bagian "Sebelum langkah 21" di bawah.
 
 ---
 
@@ -205,154 +205,216 @@ Selesai: `applicationId` `com.gingerlogic.app` dan versi 1.0.0, signing release 
 
 ## Sebelum langkah 21: desain rumah Oyen
 
-Pemilik repo memutuskan langkah 21–26 saat brainstorming 26 Okt 2026. Langkah ini dikerjakan sesudah langkah 18–20.
+Pemilik repo memutuskan langkah 21–26 saat brainstorming 26 Okt 2026. Desainnya dibuat di Claude Design dan diterima 28 Okt 2026. Langkah ini dikerjakan sesudah langkah 18–20.
 
 Sumber utama:
-- `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`: aturan, angka, model data, dan keputusan [pemilik]/[saya].
+- `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`: aturan, angka, model data, dan daftar berkas desain. Bagian "Perubahan 28 Oktober" menjelaskan Peci/Sarung yang dihapus, Lemari Kostum yang diganti Aksesoris, dan animasi.
 - `docs/DESIGN_NOTES.md` bagian "Sebelum langkah 21".
+- Desain: `docs/design/rumah-oyen/project/*.dc.html`.
 
-Desainnya dibuat pemilik repo di Claude Design dengan brief `docs/design-brief/rumah-oyen.md`, lalu diekspor ke `docs/design/source/` sebagai halaman 19–24.
+**Desainnya diambil dari link kanvas** yang tercantum di spesifikasi.
+- Kalau folder desain belum ada, unduh dulu lewat alat Artifact: aksi `read` dengan `paths` semua berkas `project/*` dan `out_dir` `docs/design/rumah-oyen`.
+- Kalau link tidak bisa dibuka, berhenti sebelum bercabang dan beri tahu pemilik repo.
 
-**Setiap langkah 21–26 dimulai dengan mengecek bahwa halaman desain yang disebut prompt-nya sudah ada.**
-- Kalau belum ada, berhenti sebelum bercabang dan beri tahu pemilik repo.
-- Pengecualian: langkah 21 hanya memakai halaman 21 dan 22 untuk daftar barang dan kucing. Kalau keduanya belum ada, pakai katalog di spesifikasi dan catat.
-- Kalau desain bertentangan dengan spesifikasi, tampilan ikut desain, sedangkan aturan dan angka ikut spesifikasi. Catat keputusannya di `docs/DESIGN_NOTES.md`.
+**Kalau desain bertentangan dengan spesifikasi:**
+- Tampilan, teks, dan harga ikut desain.
+- Aturan yang tidak tampak di desain ikut spesifikasi.
+- Catat keputusannya di `docs/DESIGN_NOTES.md`.
 
-## 21. Rumah Oyen: model kamar, kucing, makanan, dan kebutuhan
+## 21. Rumah Oyen: model kamar, kucing, aksesoris, makanan, dan kebutuhan
 
-**Hasil:** data dan aturan rumah Oyen ada sebagai Dart murni yang tersimpan dan teruji: barang, kucing koleksi, camilan, tata letak, kebutuhan, mangkuk, dan hadiah. Belum ada layar baru.
+**Hasil:** data dan aturan rumah Oyen tersedia sebagai Dart murni yang tersimpan dan teruji: barang, kucing koleksi, aksesoris, camilan, tata letak, kebutuhan, mangkuk, dan hadiah. Belum ada layar baru.
 
-> Baca dulu:
-> - spesifikasi rumah Oyen bagian Kebutuhan dan hadiah, Toko/Katalog, Koin, dan Model data
-> - `lib/game/model/costumes.dart` dan `rewards.dart`
-> - `ProgressController`, `ProgressStore`, `PrefsProgressStore`, `MemoryProgressStore`
-> - `test/app/progress_test.dart`
+> **Baca dulu:**
+> - spesifikasi rumah Oyen bagian Kebutuhan dan hadiah, Aksesoris, Toko, Koin, dan Model data
+> - skrip katalog di `Toko.dc.html` dan `Kamar.dc.html` desain
+> - `lib/game/model/costumes.dart` dan `lib/game/model/rewards.dart`
+> - `ProgressController`, `ProgressStore`/`PrefsProgressStore`/`MemoryProgressStore`, dan `test/app/progress_test.dart`
 >
-> Lalu buat:
-> - **Katalog:** 12 barang (zona lantai/dinding, cara dipakai, posisi bawaan), kucing koleksi (Oyen + 4, dengan harga), dan 3 camilan beserta `Pantry`.
-> - **`Room`:** barang yang dimiliki, yang ditaruh (posisi pecahan 0–1), dan Gudang.
-> - **`CatNeeds`:** Lapar habis dalam 12 jam, Senang dalam 16 jam. Keduanya turun mengikuti jam, juga saat aplikasi ditutup; jam mundur tidak menaikkannya. Ada batas elus dan main.
-> - **`Bowl`:** satu isi tiap 4 jam, tiap kucing makan sekali per isi (+40).
-> - **Hadiah:** 10 koin per kucing per hari kalender saat kedua bar ≥ 70.
-> - Semua `toJson`/`fromJson` membuang entri rusak.
-> - **Simpanan baru lewat `ProgressStore`:** kunci `home.state` (satu JSON untuk barang, tata letak, kucing, dan stok) dan `home.needs` (kebutuhan, mangkuk, dan hari hadiah).
-> - **`ProgressController`:**
->   - `home`, `needs` (dihitung dari `clock`)
->   - `buyItem`/`buyKitty`/`buySnack` → `Future<bool>`: gagal tanpa efek, dua ketukan tidak membayar dua kali, barang disimpan sebelum koin seperti `buyCostume`
->   - `placeItem`, `storeItem`, `feed`, `pet`, `play`, `eatFromBowl`, `claimKittyReward`
->   - `resetProgress` menghapus barang, kucing, stok, dan tata letak; bar Oyen kembali 100; hari hadiah tetap
-> - **`maxAdsPerDay` jadi 10.** Teks "Sisa N kali hari ini" dan test koin tambahan menyesuaikan. Tambahkan catatan di `docs/DESIGN_NOTES.md` bagian langkah 14.
+> **Lalu buat:**
+> - **Katalog** dengan harga dari desain:
+>   - 12 barang: zona lantai/dinding, cara dipakai, posisi bawaan
+>   - kucing koleksi: Oyen + 4
+>   - 8 aksesoris: harga, kelangkaan, jangkar; Topi Koki 200
+>   - 3 camilan: Lapar dan Senang menurut spesifikasi, beserta `Pantry`
+> - **`Room`**: barang dimiliki, posisi barang yang ditaruh (pecahan 0–1), dan Gudang.
+> - **`AccessoryCloset`**: aksesoris dimiliki, dan yang dipakai per kucing. Satu kucing satu aksesoris. Aksesoris yang sama boleh dipakai beberapa kucing.
+> - **`CatNeeds`**:
+>   - Lapar habis dalam 12 jam, Senang dalam 16 jam. Keduanya turun mengikuti jam, juga saat aplikasi ditutup. Jam mundur tidak menaikkan bar.
+>   - Elus +10, paling banyak +30 per jam.
+>   - Main +10, paling banyak sekali per 30 menit.
+>   - Selesai menghias +5, paling banyak sekali per jam.
+> - **`Bowl`**: satu isi tiap 4 jam; tiap kucing boleh makan sekali per isi (+40).
+> - **Hadiah**: 10 koin per kucing per hari kalender, kalau kedua bar ≥ 70.
+> - **Simpanan**:
+>   - Semua `toJson`/`fromJson` membuang entri rusak.
+>   - Kunci baru lewat `ProgressStore`: `home.state` (satu JSON untuk barang, tata letak, kucing, aksesoris, dan stok) dan `home.needs`.
+> - **`ProgressController`**:
+>   - `home`, `needs`
+>   - `buyItem`/`buyKitty`/`buyAccessory`/`buySnack` → `Future<bool>`. Gagal tanpa efek, dua ketukan tidak membayar dua kali, dan barang disimpan sebelum koin.
+>   - `wearAccessory`, `placeItem`, `storeItem`, `feed`, `pet`, `play`, `finishDecorating`, `eatFromBowl`, `claimKittyReward`
+>   - `resetProgress` juga menghapus barang, kucing, aksesoris, stok, dan tata letak. Bar Oyen kembali 100; hari hadiah tetap.
+> - **`maxAdsPerDay` jadi 10.** Sesuaikan teks "Sisa N kali hari ini" dan test koin tambahan, lalu tambahkan catatan di `docs/DESIGN_NOTES.md` bagian langkah 14.
 >
-> Belum ada layar dan teks baru di langkah ini, kecuali yang dibutuhkan test.
+> Kostum lama dan Lemari Kostum masih dibiarkan; keduanya dihapus di langkah 23. Belum ada layar dan teks baru di langkah ini, kecuali yang dibutuhkan test.
 >
-> Test:
-> - katalog dan harga
+> **Test:**
+> - katalog dan harga sama dengan desain
 > - beli, koin kurang, dua ketukan, simpanan rusak
-> - kebutuhan turun per jam dan berhenti di 0
-> - jam mundur
+> - aksesoris dipakai beberapa kucing, ganti, lepas, dan aksesoris yang tidak dimiliki dibuang saat dibaca
+> - kebutuhan turun per jam dan berhenti di 0; jam mundur
 > - mangkuk per isi
-> - hadiah sekali sehari dan tertahan saat jam mundur
-> - batas elus
+> - hadiah sekali sehari, dan tertahan saat jam mundur
+> - batas elus dan batas menghias
 > - reset
 > - `maxAdsPerDay` 10
 >
 > Perbarui bagian "Struktur" di `CLAUDE.md`.
 
-## 22. Toko
+## 22. Toko dan aksesoris
 
-**Hasil:** layar Toko (desain 20) di rute `/toko` untuk membeli barang, kucing, dan camilan dengan koin.
+**Hasil:** layar Toko di rute `/toko` untuk membeli barang, kucing, aksesoris (dengan pratinjau langsung), dan camilan dengan koin.
 
-> Baca dulu:
-> - spesifikasi rumah Oyen bagian Toko
-> - `docs/design/source/20-*.html` dan komponen halaman 24 yang dipakai
-> - `21-*.html` dan `22-*.html` untuk gambar kartu
-> - `lib/screens/closet/` (pola layar beli), `lib/screens/coins/` (sheet Tambah Koin), dan `lib/widgets/ko_sheet.dart`
+> **Baca dulu:**
+> - spesifikasi rumah Oyen bagian Toko dan Aksesoris
+> - desain `Toko.dc.html`, `TabToko`, `KartuToko`, `SheetBeli`, `ChipKoin`, `IkonAksesoris`, `Kucing.dc.html` (sprite, warna, aksesoris), `AksesorisPreview.dc.html`, `Barang.dc.html`, dan artboard `Toko*.dc.html`
+> - `lib/screens/closet/` (pola layar beli), `lib/screens/coins/`, dan `lib/widgets/ko_sheet.dart`
 >
-> Kalau halaman 20, 21, atau 22 belum ada, berhenti dan beri tahu pemilik repo.
+> **Gambar Topi Koki:** cek apakah desain sudah memuatnya (tambahan brief `docs/design-brief/rumah-oyen.md`). Kalau belum, gambar sendiri dengan palet dan aturan jangkar desain 21b, cek lewat potret layar, lalu catat.
 >
-> Lalu buat:
-> - **Gambar:** salin `<svg>` kucing koleksi (pose duduk), barang (diam), dan camilan dari desain ke `lib/game/render/` lewat `SvgTemplate`, seperti `design_svg.dart`. Jangan diketik ulang. Buat juga fungsi `Canvas` dan widget pembungkusnya.
-> - **Layar Toko:**
+> **Lalu buat:**
+> - **Gambar**: salin `<svg>` dari desain ke `lib/game/render/` lewat `SvgTemplate`. Jangan diketik ulang.
+>   - Sprite kucing kamar dibuat sebagai fungsi `Canvas` yang menerima kucing, pose, arah, aksesoris, dan waktu animasi. Bagian sprite (kepala, mata, ekor) tetap terpisah, karena langkah 24 menganimasikannya.
+>   - Gambar aksesoris mengikuti jangkar di semua pose.
+>   - Buat juga ikon aksesoris, barang (diam), dan camilan, beserta widget pembungkusnya.
+> - **Layar Toko**:
 >   - bar atas: kembali, judul, chip koin yang membuka sheet Tambah Koin
->   - tab Barang/Kucing/Makanan
->   - kartu dengan keadaan desain: bisa dibeli, dimiliki, koin kurang, stok camilan
->   - sheet konfirmasi beli lewat `showKoSheet`
->   - keadaan sukses dengan "Lihat di kamar"; sementara menuju Beranda lama sampai langkah 23
-> - **Tombol Toko sementara** di Beranda lama, dengan gaya tombol menu yang ada. Catat; tombol ini diganti di langkah 23.
-> - **Teks baru** di keempat ARB, lalu `flutter gen-l10n`: nama barang, kucing, dan camilan lewat `lib/l10n/names.dart`, tab, keadaan kartu, dan konfirmasi.
-> - **Suara beli** lewat `GameSound`, kalau sudah ada efek yang cocok. Efek baru dibuat di langkah 24.
-> - **`overflow_test`:** tambahkan rute baru ke daftar `routes`, dengan Toko bersaldo 99999 di ketiga tab dan sheet konfirmasi.
-> - Galeri barang dan kucing di `/galeri`, kalau berguna.
-> - Potret layar Toko di `test/screenshots/`.
+>   - empat tab
+>   - kartu dengan keadaan sesuai desain
+>   - tab Aksesoris dengan pratinjau langsung: pilih kucing yang dimiliki dan aksesorisnya; tombol beli atau pakai
+>   - sheet konfirmasi lewat `showKoSheet`, keadaan koin kurang, dan keadaan sukses ("Lihat di kamar" untuk barang/kucing, "Milikmu selamanya" untuk aksesoris)
+> - **Tombol sementara**: tambahkan tombol Toko ke Beranda lama dengan gaya tombol menu yang ada, dan catat. Tombol ini diganti di langkah 23. Sampai langkah 23, "Lihat di kamar" menuju Beranda.
+> - **Teks baru** di keempat ARB, lalu `flutter gen-l10n`. Nama dan deskripsi lewat `lib/l10n/names.dart`.
+> - **`overflow_test`**: tambahkan `/toko` bersaldo 99999 untuk keempat tab, pratinjau aksesoris, dan sheet konfirmasi.
+> - **Galeri dan potret layar**: tampilkan sprite dan aksesoris di galeri (`/galeri`), dan buat potret layar Toko.
 >
-> Test: tab, beli dengan konfirmasi, koin kurang, dua ketukan, stok camilan bertambah, dan pembaca layar (label kartu dan keadaannya).
+> **Test:**
+> - tab
+> - beli dengan konfirmasi, koin kurang, dua ketukan
+> - stok camilan bertambah
+> - pratinjau aksesoris tidak membeli
+> - pakai aksesoris yang dimiliki
+> - pembaca layar
+> - test gambar: aksesoris digambar di jangkarnya untuk beberapa pose (warna piksel di koordinat desain, seperti `test/game/render/`)
 >
 > Perbarui bagian "Struktur" di `CLAUDE.md`.
 
-## 23. Kamar Oyen sebagai Beranda
+## 23. Kamar Oyen sebagai Beranda, tanpa Lemari Kostum
 
-**Hasil:** Beranda berubah jadi kamar Oyen (desain 19). Barang yang dibeli tampil dan bisa ditata bebas, kucing tampil dan bisa diketuk, dan navigasi lama tetap ada.
+**Hasil:** Beranda berubah jadi kamar Oyen. Barang yang dibeli tampil dan bisa ditata bebas, kucing tampil dan bisa diketuk, aksesoris bisa diganti dari kartu kucing, dan Lemari Kostum beserta kostum lama hilang.
 
-> Baca dulu:
-> - spesifikasi rumah Oyen bagian Kamar
-> - `docs/design/source/19-*.html`, `21-*.html`, `22-*.html`, `24-*.html`
-> - `lib/screens/home/` dan `lib/screens/level/` (pola seret benda dari baki)
-> - `test/screens/home_chapter_test.dart`
+> **Baca dulu:**
+> - spesifikasi rumah Oyen bagian Kamar, "Perubahan 28 Oktober", dan Aksesoris (bagian "Di puzzle")
+> - desain `Kamar.dc.html` beserta artboard `Kamar*.dc.html`, `TombolHias`, `BakiGudang`, `BarKebutuhan`, `TandaLesu`, `GelembungKoin`, `BarangKamar.dc.html`, dan catatan `n360` di `canvas.json`
+> - `lib/screens/home/`, `lib/screens/closet/`, `lib/game/render/oyen.dart` (`OyenCostume`), dan `lib/screens/level/` (pola seret)
+> - `test/screens/home_chapter_test.dart`, `navigation_test.dart`, dan test kostum yang disebut di `CLAUDE.md`
 >
-> Kalau halaman 19, 21, 22, atau 24 belum ada, berhenti dan beri tahu pemilik repo.
->
-> Lalu:
-> - **Kamar desain 19 menggantikan isi `HomeScreen`** di rute `/`: chip koin dengan titik bonus, total bintang, logo sesuai desain, dan tombol Main/Toko/Lemari Kostum/Pengaturan. Lepas tombol Toko sementara dari langkah 22.
-> - **Area dinding dan lantai** diukur dari ruang yang tersisa, di 360×640 sampai 412×915 dengan teks 130%.
-> - **Barang** yang ditaruh digambar di posisinya, urut y di lantai. Barang baru muncul di posisi bawaannya. Mangkuk termasuk barang bawaan.
-> - **Kucing:** Oyen berkostum dan kucing koleksi dalam pose diam, di tempat acak yang tetap (seed dari id).
-> - **Ketuk kucing** memunculkan reaksi singkat dan kartu kucing berisi nama dan bar dari model langkah 21. Tombol beri camilan dan elus boleh sudah bekerja lewat `ProgressController`.
-> - **Mode hias:** tombol Hias, seret bebas di dalam zonanya, lepas ke Gudang, dan Selesai menyimpan lewat `placeItem`/`storeItem`.
+> **Lalu, untuk kamar:**
+> - **Isi `HomeScreen`** di rute `/` diganti kamar sesuai desain:
+>   - logo dan chip koin
+>   - tombol Main/Toko/Aksesoris/Pengaturan; Aksesoris membuka `/toko` di tab Aksesoris
+>   - keadaan pemain baru
+>   - tombol Toko sementara dari langkah 22 dilepas
+> - **Area dinding dan lantai** dari ruang yang tersisa, ukuran 360×640 sampai 412×915, teks 130%. Ikuti catatan `n360`.
+> - **Barang dan kucing**:
+>   - barang yang ditaruh digambar di posisinya, urut menurut y
+>   - kucing dalam pose diam dengan aksesorisnya, di tempat acak yang tetap
+>   - mangkuk bawaan
+> - **Ketuk kucing** membuka kartu kucing sesuai desain:
+>   - bar, Elus
+>   - panel Camilan, yang memberi camilan dari stok
+>   - panel Aksesoris: pasang/lepas lewat `wearAccessory`, dan "Toko aksesoris →"
+>   - reaksi teks dan hati
+> - **Mode hias**:
+>   - tombol Hias
+>   - seret bebas di dalam zonanya; lepas ke Gudang; ketuk di Gudang untuk menaruh
+>   - Selesai menyimpan lewat `placeItem`/`storeItem`/`finishDecorating` dan menampilkan pujian
 > - **"Lihat di kamar"** dari Toko kini menuju kamar.
-> - Kucing berjalan, gelembung hadiah, dan jam mangkuk belum ada (langkah 24), kecuali yang perlu untuk test.
-> - **Teks baru** di keempat ARB: Hias, Selesai, Gudang, kartu kucing, dan label pembaca layar kucing dan barang.
-> - **`overflow_test`:** kamar kosong, kamar penuh dengan 12 barang dan 5 kucing, mode hias, dan kartu kucing, semuanya bersaldo 99999.
-> - Potret layar Beranda per bahasa diperbarui.
 >
-> Test:
+> **Lalu, hapus Lemari Kostum dan kostum lama:**
+> - rute `/kostum`, `lib/screens/closet/`, `costumes.dart`/`Wardrobe`, `OyenCostume`, prop `costume`/`dressed`
+> - kostum di papan, putar ulang, layar hasil, dan tutorial; Oyen di area puzzle tampil tanpa aksesoris
+> - kunci `costume.*` (dibuang saat dibaca), dan teks kostum di keempat ARB
+> - test kostum: yang masih relevan diganti test aksesoris
+> - gambar Peci dan Sarung, termasuk di `design_svg.dart` dan galeri
+>
+> Kucing berjalan, animasi, gelembung hadiah, dan jam mangkuk dikerjakan di langkah 24, kecuali yang dibutuhkan test.
+>
+> **Teks baru** di keempat ARB.
+>
+> **`overflow_test`**:
+> - kamar kosong
+> - kamar penuh: 12 barang dan 5 kucing beraksesoris
+> - mode hias
+> - kartu kucing dengan panel Camilan dan Aksesoris
+> - semuanya bersaldo 99999
+> - `/kostum` dihapus dari daftar rute
+>
+> **Potret layar** Beranda per bahasa diperbarui.
+>
+> **Test:**
 > - barang tampil di posisinya
-> - seret di dalam zona dan tidak bisa keluar zona
+> - seret di dalam zona, dan tidak bisa keluar zona
 > - Gudang
 > - tata letak tersimpan sesudah aplikasi dibuka ulang
+> - ganti aksesoris dari kartu
 > - navigasi dari kamar (`navigation_test` disesuaikan)
-> - ketuk kucing
+> - `/kostum` tidak ada lagi
 > - pembaca layar
 >
-> Catat keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 23" dan perbarui "Struktur" di `CLAUDE.md`.
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 23", dan perbarui bagian "Struktur" di `CLAUDE.md`.
 
-## 24. Kamar hidup: kucing berjalan, kebutuhan, dan hadiah
+## 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
 
-**Hasil:** kucing di kamar berjalan sendiri ke barang dan memakainya. Lapar dan senang mengikuti jam. Kucing bisa diberi makan, dielus, dan diajak main, dan kucing yang dirawat memberi hadiah koin.
+**Hasil:**
+- Kucing di kamar berkedip, mengibaskan ekor, dan bernapas.
+- Kucing berjalan sendiri ke barang lalu memakainya.
+- Barang ikut bergerak.
+- Lapar dan Senang mengikuti jam.
+- Kucing yang dirawat memberi hadiah koin.
 
-> Baca dulu:
-> - spesifikasi rumah Oyen bagian Kebutuhan dan hadiah, dan Kamar hidup
-> - `docs/design/source/19-*.html` (keadaan hadiah dan lesu), `21-*.html` (semua pose), `22-*.html` (barang yang sedang dipakai)
-> - `lib/game/model/run_clock.dart` (pola jam yang bisa dimajukan di test)
-> - `lib/game/model/sounds.dart`, `lib/app/game_audio.dart`, dan `tool/audio/`
+> **Baca dulu:**
+> - spesifikasi rumah Oyen bagian Kamar hidup, dan Kebutuhan dan hadiah
+> - desain `AnimasiKucing.dc.html` (angka animasi dan rutinitas), `Kucing.dc.html` (pose dan bagian yang dianimasikan), `Barang.dc.html` (barang dipakai dan bergerak), dan `Kamar.dc.html` (rutinitas dan reaksi)
+> - `lib/game/model/run_clock.dart`, `lib/game/model/sounds.dart`, `lib/app/game_audio.dart`, dan `tool/audio/`
 >
-> Kalau halaman itu belum ada, berhenti dan beri tahu pemilik repo.
->
-> Lalu:
-> - **Perilaku kamar sebagai Dart murni.** Keadaan per kucing: diam, berjalan ke tujuan, memakai barang, makan di mangkuk, lesu, dan bereaksi. Tujuan dipilih acak berbobot dengan `Random` ber-seed. Satu barang tidak dipakai dua kucing sekaligus. Kucing berjalan lurus di lantai. Semuanya dimajukan oleh satu jam kamar yang bisa diganti di test.
-> - **Gambar:** semua pose dan barang "sedang dipakai" disalin dari desain lewat `SvgTemplate`.
-> - **Makan:** kucing lapar menuju mangkuk saat isinya tersedia. Camilan diseret dari kartu atau stok ke kucing. Jam isi ulang mangkuk tampil.
-> - **Tanda:** gelembung hadiah dan tanda lesu.
-> - **Interaksi:** elus (ketuk dan usap) dan ketuk mainan.
-> - **Kurangi gerak:** kucing hanya berganti pose di tempat.
-> - **Animasi** berhenti lewat `TickerMode` saat layar lain menutupi kamar. Test kamar memakai `settle`; catat di `CLAUDE.md` seperti denyut peta.
-> - **Simpan kebutuhan** saat ada aksi pemain dan saat aplikasi ke latar belakang, bukan per bingkai.
-> - **Efek suara baru** (dengkur, meong, makan, koin hadiah, beli) dari sumber CC0 lewat `tool/audio/make_sfx.py`. Catat sumbernya di `assets/audio/LICENSE-sfx.txt` dan `docs/DESIGN_NOTES.md`. Naikkan batas ukuran di `audio_assets_test` seperlunya, dengan alasan.
-> - **Galeri:** `/galeri/oyen` atau halaman galeri baru menampilkan semua pose kucing.
+> **Lalu buat:**
+> - **Animasi sebagai fungsi waktu**, dengan angka dari desain 21c: kedip, ekor, napas, jalan 2 bingkai, makan, main, garuk, dielus, senang, plus akuarium, bola, catnip, dan jam.
+> - **Rutinitas kamar sebagai Dart murni**:
+>   - keadaan per kucing: diam, jalan, memakai barang, makan di mangkuk, lesu, bereaksi
+>   - tujuan acak berbobot, dengan `Random` ber-seed
+>   - satu barang tidak dipakai dua kucing sekaligus
+>   - bola dan mangkuk disembunyikan saat dipakai; kardus, kasur, dan rak berganti keadaan "dipakai"
+>   - dimajukan oleh satu jam kamar yang bisa diganti di test
+> - **Jeda dan hemat**:
+>   - rutinitas berhenti saat kartu terbuka, saat mode hias, dan saat reaksi berlangsung
+>   - kucing di luar layar tidak dianimasikan
+> - **Kurangi gerak**: semua loop berhenti, kucing diam di posenya.
+> - **Kebutuhan dan hadiah**:
+>   - kucing lapar menuju mangkuk
+>   - gelembung hadiah dan tanda lesu
+>   - jam isi ulang mangkuk
+>   - reaksi saat dielus, diberi camilan, dan memasang aksesoris
+> - **Animasi berhenti lewat `TickerMode`** saat layar lain menutupi kamar. Test kamar memakai `settle`; catat ini di `CLAUDE.md`, seperti denyut peta.
+> - **Simpan kebutuhan** saat ada aksi dan saat aplikasi masuk ke latar belakang.
+> - **Efek suara baru** dari sumber CC0 lewat `tool/audio/make_sfx.py`: dengkur, meong, makan, koin hadiah, beli, pasang aksesoris. Catat lisensinya, dan naikkan batas `audio_assets_test` seperlunya dengan alasan.
+> - **Galeri** pose dan animasi.
 > - **Teks baru** di keempat ARB.
-> - **`overflow_test`** dan potret layar kamar dengan gelembung hadiah.
+> - **`overflow_test` dan potret layar** kamar dengan gelembung hadiah.
 >
-> Test:
-> - perilaku dengan seed: kucing mencapai barang lalu memakainya, dan tidak berebut
+> **Test:**
+> - nilai animasi pada waktu tertentu (mata tertutup di tengah kedip, sudut ekor)
+> - rutinitas dengan seed: kucing mencapai barang lalu memakainya, dan tidak berebut
 > - kebutuhan turun saat waktu dimajukan dan saat aplikasi dibuka lagi
 > - makan dari mangkuk sekali per isi
 > - camilan mengurangi stok
@@ -360,65 +422,74 @@ Desainnya dibuat pemilik repo di Claude Design dengan brief `docs/design-brief/r
 > - kurangi gerak
 > - suara per aksi, dan efek suara yang dimatikan
 >
-> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 24" dan perbarui "Struktur" di `CLAUDE.md`.
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 24", dan perbarui bagian "Struktur" di `CLAUDE.md`.
 
 ## 25. Peta bergambar dan Oyen berjalan ke level berikutnya
 
-**Hasil:** peta babak berupa ilustrasi ruangan dengan titik level bergambar dan token Oyen. "Lanjut" memperlihatkan Oyen berjalan ke level berikutnya, lalu level itu terbuka.
+**Hasil:**
+- Peta babak berupa ilustrasi ruangan, dengan titik level bergambar dan token Oyen.
+- "Lanjut" memperlihatkan Oyen berjalan ke level berikutnya, lalu level itu terbuka.
 
-> Baca dulu:
+> **Baca dulu:**
 > - spesifikasi rumah Oyen bagian Peta bergambar
-> - `docs/design/source/23-*.html` dan komponen halaman 24
-> - `lib/screens/chapter/`, `lib/game/render/` bagian `MapArt`, dan `lib/screens/level/level_screen.dart` (`_next`)
+> - desain `PetaBergambar.dc.html`, `PetaDapur`, `PetaJalan`, `PetaPindah`, `TitikLevel`, dan `TokenOyenPeta`
+> - `lib/screens/chapter/`, `MapArt` di `lib/game/render/`, dan `lib/screens/level/level_screen.dart` (`_next`)
 > - `test/screens/home_chapter_test.dart`, `progress_flow_test.dart`, dan `navigation_test.dart`
 >
-> Kalau halaman 23 belum ada, berhenti dan beri tahu pemilik repo.
->
-> Lalu:
-> - **`ChapterMap`** memakai ilustrasi ruangan Babak 1 (Dapur) dan Babak 2 (Ruang Tamu) dari desain: titik level bergambar dengan keadaan selesai/saat ini/terkunci, bos di ujung, dan token Oyen berkostum di level saat ini. Gulir awal menuju Oyen.
-> - **"Lanjut" sesudah menang:**
+> **Lalu buat:**
+> - **`ChapterMap`** sesuai desain:
+>   - ilustrasi Babak 1 dan Babak 2
+>   - titik level bergambar dengan keadaan selesai, saat ini, dan terkunci
+>   - bos di ujung peta
+>   - token Oyen di level saat ini
+>   - gulir awal menuju Oyen
+> - **"Lanjut" sesudah menang**:
 >   1. Kembali ke peta babak level id+1.
->   2. Oyen berjalan dari titik level yang baru dimainkan, sekitar 1 detik. Dengan kurangi gerak, Oyen langsung pindah.
+>   2. Oyen berjalan dari titik level tadi, sekitar 1 detik. Dengan kurangi gerak, Oyen langsung pindah.
 >   3. Level id+1 terbuka sendiri.
 >   4. Ketukan selama Oyen berjalan membatalkan pembukaan otomatis.
 >
->   Ini berlaku juga untuk level lama yang diulang.
-> - **Sesudah bos level 10:** peta Babak 2 dengan Oyen di level 11 dan judul babak baru, tanpa buka otomatis.
-> - **Sesudah level 20:** peta Babak 2 dengan Oyen di bos, tanpa buka otomatis.
-> - **"Main" dari kamar** tetap hanya membuka peta.
-> - **Tombol kembali sistem** tetap seperti sekarang.
-> - **Teks baru** di keempat ARB: label titik level bergambar untuk pembaca layar dan judul ganti babak.
-> - **`overflow_test`:** peta kedua babak, juga saat Oyen berjalan.
-> - Potret layar peta per bahasa.
+>   Ini juga berlaku untuk level lama yang diulang.
+> - **Sesudah level 10**: peta Babak 2, Oyen di level 11, judul babak baru, tanpa buka otomatis.
+> - **Sesudah level 20**: Oyen berdiri di bos, tanpa buka otomatis.
+> - **"Main" dari kamar** hanya membuka peta.
+> - **Teks baru** di keempat ARB.
+> - **`overflow_test`**: peta kedua babak, termasuk saat Oyen berjalan.
+> - **Potret layar** peta per bahasa.
 >
-> Test:
+> **Test:**
 > - Lanjut biasa
-> - batal dengan ketukan
-> - level lama yang diulang
+> - pembukaan dibatalkan dengan ketukan
+> - level lama
 > - sesudah level 10 dan 20
 > - kurangi gerak
 > - label pembaca layar node
 > - gulir awal
 >
-> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 25" dan perbarui "Struktur" di `CLAUDE.md`.
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 25", dan perbarui bagian "Struktur" di `CLAUDE.md`.
 
 ## 26. Potret toko dan rapi-rapi rumah Oyen
 
-**Hasil:** listing Play Store, potret ponsel, feature graphic, dan dokumen memperlihatkan rumah Oyen. Temuan kecil review langkah 21–25 dibereskan.
+**Hasil:**
+- Listing Play Store, potret ponsel, feature graphic, dan dokumen memperlihatkan rumah Oyen.
+- Temuan kecil review langkah 21–25 dibereskan.
 
-> Baca dulu:
-> - `docs/store/README.md` dan listing toko di `docs/store/`
-> - `test/screenshots/` (`brand_test.dart`, `scenes.dart`, `capture.dart`)
+> **Baca dulu:**
+> - `docs/store/README.md` dan listing di `docs/store/`
+> - `test/screenshots/`
 > - GDD
 > - bagian "Saran di luar lingkup" PR langkah 21–25 (`gh pr view <nomor>`)
 >
-> Lalu:
-> - **Potret ponsel** per bahasa di `docs/store/screenshots/` ditambah kamar Oyen (kamar penuh, Toko, peta bergambar). Urutannya disusun ulang supaya kamar tampil pertama.
-> - **Feature graphic** dibuat ulang kalau memakai Beranda lama.
-> - **Listing toko** empat bahasa (deskripsi pendek dan panjang) menyebut kamar yang bisa dihias dan kucing yang bisa diadopsi, dengan nada santai dan jenaka.
-> - **GDD** bagian Monetisasi dan versi pertama, dan bagian Layar, menyebut rumah Oyen dan menunjuk spesifikasinya. Aturan main tidak berubah.
-> - **Jawaban Data safety** di `docs/store/README.md` dicek ulang: tidak ada data baru yang keluar dari perangkat.
-> - **Saran kecil** dari PR 21–25 yang masih berlaku dibereskan, masing-masing dengan test kalau bisa diuji.
-> - Jalankan ulang `brand_test.dart` dan potret layar.
+> **Lalu:**
+> - **Potret ponsel** per bahasa: tambahkan kamar penuh, Toko aksesoris dengan pratinjau, dan peta bergambar. Kamar tampil pertama.
+> - **Feature graphic**: buat ulang kalau masih memakai Beranda lama atau Oyen berkostum.
+> - **Listing toko** dalam empat bahasa: sebut kamar yang bisa dihias, kucing yang bisa diadopsi, dan aksesoris, dengan nada santai dan jenaka.
+> - **GDD**:
+>   - bagian Monetisasi menyebut aksesoris, bukan "Kostum Oyen: peci, sarung, ..."
+>   - bagian Layar dan prompt Claude Design lama diberi catatan bahwa Lemari Kostum sudah diganti
+>   - aturan main tidak berubah
+> - **Data safety**: cek ulang.
+> - **Saran kecil** dari PR 21–25 yang masih berlaku, masing-masing dengan test kalau bisa diuji.
+> - **Jalankan ulang** `brand_test.dart` dan potret layar.
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 26".

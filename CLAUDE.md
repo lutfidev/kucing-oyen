@@ -7,7 +7,7 @@ Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kar
 - `docs/GDD.md`: dokumen desain game (aturan Oyen, elemen peta, alur level, bintang, 20 level).
 - `docs/reference/oyen_simulator.py`: simulator + solver acuan. Logika simulasi Dart HARUS identik dengan file ini.
 - `assets/levels/chapter1-2.json`: data 20 level (peta, baki, bintang 3, solusi, jumlah langkah solusi).
-- `docs/design/`: ekspor desain UI dari Claude Design (warna, tipografi, layar). Baca `docs/design/source/` (hasil bongkar: 18 halaman, komponen `*.dc.html`, token warna di `13-design-token-komponen-ui.html`), bukan `Kucing Oren.html` yang berupa paket terkompresi 16 MB. Folder ini tidak ikut repo (`.gitignore`), hanya ada di komputer pemilik repo. Kalau tidak ada, beri tahu pemilik repo; jangan menebak isi desain.
+- `docs/design/`: ekspor desain UI dari Claude Design (warna, tipografi, layar). Baca `docs/design/source/` (hasil bongkar: 18 halaman, komponen `*.dc.html`, token warna di `13-design-token-komponen-ui.html`), bukan `Kucing Oren.html` yang berupa paket terkompresi 16 MB. Folder ini tidak ikut repo (`.gitignore`), hanya ada di komputer pemilik repo. Kalau tidak ada, beri tahu pemilik repo; jangan menebak isi desain. Desain rumah Oyen (langkah 21–26) ada di `docs/design/rumah-oyen/project/*.dc.html` (satu berkas per artboard, daftar di `canvas.json`), diambil dari link kanvas Claude Design di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md` lewat alat Artifact (aksi `read` dengan `paths` dan `out_dir`). Desain baru dari Claude Design diserahkan pemilik repo sebagai link kanvas, bukan unduhan HTML.
 - `docs/DESIGN_NOTES.md`: keputusan saat desain, GDD, dan data level tidak cocok (dibuat saat pertama dibutuhkan).
 
 ## Struktur
@@ -80,6 +80,7 @@ Pemilik repo biasanya `/clear` setelah tiap sesi, jadi aturan ini yang berlaku, 
 - **Selama langkah:** commit kecil, pesan bahasa Inggris singkat (`feat(sim): ...`, `fix: ...`, `test: ...`, `docs: ...`).
 - **Akhir langkah** (analyze bersih, test hijau, temuan review sudah diperbaiki, langkah sudah dicentang di `docs/ROADMAP.md`): `git push -u origin <branch>` lalu `gh pr create --base main` langsung, tanpa menu pilihan. Kirim link PR-nya. Judul PR `feat: <nama langkah>`. Badan PR berbahasa Indonesia: kalimat pembuka "Langkah N roadmap: ...", daftar perubahan, asumsi baru (kalau ada, juga dicatat di `docs/DESIGN_NOTES.md`), lalu baris "Verifikasi:" berisi hasil `flutter analyze`, jumlah test `flutter test` yang lulus, dan cek lain yang dijalankan.
 - **Merge PR** dilakukan pemilik repo di GitHub; jangan merge sendiri kecuali diminta.
+- **Tambahan ke PR yang sudah ada:** sebelum push, cek `gh pr view <nomor> --json state` masih `OPEN`. Kalau sudah di-merge, buat branch baru dari HEAD sekarang dan buka PR baru dengan judul dan badan lengkap. Jangan mengubah badan PR yang sudah di-merge.
 - **Atribusi:** commit dan PR atas nama akun git pemilik repo. Jangan tambahkan `Co-Authored-By: Claude`, "Generated with Claude Code", atau atribusi Claude lain di pesan commit maupun badan PR.
 - Kesepakatan baru soal alur kerja langsung dicatat di file ini, jangan hanya diucapkan di chat.
 

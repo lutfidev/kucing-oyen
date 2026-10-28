@@ -1,238 +1,315 @@
-# Rumah Oyen: kamar, Toko, kucing koleksi, peta bergambar (langkah 21–26)
+# Rumah Oyen: kamar, Toko, kucing koleksi, aksesoris, peta bergambar (langkah 21–26)
 
-Dokumen ini hasil brainstorming dengan pemilik repo pada 26 Oktober 2026. Pekerjaannya dipecah menjadi langkah 21–26 di `docs/ROADMAP.md` dan baru dikerjakan **sesudah langkah 18–20**.
+Dokumen ini dimulai dari brainstorming dengan pemilik repo pada 26 Oktober 2026, lalu diperbarui 28 Oktober 2026 sesudah desainnya jadi. Pekerjaannya dipecah menjadi langkah 21–26 di `docs/ROADMAP.md` dan baru dikerjakan **sesudah langkah 18–20** [pemilik].
 
-Gambar dan tata letak semua layar baru didesain pemilik repo di Claude Design memakai brief di `docs/design-brief/rumah-oyen.md`, lalu diekspor ke `docs/design/source/` sebagai halaman 19–24. Kalau halaman yang dibutuhkan suatu langkah belum ada di sana, langkah itu berhenti dan memberi tahu pemilik repo; jangan menebak desainnya. Begitu desain ada, tata letak, ukuran, warna, dan teks mengikuti desain. Angka di dokumen ini hanya aturan main dan usulan awal.
+## Sumber desain
 
-Tiap keputusan diberi penanda:
+Pemilik repo membuat desainnya di Claude Design dengan brief `docs/design-brief/rumah-oyen.md` ditambah permintaan perubahan sendiri (lihat "Perubahan 28 Oktober").
+
+- **Hasil desain**: kanvas "Ginger Logic – Rumah Oyen (19–24)", https://claude.ai/code/artifact/d25a6575-3d34-4887-9de4-18435367bf86.
+- **Salinan di komputer pemilik repo**: `docs/design/rumah-oyen/project/`. Folder `docs/design/` tidak ikut repo (`.gitignore`).
+- **Kalau folder itu tidak ada**: unduh ulang file `project/*` dari link kanvas memakai alat Artifact (aksi `read` dengan `paths` dan `out_dir` `docs/design/rumah-oyen`). Kalau link tidak bisa dibuka, beri tahu pemilik repo dan jangan menebak isi desainnya.
+
+Setiap artboard adalah satu berkas `.dc.html` lengkap. `project/canvas.json` berisi daftar dan judulnya.
+
+| Halaman | Berkas |
+|---|---|
+| 19 Kamar | `Kamar.dc.html` dengan prop `keadaan`, dipakai `KamarKartu`, `KamarHadiah`, `KamarHias`, `KamarBaru`, `KamarSalju`, `KamarAksesoris` |
+| 20 Toko | `Toko.dc.html` dengan prop `tab`/`lembar`/`tahap`, dipakai `TokoKucing`, `TokoMakanan`, `TokoBeli`, `TokoKurang`, `TokoSukses`, `TokoAksesoris*` |
+| 21 Sprite | `Kucing.dc.html` (komponen sprite: `kucing`, `pose`, `dir`, `aksesoris`, `animasi`, warna), `SpriteKucing.dc.html`, `AksesorisPreview.dc.html` (21b), `AnimasiKucing.dc.html` (21c, angka animasi), `IkonAksesoris.dc.html` |
+| 22 Barang | `Barang.dc.html` (komponen barang: `item`, `dipakai`, `kucing`, `aksesoris`, `skala`), `BarangKamar.dc.html` |
+| 23 Peta | `PetaBergambar.dc.html` (Babak 2), `PetaDapur.dc.html` (Babak 1), `PetaJalan.dc.html`, `PetaPindah.dc.html`, `TitikLevel.dc.html`, `TokenOyenPeta.dc.html` |
+| 24 Komponen | `KomponenBaru.dc.html`, `BarKebutuhan`, `GelembungKoin`, `TandaLesu`, `ChipKoin`, `TabToko`, `KartuToko`, `SheetBeli`, `TombolHias`, `BakiGudang` |
+
+Aturan pemakaian desain:
+
+- Tata letak, ukuran, warna, teks, dan harga mengikuti desain. Untuk layar 360×640, catatan `n360` di `canvas.json` menyebut apa saja yang mengecil.
+- Aturan yang tidak tampak di desain mengikuti dokumen ini: kebutuhan turun mengikuti jam, mangkuk, batas, dan simpanan.
+- Interaksi di prototipe desain hanya peraga, misalnya "+50 koin iklan" di chip koin Kamar. Iklan tetap +20 koin sesuai langkah 14.
+- Kalau desain dan dokumen ini bertentangan dalam aturan main, ikuti dokumen ini dan catat di `docs/DESIGN_NOTES.md`.
+
+Penanda keputusan:
 
 - **[pemilik]**: dipilih pemilik repo.
-- **[saya]**: keputusan saya. Pemilik repo boleh mengubahnya, dan builder mengikutinya kalau tidak ada perubahan.
+- **[desain]**: diambil dari desain.
+- **[saya]**: keputusan saya. Pemilik repo boleh mengubahnya; builder mengikutinya kalau tidak ada perubahan.
 
 ## Maksud
 
-Pemilik repo merasa UI sekarang hambar. Ada tiga hal yang dikeluhkan:
+Pemilik repo merasa UI sekarang hambar. Ada tiga keluhan:
 
-- Masuk level dengan mengetuk bulatan angka di peta.
+- Masuk level dengan mengetuk bulatan angka.
 - Rasa bolak-balik antara peta dan level.
 - Koin yang tidak punya banyak tujuan.
 
-Arah yang dipilih adalah **Talking Tom / Neko Atsume** [pemilik]: kucingnya menjadi pusat perhatian, dan puzzle menjadi cara mendapat koin untuk merawat dan menghias rumahnya. Pemain membuka game, menyapa Oyen di kamarnya, memberi makan, mengambil hadiah, membeli barang atau kucing baru, lalu menekan Main untuk mencari koin lagi.
+Arah yang dipilih adalah **Talking Tom / Neko Atsume** [pemilik]. Kucingnya menjadi pusat perhatian, dan puzzle menjadi cara mendapat koin untuk merawat, mendandani, dan menghias rumahnya.
+
+## Perubahan 28 Oktober (sesudah desain) [pemilik]
+
+- **Peci, sarung, dan atribut religius dihapus** dari semua karakter dan sprite, supaya game inklusif. Oyen tampil default sebagai kucing oranye belang tanpa pakaian.
+- **Lemari Kostum dihapus.** Di kamar, tombolnya diganti **Aksesoris**, yang membuka tab Aksesoris di Toko. Aksesoris juga bisa diganti dari kartu kucing.
+- **Kostum lama dihapus tanpa migrasi** karena belum ada pemain asli. Simpanan `costume.owned` dan `costume.wearing` diabaikan, lalu dihapus saat dibaca. Koin yang dulu dipakai membeli kostum tidak dikembalikan.
+  - **Kacamata** lama diganti **Kacamata Bulat** dari desain.
+  - **Topi Koki** tetap ada sebagai aksesoris, dengan gambar yang lebih bagus. Gambarnya diminta lewat tambahan brief di `docs/design-brief/rumah-oyen.md`.
+- **Animasi natural**: berkedip, ekor bergerak, jalan, tidur, makan, main, menggaruk, dielus, plus barang yang bergerak (akuarium, bola benang, catnip, jam).
+- **Respons yang menyenangkan** saat memberi camilan, mengelus, membeli atau memasang aksesoris, dan selesai menghias.
 
 ## Tujuan
 
-1. **Kamar Oyen menggantikan Beranda** [pemilik]. Oyen dan kucing koleksi tinggal di sana, dan kamarnya bisa dihias dengan barang yang dibeli.
-2. **Toko** (rute baru `/toko`) dengan tab Barang, Kucing, dan Makanan, **terpisah dari Lemari Kostum** [pemilik]. Lemari Kostum tidak berubah.
-3. **Kucing koleksi dibeli langsung** di Toko [pemilik]. Mereka **hanya tinggal di kamar**, sedangkan yang berjalan di puzzle tetap Oyen [pemilik].
-4. **Barang diseret bebas** di kamar, dan posisinya tersimpan [pemilik].
-5. **Kamar hidup** [pemilik]:
-   - kucing berjalan sendiri ke barang lalu memakainya
-   - kucing punya kebutuhan
-   - kucing bereaksi saat diketuk atau dielus
-6. **Kebutuhan tanpa hukuman, dengan bonus** [pemilik]. Kucing yang dirawat memberi hadiah koin harian. Kucing yang diabaikan hanya lesu.
-7. **Jatah iklan koin naik dari 5 jadi 10 per hari** [pemilik].
-8. **Peta bergambar** [pemilik]. Tiap babak berupa ilustrasi ruangan dengan titik level bergambar. Sesudah menang, Oyen terlihat berjalan ke level berikutnya.
+1. **Kamar Oyen menggantikan Beranda** [pemilik]. Oyen dan kucing koleksi tinggal di sana, dan kamarnya bisa dihias.
+2. **Toko** di rute baru `/toko`, dengan tab **Barang, Kucing, Aksesoris, Makanan** [desain].
+3. **Kucing koleksi dibeli langsung** di Toko dan **hanya tinggal di kamar**. Yang berjalan di puzzle tetap Oyen [pemilik].
+4. **Aksesoris dibeli sekali dan dimiliki selamanya.** Semua kucing bisa memakainya; memasang, melepas, dan mengganti gratis [pemilik].
+5. **Barang diseret bebas** di kamar, dan posisinya tersimpan [pemilik].
+6. **Kamar hidup**: kucing berjalan sendiri ke barang lalu memakainya, punya kebutuhan, dan bereaksi saat diketuk atau dielus [pemilik].
+7. **Kebutuhan tanpa hukuman, dengan bonus**. Kucing yang dirawat memberi hadiah koin harian; kucing yang diabaikan hanya lesu [pemilik].
+8. **Jatah iklan koin naik dari 5 jadi 10 per hari** [pemilik].
+9. **Peta bergambar**, dan Oyen terlihat berjalan ke level berikutnya sesudah menang [pemilik].
 
 ## Bukan tujuan
 
-- Mengubah aturan Oyen, simulasi, solver, data level, bintang, petunjuk, atau kostum.
-- Kucing koleksi di puzzle, kucing berkostum, atau kostum baru.
-- Babak 3–5, pembelian dalam aplikasi (IAP), akun atau sinkron awan, dan notifikasi push.
-- Kamar yang lebih lebar dari layar, lebih dari satu kamar, atau barang dobel.
+- Mengubah aturan Oyen, simulasi, solver, data level, bintang, atau petunjuk.
+- Kucing koleksi di puzzle.
+- Babak 3–5, pembelian dalam aplikasi, akun atau sinkron awan, dan notifikasi push.
+- Kamar yang lebih lebar dari layar, lebih dari satu kamar, barang dobel, atau dua aksesoris sekaligus di satu kucing.
 
 ## Jangan sampai
 
-- **Ada hukuman.** Kucing kabur, sakit, mati, atau barang hilang karena diabaikan.
-- **Ada iklan paksa, interstitial, atau sheet iklan yang terbuka sendiri.** Iklan tetap selalu pilihan pemain, seperti langkah 14.
-- **Ada barang atau kucing yang membantu puzzle** (pay-to-win).
-- **Koin terpotong dua kali, saldo negatif, atau stok camilan negatif.** Aturan `buyCostume` berlaku: kegagalan simpan harus menguntungkan pemain.
-- **Kamar menghentikan `pumpAndSettle` selamanya tanpa jalan keluar di test.** Animasi kamar mengikuti pola peta: `settle`, `TickerMode`, dan `disableAnimations` mematikan gerak.
-- **Gambar dari desain diketik ulang.** Isi `<svg>` disalin utuh seperti sekarang (lihat Format gambar).
+- **Hukuman**: kucing kabur, sakit, mati, atau barang hilang karena diabaikan.
+- **Iklan paksa**, interstitial, atau sheet iklan yang terbuka sendiri.
+- **Pay-to-win**: barang, kucing, atau aksesoris yang membantu puzzle.
+- **Kesalahan saldo**: koin terpotong dua kali, saldo negatif, atau stok camilan negatif. Kegagalan simpan harus menguntungkan pemain: barang disimpan sebelum koin, seperti `buyCostume` dulu.
+- **Aksesoris yang menutup wajah atau ekspresi kucing**.
+- **`pumpAndSettle` yang tidak pernah selesai di test tanpa jalan keluar**. Animasi kamar mengikuti pola peta: `settle`, `TickerMode`, dan `disableAnimations` mematikan gerak.
+- **Gambar dari desain yang diketik ulang**. Isi `<svg>` disalin utuh (lihat Format gambar).
 
-## Rincian yang sudah diputuskan
+## Rincian
 
-### Kamar (Beranda baru, desain 19)
+### Kamar (Beranda baru, `Kamar.dc.html`)
 
-- **Isi layar** [saya]: kamar satu layar tanpa gulir, dengan bagian dinding di atas dan lantai di bawah.
-  - Di atas kamar ada chip koin (membuka sheet Tambah Koin, bertitik selama bonus harian belum diambil, seperti sekarang) dan total bintang.
-  - Di bawah ada tombol besar **Main** (ke `currentChapter` seperti sekarang) dan tombol **Toko**, **Lemari Kostum**, **Pengaturan**.
-  - Logo "Ginger Logic" tetap ada di Beranda. Letak dan ukurannya mengikuti desain 19.
-- **Ukuran layar**: harus muat di 360×640 sampai 412×915, teks 100% dan 130%, keempat bahasa (`overflow_test`). Area lantai dan dinding diukur dari ruang yang tersisa.
-- **Mode hias** [saya]:
-  - Tombol "Hias" membuat semua barang bisa diseret. Selama mode hias, kucing diam di tempat.
-  - Barang lantai hanya bisa ditaruh di area lantai, barang dinding hanya di area dinding. Barang boleh bertumpuk; yang ditaruh terakhir digambar paling depan, dan di lantai urutannya ikut posisi y.
-  - Barang yang sedang diangkat bisa dilepas ke "Gudang" (baki di bawah). Barang tetap dimiliki dan bisa ditaruh lagi dari Gudang.
-  - Tombol "Selesai" menyimpan tata letak. Tidak ada tombol batal (keputusan saya: lebih sederhana).
-  - Barang yang baru dibeli langsung muncul di posisi bawaan katalognya, atau di tengah area kalau tempat itu sudah terisi.
-- **Posisi tersimpan** sebagai pecahan 0–1 dari area lantai atau dinding, jadi tetap pas di semua ukuran layar [saya].
-- **Ketuk kucing** membuka kartu kecil kucing itu: nama, bar Lapar dan Senang, tombol "Beri camilan" yang memilih dari stok, dan "Elus". Mengusap kucing juga dihitung mengelus. Tanpa kartu terbuka, tidak ada bar permanen.
-- **Tanda di atas kucing** [saya]:
-  - gelembung koin kalau ada hadiah
-  - tanda lesu kecil kalau Lapar atau Senang < 30
-- **Mangkuk makanan kering** berupa barang bawaan yang selalu ada di lantai, tidak bisa dijual tapi bisa digeser di mode hias. Penuh = kering bisa dimakan; kosong = jam isi ulang.
+- **Satu layar tanpa gulir** [saya, sesuai desain], dengan dinding di atas dan lantai di bawah.
+  - Logo kecil dan chip koin ada di atas. Chip koin membuka sheet Tambah Koin dan bertitik selama bonus harian belum diambil.
+  - Panel bawah berisi tombol besar **Main** (ke `currentChapter`) dan tiga tombol: **Toko** (bertitik saat ada yang baru terjangkau), **Aksesoris** (ke tab Aksesoris), dan **Pengaturan** [desain].
+  - Kalau desain menampilkan total bintang, ikuti desainnya. Kalau tidak, total bintang cukup tampil di peta babak.
+- **Ukuran layar**: muat di 360×640 sampai 412×915, teks 100% dan 130%, keempat bahasa (`overflow_test`). Cara mengecil mengikuti catatan `n360`.
+- **Pemain baru** (`KamarBaru`): hanya Oyen, mangkuk, kamar kosong, dan ajakan "Kamar masih sepi. Ke Toko, yuk!" [desain].
+- **Mode hias** (`KamarHias`, `TombolHias`, `BakiGudang`):
+  - Tombol "Hias" membuat barang bisa diseret dan menghentikan rutinitas kucing.
+  - Barang lantai hanya di area lantai, barang dinding hanya di area dinding. Di lantai, urutan gambar mengikuti posisi y.
+  - Barang yang dilepas ke Gudang tetap dimiliki. Mengetuk barang di Gudang menaruhnya kembali di kamar.
+  - Tombol "Selesai" menyimpan tata letak dan menampilkan pujian [desain]. Selesai juga memberi +5 Senang ke semua kucing, paling banyak sekali per jam [saya; angka dari desain].
+  - Barang yang baru dibeli muncul di posisi bawaannya.
+- **Posisi tersimpan** sebagai pecahan 0–1 dari area lantai atau dinding [saya].
+- **Ketuk kucing** membuka kartu kucing (`KamarKartu`, `KamarAksesoris`) berisi nama, keterangan, bar Lapar dan Senang (`BarKebutuhan`), tombol Elus, dan dua panel [desain]:
+  - **Camilan**: stok tiap camilan; yang habis nonaktif.
+  - **Aksesoris**: "Lepas" dan aksesoris yang dimiliki; yang sedang dipakai ditandai; ada tautan "Toko aksesoris →".
+- **Reaksi** [desain]: angka melayang ("+25 kenyang", "+10 senang", "Cakep!", "+10 koin"), hati, dan pose singkat (makan, dielus, senang).
+- **Tanda di atas kucing**: gelembung koin (`GelembungKoin`) kalau ada hadiah, dan tanda lesu (`TandaLesu`) kalau Lapar atau Senang ≤ 20 [desain].
+- **Mangkuk makanan kering** adalah barang bawaan yang selalu ada dan bisa digeser saat menghias. Saat kosong tampil label "Terisi lagi N jam" [desain].
 
-### Kebutuhan dan hadiah [saya]
+### Kebutuhan dan hadiah
 
-- **Dua bar per kucing, Lapar dan Senang**, 0–100. Tiap bar turun lurus mengikuti jam:
-  - Lapar dari 100 ke 0 dalam 12 jam.
-  - Senang dari 100 ke 0 dalam 16 jam.
-  - Bar juga turun saat aplikasi ditutup, dihitung dari waktu terakhir disimpan, dan berhenti di 0.
-  - Jam yang mundur tidak menaikkan bar dan tidak menggeser waktu terakhir ke belakang, mengikuti pola `DailyRewards`.
-- **Kucing baru dan kucing sesudah reset** mulai dengan kedua bar 100.
-- **Mangkuk dipakai bersama**, satu isi tiap 4 jam:
-  - Mangkuk terisi lagi 4 jam sesudah isi sebelumnya dimulai. Hitungannya memakai jam, jadi tetap berjalan saat aplikasi ditutup, dan isi yang terlewat tidak menumpuk.
-  - Dalam satu isi, tiap kucing boleh makan sekali (+40 Lapar), kalau Lapar-nya < 70.
-  - Mangkuk tampil kosong begitu semua kucing yang dimiliki sudah makan dari isi itu.
-  - Kucing yang lapar bergantian berjalan ke mangkuk. Hasilnya ditentukan model, bukan animasi, jadi saat aplikasi dibuka kucing yang lapar boleh langsung dihitung sudah makan kalau isi itu belum dipakainya.
-- **Camilan** dibeli di tab Makanan dan masuk stok:
+- **Dua bar per kucing, Lapar dan Senang**, 0–100. Keduanya turun lurus mengikuti jam [saya]:
+  - Lapar habis dalam 12 jam, Senang dalam 16 jam.
+  - Bar tetap turun saat aplikasi ditutup dan berhenti di 0.
+  - Jam yang mundur tidak menaikkan bar, mengikuti pola `DailyRewards`.
+- **Kucing baru dan kucing sesudah reset** mulai dengan kedua bar 100 [saya].
+- **Mangkuk dipakai bersama**, satu isi tiap 4 jam [saya]:
+  - Isi baru datang 4 jam sesudah isi sebelumnya dimulai. Isi yang terlewat tidak menumpuk.
+  - Dalam satu isi, tiap kucing boleh makan sekali (+40 Lapar) kalau Lapar-nya < 70.
+  - Mangkuk tampil kosong begitu semua kucing sudah makan dari isi itu.
+  - Hasilnya ditentukan model, bukan animasi.
+- **Camilan** dibeli di tab Makanan lalu masuk stok. Stok paling banyak 99 per jenis [saya].
 
   | Camilan | Harga | Lapar | Senang |
   |---|---|---|---|
-  | Ikan Asin | 10 | +30 | +0 |
-  | Susu | 15 | +20 | +20 |
-  | Tuna Kaleng | 30 | jadi 100 | +30 |
+  | Ikan Asin | 20 | +25 | +5 |
+  | Susu | 15 | +15 | +5 |
+  | Tuna Kaleng | 40 | +40 | +5 |
 
-  Camilan diberikan lewat kartu kucing atau dengan menyeret camilan dari stok ke kucing. Satu camilan = satu stok.
-- **Senang naik saat:**
-  - dielus: +5, paling banyak +30 per jam per kucing supaya tidak bisa diketuk terus
-  - kucing memakai mainan sendiri (bola, tikus, garukan, catnip, akuarium): +10 per pemakaian, paling banyak sekali per 30 menit per kucing
-  - mainan diketuk pemain saat tidak dipakai, sehingga kucing terdekat datang bermain
-- **Hadiah:**
-  - Kucing yang Lapar dan Senang-nya ≥ 70 memunculkan gelembung **10 koin**, paling banyak sekali per hari kalender (`dayNumber`) per kucing.
-  - Gelembung diketuk untuk diambil, dan koin ditambah lewat `ProgressController` yang sama dengan bonus harian.
-  - Jam yang mundur menahan hadiah, seperti bonus harian.
-- **Oyen penghuni penuh**: punya bar, bisa diberi makan, ikut hadiah, dan memakai kostumnya di kamar (`OyenLook.costume`).
-- **Reset progres** menghapus barang, kucing koleksi, stok camilan, dan tata letak kamar. Bar Oyen kembali 100. Hari hadiah per kucing tidak ikut dihapus, supaya hadiah hari itu tidak bisa diambil ulang (sama dengan bonus harian).
+  Harga dan Lapar dari desain; Senang +5 dari desain. Camilan diberikan lewat kartu kucing.
+- **Senang naik karena:**
+  - **dielus**: +10 [desain], paling banyak +30 per jam per kucing [saya]
+  - **memakai mainan sendiri**: bola, tikus, garukan, catnip, akuarium; +10 per pemakaian, paling banyak sekali per 30 menit per kucing [saya]
+  - **selesai menghias** (lihat Mode hias)
+- **Hadiah**:
+  - Kucing yang Lapar dan Senang-nya ≥ 70 memunculkan gelembung **10 koin**, paling banyak sekali per hari kalender (`dayNumber`) per kucing [saya; 10 dari desain].
+  - Gelembung diketuk untuk mengambil koinnya. Jam yang mundur menahan hadiah.
+- **Oyen penghuni penuh kamar**: punya bar, bisa diberi makan, ikut hadiah, dan bisa memakai aksesoris.
 
-### Kamar hidup [saya]
+### Aksesoris (Toko tab Aksesoris, `AksesorisPreview`, `IkonAksesoris`)
 
-- Setiap kucing punya keadaan sederhana: diam (duduk/menjilat), berjalan ke tujuan, memakai barang (tidur, main, garuk, nonton, duduk), makan, lesu, dan bereaksi.
-  - Tujuan dipilih acak berbobot dari barang yang ada dan sedang tidak dipakai kucing lain. Jalannya lurus di area lantai, tanpa pencarian jalur, dan boleh melewati barang. Barang dinding dipakai dari lantai di bawahnya (nonton jam/lukisan) atau tidak dipakai sama sekali.
-  - Kucing yang lesu lebih sering rebahan dan berjalan lebih pelan.
-- **Pemilihan perilaku memakai `Random` yang bisa diberi seed**, dan waktu kamar dimajukan oleh satu jam/ticker yang bisa diganti di test (seperti `RunClock`). Dengan begitu urutan perilaku bisa diuji tanpa menunggu.
-- **Kurangi gerak** (`disableAnimations`): kucing tidak berjalan, hanya berganti pose di tempat. Kebutuhan dan hadiah tetap jalan.
-- **Suara baru** lewat `GameSound`, berkas dibuat seperti langkah 16 dengan sumber CC0 dan dicatat lisensinya:
-  - dengkur saat dielus
-  - "meong" saat diketuk
-  - makan
-  - koin hadiah
-  - beli di Toko
+| Aksesoris | Harga | Kelangkaan | Jangkar |
+|---|---|---|---|
+| Pita | 50 | Biasa | kepala-samping |
+| Bandana | 80 | Biasa | leher |
+| Kalung Lonceng | 120 | Biasa | leher |
+| Beanie | 180 | Langka | kepala-atas |
+| Topi Koki | 200 | Langka | kepala-atas |
+| Kacamata Bulat | 250 | Langka | wajah |
+| Topi Pesta | 350 | Langka | kepala-atas |
+| Mahkota Bunga | 600 | Spesial | kepala-atas |
 
-  Ukuran dan total berkas tetap dicek `audio_assets_test`. Batas total boleh dinaikkan seperlunya; catat alasannya.
+Semua baris dari desain, kecuali **Topi Koki** (harga, kelangkaan, dan jangkarnya [saya]).
 
-### Toko (desain 20)
+- **Aturan memakai** [pemilik + desain]:
+  - Sekali beli, aksesoris jadi milik pemain dan bisa dipakai semua kucing.
+  - Satu kucing memakai paling banyak satu aksesoris.
+  - Aksesoris yang sama boleh dipakai beberapa kucing sekaligus [saya; desain menyebut "membuka gaya untuk semua kucing sekaligus"].
+  - Memasang, melepas, dan mengganti gratis.
+- **Pratinjau langsung** di tab Aksesoris (`TokoAksesoris`): pemain memilih kucing dan aksesoris, lalu melihat kucing itu memakainya.
+  - Konfirmasi beli: `TokoAksesorisBeli`.
+  - Koin kurang: `TokoAksesorisKurang`.
+  - Sukses: `TokoAksesorisSukses`, "Milikmu selamanya", lalu bisa langsung dipakai.
+- **Posisi** mengikuti jangkar di desain 21b: aksesoris digambar di grup kepala sprite, jadi ikut setiap pose dan animasi.
+  - Pose tidur memakai varian kecil.
+  - Lonceng dan ujung bandana disembunyikan saat lesu.
+  - Kacamata berlensa bening, dengan bingkai berwarna garis wajah kucing.
+- **Di puzzle** [saya]: Oyen di papan, putar ulang, layar hasil, dan tutorial tampil tanpa aksesoris. Aksesoris hanya digambar untuk sprite kamar (`Kucing.dc.html`). Sprite papan (desain 14) punya bentuk dan arah lain, dan desain tidak menggambarkan aksesoris di sana.
+  - Akibatnya `OyenCostume`, prop `costume` di `OyenLook`/`BoardScene.dressed`, dan kostum di papan dihapus bersama Lemari Kostum.
+  - Token Oyen di peta (`TokenOyenPeta`) memakai aksesoris Oyen kalau desainnya mendukung.
 
-- Rute `/toko`, dibuka dari tombol Toko di kamar. Kembali = kamar. Chip koin di bar atas membuka sheet Tambah Koin.
-- Tiga tab: **Barang**, **Kucing**, **Makanan**. Tiap kartu menampilkan gambar, nama, dan harga, dengan keadaan:
-  - dimiliki ("Punyamu")
-  - bisa dibeli
-  - koin kurang
+### Kamar hidup (`AnimasiKucing.dc.html`, `Kamar.dc.html`)
 
-  Kartu Makanan menampilkan jumlah stok, dan bisa dibeli berulang.
-- **Beli** dengan satu konfirmasi [saya]. Konfirmasinya berupa sheet kecil berisi gambar besar, nama, harga, dan tombol "Beli · N koin". Toko memakai konfirmasi karena harganya lebih besar dari kostum; Lemari Kostum tetap tanpa konfirmasi. Sesudah membeli barang atau kucing, ada tombol "Lihat di kamar".
-- **Katalog** (harga usulan, nama Indonesia usulan, semua lewat ARB) [saya]:
+- **Rutinitas per kucing**: diam (duduk/menjilat), jalan, memakai barang (main bola, makan, sembunyi di kardus, garuk tiang, tidur di kasur, duduk di rak), lesu, dan bereaksi.
+  - Contoh rutinitas Oyen ada di desain 21c.
+  - Tujuan dipilih acak berbobot dari barang yang ada dan sedang tidak dipakai kucing lain [saya].
+  - Kucing berjalan lurus di lantai dan boleh melewati barang.
+  - Bola dan mangkuk disembunyikan dari lantai saat dipakai, lalu digambar oleh sprite. Kardus, kasur, dan rak berganti ke keadaan "dipakai" lewat komponen Barang [desain].
+- **Angka animasi** [desain 21c]:
+  - kedip: mata skala-Y 1→0,12 selama 140 ms, tiap 4,6 detik, dengan jeda awal acak
+  - ekor: ±8° per 2,6 detik; kibas cepat 0,9 detik saat senang atau main
+  - jalan: 2 bingkai tiap 220 ms, ±70 px/detik
+  - tidur: napas skala 1→1,04 per 3,2 detik, "Z" naik 2,4 detik
+  - makan: angguk 2,6 px per 0,45 detik
+  - main: tepukan 5 px per 0,5 detik
+  - garuk: 5 px per 0,35 detik
+  - dielus: ±4° per 0,9 detik
+  - senang: kilau 1,2 detik
+  - barang: ikan akuarium 4–5 detik, bola ±10° per 2,8 detik, catnip 3,2 detik, pendulum jam 1,4 detik
+- **Jeda**: rutinitas berhenti selama kartu kucing terbuka, mode hias aktif, atau ada reaksi, lalu lanjut dari langkah berikutnya [desain].
+- **Hemat**: kucing di luar layar tidak dianimasikan.
+- **Kurangi gerak** (`disableAnimations`): semua loop berhenti dan kucing tetap di pose diam. Kebutuhan dan hadiah tetap berjalan [desain].
+- **Bisa diuji**: perilaku memakai `Random` yang bisa diberi seed, dan satu jam kamar yang bisa dimajukan di test seperti `RunClock` [saya].
+- **Suara baru** lewat `GameSound`, dengan sumber CC0 yang dicatat lisensinya [saya]: dengkur saat dielus, meong saat diketuk, makan, koin hadiah, beli, dan pasang aksesoris. Ukurannya dicek `audio_assets_test`; batasnya boleh dinaikkan seperlunya, dengan alasan yang dicatat.
+
+### Toko (`Toko.dc.html`)
+
+- **Rute dan bar atas**: rute `/toko`, dibuka dari tombol Toko (tab Barang) atau Aksesoris (tab Aksesoris) di kamar. Kembali = kamar. Chip koin membuka sheet Tambah Koin.
+- **Tab dan kartu** (`TabToko`, `KartuToko`): keadaan kartu adalah bisa dibeli, dimiliki ("Punyamu", atau untuk kucing "Tinggal di kamar"), dan koin kurang. Kartu Makanan menampilkan stok dan bisa dibeli berulang.
+- **Konfirmasi beli** (`SheetBeli`) berisi gambar besar, nama, deskripsi jenaka, dan tombol "Beli · N koin" / "Nanti dulu". Kalau koin kurang, tombolnya "Koin kurang · N". Sesudah berhasil, tombolnya "Lihat di kamar" [desain].
+- **Katalog** [desain]. Kucing dan barang hanya bisa dibeli satu kali.
 
   | Tab | Isi |
   |---|---|
-  | Kucing | Arang (hitam) 300, Mendung (abu) 400, Telon (belang tiga) 600, Salju (putih) 800 |
-  | Barang lantai | Kardus Nyaman 40 (duduk), Bola Benang 40 (main), Tikus Mainan 50 (main), Karpet Bulat 70 (rebahan), Kasur Bantal 80 (tidur), Pot Catnip 90 (main), Tiang Garukan 120 (garuk), Akuarium 200 (nonton), Rumah Kucing 250 (tidur) |
-  | Barang dinding | Lukisan Ikan 60, Jam Kucing 100, Rak Dinding 150 (kucing bisa duduk di atasnya kalau desain 22 memungkinkan; kalau tidak, hiasan saja) |
-  | Makanan | Ikan Asin 10, Susu 15, Tuna Kaleng 30 |
+  | Kucing | Salju 300, Mendung 350, Arang 400, Telon 550 |
+  | Barang lantai | Kardus Nyaman 50, Bola Benang 80, Tikus Mainan 120, Karpet Bulat 150, Pot Catnip 180, Kasur Bantal 200, Tiang Garukan 220, Akuarium 600, Rumah Kucing 900 |
+  | Barang dinding | Lukisan Ikan 140, Rak Dinding 160, Jam Kucing 240 |
+  | Aksesoris | lihat tabel Aksesoris |
+  | Makanan | Susu 15, Ikan Asin 20, Tuna Kaleng 40 |
 
-  Kucing dan barang hanya bisa dibeli satu kali. Stok camilan dibatasi 99 per jenis.
+  Deskripsi jenaka tiap barang ada di `Toko.dc.html`.
 
 ### Koin
 
-- Sumber koin:
+- **Sumber koin**:
   - 10 koin per bintang baru
   - bonus harian 20
-  - iklan +20 koin, **10 kali per hari** [pemilik] (`maxAdsPerDay` 10; teks "Sisa N kali hari ini" mengikuti)
+  - iklan +20 koin, **10 kali per hari** [pemilik]
   - hadiah kucing 10 per kucing per hari
-- Barang dan kucing berjumlah ±3.900 koin, belum termasuk kostum dan camilan. Dengan 600 koin dari bintang dan sampai ±270 koin per hari dari bonus, iklan, dan hadiah lima kucing, semuanya bisa dibeli dalam sekitar 2–3 minggu bermain santai. Angka bisa diseimbangkan lagi sesudah dimainkan.
+- **Total belanja**: barang 3.040, kucing 1.600, aksesoris 1.830, jadi ±6.470 koin, belum termasuk camilan. Sumber per hari paling banyak ±270 koin, ditambah 600 koin dari bintang. Semuanya terbeli dalam sekitar 3–5 minggu bermain santai. Angka bisa diseimbangkan lagi sesudah dimainkan.
 
-### Peta bergambar (desain 23)
+### Peta bergambar (`PetaBergambar`, `PetaDapur`, `PetaJalan`, `PetaPindah`)
 
-- Tiap babak berupa ilustrasi ruangannya: **Babak 1 Dapur**, **Babak 2 Ruang Tamu**.
-  - Titik level bergambar benda di ruangan itu menggantikan bulatan angka polos. Nomor level tetap terbaca, dengan keadaan selesai (bintang), saat ini, dan terkunci.
-  - Bos tetap di ujung jalan.
-  - **Token Oyen** (dengan kostumnya) berdiri di titik level saat ini.
-- Peta tetap bisa digulir kalau lebih tinggi dari layar, dan dibuka dengan Oyen di tengah, seperti sekarang. Kartu babak lain tetap ada (desain 23 boleh mengubah bentuknya).
-- **"Lanjut" sesudah menang** [saya]:
-  1. Pemain kembali ke peta babak level berikutnya.
-  2. Token Oyen berjalan dari titik level yang baru dimainkan ke titik level id+1, sekitar 1 detik. Dengan kurangi gerak, Oyen langsung pindah.
-  3. Level berikutnya terbuka sendiri.
-  4. Mengetuk layar selama Oyen berjalan membatalkan pembukaan otomatis; pemain tetap di peta.
-  5. Tombol kembali di level yang terbuka sendiri tetap kembali ke peta.
+- **Ilustrasi per babak**: Babak 1 Dapur, Babak 2 Ruang Tamu.
+  - Titik level bergambar (`TitikLevel`) punya keadaan selesai, saat ini, dan terkunci.
+  - Bos ada di ujung.
+  - Token Oyen (`TokenOyenPeta`) berdiri di level saat ini.
+- **Gulir**: peta tetap bisa digulir, dan dibuka dengan Oyen di tengah.
+- **"Lanjut" sesudah menang** [saya; gambar dari desain `PetaJalan`]:
+  1. Kembali ke peta babak level id+1.
+  2. Oyen berjalan dari titik level yang baru dimainkan, sekitar 1 detik (langsung pindah kalau gerak dikurangi).
+  3. Level id+1 terbuka sendiri.
+  4. Ketukan selama Oyen berjalan membatalkan pembukaan otomatis.
 
-  Ini juga berlaku untuk level lama yang diulang.
+  Berlaku juga untuk level lama yang diulang. Tombol kembali di level tetap ke peta.
 - **Kasus tepi** [saya]:
-  - Sesudah bos level 10: pindah ke peta Babak 2 dengan Oyen di titik level 11, tanpa level yang terbuka sendiri. Ganti babak ditandai dengan judul baru.
-  - Sesudah level 20: tetap di peta Babak 2, Oyen di titik bos, tanpa yang terbuka sendiri.
+  - Sesudah bos level 10: peta Babak 2 dengan Oyen di level 11 (`PetaPindah`), tanpa buka otomatis.
+  - Sesudah level 20: peta Babak 2 dengan Oyen di bos, tanpa buka otomatis.
   - Test lama "Lanjut sesudah level 10 dan 20" diperbarui.
-- **"Main" dari kamar** tetap membuka peta babak saat ini tanpa membuka level sendiri.
+- **"Main" dari kamar** hanya membuka peta.
 
 ### Format gambar [saya]
 
-- Semua gambar baru (kamar, barang, kucing koleksi, pose kamar Oyen, peta) disalin utuh dari `<svg>` ekspor desain ke `lib/game/render/` (`design_svg.dart` atau berkas pendamping) dan digambar lewat `SvgTemplate` dengan fungsi `Canvas`, seperti Oyen dan lemari. Tidak ada paket gambar baru.
-- Kucing koleksi sebaiknya satu bentuk sprite dengan warna lewat placeholder, seperti kostum Oyen. Kalau desain 21 menggambar tiap kucing terpisah, salin terpisah.
-- Gerak berjalan = pose diganti dan digeser, plus cermin kiri/kanan (`OyenLook.mirror`).
-- `design_sync_test.dart` diperluas untuk halaman baru.
+- **Salin dari desain**: semua gambar baru (kucing dan pose, aksesoris, barang, kamar, peta) disalin dari `<svg>` desain ke `lib/game/render/` dan digambar lewat `SvgTemplate` dengan fungsi `Canvas`. Tidak ada paket gambar baru.
+  - `Kucing.dc.html` menyusun sprite dari bagian-bagian (kepala, ekor, mata) dengan warna lewat prop. Pertahankan pembagian itu, karena animasi memutar, menggeser, dan menskala bagian.
+- **Kurangi gerak dan test**: animasi dibuat sebagai fungsi waktu (pose, sudut ekor, skala mata) supaya bisa dimatikan dan diuji per waktu.
+- **`design_sync_test.dart`** diperluas untuk berkas desain baru, dan dilewati kalau folder desain tidak ada.
 
 ## Model data yang diusulkan (Dart murni, `lib/game/model/`)
 
-Nama kelas dan berkas adalah usulan; ikuti kode kalau langkah sebelumnya memakai nama lain.
+Nama kelas dan berkas adalah usulan. Kalau langkah sebelumnya memakai nama lain, ikuti kode.
 
 - **`home_items.dart`**:
-  - `RoomItemId` (enum 12 barang)
-  - `RoomItem` (`id`, `price`, `zone` lantai/dinding, `use` tidur/main/garuk/nonton/duduk/rebahan/hiasan, `toy` bool, `defaultSpot`)
+  - `RoomItemId` (12 barang)
+  - `RoomItem`: `id`, `price`, `zone` lantai/dinding, `use` tidur/main/garuk/nonton/duduk/sembunyi/rebahan/hiasan, `toy`, `defaultSpot`
   - `roomItems`, `roomItemOf`
 - **`kitties.dart`**:
-  - `KittyId` (`oyen`, `arang`, `mendung`, `telon`, `salju`)
-  - `Kitty` (`id`, `price`; Oyen 0 dan selalu dimiliki), `kitties`
+  - `KittyId`: `oyen`, `salju`, `mendung`, `arang`, `telon`
+  - `Kitty`: `id`, `price`; Oyen berharga 0 dan selalu dimiliki
+  - `kitties`
+- **`accessories.dart`**:
+  - `AccessoryId` (8 aksesoris)
+  - `Accessory`: `id`, `price`, `rarity`, `anchor`
+  - `accessories`
+  - `AccessoryCloset`: `owned`, `wearing` (`Map<KittyId, AccessoryId>`), `buy`, `wear(kitty, id?)`; JSON membuang entri rusak, termasuk aksesoris yang belum dimiliki
+  - **Menggantikan `costumes.dart`/`Wardrobe`**
 - **`snacks.dart`**:
-  - `Snack` (`id`, `price`, `hunger`, `joy`), `snacks`
-  - `Pantry` (stok per camilan; `add`, `use`, batas 99, `toJson`/`fromJson` membuang yang rusak)
+  - `Snack`: `id`, `price`, `hunger`, `joy`
+  - `snacks`
+  - `Pantry`: batas 99
 - **`room.dart`**:
-  - `Spot` (x, y pecahan, dijepit 0–1)
-  - `Room` (`owned` barang, `placed` `Map<RoomItemId, Spot>`; yang dimiliki tapi tidak ditaruh = Gudang; `buy`, `place`, `store`)
-  - `Room.initial`, JSON yang membuang entri rusak
+  - `Spot`: pecahan, dijepit ke 0–1
+  - `Room`: `owned`, `placed`, dan Gudang
 - **`needs.dart`**:
-  - `CatNeeds` (`hunger`, `joy`, `at` waktu terakhir; `decayed(now)` dengan laju di atas, jam mundur tidak menaikkan; `fed(snack)`, `petted(now)`, `played(now)`, batas elus per jam dan main per 30 menit)
-  - `Bowl` (`filledAt`, kucing yang sudah makan dari isi itu; `refilled(now)`, `canEat(id, now)`, `eat(id)`, `looksEmpty(owned)`)
-  - `CatRewards` (hari hadiah terakhir per kucing; `canClaim(id, today, needs)`, `claim`)
-  - Konstanta: `hungerHours` 12, `joyHours` 16, `bowlRefillHours` 4, `bowlFood` 40, `rewardCoins` 10, `rewardThreshold` 70, `sadThreshold` 30
+  - `CatNeeds`: `hunger`, `joy`, `at`, `decayed(now)`, `fed`, `petted`, `played`, `decorated`, plus batas per jam
+  - `Bowl`: `filledAt`, kucing yang sudah makan dari isi itu
+  - `CatRewards`
+  - konstanta: `hungerHours` 12, `joyHours` 16, `bowlRefillHours` 4, `bowlFood` 40, `rewardCoins` 10, `rewardThreshold` 70, `sadThreshold` 20, `petJoy` 10, `petJoyPerHour` 30, `decorateJoy` 5
 - **`rewards.dart`**: `maxAdsPerDay` = 10.
-- **`ProgressStore`** baru:
-  - `loadHome`/`saveHome`: satu JSON untuk barang, tata letak, kucing, dan stok, supaya pembelian tidak terbelah di dua kunci
-  - `loadNeeds`/`saveNeeds`: kebutuhan, mangkuk, dan hari hadiah
-
-  Kunci `home.state` dan `home.needs`. `MemoryProgressStore` ikut punya field-nya.
-- **`ProgressController`** ditambah:
-  - `home`, `needs` (sudah diturunkan ke `clock()`)
-  - `buyItem`, `buyKitty`, `buySnack` (→ `Future<bool>`; gagal tanpa efek; barang disimpan sebelum koin)
-  - `placeItem`, `storeItem`
-  - `feed(kitty, snack)`, `pet(kitty)`, `play(kitty)`, `eatFromBowl(kitty)`
-  - `claimKittyReward(kitty)` → `Future<bool>`
-  - `resetProgress` menghapus sesuai aturan di atas
+- **`ProgressStore`**:
+  - `loadHome`/`saveHome`, kunci `home.state`: satu JSON berisi barang, tata letak, kucing, aksesoris, dan stok, supaya satu pembelian tidak terbelah di dua kunci
+  - `loadNeeds`/`saveNeeds`, kunci `home.needs`: kebutuhan, mangkuk, dan hari hadiah
+  - `loadWardrobe`/`saveWardrobe` dan kunci `costume.*` dihapus
+- **`ProgressController`**:
+  - `home`, `needs`
+  - `buyItem`, `buyKitty`, `buySnack`, `buyAccessory`, masing-masing → `Future<bool>`
+  - `wearAccessory(kitty, id?)`, `placeItem`, `storeItem`, `feed`, `pet`, `play`, `finishDecorating`, `eatFromBowl`, `claimKittyReward`
+  - `resetProgress` menghapus barang, kucing, aksesoris, stok, dan tata letak. Bar Oyen kembali ke 100, dan hari hadiah tidak berubah.
+  - `wardrobe`, `buyCostume`, dan `wearCostume` dihapus.
 
 ## Teks baru
 
-Semua teks yang tampil ke pemain, juga label pembaca layar, masuk ke keempat ARB dengan nada santai dan jenaka. Teks Indonesia ditulis dulu, sesuai aturan di `CLAUDE.md`. Daftar kasarnya:
+Semua teks pemain dan label pembaca layar masuk ke keempat ARB. Teks Indonesia diambil dari desain dan ditulis dulu. Nama-nama lewat `lib/l10n/names.dart`. Yang perlu ditambah:
 
-- nama 4 kucing, 12 barang, dan 3 camilan
-- judul Toko dan nama tab
-- keadaan kartu, konfirmasi beli, "Lihat di kamar"
-- "Hias", "Selesai", "Gudang"
-- isi kartu kucing (Lapar, Senang, Beri camilan, Elus, stok kosong)
+- nama dan deskripsi kucing, barang, aksesoris, dan camilan
+- kelangkaan aksesoris
+- tab Toko
+- keadaan kartu
+- konfirmasi beli dan "Milikmu selamanya"
+- Hias, Selesai, Gudang, dan pujian sesudah menghias
+- kartu kucing: Lapar, Senang, "Hampir habis!", Elus, Camilan, Aksesoris, Lepas
+- reaksi
 - gelembung hadiah
-- label pembaca layar kucing dan barang di kamar
-- judul ganti babak di peta
+- "Kamar masih sepi"
+- label pembaca layar
+- judul pindah babak
 
-Nama-nama tersebut memakai fungsi baru di `lib/l10n/names.dart`.
+Teks Lemari Kostum dan kostum lama dihapus dari keempat ARB.
 
 ## Diserahkan ke builder
 
-- Kurva gerak, kecepatan berjalan, bobot acak perilaku, dan lama tiap pose.
-- Cara menyimpan berkala: misalnya simpan kebutuhan saat ada aksi pemain dan saat aplikasi ke latar belakang, tidak tiap bingkai.
-- Bentuk persis kartu kucing dan sheet konfirmasi, kalau desain 19/20 tidak menggambarkannya. Gunakan gaya `KoSheet` dan `KoCard`, lalu catat di `docs/DESIGN_NOTES.md`.
-- Cara galeri (`/galeri`) menampilkan sprite dan barang baru.
+- Bobot acak rutinitas, urutan gambar saat kucing bertumpuk, dan cara menyimpan berkala. Usulan untuk penyimpanan: simpan saat ada aksi pemain dan saat aplikasi masuk ke latar belakang.
+- Bentuk persis bagian yang tidak digambar desain. Pakai gaya `KoSheet` dan `KoCard`, lalu catat di `docs/DESIGN_NOTES.md`.
+- Cara galeri (`/galeri`) menampilkan sprite, aksesoris, dan barang baru.
+- Gambar Topi Koki, kalau tambahan brief belum dikerjakan saat langkah 22 dimulai. Gambar sendiri dengan palet dan aturan jangkar desain 21b, cek lewat potret layar, lalu catat.
