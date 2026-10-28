@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/home_items.dart';
+import '../../game/model/kitties.dart';
+import '../../game/model/snacks.dart';
+import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../coins/coin_sheet.dart';
 import 'buy_sheet.dart';
@@ -27,6 +32,32 @@ class ShopScreen extends StatefulWidget {
 
 class _ShopScreenState extends State<ShopScreen> {
   late ShopTab _tab = widget.initialTab;
+
+  /// Pesan mengapung terakhir ("-15 koin", "Cakep!"), null = tidak ada.
+  String? _flash;
+  Timer? _flashTimer;
+
+  @override
+  void dispose() {
+    _flashTimer?.cancel();
+    super.dispose();
+  }
+
+  /// Menampilkan [text] sebentar di bawah bar atas.
+  void _showFlash(String text) {
+    _flashTimer?.cancel();
+    setState(() => _flash = text);
+    _flashTimer = Timer(ShopFlash.duration, () {
+      if (mounted) setState(() => _flash = null);
+    });
+  }
+
+  Future<void> _buySnack(ProgressController progress, SnackId id) async {
+    final price = snackOf(id).price;
+    if (await progress.buySnack(id) && mounted) {
+      _showFlash(context.l10n.shopFlashSpent(price));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +89,16 @@ class _ShopScreenState extends State<ShopScreen> {
                 onPick: (tab) => setState(() => _tab = tab),
               ),
             ),
-            SizedBox(height: space.s12),
+            SizedBox(height: space.s8),
+            SizedBox(
+              height: context.koSize.chipSmall,
+              child: Center(
+                child: _flash == null
+                    ? const SizedBox.shrink()
+                    : ShopFlash(_flash!),
+              ),
+            ),
+            SizedBox(height: space.s4),
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.fromLTRB(
@@ -69,7 +109,12 @@ class _ShopScreenState extends State<ShopScreen> {
                 ),
                 child: switch (_tab) {
                   ShopTab.items => _Items(progress: progress),
-                  _ => const SizedBox.shrink(),
+                  ShopTab.kitties => _Kitties(progress: progress),
+                  ShopTab.snacks => _Snacks(
+                    progress: progress,
+                    onBuy: (id) => _buySnack(progress, id),
+                  ),
+                  ShopTab.accessories => const SizedBox.shrink(),
                 },
               ),
             ),
@@ -108,6 +153,77 @@ class _Items extends StatelessWidget {
                     progress: progress,
                   ),
           ),
+      ],
+    );
+  }
+}
+
+/// Tab Kucing: paragraf pembuka lalu kartu kesembilan kucing (Oyen sudah
+/// tinggal di kamar, jadi tidak dijual).
+class _Kitties extends StatelessWidget {
+  const _Kitties({required this.progress});
+
+  final ProgressController progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final space = context.koSpace;
+    final home = progress.home;
+    final coins = progress.coins;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ShopIntro(context.l10n.shopKittyIntro),
+        for (final kitty in kitties.skip(1)) ...[
+          SizedBox(height: space.s12),
+          KittyCard(
+            id: kitty.id,
+            coins: coins,
+            state: home.ownsKitty(kitty.id)
+                ? ShopCardState.livesHere
+                : coins >= kitty.price
+                ? ShopCardState.buy
+                : ShopCardState.short,
+            onPressed: home.ownsKitty(kitty.id)
+                ? null
+                : () => showBuySheet(
+                    context,
+                    target: BuyKitty(kitty.id),
+                    progress: progress,
+                  ),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+/// Tab Makanan: paragraf pembuka lalu kartu camilan yang bisa dibeli
+/// berulang. Camilan masuk stok langsung, tanpa sheet konfirmasi (desain).
+class _Snacks extends StatelessWidget {
+  const _Snacks({required this.progress, required this.onBuy});
+
+  final ProgressController progress;
+  final void Function(SnackId id) onBuy;
+
+  @override
+  Widget build(BuildContext context) {
+    final space = context.koSpace;
+    final pantry = progress.home.pantry;
+    final coins = progress.coins;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ShopIntro(context.l10n.shopSnackIntro),
+        for (final snack in snacks) ...[
+          SizedBox(height: space.s12),
+          SnackCard(
+            id: snack.id,
+            stock: pantry.countOf(snack.id),
+            short: coins < snack.price,
+            onBuy: () => onBuy(snack.id),
+          ),
+        ],
       ],
     );
   }

@@ -1,6 +1,9 @@
 import 'package:flutter/widgets.dart';
 
 import '../../game/model/home_items.dart';
+import '../../game/render/render.dart';
+import '../../game/model/kitties.dart';
+import '../../game/model/snacks.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
 import '../../theme/theme.dart';
@@ -251,7 +254,7 @@ class ShopOwnedTag extends StatelessWidget {
     final c = context.koColors;
     final space = context.koSpace;
     return Container(
-      height: context.koSize.chipMedium,
+      height: context.koSize.shopOwnedChip,
       padding: EdgeInsets.symmetric(horizontal: space.s10),
       decoration: BoxDecoration(
         color: c.ownedChip,
@@ -282,7 +285,7 @@ class ShopOwnedMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
-    final size = context.koSize.chipMedium - context.koSpace.s2;
+    final size = context.koSize.shopOwnedMark;
     return Container(
       width: size,
       height: size,
@@ -404,7 +407,7 @@ class ItemCard extends StatelessWidget {
       edgeColor: c.lineDeep,
       depth: context.koShadow.pressSecondary,
       borderColor: c.line,
-      borderWidth: s.artBorder,
+      borderWidth: s.border,
       radius: context.koRadius.card,
       padding: EdgeInsets.all(space.s10),
       child: Column(
@@ -477,6 +480,354 @@ class ShopGrid extends StatelessWidget {
           ),
         ],
       ],
+    );
+  }
+}
+
+/// Kartu satu kucing koleksi (`KartuToko.dc.html`, jenis kucing): sprite
+/// di kotak, nama, deskripsi, lalu "Adopsi · N", badge "Tinggal di kamar",
+/// atau harga pudar beserta selisih koinnya.
+class KittyCard extends StatelessWidget {
+  const KittyCard({
+    super.key,
+    required this.id,
+    required this.state,
+    required this.coins,
+    required this.onPressed,
+  });
+
+  final KittyId id;
+  final ShopCardState state;
+
+  /// Saldo pemain, untuk menghitung selisih harga.
+  final int coins;
+
+  /// Null = kartu tidak bisa ditekan (sudah tinggal di kamar).
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final space = context.koSpace;
+    final s = context.koSize;
+    final l = context.l10n;
+    final kitty = kittyOf(id);
+    final name = kittyName(l, id);
+    final short = state == ShopCardState.short;
+    final home = state == ShopCardState.livesHere;
+    return KoPressable(
+      key: ValueKey('shop-kitty-${id.name}'),
+      onPressed: onPressed,
+      semanticLabel: home
+          ? l.shopCardLivesLabel(name)
+          : short
+          ? l.shopCardShortLabel(name, kitty.price)
+          : l.shopCardBuyLabel(name, kitty.price),
+      color: c.surface,
+      edgeColor: c.lineDeep,
+      depth: context.koShadow.pressSecondary,
+      borderColor: c.line,
+      borderWidth: s.border,
+      radius: context.koRadius.tray,
+      padding: EdgeInsets.all(space.s12),
+      child: Row(
+        children: [
+          Container(
+            width: s.shopKittyWell,
+            height: s.shopKittyWell,
+            decoration: BoxDecoration(
+              color: c.floor,
+              borderRadius: BorderRadius.circular(context.koRadius.control),
+            ),
+            alignment: Alignment.center,
+            child: KittyView(
+              look: KittyLook(kitty: id),
+              size: s.shopKittyArt,
+            ),
+          ),
+          SizedBox(width: space.s12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.koType.button.copyWith(color: c.ink),
+                ),
+                SizedBox(height: space.s6),
+                Text(
+                  kittyDesc(l, id),
+                  style: context.koType.cardText.copyWith(color: c.inkSoft),
+                ),
+                SizedBox(height: space.s6),
+                if (home)
+                  ShopOwnedTag(text: l.shopLivesHere, icon: KoIcons.house)
+                else if (short)
+                  Wrap(
+                    spacing: space.s8,
+                    runSpacing: space.s4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      _PriceChip(price: kitty.price),
+                      Text(
+                        l.shopShortBy(kitty.price - coins),
+                        style: context.koType.tag.copyWith(color: c.brickDeep),
+                      ),
+                    ],
+                  )
+                else
+                  _AdoptChip(price: kitty.price),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Chip harga oranye "Adopsi · N" di kartu kucing yang bisa dibeli.
+class _AdoptChip extends StatelessWidget {
+  const _AdoptChip({required this.price});
+
+  final int price;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final space = context.koSpace;
+    final s = context.koSize;
+    return Container(
+      height: s.shopPriceChip,
+      padding: EdgeInsetsDirectional.only(start: space.s8, end: space.s12),
+      decoration: BoxDecoration(
+        color: c.orange,
+        borderRadius: BorderRadius.circular(context.koRadius.pill),
+        boxShadow: context.koShadow.card,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CoinView(size: s.iconSmall),
+          SizedBox(width: space.s6),
+          Text(
+            context.l10n.shopAdopt(price),
+            style: context.koType.cardLabel.copyWith(color: c.ink),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Chip harga pudar di kartu kucing yang koinnya kurang.
+class _PriceChip extends StatelessWidget {
+  const _PriceChip({required this.price});
+
+  final int price;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final space = context.koSpace;
+    final s = context.koSize;
+    return Container(
+      height: s.shopPriceChip,
+      padding: EdgeInsetsDirectional.only(start: space.s8, end: space.s12),
+      decoration: BoxDecoration(
+        color: c.shortFill,
+        borderRadius: BorderRadius.circular(context.koRadius.pill),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Opacity(
+            opacity: s.lockedOpacity,
+            child: CoinView(kind: CoinKind.plain, size: s.iconSmall),
+          ),
+          SizedBox(width: space.s6),
+          Text(
+            '$price',
+            style: context.koType.cardLabel.copyWith(color: c.inkSoft),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Kartu satu camilan (`KartuToko.dc.html`, jenis makanan): gambar, nama,
+/// deskripsi, stok, dan tombol beli yang langsung menambah stok.
+class SnackCard extends StatelessWidget {
+  const SnackCard({
+    super.key,
+    required this.id,
+    required this.stock,
+    required this.short,
+    required this.onBuy,
+  });
+
+  final SnackId id;
+  final int stock;
+
+  /// Koin tidak cukup: tombol beli mati.
+  final bool short;
+  final VoidCallback onBuy;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final space = context.koSpace;
+    final s = context.koSize;
+    final l = context.l10n;
+    final snack = snackOf(id);
+    final name = snackName(l, id);
+    return Container(
+      padding: EdgeInsetsDirectional.fromSTEB(
+        space.s10,
+        space.s10,
+        space.s12,
+        space.s10,
+      ),
+      decoration: BoxDecoration(
+        color: c.surface,
+        border: Border.all(color: c.line, width: s.border),
+        borderRadius: BorderRadius.circular(context.koRadius.card),
+        boxShadow: context.koShadow.card,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: s.shopSnackWell,
+            height: s.shopSnackWell,
+            decoration: BoxDecoration(
+              color: c.floor,
+              borderRadius: BorderRadius.circular(context.koRadius.slot),
+            ),
+            alignment: Alignment.center,
+            child: SnackView(
+              id: id,
+              box: Size(s.shopSnackArtWidth, s.shopSnackArtHeight),
+            ),
+          ),
+          SizedBox(width: space.s12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.koType.chip.copyWith(color: c.ink),
+                ),
+                SizedBox(height: space.s4),
+                Text(
+                  snackDesc(l, id),
+                  style: context.koType.cardTextSmall.copyWith(
+                    color: c.inkSoft,
+                  ),
+                ),
+                SizedBox(height: space.s6),
+                _StockChip(stock: stock),
+              ],
+            ),
+          ),
+          SizedBox(width: space.s8),
+          KoPressable(
+            key: ValueKey('shop-snack-${id.name}'),
+            onPressed: short ? null : onBuy,
+            semanticLabel: short
+                ? l.shopSnackShortLabel(name, snack.price)
+                : l.shopSnackBuyLabel(name, snack.price),
+            color: short ? c.shortFill : c.orange,
+            edgeColor: short ? null : c.orangeDeep,
+            depth: short ? 0 : context.koShadow.pressSecondary,
+            radius: context.koRadius.slot,
+            height: s.shopSnackButton,
+            padding: EdgeInsetsDirectional.only(
+              start: space.s10,
+              end: space.s12,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (short)
+                  Opacity(
+                    opacity: s.lockedOpacity,
+                    child: CoinView(kind: CoinKind.plain, size: s.iconSmall),
+                  )
+                else
+                  CoinView(kind: CoinKind.plain, size: s.iconSmall),
+                SizedBox(width: space.s6),
+                Text(
+                  l.shopBuyShort(snack.price),
+                  style: context.koType.cardLabel.copyWith(
+                    color: short ? c.inkSoft : c.ink,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Chip stok camilan: krem kalau ada, merah muda kalau habis.
+class _StockChip extends StatelessWidget {
+  const _StockChip({required this.stock});
+
+  final int stock;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final empty = stock == 0;
+    return Container(
+      height: context.koSize.shopStockChip,
+      padding: EdgeInsets.symmetric(horizontal: context.koSpace.s8),
+      decoration: BoxDecoration(
+        color: empty ? c.priceTag : c.tabTrack,
+        borderRadius: BorderRadius.circular(context.koRadius.pill),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        context.l10n.shopStock(stock),
+        style: context.koType.tagSmall.copyWith(
+          color: empty ? c.brickDeep : c.ink,
+        ),
+      ),
+    );
+  }
+}
+
+/// Pesan mengapung sesudah membeli camilan atau memasang aksesoris
+/// ("-15 koin", "Cakep!"). Hilang sendiri; diumumkan pembaca layar.
+class ShopFlash extends StatelessWidget {
+  const ShopFlash(this.text, {super.key});
+
+  final String text;
+
+  /// Lama pesan tampil (desain: animasi 1,3 detik).
+  static const duration = Duration(milliseconds: 1300);
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      liveRegion: true,
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: context.koType.cardLabel.copyWith(
+          color: context.koColors.orangeDeep,
+        ),
+      ),
     );
   }
 }

@@ -4,7 +4,9 @@ import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
+import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/screens/home/home_screen.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
 
@@ -139,6 +141,132 @@ void main() {
         find.bySemanticsLabel('Akuarium, 600 koin, koin kurang'),
         findsOneWidget,
       );
+      semantics.dispose();
+    });
+  });
+
+  group('tab Kucing', () {
+    testWidgets('tab berganti isi', (tester) async {
+      await pumpShop(tester, coins: 500);
+      expect(find.text('Kardus Nyaman'), findsOneWidget);
+
+      await tester.tap(find.text('Kucing'));
+      await settle(tester);
+      expect(find.text('Kardus Nyaman'), findsNothing);
+      expect(find.text('Salju'), findsOneWidget);
+      expect(
+        find.text(
+          'Semua kucing tinggal sekamar dengan Oyen. Oyen setuju. '
+          'Kayaknya.',
+        ),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.text('Makanan'));
+      await settle(tester);
+      expect(find.text('Salju'), findsNothing);
+      expect(find.text('Susu'), findsOneWidget);
+    });
+
+    testWidgets('adopsi kucing lewat sheet', (tester) async {
+      final progress = await pumpShop(tester, coins: 400, tab: ShopTab.kitties);
+      // Salju dan Kopi Susu sama-sama 300 koin.
+      expect(find.text('Adopsi · 300'), findsNWidgets(2));
+      await tapCard(tester, 'shop-kitty-salju');
+      expect(
+        find.text('Putih bersih. Bertahan bersih sampai ketemu kardus.'),
+        findsWidgets,
+      );
+
+      await tester.tap(find.text('Beli · 300 koin'));
+      await settle(tester);
+      expect(find.text('Salju pindah ke kamar!'), findsOneWidget);
+      expect(progress.coins, 100);
+      expect(progress.home.ownsKitty(KittyId.salju), isTrue);
+
+      await tester.tap(find.byKey(const ValueKey('buy-close')));
+      await settle(tester);
+      expect(find.text('Tinggal di kamar'), findsOneWidget);
+    });
+
+    testWidgets('koin kurang menampilkan selisih', (tester) async {
+      await pumpShop(tester, coins: 100, tab: ShopTab.kitties);
+      // Salju dan Kopi Susu sama-sama 300 koin.
+      expect(find.text('Kurang 200 koin'), findsNWidgets(2));
+      expect(find.text('Adopsi · 300'), findsNothing);
+    });
+
+    testWidgets('pembaca layar: kartu kucing per keadaan', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await pumpShop(
+        tester,
+        coins: 300,
+        home: Home(kitties: const [KittyId.arang]),
+        tab: ShopTab.kitties,
+      );
+      expect(find.bySemanticsLabel('Salju, 300 koin'), findsOneWidget);
+      expect(
+        find.bySemanticsLabel('Arang, sudah tinggal di kamar'),
+        findsOneWidget,
+      );
+      expect(
+        find.bySemanticsLabel('Kembang, 700 koin, koin kurang'),
+        findsOneWidget,
+      );
+      semantics.dispose();
+    });
+  });
+
+  group('tab Makanan', () {
+    testWidgets('beli camilan langsung menambah stok', (tester) async {
+      final progress = await pumpShop(tester, coins: 100, tab: ShopTab.snacks);
+      expect(find.text('Stok: 0'), findsWidgets);
+      await tester.tap(find.byKey(const ValueKey('shop-snack-susu')));
+      await settle(tester);
+      expect(progress.coins, 85);
+      expect(progress.home.pantry.countOf(SnackId.susu), 1);
+      expect(find.text('Stok: 1'), findsOneWidget);
+    });
+
+    testWidgets('camilan bisa dibeli berulang, sekali potong per ketukan', (
+      tester,
+    ) async {
+      final progress = await pumpShop(tester, coins: 100, tab: ShopTab.snacks);
+      final buy = find.byKey(const ValueKey('shop-snack-susu'));
+      await tester.tap(buy);
+      await tester.tap(buy);
+      await settle(tester);
+      expect(progress.coins, 70);
+      expect(progress.home.pantry.countOf(SnackId.susu), 2);
+      expect(find.text('Stok: 2'), findsOneWidget);
+    });
+
+    testWidgets('stok penuh tidak menambah dan tidak memotong koin', (
+      tester,
+    ) async {
+      final progress = await pumpShop(
+        tester,
+        coins: 100,
+        home: Home(pantry: Pantry(const {SnackId.susu: maxSnackStock})),
+        tab: ShopTab.snacks,
+      );
+      await tester.tap(find.byKey(const ValueKey('shop-snack-susu')));
+      await settle(tester);
+      expect(progress.coins, 100);
+      expect(progress.home.pantry.countOf(SnackId.susu), maxSnackStock);
+    });
+
+    testWidgets('koin kurang: tombol camilan mati', (tester) async {
+      final semantics = tester.ensureSemantics();
+      final progress = await pumpShop(tester, coins: 5, tab: ShopTab.snacks);
+      expect(
+        find.bySemanticsLabel('Beli Susu seharga 15 koin, koin kurang'),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const ValueKey('shop-snack-susu')));
+      await settle(tester);
+      expect(progress.coins, 5);
+      expect(progress.home.pantry.countOf(SnackId.susu), 0);
       semantics.dispose();
     });
   });

@@ -114,6 +114,15 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.buyItemArtHeight,
     required this.buyButton,
     required this.buyClose,
+    required this.shopOwnedChip,
+    required this.shopHomeChip,
+    required this.shopOwnedMark,
+    required this.shopPriceChip,
+    required this.shopSnackButton,
+    required this.shopStockChip,
+    required this.shopRarityChip,
+    required this.shopPreviewChip,
+    required this.shopPreviewButton,
   });
 
   static const standard = KoSize(
@@ -223,6 +232,15 @@ class KoSize extends ThemeExtension<KoSize> {
     buyItemArtHeight: 130,
     buyButton: 64,
     buyClose: 52,
+    shopOwnedChip: 26,
+    shopHomeChip: 30,
+    shopOwnedMark: 24,
+    shopPriceChip: 34,
+    shopSnackButton: 44,
+    shopStockChip: 22,
+    shopRarityChip: 20,
+    shopPreviewChip: 22,
+    shopPreviewButton: 46,
   );
 
   /// Tombol "Main" di Beranda.
@@ -518,6 +536,33 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Tombol tutup di sheet beli.
   final double buyClose;
 
+  /// Badge "Punyamu" di kartu Toko (desain 20).
+  final double shopOwnedChip;
+
+  /// Badge "Tinggal di kamar" di kartu kucing (desain 20).
+  final double shopHomeChip;
+
+  /// Centang hijau di kotak gambar kartu yang dimiliki (desain 20).
+  final double shopOwnedMark;
+
+  /// Chip "Adopsi - N" dan harga pudar di kartu kucing (desain 20).
+  final double shopPriceChip;
+
+  /// Tombol beli di kartu camilan (desain 20).
+  final double shopSnackButton;
+
+  /// Chip stok di kartu camilan (desain 20).
+  final double shopStockChip;
+
+  /// Badge kelangkaan di kartu aksesoris (desain 20).
+  final double shopRarityChip;
+
+  /// Badge di panel pratinjau aksesoris (desain 20).
+  final double shopPreviewChip;
+
+  /// Tombol beli, pakai, dan lepas di panel pratinjau (desain 20).
+  final double shopPreviewButton;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -626,6 +671,15 @@ class KoSize extends ThemeExtension<KoSize> {
     double? buyItemArtHeight,
     double? buyButton,
     double? buyClose,
+    double? shopOwnedChip,
+    double? shopHomeChip,
+    double? shopOwnedMark,
+    double? shopPriceChip,
+    double? shopSnackButton,
+    double? shopStockChip,
+    double? shopRarityChip,
+    double? shopPreviewChip,
+    double? shopPreviewButton,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -734,6 +788,15 @@ class KoSize extends ThemeExtension<KoSize> {
       buyItemArtHeight: buyItemArtHeight ?? this.buyItemArtHeight,
       buyButton: buyButton ?? this.buyButton,
       buyClose: buyClose ?? this.buyClose,
+      shopOwnedChip: shopOwnedChip ?? this.shopOwnedChip,
+      shopHomeChip: shopHomeChip ?? this.shopHomeChip,
+      shopOwnedMark: shopOwnedMark ?? this.shopOwnedMark,
+      shopPriceChip: shopPriceChip ?? this.shopPriceChip,
+      shopSnackButton: shopSnackButton ?? this.shopSnackButton,
+      shopStockChip: shopStockChip ?? this.shopStockChip,
+      shopRarityChip: shopRarityChip ?? this.shopRarityChip,
+      shopPreviewChip: shopPreviewChip ?? this.shopPreviewChip,
+      shopPreviewButton: shopPreviewButton ?? this.shopPreviewButton,
     );
   }
 
@@ -848,6 +911,15 @@ class KoSize extends ThemeExtension<KoSize> {
       buyItemArtHeight: d(buyItemArtHeight, other.buyItemArtHeight),
       buyButton: d(buyButton, other.buyButton),
       buyClose: d(buyClose, other.buyClose),
+      shopOwnedChip: d(shopOwnedChip, other.shopOwnedChip),
+      shopHomeChip: d(shopHomeChip, other.shopHomeChip),
+      shopOwnedMark: d(shopOwnedMark, other.shopOwnedMark),
+      shopPriceChip: d(shopPriceChip, other.shopPriceChip),
+      shopSnackButton: d(shopSnackButton, other.shopSnackButton),
+      shopStockChip: d(shopStockChip, other.shopStockChip),
+      shopRarityChip: d(shopRarityChip, other.shopRarityChip),
+      shopPreviewChip: d(shopPreviewChip, other.shopPreviewChip),
+      shopPreviewButton: d(shopPreviewButton, other.shopPreviewButton),
     );
   }
 }
