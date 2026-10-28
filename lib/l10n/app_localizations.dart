@@ -522,22 +522,16 @@ abstract class AppLocalizations {
   /// **'{name}, dragging, {n} left'**
   String traySlotDragging(String name, int n);
 
-  /// Screen reader label of a tray slot picked up without dragging.
-  ///
-  /// In en, this message translates to:
-  /// **'{name}, picked up, {n} left'**
-  String traySlotSelected(String name, int n);
-
   /// Screen reader hint for a tray slot: what a double tap does ("Double tap to ...").
   ///
   /// In en, this message translates to:
   /// **'pick it up'**
   String get traySlotSelectHint;
 
-  /// Screen reader hint for a picked-up tray slot or board item: double tap puts it back down.
+  /// Screen reader hint for a picked-up tray slot or board item: double tap cancels the pick (the item stays where it is).
   ///
   /// In en, this message translates to:
-  /// **'put it back'**
+  /// **'cancel'**
   String get traySlotUnselectHint;
 
   /// Screen reader label of one board tile: row and column (from 1, top left) and what is on it.

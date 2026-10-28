@@ -288,15 +288,10 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String traySlotSelected(String name, int n) {
-    return '$name, в руке, осталось: $n';
-  }
-
-  @override
   String get traySlotSelectHint => 'взять эту вещь';
 
   @override
-  String get traySlotUnselectHint => 'положить обратно';
+  String get traySlotUnselectHint => 'отменить';
 
   @override
   String tileLabel(int row, int col, String content) {
@@ -344,7 +339,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String tilePlayerItem(String item) {
-    return '$item, ставил ты';
+    return '$item, твоя вещь';
   }
 
   @override

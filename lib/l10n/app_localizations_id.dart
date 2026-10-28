@@ -252,11 +252,6 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String traySlotSelected(String name, int n) {
-    return '$name, dipilih, sisa $n';
-  }
-
-  @override
   String get traySlotSelectHint => 'mengambil benda ini';
 
   @override

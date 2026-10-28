@@ -202,10 +202,9 @@ class _TrayItem extends StatelessWidget {
       },
       child: TraySlot(
         count: count,
+        // Terpilih dibacakan dari [TraySlot.selected], tidak diulang di label.
         semanticLabel: dragging
             ? l.traySlotDragging(name, count)
-            : selected
-            ? l.traySlotSelected(name, count)
             : l.traySlotLabel(name, count),
         selected: selected,
         onSemanticTap: switch (onSelect) {

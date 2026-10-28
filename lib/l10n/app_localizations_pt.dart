@@ -288,21 +288,10 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String traySlotSelected(String name, int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: 'restam $n',
-      one: 'resta $n',
-    );
-    return '$name, na mão, $_temp0';
-  }
-
-  @override
   String get traySlotSelectHint => 'pegar este item';
 
   @override
-  String get traySlotUnselectHint => 'devolver';
+  String get traySlotUnselectHint => 'cancelar';
 
   @override
   String tileLabel(int row, int col, String content) {
@@ -350,7 +339,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String tilePlayerItem(String item) {
-    return '$item, você que colocou';
+    return '$item, foi você que colocou';
   }
 
   @override

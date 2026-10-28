@@ -70,7 +70,6 @@
   "itemBox": "Kardus",
   "traySlotLabel": "{name}, sisa {n}",
   "traySlotDragging": "{name}, sedang diseret, sisa {n}",
-  "traySlotSelected": "{name}, dipilih, sisa {n}",
   "traySlotSelectHint": "mengambil benda ini",
   "traySlotUnselectHint": "batal mengambil",
   "tileLabel": "Baris {row}, kolom {col}: {content}",

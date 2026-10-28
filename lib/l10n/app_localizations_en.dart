@@ -276,15 +276,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String traySlotSelected(String name, int n) {
-    return '$name, picked up, $n left';
-  }
-
-  @override
   String get traySlotSelectHint => 'pick it up';
 
   @override
-  String get traySlotUnselectHint => 'put it back';
+  String get traySlotUnselectHint => 'cancel';
 
   @override
   String tileLabel(int row, int col, String content) {

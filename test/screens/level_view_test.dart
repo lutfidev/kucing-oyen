@@ -1299,8 +1299,10 @@ void main() {
       await tap(tester, 'Ember air, sisa 1');
       expect(
         tester.getSemantics(_slot(Item.water)),
+        // "Dipilih" sudah dibacakan dari keadaan terpilih, tidak diulang
+        // di label.
         isSemantics(
-          label: 'Ember air, dipilih, sisa 1',
+          label: 'Ember air, sisa 1',
           hasTapAction: true,
           isSelected: true,
         ),
@@ -1335,7 +1337,7 @@ void main() {
     testWidgets('ketuk slot yang dipilih lagi: batal', (tester) async {
       final handle = await open(tester);
       await tap(tester, 'Ikan asin, sisa 1');
-      await tap(tester, 'Ikan asin, dipilih, sisa 1');
+      await tap(tester, 'Ikan asin, sisa 1');
       expect(
         tester.getSemantics(_slot(Item.fish)),
         isSemantics(label: 'Ikan asin, sisa 1', isSelected: false),

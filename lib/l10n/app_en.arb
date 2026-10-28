@@ -384,25 +384,13 @@
       }
     }
   },
-  "traySlotSelected": "{name}, picked up, {n} left",
-  "@traySlotSelected": {
-    "description": "Screen reader label of a tray slot picked up without dragging.",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      },
-      "n": {
-        "type": "int"
-      }
-    }
-  },
   "traySlotSelectHint": "pick it up",
   "@traySlotSelectHint": {
     "description": "Screen reader hint for a tray slot: what a double tap does (\"Double tap to ...\")."
   },
-  "traySlotUnselectHint": "put it back",
+  "traySlotUnselectHint": "cancel",
   "@traySlotUnselectHint": {
-    "description": "Screen reader hint for a picked-up tray slot or board item: double tap puts it back down."
+    "description": "Screen reader hint for a picked-up tray slot or board item: double tap cancels the pick (the item stays where it is)."
   },
   "tileLabel": "Row {row}, column {col}: {content}",
   "@tileLabel": {
