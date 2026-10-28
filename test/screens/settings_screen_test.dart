@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/ad_consent.dart';
@@ -159,6 +160,29 @@ void main() {
         tester.getSemantics(_language(AppLanguage.en)),
         isSemantics(isSelected: false, isButton: true),
       );
+    });
+
+    testWidgets('nama bahasa bertag bahasanya untuk pembaca layar', (
+      tester,
+    ) async {
+      await pumpApp(tester, location: AppRoutes.settings);
+      List<StringAttribute> attributes(AppLanguage language) => tester
+          .getSemantics(_language(language))
+          .getSemanticsData()
+          .attributedLabel
+          .attributes;
+      for (final language in AppLanguage.supported) {
+        final tags = attributes(language);
+        expect(tags, hasLength(1), reason: language.name);
+        final tag = tags.single as LocaleStringAttribute;
+        expect(tag.locale, Locale(language.name));
+        expect(
+          tag.range,
+          TextRange(start: 0, end: language.nativeName!.length),
+        );
+      }
+      // "Ikuti bahasa HP" ditulis dalam bahasa yang sedang dipakai.
+      expect(attributes(AppLanguage.system), isEmpty);
     });
 
     testWidgets('memilih bahasa langsung mengganti teks dan tersimpan', (
