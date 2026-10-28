@@ -13,9 +13,9 @@ val admobAppId = "ca-app-pub-3940256099942544~3347511713"
 val admobTestAppId = "ca-app-pub-3940256099942544~3347511713"
 
 // Kunci upload untuk Play Console (keystore di luar repo). Tanpa
-// android/key.properties, build release ditandatangani debug key supaya
-// `flutter run --release` tetap jalan; bundle seperti itu tidak bisa
-// diunggah. Lihat docs/store/README.md.
+// android/key.properties, APK release ditandatangani debug key supaya
+// `flutter run --release` tetap jalan, sedangkan app bundle (untuk
+// diunggah) ditolak. Lihat docs/store/README.md.
 val keyProperties = Properties().apply {
     val file = rootProject.file("key.properties")
     if (file.exists()) file.inputStream().use { load(it) }
@@ -69,8 +69,16 @@ android {
     }
 }
 
-// Peringatan saat membuat build release yang belum siap diunggah.
+// App bundle tanpa upload key ditolak (Play Console juga menolaknya);
+// build release lain yang belum siap diunggah hanya diberi peringatan.
 gradle.taskGraph.whenReady {
+    if (allTasks.any { it.name == "bundleRelease" } && !hasReleaseKey) {
+        throw GradleException(
+            "Ginger Logic: android/key.properties tidak ada, jadi app bundle release tidak bisa ditandatangani upload key. " +
+                "Buat keystore dan key.properties dulu (docs/store/README.md, bagian Signing). " +
+                "Untuk mencoba build release tanpa kunci, pakai flutter build apk --release atau flutter run --release."
+        )
+    }
     if (allTasks.any { it.name.contains("Release") }) {
         if (!hasReleaseKey) {
             logger.warn("Ginger Logic: android/key.properties tidak ada, build release ditandatangani debug key (tidak bisa diunggah ke Play Console).")
