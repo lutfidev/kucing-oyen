@@ -490,10 +490,14 @@ class _LevelViewState extends State<LevelView>
     final running = _session.phase == SessionPhase.running;
     final showResult = _session.phase == SessionPhase.result;
 
+    // Tombol kembali sistem seperti tombol kembali di layar: putar ulang →
+    // layar hasil; fase jalan dan layar hasil → fase atur (susunan tetap);
+    // fase atur → peta.
     return PopScope(
-      canPop: !_replaying,
+      canPop: _session.phase == SessionPhase.arrange && !_replaying,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _closeReplay();
+        if (didPop) return;
+        _replaying ? _closeReplay() : _arrangeAgain();
       },
       child: Scaffold(
         body: Stack(

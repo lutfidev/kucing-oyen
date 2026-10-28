@@ -8,9 +8,11 @@ import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
 import 'package:kucing_oren/screens/closet/closet_screen.dart';
 import 'package:kucing_oren/screens/home/home_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
+import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
+import 'result_fixtures.dart' show pumpFor;
 
 void main() {
   testWidgets('Beranda → Main → peta → level 1 → kembali ke peta → Beranda', (
@@ -52,6 +54,43 @@ void main() {
     await tester.binding.handlePopRoute();
     await settle(tester);
     expect(find.byType(HomeScreen), findsOneWidget);
+  });
+
+  group('tombol kembali sistem di level', () {
+    Future<void> openLevel(WidgetTester tester) async {
+      await pumpApp(tester, location: AppRoutes.level(1, chapter: 1));
+      await tester.tap(find.text('Bangunkan Oyen'));
+      await tester.pump();
+    }
+
+    testWidgets('fase jalan → fase atur, lalu ke peta', (tester) async {
+      await openLevel(tester);
+      expect(find.text('Bangunkan Oyen'), findsNothing);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.byType(LevelView), findsOneWidget);
+      expect(find.text('Bangunkan Oyen'), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await settle(tester);
+      expect(find.byType(LevelView), findsNothing);
+      expect(find.byType(ChapterView), findsOneWidget);
+    });
+
+    testWidgets('layar hasil → fase atur', (tester) async {
+      await openLevel(tester);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Lihat hasil'));
+      await pumpFor(tester, const Duration(milliseconds: 1500));
+      expect(find.byType(SuccessResult), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.byType(SuccessResult), findsNothing);
+      expect(find.byType(LevelView), findsOneWidget);
+      expect(find.text('Bangunkan Oyen'), findsOneWidget);
+    });
   });
 
   testWidgets('Main membuka babak level yang dimainkan berikutnya', (
