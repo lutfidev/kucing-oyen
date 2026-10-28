@@ -9,6 +9,8 @@ export 'brand_art.dart';
 export 'closet_art.dart';
 export 'coin_art.dart';
 export 'item_art.dart';
+export 'kitty.dart';
+export 'kitty_painter.dart';
 export 'map_art.dart';
 export 'oyen.dart';
 export 'oyen_painter.dart';
