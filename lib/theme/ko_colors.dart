@@ -104,6 +104,11 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.roomHintFloorInk,
     required this.roomScrim,
     required this.roomSelectFill,
+    required this.roomZoneLine,
+    required this.roomZoneFill,
+    required this.roomItemDecorFill,
+    required this.roomDragShadow,
+    required this.onWaterDeep,
   });
 
   static const standard = KoColors(
@@ -203,6 +208,11 @@ class KoColors extends ThemeExtension<KoColors> {
     roomHintFloorInk: Color(0xFF8E5A30),
     roomScrim: Color(0x383B2716), // rgba(59,39,22,.22),
     roomSelectFill: Color(0x2EF59A33), // rgba(245,154,51,.18),
+    roomZoneLine: Color(0x8C2F86B8), // rgba(47,134,184,.55),
+    roomZoneFill: Color(0x0D2F86B8), // rgba(47,134,184,.05),
+    roomItemDecorFill: Color(0x122F86B8), // rgba(47,134,184,.07),
+    roomDragShadow: Color(0x383B2716), // rgba(59,39,22,.22),
+    onWaterDeep: Color(0xFFFFFFFF),
   );
 
   /// Latar semua layar.
@@ -465,6 +475,21 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Isi cincin di bawah kucing yang kartunya terbuka.
   final Color roomSelectFill;
 
+  /// Garis putus-putus area dinding/lantai saat menghias.
+  final Color roomZoneLine;
+
+  /// Isi area dinding/lantai saat menghias.
+  final Color roomZoneFill;
+
+  /// Isi kotak barang saat menghias.
+  final Color roomItemDecorFill;
+
+  /// Bayangan elips di bawah barang yang diangkat.
+  final Color roomDragShadow;
+
+  /// Teks dan ikon di atas `waterDeep` (label area, gagang).
+  final Color onWaterDeep;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -563,6 +588,11 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? roomHintFloorInk,
     Color? roomScrim,
     Color? roomSelectFill,
+    Color? roomZoneLine,
+    Color? roomZoneFill,
+    Color? roomItemDecorFill,
+    Color? roomDragShadow,
+    Color? onWaterDeep,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -661,6 +691,11 @@ class KoColors extends ThemeExtension<KoColors> {
       roomHintFloorInk: roomHintFloorInk ?? this.roomHintFloorInk,
       roomScrim: roomScrim ?? this.roomScrim,
       roomSelectFill: roomSelectFill ?? this.roomSelectFill,
+      roomZoneLine: roomZoneLine ?? this.roomZoneLine,
+      roomZoneFill: roomZoneFill ?? this.roomZoneFill,
+      roomItemDecorFill: roomItemDecorFill ?? this.roomItemDecorFill,
+      roomDragShadow: roomDragShadow ?? this.roomDragShadow,
+      onWaterDeep: onWaterDeep ?? this.onWaterDeep,
     );
   }
 
@@ -765,6 +800,11 @@ class KoColors extends ThemeExtension<KoColors> {
       roomHintFloorInk: c(roomHintFloorInk, other.roomHintFloorInk),
       roomScrim: c(roomScrim, other.roomScrim),
       roomSelectFill: c(roomSelectFill, other.roomSelectFill),
+      roomZoneLine: c(roomZoneLine, other.roomZoneLine),
+      roomZoneFill: c(roomZoneFill, other.roomZoneFill),
+      roomItemDecorFill: c(roomItemDecorFill, other.roomItemDecorFill),
+      roomDragShadow: c(roomDragShadow, other.roomDragShadow),
+      onWaterDeep: c(onWaterDeep, other.onWaterDeep),
     );
   }
 }

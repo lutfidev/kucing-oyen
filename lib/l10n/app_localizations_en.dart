@@ -1948,4 +1948,59 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reactionRelieved => 'Ahh, free!';
+
+  @override
+  String get decorate => 'Decorate';
+
+  @override
+  String get decorateDone => 'Done';
+
+  @override
+  String get decorateHint => 'Drag things to a new spot';
+
+  @override
+  String get zoneWall => 'Wall area';
+
+  @override
+  String get zoneFloor => 'Floor area';
+
+  @override
+  String get storage => 'Storage';
+
+  @override
+  String storageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storageTapHint => 'Tap to place';
+
+  @override
+  String get storageEmpty =>
+      'Storage is empty. Everything\'s on display, Oyen is proud.';
+
+  @override
+  String storagePlaceLabel(String item) {
+    return 'Put $item in the room';
+  }
+
+  @override
+  String get storageLabel => 'Item storage';
+
+  @override
+  String get storeItemAction => 'Move to storage';
+
+  @override
+  String get decoratePraise => 'Room\'s looking great!';
+
+  @override
+  String decoratePraiseJoy(int joy) {
+    return '+$joy Happy for every cat';
+  }
 }

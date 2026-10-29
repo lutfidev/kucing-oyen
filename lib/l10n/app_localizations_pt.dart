@@ -1966,4 +1966,59 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get reactionRelieved => 'Ufa, livre!';
+
+  @override
+  String get decorate => 'Decorar';
+
+  @override
+  String get decorateDone => 'Pronto';
+
+  @override
+  String get decorateHint => 'Arraste as coisas pra um lugar novo';
+
+  @override
+  String get zoneWall => 'Área da parede';
+
+  @override
+  String get zoneFloor => 'Área do chão';
+
+  @override
+  String get storage => 'Depósito';
+
+  @override
+  String storageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count itens',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storageTapHint => 'Toque pra colocar';
+
+  @override
+  String get storageEmpty =>
+      'Depósito vazio. Tudo em exposição, Oyen tá orgulhoso.';
+
+  @override
+  String storagePlaceLabel(String item) {
+    return 'Colocar $item no quarto';
+  }
+
+  @override
+  String get storageLabel => 'Depósito de itens';
+
+  @override
+  String get storeItemAction => 'Guardar no depósito';
+
+  @override
+  String get decoratePraise => 'O quarto tá ficando lindo!';
+
+  @override
+  String decoratePraiseJoy(int joy) {
+    return '+$joy de Alegria pra todos os gatos';
+  }
 }

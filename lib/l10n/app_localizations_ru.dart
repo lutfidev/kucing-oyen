@@ -1989,4 +1989,60 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get reactionRelieved => 'Свобода!';
+
+  @override
+  String get decorate => 'Обустроить';
+
+  @override
+  String get decorateDone => 'Готово';
+
+  @override
+  String get decorateHint => 'Перетащи вещи на новое место';
+
+  @override
+  String get zoneWall => 'Стена';
+
+  @override
+  String get zoneFloor => 'Пол';
+
+  @override
+  String get storage => 'Кладовка';
+
+  @override
+  String storageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count вещи',
+      many: '$count вещей',
+      few: '$count вещи',
+      one: '$count вещь',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storageTapHint => 'Нажми, чтобы поставить';
+
+  @override
+  String get storageEmpty => 'Кладовка пуста. Всё расставлено, Ойен гордится.';
+
+  @override
+  String storagePlaceLabel(String item) {
+    return 'Поставить в комнату: $item';
+  }
+
+  @override
+  String get storageLabel => 'Кладовка с вещами';
+
+  @override
+  String get storeItemAction => 'Убрать в кладовку';
+
+  @override
+  String get decoratePraise => 'Комната всё краше!';
+
+  @override
+  String decoratePraiseJoy(int joy) {
+    return '+$joy радости всем котикам';
+  }
 }

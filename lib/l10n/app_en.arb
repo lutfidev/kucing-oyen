@@ -2543,5 +2543,76 @@
   "reactionRelieved": "Ahh, free!",
   "@reactionRelieved": {
     "description": "Floating text over a cat after taking its accessory off."
+  },
+  "decorate": "Decorate",
+  "@decorate": {
+    "description": "Room button that starts decorate mode."
+  },
+  "decorateDone": "Done",
+  "@decorateDone": {
+    "description": "Button that ends decorate mode."
+  },
+  "decorateHint": "Drag things to a new spot",
+  "@decorateHint": {
+    "description": "Chip shown while decorating."
+  },
+  "zoneWall": "Wall area",
+  "@zoneWall": {
+    "description": "Label of the wall area while decorating."
+  },
+  "zoneFloor": "Floor area",
+  "@zoneFloor": {
+    "description": "Label of the floor area while decorating."
+  },
+  "storage": "Storage",
+  "@storage": {
+    "description": "Title of the storage tray with owned items that are not in the room."
+  },
+  "storageCount": "{count, plural, =1{1 item} other{{count} items}}",
+  "@storageCount": {
+    "description": "Number of items in storage.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storageTapHint": "Tap to place",
+  "@storageTapHint": {
+    "description": "Hint on the storage tray."
+  },
+  "storageEmpty": "Storage is empty. Everything's on display, Oyen is proud.",
+  "@storageEmpty": {
+    "description": "Storage tray when every item is in the room."
+  },
+  "storagePlaceLabel": "Put {item} in the room",
+  "@storagePlaceLabel": {
+    "description": "Screen reader label of an item in storage.",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "storageLabel": "Item storage",
+  "@storageLabel": {
+    "description": "Screen reader label of the storage tray."
+  },
+  "storeItemAction": "Move to storage",
+  "@storeItemAction": {
+    "description": "Screen reader action on a room item while decorating."
+  },
+  "decoratePraise": "Room's looking great!",
+  "@decoratePraise": {
+    "description": "Praise shown after decorating."
+  },
+  "decoratePraiseJoy": "+{joy} Happy for every cat",
+  "@decoratePraiseJoy": {
+    "description": "Bonus line under the decorating praise.",
+    "placeholders": {
+      "joy": {
+        "type": "int"
+      }
+    }
   }
 }

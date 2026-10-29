@@ -71,6 +71,7 @@ class KoType extends ThemeExtension<KoType> {
     required this.buttonRoom,
     required this.buttonCard,
     required this.reaction,
+    required this.buttonDone,
   });
 
   static const standard = KoType(
@@ -398,6 +399,12 @@ class KoType extends ThemeExtension<KoType> {
       fontWeight: FontWeight.w700,
       fontSize: 18,
     ),
+    buttonDone: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w700,
+      fontSize: 17,
+    ),
   );
 
   /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
@@ -565,6 +572,9 @@ class KoType extends ThemeExtension<KoType> {
   /// Angka reaksi yang melayang di atas kucing ("+10 senang").
   final TextStyle reaction;
 
+  /// Tombol Selesai menghias.
+  final TextStyle buttonDone;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -621,6 +631,7 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? buttonRoom,
     TextStyle? buttonCard,
     TextStyle? reaction,
+    TextStyle? buttonDone,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -677,6 +688,7 @@ class KoType extends ThemeExtension<KoType> {
       buttonRoom: buttonRoom ?? this.buttonRoom,
       buttonCard: buttonCard ?? this.buttonCard,
       reaction: reaction ?? this.reaction,
+      buttonDone: buttonDone ?? this.buttonDone,
     );
   }
 
@@ -739,6 +751,7 @@ class KoType extends ThemeExtension<KoType> {
       buttonRoom: s(buttonRoom, other.buttonRoom),
       buttonCard: s(buttonCard, other.buttonCard),
       reaction: s(reaction, other.reaction),
+      buttonDone: s(buttonDone, other.buttonDone),
     );
   }
 }

@@ -127,6 +127,21 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.roomDecorateGap,
     required this.roomHintBorder,
     required this.roomBubbleTail,
+    required this.roomPraiseTop,
+    required this.roomPraiseInset,
+    required this.roomDecorateButton,
+    required this.roomZoneChip,
+    required this.roomGrip,
+    required this.roomItemOutline,
+    required this.roomLift,
+    required this.roomLiftScale,
+    required this.roomLiftShadow,
+    required this.roomTraySlotWidth,
+    required this.roomTraySlotHeight,
+    required this.roomTraySlotWidthCompact,
+    required this.roomTraySlotHeightCompact,
+    required this.roomTrayArtWidth,
+    required this.roomTrayArtHeight,
     required this.roomCardTop,
     required this.roomCardAvatar,
     required this.roomCardAvatarArt,
@@ -272,6 +287,21 @@ class KoSize extends ThemeExtension<KoSize> {
     roomDecorateGap: 56,
     roomHintBorder: 2.5,
     roomBubbleTail: 14,
+    roomPraiseTop: 120,
+    roomPraiseInset: 40,
+    roomDecorateButton: 44,
+    roomZoneChip: 22,
+    roomGrip: 24,
+    roomItemOutline: 4,
+    roomLift: 16,
+    roomLiftScale: 1.06,
+    roomLiftShadow: 18,
+    roomTraySlotWidth: 76,
+    roomTraySlotHeight: 64,
+    roomTraySlotWidthCompact: 64,
+    roomTraySlotHeightCompact: 54,
+    roomTrayArtWidth: 56,
+    roomTrayArtHeight: 46,
     roomCardTop: 52,
     roomCardAvatar: 60,
     roomCardAvatarArt: 54,
@@ -630,6 +660,48 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Ekor gelembung ajakan kamar baru.
   final double roomBubbleTail;
 
+  /// Jarak pujian menghias dari bawah status bar (desain: top 164 − 44).
+  final double roomPraiseTop;
+
+  /// Jarak kiri-kanan pujian menghias.
+  final double roomPraiseInset;
+
+  /// Tombol Hias, Selesai, dan chip petunjuk menghias (`TombolHias.dc.html`).
+  final double roomDecorateButton;
+
+  /// Label "Area dinding" dan "Area lantai" saat menghias.
+  final double roomZoneChip;
+
+  /// Gagang titik-titik di pojok barang saat menghias.
+  final double roomGrip;
+
+  /// Jarak garis putus-putus dari barang saat menghias.
+  final double roomItemOutline;
+
+  /// Barang yang diangkat naik sejauh ini (dikali skala gambar).
+  final double roomLift;
+
+  /// Barang yang diangkat sedikit membesar.
+  final double roomLiftScale;
+
+  /// Tinggi bayangan elips di bawah barang yang diangkat.
+  final double roomLiftShadow;
+
+  /// Kotak barang di baki Gudang (`BakiGudang.dc.html`).
+  final double roomTraySlotWidth;
+
+  final double roomTraySlotHeight;
+
+  /// Kotak barang Gudang di layar pendek (catatan `n360`).
+  final double roomTraySlotWidthCompact;
+
+  final double roomTraySlotHeightCompact;
+
+  /// Gambar barang di kotak Gudang.
+  final double roomTrayArtWidth;
+
+  final double roomTrayArtHeight;
+
   /// Jarak kartu kucing dari bawah status bar (desain: top 96 − status bar 44).
   final double roomCardTop;
 
@@ -817,6 +889,21 @@ class KoSize extends ThemeExtension<KoSize> {
     double? roomDecorateGap,
     double? roomHintBorder,
     double? roomBubbleTail,
+    double? roomPraiseTop,
+    double? roomPraiseInset,
+    double? roomDecorateButton,
+    double? roomZoneChip,
+    double? roomGrip,
+    double? roomItemOutline,
+    double? roomLift,
+    double? roomLiftScale,
+    double? roomLiftShadow,
+    double? roomTraySlotWidth,
+    double? roomTraySlotHeight,
+    double? roomTraySlotWidthCompact,
+    double? roomTraySlotHeightCompact,
+    double? roomTrayArtWidth,
+    double? roomTrayArtHeight,
     double? roomCardTop,
     double? roomCardAvatar,
     double? roomCardAvatarArt,
@@ -962,6 +1049,23 @@ class KoSize extends ThemeExtension<KoSize> {
       roomDecorateGap: roomDecorateGap ?? this.roomDecorateGap,
       roomHintBorder: roomHintBorder ?? this.roomHintBorder,
       roomBubbleTail: roomBubbleTail ?? this.roomBubbleTail,
+      roomPraiseTop: roomPraiseTop ?? this.roomPraiseTop,
+      roomPraiseInset: roomPraiseInset ?? this.roomPraiseInset,
+      roomDecorateButton: roomDecorateButton ?? this.roomDecorateButton,
+      roomZoneChip: roomZoneChip ?? this.roomZoneChip,
+      roomGrip: roomGrip ?? this.roomGrip,
+      roomItemOutline: roomItemOutline ?? this.roomItemOutline,
+      roomLift: roomLift ?? this.roomLift,
+      roomLiftScale: roomLiftScale ?? this.roomLiftScale,
+      roomLiftShadow: roomLiftShadow ?? this.roomLiftShadow,
+      roomTraySlotWidth: roomTraySlotWidth ?? this.roomTraySlotWidth,
+      roomTraySlotHeight: roomTraySlotHeight ?? this.roomTraySlotHeight,
+      roomTraySlotWidthCompact:
+          roomTraySlotWidthCompact ?? this.roomTraySlotWidthCompact,
+      roomTraySlotHeightCompact:
+          roomTraySlotHeightCompact ?? this.roomTraySlotHeightCompact,
+      roomTrayArtWidth: roomTrayArtWidth ?? this.roomTrayArtWidth,
+      roomTrayArtHeight: roomTrayArtHeight ?? this.roomTrayArtHeight,
       roomCardTop: roomCardTop ?? this.roomCardTop,
       roomCardAvatar: roomCardAvatar ?? this.roomCardAvatar,
       roomCardAvatarArt: roomCardAvatarArt ?? this.roomCardAvatarArt,
@@ -1117,6 +1221,27 @@ class KoSize extends ThemeExtension<KoSize> {
       roomDecorateGap: d(roomDecorateGap, other.roomDecorateGap),
       roomHintBorder: d(roomHintBorder, other.roomHintBorder),
       roomBubbleTail: d(roomBubbleTail, other.roomBubbleTail),
+      roomPraiseTop: d(roomPraiseTop, other.roomPraiseTop),
+      roomPraiseInset: d(roomPraiseInset, other.roomPraiseInset),
+      roomDecorateButton: d(roomDecorateButton, other.roomDecorateButton),
+      roomZoneChip: d(roomZoneChip, other.roomZoneChip),
+      roomGrip: d(roomGrip, other.roomGrip),
+      roomItemOutline: d(roomItemOutline, other.roomItemOutline),
+      roomLift: d(roomLift, other.roomLift),
+      roomLiftScale: d(roomLiftScale, other.roomLiftScale),
+      roomLiftShadow: d(roomLiftShadow, other.roomLiftShadow),
+      roomTraySlotWidth: d(roomTraySlotWidth, other.roomTraySlotWidth),
+      roomTraySlotHeight: d(roomTraySlotHeight, other.roomTraySlotHeight),
+      roomTraySlotWidthCompact: d(
+        roomTraySlotWidthCompact,
+        other.roomTraySlotWidthCompact,
+      ),
+      roomTraySlotHeightCompact: d(
+        roomTraySlotHeightCompact,
+        other.roomTraySlotHeightCompact,
+      ),
+      roomTrayArtWidth: d(roomTrayArtWidth, other.roomTrayArtWidth),
+      roomTrayArtHeight: d(roomTrayArtHeight, other.roomTrayArtHeight),
       roomCardTop: d(roomCardTop, other.roomCardTop),
       roomCardAvatar: d(roomCardAvatar, other.roomCardAvatar),
       roomCardAvatarArt: d(roomCardAvatarArt, other.roomCardAvatarArt),

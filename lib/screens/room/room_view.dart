@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/progress_scope.dart';
@@ -18,6 +19,7 @@ import '../../widgets/widgets.dart';
 import '../coins/coin_sheet.dart';
 import '../shop/shop_tab.dart';
 import 'room_geometry.dart';
+import 'decorate.dart';
 import 'kitty_card.dart';
 import 'room_parts.dart';
 import 'room_reaction.dart';
@@ -71,7 +73,7 @@ class _RoomViewState extends State<RoomView> {
 
   ProgressController get _progress => widget.progress;
 
-  /// Geometri kamar terakhir (untuk letak reaksi di atas kucing).
+  /// Geometri kamar terakhir (untuk seretan dan letak reaksi).
   RoomGeometry? _geo;
 
   /// Kucing yang kartunya terbuka.
@@ -81,6 +83,24 @@ class _RoomViewState extends State<RoomView> {
   /// baru memulai ulang animasi).
   (RoomReaction, KittyId, int)? _reaction;
   int _reactions = 0;
+
+  bool _decorating = false;
+  bool _finishing = false;
+
+  /// Pujian sesudah menghias: dapat bonus Senang atau tidak, dan nomor
+  /// urutnya.
+  (bool, int)? _praise;
+  int _praises = 0;
+
+  /// Barang yang sedang diseret, letaknya sekarang, pojok kiri-atasnya
+  /// saat mulai diseret, dan titik jari (layar) saat mulai dan sekarang.
+  RoomItemId? _dragging;
+  Spot? _dragSpot;
+  Offset _dragOrigin = Offset.zero;
+  Offset _dragDown = Offset.zero;
+  Offset _dragPointer = Offset.zero;
+
+  final _trayKey = GlobalKey();
 
   void _select(KittyId kitty) => setState(() => _selected = kitty);
 
@@ -92,15 +112,83 @@ class _RoomViewState extends State<RoomView> {
   void _openShop([ShopTab tab = ShopTab.items]) =>
       context.go(AppRoutes.shop(tab: tab));
 
+  void _startDecorating() => setState(() {
+    _decorating = true;
+    _selected = null;
+    _reaction = null;
+  });
+
+  /// Selesai menghias (juga tombol kembali sistem): kembali ke mode normal,
+  /// lalu pujian, dengan bonus Senang kalau belum diberikan sejam ini.
+  Future<void> _finish() async {
+    if (_finishing || !_decorating) return;
+    _finishing = true;
+    setState(() {
+      _decorating = false;
+      _dragging = null;
+      _dragSpot = null;
+    });
+    final bonus = await _progress.finishDecorating();
+    if (!mounted) return;
+    setState(() {
+      _finishing = false;
+      _praise = (bonus, ++_praises);
+    });
+  }
+
+  void _dragStart(RoomItemId id, Rect box, Offset pointer) {
+    _dragOrigin = box.topLeft;
+    _dragDown = pointer;
+    _dragPointer = pointer;
+  }
+
+  void _dragUpdate(RoomItemId id, Offset pointer) {
+    final geo = _geo;
+    if (geo == null) return;
+    _dragPointer = pointer;
+    setState(() {
+      _dragging = id;
+      _dragSpot = geo.spotFor(
+        roomItemOf(id),
+        _dragOrigin + (pointer - _dragDown),
+      );
+    });
+  }
+
+  /// Lepas di atas baki = masuk Gudang (kecuali mangkuk), selain itu
+  /// ditaruh. Keduanya langsung disimpan.
+  void _dragEnd(RoomItemId id) {
+    final spot = _dragSpot;
+    if (_dragging == id) {
+      if (_overTray(_dragPointer) && !roomItemOf(id).builtIn) {
+        _progress.storeItem(id);
+      } else if (spot != null) {
+        _progress.placeItem(id, spot);
+      }
+    }
+    setState(() {
+      _dragging = null;
+      _dragSpot = null;
+    });
+  }
+
+  bool _overTray(Offset pointer) {
+    final box = _trayKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return false;
+    return (box.localToGlobal(Offset.zero) & box.size).contains(pointer);
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
     final s = context.koSize;
+    final space = context.koSpace;
     final compact = MediaQuery.sizeOf(context).height < s.roomCompactHeight;
     final home = _progress.home;
     final coins = _progress.coins;
     final selected = _selected;
     final reaction = _reaction;
+    final praise = _praise;
     final geo = _geo;
     final padding = MediaQuery.paddingOf(context);
     final cardTop = padding.top + s.roomCardTop;
@@ -108,11 +196,21 @@ class _RoomViewState extends State<RoomView> {
         MediaQuery.sizeOf(context).height -
         cardTop -
         padding.bottom -
-        context.koSpace.s16;
+        space.s16;
+    // Panel bawah setinggi sama saat menghias, supaya kamar tidak berubah
+    // ukuran.
+    final panel = compact
+        ? s.roomPlayCompact + space.s12 + s.roomMenuButtonCompact
+        : s.roomPlay + space.s16 + s.roomMenuButton;
     return PopScope(
-      canPop: selected == null,
+      canPop: selected == null && !_decorating,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _closeCard();
+        if (didPop) return;
+        if (_decorating) {
+          _finish();
+        } else {
+          _closeCard();
+        }
       },
       child: Scaffold(
         backgroundColor: c.roomFloorBoards,
@@ -125,16 +223,37 @@ class _RoomViewState extends State<RoomView> {
                     builder: (context, box) => _room(RoomGeometry(box.biggest)),
                   ),
                 ),
-                RoomMenu(
+                RoomPanel(
                   compact: compact,
-                  shopDot: shopHasAffordable(home, coins),
-                  accessoryDot: accessoriesHaveAffordable(home, coins),
-                  onPlay: () => context.go(
-                    AppRoutes.chapter(_progress.currentChapter.number),
+                  child: SizedBox(
+                    height: panel,
+                    child: _decorating
+                        ? StorageTray(
+                            key: _trayKey,
+                            items: home.room.stored,
+                            compact: compact,
+                            onPlace: (id) => _progress.placeItem(
+                              id,
+                              roomItemOf(id).defaultSpot,
+                            ),
+                          )
+                        : RoomMenu(
+                            compact: compact,
+                            shopDot: shopHasAffordable(home, coins),
+                            accessoryDot: accessoriesHaveAffordable(
+                              home,
+                              coins,
+                            ),
+                            onPlay: () => context.go(
+                              AppRoutes.chapter(
+                                _progress.currentChapter.number,
+                              ),
+                            ),
+                            onShop: _openShop,
+                            onAccessories: () => _openShop(ShopTab.accessories),
+                            onSettings: () => context.go(AppRoutes.settings),
+                          ),
                   ),
-                  onShop: _openShop,
-                  onAccessories: () => _openShop(ShopTab.accessories),
-                  onSettings: () => context.go(AppRoutes.settings),
                 ),
               ],
             ),
@@ -147,8 +266,8 @@ class _RoomViewState extends State<RoomView> {
                 ),
               ),
               Positioned(
-                left: context.koSpace.s16,
-                right: context.koSpace.s16,
+                left: space.s16,
+                right: space.s16,
                 top: cardTop,
                 child: ConstrainedBox(
                   constraints: BoxConstraints(maxHeight: max(0, cardMax)),
@@ -171,6 +290,20 @@ class _RoomViewState extends State<RoomView> {
                 anchor: geo.catBoxOf(kitty, _slots[kitty.index]),
                 onDone: () => setState(() => _reaction = null),
               ),
+            if (praise case (final bonus, final n))
+              Positioned(
+                left: s.roomPraiseInset,
+                right: s.roomPraiseInset,
+                top: padding.top + s.roomPraiseTop,
+                child: PraiseToast(
+                  key: ValueKey(n),
+                  title: context.l10n.decoratePraise,
+                  subtitle: bonus
+                      ? context.l10n.decoratePraiseJoy(decorateJoy)
+                      : null,
+                  onDone: () => setState(() => _praise = null),
+                ),
+              ),
           ],
         ),
       ),
@@ -180,22 +313,37 @@ class _RoomViewState extends State<RoomView> {
   Widget _room(RoomGeometry geo) {
     _geo = geo;
     final c = context.koColors;
+    final s = context.koSize;
     final space = context.koSpace;
     final home = _progress.home;
     final now = _progress.clock();
     final bowlFull = !_progress.needs.bowl.isEmptyFor(home.kitties, now);
+    final dragging = _dragging;
+    final dragSpot = _dragSpot;
     final sprites = roomSprites(
-      items: home.room.placed,
+      items: {
+        ...home.room.placed,
+        if (dragging != null && dragSpot != null) dragging: dragSpot,
+      },
       cats: {for (final kitty in home.kitties) kitty: _slots[kitty.index]},
       geo: geo,
     );
-    final empty = home.room.placed.keys.every((id) => roomItemOf(id).builtIn);
+    // Barang yang diangkat digambar paling depan.
+    final ordered = [
+      for (final sprite in sprites)
+        if (sprite is! ItemSprite || sprite.id != dragging) sprite,
+      for (final sprite in sprites)
+        if (sprite is ItemSprite && sprite.id == dragging) sprite,
+    ];
+    final owned = home.room.owned;
+    final empty = owned.every((id) => roomItemOf(id).builtIn);
     final top = MediaQuery.paddingOf(context).top + space.s6;
     return Stack(
       key: const ValueKey('room-area'),
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(child: RoomBackground(geo: geo)),
+        if (_decorating) Positioned.fill(child: ZoneGuides(geo: geo)),
         for (final sprite in sprites.whereType<KittySprite>())
           if (sprite.kitty == _selected)
             Positioned(
@@ -207,38 +355,51 @@ class _RoomViewState extends State<RoomView> {
                 decoration: ShapeDecoration(
                   color: c.roomSelectFill,
                   shape: OvalBorder(
-                    side: BorderSide(
-                      color: c.orange,
-                      width: context.koSize.artBorder,
-                    ),
+                    side: BorderSide(color: c.orange, width: s.artBorder),
                   ),
                 ),
               ),
             ),
-        for (final sprite in sprites)
-          Positioned.fromRect(
-            rect: sprite.box,
-            child: switch (sprite) {
-              ItemSprite(:final id) => RoomItemView(
-                id: id,
-                box: sprite.box.size,
-                full: id != RoomItemId.mangkuk || bowlFull,
-              ),
-              KittySprite(:final kitty) => _kitty(kitty, sprite.box),
-            },
-          ),
-        for (final sprite in sprites.whereType<KittySprite>())
-          if (_progress.catNeeds(sprite.kitty) case final needs
-              when needs.isSad)
+        for (final sprite in ordered)
+          if (sprite case ItemSprite(:final id) when id == dragging) ...[
             Positioned(
-              left: sprite.box.left + sprite.box.width * 0.19,
-              top: sprite.box.top - sprite.box.width * 0.19,
-              child: SadMarkView(
-                hungry: needs.hunger <= sadThreshold,
-                size: RoomArt.sadMarkViewBox.width * geo.artScale,
+              left: sprite.box.left + sprite.box.width * 0.1,
+              top: sprite.box.bottom - s.roomLiftShadow * geo.artScale / 2,
+              width: sprite.box.width * 0.8,
+              height: s.roomLiftShadow * geo.artScale,
+              child: DecoratedBox(
+                decoration: ShapeDecoration(
+                  color: c.roomDragShadow,
+                  shape: const OvalBorder(),
+                ),
               ),
             ),
-        if (empty)
+            _itemSprite(sprite, geo, bowlFull, lifted: true),
+          ] else
+            switch (sprite) {
+              ItemSprite() => _itemSprite(sprite, geo, bowlFull),
+              KittySprite(:final kitty) => Positioned.fromRect(
+                key: ValueKey(kitty),
+                rect: sprite.box,
+                child: IgnorePointer(
+                  ignoring: _decorating,
+                  child: _kitty(kitty, sprite.box),
+                ),
+              ),
+            },
+        if (!_decorating)
+          for (final sprite in sprites.whereType<KittySprite>())
+            if (_progress.catNeeds(sprite.kitty) case final needs
+                when needs.isSad)
+              Positioned(
+                left: sprite.box.left + sprite.box.width * 0.19,
+                top: sprite.box.top - sprite.box.width * 0.19,
+                child: SadMarkView(
+                  hungry: needs.hunger <= sadThreshold,
+                  size: RoomArt.sadMarkViewBox.width * geo.artScale,
+                ),
+              ),
+        if (empty && !_decorating)
           Positioned.fill(
             child: EmptyRoomHints(geo: geo, onShop: _openShop),
           ),
@@ -254,8 +415,79 @@ class _RoomViewState extends State<RoomView> {
             onCoins: () => showCoinSheet(context, _progress),
           ),
         ),
+        if (!empty || _decorating)
+          Positioned(
+            left: space.s16,
+            right: space.s16,
+            top: top + s.roomDecorateGap,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (_decorating)
+                  const Flexible(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: DecorateHint(),
+                    ),
+                  )
+                else
+                  const Spacer(),
+                SizedBox(width: space.s8),
+                DecorateButton(
+                  done: _decorating,
+                  onPressed: _decorating ? _finish : _startDecorating,
+                ),
+              ],
+            ),
+          ),
       ],
     );
+  }
+
+  Widget _itemSprite(
+    ItemSprite sprite,
+    RoomGeometry geo,
+    bool bowlFull, {
+    bool lifted = false,
+  }) {
+    final s = context.koSize;
+    final id = sprite.id;
+    Widget art = RoomItemView(
+      id: id,
+      box: sprite.box.size,
+      full: id != RoomItemId.mangkuk || bowlFull,
+    );
+    if (_decorating) {
+      final l = context.l10n;
+      art = DecorOutline(
+        child: Semantics(
+          label: roomItemName(l, id),
+          excludeSemantics: true,
+          customSemanticsActions: roomItemOf(id).builtIn
+              ? null
+              : {
+                  CustomSemanticsAction(label: l.storeItemAction): () =>
+                      _progress.storeItem(id),
+                },
+          child: art,
+        ),
+      );
+      art = GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onPanDown: (d) => _dragStart(id, sprite.box, d.globalPosition),
+        onPanUpdate: (d) => _dragUpdate(id, d.globalPosition),
+        onPanEnd: (_) => _dragEnd(id),
+        onPanCancel: () => _dragEnd(id),
+        child: art,
+      );
+    }
+    if (lifted) {
+      art = Transform.translate(
+        offset: Offset(0, -s.roomLift * geo.artScale),
+        child: Transform.scale(scale: s.roomLiftScale, child: art),
+      );
+    }
+    return Positioned.fromRect(key: ValueKey(id), rect: sprite.box, child: art);
   }
 
   Widget _kitty(KittyId kitty, Rect box) {

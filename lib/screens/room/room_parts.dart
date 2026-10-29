@@ -157,7 +157,8 @@ class RoomStarChip extends StatelessWidget {
   }
 }
 
-/// Panel bawah kamar: "Main", lalu Toko, Aksesoris, dan Pengaturan.
+/// Isi panel bawah kamar ([RoomPanel]): "Main", lalu Toko, Aksesoris, dan
+/// Pengaturan.
 /// [compact] untuk layar pendek (catatan `n360`).
 class RoomMenu extends StatelessWidget {
   const RoomMenu({
@@ -184,57 +185,54 @@ class RoomMenu extends StatelessWidget {
     final l = context.l10n;
     final s = context.koSize;
     final space = context.koSpace;
-    return RoomPanel(
-      compact: compact,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          KoButton(
-            label: l.play,
-            size: KoButtonSize.hero,
-            icon: KoIcons.play,
-            height: compact ? s.roomPlayCompact : s.roomPlay,
-            style: context.koType.buttonRoom,
-            onPressed: onPlay,
-          ),
-          SizedBox(height: compact ? space.s12 : space.s16),
-          Row(
-            children: [
-              Expanded(
-                child: RoomMenuButton(
-                  icon: KoIcons.store,
-                  label: l.shop,
-                  dot: shopDot,
-                  dotKey: const ValueKey('room-dot-shop'),
-                  compact: compact,
-                  onPressed: onShop,
-                ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        KoButton(
+          label: l.play,
+          size: KoButtonSize.hero,
+          icon: KoIcons.play,
+          height: compact ? s.roomPlayCompact : s.roomPlay,
+          style: context.koType.buttonRoom,
+          onPressed: onPlay,
+        ),
+        SizedBox(height: compact ? space.s12 : space.s16),
+        Row(
+          children: [
+            Expanded(
+              child: RoomMenuButton(
+                icon: KoIcons.store,
+                label: l.shop,
+                dot: shopDot,
+                dotKey: const ValueKey('room-dot-shop'),
+                compact: compact,
+                onPressed: onShop,
               ),
-              SizedBox(width: space.s10),
-              Expanded(
-                child: RoomMenuButton(
-                  icon: KoIcons.accessory,
-                  label: l.accessories,
-                  dot: accessoryDot,
-                  dotKey: const ValueKey('room-dot-accessories'),
-                  compact: compact,
-                  onPressed: onAccessories,
-                ),
+            ),
+            SizedBox(width: space.s10),
+            Expanded(
+              child: RoomMenuButton(
+                icon: KoIcons.accessory,
+                label: l.accessories,
+                dot: accessoryDot,
+                dotKey: const ValueKey('room-dot-accessories'),
+                compact: compact,
+                onPressed: onAccessories,
               ),
-              SizedBox(width: space.s10),
-              Expanded(
-                child: RoomMenuButton(
-                  icon: KoIcons.settings,
-                  label: l.settings,
-                  compact: compact,
-                  onPressed: onSettings,
-                ),
+            ),
+            SizedBox(width: space.s10),
+            Expanded(
+              child: RoomMenuButton(
+                icon: KoIcons.settings,
+                label: l.settings,
+                compact: compact,
+                onPressed: onSettings,
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

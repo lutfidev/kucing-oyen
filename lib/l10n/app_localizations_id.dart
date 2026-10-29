@@ -1814,4 +1814,58 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get reactionRelieved => 'Lega!';
+
+  @override
+  String get decorate => 'Hias';
+
+  @override
+  String get decorateDone => 'Selesai';
+
+  @override
+  String get decorateHint => 'Seret barang ke tempat baru';
+
+  @override
+  String get zoneWall => 'Area dinding';
+
+  @override
+  String get zoneFloor => 'Area lantai';
+
+  @override
+  String get storage => 'Gudang';
+
+  @override
+  String storageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count barang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storageTapHint => 'Ketuk untuk menaruh';
+
+  @override
+  String get storageEmpty =>
+      'Gudangnya kosong. Semua barang sudah dipajang, Oyen bangga.';
+
+  @override
+  String storagePlaceLabel(String item) {
+    return 'Taruh $item di kamar';
+  }
+
+  @override
+  String get storageLabel => 'Gudang barang';
+
+  @override
+  String get storeItemAction => 'Simpan ke Gudang';
+
+  @override
+  String get decoratePraise => 'Kamar makin cakep!';
+
+  @override
+  String decoratePraiseJoy(int joy) {
+    return '+$joy Senang untuk semua kucing';
+  }
 }

@@ -471,5 +471,19 @@
   "reactionFedJoy": "+{hunger} сытости, +{joy} радости",
   "reactionJoy": "+{joy} радости",
   "reactionNice": "Красота!",
-  "reactionRelieved": "Свобода!"
+  "reactionRelieved": "Свобода!",
+  "decorate": "Обустроить",
+  "decorateDone": "Готово",
+  "decorateHint": "Перетащи вещи на новое место",
+  "zoneWall": "Стена",
+  "zoneFloor": "Пол",
+  "storage": "Кладовка",
+  "storageCount": "{count, plural, one{{count} вещь} few{{count} вещи} many{{count} вещей} other{{count} вещи}}",
+  "storageTapHint": "Нажми, чтобы поставить",
+  "storageEmpty": "Кладовка пуста. Всё расставлено, Ойен гордится.",
+  "storagePlaceLabel": "Поставить в комнату: {item}",
+  "storageLabel": "Кладовка с вещами",
+  "storeItemAction": "Убрать в кладовку",
+  "decoratePraise": "Комната всё краше!",
+  "decoratePraiseJoy": "+{joy} радости всем котикам"
 }

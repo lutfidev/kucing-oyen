@@ -471,5 +471,19 @@
   "reactionFedJoy": "+{hunger} kenyang, +{joy} senang",
   "reactionJoy": "+{joy} senang",
   "reactionNice": "Cakep!",
-  "reactionRelieved": "Lega!"
+  "reactionRelieved": "Lega!",
+  "decorate": "Hias",
+  "decorateDone": "Selesai",
+  "decorateHint": "Seret barang ke tempat baru",
+  "zoneWall": "Area dinding",
+  "zoneFloor": "Area lantai",
+  "storage": "Gudang",
+  "storageCount": "{count, plural, other{{count} barang}}",
+  "storageTapHint": "Ketuk untuk menaruh",
+  "storageEmpty": "Gudangnya kosong. Semua barang sudah dipajang, Oyen bangga.",
+  "storagePlaceLabel": "Taruh {item} di kamar",
+  "storageLabel": "Gudang barang",
+  "storeItemAction": "Simpan ke Gudang",
+  "decoratePraise": "Kamar makin cakep!",
+  "decoratePraiseJoy": "+{joy} Senang untuk semua kucing"
 }

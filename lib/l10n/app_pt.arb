@@ -471,5 +471,19 @@
   "reactionFedJoy": "+{hunger} barriga, +{joy} alegria",
   "reactionJoy": "+{joy} alegria",
   "reactionNice": "Que chique!",
-  "reactionRelieved": "Ufa, livre!"
+  "reactionRelieved": "Ufa, livre!",
+  "decorate": "Decorar",
+  "decorateDone": "Pronto",
+  "decorateHint": "Arraste as coisas pra um lugar novo",
+  "zoneWall": "Área da parede",
+  "zoneFloor": "Área do chão",
+  "storage": "Depósito",
+  "storageCount": "{count, plural, =1{1 item} other{{count} itens}}",
+  "storageTapHint": "Toque pra colocar",
+  "storageEmpty": "Depósito vazio. Tudo em exposição, Oyen tá orgulhoso.",
+  "storagePlaceLabel": "Colocar {item} no quarto",
+  "storageLabel": "Depósito de itens",
+  "storeItemAction": "Guardar no depósito",
+  "decoratePraise": "O quarto tá ficando lindo!",
+  "decoratePraiseJoy": "+{joy} de Alegria pra todos os gatos"
 }

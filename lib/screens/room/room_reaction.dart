@@ -174,14 +174,16 @@ class PraiseToast extends StatefulWidget {
   const PraiseToast({
     super.key,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.onDone,
   });
 
   static const duration = Duration(milliseconds: 2400);
 
   final String title;
-  final String subtitle;
+
+  /// Bonus Senang; null kalau bonus sejam ini sudah diberikan.
+  final String? subtitle;
   final VoidCallback onDone;
 
   @override
@@ -233,11 +235,12 @@ class _PraiseToastState extends State<PraiseToast>
               textAlign: TextAlign.center,
               style: t.numberCompact.copyWith(color: c.successDeep),
             ),
-            Text(
-              widget.subtitle,
-              textAlign: TextAlign.center,
-              style: t.labelSmall.copyWith(color: c.inkSoft),
-            ),
+            if (widget.subtitle case final subtitle?)
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: t.labelSmall.copyWith(color: c.inkSoft),
+              ),
           ],
         ),
       ),

@@ -2933,6 +2933,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ahh, free!'**
   String get reactionRelieved;
+
+  /// Room button that starts decorate mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Decorate'**
+  String get decorate;
+
+  /// Button that ends decorate mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get decorateDone;
+
+  /// Chip shown while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag things to a new spot'**
+  String get decorateHint;
+
+  /// Label of the wall area while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall area'**
+  String get zoneWall;
+
+  /// Label of the floor area while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Floor area'**
+  String get zoneFloor;
+
+  /// Title of the storage tray with owned items that are not in the room.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get storage;
+
+  /// Number of items in storage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
+  String storageCount(int count);
+
+  /// Hint on the storage tray.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to place'**
+  String get storageTapHint;
+
+  /// Storage tray when every item is in the room.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage is empty. Everything\'s on display, Oyen is proud.'**
+  String get storageEmpty;
+
+  /// Screen reader label of an item in storage.
+  ///
+  /// In en, this message translates to:
+  /// **'Put {item} in the room'**
+  String storagePlaceLabel(String item);
+
+  /// Screen reader label of the storage tray.
+  ///
+  /// In en, this message translates to:
+  /// **'Item storage'**
+  String get storageLabel;
+
+  /// Screen reader action on a room item while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to storage'**
+  String get storeItemAction;
+
+  /// Praise shown after decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Room\'s looking great!'**
+  String get decoratePraise;
+
+  /// Bonus line under the decorating praise.
+  ///
+  /// In en, this message translates to:
+  /// **'+{joy} Happy for every cat'**
+  String decoratePraiseJoy(int joy);
 }
 
 class _AppLocalizationsDelegate
