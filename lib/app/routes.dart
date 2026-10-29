@@ -24,9 +24,6 @@ abstract final class AppRoutes {
   /// Galeri efek suara dan musik, untuk didengar di perangkat.
   static const gallerySound = '/galeri/suara';
 
-  /// Lemari Kostum (desain 12), dibuka dari Beranda.
-  static const closet = '/kostum';
-
   /// Toko (desain 20), dibuka dari Beranda. Dengan [tab] langsung membuka
   /// tab itu (`/toko?tab=accessories`).
   static String shop({ShopTab? tab}) =>

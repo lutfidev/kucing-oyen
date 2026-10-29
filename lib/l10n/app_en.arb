@@ -71,10 +71,6 @@
   "@play": {
     "description": "Big Play button on the home screen and the map node label."
   },
-  "closet": "Wardrobe",
-  "@closet": {
-    "description": "Costume closet button and screen title."
-  },
   "settings": "Settings",
   "@settings": {
     "description": "Settings button and screen title."
@@ -1258,59 +1254,6 @@
       }
     }
   },
-  "costumeNone": "Plain",
-  "@costumeNone": {
-    "description": "Costume: none."
-  },
-  "costumePeci": "Peci Cap",
-  "@costumePeci": {
-    "description": "Costume: peci (Indonesian cap)."
-  },
-  "costumeSarung": "Sarong",
-  "@costumeSarung": {
-    "description": "Costume: sarong."
-  },
-  "costumeKoki": "Chef Hat",
-  "@costumeKoki": {
-    "description": "Costume: chef hat."
-  },
-  "costumeKacamata": "Glasses",
-  "@costumeKacamata": {
-    "description": "Costume: glasses."
-  },
-  "costumeWearingTag": "Wearing",
-  "@costumeWearingTag": {
-    "description": "Costume card tag: being worn."
-  },
-  "costumeWearingStatus": "wearing",
-  "@costumeWearingStatus": {
-    "description": "Screen reader status: being worn."
-  },
-  "costumeOwnedTag": "Yours",
-  "@costumeOwnedTag": {
-    "description": "Costume card tag: owned."
-  },
-  "costumeOwnedStatus": "yours",
-  "@costumeOwnedStatus": {
-    "description": "Screen reader status: owned."
-  },
-  "costumeActionWearing": "Wearing now",
-  "@costumeActionWearing": {
-    "description": "Closet button: selected costume is worn."
-  },
-  "costumeActionWear": "Wear",
-  "@costumeActionWear": {
-    "description": "Closet button: wear the owned costume."
-  },
-  "costumeActionBuy": "{n, plural, one{Buy · {n} coin} other{Buy · {n} coins}}",
-  "@costumeActionBuy": {
-    "description": "Closet button: buy for n coins.",
-    "placeholders": {
-      "n": {
-        "type": "int"
-      }
-    }
-  },
   "closeCoins": "Close coins",
   "@closeCoins": {
     "description": "Screen reader: close the coin sheet."
@@ -1319,7 +1262,7 @@
   "@coinsTitle": {
     "description": "Coin sheet title."
   },
-  "coinsIntro": "Coins buy hints and outfits for Oyen. Grab the daily bonus, or watch an ad.",
+  "coinsIntro": "Coins buy hints and stuff for Oyen's room. Grab the daily bonus, or watch an ad.",
   "@coinsIntro": {
     "description": "Coin sheet intro."
   },
@@ -1426,7 +1369,7 @@
   "@resetProgress": {
     "description": "Settings button: reset progress."
   },
-  "resetProgressInfo": "Erase stars, coins, outfits, hints, and tutorials, then start again from level 1.",
+  "resetProgressInfo": "Erase stars, coins, room stuff, hints, and tutorials, then start again from level 1.",
   "@resetProgressInfo": {
     "description": "Settings text under the reset button."
   },
@@ -1434,7 +1377,7 @@
   "@resetConfirmTitle": {
     "description": "Reset confirmation title."
   },
-  "resetConfirmBody": "Stars, coins, outfits, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used.",
+  "resetConfirmBody": "Stars, coins, room stuff, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used.",
   "@resetConfirmBody": {
     "description": "Reset confirmation text."
   },

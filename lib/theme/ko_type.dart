@@ -423,7 +423,7 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 700/15: teks biasa.
   final TextStyle body;
 
-  /// Nunito 800/15: label tombol kecil ("Lemari Kostum", "Aturan").
+  /// Nunito 800/15: label tombol kecil ("Hias", "Aturan").
   final TextStyle label;
 
   /// Nunito 800/12, jarak huruf 1.2: "BABAK 1".
@@ -536,10 +536,10 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 800/14, tinggi baris 1,35: teks petunjuk yang dibuka.
   final TextStyle hintReveal;
 
-  /// Fredoka 600/17: chip koin Lemari Kostum.
+  /// Fredoka 600/17: total bintang di header kamar.
   final TextStyle numberCoinLarge;
 
-  /// Fredoka 600/16: nama kostum di kartu Lemari Kostum.
+  /// Fredoka 600/16: label kartu Pengaturan dan galeri suara.
   final TextStyle cardLabel;
 
   /// Nama barang di kartu Toko (desain 20).

@@ -57,12 +57,7 @@ void main() {
     expect(bossName(en, livingRoom), 'Eid Day');
   });
 
-  test('kostum, benda, dan Oyen', () {
-    expect(
-      [for (final c in OyenCostume.values) costumeName(l10nId, c)],
-      ['Polos', 'Peci', 'Sarung', 'Topi Koki', 'Kacamata'],
-    );
-    expect(costumeName(en, OyenCostume.koki), 'Chef Hat');
+  test('benda dan Oyen', () {
     expect(itemName(l10nId, Item.water), 'Ember air');
     expect(itemName(en, Item.fish), 'Salted fish');
     const look = OyenLook(pose: OyenPose.sleep, dir: Direction.left);

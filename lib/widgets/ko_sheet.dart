@@ -6,7 +6,7 @@ import '../theme/theme.dart';
 import 'ko_pressable.dart';
 
 /// Membuka sheet bawah (sheet Aturan desain 05 dan Petunjuk desain 10 di
-/// layar level, sheet Tambah Koin di Beranda dan Lemari Kostum, konfirmasi
+/// layar level, sheet Tambah Koin di kamar dan Toko, konfirmasi
 /// reset di Pengaturan): latar gelap, sheet naik sambil muncul. Ditutup
 /// dengan `onClose` dari [builder] (tombol tutup, tarik ke bawah), ketuk
 /// latar, atau tombol kembali sistem. [barrierColor] default

@@ -119,28 +119,6 @@ class _CoinPainter extends CustomPainter {
   bool shouldRepaint(_CoinPainter old) => old.kind != kind;
 }
 
-/// Lemari kayu di belakang pratinjau Oyen (desain 12). Hiasan saja.
-class ClosetView extends StatelessWidget {
-  const ClosetView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const ExcludeSemantics(
-      child: CustomPaint(size: ClosetArt.viewBox, painter: _ClosetPainter()),
-    );
-  }
-}
-
-class _ClosetPainter extends CustomPainter {
-  const _ClosetPainter();
-
-  @override
-  void paint(Canvas canvas, Size size) => paintCloset(canvas);
-
-  @override
-  bool shouldRepaint(_ClosetPainter old) => false;
-}
-
 /// Benda yang sedang diseret jari: kotak 64 px, miring dan diperbesar
 /// dengan bayangan jatuh. Hiasan saja.
 class LiftedItemView extends StatelessWidget {

@@ -54,9 +54,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get play => 'Main';
 
   @override
-  String get closet => 'Lemari Kostum';
-
-  @override
   String get settings => 'Pengaturan';
 
   @override
@@ -936,44 +933,6 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get costumeNone => 'Polos';
-
-  @override
-  String get costumePeci => 'Peci';
-
-  @override
-  String get costumeSarung => 'Sarung';
-
-  @override
-  String get costumeKoki => 'Topi Koki';
-
-  @override
-  String get costumeKacamata => 'Kacamata';
-
-  @override
-  String get costumeWearingTag => 'Dipakai';
-
-  @override
-  String get costumeWearingStatus => 'dipakai';
-
-  @override
-  String get costumeOwnedTag => 'Punyamu';
-
-  @override
-  String get costumeOwnedStatus => 'punyamu';
-
-  @override
-  String get costumeActionWearing => 'Sedang dipakai';
-
-  @override
-  String get costumeActionWear => 'Pakai';
-
-  @override
-  String costumeActionBuy(int n) {
-    return 'Beli · $n koin';
-  }
-
-  @override
   String get closeCoins => 'Tutup tambah koin';
 
   @override
@@ -981,7 +940,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get coinsIntro =>
-      'Koin buat petunjuk dan kostum Oyen. Ambil bonus tiap hari, atau tonton iklan.';
+      'Koin buat petunjuk dan isi kamar Oyen. Ambil bonus tiap hari, atau tonton iklan.';
 
   @override
   String get dailyBonus => 'Bonus harian';
@@ -1058,14 +1017,14 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get resetProgressInfo =>
-      'Hapus bintang, koin, kostum, petunjuk, dan tutorial, lalu mulai lagi dari level 1.';
+      'Hapus bintang, koin, isi kamar, petunjuk, dan tutorial, lalu mulai lagi dari level 1.';
 
   @override
   String get resetConfirmTitle => 'Hapus semua progres?';
 
   @override
   String get resetConfirmBody =>
-      'Bintang, koin, kostum, petunjuk, dan tutorial dihapus. Ini nggak bisa dibatalkan. Bonus harian dan iklan hari ini tetap terhitung.';
+      'Bintang, koin, isi kamar, petunjuk, dan tutorial dihapus. Ini nggak bisa dibatalkan. Bonus harian dan iklan hari ini tetap terhitung.';
 
   @override
   String get resetConfirm => 'Hapus';

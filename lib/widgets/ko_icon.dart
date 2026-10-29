@@ -184,14 +184,6 @@ abstract final class KoIcons {
     KoIconShape.path('M8 11V8a4 4 0 0 1 8 0v3'),
   ], strokeWidth: 2.6);
 
-  /// Lemari Kostum (gantungan baju).
-  static const costume = KoIconData([
-    KoIconShape.path('M12 7a2 2 0 1 1 2-2c0 1-2 1.5-2 3'),
-    KoIconShape.path(
-      'M12 8 3 15.5a1.2 1.2 0 0 0 .8 2.1h16.4a1.2 1.2 0 0 0 .8-2.1z',
-    ),
-  ], strokeWidth: 2.2);
-
   /// Pengaturan (penggeser).
   static const settings = KoIconData([
     KoIconShape.path('M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0'),

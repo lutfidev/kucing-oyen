@@ -66,9 +66,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get play => 'Play';
 
   @override
-  String get closet => 'Wardrobe';
-
-  @override
   String get settings => 'Settings';
 
   @override
@@ -988,50 +985,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get costumeNone => 'Plain';
-
-  @override
-  String get costumePeci => 'Peci Cap';
-
-  @override
-  String get costumeSarung => 'Sarong';
-
-  @override
-  String get costumeKoki => 'Chef Hat';
-
-  @override
-  String get costumeKacamata => 'Glasses';
-
-  @override
-  String get costumeWearingTag => 'Wearing';
-
-  @override
-  String get costumeWearingStatus => 'wearing';
-
-  @override
-  String get costumeOwnedTag => 'Yours';
-
-  @override
-  String get costumeOwnedStatus => 'yours';
-
-  @override
-  String get costumeActionWearing => 'Wearing now';
-
-  @override
-  String get costumeActionWear => 'Wear';
-
-  @override
-  String costumeActionBuy(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: 'Buy · $n coins',
-      one: 'Buy · $n coin',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get closeCoins => 'Close coins';
 
   @override
@@ -1039,7 +992,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get coinsIntro =>
-      'Coins buy hints and outfits for Oyen. Grab the daily bonus, or watch an ad.';
+      'Coins buy hints and stuff for Oyen\'s room. Grab the daily bonus, or watch an ad.';
 
   @override
   String get dailyBonus => 'Daily bonus';
@@ -1134,14 +1087,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetProgressInfo =>
-      'Erase stars, coins, outfits, hints, and tutorials, then start again from level 1.';
+      'Erase stars, coins, room stuff, hints, and tutorials, then start again from level 1.';
 
   @override
   String get resetConfirmTitle => 'Erase all progress?';
 
   @override
   String get resetConfirmBody =>
-      'Stars, coins, outfits, hints, and tutorials will be erased. This can\'t be undone. Today\'s daily bonus and ads stay used.';
+      'Stars, coins, room stuff, hints, and tutorials will be erased. This can\'t be undone. Today\'s daily bonus and ads stay used.';
 
   @override
   String get resetConfirm => 'Erase';

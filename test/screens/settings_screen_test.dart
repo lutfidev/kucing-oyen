@@ -13,11 +13,12 @@ import 'package:kucing_oren/app/privacy.dart';
 import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/app/sound_player.dart';
-import 'package:kucing_oren/game/model/costumes.dart';
+import 'package:kucing_oren/game/model/home.dart';
+import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
+import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
-import 'package:kucing_oren/game/render/oyen.dart';
 import 'package:kucing_oren/screens/room/room_screen.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:kucing_oren/screens/settings/settings_screen.dart';
@@ -258,7 +259,7 @@ void main() {
       best: wonUpTo(5),
       coins: 240,
       hints: {3: 2},
-      wardrobe: Wardrobe(owned: {OyenCostume.peci}, wearing: OyenCostume.peci),
+      home: Home(room: Room().buy(RoomItemId.kasur)),
       rewards: const DailyRewards(bonusDay: 5),
     );
 
@@ -277,7 +278,7 @@ void main() {
       expect(progress.coins, 240);
     });
 
-    testWidgets('hapus: bintang, koin, petunjuk, kostum, tutorial hilang; '
+    testWidgets('hapus: bintang, koin, petunjuk, isi kamar, tutorial hilang; '
         'bonus harian dan bahasa tetap', (tester) async {
       final progress = await pumpApp(
         tester,
@@ -291,7 +292,7 @@ void main() {
       expect(progress.progress, Progress.empty);
       expect(progress.coins, 0);
       expect(progress.hintTier(3), 0);
-      expect(progress.wardrobe.wearing, OyenCostume.none);
+      expect(progress.home, Home.initial);
       expect(progress.tutorialsDone, isEmpty);
       expect(progress.language, AppLanguage.id);
       expect(

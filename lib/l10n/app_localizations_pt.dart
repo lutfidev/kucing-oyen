@@ -66,9 +66,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get play => 'Jogar';
 
   @override
-  String get closet => 'Guarda-roupa';
-
-  @override
   String get settings => 'Configurações';
 
   @override
@@ -1001,50 +998,6 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get costumeNone => 'Básico';
-
-  @override
-  String get costumePeci => 'Peci';
-
-  @override
-  String get costumeSarung => 'Sarongue';
-
-  @override
-  String get costumeKoki => 'Chapéu de Chef';
-
-  @override
-  String get costumeKacamata => 'Óculos';
-
-  @override
-  String get costumeWearingTag => 'Usando';
-
-  @override
-  String get costumeWearingStatus => 'usando';
-
-  @override
-  String get costumeOwnedTag => 'Seu';
-
-  @override
-  String get costumeOwnedStatus => 'seu';
-
-  @override
-  String get costumeActionWearing => 'Usando agora';
-
-  @override
-  String get costumeActionWear => 'Usar';
-
-  @override
-  String costumeActionBuy(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: 'Comprar · $n moedas',
-      one: 'Comprar · $n moeda',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get closeCoins => 'Fechar moedas';
 
   @override
@@ -1052,7 +1005,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get coinsIntro =>
-      'Moedas servem para dicas e roupas do Oyen. Pegue o bônus diário ou veja um anúncio.';
+      'Moedas servem para dicas e coisas pro quarto do Oyen. Pegue o bônus diário ou veja um anúncio.';
 
   @override
   String get dailyBonus => 'Bônus diário';
@@ -1147,14 +1100,14 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get resetProgressInfo =>
-      'Apaga estrelas, moedas, roupas, dicas e tutoriais e recomeça na fase 1.';
+      'Apaga estrelas, moedas, o quarto, dicas e tutoriais e recomeça na fase 1.';
 
   @override
   String get resetConfirmTitle => 'Apagar todo o progresso?';
 
   @override
   String get resetConfirmBody =>
-      'Estrelas, moedas, roupas, dicas e tutoriais serão apagados. Não dá para desfazer. O bônus e os anúncios de hoje continuam contados.';
+      'Estrelas, moedas, o quarto, dicas e tutoriais serão apagados. Não dá para desfazer. O bônus e os anúncios de hoje continuam contados.';
 
   @override
   String get resetConfirm => 'Apagar';

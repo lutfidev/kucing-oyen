@@ -5,7 +5,6 @@ import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/app/routes.dart';
-import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/l10n/l10n.dart';
@@ -36,7 +35,6 @@ final routes = <String>[
   AppRoutes.home,
   AppRoutes.chapter(1),
   AppRoutes.chapter(2),
-  AppRoutes.closet,
   AppRoutes.shop(),
   AppRoutes.settings,
   // Tanpa benda, dua jenis benda, dan tiga jenis benda (baki terlebar).
@@ -102,7 +100,7 @@ void main() {
 
   for (final (route, last) in [
     (AppRoutes.galleryBoard, find.text('Vas pecah')),
-    (AppRoutes.galleryOyen, find.text('Kacamata')),
+    (AppRoutes.galleryOyen, find.text('Senang')),
     (AppRoutes.galleryKitty, find.text('Puding Ikan')),
     (AppRoutes.gallerySound, find.text('Lagu level')),
   ]) {
@@ -134,7 +132,6 @@ void _cases(AppLanguage language) {
     Set<int>? tutorialsDone,
     int coins = 0,
     Map<int, int> hints = const {},
-    Wardrobe? wardrobe,
     DailyRewards rewards = DailyRewards.initial,
     RewardedAds? ads,
     DateTime Function()? clock,
@@ -143,7 +140,6 @@ void _cases(AppLanguage language) {
     tutorialsDone: tutorialsDone,
     coins: coins,
     hints: hints,
-    wardrobe: wardrobe,
     rewards: rewards,
     ads: ads,
     clock: clock,
@@ -328,33 +324,6 @@ void _cases(AppLanguage language) {
         setTextScale(tester, scale);
         await pumpApp(tester, progress: p(coins: 99999));
         expect(find.text('99999'), findsOneWidget);
-        expect(tester.takeException(), isNull);
-      });
-      testWidgets('tanpa overflow: Lemari Kostum saldo 99999, Topi Koki '
-          'dipilih @ $label, teks ${scale * 100}%', (tester) async {
-        setScreenSize(tester, size);
-        setTextScale(tester, scale);
-        await pumpApp(
-          tester,
-          location: AppRoutes.closet,
-          progress: p(coins: 99999),
-        );
-        final koki = find.byKey(const ValueKey('costume-koki'));
-        await tester.ensureVisible(koki);
-        await tester.tap(koki);
-        await settle(tester);
-        expect(find.text(l.costumeActionBuy(150)), findsOneWidget);
-        // Semua kartu dan tombol aksi bisa dicapai.
-        for (final id in ['none', 'peci', 'sarung', 'koki', 'kacamata']) {
-          final card = find.byKey(ValueKey('costume-$id'));
-          await tester.ensureVisible(card);
-          expect(card.hitTestable(), findsOneWidget);
-        }
-        await tester.ensureVisible(find.text(l.costumeActionBuy(150)));
-        expect(
-          find.text(l.costumeActionBuy(150)).hitTestable(),
-          findsOneWidget,
-        );
         expect(tester.takeException(), isNull);
       });
       // Sheet Tambah Koin dari Beranda bersaldo 5 digit: siap semua, jatah

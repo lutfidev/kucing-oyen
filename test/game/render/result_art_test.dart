@@ -41,15 +41,6 @@ Matcher _near(Color expected, {int tolerance = 2}) => predicate<Color>((c) {
 const _white = Color(0xFFFFFFFF);
 
 void main() {
-  group('lemari kostum (desain 12)', () {
-    test('lemari kayu di kotak 300×236', () async {
-      final at = await _paint(ClosetArt.viewBox, paintCloset);
-      expect(at(150, 30), _near(const Color(0xFFE9C9A0)));
-      expect(at(150, 100), _near(const Color(0xFFF3DDBB)));
-      expect(at(10, 10), _near(_white));
-    });
-  });
-
   group('sinar layar Berhasil', () {
     // #FCE3BC dengan opasitas 0,55 di atas putih.
     const ray = Color(0xFFFDF0DA);

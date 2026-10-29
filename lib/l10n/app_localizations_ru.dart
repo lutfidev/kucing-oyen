@@ -76,9 +76,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get play => 'Играть';
 
   @override
-  String get closet => 'Гардероб';
-
-  @override
   String get settings => 'Настройки';
 
   @override
@@ -1012,52 +1009,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get costumeNone => 'Без костюма';
-
-  @override
-  String get costumePeci => 'Пеци';
-
-  @override
-  String get costumeSarung => 'Саронг';
-
-  @override
-  String get costumeKoki => 'Колпак';
-
-  @override
-  String get costumeKacamata => 'Очки';
-
-  @override
-  String get costumeWearingTag => 'Надето';
-
-  @override
-  String get costumeWearingStatus => 'надето';
-
-  @override
-  String get costumeOwnedTag => 'Твоё';
-
-  @override
-  String get costumeOwnedStatus => 'твоё';
-
-  @override
-  String get costumeActionWearing => 'Сейчас надето';
-
-  @override
-  String get costumeActionWear => 'Надеть';
-
-  @override
-  String costumeActionBuy(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: 'Купить · $n монеты',
-      many: 'Купить · $n монет',
-      few: 'Купить · $n монеты',
-      one: 'Купить · $n монета',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get closeCoins => 'Закрыть монеты';
 
   @override
@@ -1065,7 +1016,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get coinsIntro =>
-      'Монеты нужны для подсказок и костюмов Ойена. Забирай бонус каждый день или смотри рекламу.';
+      'Монеты нужны для подсказок и вещей в комнату Ойена. Забирай бонус каждый день или смотри рекламу.';
 
   @override
   String get dailyBonus => 'Ежедневный бонус';
@@ -1158,14 +1109,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get resetProgressInfo =>
-      'Удалить звёзды, монеты, костюмы, подсказки и обучение и начать с уровня 1.';
+      'Удалить звёзды, монеты, вещи в комнате, подсказки и обучение и начать с уровня 1.';
 
   @override
   String get resetConfirmTitle => 'Удалить весь прогресс?';
 
   @override
   String get resetConfirmBody =>
-      'Звёзды, монеты, костюмы, подсказки и обучение будут удалены. Отменить нельзя. Сегодняшний бонус и реклама останутся использованными.';
+      'Звёзды, монеты, вещи в комнате, подсказки и обучение будут удалены. Отменить нельзя. Сегодняшний бонус и реклама останутся использованными.';
 
   @override
   String get resetConfirm => 'Удалить';

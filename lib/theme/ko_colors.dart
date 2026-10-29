@@ -397,7 +397,7 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Garis tombol nonaktif di kartu petunjuk yang terkunci.
   final Color disabledLine;
 
-  /// Label harga kostum yang belum dimiliki (desain 12).
+  /// Stok camilan penuh di Toko.
   final Color priceTag;
 
   /// Latar badge "Punyamu" dan "Tinggal di kamar" di Toko (desain 20).

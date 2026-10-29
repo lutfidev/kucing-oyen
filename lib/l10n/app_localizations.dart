@@ -174,12 +174,6 @@ abstract class AppLocalizations {
   /// **'Play'**
   String get play;
 
-  /// Costume closet button and screen title.
-  ///
-  /// In en, this message translates to:
-  /// **'Wardrobe'**
-  String get closet;
-
   /// Settings button and screen title.
   ///
   /// In en, this message translates to:
@@ -1446,78 +1440,6 @@ abstract class AppLocalizations {
   /// **'Oyen {pose, select, idle{standing} walk{walking} sleep{asleep} shock{startled} box{sitting in a box} knock{knocking something over} eat{eating} happy{happy} other{standing}}, facing {dir, select, up{up} right{right} down{down} left{left} other{right}}'**
   String oyenLabel(String pose, String dir);
 
-  /// Costume: none.
-  ///
-  /// In en, this message translates to:
-  /// **'Plain'**
-  String get costumeNone;
-
-  /// Costume: peci (Indonesian cap).
-  ///
-  /// In en, this message translates to:
-  /// **'Peci Cap'**
-  String get costumePeci;
-
-  /// Costume: sarong.
-  ///
-  /// In en, this message translates to:
-  /// **'Sarong'**
-  String get costumeSarung;
-
-  /// Costume: chef hat.
-  ///
-  /// In en, this message translates to:
-  /// **'Chef Hat'**
-  String get costumeKoki;
-
-  /// Costume: glasses.
-  ///
-  /// In en, this message translates to:
-  /// **'Glasses'**
-  String get costumeKacamata;
-
-  /// Costume card tag: being worn.
-  ///
-  /// In en, this message translates to:
-  /// **'Wearing'**
-  String get costumeWearingTag;
-
-  /// Screen reader status: being worn.
-  ///
-  /// In en, this message translates to:
-  /// **'wearing'**
-  String get costumeWearingStatus;
-
-  /// Costume card tag: owned.
-  ///
-  /// In en, this message translates to:
-  /// **'Yours'**
-  String get costumeOwnedTag;
-
-  /// Screen reader status: owned.
-  ///
-  /// In en, this message translates to:
-  /// **'yours'**
-  String get costumeOwnedStatus;
-
-  /// Closet button: selected costume is worn.
-  ///
-  /// In en, this message translates to:
-  /// **'Wearing now'**
-  String get costumeActionWearing;
-
-  /// Closet button: wear the owned costume.
-  ///
-  /// In en, this message translates to:
-  /// **'Wear'**
-  String get costumeActionWear;
-
-  /// Closet button: buy for n coins.
-  ///
-  /// In en, this message translates to:
-  /// **'{n, plural, one{Buy · {n} coin} other{Buy · {n} coins}}'**
-  String costumeActionBuy(int n);
-
   /// Screen reader: close the coin sheet.
   ///
   /// In en, this message translates to:
@@ -1533,7 +1455,7 @@ abstract class AppLocalizations {
   /// Coin sheet intro.
   ///
   /// In en, this message translates to:
-  /// **'Coins buy hints and outfits for Oyen. Grab the daily bonus, or watch an ad.'**
+  /// **'Coins buy hints and stuff for Oyen\'s room. Grab the daily bonus, or watch an ad.'**
   String get coinsIntro;
 
   /// Coin card title: daily bonus.
@@ -1671,7 +1593,7 @@ abstract class AppLocalizations {
   /// Settings text under the reset button.
   ///
   /// In en, this message translates to:
-  /// **'Erase stars, coins, outfits, hints, and tutorials, then start again from level 1.'**
+  /// **'Erase stars, coins, room stuff, hints, and tutorials, then start again from level 1.'**
   String get resetProgressInfo;
 
   /// Reset confirmation title.
@@ -1683,7 +1605,7 @@ abstract class AppLocalizations {
   /// Reset confirmation text.
   ///
   /// In en, this message translates to:
-  /// **'Stars, coins, outfits, hints, and tutorials will be erased. This can\'t be undone. Today\'s daily bonus and ads stay used.'**
+  /// **'Stars, coins, room stuff, hints, and tutorials will be erased. This can\'t be undone. Today\'s daily bonus and ads stay used.'**
   String get resetConfirmBody;
 
   /// Reset confirmation button.

@@ -7,7 +7,6 @@ export 'accessory_icon.dart';
 export 'board_painter.dart';
 export 'board_scene.dart';
 export 'brand_art.dart';
-export 'closet_art.dart';
 export 'coin_art.dart';
 export 'item_art.dart';
 export 'kitty.dart';

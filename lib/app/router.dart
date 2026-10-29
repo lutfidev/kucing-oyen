@@ -8,7 +8,6 @@ import '../gallery/gallery_oyen_screen.dart';
 import '../gallery/gallery_screen.dart';
 import '../gallery/gallery_sound_screen.dart';
 import '../screens/chapter/chapter_screen.dart';
-import '../screens/closet/closet_screen.dart';
 import '../screens/level/level_screen.dart';
 import '../screens/room/room_screen.dart';
 import '../screens/settings/settings_screen.dart';
@@ -23,6 +22,8 @@ GoRouter createRouter({
 }) {
   return GoRouter(
     initialLocation: initialLocation,
+    // Rute yang tidak ada (mis. `/kostum` Lemari Kostum lama) membuka kamar.
+    onException: (context, state, router) => router.go(AppRoutes.home),
     routes: [
       GoRoute(
         path: AppRoutes.home,
@@ -49,10 +50,6 @@ GoRouter createRouter({
                 builder: (context, state) => const GallerySoundScreen(),
               ),
             ],
-          ),
-          GoRoute(
-            path: 'kostum',
-            builder: (context, state) => const ClosetScreen(),
           ),
           GoRoute(
             path: 'toko',

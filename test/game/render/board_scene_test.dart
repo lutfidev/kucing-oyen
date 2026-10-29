@@ -204,23 +204,4 @@ void main() {
       throwsAssertionError,
     );
   });
-
-  group('dressed', () {
-    test('Oyen memakai kostum, isi papan lain tetap', () {
-      final scene = BoardScene.fromMap(BoardScene.designMap);
-      final dressed = scene.dressed(OyenCostume.peci);
-      expect(dressed.oyen!.look.costume, OyenCostume.peci);
-      expect(dressed.oyen!.look.pose, scene.oyen!.look.pose);
-      expect(dressed.tiles, scene.tiles);
-      expect(dressed.facing, scene.facing);
-      expect(dressed.showFacing, scene.showFacing);
-    });
-
-    test('tanpa Oyen atau kostum sama: papan yang sama', () {
-      final hidden = BoardScene.fromMap(BoardScene.designMap, showOyen: false);
-      expect(identical(hidden.dressed(OyenCostume.koki), hidden), isTrue);
-      final plain = BoardScene.fromMap(BoardScene.designMap);
-      expect(identical(plain.dressed(OyenCostume.none), plain), isTrue);
-    });
-  });
 }

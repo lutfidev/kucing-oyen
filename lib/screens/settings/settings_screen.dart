@@ -14,8 +14,8 @@ import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'settings_parts.dart';
 
-/// Pengaturan (rute `/pengaturan`, tidak ada di desain; gaya kartu Lemari
-/// Kostum dan sheet Petunjuk): sakelar musik dan efek suara, bahasa, lihat
+/// Pengaturan (rute `/pengaturan`, tidak ada di desain; gaya kartu Toko
+/// dan sheet Petunjuk): sakelar musik dan efek suara, bahasa, lihat
 /// tutorial lagi, reset progres dengan konfirmasi, privasi (kebijakan dan
 /// persetujuan iklan), dan tentang game.
 class SettingsScreen extends StatefulWidget {

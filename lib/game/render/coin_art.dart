@@ -16,15 +16,11 @@ enum CoinKind {
 
   /// Tanpa huruf, garis 2 (tombol bayar sheet Petunjuk, desain 10).
   plain,
-
-  /// Tanpa huruf, garis 2,4 (label harga kartu kostum, desain 12).
-  price,
 }
 
 final _drawings = {
   CoinKind.full: SvgTemplate(coinSvg).render(const {}),
   CoinKind.plain: SvgTemplate(coinPlainSvg).render(const {}),
-  CoinKind.price: SvgTemplate(coinPriceSvg).render(const {}),
 };
 
 /// Menggambar koin [kind] di kotak 0..28 kanvas.

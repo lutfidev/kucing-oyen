@@ -90,16 +90,6 @@ String cellName(AppLocalizations l, Cell cell) => switch (cell) {
   Cell.box => l.cellBox,
 };
 
-/// Nama kostum di Lemari Kostum.
-String costumeName(AppLocalizations l, OyenCostume costume) =>
-    switch (costume) {
-      OyenCostume.none => l.costumeNone,
-      OyenCostume.peci => l.costumePeci,
-      OyenCostume.sarung => l.costumeSarung,
-      OyenCostume.koki => l.costumeKoki,
-      OyenCostume.kacamata => l.costumeKacamata,
-    };
-
 /// Label pembaca layar Oyen ("Oyen tidur, menghadap kiri"), sama dengan
 /// `aria-label` di desain.
 String oyenLabel(AppLocalizations l, OyenLook look) =>

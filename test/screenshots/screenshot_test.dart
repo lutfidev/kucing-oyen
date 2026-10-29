@@ -22,10 +22,7 @@ import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
-import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
-import 'package:kucing_oren/game/model/run_clock.dart';
-import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
@@ -429,35 +426,6 @@ void main() {
     }, skip: !screenshotsEnabled);
   }
 
-  // Lemari Kostum seperti contoh desain 12: 120 koin, Kacamata dimiliki dan
-  // dipakai, Peci dipilih.
-  for (final small in [false, true]) {
-    final name = '12-lemari-kostum${small ? '-360x640' : ''}';
-    testWidgets('$folder/$name', (tester) async {
-      setScreenSize(tester, small ? const Size(360, 640) : _size);
-      await withShadows(() async {
-        await tester.pumpWidget(
-          capturable(
-            KucingOrenApp(
-              progress: testProgressWith(
-                coins: 120,
-                wardrobe: Wardrobe(
-                  owned: {OyenCostume.kacamata},
-                  wearing: OyenCostume.kacamata,
-                ),
-              ),
-              initialLocation: AppRoutes.closet,
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-        await tester.tap(find.byKey(const ValueKey('costume-peci')));
-        await tester.pumpAndSettle();
-        await capture(tester, '$folder/$name');
-      });
-    }, skip: !screenshotsEnabled);
-  }
-
   // Sheet Tambah Koin dari Beranda bersaldo 120: siap semua, bonus diambil
   // dan jatah iklan habis, dan iklan gagal di layar kecil.
   final now = DateTime(2026, 10, 19, 9);
@@ -552,35 +520,6 @@ void main() {
       }, skip: !screenshotsEnabled);
     }
   }
-
-  // Oyen berpeci di fase jalan level 13, langkah ke-2.
-  testWidgets('$folder/04-fase-jalan-kostum-peci', (tester) async {
-    setScreenSize(tester, _size);
-    await withShadows(() async {
-      await tester.pumpWidget(
-        capturable(
-          KucingOrenApp(
-            progress: testProgressWith(
-              wardrobe: Wardrobe(
-                owned: {OyenCostume.peci},
-                wearing: OyenCostume.peci,
-              ),
-            ),
-            initialLocation: AppRoutes.level(13, chapter: 2),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Bangunkan Oyen'));
-      await tester.pump();
-      for (var i = 0; i < 2; i++) {
-        await tester.pump(RunClock.stepTime);
-      }
-      await tester.tap(find.bySemanticsLabel(RegExp('Jeda')));
-      await tester.pumpAndSettle();
-      await capture(tester, '$folder/04-fase-jalan-kostum-peci');
-    });
-  }, skip: !screenshotsEnabled);
 
   // Toko seperti contoh desain 20: saldo 480, Arang dan Mendung sudah
   // tinggal di kamar, beberapa barang dan dua aksesoris sudah dimiliki.

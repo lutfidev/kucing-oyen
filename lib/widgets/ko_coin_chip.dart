@@ -8,11 +8,8 @@ import 'ko_pressable.dart';
 
 /// Gaya [KoCoinChip] per layar.
 enum KoCoinChipStyle {
-  /// Beranda (desain 01): koin 28 px, bayangan `coinChip`.
+  /// Kamar dan Toko: koin 28 px, bayangan `coinChip`.
   raised,
-
-  /// Lemari Kostum (desain 12): koin 24 px, bergaris tanpa bayangan.
-  outlined,
 
   /// Kepala sheet (desain 10): lebih pendek, koin 22 px, bergaris.
   compact,
@@ -50,11 +47,6 @@ class KoCoinChip extends StatelessWidget {
 
     final (double coin, double gap, TextStyle number) = switch (style) {
       KoCoinChipStyle.raised => (s.iconLarge, space.s8, t.chip),
-      KoCoinChipStyle.outlined => (
-        s.iconMedium,
-        space.s6,
-        t.numberCoinLarge.copyWith(color: c.ink),
-      ),
       KoCoinChipStyle.compact => (s.icon, space.s6, t.numberCoin),
     };
     final height = compact ? s.chipMedium : s.chip;
@@ -99,7 +91,7 @@ class KoCoinChip extends StatelessWidget {
         // Bayangan `coinChip` = garis padat (turun saat ditekan) + lembut.
         edgeColor: raised ? shadow.first.color : null,
         depth: shadow.first.offset.dy,
-        // Tanpa bayangan padat (outlined, compact) chip tetap turun.
+        // Tanpa bayangan padat (compact) chip tetap turun.
         sink: shadow.first.offset.dy,
         liveRegion: true,
         glow: raised ? shadow.skip(1).toList() : const [],

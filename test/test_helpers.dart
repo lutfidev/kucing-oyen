@@ -12,7 +12,6 @@ import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/app/sound_player.dart';
 import 'package:kucing_oren/game/level_loader.dart';
-import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/progress.dart';
@@ -42,7 +41,7 @@ ProgressController testProgress([
 ]) => testProgressWith(best: best, tutorialsDone: tutorialsDone);
 
 /// Seperti [testProgress], ditambah saldo [coins], tingkat petunjuk
-/// [hints] per level, kostum [wardrobe], rumah [home] dan kebutuhan
+/// [hints] per level, rumah [home] dan kebutuhan
 /// kucing [needs], hadiah harian [rewards], iklan
 /// [ads] untuk petunjuk dan koin (default iklan palsu yang berhasil), jam
 /// [clock], dan bahasa [language] (default Indonesia, supaya test bisa
@@ -52,7 +51,6 @@ ProgressController testProgressWith({
   Set<int>? tutorialsDone,
   int coins = 0,
   Map<int, int> hints = const {},
-  Wardrobe? wardrobe,
   Home? home,
   HomeNeeds? needs,
   DailyRewards rewards = DailyRewards.initial,
@@ -67,7 +65,6 @@ ProgressController testProgressWith({
     store: MemoryProgressStore(progress, tutorials)
       ..coins = coins
       ..hints = hints
-      ..wardrobe = wardrobe ?? Wardrobe.initial
       ..home = home ?? Home.initial
       ..needs = needs ?? HomeNeeds.empty
       ..rewards = rewards
@@ -76,7 +73,6 @@ ProgressController testProgressWith({
     tutorialsDone: tutorials,
     coins: coins,
     hints: hints,
-    wardrobe: wardrobe,
     home: home,
     needs: needs,
     rewards: rewards,
@@ -203,7 +199,7 @@ Future<void> pumpThemed(
 }
 
 /// Simpanan di memori yang mencatat urutan tulisan ([writes], nama bagian:
-/// `progress`, `tutorials`, `coins`, `hints`, `wardrobe`, `rewards`,
+/// `progress`, `tutorials`, `coins`, `hints`, `home`, `needs`, `rewards`,
 /// `language`, `sound`) dan melempar untuk bagian di [failing], seperti
 /// penyimpanan perangkat yang gagal (I/O).
 class FailingProgressStore extends MemoryProgressStore {
@@ -237,10 +233,6 @@ class FailingProgressStore extends MemoryProgressStore {
   @override
   Future<void> saveHints(Map<int, int> tiers) =>
       _write('hints', () => super.saveHints(tiers));
-
-  @override
-  Future<void> saveWardrobe(Wardrobe wardrobe) =>
-      _write('wardrobe', () => super.saveWardrobe(wardrobe));
 
   @override
   Future<void> saveHome(Home home) =>

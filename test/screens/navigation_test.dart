@@ -62,8 +62,7 @@ void main() {
     await pumpApp(tester, location: AppRoutes.shop(tab: ShopTab.accessories));
     await settle(tester);
     expect(find.byType(ShopScreen), findsOneWidget);
-    // Tab terpilih memakai keadaan toggled KoPressable, seperti kartu
-    // kostum.
+    // Tab terpilih memakai keadaan toggled KoPressable.
     expect(
       tester.getSemantics(find.text('Aksesoris')),
       isSemantics(isToggled: true, hasToggledState: true),
@@ -189,6 +188,16 @@ void main() {
   });
 
   group('rute yang tidak ada', () {
+    testWidgets('/kostum (Lemari Kostum lama) membuka kamar', (tester) async {
+      await pumpApp(tester, location: '/kostum');
+      expect(find.byType(RoomScreen), findsOneWidget);
+    });
+
+    testWidgets('rute asing membuka kamar', (tester) async {
+      await pumpApp(tester, location: '/entah/apa');
+      expect(find.byType(RoomScreen), findsOneWidget);
+    });
+
     for (final (location, back, target) in [
       ('/babak/2/level/99', 'Kembali ke peta', ChapterView),
       ('/babak/abc/level/abc', 'Kembali ke Beranda', RoomScreen),
@@ -278,10 +287,10 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('galeri Oyen menggambar arah, pose, dan kostum', (tester) async {
+  testWidgets('galeri Oyen menggambar arah dan pose', (tester) async {
     setScreenSize(tester, const Size(390, 5000));
     await pumpApp(tester, location: AppRoutes.galleryOyen);
-    expect(find.byType(OyenView), findsNWidgets(4 + 7 + 4));
+    expect(find.byType(OyenView), findsNWidgets(4 + 7));
     for (final label in [
       'Oyen jalan, menghadap kanan',
       'Oyen kaget, menghadap bawah',

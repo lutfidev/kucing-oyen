@@ -3,27 +3,22 @@ import '../sim/direction.dart';
 /// Pose Oyen di `Oyen.dc.html` (prop `pose`).
 enum OyenPose { idle, walk, sleep, shock, box, knock, eat, happy }
 
-/// Kostum Oyen (prop `costume`).
-enum OyenCostume { none, peci, sarung, koki, kacamata }
-
 /// Gelembung di atas kepala Oyen (prop `bubble`). [ikan] tidak ada di
 /// desain: gelembung pikiran saat Oyen mengejar ikan (GDD).
 enum OyenBubble { none, zzz, kaget, ikan }
 
-/// Tampilan Oyen: pose, arah hadap, kostum, dan gelembung. Data saja,
+/// Tampilan Oyen: pose, arah hadap, dan gelembung. Data saja,
 /// digambar oleh `paintOyen`.
 class OyenLook {
   const OyenLook({
     this.pose = OyenPose.idle,
     this.dir = Direction.down,
-    this.costume = OyenCostume.none,
     this.bubble = OyenBubble.none,
     this.mirror = false,
   });
 
   final OyenPose pose;
   final Direction dir;
-  final OyenCostume costume;
   final OyenBubble bubble;
 
   /// Seluruh gambar (termasuk gelembung) dicerminkan kiri-kanan, untuk pose
@@ -31,19 +26,17 @@ class OyenLook {
   final bool mirror;
 
   /// Sprite memakai viewBox 100×100 dan boleh menggambar di luarnya
-  /// (gelembung, topi koki).
+  /// (gelembung).
   static const double viewBox = 100;
 
   OyenLook copyWith({
     OyenPose? pose,
     Direction? dir,
-    OyenCostume? costume,
     OyenBubble? bubble,
     bool? mirror,
   }) => OyenLook(
     pose: pose ?? this.pose,
     dir: dir ?? this.dir,
-    costume: costume ?? this.costume,
     bubble: bubble ?? this.bubble,
     mirror: mirror ?? this.mirror,
   );
@@ -53,15 +46,14 @@ class OyenLook {
       other is OyenLook &&
       other.pose == pose &&
       other.dir == dir &&
-      other.costume == costume &&
       other.bubble == bubble &&
       other.mirror == mirror;
 
   @override
-  int get hashCode => Object.hash(pose, dir, costume, bubble, mirror);
+  int get hashCode => Object.hash(pose, dir, bubble, mirror);
 
   @override
   String toString() =>
-      'OyenLook(${pose.name}, ${dir.name}, ${costume.name}, ${bubble.name}'
+      'OyenLook(${pose.name}, ${dir.name}, ${bubble.name}'
       '${mirror ? ', mirror' : ''})';
 }

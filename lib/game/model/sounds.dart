@@ -51,7 +51,7 @@ enum GameSound {
   String get asset => 'audio/sfx/$file.ogg';
 }
 
-/// Musik latar: [home] untuk Beranda, peta, Lemari Kostum, dan Pengaturan;
+/// Musik latar: [home] untuk kamar, peta, Toko, dan Pengaturan;
 /// [level] untuk layar level (fase atur, jalan, hasil, putar ulang).
 enum MusicTrack {
   home,

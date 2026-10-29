@@ -60,7 +60,6 @@ class LevelScreen extends StatelessWidget {
           : tutorialFor(level.id),
       onTutorialDone: () => unawaited(progress.finishTutorial(level.id)),
       hints: progress,
-      costume: progress.wardrobe.wearing,
     );
   }
 

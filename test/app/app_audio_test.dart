@@ -28,7 +28,7 @@ void main() {
   test('lagu per rute', () {
     expect(musicFor(AppRoutes.home), MusicTrack.home);
     expect(musicFor(AppRoutes.chapter(2)), MusicTrack.home);
-    expect(musicFor(AppRoutes.closet), MusicTrack.home);
+    expect(musicFor(AppRoutes.shop()), MusicTrack.home);
     expect(musicFor(AppRoutes.settings), MusicTrack.home);
     expect(musicFor(AppRoutes.gallery), MusicTrack.home);
     expect(musicFor(AppRoutes.level(13, chapter: 2)), MusicTrack.level);

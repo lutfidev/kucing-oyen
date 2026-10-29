@@ -74,11 +74,7 @@ class TutorialOverlay extends StatefulWidget {
     required this.target,
     required this.targetRadius,
     required this.onSkip,
-    this.costume = OyenCostume.none,
   });
-
-  /// Kostum Oyen dari Lemari Kostum.
-  final OyenCostume costume;
 
   final Tutorial tutorial;
   final GlobalKey target;
@@ -215,10 +211,7 @@ class _TutorialOverlayState extends State<TutorialOverlay>
                   fit: BoxFit.scaleDown,
                   child: SizedBox(
                     width: math.max(0, constraints.maxWidth - 2 * side),
-                    child: _TutorialCard(
-                      widget.tutorial,
-                      costume: widget.costume,
-                    ),
+                    child: _TutorialCard(widget.tutorial),
                   ),
                 ),
               ),
@@ -240,10 +233,9 @@ class _TutorialOverlayState extends State<TutorialOverlay>
 
 /// Oyen di atas kartu teks tutorial.
 class _TutorialCard extends StatelessWidget {
-  const _TutorialCard(this.tutorial, {required this.costume});
+  const _TutorialCard(this.tutorial);
 
   final Tutorial tutorial;
-  final OyenCostume costume;
 
   @override
   Widget build(BuildContext context) {
@@ -294,10 +286,7 @@ class _TutorialCard extends StatelessWidget {
             ),
           ),
           ExcludeSemantics(
-            child: OyenView(
-              tutorial.look.copyWith(costume: costume),
-              size: s.oyenTutorial,
-            ),
+            child: OyenView(tutorial.look, size: s.oyenTutorial),
           ),
         ],
       ),

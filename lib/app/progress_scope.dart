@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 
 import '../game/model/accessories.dart';
 import '../game/model/chapter.dart';
-import '../game/model/costumes.dart';
 import '../game/model/hints.dart';
 import '../game/model/home.dart';
 import '../game/model/home_items.dart';
@@ -11,7 +10,6 @@ import '../game/model/needs.dart';
 import '../game/model/progress.dart';
 import '../game/model/rewards.dart';
 import '../game/model/snacks.dart';
-import '../game/render/oyen.dart';
 import '../game/sim/sim.dart';
 import 'hint_source.dart';
 import 'language.dart';
@@ -34,27 +32,16 @@ enum AdReward {
 }
 
 /// Bagian progres yang disimpan terpisah, urut tulisnya. Urutan ini memihak
-/// pemain kalau aplikasi mati di tengah: petunjuk, kostum, dan isi rumah
+/// pemain kalau aplikasi mati di tengah: petunjuk dan isi rumah
 /// sebelum koin yang membayarnya, koin sebelum bintang, hadiah harian, dan
 /// hari hadiah kucing yang memberikannya (jadi paling buruk koin didapat
 /// lagi, tidak hilang). Akibatnya stok camilan ditulis sebelum bar yang
 /// dinaikkannya.
-enum _Part {
-  hints,
-  wardrobe,
-  home,
-  coins,
-  needs,
-  progress,
-  rewards,
-  tutorials,
-  language,
-}
+enum _Part { hints, home, coins, needs, progress, rewards, tutorials, language }
 
 /// Data level dan progres pemain untuk semua layar: bintang, tutorial,
-/// koin, petunjuk, kostum Oyen, rumah Oyen dan kebutuhan kucingnya, hadiah
-/// harian, dan bahasa. Dimuat sekali
-/// sebelum aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
+/// koin, petunjuk, rumah Oyen dan kebutuhan kucingnya, hadiah harian, dan
+/// bahasa. Dimuat sekali sebelum aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
 class ProgressController extends ChangeNotifier implements HintSource {
   ProgressController({
     required List<Level> levels,
@@ -63,7 +50,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
     Set<int> tutorialsDone = const {},
     this._coins = 0,
     Map<int, int> hints = const {},
-    Wardrobe? wardrobe,
     Home? home,
     HomeNeeds? needs,
     this._rewards = DailyRewards.initial,
@@ -74,7 +60,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
   }) : levels = List.unmodifiable(levels),
        _tutorialsDone = Set.unmodifiable(tutorialsDone),
        _hints = Map.unmodifiable(hints),
-       _wardrobe = wardrobe ?? Wardrobe.initial,
        _home = home ?? Home.initial,
        _needs = (needs ?? HomeNeeds.empty).withKitties(
          (home ?? Home.initial).kitties,
@@ -86,7 +71,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
        coinAds = coinAds ?? FakeRewardedAds(),
        chapters = List.unmodifiable(chaptersOf(levels));
 
-  /// Memuat progres, tutorial, koin, petunjuk, kostum, rumah, kebutuhan
+  /// Memuat progres, tutorial, koin, petunjuk, rumah, kebutuhan
   /// kucing, hadiah harian, dan bahasa dari [store]. Koin yang belum pernah
   /// disimpan (progres dari sebelum ada koin) dihitung dari total bintang.
   /// Kucing yang kebutuhannya belum tercatat (pemain baru) mulai penuh pada
@@ -108,7 +93,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
       tutorialsDone: await store.loadTutorials(),
       coins: await store.loadCoins() ?? progress.totalStars * coinsPerStar,
       hints: await store.loadHints(),
-      wardrobe: await store.loadWardrobe(),
       home: await store.loadHome(),
       needs: needs,
       rewards: await store.loadRewards(),
@@ -224,34 +208,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
     notifyListeners();
     await _save({_Part.hints, if (pay == HintPay.coins) _Part.coins});
     return HintUnlock.opened;
-  }
-
-  Wardrobe _wardrobe;
-
-  /// Kostum yang dimiliki dan yang sedang dipakai Oyen.
-  Wardrobe get wardrobe => _wardrobe;
-
-  /// Membeli kostum [id] dengan koin lalu langsung memakainya. Gagal tanpa
-  /// efek kalau sudah dimiliki atau koin kurang. Semua perubahan terjadi
-  /// sebelum menyimpan, jadi ketukan kedua melihat kostumnya sudah dimiliki.
-  /// Kostum disimpan sebelum koin (lihat [_Part]).
-  Future<bool> buyCostume(OyenCostume id) async {
-    if (!_wardrobe.canBuy(id, _coins)) return false;
-    _coins -= costumeOf(id).price;
-    _wardrobe = _wardrobe.buy(id);
-    notifyListeners();
-    await _save({_Part.wardrobe, _Part.coins});
-    return true;
-  }
-
-  /// Memakai kostum [id]; gagal kalau belum dimiliki.
-  Future<bool> wearCostume(OyenCostume id) async {
-    if (!_wardrobe.owns(id)) return false;
-    if (_wardrobe.wearing == id) return true;
-    _wardrobe = _wardrobe.wear(id);
-    notifyListeners();
-    await _save({_Part.wardrobe});
-    return true;
   }
 
   // ── Rumah Oyen ──────────────────────────────────────────────────────
@@ -502,7 +458,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     await _save({_Part.tutorials});
   }
 
-  /// "Reset progres": menghapus bintang, koin, petunjuk, kostum, tutorial,
+  /// "Reset progres": menghapus bintang, koin, petunjuk, tutorial,
   /// dan isi rumah (barang, tata letak, kucing, aksesoris, stok); bar Oyen
   /// kembali penuh. Hadiah harian dan hadiah kucing hari ini (supaya tidak
   /// bisa diklaim ulang) dan bahasa tetap. Koin disimpan 0, bukan dihitung
@@ -511,7 +467,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
     _progress = Progress.empty;
     _coins = 0;
     _hints = const {};
-    _wardrobe = Wardrobe.initial;
     _home = Home.initial;
     _needs = _needs.reset(clock());
     _tutorialsDone = const {};
@@ -520,7 +475,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
       _Part.progress,
       _Part.coins,
       _Part.hints,
-      _Part.wardrobe,
       _Part.home,
       _Part.needs,
       _Part.tutorials,
@@ -585,7 +539,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
     _Part.tutorials => store.saveTutorials(_tutorialsDone),
     _Part.coins => store.saveCoins(_coins),
     _Part.hints => store.saveHints(_hints),
-    _Part.wardrobe => store.saveWardrobe(_wardrobe),
     _Part.home => store.saveHome(_home),
     _Part.needs => store.saveNeeds(_needs),
     _Part.rewards => store.saveRewards(_rewards),

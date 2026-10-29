@@ -24,13 +24,9 @@ class ResultView extends StatelessWidget {
     required this.onNext,
     this.onReplay,
     this.coins = 0,
-    this.costume = OyenCostume.none,
   });
 
   final LevelSession session;
-
-  /// Kostum Oyen dari Lemari Kostum.
-  final OyenCostume costume;
 
   /// Koin yang baru didapat; tampil di layar Berhasil dan vas pecah kalau
   /// lebih dari 0.
@@ -62,7 +58,7 @@ class ResultView extends StatelessWidget {
           level.map,
           session.placed,
           runFrames(level.board, result),
-        ).dressed(costume),
+        ),
         onArrange: onArrange,
         onReplay: onReplay,
       );
@@ -77,7 +73,6 @@ class ResultView extends StatelessWidget {
         onRetry: onArrange,
         onNext: onNext,
         coins: coins,
-        costume: costume,
       );
     }
     return SuccessResult(
@@ -89,7 +84,6 @@ class ResultView extends StatelessWidget {
       onNext: onNext,
       onReplay: onReplay,
       coins: coins,
-      costume: costume,
     );
   }
 }
@@ -118,11 +112,7 @@ class SuccessResult extends StatelessWidget {
     required this.onNext,
     this.onReplay,
     this.coins = 0,
-    this.costume = OyenCostume.none,
   });
-
-  /// Kostum Oyen dari Lemari Kostum.
-  final OyenCostume costume;
 
   /// "Level 13 · Vas Ibu".
   final String title;
@@ -196,7 +186,7 @@ class SuccessResult extends StatelessWidget {
         Expanded(
           child: ResultArtSlot(
             size: ResultArt.successCard,
-            child: SuccessArt(costume: costume),
+            child: const SuccessArt(),
           ),
         ),
         SizedBox(height: space.s16),
@@ -304,11 +294,7 @@ class VaseResult extends StatelessWidget {
     required this.onRetry,
     required this.onNext,
     this.coins = 0,
-    this.costume = OyenCostume.none,
   });
-
-  /// Kostum Oyen dari Lemari Kostum.
-  final OyenCostume costume;
 
   /// "Level 13 · Vas Ibu".
   final String title;
@@ -363,7 +349,7 @@ class VaseResult extends StatelessWidget {
         Expanded(
           child: ResultArtSlot(
             size: ResultArt.vaseCard,
-            child: VaseArt(costume: costume),
+            child: const VaseArt(),
           ),
         ),
         SizedBox(height: space.s16),
