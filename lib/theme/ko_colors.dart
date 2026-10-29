@@ -102,6 +102,8 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.roomHintWallInk,
     required this.roomHintFloorLine,
     required this.roomHintFloorInk,
+    required this.roomScrim,
+    required this.roomSelectFill,
   });
 
   static const standard = KoColors(
@@ -199,6 +201,8 @@ class KoColors extends ThemeExtension<KoColors> {
     roomHintWallInk: Color(0xFFA9530A),
     roomHintFloorLine: Color(0xFFC99466),
     roomHintFloorInk: Color(0xFF8E5A30),
+    roomScrim: Color(0x383B2716), // rgba(59,39,22,.22),
+    roomSelectFill: Color(0x2EF59A33), // rgba(245,154,51,.18),
   );
 
   /// Latar semua layar.
@@ -455,6 +459,12 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Teks bidang kosong lantai kamar baru.
   final Color roomHintFloorInk;
 
+  /// Latar gelap di belakang kartu kucing.
+  final Color roomScrim;
+
+  /// Isi cincin di bawah kucing yang kartunya terbuka.
+  final Color roomSelectFill;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -551,6 +561,8 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? roomHintWallInk,
     Color? roomHintFloorLine,
     Color? roomHintFloorInk,
+    Color? roomScrim,
+    Color? roomSelectFill,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -647,6 +659,8 @@ class KoColors extends ThemeExtension<KoColors> {
       roomHintWallInk: roomHintWallInk ?? this.roomHintWallInk,
       roomHintFloorLine: roomHintFloorLine ?? this.roomHintFloorLine,
       roomHintFloorInk: roomHintFloorInk ?? this.roomHintFloorInk,
+      roomScrim: roomScrim ?? this.roomScrim,
+      roomSelectFill: roomSelectFill ?? this.roomSelectFill,
     );
   }
 
@@ -749,6 +763,8 @@ class KoColors extends ThemeExtension<KoColors> {
       roomHintWallInk: c(roomHintWallInk, other.roomHintWallInk),
       roomHintFloorLine: c(roomHintFloorLine, other.roomHintFloorLine),
       roomHintFloorInk: c(roomHintFloorInk, other.roomHintFloorInk),
+      roomScrim: c(roomScrim, other.roomScrim),
+      roomSelectFill: c(roomSelectFill, other.roomSelectFill),
     );
   }
 }

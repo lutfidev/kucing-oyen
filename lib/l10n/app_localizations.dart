@@ -2783,6 +2783,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name}, hungry. Tap to see their card'**
   String kittyTapHintHungry(String name);
+
+  /// Hunger bar label on a cat card (higher = fuller).
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get needHunger;
+
+  /// Happiness bar label on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Happy'**
+  String get needJoy;
+
+  /// Screen reader label of a need bar.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} {value} out of 100'**
+  String needValueLabel(String label, int value);
+
+  /// Screen reader label of a need bar that is almost empty.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} {value} out of 100, almost empty'**
+  String needValueLow(String label, int value);
+
+  /// Warning under an almost empty hunger bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost empty! That tummy is rumbling.'**
+  String get needLowHunger;
+
+  /// Warning under an almost empty happiness bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost empty! Pet them already.'**
+  String get needLowJoy;
+
+  /// Screen reader label of the cat card dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s card'**
+  String kittyCardLabel(String name);
+
+  /// Screen reader label of the close button on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Close card'**
+  String get kittyCardClose;
+
+  /// Cat card button that pets the cat.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet'**
+  String get petAction;
+
+  /// Cat card button that opens the snack list.
+  ///
+  /// In en, this message translates to:
+  /// **'Snacks'**
+  String get snackPanel;
+
+  /// Heading above the snack list on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from your stock'**
+  String get snackPick;
+
+  /// Screen reader label of a snack on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Give {name}, {count} in stock'**
+  String snackGive(String name, int count);
+
+  /// Screen reader label of a snack that ran out.
+  ///
+  /// In en, this message translates to:
+  /// **'Give {name}, {count} in stock, all gone'**
+  String snackGiveEmpty(String name, int count);
+
+  /// Heading above the owned accessories on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Yours · swap for free'**
+  String get accessoryPanelTitle;
+
+  /// Link on a cat card to the accessories shop (an arrow icon follows it).
+  ///
+  /// In en, this message translates to:
+  /// **'Accessory shop'**
+  String get accessoryShopLink;
+
+  /// Card in the accessory list that takes the accessory off.
+  ///
+  /// In en, this message translates to:
+  /// **'Take off'**
+  String get accessoryRemove;
+
+  /// Tag on the accessory the cat is wearing.
+  ///
+  /// In en, this message translates to:
+  /// **'Wearing'**
+  String get accessoryWornTag;
+
+  /// Screen reader label of an accessory on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Put {accessory} on {name}'**
+  String accessoryWearLabel(String accessory, String name);
+
+  /// Screen reader label of the accessory the cat is wearing.
+  ///
+  /// In en, this message translates to:
+  /// **'Put {accessory} on {name}, wearing it now'**
+  String accessoryWornLabel(String accessory, String name);
+
+  /// Screen reader label of the take-off card.
+  ///
+  /// In en, this message translates to:
+  /// **'Take {name}\'s accessory off'**
+  String accessoryRemoveLabel(String name);
+
+  /// Floating text over a cat after a snack.
+  ///
+  /// In en, this message translates to:
+  /// **'+{hunger} full'**
+  String reactionFed(int hunger);
+
+  /// Floating text over a cat after a snack that also makes it happy.
+  ///
+  /// In en, this message translates to:
+  /// **'+{hunger} full, +{joy} happy'**
+  String reactionFedJoy(int hunger, int joy);
+
+  /// Floating text over a cat after petting.
+  ///
+  /// In en, this message translates to:
+  /// **'+{joy} happy'**
+  String reactionJoy(int joy);
+
+  /// Floating text over a cat after putting an accessory on.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking sharp!'**
+  String get reactionNice;
+
+  /// Floating text over a cat after taking its accessory off.
+  ///
+  /// In en, this message translates to:
+  /// **'Ahh, free!'**
+  String get reactionRelieved;
 }
 
 class _AppLocalizationsDelegate

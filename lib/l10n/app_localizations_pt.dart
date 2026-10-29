@@ -1869,4 +1869,101 @@ class AppLocalizationsPt extends AppLocalizations {
   String kittyTapHintHungry(String name) {
     return '$name, com fome. Toque para ver o cartão';
   }
+
+  @override
+  String get needHunger => 'Barriga';
+
+  @override
+  String get needJoy => 'Alegria';
+
+  @override
+  String needValueLabel(String label, int value) {
+    return '$label $value de 100';
+  }
+
+  @override
+  String needValueLow(String label, int value) {
+    return '$label $value de 100, quase acabando';
+  }
+
+  @override
+  String get needLowHunger => 'Quase acabando! A barriga tá roncando.';
+
+  @override
+  String get needLowJoy => 'Quase acabando! Faz um carinho, vai.';
+
+  @override
+  String kittyCardLabel(String name) {
+    return 'Cartão de $name';
+  }
+
+  @override
+  String get kittyCardClose => 'Fechar cartão';
+
+  @override
+  String get petAction => 'Carinho';
+
+  @override
+  String get snackPanel => 'Petiscos';
+
+  @override
+  String get snackPick => 'Escolha do estoque';
+
+  @override
+  String snackGive(String name, int count) {
+    return 'Dar $name, estoque $count';
+  }
+
+  @override
+  String snackGiveEmpty(String name, int count) {
+    return 'Dar $name, estoque $count, acabou';
+  }
+
+  @override
+  String get accessoryPanelTitle => 'Seus · troca grátis';
+
+  @override
+  String get accessoryShopLink => 'Loja de acessórios';
+
+  @override
+  String get accessoryRemove => 'Tirar';
+
+  @override
+  String get accessoryWornTag => 'Usando';
+
+  @override
+  String accessoryWearLabel(String accessory, String name) {
+    return 'Colocar $accessory em $name';
+  }
+
+  @override
+  String accessoryWornLabel(String accessory, String name) {
+    return 'Colocar $accessory em $name, já está usando';
+  }
+
+  @override
+  String accessoryRemoveLabel(String name) {
+    return 'Tirar o acessório de $name';
+  }
+
+  @override
+  String reactionFed(int hunger) {
+    return '+$hunger barriga';
+  }
+
+  @override
+  String reactionFedJoy(int hunger, int joy) {
+    return '+$hunger barriga, +$joy alegria';
+  }
+
+  @override
+  String reactionJoy(int joy) {
+    return '+$joy alegria';
+  }
+
+  @override
+  String get reactionNice => 'Que chique!';
+
+  @override
+  String get reactionRelieved => 'Ufa, livre!';
 }

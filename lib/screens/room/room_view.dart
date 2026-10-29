@@ -18,7 +18,9 @@ import '../../widgets/widgets.dart';
 import '../coins/coin_sheet.dart';
 import '../shop/shop_tab.dart';
 import 'room_geometry.dart';
+import 'kitty_card.dart';
 import 'room_parts.dart';
+import 'room_reaction.dart';
 
 // Tempat kucing di lantai: 4 kolom × 3 baris, diacak tiap kamar dibuka.
 const _slotColumns = [0.08, 0.36, 0.64, 0.92];
@@ -69,6 +71,24 @@ class _RoomViewState extends State<RoomView> {
 
   ProgressController get _progress => widget.progress;
 
+  /// Geometri kamar terakhir (untuk letak reaksi di atas kucing).
+  RoomGeometry? _geo;
+
+  /// Kucing yang kartunya terbuka.
+  KittyId? _selected;
+
+  /// Reaksi yang sedang melayang, kucingnya, dan nomor urutnya (reaksi
+  /// baru memulai ulang animasi).
+  (RoomReaction, KittyId, int)? _reaction;
+  int _reactions = 0;
+
+  void _select(KittyId kitty) => setState(() => _selected = kitty);
+
+  void _closeCard() => setState(() => _selected = null);
+
+  void _react(KittyId kitty, RoomReaction reaction) =>
+      setState(() => _reaction = (reaction, kitty, ++_reactions));
+
   void _openShop([ShopTab tab = ShopTab.items]) =>
       context.go(AppRoutes.shop(tab: tab));
 
@@ -79,31 +99,87 @@ class _RoomViewState extends State<RoomView> {
     final compact = MediaQuery.sizeOf(context).height < s.roomCompactHeight;
     final home = _progress.home;
     final coins = _progress.coins;
-    return Scaffold(
-      backgroundColor: c.roomFloorBoards,
-      body: Column(
-        children: [
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, box) => _room(RoomGeometry(box.biggest)),
+    final selected = _selected;
+    final reaction = _reaction;
+    final geo = _geo;
+    final padding = MediaQuery.paddingOf(context);
+    final cardTop = padding.top + s.roomCardTop;
+    final cardMax =
+        MediaQuery.sizeOf(context).height -
+        cardTop -
+        padding.bottom -
+        context.koSpace.s16;
+    return PopScope(
+      canPop: selected == null,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _closeCard();
+      },
+      child: Scaffold(
+        backgroundColor: c.roomFloorBoards,
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, box) => _room(RoomGeometry(box.biggest)),
+                  ),
+                ),
+                RoomMenu(
+                  compact: compact,
+                  shopDot: shopHasAffordable(home, coins),
+                  accessoryDot: accessoriesHaveAffordable(home, coins),
+                  onPlay: () => context.go(
+                    AppRoutes.chapter(_progress.currentChapter.number),
+                  ),
+                  onShop: _openShop,
+                  onAccessories: () => _openShop(ShopTab.accessories),
+                  onSettings: () => context.go(AppRoutes.settings),
+                ),
+              ],
             ),
-          ),
-          RoomMenu(
-            compact: compact,
-            shopDot: shopHasAffordable(home, coins),
-            accessoryDot: accessoriesHaveAffordable(home, coins),
-            onPlay: () =>
-                context.go(AppRoutes.chapter(_progress.currentChapter.number)),
-            onShop: _openShop,
-            onAccessories: () => _openShop(ShopTab.accessories),
-            onSettings: () => context.go(AppRoutes.settings),
-          ),
-        ],
+            if (selected != null) ...[
+              Positioned.fill(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _closeCard,
+                  child: ColoredBox(color: c.roomScrim),
+                ),
+              ),
+              Positioned(
+                left: context.koSpace.s16,
+                right: context.koSpace.s16,
+                top: cardTop,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: max(0, cardMax)),
+                  child: KittyCard(
+                    key: ValueKey(selected),
+                    progress: _progress,
+                    kitty: selected,
+                    onReaction: (r) => _react(selected, r),
+                    onClose: _closeCard,
+                  ),
+                ),
+              ),
+            ],
+            if ((reaction, geo)
+                case ((final r, final kitty, final n), final geo?)
+                when _progress.home.ownsKitty(kitty))
+              ReactionOverlay(
+                key: ValueKey(n),
+                reaction: r,
+                anchor: geo.catBoxOf(kitty, _slots[kitty.index]),
+                onDone: () => setState(() => _reaction = null),
+              ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _room(RoomGeometry geo) {
+    _geo = geo;
+    final c = context.koColors;
     final space = context.koSpace;
     final home = _progress.home;
     final now = _progress.clock();
@@ -120,6 +196,25 @@ class _RoomViewState extends State<RoomView> {
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(child: RoomBackground(geo: geo)),
+        for (final sprite in sprites.whereType<KittySprite>())
+          if (sprite.kitty == _selected)
+            Positioned(
+              left: sprite.box.left + sprite.box.width * 0.12,
+              top: sprite.box.top + sprite.box.height * 0.84,
+              width: sprite.box.width * 0.76,
+              height: space.s16 + space.s4,
+              child: DecoratedBox(
+                decoration: ShapeDecoration(
+                  color: c.roomSelectFill,
+                  shape: OvalBorder(
+                    side: BorderSide(
+                      color: c.orange,
+                      width: context.koSize.artBorder,
+                    ),
+                  ),
+                ),
+              ),
+            ),
         for (final sprite in sprites)
           Positioned.fromRect(
             rect: sprite.box,
@@ -187,7 +282,4 @@ class _RoomViewState extends State<RoomView> {
       ),
     );
   }
-
-  // Kartu kucing menyusul (Task 4).
-  void _select(KittyId kitty) {}
 }

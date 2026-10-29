@@ -367,6 +367,14 @@ abstract final class KoIcons {
     ),
   ], strokeWidth: 2.4);
 
+  /// Hati yang melayang sesudah dielus (terisi, `Kamar.dc.html`).
+  static const heartFill = KoIconData([
+    KoIconShape.path(
+      'M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z',
+      paint: KoIconPaint.fill,
+    ),
+  ], strokeWidth: 0);
+
   /// Chip "Seret barang ke tempat baru" (panah empat arah, `Kamar.dc.html`).
   static const move = KoIconData([
     KoIconShape.path(

@@ -127,6 +127,28 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.roomDecorateGap,
     required this.roomHintBorder,
     required this.roomBubbleTail,
+    required this.roomCardTop,
+    required this.roomCardAvatar,
+    required this.roomCardAvatarArt,
+    required this.roomCardAvatarMinWidth,
+    required this.roomCardButton,
+    required this.roomSnackCardWidth,
+    required this.roomSnackCardHeight,
+    required this.roomSnackArtWidth,
+    required this.roomSnackArtHeight,
+    required this.roomSnackArtBox,
+    required this.roomStockBadge,
+    required this.roomEmptyOpacity,
+    required this.roomAccessoryArt,
+    required this.roomAccessoryCard,
+    required this.roomWornTag,
+    required this.needTile,
+    required this.needLabel,
+    required this.needBar,
+    required this.needValue,
+    required this.roomReactionWidth,
+    required this.roomReactionHeight,
+    required this.roomReactionRise,
     required this.roomHeaderLogoMinWidth,
   });
 
@@ -250,6 +272,28 @@ class KoSize extends ThemeExtension<KoSize> {
     roomDecorateGap: 56,
     roomHintBorder: 2.5,
     roomBubbleTail: 14,
+    roomCardTop: 52,
+    roomCardAvatar: 60,
+    roomCardAvatarArt: 54,
+    roomCardAvatarMinWidth: 380,
+    roomCardButton: 54,
+    roomSnackCardWidth: 94,
+    roomSnackCardHeight: 86,
+    roomSnackArtWidth: 44,
+    roomSnackArtHeight: 28,
+    roomSnackArtBox: 30,
+    roomStockBadge: 20,
+    roomEmptyOpacity: 0.45,
+    roomAccessoryArt: 30,
+    roomAccessoryCard: 86,
+    roomWornTag: 18,
+    needTile: 28,
+    needLabel: 54,
+    needBar: 14,
+    needValue: 30,
+    roomReactionWidth: 120,
+    roomReactionHeight: 60,
+    roomReactionRise: 26,
     roomHeaderLogoMinWidth: 360,
   );
 
@@ -586,6 +630,69 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Ekor gelembung ajakan kamar baru.
   final double roomBubbleTail;
 
+  /// Jarak kartu kucing dari bawah status bar (desain: top 96 − status bar 44).
+  final double roomCardTop;
+
+  /// Kotak avatar di kartu kucing.
+  final double roomCardAvatar;
+
+  /// Sprite kucing di avatar kartu.
+  final double roomCardAvatarArt;
+
+  /// Avatar kartu disembunyikan di layar lebih sempit dari ini (catatan `n360`).
+  final double roomCardAvatarMinWidth;
+
+  /// Tombol Camilan, Elus, dan Aksesoris di kartu kucing.
+  final double roomCardButton;
+
+  /// Kartu camilan di kartu kucing.
+  final double roomSnackCardWidth;
+
+  final double roomSnackCardHeight;
+
+  /// Gambar camilan di kartu camilan.
+  final double roomSnackArtWidth;
+
+  final double roomSnackArtHeight;
+
+  /// Tinggi tempat gambar camilan.
+  final double roomSnackArtBox;
+
+  /// Badge stok "×N" camilan.
+  final double roomStockBadge;
+
+  /// Kartu camilan yang stoknya habis.
+  final double roomEmptyOpacity;
+
+  /// Ikon aksesoris di kartu kucing.
+  final double roomAccessoryArt;
+
+  /// Tinggi minimum kartu aksesoris di kartu kucing.
+  final double roomAccessoryCard;
+
+  /// Tag "Dipakai" di kartu aksesoris.
+  final double roomWornTag;
+
+  /// Kotak ikon bar kebutuhan (`BarKebutuhan.dc.html`).
+  final double needTile;
+
+  /// Lebar label bar kebutuhan.
+  final double needLabel;
+
+  /// Tinggi bar kebutuhan.
+  final double needBar;
+
+  /// Lebar angka bar kebutuhan.
+  final double needValue;
+
+  /// Kotak angka dan hati yang melayang di atas kucing.
+  final double roomReactionWidth;
+
+  final double roomReactionHeight;
+
+  /// Seberapa jauh angka reaksi naik sebelum hilang.
+  final double roomReactionRise;
+
   /// Logo header kamar disembunyikan di layar lebih sempit dari ini.
   final double roomHeaderLogoMinWidth;
 
@@ -710,6 +817,28 @@ class KoSize extends ThemeExtension<KoSize> {
     double? roomDecorateGap,
     double? roomHintBorder,
     double? roomBubbleTail,
+    double? roomCardTop,
+    double? roomCardAvatar,
+    double? roomCardAvatarArt,
+    double? roomCardAvatarMinWidth,
+    double? roomCardButton,
+    double? roomSnackCardWidth,
+    double? roomSnackCardHeight,
+    double? roomSnackArtWidth,
+    double? roomSnackArtHeight,
+    double? roomSnackArtBox,
+    double? roomStockBadge,
+    double? roomEmptyOpacity,
+    double? roomAccessoryArt,
+    double? roomAccessoryCard,
+    double? roomWornTag,
+    double? needTile,
+    double? needLabel,
+    double? needBar,
+    double? needValue,
+    double? roomReactionWidth,
+    double? roomReactionHeight,
+    double? roomReactionRise,
     double? roomHeaderLogoMinWidth,
   }) {
     return KoSize(
@@ -833,6 +962,29 @@ class KoSize extends ThemeExtension<KoSize> {
       roomDecorateGap: roomDecorateGap ?? this.roomDecorateGap,
       roomHintBorder: roomHintBorder ?? this.roomHintBorder,
       roomBubbleTail: roomBubbleTail ?? this.roomBubbleTail,
+      roomCardTop: roomCardTop ?? this.roomCardTop,
+      roomCardAvatar: roomCardAvatar ?? this.roomCardAvatar,
+      roomCardAvatarArt: roomCardAvatarArt ?? this.roomCardAvatarArt,
+      roomCardAvatarMinWidth:
+          roomCardAvatarMinWidth ?? this.roomCardAvatarMinWidth,
+      roomCardButton: roomCardButton ?? this.roomCardButton,
+      roomSnackCardWidth: roomSnackCardWidth ?? this.roomSnackCardWidth,
+      roomSnackCardHeight: roomSnackCardHeight ?? this.roomSnackCardHeight,
+      roomSnackArtWidth: roomSnackArtWidth ?? this.roomSnackArtWidth,
+      roomSnackArtHeight: roomSnackArtHeight ?? this.roomSnackArtHeight,
+      roomSnackArtBox: roomSnackArtBox ?? this.roomSnackArtBox,
+      roomStockBadge: roomStockBadge ?? this.roomStockBadge,
+      roomEmptyOpacity: roomEmptyOpacity ?? this.roomEmptyOpacity,
+      roomAccessoryArt: roomAccessoryArt ?? this.roomAccessoryArt,
+      roomAccessoryCard: roomAccessoryCard ?? this.roomAccessoryCard,
+      roomWornTag: roomWornTag ?? this.roomWornTag,
+      needTile: needTile ?? this.needTile,
+      needLabel: needLabel ?? this.needLabel,
+      needBar: needBar ?? this.needBar,
+      needValue: needValue ?? this.needValue,
+      roomReactionWidth: roomReactionWidth ?? this.roomReactionWidth,
+      roomReactionHeight: roomReactionHeight ?? this.roomReactionHeight,
+      roomReactionRise: roomReactionRise ?? this.roomReactionRise,
       roomHeaderLogoMinWidth:
           roomHeaderLogoMinWidth ?? this.roomHeaderLogoMinWidth,
     );
@@ -965,6 +1117,31 @@ class KoSize extends ThemeExtension<KoSize> {
       roomDecorateGap: d(roomDecorateGap, other.roomDecorateGap),
       roomHintBorder: d(roomHintBorder, other.roomHintBorder),
       roomBubbleTail: d(roomBubbleTail, other.roomBubbleTail),
+      roomCardTop: d(roomCardTop, other.roomCardTop),
+      roomCardAvatar: d(roomCardAvatar, other.roomCardAvatar),
+      roomCardAvatarArt: d(roomCardAvatarArt, other.roomCardAvatarArt),
+      roomCardAvatarMinWidth: d(
+        roomCardAvatarMinWidth,
+        other.roomCardAvatarMinWidth,
+      ),
+      roomCardButton: d(roomCardButton, other.roomCardButton),
+      roomSnackCardWidth: d(roomSnackCardWidth, other.roomSnackCardWidth),
+      roomSnackCardHeight: d(roomSnackCardHeight, other.roomSnackCardHeight),
+      roomSnackArtWidth: d(roomSnackArtWidth, other.roomSnackArtWidth),
+      roomSnackArtHeight: d(roomSnackArtHeight, other.roomSnackArtHeight),
+      roomSnackArtBox: d(roomSnackArtBox, other.roomSnackArtBox),
+      roomStockBadge: d(roomStockBadge, other.roomStockBadge),
+      roomEmptyOpacity: d(roomEmptyOpacity, other.roomEmptyOpacity),
+      roomAccessoryArt: d(roomAccessoryArt, other.roomAccessoryArt),
+      roomAccessoryCard: d(roomAccessoryCard, other.roomAccessoryCard),
+      roomWornTag: d(roomWornTag, other.roomWornTag),
+      needTile: d(needTile, other.needTile),
+      needLabel: d(needLabel, other.needLabel),
+      needBar: d(needBar, other.needBar),
+      needValue: d(needValue, other.needValue),
+      roomReactionWidth: d(roomReactionWidth, other.roomReactionWidth),
+      roomReactionHeight: d(roomReactionHeight, other.roomReactionHeight),
+      roomReactionRise: d(roomReactionRise, other.roomReactionRise),
       roomHeaderLogoMinWidth: d(
         roomHeaderLogoMinWidth,
         other.roomHeaderLogoMinWidth,

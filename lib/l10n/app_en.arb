@@ -2367,5 +2367,181 @@
         "type": "String"
       }
     }
+  },
+  "needHunger": "Full",
+  "@needHunger": {
+    "description": "Hunger bar label on a cat card (higher = fuller)."
+  },
+  "needJoy": "Happy",
+  "@needJoy": {
+    "description": "Happiness bar label on a cat card."
+  },
+  "needValueLabel": "{label} {value} out of 100",
+  "@needValueLabel": {
+    "description": "Screen reader label of a need bar.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "needValueLow": "{label} {value} out of 100, almost empty",
+  "@needValueLow": {
+    "description": "Screen reader label of a need bar that is almost empty.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "needLowHunger": "Almost empty! That tummy is rumbling.",
+  "@needLowHunger": {
+    "description": "Warning under an almost empty hunger bar."
+  },
+  "needLowJoy": "Almost empty! Pet them already.",
+  "@needLowJoy": {
+    "description": "Warning under an almost empty happiness bar."
+  },
+  "kittyCardLabel": "{name}'s card",
+  "@kittyCardLabel": {
+    "description": "Screen reader label of the cat card dialog.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kittyCardClose": "Close card",
+  "@kittyCardClose": {
+    "description": "Screen reader label of the close button on a cat card."
+  },
+  "petAction": "Pet",
+  "@petAction": {
+    "description": "Cat card button that pets the cat."
+  },
+  "snackPanel": "Snacks",
+  "@snackPanel": {
+    "description": "Cat card button that opens the snack list."
+  },
+  "snackPick": "Pick from your stock",
+  "@snackPick": {
+    "description": "Heading above the snack list on a cat card."
+  },
+  "snackGive": "Give {name}, {count} in stock",
+  "@snackGive": {
+    "description": "Screen reader label of a snack on a cat card.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackGiveEmpty": "Give {name}, {count} in stock, all gone",
+  "@snackGiveEmpty": {
+    "description": "Screen reader label of a snack that ran out.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "accessoryPanelTitle": "Yours · swap for free",
+  "@accessoryPanelTitle": {
+    "description": "Heading above the owned accessories on a cat card."
+  },
+  "accessoryShopLink": "Accessory shop",
+  "@accessoryShopLink": {
+    "description": "Link on a cat card to the accessories shop (an arrow icon follows it)."
+  },
+  "accessoryRemove": "Take off",
+  "@accessoryRemove": {
+    "description": "Card in the accessory list that takes the accessory off."
+  },
+  "accessoryWornTag": "Wearing",
+  "@accessoryWornTag": {
+    "description": "Tag on the accessory the cat is wearing."
+  },
+  "accessoryWearLabel": "Put {accessory} on {name}",
+  "@accessoryWearLabel": {
+    "description": "Screen reader label of an accessory on a cat card.",
+    "placeholders": {
+      "accessory": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accessoryWornLabel": "Put {accessory} on {name}, wearing it now",
+  "@accessoryWornLabel": {
+    "description": "Screen reader label of the accessory the cat is wearing.",
+    "placeholders": {
+      "accessory": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accessoryRemoveLabel": "Take {name}'s accessory off",
+  "@accessoryRemoveLabel": {
+    "description": "Screen reader label of the take-off card.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "reactionFed": "+{hunger} full",
+  "@reactionFed": {
+    "description": "Floating text over a cat after a snack.",
+    "placeholders": {
+      "hunger": {
+        "type": "int"
+      }
+    }
+  },
+  "reactionFedJoy": "+{hunger} full, +{joy} happy",
+  "@reactionFedJoy": {
+    "description": "Floating text over a cat after a snack that also makes it happy.",
+    "placeholders": {
+      "hunger": {
+        "type": "int"
+      },
+      "joy": {
+        "type": "int"
+      }
+    }
+  },
+  "reactionJoy": "+{joy} happy",
+  "@reactionJoy": {
+    "description": "Floating text over a cat after petting.",
+    "placeholders": {
+      "joy": {
+        "type": "int"
+      }
+    }
+  },
+  "reactionNice": "Looking sharp!",
+  "@reactionNice": {
+    "description": "Floating text over a cat after putting an accessory on."
+  },
+  "reactionRelieved": "Ahh, free!",
+  "@reactionRelieved": {
+    "description": "Floating text over a cat after taking its accessory off."
   }
 }

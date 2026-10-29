@@ -69,6 +69,8 @@ class KoType extends ThemeExtension<KoType> {
     required this.buttonSoft,
     required this.logoRow,
     required this.buttonRoom,
+    required this.buttonCard,
+    required this.reaction,
   });
 
   static const standard = KoType(
@@ -384,6 +386,18 @@ class KoType extends ThemeExtension<KoType> {
       fontWeight: FontWeight.w700,
       fontSize: 32,
     ),
+    buttonCard: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w600,
+      fontSize: 15,
+    ),
+    reaction: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w700,
+      fontSize: 18,
+    ),
   );
 
   /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
@@ -545,6 +559,12 @@ class KoType extends ThemeExtension<KoType> {
   /// Tombol Main di panel bawah kamar.
   final TextStyle buttonRoom;
 
+  /// Tombol Camilan, Elus, dan Aksesoris di kartu kucing.
+  final TextStyle buttonCard;
+
+  /// Angka reaksi yang melayang di atas kucing ("+10 senang").
+  final TextStyle reaction;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -599,6 +619,8 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? buttonSoft,
     TextStyle? logoRow,
     TextStyle? buttonRoom,
+    TextStyle? buttonCard,
+    TextStyle? reaction,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -653,6 +675,8 @@ class KoType extends ThemeExtension<KoType> {
       buttonSoft: buttonSoft ?? this.buttonSoft,
       logoRow: logoRow ?? this.logoRow,
       buttonRoom: buttonRoom ?? this.buttonRoom,
+      buttonCard: buttonCard ?? this.buttonCard,
+      reaction: reaction ?? this.reaction,
     );
   }
 
@@ -713,6 +737,8 @@ class KoType extends ThemeExtension<KoType> {
       buttonSoft: s(buttonSoft, other.buttonSoft),
       logoRow: s(logoRow, other.logoRow),
       buttonRoom: s(buttonRoom, other.buttonRoom),
+      buttonCard: s(buttonCard, other.buttonCard),
+      reaction: s(reaction, other.reaction),
     );
   }
 }

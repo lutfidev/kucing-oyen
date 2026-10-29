@@ -1892,4 +1892,101 @@ class AppLocalizationsRu extends AppLocalizations {
   String kittyTapHintHungry(String name) {
     return '$name хочет есть. Нажми, чтобы открыть карточку';
   }
+
+  @override
+  String get needHunger => 'Сытость';
+
+  @override
+  String get needJoy => 'Радость';
+
+  @override
+  String needValueLabel(String label, int value) {
+    return '$label: $value из 100';
+  }
+
+  @override
+  String needValueLow(String label, int value) {
+    return '$label: $value из 100, почти на нуле';
+  }
+
+  @override
+  String get needLowHunger => 'Почти на нуле! Живот уже урчит.';
+
+  @override
+  String get needLowJoy => 'Почти на нуле! Погладь уже.';
+
+  @override
+  String kittyCardLabel(String name) {
+    return 'Карточка: $name';
+  }
+
+  @override
+  String get kittyCardClose => 'Закрыть карточку';
+
+  @override
+  String get petAction => 'Погладить';
+
+  @override
+  String get snackPanel => 'Вкусняшки';
+
+  @override
+  String get snackPick => 'Выбери из запасов';
+
+  @override
+  String snackGive(String name, int count) {
+    return 'Дать: $name, в запасе $count';
+  }
+
+  @override
+  String snackGiveEmpty(String name, int count) {
+    return 'Дать: $name, в запасе $count, закончилось';
+  }
+
+  @override
+  String get accessoryPanelTitle => 'Твои · меняй бесплатно';
+
+  @override
+  String get accessoryShopLink => 'Магазин аксессуаров';
+
+  @override
+  String get accessoryRemove => 'Снять';
+
+  @override
+  String get accessoryWornTag => 'Надето';
+
+  @override
+  String accessoryWearLabel(String accessory, String name) {
+    return 'Надеть $accessory: $name';
+  }
+
+  @override
+  String accessoryWornLabel(String accessory, String name) {
+    return 'Надеть $accessory: $name, уже надето';
+  }
+
+  @override
+  String accessoryRemoveLabel(String name) {
+    return 'Снять аксессуар: $name';
+  }
+
+  @override
+  String reactionFed(int hunger) {
+    return '+$hunger сытости';
+  }
+
+  @override
+  String reactionFedJoy(int hunger, int joy) {
+    return '+$hunger сытости, +$joy радости';
+  }
+
+  @override
+  String reactionJoy(int joy) {
+    return '+$joy радости';
+  }
+
+  @override
+  String get reactionNice => 'Красота!';
+
+  @override
+  String get reactionRelieved => 'Свобода!';
 }
