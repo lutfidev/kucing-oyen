@@ -258,3 +258,7 @@ String kittyLabel(AppLocalizations l, KittyLook look) {
       ? l.kittyLabel(name, pose)
       : l.kittyLabelAccessory(name, pose, accessoryName(l, accessory));
 }
+
+/// Label pembaca layar tanda lesu (`aria-label` di `TandaLesu.dc.html`).
+String sadMarkLabel(AppLocalizations l, {required bool hungry}) =>
+    hungry ? l.sadMarkHungry : l.sadMarkSad;

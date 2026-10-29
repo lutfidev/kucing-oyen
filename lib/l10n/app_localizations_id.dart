@@ -1678,4 +1678,10 @@ class AppLocalizationsId extends AppLocalizations {
   String shopAccessoryWornLabel(String name, String who) {
     return 'Lihat $name, punyamu, dipakai $who';
   }
+
+  @override
+  String get sadMarkHungry => 'Lesu: lapar';
+
+  @override
+  String get sadMarkSad => 'Lesu: kurang perhatian';
 }

@@ -88,6 +88,17 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.tabTrack,
     required this.shortFill,
     required this.priceMuted,
+    required this.roomWall,
+    required this.roomWallStripe,
+    required this.roomWallMark,
+    required this.roomTrimLight,
+    required this.roomFloorBoards,
+    required this.roomFloorLine,
+    required this.needHungerTile,
+    required this.needHungerInk,
+    required this.needJoyTile,
+    required this.needLowTile,
+    required this.heart,
   });
 
   static const standard = KoColors(
@@ -171,6 +182,17 @@ class KoColors extends ThemeExtension<KoColors> {
     tabTrack: Color(0xFFF3E3C6),
     shortFill: Color(0xFFEADBC2),
     priceMuted: Color(0xFF8A7259),
+    roomWall: Color(0xFFFCE6C8),
+    roomWallStripe: Color(0x24E2AA6E), // rgba(226,170,110,.14)
+    roomWallMark: Color(0x80D4A971), // #D4A971, opacity .5,
+    roomTrimLight: Color(0xFFC99466),
+    roomFloorBoards: Color(0xFFEBC896),
+    roomFloorLine: Color(0x40B07A4F), // rgba(176,122,79,.25),
+    needHungerTile: Color(0xFFFDE3C2),
+    needHungerInk: Color(0xFFA9530A),
+    needJoyTile: Color(0xFFCDEFE8),
+    needLowTile: Color(0xFFF6D3CA),
+    heart: Color(0xFFF07F9A),
   );
 
   /// Latar semua layar.
@@ -385,6 +407,39 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Angka harga di kartu yang koinnya kurang (desain 20).
   final Color priceMuted;
 
+  /// Dinding kamar (desain 19).
+  final Color roomWall;
+
+  /// Garis tegak dinding kamar.
+  final Color roomWallStripe;
+
+  /// Goresan lantai dan dinding kamar.
+  final Color roomWallMark;
+
+  /// Tepi terang trim kamar.
+  final Color roomTrimLight;
+
+  /// Lantai papan kamar.
+  final Color roomFloorBoards;
+
+  /// Sambungan papan lantai kamar.
+  final Color roomFloorLine;
+
+  /// Kotak ikon bar Lapar.
+  final Color needHungerTile;
+
+  /// Ikon dan angka bar Lapar.
+  final Color needHungerInk;
+
+  /// Kotak ikon bar Senang.
+  final Color needJoyTile;
+
+  /// Kotak ikon bar yang hampir habis.
+  final Color needLowTile;
+
+  /// Hati elusan.
+  final Color heart;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -467,6 +522,17 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? tabTrack,
     Color? shortFill,
     Color? priceMuted,
+    Color? roomWall,
+    Color? roomWallStripe,
+    Color? roomWallMark,
+    Color? roomTrimLight,
+    Color? roomFloorBoards,
+    Color? roomFloorLine,
+    Color? needHungerTile,
+    Color? needHungerInk,
+    Color? needJoyTile,
+    Color? needLowTile,
+    Color? heart,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -549,6 +615,17 @@ class KoColors extends ThemeExtension<KoColors> {
       tabTrack: tabTrack ?? this.tabTrack,
       shortFill: shortFill ?? this.shortFill,
       priceMuted: priceMuted ?? this.priceMuted,
+      roomWall: roomWall ?? this.roomWall,
+      roomWallStripe: roomWallStripe ?? this.roomWallStripe,
+      roomWallMark: roomWallMark ?? this.roomWallMark,
+      roomTrimLight: roomTrimLight ?? this.roomTrimLight,
+      roomFloorBoards: roomFloorBoards ?? this.roomFloorBoards,
+      roomFloorLine: roomFloorLine ?? this.roomFloorLine,
+      needHungerTile: needHungerTile ?? this.needHungerTile,
+      needHungerInk: needHungerInk ?? this.needHungerInk,
+      needJoyTile: needJoyTile ?? this.needJoyTile,
+      needLowTile: needLowTile ?? this.needLowTile,
+      heart: heart ?? this.heart,
     );
   }
 
@@ -637,6 +714,17 @@ class KoColors extends ThemeExtension<KoColors> {
       tabTrack: c(tabTrack, other.tabTrack),
       shortFill: c(shortFill, other.shortFill),
       priceMuted: c(priceMuted, other.priceMuted),
+      roomWall: c(roomWall, other.roomWall),
+      roomWallStripe: c(roomWallStripe, other.roomWallStripe),
+      roomWallMark: c(roomWallMark, other.roomWallMark),
+      roomTrimLight: c(roomTrimLight, other.roomTrimLight),
+      roomFloorBoards: c(roomFloorBoards, other.roomFloorBoards),
+      roomFloorLine: c(roomFloorLine, other.roomFloorLine),
+      needHungerTile: c(needHungerTile, other.needHungerTile),
+      needHungerInk: c(needHungerInk, other.needHungerInk),
+      needJoyTile: c(needJoyTile, other.needJoyTile),
+      needLowTile: c(needLowTile, other.needLowTile),
+      heart: c(heart, other.heart),
     );
   }
 }

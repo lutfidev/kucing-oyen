@@ -435,5 +435,7 @@
   "shopAccessoryBuyLabel": "Посмотреть {name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}}",
   "shopAccessoryShortLabel": "Посмотреть {name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}}, не хватает монет",
   "shopAccessoryOwnedLabel": "Посмотреть {name}, твоё",
-  "shopAccessoryWornLabel": "Посмотреть {name}, твоё, носит {who}"
+  "shopAccessoryWornLabel": "Посмотреть {name}, твоё, носит {who}",
+  "sadMarkHungry": "Скис: голодный",
+  "sadMarkSad": "Скис: мало внимания"
 }

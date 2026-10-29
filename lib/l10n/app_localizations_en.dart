@@ -1812,4 +1812,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String shopAccessoryWornLabel(String name, String who) {
     return 'View $name, yours, worn by $who';
   }
+
+  @override
+  String get sadMarkHungry => 'Droopy: hungry';
+
+  @override
+  String get sadMarkSad => 'Droopy: wants attention';
 }

@@ -435,5 +435,7 @@
   "shopAccessoryBuyLabel": "Ver {name}, {n, plural, one{{n} moeda} other{{n} moedas}}",
   "shopAccessoryShortLabel": "Ver {name}, {n, plural, one{{n} moeda} other{{n} moedas}}, moedas de menos",
   "shopAccessoryOwnedLabel": "Ver {name}, seu",
-  "shopAccessoryWornLabel": "Ver {name}, seu, usado por {who}"
+  "shopAccessoryWornLabel": "Ver {name}, seu, usado por {who}",
+  "sadMarkHungry": "Murchinho: com fome",
+  "sadMarkSad": "Murchinho: quer carinho"
 }

@@ -421,3 +421,37 @@ class _AccessoryIconPainter extends CustomPainter {
   @override
   bool shouldRepaint(_AccessoryIconPainter old) => old.id != id;
 }
+
+/// Tanda lesu di atas kucing kamar selebar [size] (`TandaLesu.dc.html`).
+class SadMarkView extends StatelessWidget {
+  const SadMarkView({super.key, required this.hungry, this.size = 48});
+
+  final bool hungry;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final box = RoomArt.sadMarkViewBox;
+    return Semantics(
+      image: true,
+      label: sadMarkLabel(context.l10n, hungry: hungry),
+      child: CustomPaint(
+        size: box * (size / box.width),
+        painter: _SadMarkPainter(hungry),
+      ),
+    );
+  }
+}
+
+class _SadMarkPainter extends CustomPainter {
+  _SadMarkPainter(this.hungry);
+
+  final bool hungry;
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      paintSadMark(canvas, hungry: hungry, width: size.width);
+
+  @override
+  bool shouldRepaint(_SadMarkPainter old) => old.hungry != hungry;
+}

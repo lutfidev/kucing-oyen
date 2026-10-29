@@ -1852,4 +1852,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String shopAccessoryWornLabel(String name, String who) {
     return 'Посмотреть $name, твоё, носит $who';
   }
+
+  @override
+  String get sadMarkHungry => 'Скис: голодный';
+
+  @override
+  String get sadMarkSad => 'Скис: мало внимания';
 }

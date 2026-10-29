@@ -16,6 +16,7 @@ export 'map_art.dart';
 export 'oyen.dart';
 export 'oyen_painter.dart';
 export 'result_art.dart';
+export 'room_art.dart';
 export 'room_item_art.dart';
 export 'rules_art.dart';
 export 'run_scene.dart';

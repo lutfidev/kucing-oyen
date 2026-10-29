@@ -1829,4 +1829,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String shopAccessoryWornLabel(String name, String who) {
     return 'Ver $name, seu, usado por $who';
   }
+
+  @override
+  String get sadMarkHungry => 'Murchinho: com fome';
+
+  @override
+  String get sadMarkSad => 'Murchinho: quer carinho';
 }

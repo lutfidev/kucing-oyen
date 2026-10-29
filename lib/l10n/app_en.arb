@@ -2305,5 +2305,13 @@
         "type": "String"
       }
     }
+  },
+  "sadMarkHungry": "Droopy: hungry",
+  "@sadMarkHungry": {
+    "description": "Screen reader label of the thought bubble above a hungry room cat."
+  },
+  "sadMarkSad": "Droopy: wants attention",
+  "@sadMarkSad": {
+    "description": "Screen reader label of the thought bubble above a room cat that needs attention."
   }
 }

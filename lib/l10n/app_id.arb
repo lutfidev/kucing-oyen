@@ -435,5 +435,7 @@
   "shopAccessoryBuyLabel": "Lihat {name}, {n} koin",
   "shopAccessoryShortLabel": "Lihat {name}, {n} koin, koin kurang",
   "shopAccessoryOwnedLabel": "Lihat {name}, punyamu",
-  "shopAccessoryWornLabel": "Lihat {name}, punyamu, dipakai {who}"
+  "shopAccessoryWornLabel": "Lihat {name}, punyamu, dipakai {who}",
+  "sadMarkHungry": "Lesu: lapar",
+  "sadMarkSad": "Lesu: kurang perhatian"
 }

@@ -2717,6 +2717,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View {name}, yours, worn by {who}'**
   String shopAccessoryWornLabel(String name, String who);
+
+  /// Screen reader label of the thought bubble above a hungry room cat.
+  ///
+  /// In en, this message translates to:
+  /// **'Droopy: hungry'**
+  String get sadMarkHungry;
+
+  /// Screen reader label of the thought bubble above a room cat that needs attention.
+  ///
+  /// In en, this message translates to:
+  /// **'Droopy: wants attention'**
+  String get sadMarkSad;
 }
 
 class _AppLocalizationsDelegate

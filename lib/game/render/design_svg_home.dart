@@ -1002,3 +1002,41 @@ const roomItemViewBoxes = <String, (double, double, double, double)>{
   'biskuit': (0, 0, 44, 24),
   'puding': (0, 0, 40, 34),
 };
+
+/// Jendela dinding kamar, viewBox -8 0 140 134 (`Kamar.dc.html`).
+const roomWindowSvg = r'''
+      <rect x="0" y="0" width="124" height="124" rx="10" fill="#FFFBF3"></rect>
+      <rect x="8" y="8" width="108" height="108" rx="6" fill="#BFE7F7"></rect>
+      <circle cx="90" cy="34" r="12" fill="#FFE6A8"></circle>
+      <ellipse cx="38" cy="36" rx="16" ry="7" fill="#FFFFFF"></ellipse>
+      <ellipse cx="50" cy="32" rx="11" ry="7" fill="#FFFFFF"></ellipse>
+      <path d="M8 98 Q40 78 70 94 Q96 82 116 94 V116 H8 Z" fill="#9ED39A"></path>
+      <rect x="59" y="8" width="6" height="108" fill="#FFFBF3"></rect>
+      <rect x="8" y="59" width="108" height="6" fill="#FFFBF3"></rect>
+      <rect x="-6" y="118" width="136" height="10" rx="4" fill="#B07A4F"></rect>
+      <path d="M-8 0 Q8 50 -2 118 L-8 118 Z" fill="#F4B48C"></path>
+      <path d="M132 0 Q116 50 126 118 L132 118 Z" fill="#F4B48C"></path>
+''';
+
+/// Bidang cahaya dan goresan lantai kamar, viewBox 0 0 390 844
+/// (`Kamar.dc.html`).
+const roomFloorDecorSvg = r'''
+    <path d="M44 426 L156 426 L214 566 L74 566 Z" fill="#FFFFFF" opacity="0.18"></path>
+    <path d="M190 436 L196 470 M290 452 L296 486 M120 476 L124 500" stroke="#D4A971" stroke-width="2" opacity="0.5"></path>
+''';
+
+/// Tanda lesu di atas kucing, viewBox 0 0 48 52 (`TandaLesu.dc.html`).
+const sadMarkSvg = r'''
+    <circle cx="11" cy="48" r="2.8" fill="#EEF2F7" stroke="#6E86A8" stroke-width="1.6"></circle>
+    <circle cx="17" cy="41" r="4" fill="#EEF2F7" stroke="#6E86A8" stroke-width="1.8"></circle>
+    <circle cx="28" cy="20" r="18" fill="#EEF2F7" stroke="#6E86A8" stroke-width="2"></circle>
+    <sc-if value="{{isLapar}}" hint-placeholder-val="{{ true }}">
+      <path d="M16 20 H35 M21 14.5 L23.5 20 L21 25.5 M26 13.5 L28.5 20 L26 26.5 M31 14.5 L33 20 L31 25.5 M16 20 L12.5 16 M16 20 L12.5 24" stroke="#6E86A8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+      <circle cx="38.6" cy="20" r="3.4" fill="none" stroke="#6E86A8" stroke-width="2"></circle>
+      <circle cx="39.4" cy="19.4" r="0.9" fill="#6E86A8"></circle>
+    </sc-if>
+    <sc-if value="{{isSedih}}" hint-placeholder-val="{{ false }}">
+      <path d="M17 18 Q17 11 24 11 Q27 6 33 9 Q39 9 39 15 Q42 19 37 22 L20 22 Q15 22 17 18 Z" fill="#B9C7DA"></path>
+      <path d="M22 26 L20.5 30 M28 26 L26.5 30 M34 26 L32.5 30" stroke="#6E86A8" stroke-width="2" stroke-linecap="round"></path>
+    </sc-if>
+''';

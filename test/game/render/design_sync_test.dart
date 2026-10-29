@@ -6,6 +6,7 @@ import 'package:kucing_oren/game/render/design_svg.dart';
 import 'package:kucing_oren/game/render/design_svg_home.dart';
 import 'package:kucing_oren/game/render/map_art.dart';
 import 'package:kucing_oren/game/render/result_art.dart';
+import 'package:kucing_oren/game/render/room_art.dart';
 
 /// `docs/design/` tidak ikut repo; test ini hanya jalan di komputer yang
 /// punya ekspor desainnya.
@@ -316,6 +317,23 @@ void main() {
           h,
         ], reason: key);
       }
+    });
+
+    test('Kamar.dc.html: jendela dan dekor lantai', () {
+      final source = _readHome('Kamar.dc.html');
+      expect(source, contains(_lf(roomWindowSvg)));
+      expect(source, contains(_lf(roomFloorDecorSvg)));
+      expect(
+        source,
+        contains(
+          'left: ${RoomArt.windowBox.left.toInt()}px; '
+          'top: ${RoomArt.windowBox.top.toInt()}px',
+        ),
+      );
+    });
+
+    test('TandaLesu.dc.html', () {
+      expect(_lf(sadMarkSvg), _innerHome('TandaLesu.dc.html'));
     });
   }, skip: homeMissing);
 }
