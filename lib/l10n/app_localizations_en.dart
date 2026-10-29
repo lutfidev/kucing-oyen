@@ -1956,4 +1956,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String decoratePraiseJoy(int joy) {
     return '+$joy Happy for every cat';
   }
+
+  @override
+  String bowlRefill(int hours) {
+    String _temp0 = intl.Intl.pluralLogic(
+      hours,
+      locale: localeName,
+      other: 'Refills in $hours hours',
+      one: 'Refills in $hours hour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String kittyRewardLabel(int coins, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      coins,
+      locale: localeName,
+      other: 'Collect $coins coins from $name',
+      one: 'Collect $coins coin from $name',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reactionCoins(int coins) {
+    String _temp0 = intl.Intl.pluralLogic(
+      coins,
+      locale: localeName,
+      other: '+$coins coins',
+      one: '+$coins coin',
+    );
+    return '$_temp0';
+  }
 }

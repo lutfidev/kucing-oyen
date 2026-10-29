@@ -1827,4 +1827,24 @@ class AppLocalizationsId extends AppLocalizations {
   String decoratePraiseJoy(int joy) {
     return '+$joy Senang untuk semua kucing';
   }
+
+  @override
+  String bowlRefill(int hours) {
+    String _temp0 = intl.Intl.pluralLogic(
+      hours,
+      locale: localeName,
+      other: 'Terisi lagi $hours jam',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String kittyRewardLabel(int coins, String name) {
+    return 'Ambil $coins koin dari $name';
+  }
+
+  @override
+  String reactionCoins(int coins) {
+    return '+$coins koin';
+  }
 }

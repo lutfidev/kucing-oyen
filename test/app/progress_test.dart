@@ -669,6 +669,27 @@ void main() {
       expect(c.home, home);
       expect(c.needs, needs);
     });
+
+    test('kebutuhan turun selama aplikasi ditutup', () async {
+      final store = MemoryProgressStore();
+      final first = await ProgressController.load(
+        levels: testLevels,
+        store: store,
+        clock: () => now,
+      );
+      expect(first.catNeeds(KittyId.oyen).hunger, maxNeed);
+      // Dibuka lagi 6 jam kemudian: Lapar turun setengah (habis dalam 12
+      // jam), Senang 6/16.
+      final later = now.add(const Duration(hours: 6));
+      final again = await ProgressController.load(
+        levels: testLevels,
+        store: store,
+        clock: () => later,
+      );
+      final needs = again.catNeeds(KittyId.oyen);
+      expect(needs.hunger, closeTo(50, 1e-9));
+      expect(needs.joy, closeTo(100 - 100 * 6 / joyHours, 1e-9));
+    });
   });
 
   group('simpanan gagal', () {

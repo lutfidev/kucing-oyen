@@ -384,6 +384,12 @@ abstract final class KoIcons {
     KoIconShape.circle(Offset(8, 18), 2.4, paint: KoIconPaint.fill),
     KoIconShape.circle(Offset(16, 18), 2.4, paint: KoIconPaint.fill),
   ], strokeWidth: 0);
+
+  /// Jam: label "Terisi lagi" di atas mangkuk kosong (`Kamar.dc.html`).
+  static const clock = KoIconData([
+    KoIconShape.circle(Offset(12, 12), 9),
+    KoIconShape.path('M12 7v5l3 2'),
+  ], strokeWidth: 2.6);
 }
 
 /// Menggambar [KoIconData] seukuran [size] dengan warna [color]. Hiasan

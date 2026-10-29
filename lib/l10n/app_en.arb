@@ -2557,5 +2557,35 @@
         "type": "int"
       }
     }
+  },
+  "bowlRefill": "{hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}}",
+  "@bowlRefill": {
+    "description": "Label over the empty shared food bowl in the cat room: hours until it refills.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "kittyRewardLabel": "{coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}}",
+  "@kittyRewardLabel": {
+    "description": "Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward.",
+    "placeholders": {
+      "coins": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "reactionCoins": "{coins, plural, one{+{coins} coin} other{+{coins} coins}}",
+  "@reactionCoins": {
+    "description": "Floating text over a cat after collecting its coin reward.",
+    "placeholders": {
+      "coins": {
+        "type": "int"
+      }
+    }
   }
 }

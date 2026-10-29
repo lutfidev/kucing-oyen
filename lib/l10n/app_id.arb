@@ -472,5 +472,8 @@
   "storageLabel": "Gudang barang",
   "storeItemAction": "Simpan ke Gudang",
   "decoratePraise": "Kamar makin cakep!",
-  "decoratePraiseJoy": "+{joy} Senang untuk semua kucing"
+  "decoratePraiseJoy": "+{joy} Senang untuk semua kucing",
+  "bowlRefill": "{hours, plural, other{Terisi lagi {hours} jam}}",
+  "kittyRewardLabel": "Ambil {coins} koin dari {name}",
+  "reactionCoins": "+{coins} koin"
 }

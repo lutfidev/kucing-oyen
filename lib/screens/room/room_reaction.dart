@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 
+import '../../game/model/room_life.dart';
+import '../../game/model/sounds.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
 /// Reaksi kucing sesudah aksi di kartu: angka yang melayang ([text], null
-/// = tanpa angka, mis. elusan yang sudah kena batas) dan hati ([hearts]).
+/// = tanpa angka, mis. elusan yang sudah kena batas) dan hati ([hearts]),
+/// plus pose singkat kucingnya ([pose]).
 class RoomReaction {
-  const RoomReaction({this.text, this.hearts = true});
+  const RoomReaction({
+    this.text,
+    this.hearts = true,
+    this.pose = LifePose.happy,
+    this.sound,
+  });
 
   final String? text;
   final bool hearts;
+  final LifePose pose;
+
+  /// Efek suara reaksinya (dengkur, makan, pasang aksesoris, koin).
+  final GameSound? sound;
 }
 
 /// Kurva `@keyframes` desain sebagai fungsi waktu 0–1.

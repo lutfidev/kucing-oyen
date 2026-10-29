@@ -9,7 +9,9 @@ import '../../app/routes.dart';
 import '../../game/model/accessories.dart';
 import '../../game/model/kitties.dart';
 import '../../game/model/needs.dart';
+import '../../game/model/room_life.dart';
 import '../../game/model/snacks.dart';
+import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
@@ -80,7 +82,11 @@ class _KittyCardState extends State<KittyCard> {
     final l = context.l10n;
     _run(
       () => _progress.pet(_kitty),
-      (ok) => RoomReaction(text: ok ? l.reactionJoy(petJoy) : null),
+      (ok) => RoomReaction(
+        text: ok ? l.reactionJoy(petJoy) : null,
+        pose: LifePose.petted,
+        sound: GameSound.purr,
+      ),
     );
   }
 
@@ -98,6 +104,8 @@ class _KittyCardState extends State<KittyCard> {
               text: joy >= 15
                   ? l.reactionFedJoy(hunger, joy)
                   : l.reactionFed(hunger),
+              pose: joy >= 15 ? LifePose.happy : LifePose.eat,
+              sound: GameSound.munch,
             ),
     );
   }
@@ -110,6 +118,7 @@ class _KittyCardState extends State<KittyCard> {
           ? null
           : RoomReaction(
               text: id == null ? l.reactionRelieved : l.reactionNice,
+              sound: id == null ? null : GameSound.wear,
             ),
     );
   }

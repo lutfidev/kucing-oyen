@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/accessories.dart';
@@ -8,6 +9,7 @@ import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/snacks.dart';
+import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/screens/room/room_screen.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
 
@@ -19,12 +21,14 @@ Future<ProgressController> pumpShop(
   int coins = 0,
   Home? home,
   ShopTab tab = ShopTab.items,
+  GameAudio? audio,
 }) async {
   setScreenSize(tester, const Size(390, 844));
   final progress = await pumpApp(
     tester,
     location: AppRoutes.shop(tab: tab),
     progress: testProgressWith(coins: coins, home: home),
+    audio: audio,
   );
   await settle(tester);
   return progress;
@@ -508,5 +512,19 @@ void main() {
       );
       semantics.dispose();
     });
+  });
+
+  testWidgets('suara: beli berbunyi, pasang aksesoris berbunyi', (
+    tester,
+  ) async {
+    final audio = testAudio();
+    await pumpShop(tester, coins: 200, tab: ShopTab.accessories, audio: audio);
+    await tapCard(tester, 'shop-accessory-beanie');
+    await tapCard(tester, 'shop-preview-buy');
+    await tapCard(tester, 'buy-confirm');
+    expect(playedBy(audio), contains(GameSound.buy));
+    expect(playedBy(audio), isNot(contains(GameSound.wear)));
+    await tapCard(tester, 'buy-wear');
+    expect(playedBy(audio), contains(GameSound.wear));
   });
 }

@@ -531,3 +531,41 @@ class _InviteBubble extends StatelessWidget {
     );
   }
 }
+
+/// Label "Terisi lagi N jam" di atas mangkuk kosong (`Kamar.dc.html`),
+/// selebar isinya.
+class BowlRefillLabel extends StatelessWidget {
+  const BowlRefillLabel({super.key, required this.hours});
+
+  final int hours;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    final space = context.koSpace;
+    return Container(
+      constraints: BoxConstraints(minHeight: s.roomBowlLabel),
+      padding: EdgeInsets.symmetric(horizontal: s.roomBowlLabelPad),
+      decoration: ShapeDecoration(
+        color: c.surface,
+        shape: StadiumBorder(
+          side: BorderSide(color: c.line, width: space.s2),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          KoIcon(KoIcons.clock, size: s.roomBowlLabelIcon, color: c.inkSoft),
+          SizedBox(width: space.s4),
+          Text(
+            context.l10n.bowlRefill(hours),
+            maxLines: 1,
+            softWrap: false,
+            style: context.koType.tagSmall.copyWith(color: c.inkSoft),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -146,8 +146,7 @@ class RoomLife {
 
   /// Barang yang sedang dituju atau dipakai, dan kucingnya.
   Map<RoomItemId, KittyId> get users => {
-    for (final cat in _cats.values)
-      ?cat.item: cat.kitty,
+    for (final cat in _cats.values) ?cat.item: cat.kitty,
   };
 
   /// Kucing yang memakai [item] sekarang (bukan sekadar menuju).
@@ -204,6 +203,11 @@ class RoomLife {
     for (final cat in _cats.values) {
       _rest(cat);
     }
+  }
+
+  /// Kucing [kitty] berhenti di tempat (reaksi selesai).
+  void rest(KittyId kitty) {
+    if (_cats[kitty] case final cat?) _rest(cat);
   }
 
   /// Kucing [kitty] bereaksi dengan [pose] selama [seconds], lalu lanjut

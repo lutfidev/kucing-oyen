@@ -472,5 +472,8 @@
   "storageLabel": "Depósito de itens",
   "storeItemAction": "Guardar no depósito",
   "decoratePraise": "O quarto tá ficando lindo!",
-  "decoratePraiseJoy": "+{joy} de Alegria pra todos os gatos"
+  "decoratePraiseJoy": "+{joy} de Alegria pra todos os gatos",
+  "bowlRefill": "{hours, plural, one{Enche de novo em {hours} hora} other{Enche de novo em {hours} horas}}",
+  "kittyRewardLabel": "{coins, plural, one{Pegar {coins} moeda de {name}} other{Pegar {coins} moedas de {name}}}",
+  "reactionCoins": "{coins, plural, one{+{coins} moeda} other{+{coins} moedas}}"
 }

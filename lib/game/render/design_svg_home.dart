@@ -1080,3 +1080,15 @@ const roomBadgeKeyframes = r'''
 @keyframes gkBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @keyframes tlBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 ''';
+
+/// Gelembung hadiah koin (`GelembungKoin.dc.html`, viewBox 0 0 64 76).
+const coinBubbleSvg = r'''
+    <ellipse cx="32" cy="34" rx="31" ry="31" fill="#FFC83D" opacity="0.18"></ellipse>
+    <path d="M25 56 L32 68 L39 56 Z" fill="#FFFBF3" stroke="#F0C55A" stroke-width="2.6" stroke-linejoin="round"></path>
+    <circle cx="32" cy="32" r="26" fill="#FFFBF3" stroke="#F0C55A" stroke-width="3"></circle>
+    <path d="M26.6 56.4 L37.4 56.4" stroke="#FFFBF3" stroke-width="3.4"></path>
+    <circle cx="32" cy="25" r="12.5" fill="#FFC83D"></circle>
+    <circle cx="32" cy="25" r="8.6" fill="none" stroke="#E0A100" stroke-width="2"></circle>
+    <path d="M29 21.5h5a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h5" fill="none" stroke="#B57F00" stroke-width="2" stroke-linecap="round"></path>
+    <path d="M52 6 L53.2 9.8 L57 11 L53.2 12.2 L52 16 L50.8 12.2 L47 11 L50.8 9.8 Z" fill="#FFC83D"></path>
+''';

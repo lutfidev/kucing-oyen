@@ -130,7 +130,12 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('sound-vase')));
     expect(player.played, [GameSound.vase]);
 
-    await tester.ensureVisible(find.byKey(const ValueKey('music-level')));
+    // Daftar efek panjang: kartu lagu baru dibangun sesudah digulir.
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('music-level')),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('music-level')));
     await tester.pump();
