@@ -6,6 +6,9 @@ Sound effects in Ginger Logic are made from these CC0 (public domain) sounds:
 - "Kitten Mew" by AntumDeluge (opengameart.org/content/kitten-mew)
 - "Cat Purr & Meow" by Kerzoven (opengameart.org/content/cat-purr-meow)
 
+The chime and munch sounds in the cat room are original, made for
+Ginger Logic.
+
 License: Creative Commons Zero, CC0
 http://creativecommons.org/publicdomain/zero/1.0/
 

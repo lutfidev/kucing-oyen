@@ -40,7 +40,25 @@ enum GameSound {
   bored('bored'),
 
   /// Koin bertambah.
-  coin('coin');
+  coin('coin'),
+
+  /// Kucing kamar mendengkur saat dielus.
+  purr('purr'),
+
+  /// Kucing kamar mengeong saat diketuk.
+  meow('meow'),
+
+  /// Kucing kamar makan camilan atau dari mangkuk.
+  munch('munch'),
+
+  /// Hadiah koin dari kucing yang dirawat diambil.
+  reward('reward'),
+
+  /// Barang, kucing, aksesoris, atau camilan dibeli di Toko.
+  buy('buy'),
+
+  /// Aksesoris dipasang.
+  wear('wear');
 
   const GameSound(this.file);
 

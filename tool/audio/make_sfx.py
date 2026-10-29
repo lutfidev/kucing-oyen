@@ -5,9 +5,14 @@ Sumber tidak ikut repo. Unduh dan bongkar ke satu folder:
     RPG Audio -> <sumber>/kenney_<paket>/Audio/*.ogg
   - OpenGameArt (CC0): "Meow" oleh IgnasD (Meow.ogg), "Kitten Mew" oleh
     AntumDeluge (kitten_mew-1.wav), "Cat Purr & Meow" oleh Kerzoven
-    (cat_softmew.wav) -> <sumber>/oga/
+    (cat_softmew.wav, cat_mewfood.wav, cat_purractive_loop.wav)
+    -> <sumber>/oga/
 
-Pakai:  python tool/audio/make_sfx.py <sumber>
+Lapisan "synth:<jenis>" dibuat sendiri tanpa berkas sumber: "chime:<Hz,...>"
+(nada lonceng berurutan) dan "munch" (tiga gigitan derau lembut).
+
+Pakai:  python tool/audio/make_sfx.py <sumber> [nama ...]
+        (tanpa nama = semua suara; dengan nama = hanya itu)
 Butuh:  pip install numpy soundfile
 
 Setiap suara: lapisan berkas sumber (gain, geser detik) dicampur mono
@@ -54,7 +59,42 @@ SOUNDS = {
     "star": ([(UI + "glass_001.ogg", 1, 0)], 0.4, 0.6),
     "bored": ([(OGA + "cat_softmew.wav", 1, 0)], 1.3, 0.65),
     "coin": ([(RPG + "handleCoins.ogg", 1, 0)], 0.6, 0.6),
+    # Kamar Oyen (langkah 24).
+    "purr": ([(OGA + "cat_purractive_loop.wav", 1, 0)], 1.4, 0.55),
+    "meow": ([(OGA + "cat_mewfood.wav", 1, 0)], 0.9, 0.6),
+    "munch": ([("synth:munch", 1, 0)], 0.5, 0.5),
+    "reward": ([("synth:chime:1318.5,1975.5", 1, 0)], 0.7, 0.5),
+    "buy": ([("synth:chime:1046.5,1318.5,1568", 1, 0)], 0.7, 0.5),
+    "wear": ([("synth:chime:1568,2093,2637", 1, 0)], 0.6, 0.45),
 }
+
+
+def synth(kind):
+    """Lapisan sintetis: lonceng (sinus dengan nada atas, peluruhan cepat)
+    atau gigitan (derau yang disaring, tiga kali)."""
+    rng = np.random.default_rng(24)
+    if kind.startswith("chime:"):
+        notes = [float(n) for n in kind.split(":")[1].split(",")]
+        gap, ring = 0.08, 0.45
+        out = np.zeros(int((gap * len(notes) + ring) * RATE))
+        t = np.arange(int(ring * RATE)) / RATE
+        env = np.exp(-t * 9) * np.minimum(1, t * 400)
+        for i, f in enumerate(notes):
+            tone = np.sin(2 * np.pi * f * t) + 0.3 * np.sin(2 * np.pi * 2 * f * t)
+            start = int(i * gap * RATE)
+            out[start : start + len(t)] += tone * env
+        return out
+    if kind == "munch":
+        bite = int(0.07 * RATE)
+        out = np.zeros(int(0.45 * RATE))
+        kernel = np.ones(24) / 24
+        for i in range(3):
+            noise = np.convolve(rng.standard_normal(bite), kernel, "same")
+            env = np.exp(-np.arange(bite) / RATE * 45)
+            start = int(i * 0.13 * RATE)
+            out[start : start + bite] += noise * env * (1 - 0.15 * i)
+        return out
+    raise ValueError("synth tidak dikenal: " + kind)
 
 
 def load(path):
@@ -74,7 +114,10 @@ def trim_start(x, threshold=0.01):
 def build(src, layers, max_len, peak):
     parts = []
     for path, gain, shift in layers:
-        x = trim_start(load(os.path.join(src, path))) * gain
+        if path.startswith("synth:"):
+            x = synth(path[len("synth:") :]) * gain
+        else:
+            x = trim_start(load(os.path.join(src, path))) * gain
         parts.append(np.concatenate([np.zeros(int(shift * RATE)), x]))
     mix = np.zeros(max(len(p) for p in parts))
     for p in parts:
@@ -86,10 +129,15 @@ def build(src, layers, max_len, peak):
 
 
 def main():
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
         sys.exit(__doc__)
+    names = sys.argv[2:] or list(SOUNDS)
+    unknown = [n for n in names if n not in SOUNDS]
+    if unknown:
+        sys.exit("suara tidak dikenal: " + ", ".join(unknown))
     os.makedirs(OUT, exist_ok=True)
-    for name, (layers, max_len, peak) in SOUNDS.items():
+    for name in names:
+        layers, max_len, peak = SOUNDS[name]
         out = os.path.join(OUT, name + ".ogg")
         sf.write(out, build(sys.argv[1], layers, max_len, peak), RATE,
                  format="OGG", subtype="VORBIS")
