@@ -305,34 +305,55 @@ class RoomItemView extends StatelessWidget {
     required this.id,
     required this.box,
     this.full = true,
+    this.time,
+    this.user,
   });
 
   final RoomItemId id;
   final Size box;
   final bool full;
 
+  /// Detik animasi barang; null = diam.
+  final double? time;
+
+  /// Kucing yang sedang memakai barang ini; [box] = kotak dipakai
+  /// ([RoomItemArt.inUseBox]).
+  final KittyLook? user;
+
   @override
   Widget build(BuildContext context) {
     return Semantics(
       image: true,
       label: roomItemName(context.l10n, id),
-      child: CustomPaint(size: box, painter: _RoomItemPainter(id, full)),
+      child: CustomPaint(
+        size: box,
+        painter: _RoomItemPainter(id, full, time, user),
+      ),
     );
   }
 }
 
 class _RoomItemPainter extends CustomPainter {
-  _RoomItemPainter(this.id, this.full);
+  _RoomItemPainter(this.id, this.full, this.time, this.user);
 
   final RoomItemId id;
   final bool full;
+  final double? time;
+  final KittyLook? user;
 
   @override
-  void paint(Canvas canvas, Size size) =>
-      paintRoomItemArt(canvas, id, box: size, full: full);
+  void paint(Canvas canvas, Size size) => paintRoomItemArt(
+    canvas,
+    id,
+    box: size,
+    full: full,
+    time: time,
+    user: user,
+  );
 
   @override
-  bool shouldRepaint(_RoomItemPainter old) => old.id != id || old.full != full;
+  bool shouldRepaint(_RoomItemPainter old) =>
+      old.id != id || old.full != full || old.time != time || old.user != user;
 }
 
 /// Camilan yang diskalakan supaya muat dan dipusatkan di [box].

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/game/render/render.dart';
 
@@ -135,5 +136,102 @@ void main() {
       size,
     );
     expect(none(24, 24), _near(_hex('#CDB48C')));
+  });
+
+  group('dipakai dan bergerak', () {
+    Future<List<int>> pixels(void Function(Canvas) paint, Size size) async {
+      final recorder = PictureRecorder();
+      paint(Canvas(recorder));
+      final image = await recorder.endRecording().toImage(
+        size.width.ceil(),
+        size.height.ceil(),
+      );
+      return (await image.toByteData())!.buffer.asUint8List();
+    }
+
+    const oyen = KittyLook(kitty: KittyId.oyen);
+
+    test('kotak dipakai mengikuti tabel desain', () {
+      expect(
+        RoomItemArt.inUseBox(
+          RoomItemId.kardus,
+          const Rect.fromLTWH(0, 42, 122, 82),
+        ),
+        const Rect.fromLTWH(0, 0, 122, 124),
+      );
+      // Skala ikut kotak diam: kasur ×0,85 seperti kamar desain.
+      final box = RoomItemArt.inUseBox(
+        RoomItemId.kasur,
+        const Rect.fromLTWH(246, 448, 150 * 0.85, 76 * 0.85),
+      );
+      expect(box.top, closeTo(448 - 36 * 0.85, 1e-9));
+      expect(box.width, closeTo(150 * 0.85, 1e-9));
+      expect(box.height, closeTo(112 * 0.85, 1e-9));
+      for (final id in RoomItemId.values) {
+        expect(RoomItemArt.inUse(id).size.width, greaterThan(0));
+      }
+    });
+
+    test('semua barang dipakai semua kucing tergambar', () {
+      final canvas = Canvas(PictureRecorder());
+      for (final id in RoomItemId.values) {
+        for (final kitty in KittyId.values) {
+          paintRoomItemArt(canvas, id, user: KittyLook(kitty: kitty, time: 1));
+        }
+      }
+    });
+
+    test('bola dipakai: bola lantai disembunyikan, kucing main', () async {
+      const size = Size(110, 100);
+      final used = await _sampler(
+        (c) => paintRoomItemArt(c, RoomItemId.bola, user: oyen),
+        size,
+      );
+      final cat = await _sampler(
+        (c) => paintKitty(
+          c,
+          const KittyLook(
+            kitty: KittyId.oyen,
+            pose: KittyPose.play,
+            toy: KittyToy.ball,
+          ),
+        ),
+        size,
+      );
+      for (final (x, y) in [(50.0, 60.0), (20.0, 80.0), (80.0, 85.0)]) {
+        expect(used(x, y), cat(x, y), reason: '($x, $y)');
+      }
+    });
+
+    test('kucing di antara lapisan: depan kardus menutupi badan', () async {
+      final used = await _sampler(
+        (c) => paintRoomItemArt(c, RoomItemId.kardus, user: oyen),
+        const Size(122, 124),
+      );
+      // Depan kardus (rect 6,24 98×56 di viewBox −6) bergeser 42 ke bawah.
+      expect(used(30, 42 + 40), _near(_hex('#C8955A')));
+    });
+
+    test('catnip bergoyang: setengah periode beda dari diam', () async {
+      const size = Size(52, 74);
+      void paint(Canvas c, double? t) =>
+          paintRoomItemArt(c, RoomItemId.catnip, time: t);
+      final still = await pixels((c) => paint(c, null), size);
+      expect(await pixels((c) => paint(c, 0), size), isNot(still));
+      expect(await pixels((c) => paint(c, 1.6), size), isNot(still));
+    });
+
+    test('hammock berayun walau tidak dipakai', () async {
+      const size = Size(120, 70);
+      final still = await pixels(
+        (c) => paintRoomItemArt(c, RoomItemId.hammock),
+        size,
+      );
+      final swung = await pixels(
+        (c) => paintRoomItemArt(c, RoomItemId.hammock, time: 0),
+        size,
+      );
+      expect(swung, isNot(still));
+    });
   });
 }
