@@ -64,6 +64,8 @@ android {
 
     buildTypes {
         release {
+            // Tanpa ini build release crash saat dibuka (lihat berkasnya).
+            proguardFiles("proguard-rules.pro")
             signingConfig = if (hasReleaseKey) {
                 signingConfigs.getByName("release")
             } else {

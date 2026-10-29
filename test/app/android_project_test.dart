@@ -51,6 +51,21 @@ void main() {
       expect(manifest, contains('android:scheme="https"'));
     });
 
+    test('R8 menyimpan konstruktor database Room (WorkManager AdMob)', () {
+      // room-runtime 2.2.5 bawaan play-services-ads hanya menyimpan kelasnya;
+      // R8 full mode membuang konstruktornya, lalu aplikasi rilis crash
+      // sebelum Flutter jalan ("Failed to create an instance of
+      // androidx.work.impl.WorkDatabase").
+      final gradle = _read('$_app/build.gradle.kts');
+      expect(gradle, contains('proguardFiles("proguard-rules.pro")'));
+      expect(
+        _read('$_app/proguard-rules.pro'),
+        contains(
+          '-keep class * extends androidx.room.RoomDatabase { <init>(); }',
+        ),
+      );
+    });
+
     test('signing release dari key.properties dengan cadangan debug', () {
       final gradle = _read('$_app/build.gradle.kts');
       expect(gradle, contains('key.properties'));
