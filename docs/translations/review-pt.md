@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-436 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+473 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -37,11 +37,9 @@ for the store listing at the end.
 | `adFailed` | The ad couldn't play. Try again later, okay? | O anúncio não rolou. Tenta de novo mais tarde, tá? | The rewarded ad failed to load or was closed early. | |
 | `boardLabel` | Game board, 7 by 9 tiles | Tabuleiro de 7 por 9 quadrados | Screen reader label of the 7×9 game board. | |
 | `play` | Play | Jogar | Big Play button on the home screen and the map node label. | |
-| `closet` | Wardrobe | Guarda-roupa | Costume closet button and screen title. | |
 | `settings` | Settings | Configurações | Settings button and screen title. | |
 | `tagline` | Oyen won't listen. You do the thinking. | Oyen não obedece. Quem pensa é você. | Tagline under the logo on the home screen. | |
 | `splashTagline` | Let's play! | Bora jogar! | Short line under the logo on the Android splash screen (rendered into an image, keep it very short). | |
-| `starTotalUnit` | stars | estrelas | Word after the star total on the home screen ("31/60 stars"). | |
 | `chapterNumber` | Chapter {n} | Capítulo {n} | Chapter number above the chapter name (shown in capitals). Placeholders: `{n}`. | |
 | `chapter1Name` | Kitchen | Cozinha | Name of chapter 1 (setting: kitchen). | |
 | `chapter2Name` | Living Room | Sala de Estar | Name of chapter 2 (setting: living room). | |
@@ -250,21 +248,9 @@ for the store listing at the end.
 | `replayStepCaption` | Step {n}. {text} | Passo {n}. {text} | Replay: screen reader caption of step n. Placeholders: `{n}`, `{text}`. | |
 | `timeline` | Time | Tempo | Replay: label of the time slider (shown in capitals). | |
 | `oyenLabel` | Oyen {pose, select, idle{standing} walk{walking} sleep{asleep} shock{startled} box{sitting in a box} knock{knocking something over} eat{eating} happy{happy} other{standing}}, facing {dir, select, up{up} right{right} down{down} left{left} other{right}} | Oyen {pose, select, idle{parado} walk{andando} sleep{dormindo} shock{assustado} box{sentado na caixa} knock{derrubando algo} eat{comendo} happy{feliz} other{parado}}, virado para {dir, select, up{cima} right{a direita} down{baixo} left{a esquerda} other{a direita}} | Screen reader label of Oyen: pose and facing (screen direction). Placeholders: `{pose}`, `{dir}`. | |
-| `costumeNone` | Plain | Básico | Costume: none. | |
-| `costumePeci` | Peci Cap | Peci | Costume: peci (Indonesian cap). | |
-| `costumeSarung` | Sarong | Sarongue | Costume: sarong. | |
-| `costumeKoki` | Chef Hat | Chapéu de Chef | Costume: chef hat. | |
-| `costumeKacamata` | Glasses | Óculos | Costume: glasses. | |
-| `costumeWearingTag` | Wearing | Usando | Costume card tag: being worn. | |
-| `costumeWearingStatus` | wearing | usando | Screen reader status: being worn. | |
-| `costumeOwnedTag` | Yours | Seu | Costume card tag: owned. | |
-| `costumeOwnedStatus` | yours | seu | Screen reader status: owned. | |
-| `costumeActionWearing` | Wearing now | Usando agora | Closet button: selected costume is worn. | |
-| `costumeActionWear` | Wear | Usar | Closet button: wear the owned costume. | |
-| `costumeActionBuy` | {n, plural, one{Buy · {n} coin} other{Buy · {n} coins}} | {n, plural, one{Comprar · {n} moeda} other{Comprar · {n} moedas}} | Closet button: buy for n coins. Placeholders: `{n}`. | |
 | `closeCoins` | Close coins | Fechar moedas | Screen reader: close the coin sheet. | |
 | `coinsTitle` | Get Coins | Mais Moedas | Coin sheet title. | |
-| `coinsIntro` | Coins buy hints and outfits for Oyen. Grab the daily bonus, or watch an ad. | Moedas servem para dicas e roupas do Oyen. Pegue o bônus diário ou veja um anúncio. | Coin sheet intro. | |
+| `coinsIntro` | Coins buy hints and stuff for Oyen's room. Grab the daily bonus, or watch an ad. | Moedas servem para dicas e coisas pro quarto do Oyen. Pegue o bônus diário ou veja um anúncio. | Coin sheet intro. | |
 | `dailyBonus` | Daily bonus | Bônus diário | Coin card title: daily bonus. | |
 | `dailyBonusReady` | Once a day | Uma vez por dia | Daily bonus status: can claim. | |
 | `dailyBonusTaken` | Claimed today | Já pegou hoje | Daily bonus status: already claimed. | |
@@ -287,9 +273,9 @@ for the store listing at the end.
 | `tutorialsBack` | Done! The tutorials are back. | Pronto! Os tutoriais voltaram. | Confirmation after pressing "show tutorials again". | |
 | `progressSection` | Progress | Progresso | Settings section: progress. | |
 | `resetProgress` | Reset progress | Apagar progresso | Settings button: reset progress. | |
-| `resetProgressInfo` | Erase stars, coins, outfits, hints, and tutorials, then start again from level 1. | Apaga estrelas, moedas, roupas, dicas e tutoriais e recomeça na fase 1. | Settings text under the reset button. | |
+| `resetProgressInfo` | Erase stars, coins, room stuff, hints, and tutorials, then start again from level 1. | Apaga estrelas, moedas, o quarto, dicas e tutoriais e recomeça na fase 1. | Settings text under the reset button. | |
 | `resetConfirmTitle` | Erase all progress? | Apagar todo o progresso? | Reset confirmation title. | |
-| `resetConfirmBody` | Stars, coins, outfits, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used. | Estrelas, moedas, roupas, dicas e tutoriais serão apagados. Não dá para desfazer. O bônus e os anúncios de hoje continuam contados. | Reset confirmation text. | |
+| `resetConfirmBody` | Stars, coins, room stuff, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used. | Estrelas, moedas, o quarto, dicas e tutoriais serão apagados. Não dá para desfazer. O bônus e os anúncios de hoje continuam contados. | Reset confirmation text. | |
 | `resetConfirm` | Erase | Apagar | Reset confirmation button. | |
 | `closeReset` | Close reset | Fechar apagar progresso | Screen reader: close the reset confirmation. | |
 | `resetDone` | Progress erased. Fresh start! | Progresso apagado. Bora recomeçar! | Message after resetting. | |
@@ -461,6 +447,57 @@ for the store listing at the end.
 | `shopAccessoryShortLabel` | View {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | Ver {name}, {n, plural, one{{n} moeda} other{{n} moedas}}, moedas de menos | Screen reader label of an accessory card that costs more than the balance. Placeholders: `{name}`, `{n}`. | |
 | `shopAccessoryOwnedLabel` | View {name}, yours | Ver {name}, seu | Screen reader label of an owned accessory card nobody wears. Placeholders: `{name}`. | |
 | `shopAccessoryWornLabel` | View {name}, yours, worn by {who} | Ver {name}, seu, usado por {who} | Screen reader label of an owned accessory card with the cats wearing it. Placeholders: `{name}`, `{who}`. | |
+| `sadMarkHungry` | Droopy: hungry | Murchinho: com fome | Screen reader label of the thought bubble above a hungry room cat. | |
+| `sadMarkSad` | Droopy: wants attention | Murchinho: quer carinho | Screen reader label of the thought bubble above a room cat that needs attention. | |
+| `roomEmptyBubble` | Pretty empty in here. To the Shop! | Quarto vazio demais. Bora pra Loja! | Speech bubble in an empty starter room, pointing the player to the shop. | |
+| `roomEmptyWall` | Wall decor? | Decoração de parede? | Short label inside the empty dashed spot on the wall of a starter room. | |
+| `roomEmptyWallHint` | Empty. Find wall decor in the Shop | Vazio. Procure decoração de parede na Loja | Screen reader label of the empty wall spot; tapping opens the shop. | |
+| `roomEmptyFloor` | A bed, maybe? | Uma caminha, talvez? | Short label inside the empty dashed spot on the floor of a starter room. | |
+| `roomEmptyFloorHint` | Empty. Find a bed or a toy in the Shop | Vazio. Procure uma caminha ou brinquedo na Loja | Screen reader label of the empty floor spot; tapping opens the shop. | |
+| `accessories` | Accessories | Acessórios | Room menu button that opens the accessories tab of the shop. | |
+| `shopHasNew` | something new you can afford | tem novidade que cabe no bolso | Added to a room menu button's screen reader label when something there is affordable and not owned yet. | |
+| `menuButtonNew` | {label}, {note} | {label}, {note} | Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew. Placeholders: `{label}`, `{note}`. | |
+| `kittyTapHint` | {name}. Tap to see their card | {name}. Toque para ver o cartão | Screen reader label of a cat in the room. Placeholders: `{name}`. | |
+| `kittyTapHintHungry` | {name}, hungry. Tap to see their card | {name}, com fome. Toque para ver o cartão | Screen reader label of a hungry cat in the room. Placeholders: `{name}`. | |
+| `needHunger` | Full | Barriga | Hunger bar label on a cat card (higher = fuller). | |
+| `needJoy` | Happy | Alegria | Happiness bar label on a cat card. | |
+| `needValueLabel` | {label} {value} out of 100 | {label} {value} de 100 | Screen reader label of a need bar. Placeholders: `{label}`, `{value}`. | |
+| `needValueLow` | {label} {value} out of 100, almost empty | {label} {value} de 100, quase acabando | Screen reader label of a need bar that is almost empty. Placeholders: `{label}`, `{value}`. | |
+| `needLowHunger` | Almost empty! That tummy is rumbling. | Quase acabando! A barriga tá roncando. | Warning under an almost empty hunger bar. | |
+| `needLowJoy` | Almost empty! Pet them already. | Quase acabando! Faz um carinho, vai. | Warning under an almost empty happiness bar. | |
+| `kittyCardLabel` | {name}'s card | Cartão de {name} | Screen reader label of the cat card dialog. Placeholders: `{name}`. | |
+| `kittyCardClose` | Close card | Fechar cartão | Screen reader label of the close button on a cat card. | |
+| `petAction` | Pet | Carinho | Cat card button that pets the cat. | |
+| `snackPanel` | Snacks | Petiscos | Cat card button that opens the snack list. | |
+| `snackPick` | Pick from your stock | Escolha do estoque | Heading above the snack list on a cat card. | |
+| `snackGive` | Give {name}, {count} in stock | Dar {name}, estoque {count} | Screen reader label of a snack on a cat card. Placeholders: `{name}`, `{count}`. | |
+| `snackGiveEmpty` | Give {name}, {count} in stock, all gone | Dar {name}, estoque {count}, acabou | Screen reader label of a snack that ran out. Placeholders: `{name}`, `{count}`. | |
+| `accessoryPanelTitle` | Yours · swap for free | Seus · troca grátis | Heading above the owned accessories on a cat card. | |
+| `accessoryShopLink` | Accessory shop | Loja de acessórios | Link on a cat card to the accessories shop (an arrow icon follows it). | |
+| `accessoryRemove` | Take off | Tirar | Card in the accessory list that takes the accessory off. | |
+| `accessoryWornTag` | Wearing | Usando | Tag on the accessory the cat is wearing. | |
+| `accessoryWearLabel` | Put {accessory} on {name} | Colocar {accessory} em {name} | Screen reader label of an accessory on a cat card. Placeholders: `{accessory}`, `{name}`. | |
+| `accessoryWornLabel` | Put {accessory} on {name}, wearing it now | Colocar {accessory} em {name}, já está usando | Screen reader label of the accessory the cat is wearing. Placeholders: `{accessory}`, `{name}`. | |
+| `accessoryRemoveLabel` | Take {name}'s accessory off | Tirar o acessório de {name} | Screen reader label of the take-off card. Placeholders: `{name}`. | |
+| `reactionFed` | +{hunger} full | +{hunger} barriga | Floating text over a cat after a snack. Placeholders: `{hunger}`. | |
+| `reactionFedJoy` | +{hunger} full, +{joy} happy | +{hunger} barriga, +{joy} alegria | Floating text over a cat after a snack that also makes it happy. Placeholders: `{hunger}`, `{joy}`. | |
+| `reactionJoy` | +{joy} happy | +{joy} alegria | Floating text over a cat after petting. Placeholders: `{joy}`. | |
+| `reactionNice` | Looking sharp! | Que chique! | Floating text over a cat after putting an accessory on. | |
+| `reactionRelieved` | Ahh, free! | Ufa, livre! | Floating text over a cat after taking its accessory off. | |
+| `decorate` | Decorate | Decorar | Room button that starts decorate mode. | |
+| `decorateDone` | Done | Pronto | Button that ends decorate mode. | |
+| `decorateHint` | Drag things to a new spot | Arraste as coisas pra um lugar novo | Chip shown while decorating. | |
+| `zoneWall` | Wall area | Área da parede | Label of the wall area while decorating. | |
+| `zoneFloor` | Floor area | Área do chão | Label of the floor area while decorating. | |
+| `storage` | Storage | Depósito | Title of the storage tray with owned items that are not in the room. | |
+| `storageCount` | {count, plural, =1{1 item} other{{count} items}} | {count, plural, =1{1 item} other{{count} itens}} | Number of items in storage. Placeholders: `{count}`. | |
+| `storageTapHint` | Tap to place | Toque pra colocar | Hint on the storage tray. | |
+| `storageEmpty` | Storage is empty. Everything's on display, Oyen is proud. | Depósito vazio. Tudo em exposição, Oyen tá orgulhoso. | Storage tray when every item is in the room. | |
+| `storagePlaceLabel` | Put {item} in the room | Colocar {item} no quarto | Screen reader label of an item in storage. Placeholders: `{item}`. | |
+| `storageLabel` | Item storage | Depósito de itens | Screen reader label of the storage tray. | |
+| `storeItemAction` | Move to storage | Guardar no depósito | Screen reader action on a room item while decorating. | |
+| `decoratePraise` | Room's looking great! | O quarto tá ficando lindo! | Praise shown after decorating. | |
+| `decoratePraiseJoy` | +{joy} Happy for every cat | +{joy} de Alegria pra todos os gatos | Bonus line under the decorating praise. Placeholders: `{joy}`. | |
 
 ---
 

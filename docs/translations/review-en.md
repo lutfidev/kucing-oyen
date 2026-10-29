@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-436 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+473 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -37,11 +37,9 @@ for the store listing at the end.
 | `adFailed` | The ad couldn't play. Try again later, okay? | Iklannya belum bisa diputar. Coba lagi nanti, ya. | The rewarded ad failed to load or was closed early. | |
 | `boardLabel` | Game board, 7 by 9 tiles | Papan permainan 7 kali 9 petak | Screen reader label of the 7×9 game board. | |
 | `play` | Play | Main | Big Play button on the home screen and the map node label. | |
-| `closet` | Wardrobe | Lemari Kostum | Costume closet button and screen title. | |
 | `settings` | Settings | Pengaturan | Settings button and screen title. | |
 | `tagline` | Oyen won't listen. You do the thinking. | Oyen nggak bisa disuruh. Kamu yang mikir. | Tagline under the logo on the home screen. | |
 | `splashTagline` | Let's play! | Ayo main! | Short line under the logo on the Android splash screen (rendered into an image, keep it very short). | |
-| `starTotalUnit` | stars | bintang | Word after the star total on the home screen ("31/60 stars"). | |
 | `chapterNumber` | Chapter {n} | Babak {n} | Chapter number above the chapter name (shown in capitals). Placeholders: `{n}`. | |
 | `chapter1Name` | Kitchen | Dapur | Name of chapter 1 (setting: kitchen). | |
 | `chapter2Name` | Living Room | Ruang Tamu | Name of chapter 2 (setting: living room). | |
@@ -250,21 +248,9 @@ for the store listing at the end.
 | `replayStepCaption` | Step {n}. {text} | Langkah {n}. {text} | Replay: screen reader caption of step n. Placeholders: `{n}`, `{text}`. | |
 | `timeline` | Time | Waktu | Replay: label of the time slider (shown in capitals). | |
 | `oyenLabel` | Oyen {pose, select, idle{standing} walk{walking} sleep{asleep} shock{startled} box{sitting in a box} knock{knocking something over} eat{eating} happy{happy} other{standing}}, facing {dir, select, up{up} right{right} down{down} left{left} other{right}} | Oyen {pose, select, idle{diam} walk{jalan} sleep{tidur} shock{kaget} box{duduk dalam kardus} knock{menjatuhkan barang} eat{makan} happy{senang} other{diam}}, menghadap {dir, select, up{atas} right{kanan} down{bawah} left{kiri} other{kanan}} | Screen reader label of Oyen: pose and facing (screen direction). Placeholders: `{pose}`, `{dir}`. | |
-| `costumeNone` | Plain | Polos | Costume: none. | |
-| `costumePeci` | Peci Cap | Peci | Costume: peci (Indonesian cap). | |
-| `costumeSarung` | Sarong | Sarung | Costume: sarong. | |
-| `costumeKoki` | Chef Hat | Topi Koki | Costume: chef hat. | |
-| `costumeKacamata` | Glasses | Kacamata | Costume: glasses. | |
-| `costumeWearingTag` | Wearing | Dipakai | Costume card tag: being worn. | |
-| `costumeWearingStatus` | wearing | dipakai | Screen reader status: being worn. | |
-| `costumeOwnedTag` | Yours | Punyamu | Costume card tag: owned. | |
-| `costumeOwnedStatus` | yours | punyamu | Screen reader status: owned. | |
-| `costumeActionWearing` | Wearing now | Sedang dipakai | Closet button: selected costume is worn. | |
-| `costumeActionWear` | Wear | Pakai | Closet button: wear the owned costume. | |
-| `costumeActionBuy` | {n, plural, one{Buy · {n} coin} other{Buy · {n} coins}} | Beli · {n} koin | Closet button: buy for n coins. Placeholders: `{n}`. | |
 | `closeCoins` | Close coins | Tutup tambah koin | Screen reader: close the coin sheet. | |
 | `coinsTitle` | Get Coins | Tambah Koin | Coin sheet title. | |
-| `coinsIntro` | Coins buy hints and outfits for Oyen. Grab the daily bonus, or watch an ad. | Koin buat petunjuk dan kostum Oyen. Ambil bonus tiap hari, atau tonton iklan. | Coin sheet intro. | |
+| `coinsIntro` | Coins buy hints and stuff for Oyen's room. Grab the daily bonus, or watch an ad. | Koin buat petunjuk dan isi kamar Oyen. Ambil bonus tiap hari, atau tonton iklan. | Coin sheet intro. | |
 | `dailyBonus` | Daily bonus | Bonus harian | Coin card title: daily bonus. | |
 | `dailyBonusReady` | Once a day | Sekali sehari | Daily bonus status: can claim. | |
 | `dailyBonusTaken` | Claimed today | Sudah diambil hari ini | Daily bonus status: already claimed. | |
@@ -287,9 +273,9 @@ for the store listing at the end.
 | `tutorialsBack` | Done! The tutorials are back. | Siap! Tutorialnya muncul lagi. | Confirmation after pressing "show tutorials again". | |
 | `progressSection` | Progress | Progres | Settings section: progress. | |
 | `resetProgress` | Reset progress | Reset progres | Settings button: reset progress. | |
-| `resetProgressInfo` | Erase stars, coins, outfits, hints, and tutorials, then start again from level 1. | Hapus bintang, koin, kostum, petunjuk, dan tutorial, lalu mulai lagi dari level 1. | Settings text under the reset button. | |
+| `resetProgressInfo` | Erase stars, coins, room stuff, hints, and tutorials, then start again from level 1. | Hapus bintang, koin, isi kamar, petunjuk, dan tutorial, lalu mulai lagi dari level 1. | Settings text under the reset button. | |
 | `resetConfirmTitle` | Erase all progress? | Hapus semua progres? | Reset confirmation title. | |
-| `resetConfirmBody` | Stars, coins, outfits, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used. | Bintang, koin, kostum, petunjuk, dan tutorial dihapus. Ini nggak bisa dibatalkan. Bonus harian dan iklan hari ini tetap terhitung. | Reset confirmation text. | |
+| `resetConfirmBody` | Stars, coins, room stuff, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used. | Bintang, koin, isi kamar, petunjuk, dan tutorial dihapus. Ini nggak bisa dibatalkan. Bonus harian dan iklan hari ini tetap terhitung. | Reset confirmation text. | |
 | `resetConfirm` | Erase | Hapus | Reset confirmation button. | |
 | `closeReset` | Close reset | Tutup reset progres | Screen reader: close the reset confirmation. | |
 | `resetDone` | Progress erased. Fresh start! | Progres dihapus. Mulai lagi, yuk! | Message after resetting. | |
@@ -461,6 +447,57 @@ for the store listing at the end.
 | `shopAccessoryShortLabel` | View {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | Lihat {name}, {n} koin, koin kurang | Screen reader label of an accessory card that costs more than the balance. Placeholders: `{name}`, `{n}`. | |
 | `shopAccessoryOwnedLabel` | View {name}, yours | Lihat {name}, punyamu | Screen reader label of an owned accessory card nobody wears. Placeholders: `{name}`. | |
 | `shopAccessoryWornLabel` | View {name}, yours, worn by {who} | Lihat {name}, punyamu, dipakai {who} | Screen reader label of an owned accessory card with the cats wearing it. Placeholders: `{name}`, `{who}`. | |
+| `sadMarkHungry` | Droopy: hungry | Lesu: lapar | Screen reader label of the thought bubble above a hungry room cat. | |
+| `sadMarkSad` | Droopy: wants attention | Lesu: kurang perhatian | Screen reader label of the thought bubble above a room cat that needs attention. | |
+| `roomEmptyBubble` | Pretty empty in here. To the Shop! | Kamar masih sepi. Ke Toko, yuk! | Speech bubble in an empty starter room, pointing the player to the shop. | |
+| `roomEmptyWall` | Wall decor? | Hiasan dinding? | Short label inside the empty dashed spot on the wall of a starter room. | |
+| `roomEmptyWallHint` | Empty. Find wall decor in the Shop | Kosong. Cari hiasan dinding di Toko | Screen reader label of the empty wall spot; tapping opens the shop. | |
+| `roomEmptyFloor` | A bed, maybe? | Kasur, mungkin? | Short label inside the empty dashed spot on the floor of a starter room. | |
+| `roomEmptyFloorHint` | Empty. Find a bed or a toy in the Shop | Kosong. Cari kasur atau mainan di Toko | Screen reader label of the empty floor spot; tapping opens the shop. | |
+| `accessories` | Accessories | Aksesoris | Room menu button that opens the accessories tab of the shop. | |
+| `shopHasNew` | something new you can afford | ada yang baru terjangkau | Added to a room menu button's screen reader label when something there is affordable and not owned yet. | |
+| `menuButtonNew` | {label}, {note} | {label}, {note} | Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew. Placeholders: `{label}`, `{note}`. | |
+| `kittyTapHint` | {name}. Tap to see their card | {name}. Ketuk untuk lihat kartunya | Screen reader label of a cat in the room. Placeholders: `{name}`. | |
+| `kittyTapHintHungry` | {name}, hungry. Tap to see their card | {name}, lapar. Ketuk untuk lihat kartunya | Screen reader label of a hungry cat in the room. Placeholders: `{name}`. | |
+| `needHunger` | Full | Lapar | Hunger bar label on a cat card (higher = fuller). | |
+| `needJoy` | Happy | Senang | Happiness bar label on a cat card. | |
+| `needValueLabel` | {label} {value} out of 100 | {label} {value} dari 100 | Screen reader label of a need bar. Placeholders: `{label}`, `{value}`. | |
+| `needValueLow` | {label} {value} out of 100, almost empty | {label} {value} dari 100, hampir habis | Screen reader label of a need bar that is almost empty. Placeholders: `{label}`, `{value}`. | |
+| `needLowHunger` | Almost empty! That tummy is rumbling. | Hampir habis! Perutnya keroncongan. | Warning under an almost empty hunger bar. | |
+| `needLowJoy` | Almost empty! Pet them already. | Hampir habis! Elus dulu, dong. | Warning under an almost empty happiness bar. | |
+| `kittyCardLabel` | {name}'s card | Kartu {name} | Screen reader label of the cat card dialog. Placeholders: `{name}`. | |
+| `kittyCardClose` | Close card | Tutup kartu | Screen reader label of the close button on a cat card. | |
+| `petAction` | Pet | Elus | Cat card button that pets the cat. | |
+| `snackPanel` | Snacks | Camilan | Cat card button that opens the snack list. | |
+| `snackPick` | Pick from your stock | Pilih dari stok | Heading above the snack list on a cat card. | |
+| `snackGive` | Give {name}, {count} in stock | Beri {name}, stok {count} | Screen reader label of a snack on a cat card. Placeholders: `{name}`, `{count}`. | |
+| `snackGiveEmpty` | Give {name}, {count} in stock, all gone | Beri {name}, stok {count}, habis | Screen reader label of a snack that ran out. Placeholders: `{name}`, `{count}`. | |
+| `accessoryPanelTitle` | Yours · swap for free | Punyamu · ganti gratis | Heading above the owned accessories on a cat card. | |
+| `accessoryShopLink` | Accessory shop | Toko aksesoris | Link on a cat card to the accessories shop (an arrow icon follows it). | |
+| `accessoryRemove` | Take off | Lepas | Card in the accessory list that takes the accessory off. | |
+| `accessoryWornTag` | Wearing | Dipakai | Tag on the accessory the cat is wearing. | |
+| `accessoryWearLabel` | Put {accessory} on {name} | Pasang {accessory} di {name} | Screen reader label of an accessory on a cat card. Placeholders: `{accessory}`, `{name}`. | |
+| `accessoryWornLabel` | Put {accessory} on {name}, wearing it now | Pasang {accessory} di {name}, sedang dipakai | Screen reader label of the accessory the cat is wearing. Placeholders: `{accessory}`, `{name}`. | |
+| `accessoryRemoveLabel` | Take {name}'s accessory off | Lepas aksesoris {name} | Screen reader label of the take-off card. Placeholders: `{name}`. | |
+| `reactionFed` | +{hunger} full | +{hunger} kenyang | Floating text over a cat after a snack. Placeholders: `{hunger}`. | |
+| `reactionFedJoy` | +{hunger} full, +{joy} happy | +{hunger} kenyang, +{joy} senang | Floating text over a cat after a snack that also makes it happy. Placeholders: `{hunger}`, `{joy}`. | |
+| `reactionJoy` | +{joy} happy | +{joy} senang | Floating text over a cat after petting. Placeholders: `{joy}`. | |
+| `reactionNice` | Looking sharp! | Cakep! | Floating text over a cat after putting an accessory on. | |
+| `reactionRelieved` | Ahh, free! | Lega! | Floating text over a cat after taking its accessory off. | |
+| `decorate` | Decorate | Hias | Room button that starts decorate mode. | |
+| `decorateDone` | Done | Selesai | Button that ends decorate mode. | |
+| `decorateHint` | Drag things to a new spot | Seret barang ke tempat baru | Chip shown while decorating. | |
+| `zoneWall` | Wall area | Area dinding | Label of the wall area while decorating. | |
+| `zoneFloor` | Floor area | Area lantai | Label of the floor area while decorating. | |
+| `storage` | Storage | Gudang | Title of the storage tray with owned items that are not in the room. | |
+| `storageCount` | {count, plural, =1{1 item} other{{count} items}} | {count, plural, other{{count} barang}} | Number of items in storage. Placeholders: `{count}`. | |
+| `storageTapHint` | Tap to place | Ketuk untuk menaruh | Hint on the storage tray. | |
+| `storageEmpty` | Storage is empty. Everything's on display, Oyen is proud. | Gudangnya kosong. Semua barang sudah dipajang, Oyen bangga. | Storage tray when every item is in the room. | |
+| `storagePlaceLabel` | Put {item} in the room | Taruh {item} di kamar | Screen reader label of an item in storage. Placeholders: `{item}`. | |
+| `storageLabel` | Item storage | Gudang barang | Screen reader label of the storage tray. | |
+| `storeItemAction` | Move to storage | Simpan ke Gudang | Screen reader action on a room item while decorating. | |
+| `decoratePraise` | Room's looking great! | Kamar makin cakep! | Praise shown after decorating. | |
+| `decoratePraiseJoy` | +{joy} Happy for every cat | +{joy} Senang untuk semua kucing | Bonus line under the decorating praise. Placeholders: `{joy}`. | |
 
 ---
 
