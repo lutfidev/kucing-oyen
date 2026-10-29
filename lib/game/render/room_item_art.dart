@@ -219,10 +219,32 @@ abstract final class RoomItemArt {
 
   /// Kotak barang [id] saat dipakai, kalau kotak diamnya [box]: pojok
   /// gambar barang tetap di tempatnya, kotaknya melebar untuk kucingnya.
-  static Rect inUseBox(RoomItemId id, Rect box) {
+  /// [mirror] = dicerminkan (kucing di sisi lain barang), dipakai kalau
+  /// kotak biasanya keluar tepi kamar.
+  static Rect inUseBox(RoomItemId id, Rect box, {bool mirror = false}) {
     final use = inUse(id);
     final k = box.width / sizeOf(id).width;
-    return (box.topLeft - use.artOffset * k) & use.size * k;
+    return (box.topLeft - _artOffset(id, mirror) * k) & use.size * k;
+  }
+
+  /// Kotak kucing di dalam kotak dipakai [inUse] (koordinat yang sama).
+  static Rect catBox(RoomItemId id, Rect inUse, {bool mirror = false}) {
+    final use = RoomItemArt.inUse(id);
+    final k = inUse.width / use.size.width;
+    final x = mirror
+        ? use.size.width - use.catOffset.dx - use.catSize
+        : use.catOffset.dx;
+    return (inUse.topLeft + Offset(x, use.catOffset.dy) * k) &
+        Size.square(use.catSize * k);
+  }
+
+  static Offset _artOffset(RoomItemId id, bool mirror) {
+    final use = inUse(id);
+    if (!mirror) return use.artOffset;
+    return Offset(
+      use.size.width - sizeOf(id).width - use.artOffset.dx,
+      use.artOffset.dy,
+    );
   }
 }
 
@@ -298,7 +320,8 @@ void _fit(Canvas canvas, Size art, Size box) {
 /// gambarnya diskalakan supaya muat dan dipusatkan di kotak itu. [full] =
 /// isi mangkuk. [time] = detik animasi barang (null = diam). Dengan [user]
 /// barangnya digambar sedang dipakai kucing itu (pose, mainan, dan tiang
-/// mengikuti barangnya; kotaknya [RoomItemArt.inUseBox]).
+/// mengikuti barangnya; kotaknya [RoomItemArt.inUseBox]). [mirror]
+/// mencerminkan barang yang dipakai beserta kucingnya.
 void paintRoomItemArt(
   Canvas canvas,
   RoomItemId id, {
@@ -306,6 +329,7 @@ void paintRoomItemArt(
   bool full = true,
   double? time,
   KittyLook? user,
+  bool mirror = false,
 }) {
   final code = id.name;
   final hammock = id == RoomItemId.hammock && time != null;
@@ -326,6 +350,10 @@ void paintRoomItemArt(
     _paintLayers(canvas, code, full, time);
     canvas.restore();
     return;
+  }
+  if (mirror) {
+    canvas.translate(art.width, 0);
+    canvas.scale(-1, 1);
   }
   final (back, front) = _hidesSelf.contains(id)
       ? (null, null)

@@ -37,7 +37,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 21. Rumah Oyen: model kamar, kucing, aksesoris, makanan, dan kebutuhan
 - [x] 22. Toko dan aksesoris
 - [x] 23. Kamar Oyen sebagai Beranda, tanpa Lemari Kostum
-- [ ] 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
+- [x] 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
 - [ ] 25. Peta bergambar dan Oyen berjalan ke level berikutnya
 - [ ] 26. Potret toko dan rapi-rapi rumah Oyen
 
@@ -384,7 +384,9 @@ Selesai: kamar diam di rute `/` (`lib/screens/room/`: `RoomGeometry`/`roomSprite
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 23", dan perbarui bagian "Struktur" di `CLAUDE.md`.
 
-## 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
+## 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah ✅
+
+Selesai: `SvgTemplate` mengevaluasi `@keyframes` desain pada waktu tertentu (`css_animation.dart`), kucing dan barang bergerak, barang "dipakai" dengan kucing di dalamnya, rutinitas ber-seed `RoomLife`, gelembung hadiah, label mangkuk, enam efek suara kamar, dan galeri `/galeri/gerak`. Keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 24".
 
 **Hasil:**
 - Kucing di kamar berkedip, mengibaskan ekor, dan bernapas.

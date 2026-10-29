@@ -49,6 +49,10 @@ GoRouter createRouter({
                 builder: (context, state) => const GalleryKittyScreen(),
               ),
               GoRoute(
+                path: 'gerak',
+                builder: (context, state) => const GalleryMotionScreen(),
+              ),
+              GoRoute(
                 path: 'suara',
                 builder: (context, state) => const GallerySoundScreen(),
               ),

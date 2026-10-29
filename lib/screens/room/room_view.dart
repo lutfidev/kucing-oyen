@@ -264,11 +264,12 @@ class _RoomViewState extends State<RoomView>
   /// di kaki kucing yang digambar barang itu saat dipakai.
   Spot _standSpot(RoomGeometry geo, RoomItemId id, Spot spot) {
     final box = geo.boxOf(roomItemOf(id), spot);
-    final use = RoomItemArt.inUse(id);
-    final k = box.width / RoomItemArt.sizeOf(id).width;
-    final cat =
-        (RoomItemArt.inUseBox(id, box).topLeft + use.catOffset * k) &
-        Size.square(use.catSize * k);
+    final mirror = _mirrored(geo, id, box);
+    final cat = RoomItemArt.catBox(
+      id,
+      RoomItemArt.inUseBox(id, box, mirror: mirror),
+      mirror: mirror,
+    );
     final size = geo.catSize(KittyId.salju);
     final range = geo.rangeOf(RoomZone.floor, Size.square(size));
     final left = cat.center.dx - size / 2;
@@ -636,11 +637,19 @@ class _RoomViewState extends State<RoomView>
             final spot?,
           ))
             if (geo.boxOf(roomItemOf(RoomItemId.mangkuk), spot) case final bowl)
-              Positioned(
-                // Desain: label di (282, 566) untuk mangkuk di (298, 596).
-                left: bowl.left - 16 * geo.artScale,
-                top: bowl.top - 30 * geo.artScale,
-                child: BowlRefillLabel(hours: hours),
+              Positioned.fill(
+                child: CustomSingleChildLayout(
+                  // Desain: label di (282, 566) untuk mangkuk di (298, 596),
+                  // dijepit supaya tidak keluar tepi kamar.
+                  delegate: KeepInside(
+                    Offset(
+                      bowl.left - 16 * geo.artScale,
+                      bowl.top - 30 * geo.artScale,
+                    ),
+                    margin: context.koSpace.s8,
+                  ),
+                  child: BowlRefillLabel(hours: hours),
+                ),
               ),
         if (empty && !_decorating)
           Positioned.fill(
@@ -687,6 +696,17 @@ class _RoomViewState extends State<RoomView>
     );
   }
 
+  /// Barang dipakai digambar terbalik kalau kotak biasanya keluar tepi
+  /// kiri atau kanan kamar (mis. tiang garukan di pojok kiri).
+  bool _mirrored(RoomGeometry geo, RoomItemId id, Rect box) {
+    final plain = RoomItemArt.inUseBox(id, box);
+    if (plain.left >= 0 && plain.right <= geo.room.width) return false;
+    final flipped = RoomItemArt.inUseBox(id, box, mirror: true);
+    double outside(Rect r) =>
+        max(0.0, -r.left) + max(0.0, r.right - geo.room.width);
+    return outside(flipped) < outside(plain);
+  }
+
   /// Jam sampai mangkuk terisi lagi (dibulatkan ke atas), atau null kalau
   /// mangkuknya tidak kosong.
   int? _bowlRefill(DateTime now) {
@@ -709,7 +729,8 @@ class _RoomViewState extends State<RoomView>
     final user = widget.life && !_decorating ? _life.userOf(id) : null;
     final time = _animating ? _time : null;
     if (user != null) {
-      final box = RoomItemArt.inUseBox(id, sprite.box);
+      final mirror = _mirrored(geo, id, sprite.box);
+      final box = RoomItemArt.inUseBox(id, sprite.box, mirror: mirror);
       return Positioned.fromRect(
         key: ValueKey(id),
         rect: box,
@@ -720,6 +741,7 @@ class _RoomViewState extends State<RoomView>
             box: box.size,
             full: id != RoomItemId.mangkuk || bowlFull,
             time: time,
+            mirror: mirror,
             user: KittyLook(
               kitty: user,
               accessory: _progress.home.closet.wearingOf(user),

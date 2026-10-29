@@ -172,6 +172,23 @@ void main() {
       }
     });
 
+    test('dicerminkan: kucing pindah ke sisi lain barang', () {
+      const box = Rect.fromLTWH(20, 0, 50, 152);
+      final plain = RoomItemArt.inUseBox(RoomItemId.tiang, box);
+      final flipped = RoomItemArt.inUseBox(
+        RoomItemId.tiang,
+        box,
+        mirror: true,
+      );
+      // Tiang 50 di kotak 130: biasa 58 di kiri, dicerminkan 22.
+      expect(plain.left, -38);
+      expect(flipped.left, -2);
+      expect(flipped.size, plain.size);
+      final cat = RoomItemArt.catBox(RoomItemId.tiang, flipped, mirror: true);
+      expect(cat.left, flipped.left + 30);
+      expect(cat.left, greaterThan(box.left));
+    });
+
     test('semua barang dipakai semua kucing tergambar', () {
       final canvas = Canvas(PictureRecorder());
       for (final id in RoomItemId.values) {

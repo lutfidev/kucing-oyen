@@ -569,3 +569,25 @@ class BowlRefillLabel extends StatelessWidget {
     );
   }
 }
+
+/// Menaruh anak seukuran aslinya di [at], digeser masuk supaya paling
+/// sedikit [margin] dari tepi kiri dan kanan.
+class KeepInside extends SingleChildLayoutDelegate {
+  const KeepInside(this.at, {this.margin = 0});
+
+  final Offset at;
+  final double margin;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
+      constraints.loosen();
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) => Offset(
+    at.dx.clamp(margin, max(margin, size.width - childSize.width - margin)),
+    at.dy,
+  );
+
+  @override
+  bool shouldRelayout(KeepInside old) => old.at != at || old.margin != margin;
+}

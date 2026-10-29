@@ -38,6 +38,11 @@ class GalleryScreen extends StatelessWidget {
                 onPressed: () => context.go(AppRoutes.galleryOyen),
               ),
               KoButton(
+                label: 'Gerak',
+                kind: KoButtonKind.secondary,
+                onPressed: () => context.go(AppRoutes.galleryMotion),
+              ),
+              KoButton(
                 label: 'Suara',
                 kind: KoButtonKind.secondary,
                 onPressed: () => context.go(AppRoutes.gallerySound),

@@ -307,6 +307,7 @@ class RoomItemView extends StatelessWidget {
     this.full = true,
     this.time,
     this.user,
+    this.mirror = false,
   });
 
   final RoomItemId id;
@@ -320,6 +321,9 @@ class RoomItemView extends StatelessWidget {
   /// ([RoomItemArt.inUseBox]).
   final KittyLook? user;
 
+  /// Dicerminkan (barang dipakai di tepi kamar).
+  final bool mirror;
+
   @override
   Widget build(BuildContext context) {
     return Semantics(
@@ -327,19 +331,20 @@ class RoomItemView extends StatelessWidget {
       label: roomItemName(context.l10n, id),
       child: CustomPaint(
         size: box,
-        painter: _RoomItemPainter(id, full, time, user),
+        painter: _RoomItemPainter(id, full, time, user, mirror),
       ),
     );
   }
 }
 
 class _RoomItemPainter extends CustomPainter {
-  _RoomItemPainter(this.id, this.full, this.time, this.user);
+  _RoomItemPainter(this.id, this.full, this.time, this.user, this.mirror);
 
   final RoomItemId id;
   final bool full;
   final double? time;
   final KittyLook? user;
+  final bool mirror;
 
   @override
   void paint(Canvas canvas, Size size) => paintRoomItemArt(
@@ -349,11 +354,16 @@ class _RoomItemPainter extends CustomPainter {
     full: full,
     time: time,
     user: user,
+    mirror: mirror,
   );
 
   @override
   bool shouldRepaint(_RoomItemPainter old) =>
-      old.id != id || old.full != full || old.time != time || old.user != user;
+      old.id != id ||
+      old.full != full ||
+      old.time != time ||
+      old.user != user ||
+      old.mirror != mirror;
 }
 
 /// Camilan yang diskalakan supaya muat dan dipusatkan di [box].

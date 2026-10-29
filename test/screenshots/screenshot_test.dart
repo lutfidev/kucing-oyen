@@ -68,6 +68,8 @@ Widget _app(
   Set<int>? tutorialsDone,
 ]) => capturable(
   KucingOrenApp(
+    // Kamar diam supaya potretnya selalu sama.
+    roomLife: false,
     progress: testProgressWith(
       best: best,
       tutorialsDone: tutorialsDone,
@@ -403,6 +405,8 @@ void main() {
         await tester.pumpWidget(
           capturable(
             KucingOrenApp(
+              // Kamar diam supaya potretnya selalu sama.
+              roomLife: false,
               progress: testProgressWith(
                 best: wonUpTo(id - 1),
                 coins: coins,
@@ -452,6 +456,8 @@ void main() {
         await tester.pumpWidget(
           capturable(
             KucingOrenApp(
+              // Kamar diam supaya potretnya selalu sama.
+              roomLife: false,
               progress: testProgressWith(
                 coins: 120,
                 rewards: rewards,
@@ -506,6 +512,8 @@ void main() {
           await tester.pumpWidget(
             capturable(
               KucingOrenApp(
+                // Kamar diam supaya potretnya selalu sama.
+                roomLife: false,
                 progress: testProgressWith(
                   best: _designProgress,
                   coins: 120,
@@ -557,6 +565,43 @@ void main() {
     );
   }
 
+  // Kamar hidup (langkah 24): Oyen dan Salju dirawat (gelembung hadiah),
+  // Arang lapar, mangkuk kosong. Lalu beberapa detik rutinitas berjalan.
+  testWidgets('$folder/19-kamar-hadiah', (tester) async {
+    setScreenSize(tester, _size);
+    await withShadows(() async {
+      await tester.pumpWidget(
+        capturable(
+          KucingOrenApp(
+            progress: testProgressWith(
+              coins: 470,
+              best: _designProgress,
+              home: roomHome(),
+              clock: () => roomNow,
+              needs: HomeNeeds(
+                cats: {
+                  KittyId.oyen: CatNeeds(hunger: 90, joy: 92, at: roomNow),
+                  KittyId.arang: CatNeeds(hunger: 12, joy: 30, at: roomNow),
+                  KittyId.mendung: CatNeeds(hunger: 75, joy: 60, at: roomNow),
+                },
+                bowl: Bowl(
+                  filledAt: roomNow.subtract(const Duration(hours: 2)),
+                  eaten: const [KittyId.oyen, KittyId.arang, KittyId.mendung],
+                ),
+              ),
+            ),
+            roomRandom: () => Random(1),
+          ),
+        ),
+      );
+      // Kamar hidup bergerak terus: majukan waktu, jangan `pumpAndSettle`.
+      await settle(tester, max: const Duration(milliseconds: 600));
+      await capture(tester, '$folder/19-kamar-hadiah');
+      await settle(tester, max: const Duration(seconds: 8));
+      await capture(tester, '$folder/19-kamar-hidup');
+    });
+  }, skip: !screenshotsEnabled);
+
   for (final small in [false, true]) {
     final suffix = small ? '-360x640' : '';
     testWidgets('$folder/19-kamar$suffix', (tester) async {
@@ -565,6 +610,8 @@ void main() {
         await tester.pumpWidget(
           capturable(
             KucingOrenApp(
+              // Kamar diam supaya potretnya selalu sama.
+              roomLife: false,
               progress: testProgressWith(
                 coins: 480,
                 best: _designProgress,
@@ -652,6 +699,8 @@ void main() {
   Widget shopApp(ShopTab tab, {AppLanguage language = AppLanguage.id}) =>
       capturable(
         KucingOrenApp(
+          // Kamar diam supaya potretnya selalu sama.
+          roomLife: false,
           progress: testProgressWith(
             best: _designProgress,
             coins: 480,
