@@ -2015,10 +2015,10 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       coins,
       locale: localeName,
-      other: 'Забрать $coins монеты у $name',
-      many: 'Забрать $coins монет у $name',
-      few: 'Забрать $coins монеты у $name',
-      one: 'Забрать $coins монету у $name',
+      other: '$name: забрать $coins монеты',
+      many: '$name: забрать $coins монет',
+      few: '$name: забрать $coins монеты',
+      one: '$name: забрать $coins монету',
     );
     return '$_temp0';
   }
