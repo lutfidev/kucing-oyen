@@ -4,6 +4,8 @@ import 'dart:ui';
 
 import 'package:path_drawing/path_drawing.dart';
 
+import 'css_animation.dart';
+
 /// Template SVG dari komponen desain (`docs/design/source/*.dc.html`).
 ///
 /// Isi `<svg>` disalin apa adanya dari desain, termasuk blok
@@ -16,21 +18,32 @@ import 'package:path_drawing/path_drawing.dart';
 /// `ellipse`, `path`, `text`; atribut `fill`, `stroke`, `stroke-width`,
 /// `stroke-linecap`, `stroke-linejoin`, `stroke-dasharray`, `opacity`
 /// (juga di `g`), `fill-opacity`, `transform` (translate, scale, rotate), dan
-/// atribut huruf.
+/// atribut huruf. Atribut `style` berisi animasi CSS desain
+/// ([CssStyle]) yang dievaluasi pada waktu `time` dengan [keyframes].
 /// Elemen lain membuat [render] gagal supaya tidak ada yang hilang diam-diam.
 class SvgTemplate {
-  SvgTemplate(String source) : _nodes = _parse(source);
+  SvgTemplate(String source, {this.keyframes = const {}})
+    : _nodes = _parse(source);
 
   final List<_Element> _nodes;
+
+  /// `@keyframes` yang dipakai atribut `style` (lihat [CssKeyframes.parse]).
+  final Map<String, CssKeyframes> keyframes;
 
   /// [vals] berisi nilai `{{nama}}`, juga bersarang lewat titik
   /// (`{{c.fur}}` = `vals['c']['fur']`). Blok `sc-if` tampil kalau nilainya
   /// `true`; nama yang tidak ada dianggap `false`. Blok
   /// `<sc-for list="{{c.p}}" as="q">` mengulang anaknya sekali per elemen
   /// daftar, dengan elemen itu sebagai nilai `q`.
-  SvgDrawing render(Map<String, Object> vals) {
+  ///
+  /// [time] = detik animasi; null = gambar diam (semua `style` diabaikan,
+  /// seperti `prefers-reduced-motion`).
+  SvgDrawing render(Map<String, Object> vals, {double? time}) {
     final ops = <_Op>[];
-    _emit(_nodes, vals, const {}, _Affine.identity, ops);
+    _Emitter(
+      time,
+      keyframes,
+    ).emit(_nodes, vals, const {}, _Affine.identity, ops);
     return SvgDrawing._(List.unmodifiable(ops));
   }
 }
@@ -168,61 +181,114 @@ List<Object?> _list(_Element el, Map<String, Object> vals) {
   return value;
 }
 
-void _emit(
-  List<_Element> nodes,
-  Map<String, Object> vals,
-  Map<String, String> inherited,
-  _Affine matrix,
-  List<_Op> ops,
-) {
-  for (final el in nodes) {
-    if (el.name == 'sc-if') {
-      if (_condition(el.attrs['value'] ?? '', vals)) {
-        _emit(el.children, vals, inherited, matrix, ops);
-      }
-      continue;
-    }
-    if (el.name == 'sc-for') {
-      final name = el.attrs['as'];
-      if (name == null) throw FormatException('sc-for tanpa as', el.name);
-      for (final item in _list(el, vals)) {
-        if (item == null) continue;
-        _emit(el.children, {...vals, name: item}, inherited, matrix, ops);
-      }
-      continue;
-    }
-    final attrs = {
-      ...inherited,
-      for (final MapEntry(:key, :value) in el.attrs.entries)
-        key: _resolve(value, vals),
-    };
-    // `transform` tidak diwariskan, jadi selalu milik elemen ini.
-    final transform = attrs['transform'];
-    final m = transform == null ? matrix : matrix * _parseTransform(transform);
-    switch (el.name) {
-      case 'g':
-        final opacity = _num(attrs, 'opacity', 1);
-        final children = opacity < 1 ? <_Op>[] : ops;
-        _emit(
-          el.children,
-          vals,
-          {
-            for (final MapEntry(:key, :value) in attrs.entries)
-              if (_inherited.contains(key)) key: value,
-          },
-          m,
-          children,
-        );
-        if (opacity < 1 && children.isNotEmpty) {
-          ops.add(_GroupOp(List.unmodifiable(children), opacity));
+/// Menyusun perintah gambar pada satu waktu animasi.
+class _Emitter {
+  _Emitter(this.time, this.keyframes);
+
+  final double? time;
+  final Map<String, CssKeyframes> keyframes;
+
+  void emit(
+    List<_Element> nodes,
+    Map<String, Object> vals,
+    Map<String, String> inherited,
+    _Affine matrix,
+    List<_Op> ops,
+  ) {
+    for (final el in nodes) {
+      if (el.name == 'sc-if') {
+        if (_condition(el.attrs['value'] ?? '', vals)) {
+          emit(el.children, vals, inherited, matrix, ops);
         }
-      case 'text':
-        ops.add(_TextOp.from(attrs, el.text, m));
-      case 'rect' || 'circle' || 'ellipse' || 'path':
-        ops.add(_ShapeOp.from(el.name, attrs, m));
-      default:
-        throw UnsupportedError('Elemen <${el.name}> belum didukung');
+        continue;
+      }
+      if (el.name == 'sc-for') {
+        final name = el.attrs['as'];
+        if (name == null) throw FormatException('sc-for tanpa as', el.name);
+        for (final item in _list(el, vals)) {
+          if (item == null) continue;
+          emit(el.children, {...vals, name: item}, inherited, matrix, ops);
+        }
+        continue;
+      }
+      final attrs = {
+        ...inherited,
+        for (final MapEntry(:key, :value) in el.attrs.entries)
+          key: _resolve(value, vals),
+      };
+      // `transform` tidak diwariskan, jadi selalu milik elemen ini.
+      final transform = attrs['transform'];
+      var m = transform == null ? matrix : matrix * _parseTransform(transform);
+      final style = attrs.remove('style');
+      if ((time, style) case (final t?, final style?)
+          when style.trim().isNotEmpty) {
+        final css = CssStyle.parse(style);
+        if (css.frameAt(t, keyframes) case final frame?) {
+          if (transform != null && frame.transform != null) {
+            // CSS mengganti atribut `transform`, bukan menambahnya.
+            throw FormatException(
+              'transform dan animasi di satu elemen',
+              style,
+            );
+          }
+          var (ox, oy) = (css.originX, css.originY);
+          if (css.centerOrigin) {
+            if (!css.fillBox) {
+              throw FormatException('origin center tanpa fill-box', style);
+            }
+            final box = _localBounds(el, vals, inherited);
+            (ox, oy) = (box.center.dx, box.center.dy);
+          }
+          m = m * _Affine.of(frame.matrix(ox, oy));
+          if (frame.opacity case final o?) {
+            attrs['opacity'] = '${_num(attrs, 'opacity', 1) * o}';
+          }
+        }
+      }
+      switch (el.name) {
+        case 'g':
+          final opacity = _num(attrs, 'opacity', 1);
+          final children = opacity < 1 ? <_Op>[] : ops;
+          emit(
+            el.children,
+            vals,
+            {
+              for (final MapEntry(:key, :value) in attrs.entries)
+                if (_inherited.contains(key)) key: value,
+            },
+            m,
+            children,
+          );
+          if (opacity < 1 && children.isNotEmpty) {
+            ops.add(_GroupOp(List.unmodifiable(children), opacity));
+          }
+        case 'text':
+          ops.add(_TextOp.from(attrs, el.text, m));
+        case 'rect' || 'circle' || 'ellipse' || 'path':
+          ops.add(_ShapeOp.from(el.name, attrs, m));
+        default:
+          throw UnsupportedError('Elemen <${el.name}> belum didukung');
+      }
     }
+  }
+
+  /// Kotak isi [el] tanpa gaya dan transformasinya sendiri (`fill-box`).
+  Rect _localBounds(
+    _Element el,
+    Map<String, Object> vals,
+    Map<String, String> inherited,
+  ) {
+    final bare = _Element(el.name, {
+      for (final MapEntry(:key, :value) in el.attrs.entries)
+        if (key != 'style' && key != 'transform') key: value,
+    })..text = el.text;
+    bare.children.addAll(el.children);
+    final ops = <_Op>[];
+    _Emitter(
+      null,
+      keyframes,
+    ).emit([bare], vals, inherited, _Affine.identity, ops);
+    return SvgDrawing._(ops).bounds;
   }
 }
 
@@ -521,6 +587,8 @@ class _Affine {
   const _Affine(this.a, this.b, this.c, this.d, this.e, this.f);
 
   const _Affine.translate(double x, double y) : this(1, 0, 0, 1, x, y);
+
+  _Affine.of(CssMatrix m) : this(m.$1, m.$2, m.$3, m.$4, m.$5, m.$6);
 
   static const identity = _Affine(1, 0, 0, 1, 0, 0);
 
