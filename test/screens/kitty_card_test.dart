@@ -293,6 +293,11 @@ void main() {
     await tapInCard(tester, 'Elus');
     await tester.pump();
     expect(find.text('+10 senang'), findsOneWidget);
+    // Tetap tampil (diam) selama waktu reaksi biasa, baru hilang.
+    for (var i = 0; i < 15; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.text('+10 senang'), findsOneWidget);
     await tester.pumpAndSettle();
     expect(find.text('+10 senang'), findsNothing);
   });

@@ -42,6 +42,8 @@ class _ReactionOverlayState extends State<ReactionOverlay>
   late final AnimationController _time = AnimationController(
     vsync: this,
     duration: ReactionOverlay.duration,
+    // Kurangi gerak tidak memendekkan waktunya: reaksi tampil diam.
+    animationBehavior: AnimationBehavior.preserve,
   )..forward().whenComplete(() => mounted ? widget.onDone() : null);
 
   // Hati: ukuran, posisi (kiri/atas di kotak 120×60, kiri null = tengah),
@@ -195,6 +197,7 @@ class _PraiseToastState extends State<PraiseToast>
   late final AnimationController _time = AnimationController(
     vsync: this,
     duration: PraiseToast.duration,
+    animationBehavior: AnimationBehavior.preserve,
   )..forward().whenComplete(() => mounted ? widget.onDone() : null);
 
   @override

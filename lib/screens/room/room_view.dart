@@ -483,6 +483,15 @@ class _RoomViewState extends State<RoomView> {
           child: art,
         ),
       );
+      if (lifted) {
+        art = Transform.translate(
+          offset: Offset(0, -s.roomLift * geo.artScale),
+          child: Transform.scale(scale: s.roomLiftScale, child: art),
+        );
+      }
+      // Gerakan tetap paling luar: kalau jenis widget di atasnya berganti
+      // saat barang terangkat, pengenal seretnya ikut dibuang di tengah
+      // seretan.
       art = GestureDetector(
         behavior: HitTestBehavior.opaque,
         onPanDown: (d) => _dragStart(id, sprite.box, d.globalPosition),
@@ -490,12 +499,6 @@ class _RoomViewState extends State<RoomView> {
         onPanEnd: (_) => _dragEnd(id),
         onPanCancel: () => _dragEnd(id),
         child: art,
-      );
-    }
-    if (lifted) {
-      art = Transform.translate(
-        offset: Offset(0, -s.roomLift * geo.artScale),
-        child: Transform.scale(scale: s.roomLiftScale, child: art),
       );
     }
     return Positioned.fromRect(key: ValueKey(id), rect: sprite.box, child: art);

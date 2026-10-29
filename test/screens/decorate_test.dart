@@ -39,6 +39,23 @@ Future<ProgressController> pumpDecorating(
   return p;
 }
 
+/// Menyeret [target] sejauh [offset] dalam beberapa langkah dengan satu
+/// bingkai di antaranya, seperti jari sungguhan (barang yang terangkat
+/// dibangun ulang di tengah seretan).
+Future<void> dragFramed(
+  WidgetTester tester,
+  Finder target,
+  Offset offset,
+) async {
+  final gesture = await tester.startGesture(tester.getCenter(target));
+  const steps = 8;
+  for (var i = 0; i < steps; i++) {
+    await gesture.moveBy(offset / steps.toDouble());
+    await tester.pump(const Duration(milliseconds: 16));
+  }
+  await gesture.up();
+}
+
 /// Kotak barang [id] di koordinat kamar.
 Rect boxIn(WidgetTester tester, RoomItemId id) {
   final (room, _) = roomOf(tester);
@@ -100,7 +117,7 @@ void main() {
     final progress = await pumpDecorating(tester);
     final (_, geo) = roomOf(tester);
     final start = boxIn(tester, RoomItemId.kasur);
-    await tester.drag(itemView(RoomItemId.kasur), const Offset(-40, 30));
+    await dragFramed(tester, itemView(RoomItemId.kasur), const Offset(-40, 30));
     await tester.pumpAndSettle();
     final expected = geo.spotFor(
       roomItemOf(RoomItemId.kasur),
@@ -118,7 +135,11 @@ void main() {
   testWidgets('seret tidak bisa keluar zonanya', (tester) async {
     final progress = await pumpDecorating(tester);
     final (_, geo) = roomOf(tester);
-    await tester.drag(itemView(RoomItemId.lukisan), const Offset(0, 400));
+    await dragFramed(
+      tester,
+      itemView(RoomItemId.lukisan),
+      const Offset(0, 400),
+    );
     await tester.pumpAndSettle();
     expect(progress.home.room.spotOf(RoomItemId.lukisan)!.y, 1);
     expect(
@@ -131,7 +152,7 @@ void main() {
     final progress = await pumpDecorating(tester);
     final tray = tester.getRect(find.byType(StorageTray));
     final ball = tester.getCenter(itemView(RoomItemId.bola));
-    await tester.drag(itemView(RoomItemId.bola), tray.center - ball);
+    await dragFramed(tester, itemView(RoomItemId.bola), tray.center - ball);
     await tester.pumpAndSettle();
     expect(progress.home.room.isPlaced(RoomItemId.bola), isFalse);
     expect(progress.home.room.owns(RoomItemId.bola), isTrue);
@@ -149,7 +170,7 @@ void main() {
     final progress = await pumpDecorating(tester);
     final tray = tester.getRect(find.byType(StorageTray));
     final bowl = tester.getCenter(itemView(RoomItemId.mangkuk));
-    await tester.drag(itemView(RoomItemId.mangkuk), tray.center - bowl);
+    await dragFramed(tester, itemView(RoomItemId.mangkuk), tray.center - bowl);
     await tester.pumpAndSettle();
     expect(progress.home.room.isPlaced(RoomItemId.mangkuk), isTrue);
   });
@@ -188,6 +209,22 @@ void main() {
     expect(progress.catNeeds(KittyId.oyen).joy, 55);
     expect(progress.catNeeds(KittyId.salju).joy, 45);
     expect(find.text('Main'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('Kamar makin cakep!'), findsNothing);
+  });
+
+  testWidgets('kurangi gerak: pujian tampil diam selama waktunya', (
+    tester,
+  ) async {
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: true);
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    await pumpDecorating(tester);
+    await tester.tap(find.text('Selesai'));
+    for (var i = 0; i < 22; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.text('Kamar makin cakep!'), findsOneWidget);
     await tester.pumpAndSettle();
     expect(find.text('Kamar makin cakep!'), findsNothing);
   });
@@ -255,7 +292,7 @@ void main() {
     tester,
   ) async {
     final progress = await pumpDecorating(tester);
-    await tester.drag(itemView(RoomItemId.kasur), const Offset(-40, 30));
+    await dragFramed(tester, itemView(RoomItemId.kasur), const Offset(-40, 30));
     await tester.pumpAndSettle();
     final spot = progress.home.room.spotOf(RoomItemId.kasur);
     final reloaded = await ProgressController.load(
