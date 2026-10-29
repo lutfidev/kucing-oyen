@@ -87,10 +87,6 @@
   "@splashTagline": {
     "description": "Short line under the logo on the Android splash screen (rendered into an image, keep it very short)."
   },
-  "starTotalUnit": "stars",
-  "@starTotalUnit": {
-    "description": "Word after the star total on the home screen (\"31/60 stars\")."
-  },
   "chapterNumber": "Chapter {n}",
   "@chapterNumber": {
     "description": "Chapter number above the chapter name (shown in capitals).",
@@ -2313,5 +2309,63 @@
   "sadMarkSad": "Droopy: wants attention",
   "@sadMarkSad": {
     "description": "Screen reader label of the thought bubble above a room cat that needs attention."
+  },
+  "roomEmptyBubble": "Pretty empty in here. To the Shop!",
+  "@roomEmptyBubble": {
+    "description": "Speech bubble in an empty starter room, pointing the player to the shop."
+  },
+  "roomEmptyWall": "Wall decor?",
+  "@roomEmptyWall": {
+    "description": "Short label inside the empty dashed spot on the wall of a starter room."
+  },
+  "roomEmptyWallHint": "Empty. Find wall decor in the Shop",
+  "@roomEmptyWallHint": {
+    "description": "Screen reader label of the empty wall spot; tapping opens the shop."
+  },
+  "roomEmptyFloor": "A bed, maybe?",
+  "@roomEmptyFloor": {
+    "description": "Short label inside the empty dashed spot on the floor of a starter room."
+  },
+  "roomEmptyFloorHint": "Empty. Find a bed or a toy in the Shop",
+  "@roomEmptyFloorHint": {
+    "description": "Screen reader label of the empty floor spot; tapping opens the shop."
+  },
+  "accessories": "Accessories",
+  "@accessories": {
+    "description": "Room menu button that opens the accessories tab of the shop."
+  },
+  "shopHasNew": "something new you can afford",
+  "@shopHasNew": {
+    "description": "Added to a room menu button's screen reader label when something there is affordable and not owned yet."
+  },
+  "menuButtonNew": "{label}, {note}",
+  "@menuButtonNew": {
+    "description": "Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "kittyTapHint": "{name}. Tap to see their card",
+  "@kittyTapHint": {
+    "description": "Screen reader label of a cat in the room.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kittyTapHintHungry": "{name}, hungry. Tap to see their card",
+  "@kittyTapHintHungry": {
+    "description": "Screen reader label of a hungry cat in the room.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

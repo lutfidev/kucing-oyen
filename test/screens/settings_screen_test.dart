@@ -18,7 +18,7 @@ import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/oyen.dart';
-import 'package:kucing_oren/screens/home/home_screen.dart';
+import 'package:kucing_oren/screens/room/room_screen.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:kucing_oren/screens/settings/settings_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -60,7 +60,7 @@ void main() {
     expect(find.text('Pengaturan'), findsOneWidget);
     await tester.tap(find.bySemanticsLabel('Kembali ke Beranda'));
     await settle(tester);
-    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(RoomScreen), findsOneWidget);
   });
 
   group('suara', () {

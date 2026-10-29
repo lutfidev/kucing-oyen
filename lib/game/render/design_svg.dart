@@ -458,23 +458,6 @@ const vasePrangSvg = r'''
         <text x="1" y="6" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="13" fill="#9A3520">PRANG!</text>
 ''';
 
-/// Jejak kaki di latar Beranda (`01-beranda.html`), di koordinat layar
-/// 390×844. Dipotong dua karena dua jejak bawah menempel ke sudut kiri
-/// bawah layar dan dua jejak atas ke sudut kanan atas.
-const homePawsBottomSvg = r'''
-    <g fill="#E7C796">
-      <g transform="translate(46 760) rotate(-20)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
-      <g transform="translate(78 724) rotate(-10)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
-    </g>
-''';
-
-const homePawsTopSvg = r'''
-    <g fill="#E7C796">
-      <g transform="translate(330 140) rotate(25)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
-      <g transform="translate(352 178) rotate(35)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
-    </g>
-''';
-
 /// Ikon Babak 1 – Dapur di kartu babak (`02-peta-babak-2-ruang-tamu.html`),
 /// viewBox 36×36: lemari dan mangkuk.
 const chapterKitchenSvg = r'''

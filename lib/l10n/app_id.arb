@@ -16,7 +16,6 @@
   "settings": "Pengaturan",
   "tagline": "Oyen nggak bisa disuruh. Kamu yang mikir.",
   "splashTagline": "Ayo main!",
-  "starTotalUnit": "bintang",
   "chapterNumber": "Babak {n}",
   "chapter1Name": "Dapur",
   "chapter2Name": "Ruang Tamu",
@@ -437,5 +436,15 @@
   "shopAccessoryOwnedLabel": "Lihat {name}, punyamu",
   "shopAccessoryWornLabel": "Lihat {name}, punyamu, dipakai {who}",
   "sadMarkHungry": "Lesu: lapar",
-  "sadMarkSad": "Lesu: kurang perhatian"
+  "sadMarkSad": "Lesu: kurang perhatian",
+  "roomEmptyBubble": "Kamar masih sepi. Ke Toko, yuk!",
+  "roomEmptyWall": "Hiasan dinding?",
+  "roomEmptyWallHint": "Kosong. Cari hiasan dinding di Toko",
+  "roomEmptyFloor": "Kasur, mungkin?",
+  "roomEmptyFloorHint": "Kosong. Cari kasur atau mainan di Toko",
+  "accessories": "Aksesoris",
+  "shopHasNew": "ada yang baru terjangkau",
+  "menuButtonNew": "{label}, {note}",
+  "kittyTapHint": "{name}. Ketuk untuk lihat kartunya",
+  "kittyTapHintHungry": "{name}, lapar. Ketuk untuk lihat kartunya"
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/language.dart';
-import 'package:kucing_oren/screens/home/home_screen.dart';
+import 'package:kucing_oren/screens/room/room_screen.dart';
 
 import '../test_helpers.dart';
 
 /// Locale yang dipakai layar Beranda.
 Locale _locale(WidgetTester tester) =>
-    Localizations.localeOf(tester.element(find.byType(HomeScreen)));
+    Localizations.localeOf(tester.element(find.byType(RoomScreen)));
 
 void main() {
   testWidgets('bahasa awal mengikuti HP kalau didukung', (tester) async {

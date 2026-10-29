@@ -102,12 +102,6 @@ void main() {
         }
       }
 
-      test('jejak kaki latar disalin dari desain 01', () {
-        final source = _read('01-beranda.html');
-        linesIn(homePawsBottomSvg, source);
-        linesIn(homePawsTopSvg, source);
-      });
-
       test('ikon dapur, area bos, dan ketupat disalin dari desain 02', () {
         final source = _read('02-peta-babak-2-ruang-tamu.html');
         for (final svg in [chapterKitchenSvg, bossAreaSvg, bossKetupatSvg]) {

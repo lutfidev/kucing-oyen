@@ -1,3 +1,5 @@
+import 'dart:math';
+
 // Potret layar ke PNG untuk dibandingkan dengan desain:
 //
 //   flutter test test/screenshots --dart-define=SCREENSHOTS=true
@@ -74,6 +76,7 @@ Widget _app(
       coins: best.isEmpty ? 0 : 120,
     ),
     initialLocation: location,
+    roomRandom: () => Random(1),
   ),
 );
 

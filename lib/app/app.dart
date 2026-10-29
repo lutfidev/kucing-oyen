@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,7 @@ class KucingOrenApp extends StatefulWidget {
     this.audio,
     this.consent,
     this.initialLocation = AppRoutes.home,
+    this.roomRandom,
   });
 
   /// Data level dan progres pemain, dibagikan ke semua layar. Tidak boleh
@@ -37,6 +39,9 @@ class KucingOrenApp extends StatefulWidget {
   final AdConsent? consent;
   final String initialLocation;
 
+  /// Pengacak posisi kucing di kamar ([createRouter]); null = acak.
+  final Random Function()? roomRandom;
+
   @override
   State<KucingOrenApp> createState() => _KucingOrenAppState();
 }
@@ -45,6 +50,7 @@ class _KucingOrenAppState extends State<KucingOrenApp>
     with WidgetsBindingObserver {
   late final GoRouter _router = createRouter(
     initialLocation: widget.initialLocation,
+    roomRandom: widget.roomRandom,
   );
   final ThemeData _theme = KoTheme.light();
   late final GameAudio _audio =

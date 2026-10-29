@@ -198,12 +198,6 @@ abstract class AppLocalizations {
   /// **'Let\'s play!'**
   String get splashTagline;
 
-  /// Word after the star total on the home screen ("31/60 stars").
-  ///
-  /// In en, this message translates to:
-  /// **'stars'**
-  String get starTotalUnit;
-
   /// Chapter number above the chapter name (shown in capitals).
   ///
   /// In en, this message translates to:
@@ -2729,6 +2723,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Droopy: wants attention'**
   String get sadMarkSad;
+
+  /// Speech bubble in an empty starter room, pointing the player to the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Pretty empty in here. To the Shop!'**
+  String get roomEmptyBubble;
+
+  /// Short label inside the empty dashed spot on the wall of a starter room.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall decor?'**
+  String get roomEmptyWall;
+
+  /// Screen reader label of the empty wall spot; tapping opens the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty. Find wall decor in the Shop'**
+  String get roomEmptyWallHint;
+
+  /// Short label inside the empty dashed spot on the floor of a starter room.
+  ///
+  /// In en, this message translates to:
+  /// **'A bed, maybe?'**
+  String get roomEmptyFloor;
+
+  /// Screen reader label of the empty floor spot; tapping opens the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty. Find a bed or a toy in the Shop'**
+  String get roomEmptyFloorHint;
+
+  /// Room menu button that opens the accessories tab of the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessories'**
+  String get accessories;
+
+  /// Added to a room menu button's screen reader label when something there is affordable and not owned yet.
+  ///
+  /// In en, this message translates to:
+  /// **'something new you can afford'**
+  String get shopHasNew;
+
+  /// Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, {note}'**
+  String menuButtonNew(String label, String note);
+
+  /// Screen reader label of a cat in the room.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}. Tap to see their card'**
+  String kittyTapHint(String name);
+
+  /// Screen reader label of a hungry cat in the room.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, hungry. Tap to see their card'**
+  String kittyTapHintHungry(String name);
 }
 
 class _AppLocalizationsDelegate

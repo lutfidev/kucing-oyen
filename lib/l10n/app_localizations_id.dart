@@ -66,9 +66,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get splashTagline => 'Ayo main!';
 
   @override
-  String get starTotalUnit => 'bintang';
-
-  @override
   String chapterNumber(int n) {
     return 'Babak $n';
   }
@@ -1684,4 +1681,40 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get sadMarkSad => 'Lesu: kurang perhatian';
+
+  @override
+  String get roomEmptyBubble => 'Kamar masih sepi. Ke Toko, yuk!';
+
+  @override
+  String get roomEmptyWall => 'Hiasan dinding?';
+
+  @override
+  String get roomEmptyWallHint => 'Kosong. Cari hiasan dinding di Toko';
+
+  @override
+  String get roomEmptyFloor => 'Kasur, mungkin?';
+
+  @override
+  String get roomEmptyFloorHint => 'Kosong. Cari kasur atau mainan di Toko';
+
+  @override
+  String get accessories => 'Aksesoris';
+
+  @override
+  String get shopHasNew => 'ada yang baru terjangkau';
+
+  @override
+  String menuButtonNew(String label, String note) {
+    return '$label, $note';
+  }
+
+  @override
+  String kittyTapHint(String name) {
+    return '$name. Ketuk untuk lihat kartunya';
+  }
+
+  @override
+  String kittyTapHintHungry(String name) {
+    return '$name, lapar. Ketuk untuk lihat kartunya';
+  }
 }

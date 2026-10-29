@@ -78,9 +78,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get splashTagline => 'Bora jogar!';
 
   @override
-  String get starTotalUnit => 'estrelas';
-
-  @override
   String chapterNumber(int n) {
     return 'Capítulo $n';
   }
@@ -1835,4 +1832,41 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sadMarkSad => 'Murchinho: quer carinho';
+
+  @override
+  String get roomEmptyBubble => 'Quarto vazio demais. Bora pra Loja!';
+
+  @override
+  String get roomEmptyWall => 'Decoração de parede?';
+
+  @override
+  String get roomEmptyWallHint => 'Vazio. Procure decoração de parede na Loja';
+
+  @override
+  String get roomEmptyFloor => 'Uma caminha, talvez?';
+
+  @override
+  String get roomEmptyFloorHint =>
+      'Vazio. Procure uma caminha ou brinquedo na Loja';
+
+  @override
+  String get accessories => 'Acessórios';
+
+  @override
+  String get shopHasNew => 'tem novidade que cabe no bolso';
+
+  @override
+  String menuButtonNew(String label, String note) {
+    return '$label, $note';
+  }
+
+  @override
+  String kittyTapHint(String name) {
+    return '$name. Toque para ver o cartão';
+  }
+
+  @override
+  String kittyTapHintHungry(String name) {
+    return '$name, com fome. Toque para ver o cartão';
+  }
 }

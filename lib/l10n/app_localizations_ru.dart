@@ -88,9 +88,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get splashTagline => 'Играем!';
 
   @override
-  String get starTotalUnit => 'звёзд';
-
-  @override
   String chapterNumber(int n) {
     return 'Глава $n';
   }
@@ -1858,4 +1855,41 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sadMarkSad => 'Скис: мало внимания';
+
+  @override
+  String get roomEmptyBubble => 'Пустовато тут. Айда в магазин!';
+
+  @override
+  String get roomEmptyWall => 'Что-то на стену?';
+
+  @override
+  String get roomEmptyWallHint => 'Пусто. Найди украшение для стены в магазине';
+
+  @override
+  String get roomEmptyFloor => 'Может, лежанку?';
+
+  @override
+  String get roomEmptyFloorHint =>
+      'Пусто. Найди лежанку или игрушку в магазине';
+
+  @override
+  String get accessories => 'Аксессуары';
+
+  @override
+  String get shopHasNew => 'есть что-то новое по карману';
+
+  @override
+  String menuButtonNew(String label, String note) {
+    return '$label, $note';
+  }
+
+  @override
+  String kittyTapHint(String name) {
+    return '$name. Нажми, чтобы открыть карточку';
+  }
+
+  @override
+  String kittyTapHintHungry(String name) {
+    return '$name хочет есть. Нажми, чтобы открыть карточку';
+  }
 }

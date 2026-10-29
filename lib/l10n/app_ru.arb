@@ -16,7 +16,6 @@
   "settings": "Настройки",
   "tagline": "Ойен не слушается. Думать тебе.",
   "splashTagline": "Играем!",
-  "starTotalUnit": "звёзд",
   "chapterNumber": "Глава {n}",
   "chapter1Name": "Кухня",
   "chapter2Name": "Гостиная",
@@ -437,5 +436,15 @@
   "shopAccessoryOwnedLabel": "Посмотреть {name}, твоё",
   "shopAccessoryWornLabel": "Посмотреть {name}, твоё, носит {who}",
   "sadMarkHungry": "Скис: голодный",
-  "sadMarkSad": "Скис: мало внимания"
+  "sadMarkSad": "Скис: мало внимания",
+  "roomEmptyBubble": "Пустовато тут. Айда в магазин!",
+  "roomEmptyWall": "Что-то на стену?",
+  "roomEmptyWallHint": "Пусто. Найди украшение для стены в магазине",
+  "roomEmptyFloor": "Может, лежанку?",
+  "roomEmptyFloorHint": "Пусто. Найди лежанку или игрушку в магазине",
+  "accessories": "Аксессуары",
+  "shopHasNew": "есть что-то новое по карману",
+  "menuButtonNew": "{label}, {note}",
+  "kittyTapHint": "{name}. Нажми, чтобы открыть карточку",
+  "kittyTapHintHungry": "{name} хочет есть. Нажми, чтобы открыть карточку"
 }

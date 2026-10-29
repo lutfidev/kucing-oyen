@@ -67,6 +67,8 @@ class KoType extends ThemeExtension<KoType> {
     required this.cardTextSmall,
     required this.headingStrong,
     required this.buttonSoft,
+    required this.logoRow,
+    required this.buttonRoom,
   });
 
   static const standard = KoType(
@@ -370,6 +372,18 @@ class KoType extends ThemeExtension<KoType> {
       fontWeight: FontWeight.w600,
       fontSize: 19,
     ),
+    logoRow: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w700,
+      fontSize: 17,
+    ),
+    buttonRoom: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w700,
+      fontSize: 32,
+    ),
   );
 
   /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
@@ -452,7 +466,7 @@ class KoType extends ThemeExtension<KoType> {
 
   final TextStyle logo;
 
-  /// Nunito 700/16: tagline Beranda.
+  /// Nunito 700/16: tagline di gambar toko.
   final TextStyle bodyLarge;
 
   /// Fredoka 600/22: total bintang di Beranda ("31/60").
@@ -525,6 +539,12 @@ class KoType extends ThemeExtension<KoType> {
   /// Tombol tutup di sheet beli (desain 20).
   final TextStyle buttonSoft;
 
+  /// Logo satu baris di header kamar (desain 19).
+  final TextStyle logoRow;
+
+  /// Tombol Main di panel bawah kamar.
+  final TextStyle buttonRoom;
+
   @override
   KoType copyWith({
     TextStyle? display,
@@ -577,6 +597,8 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? cardTextSmall,
     TextStyle? headingStrong,
     TextStyle? buttonSoft,
+    TextStyle? logoRow,
+    TextStyle? buttonRoom,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -629,6 +651,8 @@ class KoType extends ThemeExtension<KoType> {
       cardTextSmall: cardTextSmall ?? this.cardTextSmall,
       headingStrong: headingStrong ?? this.headingStrong,
       buttonSoft: buttonSoft ?? this.buttonSoft,
+      logoRow: logoRow ?? this.logoRow,
+      buttonRoom: buttonRoom ?? this.buttonRoom,
     );
   }
 
@@ -687,6 +711,8 @@ class KoType extends ThemeExtension<KoType> {
       cardTextSmall: s(cardTextSmall, other.cardTextSmall),
       headingStrong: s(headingStrong, other.headingStrong),
       buttonSoft: s(buttonSoft, other.buttonSoft),
+      logoRow: s(logoRow, other.logoRow),
+      buttonRoom: s(buttonRoom, other.buttonRoom),
     );
   }
 }

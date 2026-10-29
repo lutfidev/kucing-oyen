@@ -7,7 +7,6 @@ import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/screens/closet/closet_parts.dart';
 import 'package:kucing_oren/screens/closet/closet_screen.dart';
-import 'package:kucing_oren/screens/home/home_screen.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -121,25 +120,6 @@ void main() {
     await _tap(tester, find.byType(KoButton));
     expect(progress.wardrobe.wearing, OyenCostume.peci);
     expect(_inCard(OyenCostume.peci, 'Dipakai'), findsOneWidget);
-  });
-
-  testWidgets('dibuka lagi: terpilih kostum yang dipakai', (tester) async {
-    await _openCloset(
-      tester,
-      coins: 500,
-      wardrobe: Wardrobe(
-        owned: {OyenCostume.kacamata},
-        wearing: OyenCostume.kacamata,
-      ),
-    );
-    expect(_preview(tester).look.costume, OyenCostume.kacamata);
-    await _tap(tester, _card(OyenCostume.sarung));
-    await _tap(tester, find.bySemanticsLabel('Kembali ke Beranda'));
-    expect(find.byType(HomeScreen), findsOneWidget);
-    await _tap(tester, find.bySemanticsLabel('Lemari Kostum'));
-    expect(find.byType(ClosetScreen), findsOneWidget);
-    expect(_preview(tester).look.costume, OyenCostume.kacamata);
-    expect(_action(tester).label, 'Sedang dipakai');
   });
 
   testWidgets('kartu terpilih ditandai untuk pembaca layar', (tester) async {

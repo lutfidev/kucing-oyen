@@ -56,7 +56,6 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.creamDim,
     required this.starShine,
     required this.logo,
-    required this.checker,
     required this.mapFloor,
     required this.plank,
     required this.plankJoint,
@@ -99,6 +98,10 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.needJoyTile,
     required this.needLowTile,
     required this.heart,
+    required this.roomHintWallLine,
+    required this.roomHintWallInk,
+    required this.roomHintFloorLine,
+    required this.roomHintFloorInk,
   });
 
   static const standard = KoColors(
@@ -150,7 +153,6 @@ class KoColors extends ThemeExtension<KoColors> {
     creamDim: Color(0xFFF3E6D2),
     starShine: Color(0xFFFFF1C2),
     logo: Color(0xFFD9700F),
-    checker: Color(0x33E2C08C), // rgba(226,192,140,.20)
     mapFloor: Color(0xFFF3E0C2),
     plank: Color(0x38B07A4F), // rgba(176,122,79,.22)
     plankJoint: Color(0x24B07A4F), // rgba(176,122,79,.14)
@@ -193,6 +195,10 @@ class KoColors extends ThemeExtension<KoColors> {
     needJoyTile: Color(0xFFCDEFE8),
     needLowTile: Color(0xFFF6D3CA),
     heart: Color(0xFFF07F9A),
+    roomHintWallLine: Color(0xFFD9A066),
+    roomHintWallInk: Color(0xFFA9530A),
+    roomHintFloorLine: Color(0xFFC99466),
+    roomHintFloorInk: Color(0xFF8E5A30),
   );
 
   /// Latar semua layar.
@@ -316,9 +322,6 @@ class KoColors extends ThemeExtension<KoColors> {
   /// "Oren" di logo Beranda.
   final Color logo;
 
-  /// Kotak-kotak latar Beranda.
-  final Color checker;
-
   /// Lantai kayu peta babak, garis antarpapan, dan sambungan papan.
   final Color mapFloor;
 
@@ -440,6 +443,18 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Hati elusan.
   final Color heart;
 
+  /// Garis bidang kosong dinding kamar baru.
+  final Color roomHintWallLine;
+
+  /// Teks bidang kosong dinding kamar baru.
+  final Color roomHintWallInk;
+
+  /// Garis bidang kosong lantai kamar baru.
+  final Color roomHintFloorLine;
+
+  /// Teks bidang kosong lantai kamar baru.
+  final Color roomHintFloorInk;
+
   @override
   KoColors copyWith({
     Color? cream,
@@ -490,7 +505,6 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? creamDim,
     Color? starShine,
     Color? logo,
-    Color? checker,
     Color? mapFloor,
     Color? plank,
     Color? plankJoint,
@@ -533,6 +547,10 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? needJoyTile,
     Color? needLowTile,
     Color? heart,
+    Color? roomHintWallLine,
+    Color? roomHintWallInk,
+    Color? roomHintFloorLine,
+    Color? roomHintFloorInk,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -583,7 +601,6 @@ class KoColors extends ThemeExtension<KoColors> {
       creamDim: creamDim ?? this.creamDim,
       starShine: starShine ?? this.starShine,
       logo: logo ?? this.logo,
-      checker: checker ?? this.checker,
       mapFloor: mapFloor ?? this.mapFloor,
       plank: plank ?? this.plank,
       plankJoint: plankJoint ?? this.plankJoint,
@@ -626,6 +643,10 @@ class KoColors extends ThemeExtension<KoColors> {
       needJoyTile: needJoyTile ?? this.needJoyTile,
       needLowTile: needLowTile ?? this.needLowTile,
       heart: heart ?? this.heart,
+      roomHintWallLine: roomHintWallLine ?? this.roomHintWallLine,
+      roomHintWallInk: roomHintWallInk ?? this.roomHintWallInk,
+      roomHintFloorLine: roomHintFloorLine ?? this.roomHintFloorLine,
+      roomHintFloorInk: roomHintFloorInk ?? this.roomHintFloorInk,
     );
   }
 
@@ -682,7 +703,6 @@ class KoColors extends ThemeExtension<KoColors> {
       creamDim: c(creamDim, other.creamDim),
       starShine: c(starShine, other.starShine),
       logo: c(logo, other.logo),
-      checker: c(checker, other.checker),
       mapFloor: c(mapFloor, other.mapFloor),
       plank: c(plank, other.plank),
       plankJoint: c(plankJoint, other.plankJoint),
@@ -725,6 +745,10 @@ class KoColors extends ThemeExtension<KoColors> {
       needJoyTile: c(needJoyTile, other.needJoyTile),
       needLowTile: c(needLowTile, other.needLowTile),
       heart: c(heart, other.heart),
+      roomHintWallLine: c(roomHintWallLine, other.roomHintWallLine),
+      roomHintWallInk: c(roomHintWallInk, other.roomHintWallInk),
+      roomHintFloorLine: c(roomHintFloorLine, other.roomHintFloorLine),
+      roomHintFloorInk: c(roomHintFloorInk, other.roomHintFloorInk),
     );
   }
 }

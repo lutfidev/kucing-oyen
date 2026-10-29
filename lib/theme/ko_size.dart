@@ -54,10 +54,6 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.divider,
     required this.dimSaturation,
     required this.artMinScale,
-    required this.oyenHome,
-    required this.oyenHomeOverlap,
-    required this.menuButton,
-    required this.starHome,
     required this.node,
     required this.nodeRing,
     required this.nodeDash,
@@ -123,6 +119,15 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.shopRarityChip,
     required this.shopPreviewChip,
     required this.shopPreviewButton,
+    required this.roomPlay,
+    required this.roomPlayCompact,
+    required this.roomMenuButton,
+    required this.roomMenuButtonCompact,
+    required this.roomCompactHeight,
+    required this.roomDecorateGap,
+    required this.roomHintBorder,
+    required this.roomBubbleTail,
+    required this.roomHeaderLogoMinWidth,
   });
 
   static const standard = KoSize(
@@ -172,10 +177,6 @@ class KoSize extends ThemeExtension<KoSize> {
     divider: 1.5,
     dimSaturation: 0.7,
     artMinScale: 0.3,
-    oyenHome: 190,
-    oyenHomeOverlap: 34,
-    menuButton: 56,
-    starHome: 26,
     node: 64,
     nodeRing: 4,
     nodeDash: 3,
@@ -241,6 +242,15 @@ class KoSize extends ThemeExtension<KoSize> {
     shopRarityChip: 20,
     shopPreviewChip: 22,
     shopPreviewButton: 46,
+    roomPlay: 70,
+    roomPlayCompact: 60,
+    roomMenuButton: 58,
+    roomMenuButtonCompact: 52,
+    roomCompactHeight: 700,
+    roomDecorateGap: 56,
+    roomHintBorder: 2.5,
+    roomBubbleTail: 14,
+    roomHeaderLogoMinWidth: 360,
   );
 
   /// Tombol "Main" di Beranda.
@@ -360,17 +370,6 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Skala paling kecil kartu ilustrasi layar hasil; kalau tempatnya kurang,
   /// ilustrasinya disembunyikan.
   final double artMinScale;
-
-  /// Oyen tidur di Beranda dan seberapa jauh logo menutupinya.
-  final double oyenHome;
-
-  final double oyenHomeOverlap;
-
-  /// Tombol Lemari Kostum dan Pengaturan di Beranda.
-  final double menuButton;
-
-  /// Bintang di total bintang Beranda.
-  final double starHome;
 
   /// Node level di peta babak, tebal cincin node saat ini (juga garis kotak
   /// bos), dan tebal garis putus-putus node terkunci.
@@ -563,6 +562,33 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Tombol beli, pakai, dan lepas di panel pratinjau (desain 20).
   final double shopPreviewButton;
 
+  /// Tombol Main di panel bawah kamar (desain 19).
+  final double roomPlay;
+
+  /// Tombol Main di layar pendek (catatan `n360`).
+  final double roomPlayCompact;
+
+  /// Tombol Toko, Aksesoris, dan Pengaturan di panel bawah kamar.
+  final double roomMenuButton;
+
+  /// Tombol menu kamar di layar pendek (catatan `n360`).
+  final double roomMenuButtonCompact;
+
+  /// Layar di bawah tinggi ini memakai panel kamar ringkas.
+  final double roomCompactHeight;
+
+  /// Jarak dari atas header kamar ke tombol Hias (desain: 50 → 106).
+  final double roomDecorateGap;
+
+  /// Garis putus-putus bidang kosong kamar baru.
+  final double roomHintBorder;
+
+  /// Ekor gelembung ajakan kamar baru.
+  final double roomBubbleTail;
+
+  /// Logo header kamar disembunyikan di layar lebih sempit dari ini.
+  final double roomHeaderLogoMinWidth;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -611,10 +637,6 @@ class KoSize extends ThemeExtension<KoSize> {
     double? divider,
     double? dimSaturation,
     double? artMinScale,
-    double? oyenHome,
-    double? oyenHomeOverlap,
-    double? menuButton,
-    double? starHome,
     double? node,
     double? nodeRing,
     double? nodeDash,
@@ -680,6 +702,15 @@ class KoSize extends ThemeExtension<KoSize> {
     double? shopRarityChip,
     double? shopPreviewChip,
     double? shopPreviewButton,
+    double? roomPlay,
+    double? roomPlayCompact,
+    double? roomMenuButton,
+    double? roomMenuButtonCompact,
+    double? roomCompactHeight,
+    double? roomDecorateGap,
+    double? roomHintBorder,
+    double? roomBubbleTail,
+    double? roomHeaderLogoMinWidth,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -728,10 +759,6 @@ class KoSize extends ThemeExtension<KoSize> {
       divider: divider ?? this.divider,
       dimSaturation: dimSaturation ?? this.dimSaturation,
       artMinScale: artMinScale ?? this.artMinScale,
-      oyenHome: oyenHome ?? this.oyenHome,
-      oyenHomeOverlap: oyenHomeOverlap ?? this.oyenHomeOverlap,
-      menuButton: menuButton ?? this.menuButton,
-      starHome: starHome ?? this.starHome,
       node: node ?? this.node,
       nodeRing: nodeRing ?? this.nodeRing,
       nodeDash: nodeDash ?? this.nodeDash,
@@ -797,6 +824,17 @@ class KoSize extends ThemeExtension<KoSize> {
       shopRarityChip: shopRarityChip ?? this.shopRarityChip,
       shopPreviewChip: shopPreviewChip ?? this.shopPreviewChip,
       shopPreviewButton: shopPreviewButton ?? this.shopPreviewButton,
+      roomPlay: roomPlay ?? this.roomPlay,
+      roomPlayCompact: roomPlayCompact ?? this.roomPlayCompact,
+      roomMenuButton: roomMenuButton ?? this.roomMenuButton,
+      roomMenuButtonCompact:
+          roomMenuButtonCompact ?? this.roomMenuButtonCompact,
+      roomCompactHeight: roomCompactHeight ?? this.roomCompactHeight,
+      roomDecorateGap: roomDecorateGap ?? this.roomDecorateGap,
+      roomHintBorder: roomHintBorder ?? this.roomHintBorder,
+      roomBubbleTail: roomBubbleTail ?? this.roomBubbleTail,
+      roomHeaderLogoMinWidth:
+          roomHeaderLogoMinWidth ?? this.roomHeaderLogoMinWidth,
     );
   }
 
@@ -851,10 +889,6 @@ class KoSize extends ThemeExtension<KoSize> {
       divider: d(divider, other.divider),
       dimSaturation: d(dimSaturation, other.dimSaturation),
       artMinScale: d(artMinScale, other.artMinScale),
-      oyenHome: d(oyenHome, other.oyenHome),
-      oyenHomeOverlap: d(oyenHomeOverlap, other.oyenHomeOverlap),
-      menuButton: d(menuButton, other.menuButton),
-      starHome: d(starHome, other.starHome),
       node: d(node, other.node),
       nodeRing: d(nodeRing, other.nodeRing),
       nodeDash: d(nodeDash, other.nodeDash),
@@ -920,6 +954,21 @@ class KoSize extends ThemeExtension<KoSize> {
       shopRarityChip: d(shopRarityChip, other.shopRarityChip),
       shopPreviewChip: d(shopPreviewChip, other.shopPreviewChip),
       shopPreviewButton: d(shopPreviewButton, other.shopPreviewButton),
+      roomPlay: d(roomPlay, other.roomPlay),
+      roomPlayCompact: d(roomPlayCompact, other.roomPlayCompact),
+      roomMenuButton: d(roomMenuButton, other.roomMenuButton),
+      roomMenuButtonCompact: d(
+        roomMenuButtonCompact,
+        other.roomMenuButtonCompact,
+      ),
+      roomCompactHeight: d(roomCompactHeight, other.roomCompactHeight),
+      roomDecorateGap: d(roomDecorateGap, other.roomDecorateGap),
+      roomHintBorder: d(roomHintBorder, other.roomHintBorder),
+      roomBubbleTail: d(roomBubbleTail, other.roomBubbleTail),
+      roomHeaderLogoMinWidth: d(
+        roomHeaderLogoMinWidth,
+        other.roomHeaderLogoMinWidth,
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:go_router/go_router.dart';
 
 import '../gallery/gallery_board_screen.dart';
@@ -7,19 +9,24 @@ import '../gallery/gallery_screen.dart';
 import '../gallery/gallery_sound_screen.dart';
 import '../screens/chapter/chapter_screen.dart';
 import '../screens/closet/closet_screen.dart';
-import '../screens/home/home_screen.dart';
 import '../screens/level/level_screen.dart';
+import '../screens/room/room_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/shop/shop_screen.dart';
 import 'routes.dart';
 
-GoRouter createRouter({String initialLocation = AppRoutes.home}) {
+/// [roomRandom] membuat pengacak posisi kucing tiap kamar dibuka; null =
+/// acak sungguhan (test memberi seed supaya gambarnya selalu sama).
+GoRouter createRouter({
+  String initialLocation = AppRoutes.home,
+  Random Function()? roomRandom,
+}) {
   return GoRouter(
     initialLocation: initialLocation,
     routes: [
       GoRoute(
         path: AppRoutes.home,
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => RoomScreen(random: roomRandom?.call()),
         routes: [
           GoRoute(
             path: 'galeri',

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -106,14 +107,16 @@ void setTextScale(WidgetTester tester, double scale) {
 
 /// Pompa aplikasi lengkap di [location] dengan [progress] (default:
 /// progres kosong), [audio] (default: [testAudio]), dan persetujuan iklan
-/// [consent] (default tidak ada), lalu [settle]. Mengembalikan progres yang
-/// dipakai.
+/// [consent] (default tidak ada), lalu [settle]. Posisi kucing di kamar
+/// memakai [roomRandom] (default `Random(1)`, jadi selalu sama).
+/// Mengembalikan progres yang dipakai.
 Future<ProgressController> pumpApp(
   WidgetTester tester, {
   String location = '/',
   ProgressController? progress,
   GameAudio? audio,
   AdConsent? consent,
+  Random Function()? roomRandom,
 }) async {
   final controller = progress ?? testProgress();
   await tester.pumpWidget(
@@ -122,6 +125,7 @@ Future<ProgressController> pumpApp(
       audio: audio ?? testAudio(),
       consent: consent,
       initialLocation: location,
+      roomRandom: roomRandom ?? () => Random(1),
     ),
   );
   await settle(tester);
