@@ -19,6 +19,7 @@ import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
@@ -519,6 +520,104 @@ void main() {
         });
       }, skip: !screenshotsEnabled);
     }
+  }
+
+  // Kamar seperti contoh desain 19 (`Kamar.dc.html`): saldo 480, Arang dan
+  // Mendung tinggal di kamar, Arang lapar dan memakai Kalung Lonceng, Jam
+  // dan Pot Catnip di Gudang. Lalu kartu Oyen (panel Camilan dan
+  // Aksesoris), mode hias, barang diseret, dan pujian sesudah Selesai.
+  // Posisi kucing tetap karena `roomRandom` diberi seed.
+  final roomNow = DateTime(2026, 10, 29, 9);
+  Home roomHome() {
+    var room = Room();
+    for (final id in [
+      RoomItemId.karpet,
+      RoomItemId.lukisan,
+      RoomItemId.rak,
+      RoomItemId.tiang,
+      RoomItemId.kasur,
+      RoomItemId.bola,
+      RoomItemId.kardus,
+      RoomItemId.jam,
+      RoomItemId.catnip,
+    ]) {
+      room = room.buy(id);
+    }
+    return Home(
+      room: room.store(RoomItemId.jam).store(RoomItemId.catnip),
+      kitties: const [KittyId.arang, KittyId.mendung],
+      closet: AccessoryCloset(
+        owned: const [AccessoryId.pita, AccessoryId.kalung],
+      ).wear(KittyId.arang, AccessoryId.kalung),
+      pantry: Pantry({
+        SnackId.ikanAsin: 3,
+        SnackId.susu: 1,
+        SnackId.biskuit: 5,
+      }),
+    );
+  }
+
+  for (final small in [false, true]) {
+    final suffix = small ? '-360x640' : '';
+    testWidgets('$folder/19-kamar$suffix', (tester) async {
+      setScreenSize(tester, small ? const Size(360, 640) : _size);
+      await withShadows(() async {
+        await tester.pumpWidget(
+          capturable(
+            KucingOrenApp(
+              progress: testProgressWith(
+                coins: 480,
+                best: _designProgress,
+                home: roomHome(),
+                clock: () => roomNow,
+                needs: HomeNeeds(
+                  cats: {
+                    KittyId.oyen: CatNeeds(hunger: 55, joy: 72, at: roomNow),
+                    KittyId.arang: CatNeeds(hunger: 12, joy: 30, at: roomNow),
+                  },
+                ),
+              ),
+              roomRandom: () => Random(1),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await capture(tester, '$folder/19-kamar$suffix');
+
+        Finder oyen() => find.byWidgetPredicate(
+          (w) => w is KittyView && w.look.kitty == KittyId.oyen,
+        );
+        await tester.tap(oyen());
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Camilan'));
+        await tester.pumpAndSettle();
+        await capture(tester, '$folder/19-kamar-kartu$suffix');
+        await tester.tap(find.text('Aksesoris').last);
+        await tester.pumpAndSettle();
+        await capture(tester, '$folder/19-kamar-kartu-aksesoris$suffix');
+        await tester.binding.handlePopRoute();
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Hias'));
+        await tester.pumpAndSettle();
+        await capture(tester, '$folder/19-kamar-hias$suffix');
+        final kasur = find.byWidgetPredicate(
+          (w) => w is RoomItemView && w.id == RoomItemId.kasur,
+        );
+        final drag = await tester.startGesture(tester.getCenter(kasur));
+        await drag.moveBy(const Offset(-20, 10));
+        await drag.moveBy(const Offset(-60, 20));
+        await tester.pump();
+        await capture(tester, '$folder/19-kamar-seret$suffix');
+        await drag.up();
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Selesai'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 600));
+        await capture(tester, '$folder/19-kamar-pujian$suffix');
+        await tester.pumpAndSettle();
+      });
+    }, skip: !screenshotsEnabled);
   }
 
   // Toko seperti contoh desain 20: saldo 480, Arang dan Mendung sudah

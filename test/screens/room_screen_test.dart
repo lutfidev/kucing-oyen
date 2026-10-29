@@ -65,6 +65,27 @@ void main() {
       expect(find.byType(ShopScreen), findsOneWidget);
     });
 
+    testWidgets('kamar baru: Oyen di tengah seperti desain, apa pun seed-nya', (
+      tester,
+    ) async {
+      for (final seed in [1, 2, 3]) {
+        await pumpRoom(tester, random: () => Random(seed));
+        final (room, geo) = roomOf(tester);
+        final oyen = tester
+            .getRect(kittyView(KittyId.oyen))
+            .shift(-room.topLeft);
+        expect(
+          oyen,
+          geo.catBoxOf(KittyId.oyen, starterOyenSpot),
+          reason: '$seed',
+        );
+        final bubble = tester.getRect(
+          find.text('Kamar masih sepi. Ke Toko, yuk!'),
+        );
+        expect(bubble.overlaps(oyen.shift(room.topLeft)), isFalse);
+      }
+    });
+
     testWidgets('kamar berisi: tanpa ajakan', (tester) async {
       await pumpRoom(
         tester,

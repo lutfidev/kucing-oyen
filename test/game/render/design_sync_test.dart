@@ -49,8 +49,15 @@ void main() {
       expect(_lf(tileSvg), _inner('Tile.dc.html'));
     });
 
-    test('Oyen.dc.html', () {
-      expect(_lf(oyenSvg), _inner('Oyen.dc.html'));
+    test('Oyen.dc.html tanpa kostum lama (dibuang di langkah 23)', () {
+      final design = _inner('Oyen.dc.html');
+      final costume = RegExp(
+        r'\n[ \t]*<sc-if value="\{\{show(?:Peci|Koki|Glasses|Sarung)\}\}"'
+        r'[^>]*>.*?</sc-if>',
+        dotAll: true,
+      );
+      expect(costume.allMatches(design), hasLength(4));
+      expect(_lf(oyenSvg), design.replaceAll(costume, ''));
     });
 
     test('panah arah hadap di Board.dc.html', () {

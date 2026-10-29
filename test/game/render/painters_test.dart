@@ -130,10 +130,13 @@ void main() {
     expect(shock['mouthO'], isTrue);
     expect(shock['eyeSleepy'], isFalse);
 
-    // Kostum desain tidak dipakai lagi (langkah 23).
-    for (final key in ['showPeci', 'showKoki', 'showGlasses', 'showSarung']) {
-      expect(oyenVals(const OyenLook())[key], isFalse, reason: key);
-    }
+    // Kostum desain dibuang di langkah 23 (Lemari Kostum dihapus).
+    expect(
+      oyenVals(const OyenLook()).keys.where((k) => k.startsWith('show')),
+      isNot(
+        contains(anyOf('showPeci', 'showKoki', 'showGlasses', 'showSarung')),
+      ),
+    );
   });
 
   test('kedip petak menyala: 1 → 0,45 → 1 tiap detik', () {

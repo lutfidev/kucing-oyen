@@ -5,13 +5,22 @@ import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/app/routes.dart';
+import 'package:kucing_oren/game/model/accessories.dart';
+import 'package:kucing_oren/game/model/home.dart';
+import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
+import 'package:kucing_oren/game/model/needs.dart';
+import 'package:kucing_oren/game/model/room.dart';
+import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/l10n/l10n.dart';
+import 'package:kucing_oren/l10n/names.dart';
 import 'package:kucing_oren/screens/level/hint_sheet.dart';
 import 'package:kucing_oren/screens/level/rules_sheet.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
+import 'package:kucing_oren/screens/room/kitty_card.dart';
 import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/screens/settings/settings_parts.dart';
@@ -324,6 +333,99 @@ void _cases(AppLanguage language) {
         setTextScale(tester, scale);
         await pumpApp(tester, progress: p(coins: 99999));
         expect(find.text('99999'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+      // Kamar penuh: semua barang ditaruh, sembilan kucing beraksesoris,
+      // Oyen lesu, stok camilan dan aksesoris lengkap, saldo 5 digit.
+      ProgressController fullRoom() {
+        final now = DateTime(2026, 10, 29, 9);
+        var room = Room();
+        for (final item in shopItems) {
+          room = room.buy(item.id);
+        }
+        // Dua barang di Gudang untuk baki mode hias.
+        room = room.store(RoomItemId.jam).store(RoomItemId.hammock);
+        var closet = AccessoryCloset(owned: AccessoryId.values);
+        for (final kitty in KittyId.values) {
+          closet = closet.wear(
+            kitty,
+            AccessoryId.values[kitty.index % AccessoryId.values.length],
+          );
+        }
+        return testProgressWith(
+          coins: 99999,
+          language: language,
+          clock: () => now,
+          home: Home(
+            room: room,
+            kitties: KittyId.values,
+            closet: closet,
+            pantry: Pantry({for (final s in SnackId.values) s: 99}),
+          ),
+          needs: HomeNeeds(
+            cats: {KittyId.oyen: CatNeeds(hunger: 12, joy: 8, at: now)},
+          ),
+        );
+      }
+
+      Future<void> openOyenCard(WidgetTester tester) async {
+        final handle = tester.ensureSemantics();
+        tester.semantics.tap(
+          find.semantics.byLabel(
+            l.kittyTapHintHungry(kittyName(l, KittyId.oyen)),
+          ),
+        );
+        await tester.pumpAndSettle();
+        handle.dispose();
+        expect(find.byType(KittyCard), findsOneWidget);
+      }
+
+      Finder inCard(String text) => find.descendant(
+        of: find.byType(KittyCard),
+        matching: find.text(text),
+      );
+
+      testWidgets('tanpa overflow: kamar penuh @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpApp(tester, progress: fullRoom());
+        expect(find.byType(KittyView), findsNWidgets(KittyId.values.length));
+        expect(tester.takeException(), isNull);
+      });
+      testWidgets('tanpa overflow: mode hias @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpApp(tester, progress: fullRoom());
+        await tester.tap(find.text(l.decorate));
+        await tester.pumpAndSettle();
+        expect(find.text(l.storageCount(2)), findsOneWidget);
+        expect(find.text(l.decorateDone).hitTestable(), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+      testWidgets('tanpa overflow: kartu kucing dengan Camilan dan Aksesoris '
+          '@ $label, teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpApp(tester, progress: fullRoom());
+        await openOyenCard(tester);
+        await tester.tap(inCard(l.snackPanel));
+        await tester.pumpAndSettle();
+        final lastSnack = inCard(snackName(l, SnackId.values.last));
+        await tester.ensureVisible(lastSnack);
+        await tester.pumpAndSettle();
+        expect(lastSnack.hitTestable(), findsOneWidget);
+        expect(tester.takeException(), isNull);
+
+        await tester.ensureVisible(inCard(l.accessories));
+        await tester.pumpAndSettle();
+        await tester.tap(inCard(l.accessories));
+        await tester.pumpAndSettle();
+        final lastAccessory = inCard(accessoryName(l, AccessoryId.values.last));
+        await tester.ensureVisible(lastAccessory);
+        await tester.pumpAndSettle();
+        expect(lastAccessory.hitTestable(), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
       // Sheet Tambah Koin dari Beranda bersaldo 5 digit: siap semua, jatah

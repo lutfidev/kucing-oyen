@@ -42,6 +42,11 @@ Map<KittyId, Spot> kittySpots(Iterable<KittyId> kitties, Random random) {
   return {for (final kitty in kitties) kitty: slots[kitty.index]};
 }
 
+/// Oyen di kamar baru (hanya mangkuk): di tengah lantai seperti desain
+/// (`Kamar.dc.html` keadaan `baru`, kiri 128 atas 470), jauh dari gelembung
+/// ajakan di kiri bawah.
+final starterOyenSpot = Spot(0.47, 0.71);
+
 /// Titik merah Toko: ada barang atau kucing yang belum dimiliki dan
 /// terjangkau [coins]. Camilan tidak dihitung.
 bool shopHasAffordable(Home home, int coins) =>
@@ -101,6 +106,13 @@ class _RoomViewState extends State<RoomView> {
   Offset _dragPointer = Offset.zero;
 
   final _trayKey = GlobalKey();
+
+  /// Kamar baru: belum punya barang selain mangkuk.
+  bool get _empty =>
+      _progress.home.room.owned.every((id) => roomItemOf(id).builtIn);
+
+  Spot _spotOf(KittyId kitty) =>
+      _empty && kitty == KittyId.oyen ? starterOyenSpot : _slots[kitty.index];
 
   void _select(KittyId kitty) => setState(() => _selected = kitty);
 
@@ -287,7 +299,7 @@ class _RoomViewState extends State<RoomView> {
               ReactionOverlay(
                 key: ValueKey(n),
                 reaction: r,
-                anchor: geo.catBoxOf(kitty, _slots[kitty.index]),
+                anchor: geo.catBoxOf(kitty, _spotOf(kitty)),
                 onDone: () => setState(() => _reaction = null),
               ),
             if (praise case (final bonus, final n))
@@ -325,7 +337,7 @@ class _RoomViewState extends State<RoomView> {
         ...home.room.placed,
         if (dragging != null && dragSpot != null) dragging: dragSpot,
       },
-      cats: {for (final kitty in home.kitties) kitty: _slots[kitty.index]},
+      cats: {for (final kitty in home.kitties) kitty: _spotOf(kitty)},
       geo: geo,
     );
     // Barang yang diangkat digambar paling depan.
@@ -335,8 +347,7 @@ class _RoomViewState extends State<RoomView> {
       for (final sprite in sprites)
         if (sprite is ItemSprite && sprite.id == dragging) sprite,
     ];
-    final owned = home.room.owned;
-    final empty = owned.every((id) => roomItemOf(id).builtIn);
+    final empty = _empty;
     final top = MediaQuery.paddingOf(context).top + space.s6;
     return Stack(
       key: const ValueKey('room-area'),
