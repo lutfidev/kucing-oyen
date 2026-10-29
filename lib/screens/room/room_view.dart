@@ -755,7 +755,8 @@ class _RoomViewState extends State<RoomView>
       id: id,
       box: sprite.box.size,
       full: id != RoomItemId.mangkuk || bowlFull,
-      time: time,
+      // Barang diam tidak digambar ulang tiap bingkai.
+      time: RoomItemArt.isAnimated(id) ? time : null,
     );
     if (_decorating) {
       final l = context.l10n;

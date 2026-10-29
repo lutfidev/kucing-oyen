@@ -172,14 +172,31 @@ void main() {
       }
     });
 
+    test('mangkuk, bola, tikus: gambar sprite menimpa barang aslinya', () {
+      // Titik di sprite kucing (100×100) tempat mangkuk, bola, dan tikus
+      // digambar (`Kucing.dc.html`), dan titik yang sama di gambar barang.
+      const cases = {
+        RoomItemId.mangkuk: (Offset(23, 72), Offset(0, 0)),
+        RoomItemId.bola: (Offset(92, 90), Offset(18, 18)),
+        RoomItemId.tikus: (Offset(94, 91), Offset(23, 14)),
+      };
+      for (final MapEntry(key: id, value: (inSprite, inItem))
+          in cases.entries) {
+        const k = 1.15;
+        final box = const Offset(200, 500) & RoomItemArt.sizeOf(id) * k;
+        final used = RoomItemArt.inUseBox(id, box);
+        final cat = RoomItemArt.catBox(id, used);
+        final spriteK = cat.width / 100;
+        final drawn = cat.topLeft + inSprite * spriteK;
+        final real = box.topLeft + inItem * k;
+        expect((drawn - real).distance, lessThan(4), reason: id.name);
+      }
+    });
+
     test('dicerminkan: kucing pindah ke sisi lain barang', () {
       const box = Rect.fromLTWH(20, 0, 50, 152);
       final plain = RoomItemArt.inUseBox(RoomItemId.tiang, box);
-      final flipped = RoomItemArt.inUseBox(
-        RoomItemId.tiang,
-        box,
-        mirror: true,
-      );
+      final flipped = RoomItemArt.inUseBox(RoomItemId.tiang, box, mirror: true);
       // Tiang 50 di kotak 130: biasa 58 di kiri, dicerminkan 22.
       expect(plain.left, -38);
       expect(flipped.left, -2);
@@ -236,6 +253,14 @@ void main() {
       final still = await pixels((c) => paint(c, null), size);
       expect(await pixels((c) => paint(c, 0), size), isNot(still));
       expect(await pixels((c) => paint(c, 1.6), size), isNot(still));
+    });
+
+    test('barang bergerak: hanya yang punya animasi desain', () {
+      expect(RoomItemArt.isAnimated(RoomItemId.catnip), isTrue);
+      expect(RoomItemArt.isAnimated(RoomItemId.akuarium), isTrue);
+      expect(RoomItemArt.isAnimated(RoomItemId.hammock), isTrue);
+      expect(RoomItemArt.isAnimated(RoomItemId.kasur), isFalse);
+      expect(RoomItemArt.isAnimated(RoomItemId.kardus), isFalse);
     });
 
     test('hammock berayun walau tidak dipakai', () async {

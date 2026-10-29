@@ -27,6 +27,14 @@ class SvgTemplate {
 
   final List<_Element> _nodes;
 
+  /// Ada elemen dengan atribut `style` (animasi). Kalau tidak, [render]
+  /// dengan waktu apa pun sama dengan gambar diam, jadi boleh di-cache.
+  late final bool animated = _hasStyle(_nodes);
+
+  static bool _hasStyle(List<_Element> nodes) => nodes.any(
+    (el) => el.attrs.containsKey('style') || _hasStyle(el.children),
+  );
+
   /// `@keyframes` yang dipakai atribut `style` (lihat [CssKeyframes.parse]).
   final Map<String, CssKeyframes> keyframes;
 

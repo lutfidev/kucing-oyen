@@ -42,6 +42,11 @@ class ItemInUse {
 }
 
 /// Tabel `D` (ukuran dipakai), `offs`, dan `cats` di `Barang.dc.html`.
+/// Bola, tikus, dan mangkuk disembunyikan saat dipakai; `artOffset`-nya
+/// bukan dari tabel (desain 0,0) tapi titik sprite kucing yang menggambar
+/// benda itu (`Kucing.dc.html`: mangkuk di (23, 72), bola berpusat di
+/// (92, 90), tikus di (94, 91)), supaya benda di sprite menimpa benda
+/// aslinya di kamar dan tidak melompat.
 const _inUse = <RoomItemId, ItemInUse>{
   RoomItemId.kardus: ItemInUse(
     Size(122, 124),
@@ -52,14 +57,14 @@ const _inUse = <RoomItemId, ItemInUse>{
   ),
   RoomItemId.bola: ItemInUse(
     Size(110, 100),
-    Offset.zero,
+    Offset(74, 72),
     Offset.zero,
     100,
     KittyPose.play,
   ),
   RoomItemId.tikus: ItemInUse(
     Size(110, 100),
-    Offset.zero,
+    Offset(71, 77),
     Offset.zero,
     100,
     KittyPose.play,
@@ -129,7 +134,7 @@ const _inUse = <RoomItemId, ItemInUse>{
   ),
   RoomItemId.mangkuk: ItemInUse(
     Size(100, 100),
-    Offset.zero,
+    Offset(23, 72),
     Offset.zero,
     100,
     KittyPose.eat,
@@ -217,6 +222,13 @@ abstract final class RoomItemArt {
 
   static ItemInUse inUse(RoomItemId id) => _inUse[id]!;
 
+  /// Barang yang bergerak sendiri (`brg-anim` desain, termasuk ayunan
+  /// hammock); yang lain cukup digambar diam.
+  static bool isAnimated(RoomItemId id) =>
+      id == RoomItemId.hammock ||
+      (_back[id.name]?.animated ?? false) ||
+      (_front[id.name]?.animated ?? false);
+
   /// Kotak barang [id] saat dipakai, kalau kotak diamnya [box]: pojok
   /// gambar barang tetap di tempatnya, kotaknya melebar untuk kucingnya.
   /// [mirror] = dicerminkan (kucing di sisi lain barang), dipakai kalau
@@ -270,7 +282,11 @@ Size _sizeOf(String code) {
     );
   }
 
-  return time == null ? _cache.putIfAbsent((code, full), render) : render();
+  final moving =
+      time != null &&
+      ((_back[code]?.animated ?? false) || (_front[code]?.animated ?? false));
+  // Barang tanpa animasi digambar sekali saja, juga di kamar yang bergerak.
+  return moving ? render() : _cache.putIfAbsent((code, full), render);
 }
 
 Float64List _matrix(CssMatrix m) => Float64List.fromList([

@@ -119,4 +119,20 @@ void main() {
       expect(bad.render({}).length, 1);
     });
   });
+
+  test('animated: hanya template yang punya atribut style', () {
+    expect(
+      SvgTemplate(
+        '<rect x="0" y="0" width="1" height="1" fill="#000000"></rect>',
+      ).animated,
+      isFalse,
+    );
+    expect(
+      SvgTemplate(
+        '<g style="{{s}}"><rect x="0" y="0" width="1" height="1" '
+        'fill="#000000"></rect></g>',
+      ).animated,
+      isTrue,
+    );
+  });
 }
