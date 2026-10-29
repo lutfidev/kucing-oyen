@@ -73,6 +73,7 @@ class KittyColors {
     this.headPatches = const [],
     this.sleepBody = const [],
     this.sleepHead = const [],
+    this.delay = 0,
   });
 
   final String fur;
@@ -114,6 +115,10 @@ class KittyColors {
   final List<FurPatch> headPatches;
   final List<FurPatch> sleepBody;
   final List<FurPatch> sleepHead;
+
+  /// Jeda awal kedip dan napas (detik, negatif) supaya kucing tidak
+  /// berkedip serempak (`delay` palet desain).
+  final double delay;
 
   /// Telapak mengikuti perut kalau tidak ditulis sendiri (desain).
   String get paw => pawOverride ?? belly;
@@ -179,6 +184,7 @@ const kittyPalette = <KittyId, KittyColors>{
     whisker: '#3A2618',
     whiskerOp: 0.35,
     edge: '#E3D6C6',
+    delay: -3.1,
   ),
   KittyId.telon: KittyColors(
     fur: '#FFF8EE',
@@ -216,6 +222,7 @@ const kittyPalette = <KittyId, KittyColors>{
       FurPatch(82, 68, 7, 5, _black),
     ],
     sleepHead: [FurPatch(24, 54, 7, 5.5, _orange)],
+    delay: -0.7,
   ),
   KittyId.arang: KittyColors(
     fur: _black,
@@ -238,6 +245,7 @@ const kittyPalette = <KittyId, KittyColors>{
     blushOp: 0.35,
     whisker: '#F2E3CC',
     whiskerOp: 0.6,
+    delay: -1.3,
   ),
   KittyId.mendung: KittyColors(
     fur: '#8C929A',
@@ -261,6 +269,7 @@ const kittyPalette = <KittyId, KittyColors>{
     whisker: '#2B2E33',
     whiskerOp: 0.45,
     stripes: true,
+    delay: -2.4,
   ),
   KittyId.kopiSusu: KittyColors(
     fur: '#C89A6E',
@@ -282,6 +291,7 @@ const kittyPalette = <KittyId, KittyColors>{
     blushOp: 0.45,
     whisker: '#3A2618',
     whiskerOp: 0.45,
+    delay: -1.8,
   ),
   KittyId.mochi: KittyColors(
     fur: '#F3E6D2',
@@ -309,6 +319,7 @@ const kittyPalette = <KittyId, KittyColors>{
     legOverride: '#5C4033',
     maskOn: true,
     mask: '#7A5842',
+    delay: -0.4,
   ),
   KittyId.bos: KittyColors(
     fur: '#262222',
@@ -333,6 +344,7 @@ const kittyPalette = <KittyId, KittyColors>{
     whiskerOp: 0.8,
     pawOverride: '#FFFFFF',
     blazeOn: true,
+    delay: -2.8,
   ),
   KittyId.kembang: KittyColors(
     fur: '#3A2C28',
@@ -387,11 +399,13 @@ const kittyPalette = <KittyId, KittyColors>{
       FurPatch(24, 54, 7, 5, _orangeDeep),
       FurPatch(42, 58, 5, 4, _brown),
     ],
+    delay: -1.0,
   ),
 };
 
 /// Kucing kamar yang digambar: siapa, pose, arah, aksesoris, dan mainan.
-/// [time] = detik gerak, dipakai animasi langkah 24.
+/// [time] = detik animasi (kedip, ekor, napas, dan gerak pose desain 21c);
+/// null = sprite diam, juga saat kurangi gerak.
 class KittyLook {
   const KittyLook({
     required this.kitty,
@@ -400,7 +414,7 @@ class KittyLook {
     this.accessory,
     this.toy = KittyToy.ball,
     this.post = true,
-    this.time = 0,
+    this.time,
   });
 
   /// Kotak gambar desain (100×100), isinya boleh keluar (topi, gelembung).
@@ -418,7 +432,17 @@ class KittyLook {
   /// digambar barangnya sendiri.
   final bool post;
 
-  final double time;
+  final double? time;
+
+  /// Lama satu bingkai jalan (`Kucing.dc.html`: 220 ms).
+  static const walkFrameSeconds = 0.22;
+
+  /// Bingkai jalan pada detik [time]: [KittyPose.walk1] dan
+  /// [KittyPose.walk2] bergantian.
+  static KittyPose walkPose(double time) =>
+      (time / walkFrameSeconds).floor().isOdd
+      ? KittyPose.walk2
+      : KittyPose.walk1;
 
   KittyColors get colors => kittyPalette[kitty]!;
 
@@ -431,6 +455,7 @@ class KittyLook {
     KittyToy? toy,
     bool? post,
     double? time,
+    bool still = false,
   }) => KittyLook(
     kitty: kitty ?? this.kitty,
     pose: pose ?? this.pose,
@@ -438,7 +463,7 @@ class KittyLook {
     accessory: clearAccessory ? null : accessory ?? this.accessory,
     toy: toy ?? this.toy,
     post: post ?? this.post,
-    time: time ?? this.time,
+    time: still ? null : time ?? this.time,
   );
 
   @override

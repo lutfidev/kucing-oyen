@@ -143,18 +143,68 @@ void main() {
     expect(bos(50, 40), _near(const Color(0xFFFFFFFF)));
   });
 
-  test('tanpa gerakan: semua gaya animasi kosong di langkah ini', () {
+  test('tanpa waktu (kurangi gerak): semua gaya animasi kosong', () {
     final vals = kittyVals(const KittyLook(kitty: KittyId.oyen));
     for (final key in ['tailStyle', 'blinkStyle', 'headAnim', 'zzzAnim']) {
       expect(vals[key], '', reason: key);
     }
+    expect(vals['noteOn'], isFalse);
   });
 
-  test('waktu belum mengubah gambar, jadi aman jadi kunci cache', () {
-    const look = KittyLook(kitty: KittyId.oyen, pose: KittyPose.walk1);
+  test('dengan waktu: gaya animasi desain, jeda kedip per kucing', () {
+    final arang = kittyVals(const KittyLook(kitty: KittyId.arang, time: 0));
     expect(
-      kittyVals(look.copyWith(time: 3.5)).toString(),
-      kittyVals(look).toString(),
+      arang['blinkStyle'],
+      'transform-box: fill-box; transform-origin: center; '
+      'animation: kcBlink 4.6s infinite; animation-delay: -1.3s',
     );
+    expect(
+      arang['tailStyle'],
+      'transform-origin: 73px 77px; animation: kcTail 2.6s ease-in-out infinite',
+    );
+    final happy = kittyVals(
+      const KittyLook(kitty: KittyId.oyen, pose: KittyPose.happy, time: 0),
+    );
+    expect(happy['tailStyle'], contains('kcWag 0.9s'));
+    // Mata senang tidak berkedip (desain: hanya mata terbuka).
+    expect(happy['blinkStyle'], '');
+  });
+
+  test('kedip: mata Oyen tertutup di tengah kedip', () async {
+    const look = KittyLook(kitty: KittyId.oyen);
+    final eye = _hex(kittyPalette[KittyId.oyen]!.eye);
+    final open = await _sampler(look.copyWith(time: 0));
+    expect(open(37, 48.5), _near(eye));
+    final shut = await _sampler(look.copyWith(time: 4.6 * 0.96));
+    expect(shut(37, 48.5), isNot(_near(eye, tolerance: 30)));
+  });
+
+  test('ekor bergerak: gambar Arang di −8° beda dari diam', () async {
+    const look = KittyLook(kitty: KittyId.arang);
+    Future<List<int>> pixels(KittyLook l) async {
+      final recorder = PictureRecorder();
+      paintKitty(Canvas(recorder), l);
+      final image = await recorder.endRecording().toImage(100, 100);
+      return (await image.toByteData())!.buffer.asUint8List();
+    }
+
+    final still = await pixels(look);
+    // Ekor tanpa delay: puncak −8° di 50% dari 2,6 detik, lurus di awal.
+    expect(await pixels(look.copyWith(time: 1.3)), isNot(still));
+    expect(await pixels(look.copyWith(time: 0)), still);
+  });
+
+  test('bingkai jalan bergantian tiap 220 ms', () {
+    expect(KittyLook.walkPose(0.1), KittyPose.walk1);
+    expect(KittyLook.walkPose(0.3), KittyPose.walk2);
+    expect(KittyLook.walkPose(0.5), KittyPose.walk1);
+  });
+
+  test('sprite diam di-cache, sprite bergerak tidak', () {
+    const look = KittyLook(kitty: KittyId.oyen);
+    expect(identical(kittyDrawing(look), kittyDrawing(look)), isTrue);
+    final moving = look.copyWith(time: 1);
+    expect(identical(kittyDrawing(moving), kittyDrawing(moving)), isFalse);
+    expect(look.copyWith(time: 1).copyWith(still: true), look);
   });
 }
