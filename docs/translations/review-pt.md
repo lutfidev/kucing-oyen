@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-473 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+476 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -498,6 +498,9 @@ for the store listing at the end.
 | `storeItemAction` | Move to storage | Guardar no depósito | Screen reader action on a room item while decorating. | |
 | `decoratePraise` | Room's looking great! | O quarto tá ficando lindo! | Praise shown after decorating. | |
 | `decoratePraiseJoy` | +{joy} Happy for every cat | +{joy} de Alegria pra todos os gatos | Bonus line under the decorating praise. Placeholders: `{joy}`. | |
+| `bowlRefill` | {hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}} | {hours, plural, one{Enche de novo em {hours} hora} other{Enche de novo em {hours} horas}} | Label over the empty shared food bowl in the cat room: hours until it refills. Placeholders: `{hours}`. | |
+| `kittyRewardLabel` | {coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}} | {coins, plural, one{Pegar {coins} moeda de {name}} other{Pegar {coins} moedas de {name}}} | Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward. Placeholders: `{coins}`, `{name}`. | |
+| `reactionCoins` | {coins, plural, one{+{coins} coin} other{+{coins} coins}} | {coins, plural, one{+{coins} moeda} other{+{coins} moedas}} | Floating text over a cat after collecting its coin reward. Placeholders: `{coins}`. | |
 
 ---
 
