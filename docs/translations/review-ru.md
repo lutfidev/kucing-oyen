@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-436 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+473 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -37,11 +37,9 @@ for the store listing at the end.
 | `adFailed` | The ad couldn't play. Try again later, okay? | Реклама не загрузилась. Попробуй позже, ладно? | The rewarded ad failed to load or was closed early. | |
 | `boardLabel` | Game board, 7 by 9 tiles | Игровое поле 7 на 9 клеток | Screen reader label of the 7×9 game board. | |
 | `play` | Play | Играть | Big Play button on the home screen and the map node label. | |
-| `closet` | Wardrobe | Гардероб | Costume closet button and screen title. | |
 | `settings` | Settings | Настройки | Settings button and screen title. | |
 | `tagline` | Oyen won't listen. You do the thinking. | Ойен не слушается. Думать тебе. | Tagline under the logo on the home screen. | |
 | `splashTagline` | Let's play! | Играем! | Short line under the logo on the Android splash screen (rendered into an image, keep it very short). | |
-| `starTotalUnit` | stars | звёзд | Word after the star total on the home screen ("31/60 stars"). | |
 | `chapterNumber` | Chapter {n} | Глава {n} | Chapter number above the chapter name (shown in capitals). Placeholders: `{n}`. | |
 | `chapter1Name` | Kitchen | Кухня | Name of chapter 1 (setting: kitchen). | |
 | `chapter2Name` | Living Room | Гостиная | Name of chapter 2 (setting: living room). | |
@@ -250,21 +248,9 @@ for the store listing at the end.
 | `replayStepCaption` | Step {n}. {text} | Шаг {n}. {text} | Replay: screen reader caption of step n. Placeholders: `{n}`, `{text}`. | |
 | `timeline` | Time | Время | Replay: label of the time slider (shown in capitals). | |
 | `oyenLabel` | Oyen {pose, select, idle{standing} walk{walking} sleep{asleep} shock{startled} box{sitting in a box} knock{knocking something over} eat{eating} happy{happy} other{standing}}, facing {dir, select, up{up} right{right} down{down} left{left} other{right}} | Ойен {pose, select, idle{стоит} walk{идёт} sleep{спит} shock{испугался} box{сидит в коробке} knock{сбрасывает вещь} eat{ест} happy{доволен} other{стоит}}, смотрит {dir, select, up{вверх} right{вправо} down{вниз} left{влево} other{вправо}} | Screen reader label of Oyen: pose and facing (screen direction). Placeholders: `{pose}`, `{dir}`. | |
-| `costumeNone` | Plain | Без костюма | Costume: none. | |
-| `costumePeci` | Peci Cap | Пеци | Costume: peci (Indonesian cap). | |
-| `costumeSarung` | Sarong | Саронг | Costume: sarong. | |
-| `costumeKoki` | Chef Hat | Колпак | Costume: chef hat. | |
-| `costumeKacamata` | Glasses | Очки | Costume: glasses. | |
-| `costumeWearingTag` | Wearing | Надето | Costume card tag: being worn. | |
-| `costumeWearingStatus` | wearing | надето | Screen reader status: being worn. | |
-| `costumeOwnedTag` | Yours | Твоё | Costume card tag: owned. | |
-| `costumeOwnedStatus` | yours | твоё | Screen reader status: owned. | |
-| `costumeActionWearing` | Wearing now | Сейчас надето | Closet button: selected costume is worn. | |
-| `costumeActionWear` | Wear | Надеть | Closet button: wear the owned costume. | |
-| `costumeActionBuy` | {n, plural, one{Buy · {n} coin} other{Buy · {n} coins}} | {n, plural, one{Купить · {n} монета} few{Купить · {n} монеты} many{Купить · {n} монет} other{Купить · {n} монеты}} | Closet button: buy for n coins. Placeholders: `{n}`. | |
 | `closeCoins` | Close coins | Закрыть монеты | Screen reader: close the coin sheet. | |
 | `coinsTitle` | Get Coins | Монеты | Coin sheet title. | |
-| `coinsIntro` | Coins buy hints and outfits for Oyen. Grab the daily bonus, or watch an ad. | Монеты нужны для подсказок и костюмов Ойена. Забирай бонус каждый день или смотри рекламу. | Coin sheet intro. | |
+| `coinsIntro` | Coins buy hints and stuff for Oyen's room. Grab the daily bonus, or watch an ad. | Монеты нужны для подсказок и вещей в комнату Ойена. Забирай бонус каждый день или смотри рекламу. | Coin sheet intro. | |
 | `dailyBonus` | Daily bonus | Ежедневный бонус | Coin card title: daily bonus. | |
 | `dailyBonusReady` | Once a day | Раз в день | Daily bonus status: can claim. | |
 | `dailyBonusTaken` | Claimed today | Сегодня уже получено | Daily bonus status: already claimed. | |
@@ -287,9 +273,9 @@ for the store listing at the end.
 | `tutorialsBack` | Done! The tutorials are back. | Готово! Обучение вернулось. | Confirmation after pressing "show tutorials again". | |
 | `progressSection` | Progress | Прогресс | Settings section: progress. | |
 | `resetProgress` | Reset progress | Сбросить прогресс | Settings button: reset progress. | |
-| `resetProgressInfo` | Erase stars, coins, outfits, hints, and tutorials, then start again from level 1. | Удалить звёзды, монеты, костюмы, подсказки и обучение и начать с уровня 1. | Settings text under the reset button. | |
+| `resetProgressInfo` | Erase stars, coins, room stuff, hints, and tutorials, then start again from level 1. | Удалить звёзды, монеты, вещи в комнате, подсказки и обучение и начать с уровня 1. | Settings text under the reset button. | |
 | `resetConfirmTitle` | Erase all progress? | Удалить весь прогресс? | Reset confirmation title. | |
-| `resetConfirmBody` | Stars, coins, outfits, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used. | Звёзды, монеты, костюмы, подсказки и обучение будут удалены. Отменить нельзя. Сегодняшний бонус и реклама останутся использованными. | Reset confirmation text. | |
+| `resetConfirmBody` | Stars, coins, room stuff, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used. | Звёзды, монеты, вещи в комнате, подсказки и обучение будут удалены. Отменить нельзя. Сегодняшний бонус и реклама останутся использованными. | Reset confirmation text. | |
 | `resetConfirm` | Erase | Удалить | Reset confirmation button. | |
 | `closeReset` | Close reset | Закрыть сброс | Screen reader: close the reset confirmation. | |
 | `resetDone` | Progress erased. Fresh start! | Прогресс удалён. Начнём сначала! | Message after resetting. | |
@@ -461,6 +447,57 @@ for the store listing at the end.
 | `shopAccessoryShortLabel` | View {name}, {n, plural, one{{n} coin} other{{n} coins}}, not enough coins | Посмотреть {name}, {n, plural, one{{n} монета} few{{n} монеты} many{{n} монет} other{{n} монеты}}, не хватает монет | Screen reader label of an accessory card that costs more than the balance. Placeholders: `{name}`, `{n}`. | |
 | `shopAccessoryOwnedLabel` | View {name}, yours | Посмотреть {name}, твоё | Screen reader label of an owned accessory card nobody wears. Placeholders: `{name}`. | |
 | `shopAccessoryWornLabel` | View {name}, yours, worn by {who} | Посмотреть {name}, твоё, носит {who} | Screen reader label of an owned accessory card with the cats wearing it. Placeholders: `{name}`, `{who}`. | |
+| `sadMarkHungry` | Droopy: hungry | Скис: голодный | Screen reader label of the thought bubble above a hungry room cat. | |
+| `sadMarkSad` | Droopy: wants attention | Скис: мало внимания | Screen reader label of the thought bubble above a room cat that needs attention. | |
+| `roomEmptyBubble` | Pretty empty in here. To the Shop! | Пустовато тут. Айда в магазин! | Speech bubble in an empty starter room, pointing the player to the shop. | |
+| `roomEmptyWall` | Wall decor? | Что-то на стену? | Short label inside the empty dashed spot on the wall of a starter room. | |
+| `roomEmptyWallHint` | Empty. Find wall decor in the Shop | Пусто. Найди украшение для стены в магазине | Screen reader label of the empty wall spot; tapping opens the shop. | |
+| `roomEmptyFloor` | A bed, maybe? | Может, лежанку? | Short label inside the empty dashed spot on the floor of a starter room. | |
+| `roomEmptyFloorHint` | Empty. Find a bed or a toy in the Shop | Пусто. Найди лежанку или игрушку в магазине | Screen reader label of the empty floor spot; tapping opens the shop. | |
+| `accessories` | Accessories | Аксессуары | Room menu button that opens the accessories tab of the shop. | |
+| `shopHasNew` | something new you can afford | есть что-то новое по карману | Added to a room menu button's screen reader label when something there is affordable and not owned yet. | |
+| `menuButtonNew` | {label}, {note} | {label}, {note} | Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew. Placeholders: `{label}`, `{note}`. | |
+| `kittyTapHint` | {name}. Tap to see their card | {name}. Нажми, чтобы открыть карточку | Screen reader label of a cat in the room. Placeholders: `{name}`. | |
+| `kittyTapHintHungry` | {name}, hungry. Tap to see their card | {name} хочет есть. Нажми, чтобы открыть карточку | Screen reader label of a hungry cat in the room. Placeholders: `{name}`. | |
+| `needHunger` | Full | Сытость | Hunger bar label on a cat card (higher = fuller). | |
+| `needJoy` | Happy | Радость | Happiness bar label on a cat card. | |
+| `needValueLabel` | {label} {value} out of 100 | {label}: {value} из 100 | Screen reader label of a need bar. Placeholders: `{label}`, `{value}`. | |
+| `needValueLow` | {label} {value} out of 100, almost empty | {label}: {value} из 100, почти на нуле | Screen reader label of a need bar that is almost empty. Placeholders: `{label}`, `{value}`. | |
+| `needLowHunger` | Almost empty! That tummy is rumbling. | Почти на нуле! Живот уже урчит. | Warning under an almost empty hunger bar. | |
+| `needLowJoy` | Almost empty! Pet them already. | Почти на нуле! Погладь уже. | Warning under an almost empty happiness bar. | |
+| `kittyCardLabel` | {name}'s card | Карточка: {name} | Screen reader label of the cat card dialog. Placeholders: `{name}`. | |
+| `kittyCardClose` | Close card | Закрыть карточку | Screen reader label of the close button on a cat card. | |
+| `petAction` | Pet | Погладить | Cat card button that pets the cat. | |
+| `snackPanel` | Snacks | Вкусняшки | Cat card button that opens the snack list. | |
+| `snackPick` | Pick from your stock | Выбери из запасов | Heading above the snack list on a cat card. | |
+| `snackGive` | Give {name}, {count} in stock | Дать: {name}, в запасе {count} | Screen reader label of a snack on a cat card. Placeholders: `{name}`, `{count}`. | |
+| `snackGiveEmpty` | Give {name}, {count} in stock, all gone | Дать: {name}, в запасе {count}, закончилось | Screen reader label of a snack that ran out. Placeholders: `{name}`, `{count}`. | |
+| `accessoryPanelTitle` | Yours · swap for free | Твои · меняй бесплатно | Heading above the owned accessories on a cat card. | |
+| `accessoryShopLink` | Accessory shop | Магазин аксессуаров | Link on a cat card to the accessories shop (an arrow icon follows it). | |
+| `accessoryRemove` | Take off | Снять | Card in the accessory list that takes the accessory off. | |
+| `accessoryWornTag` | Wearing | Надето | Tag on the accessory the cat is wearing. | |
+| `accessoryWearLabel` | Put {accessory} on {name} | Надеть {accessory}: {name} | Screen reader label of an accessory on a cat card. Placeholders: `{accessory}`, `{name}`. | |
+| `accessoryWornLabel` | Put {accessory} on {name}, wearing it now | Надеть {accessory}: {name}, уже надето | Screen reader label of the accessory the cat is wearing. Placeholders: `{accessory}`, `{name}`. | |
+| `accessoryRemoveLabel` | Take {name}'s accessory off | Снять аксессуар: {name} | Screen reader label of the take-off card. Placeholders: `{name}`. | |
+| `reactionFed` | +{hunger} full | +{hunger} сытости | Floating text over a cat after a snack. Placeholders: `{hunger}`. | |
+| `reactionFedJoy` | +{hunger} full, +{joy} happy | +{hunger} сытости, +{joy} радости | Floating text over a cat after a snack that also makes it happy. Placeholders: `{hunger}`, `{joy}`. | |
+| `reactionJoy` | +{joy} happy | +{joy} радости | Floating text over a cat after petting. Placeholders: `{joy}`. | |
+| `reactionNice` | Looking sharp! | Красота! | Floating text over a cat after putting an accessory on. | |
+| `reactionRelieved` | Ahh, free! | Свобода! | Floating text over a cat after taking its accessory off. | |
+| `decorate` | Decorate | Обустроить | Room button that starts decorate mode. | |
+| `decorateDone` | Done | Готово | Button that ends decorate mode. | |
+| `decorateHint` | Drag things to a new spot | Перетащи вещи на новое место | Chip shown while decorating. | |
+| `zoneWall` | Wall area | Стена | Label of the wall area while decorating. | |
+| `zoneFloor` | Floor area | Пол | Label of the floor area while decorating. | |
+| `storage` | Storage | Кладовка | Title of the storage tray with owned items that are not in the room. | |
+| `storageCount` | {count, plural, =1{1 item} other{{count} items}} | {count, plural, one{{count} вещь} few{{count} вещи} many{{count} вещей} other{{count} вещи}} | Number of items in storage. Placeholders: `{count}`. | |
+| `storageTapHint` | Tap to place | Нажми, чтобы поставить | Hint on the storage tray. | |
+| `storageEmpty` | Storage is empty. Everything's on display, Oyen is proud. | Кладовка пуста. Всё расставлено, Ойен гордится. | Storage tray when every item is in the room. | |
+| `storagePlaceLabel` | Put {item} in the room | Поставить в комнату: {item} | Screen reader label of an item in storage. Placeholders: `{item}`. | |
+| `storageLabel` | Item storage | Кладовка с вещами | Screen reader label of the storage tray. | |
+| `storeItemAction` | Move to storage | Убрать в кладовку | Screen reader action on a room item while decorating. | |
+| `decoratePraise` | Room's looking great! | Комната всё краше! | Praise shown after decorating. | |
+| `decoratePraiseJoy` | +{joy} Happy for every cat | +{joy} радости всем котикам | Bonus line under the decorating praise. Placeholders: `{joy}`. | |
 
 ---
 

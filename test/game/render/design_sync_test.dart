@@ -6,6 +6,7 @@ import 'package:kucing_oren/game/render/design_svg.dart';
 import 'package:kucing_oren/game/render/design_svg_home.dart';
 import 'package:kucing_oren/game/render/map_art.dart';
 import 'package:kucing_oren/game/render/result_art.dart';
+import 'package:kucing_oren/game/render/room_art.dart';
 
 /// `docs/design/` tidak ikut repo; test ini hanya jalan di komputer yang
 /// punya ekspor desainnya.
@@ -48,8 +49,15 @@ void main() {
       expect(_lf(tileSvg), _inner('Tile.dc.html'));
     });
 
-    test('Oyen.dc.html', () {
-      expect(_lf(oyenSvg), _inner('Oyen.dc.html'));
+    test('Oyen.dc.html tanpa kostum lama (dibuang di langkah 23)', () {
+      final design = _inner('Oyen.dc.html');
+      final costume = RegExp(
+        r'\n[ \t]*<sc-if value="\{\{show(?:Peci|Koki|Glasses|Sarung)\}\}"'
+        r'[^>]*>.*?</sc-if>',
+        dotAll: true,
+      );
+      expect(costume.allMatches(design), hasLength(4));
+      expect(_lf(oyenSvg), design.replaceAll(costume, ''));
     });
 
     test('panah arah hadap di Board.dc.html', () {
@@ -101,12 +109,6 @@ void main() {
         }
       }
 
-      test('jejak kaki latar disalin dari desain 01', () {
-        final source = _read('01-beranda.html');
-        linesIn(homePawsBottomSvg, source);
-        linesIn(homePawsTopSvg, source);
-      });
-
       test('ikon dapur, area bos, dan ketupat disalin dari desain 02', () {
         final source = _read('02-peta-babak-2-ruang-tamu.html');
         for (final svg in [chapterKitchenSvg, bossAreaSvg, bossKetupatSvg]) {
@@ -143,12 +145,6 @@ void main() {
         final boss = MapArt.points.last;
         // Kotak bos 106 px (label) di kiri 147, atas 642: tengah kotak 96 px.
         expect(boss, const Offset(147 + 106 / 2, 642 + 96 / 2));
-      });
-    });
-
-    group('lemari kostum', () {
-      test('lemari disalin dari desain 12', () {
-        expect(_read('12-lemari-kostum.html'), contains(_lf(closetSvg)));
       });
     });
 
@@ -316,6 +312,23 @@ void main() {
           h,
         ], reason: key);
       }
+    });
+
+    test('Kamar.dc.html: jendela dan dekor lantai', () {
+      final source = _readHome('Kamar.dc.html');
+      expect(source, contains(_lf(roomWindowSvg)));
+      expect(source, contains(_lf(roomFloorDecorSvg)));
+      expect(
+        source,
+        contains(
+          'left: ${RoomArt.windowBox.left.toInt()}px; '
+          'top: ${RoomArt.windowBox.top.toInt()}px',
+        ),
+      );
+    });
+
+    test('TandaLesu.dc.html', () {
+      expect(_lf(sadMarkSvg), _innerHome('TandaLesu.dc.html'));
     });
   }, skip: homeMissing);
 }

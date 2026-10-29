@@ -76,9 +76,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get play => 'Играть';
 
   @override
-  String get closet => 'Гардероб';
-
-  @override
   String get settings => 'Настройки';
 
   @override
@@ -86,9 +83,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get splashTagline => 'Играем!';
-
-  @override
-  String get starTotalUnit => 'звёзд';
 
   @override
   String chapterNumber(int n) {
@@ -1015,52 +1009,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get costumeNone => 'Без костюма';
-
-  @override
-  String get costumePeci => 'Пеци';
-
-  @override
-  String get costumeSarung => 'Саронг';
-
-  @override
-  String get costumeKoki => 'Колпак';
-
-  @override
-  String get costumeKacamata => 'Очки';
-
-  @override
-  String get costumeWearingTag => 'Надето';
-
-  @override
-  String get costumeWearingStatus => 'надето';
-
-  @override
-  String get costumeOwnedTag => 'Твоё';
-
-  @override
-  String get costumeOwnedStatus => 'твоё';
-
-  @override
-  String get costumeActionWearing => 'Сейчас надето';
-
-  @override
-  String get costumeActionWear => 'Надеть';
-
-  @override
-  String costumeActionBuy(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: 'Купить · $n монеты',
-      many: 'Купить · $n монет',
-      few: 'Купить · $n монеты',
-      one: 'Купить · $n монета',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get closeCoins => 'Закрыть монеты';
 
   @override
@@ -1068,7 +1016,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get coinsIntro =>
-      'Монеты нужны для подсказок и костюмов Ойена. Забирай бонус каждый день или смотри рекламу.';
+      'Монеты нужны для подсказок и вещей в комнату Ойена. Забирай бонус каждый день или смотри рекламу.';
 
   @override
   String get dailyBonus => 'Ежедневный бонус';
@@ -1161,14 +1109,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get resetProgressInfo =>
-      'Удалить звёзды, монеты, костюмы, подсказки и обучение и начать с уровня 1.';
+      'Удалить звёзды, монеты, вещи в комнате, подсказки и обучение и начать с уровня 1.';
 
   @override
   String get resetConfirmTitle => 'Удалить весь прогресс?';
 
   @override
   String get resetConfirmBody =>
-      'Звёзды, монеты, костюмы, подсказки и обучение будут удалены. Отменить нельзя. Сегодняшний бонус и реклама останутся использованными.';
+      'Звёзды, монеты, вещи в комнате, подсказки и обучение будут удалены. Отменить нельзя. Сегодняшний бонус и реклама останутся использованными.';
 
   @override
   String get resetConfirm => 'Удалить';
@@ -1851,5 +1799,201 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String shopAccessoryWornLabel(String name, String who) {
     return 'Посмотреть $name, твоё, носит $who';
+  }
+
+  @override
+  String get sadMarkHungry => 'Скис: голодный';
+
+  @override
+  String get sadMarkSad => 'Скис: мало внимания';
+
+  @override
+  String get roomEmptyBubble => 'Пустовато тут. Айда в магазин!';
+
+  @override
+  String get roomEmptyWall => 'Что-то на стену?';
+
+  @override
+  String get roomEmptyWallHint => 'Пусто. Найди украшение для стены в магазине';
+
+  @override
+  String get roomEmptyFloor => 'Может, лежанку?';
+
+  @override
+  String get roomEmptyFloorHint =>
+      'Пусто. Найди лежанку или игрушку в магазине';
+
+  @override
+  String get accessories => 'Аксессуары';
+
+  @override
+  String get shopHasNew => 'есть что-то новое по карману';
+
+  @override
+  String menuButtonNew(String label, String note) {
+    return '$label, $note';
+  }
+
+  @override
+  String kittyTapHint(String name) {
+    return '$name. Нажми, чтобы открыть карточку';
+  }
+
+  @override
+  String kittyTapHintHungry(String name) {
+    return '$name хочет есть. Нажми, чтобы открыть карточку';
+  }
+
+  @override
+  String get needHunger => 'Сытость';
+
+  @override
+  String get needJoy => 'Радость';
+
+  @override
+  String needValueLabel(String label, int value) {
+    return '$label: $value из 100';
+  }
+
+  @override
+  String needValueLow(String label, int value) {
+    return '$label: $value из 100, почти на нуле';
+  }
+
+  @override
+  String get needLowHunger => 'Почти на нуле! Живот уже урчит.';
+
+  @override
+  String get needLowJoy => 'Почти на нуле! Погладь уже.';
+
+  @override
+  String kittyCardLabel(String name) {
+    return 'Карточка: $name';
+  }
+
+  @override
+  String get kittyCardClose => 'Закрыть карточку';
+
+  @override
+  String get petAction => 'Погладить';
+
+  @override
+  String get snackPanel => 'Вкусняшки';
+
+  @override
+  String get snackPick => 'Выбери из запасов';
+
+  @override
+  String snackGive(String name, int count) {
+    return 'Дать: $name, в запасе $count';
+  }
+
+  @override
+  String snackGiveEmpty(String name, int count) {
+    return 'Дать: $name, в запасе $count, закончилось';
+  }
+
+  @override
+  String get accessoryPanelTitle => 'Твои · меняй бесплатно';
+
+  @override
+  String get accessoryShopLink => 'Магазин аксессуаров';
+
+  @override
+  String get accessoryRemove => 'Снять';
+
+  @override
+  String get accessoryWornTag => 'Надето';
+
+  @override
+  String accessoryWearLabel(String accessory, String name) {
+    return 'Надеть $accessory: $name';
+  }
+
+  @override
+  String accessoryWornLabel(String accessory, String name) {
+    return 'Надеть $accessory: $name, уже надето';
+  }
+
+  @override
+  String accessoryRemoveLabel(String name) {
+    return 'Снять аксессуар: $name';
+  }
+
+  @override
+  String reactionFed(int hunger) {
+    return '+$hunger сытости';
+  }
+
+  @override
+  String reactionFedJoy(int hunger, int joy) {
+    return '+$hunger сытости, +$joy радости';
+  }
+
+  @override
+  String reactionJoy(int joy) {
+    return '+$joy радости';
+  }
+
+  @override
+  String get reactionNice => 'Красота!';
+
+  @override
+  String get reactionRelieved => 'Свобода!';
+
+  @override
+  String get decorate => 'Обустроить';
+
+  @override
+  String get decorateDone => 'Готово';
+
+  @override
+  String get decorateHint => 'Перетащи вещи на новое место';
+
+  @override
+  String get zoneWall => 'Стена';
+
+  @override
+  String get zoneFloor => 'Пол';
+
+  @override
+  String get storage => 'Кладовка';
+
+  @override
+  String storageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count вещи',
+      many: '$count вещей',
+      few: '$count вещи',
+      one: '$count вещь',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storageTapHint => 'Нажми, чтобы поставить';
+
+  @override
+  String get storageEmpty => 'Кладовка пуста. Всё расставлено, Ойен гордится.';
+
+  @override
+  String storagePlaceLabel(String item) {
+    return 'Поставить в комнату: $item';
+  }
+
+  @override
+  String get storageLabel => 'Кладовка с вещами';
+
+  @override
+  String get storeItemAction => 'Убрать в кладовку';
+
+  @override
+  String get decoratePraise => 'Комната всё краше!';
+
+  @override
+  String decoratePraiseJoy(int joy) {
+    return '+$joy радости всем котикам';
   }
 }

@@ -36,7 +36,6 @@ Future<void> _pumpLevel(
   Size size = const Size(390, 844),
   bool disableAnimations = false,
   HintSource? hints,
-  OyenCostume costume = OyenCostume.none,
   Tutorial? tutorial,
   GameAudio? audio,
 }) async {
@@ -55,7 +54,6 @@ Future<void> _pumpLevel(
         onBack: () {},
         onNext: () => _nextTaps++,
         hints: hints,
-        costume: costume,
         tutorial: tutorial,
       ),
       audio: audio,
@@ -1466,37 +1464,6 @@ void main() {
         isSemantics(isSelected: false),
       );
       handle.dispose();
-    });
-  });
-
-  group('kostum', () {
-    testWidgets('Oyen memakai kostum di fase atur dan fase jalan', (
-      tester,
-    ) async {
-      await _pumpLevel(tester, 13, costume: OyenCostume.peci);
-      expect(_game(tester).scene.oyen!.look.costume, OyenCostume.peci);
-      await tester.tap(find.text('Bangunkan Oyen'));
-      await tester.pump();
-      await tester.pump(RunClock.stepTime);
-      expect(_game(tester).scene.oyen!.look.pose, isNot(OyenPose.sleep));
-      expect(_game(tester).scene.oyen!.look.costume, OyenCostume.peci);
-    });
-
-    testWidgets('Oyen di kartu tutorial memakai kostum', (tester) async {
-      await _pumpLevel(
-        tester,
-        3,
-        costume: OyenCostume.koki,
-        tutorial: tutorialFor(3),
-      );
-      final oyen = tester.widget<OyenView>(
-        find.descendant(
-          of: find.byType(TutorialOverlay),
-          matching: find.byType(OyenView),
-        ),
-      );
-      expect(oyen.look.costume, OyenCostume.koki);
-      expect(oyen.look.pose, tutorialFor(3)!.look.pose);
     });
   });
 }

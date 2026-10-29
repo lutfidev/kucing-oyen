@@ -290,7 +290,6 @@ void main() {
         ]);
         await showResult(tester, l);
       });
-      await shoot(tester, '12-lemari-kostum', AppRoutes.closet, () async {});
     }, skip: !brandEnabled);
   }
 }

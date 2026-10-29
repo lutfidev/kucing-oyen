@@ -10,11 +10,6 @@ abstract final class MapArt {
   /// Layar desain.
   static const screen = Size(390, 844);
 
-  // ── Beranda ───────────────────────────────────────────────────────────
-
-  /// Kotak-kotak latar: satu pola 2×2 (`background-size: 64px`).
-  static const double checkerPattern = 64;
-
   // ── Peta babak ────────────────────────────────────────────────────────
 
   /// Tengah node level 1–9 dan kotak bos (titik terakhir), sama untuk
@@ -89,29 +84,11 @@ abstract final class MapArt {
   }
 }
 
-final _pawsBottom = SvgTemplate(homePawsBottomSvg).render(const {});
-final _pawsTop = SvgTemplate(homePawsTopSvg).render(const {});
 final _kitchen = SvgTemplate(chapterKitchenSvg).render(const {});
 final _livingRoom = SvgTemplate(chapterLivingRoomSvg).render(const {});
 final _bossArea = SvgTemplate(bossAreaSvg).render(const {});
 final _ketupat = SvgTemplate(bossKetupatSvg).render(const {});
 final _fish = SvgTemplate(bossFishSvg).render(const {});
-
-/// Jejak kaki latar Beranda di layar [size]: dua jejak bawah menempel ke
-/// sudut kiri bawah, dua jejak atas ke sudut kanan atas, seperti di layar
-/// desain.
-void paintHomePaws(Canvas canvas, Size size) {
-  canvas
-    ..save()
-    ..translate(0, size.height - MapArt.screen.height);
-  _pawsBottom.paint(canvas);
-  canvas
-    ..restore()
-    ..save()
-    ..translate(size.width - MapArt.screen.width, 0);
-  _pawsTop.paint(canvas);
-  canvas.restore();
-}
 
 /// Ikon babak [chapter] di kotak 36×36: dapur untuk Babak 1, ruang tamu
 /// untuk babak lain.

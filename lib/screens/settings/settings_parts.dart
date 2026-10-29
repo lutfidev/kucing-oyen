@@ -8,8 +8,8 @@ import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
-/// Bar atas Pengaturan: tombol kembali dan judul, seperti bar Lemari
-/// Kostum tanpa chip koin.
+/// Bar atas Pengaturan: tombol kembali dan judul, seperti bar Toko tanpa
+/// chip koin.
 class SettingsBar extends StatelessWidget {
   const SettingsBar({super.key, required this.onBack});
 

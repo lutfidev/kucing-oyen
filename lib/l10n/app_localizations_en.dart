@@ -66,9 +66,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get play => 'Play';
 
   @override
-  String get closet => 'Wardrobe';
-
-  @override
   String get settings => 'Settings';
 
   @override
@@ -76,9 +73,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get splashTagline => 'Let\'s play!';
-
-  @override
-  String get starTotalUnit => 'stars';
 
   @override
   String chapterNumber(int n) {
@@ -991,50 +985,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get costumeNone => 'Plain';
-
-  @override
-  String get costumePeci => 'Peci Cap';
-
-  @override
-  String get costumeSarung => 'Sarong';
-
-  @override
-  String get costumeKoki => 'Chef Hat';
-
-  @override
-  String get costumeKacamata => 'Glasses';
-
-  @override
-  String get costumeWearingTag => 'Wearing';
-
-  @override
-  String get costumeWearingStatus => 'wearing';
-
-  @override
-  String get costumeOwnedTag => 'Yours';
-
-  @override
-  String get costumeOwnedStatus => 'yours';
-
-  @override
-  String get costumeActionWearing => 'Wearing now';
-
-  @override
-  String get costumeActionWear => 'Wear';
-
-  @override
-  String costumeActionBuy(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: 'Buy · $n coins',
-      one: 'Buy · $n coin',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get closeCoins => 'Close coins';
 
   @override
@@ -1042,7 +992,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get coinsIntro =>
-      'Coins buy hints and outfits for Oyen. Grab the daily bonus, or watch an ad.';
+      'Coins buy hints and stuff for Oyen\'s room. Grab the daily bonus, or watch an ad.';
 
   @override
   String get dailyBonus => 'Daily bonus';
@@ -1137,14 +1087,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetProgressInfo =>
-      'Erase stars, coins, outfits, hints, and tutorials, then start again from level 1.';
+      'Erase stars, coins, room stuff, hints, and tutorials, then start again from level 1.';
 
   @override
   String get resetConfirmTitle => 'Erase all progress?';
 
   @override
   String get resetConfirmBody =>
-      'Stars, coins, outfits, hints, and tutorials will be erased. This can\'t be undone. Today\'s daily bonus and ads stay used.';
+      'Stars, coins, room stuff, hints, and tutorials will be erased. This can\'t be undone. Today\'s daily bonus and ads stay used.';
 
   @override
   String get resetConfirm => 'Erase';
@@ -1811,5 +1761,199 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String shopAccessoryWornLabel(String name, String who) {
     return 'View $name, yours, worn by $who';
+  }
+
+  @override
+  String get sadMarkHungry => 'Droopy: hungry';
+
+  @override
+  String get sadMarkSad => 'Droopy: wants attention';
+
+  @override
+  String get roomEmptyBubble => 'Pretty empty in here. To the Shop!';
+
+  @override
+  String get roomEmptyWall => 'Wall decor?';
+
+  @override
+  String get roomEmptyWallHint => 'Empty. Find wall decor in the Shop';
+
+  @override
+  String get roomEmptyFloor => 'A bed, maybe?';
+
+  @override
+  String get roomEmptyFloorHint => 'Empty. Find a bed or a toy in the Shop';
+
+  @override
+  String get accessories => 'Accessories';
+
+  @override
+  String get shopHasNew => 'something new you can afford';
+
+  @override
+  String menuButtonNew(String label, String note) {
+    return '$label, $note';
+  }
+
+  @override
+  String kittyTapHint(String name) {
+    return '$name. Tap to see their card';
+  }
+
+  @override
+  String kittyTapHintHungry(String name) {
+    return '$name, hungry. Tap to see their card';
+  }
+
+  @override
+  String get needHunger => 'Full';
+
+  @override
+  String get needJoy => 'Happy';
+
+  @override
+  String needValueLabel(String label, int value) {
+    return '$label $value out of 100';
+  }
+
+  @override
+  String needValueLow(String label, int value) {
+    return '$label $value out of 100, almost empty';
+  }
+
+  @override
+  String get needLowHunger => 'Almost empty! That tummy is rumbling.';
+
+  @override
+  String get needLowJoy => 'Almost empty! Pet them already.';
+
+  @override
+  String kittyCardLabel(String name) {
+    return '$name\'s card';
+  }
+
+  @override
+  String get kittyCardClose => 'Close card';
+
+  @override
+  String get petAction => 'Pet';
+
+  @override
+  String get snackPanel => 'Snacks';
+
+  @override
+  String get snackPick => 'Pick from your stock';
+
+  @override
+  String snackGive(String name, int count) {
+    return 'Give $name, $count in stock';
+  }
+
+  @override
+  String snackGiveEmpty(String name, int count) {
+    return 'Give $name, $count in stock, all gone';
+  }
+
+  @override
+  String get accessoryPanelTitle => 'Yours · swap for free';
+
+  @override
+  String get accessoryShopLink => 'Accessory shop';
+
+  @override
+  String get accessoryRemove => 'Take off';
+
+  @override
+  String get accessoryWornTag => 'Wearing';
+
+  @override
+  String accessoryWearLabel(String accessory, String name) {
+    return 'Put $accessory on $name';
+  }
+
+  @override
+  String accessoryWornLabel(String accessory, String name) {
+    return 'Put $accessory on $name, wearing it now';
+  }
+
+  @override
+  String accessoryRemoveLabel(String name) {
+    return 'Take $name\'s accessory off';
+  }
+
+  @override
+  String reactionFed(int hunger) {
+    return '+$hunger full';
+  }
+
+  @override
+  String reactionFedJoy(int hunger, int joy) {
+    return '+$hunger full, +$joy happy';
+  }
+
+  @override
+  String reactionJoy(int joy) {
+    return '+$joy happy';
+  }
+
+  @override
+  String get reactionNice => 'Looking sharp!';
+
+  @override
+  String get reactionRelieved => 'Ahh, free!';
+
+  @override
+  String get decorate => 'Decorate';
+
+  @override
+  String get decorateDone => 'Done';
+
+  @override
+  String get decorateHint => 'Drag things to a new spot';
+
+  @override
+  String get zoneWall => 'Wall area';
+
+  @override
+  String get zoneFloor => 'Floor area';
+
+  @override
+  String get storage => 'Storage';
+
+  @override
+  String storageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storageTapHint => 'Tap to place';
+
+  @override
+  String get storageEmpty =>
+      'Storage is empty. Everything\'s on display, Oyen is proud.';
+
+  @override
+  String storagePlaceLabel(String item) {
+    return 'Put $item in the room';
+  }
+
+  @override
+  String get storageLabel => 'Item storage';
+
+  @override
+  String get storeItemAction => 'Move to storage';
+
+  @override
+  String get decoratePraise => 'Room\'s looking great!';
+
+  @override
+  String decoratePraiseJoy(int joy) {
+    return '+$joy Happy for every cat';
   }
 }

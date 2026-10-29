@@ -36,7 +36,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 20. Sisa saran: putar otomatis, terjemahan, dan rapi-rapi kecil
 - [x] 21. Rumah Oyen: model kamar, kucing, aksesoris, makanan, dan kebutuhan
 - [x] 22. Toko dan aksesoris
-- [ ] 23. Kamar Oyen sebagai Beranda, tanpa Lemari Kostum
+- [x] 23. Kamar Oyen sebagai Beranda, tanpa Lemari Kostum
 - [ ] 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
 - [ ] 25. Peta bergambar dan Oyen berjalan ke level berikutnya
 - [ ] 26. Potret toko dan rapi-rapi rumah Oyen
@@ -317,9 +317,11 @@ Selesai: sprite kucing kamar (`kitty.dart`, `kitty_painter.dart`: 9 kucing, 12 p
 >
 > Perbarui bagian "Struktur" di `CLAUDE.md`.
 
-## 23. Kamar Oyen sebagai Beranda, tanpa Lemari Kostum
+## 23. Kamar Oyen sebagai Beranda, tanpa Lemari Kostum ✅
 
 **Hasil:** Beranda berubah jadi kamar Oyen. Barang yang dibeli tampil dan bisa ditata bebas, kucing tampil dan bisa diketuk, aksesoris bisa diganti dari kartu kucing, dan Lemari Kostum beserta kostum lama hilang.
+
+Selesai: kamar diam di rute `/` (`lib/screens/room/`: `RoomGeometry`/`roomSprites`, latar `room_art.dart`, header, panel Main/Toko/Aksesoris/Pengaturan dengan titik merah, kamar baru), kartu kucing (bar, Elus, Camilan, Aksesoris, reaksi), mode hias (seret dalam zona, Gudang, Selesai + pujian, tiap lepas langsung disimpan), posisi kucing acak dengan seed `roomRandom` untuk test, dan penghapusan Lemari Kostum, `costumes.dart`, `OyenCostume`, `dressed`, gambar kostum di sprite Oyen, kunci simpanan `costume.*`, dan teks kostum. Rencana di `docs/superpowers/plans/2026-10-29-kamar-oyen-beranda.md`; keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 23".
 
 > **Baca dulu:**
 > - spesifikasi rumah Oyen bagian Kamar, "Perubahan 28 Oktober", dan Aksesoris (bagian "Di puzzle")

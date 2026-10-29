@@ -5,8 +5,7 @@ import 'package:kucing_oren/gallery/gallery_board_screen.dart';
 import 'package:kucing_oren/gallery/gallery_oyen_screen.dart';
 import 'package:kucing_oren/gallery/gallery_screen.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
-import 'package:kucing_oren/screens/closet/closet_screen.dart';
-import 'package:kucing_oren/screens/home/home_screen.dart';
+import 'package:kucing_oren/screens/room/room_screen.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
@@ -20,7 +19,7 @@ void main() {
     tester,
   ) async {
     await pumpApp(tester);
-    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(RoomScreen), findsOneWidget);
 
     await tester.tap(find.text('Main'));
     await settle(tester);
@@ -39,7 +38,7 @@ void main() {
 
     await tester.tap(_back('Kembali ke Beranda'));
     await settle(tester);
-    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(RoomScreen), findsOneWidget);
     expect(find.byType(ChapterView), findsNothing);
   });
 
@@ -48,11 +47,11 @@ void main() {
     await tester.tap(find.text('Toko'));
     await settle(tester);
     expect(find.byType(ShopScreen), findsOneWidget);
-    expect(find.byType(HomeScreen), findsNothing);
+    expect(find.byType(RoomScreen), findsNothing);
 
     await tester.tap(_back('Kembali ke Beranda'));
     await settle(tester);
-    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(RoomScreen), findsOneWidget);
     expect(find.byType(ShopScreen), findsNothing);
   });
 
@@ -63,8 +62,7 @@ void main() {
     await pumpApp(tester, location: AppRoutes.shop(tab: ShopTab.accessories));
     await settle(tester);
     expect(find.byType(ShopScreen), findsOneWidget);
-    // Tab terpilih memakai keadaan toggled KoPressable, seperti kartu
-    // kostum.
+    // Tab terpilih memakai keadaan toggled KoPressable.
     expect(
       tester.getSemantics(find.text('Aksesoris')),
       isSemantics(isToggled: true, hasToggledState: true),
@@ -83,7 +81,7 @@ void main() {
     expect(find.byType(ShopScreen), findsOneWidget);
     await tester.binding.handlePopRoute();
     await settle(tester);
-    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(RoomScreen), findsOneWidget);
   });
 
   testWidgets('tombol kembali sistem: level → peta → Beranda', (tester) async {
@@ -97,7 +95,7 @@ void main() {
 
     await tester.binding.handlePopRoute();
     await settle(tester);
-    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(RoomScreen), findsOneWidget);
   });
 
   group('tombol kembali sistem di level', () {
@@ -190,9 +188,19 @@ void main() {
   });
 
   group('rute yang tidak ada', () {
+    testWidgets('/kostum (Lemari Kostum lama) membuka kamar', (tester) async {
+      await pumpApp(tester, location: '/kostum');
+      expect(find.byType(RoomScreen), findsOneWidget);
+    });
+
+    testWidgets('rute asing membuka kamar', (tester) async {
+      await pumpApp(tester, location: '/entah/apa');
+      expect(find.byType(RoomScreen), findsOneWidget);
+    });
+
     for (final (location, back, target) in [
       ('/babak/2/level/99', 'Kembali ke peta', ChapterView),
-      ('/babak/abc/level/abc', 'Kembali ke Beranda', HomeScreen),
+      ('/babak/abc/level/abc', 'Kembali ke Beranda', RoomScreen),
     ]) {
       testWidgets('$location: level tidak ada, bisa kembali', (tester) async {
         await pumpApp(tester, location: location);
@@ -208,7 +216,7 @@ void main() {
       expect(find.text('Babak ini nggak ada.'), findsOneWidget);
       await tester.tap(_back('Kembali ke Beranda'));
       await settle(tester);
-      expect(find.byType(HomeScreen), findsOneWidget);
+      expect(find.byType(RoomScreen), findsOneWidget);
     });
 
     testWidgets('level di path babak lain kembali ke babaknya sendiri', (
@@ -222,27 +230,6 @@ void main() {
     });
   });
 
-  testWidgets('Beranda → Lemari Kostum → kembali (tombol dan sistem)', (
-    tester,
-  ) async {
-    await pumpApp(tester);
-    await tester.tap(find.bySemanticsLabel('Lemari Kostum'));
-    await settle(tester);
-    expect(find.byType(ClosetScreen), findsOneWidget);
-
-    await tester.tap(_back('Kembali ke Beranda'));
-    await settle(tester);
-    expect(find.byType(HomeScreen), findsOneWidget);
-    expect(find.byType(ClosetScreen), findsNothing);
-
-    await tester.tap(find.bySemanticsLabel('Lemari Kostum'));
-    await settle(tester);
-    await tester.binding.handlePopRoute();
-    await settle(tester);
-    expect(find.byType(HomeScreen), findsOneWidget);
-    expect(find.byType(ClosetScreen), findsNothing);
-  });
-
   testWidgets('galeri (tanpa tombol di Beranda) → kembali ke Beranda', (
     tester,
   ) async {
@@ -252,7 +239,7 @@ void main() {
 
     await tester.tap(_back('Kembali ke Beranda'));
     await settle(tester);
-    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(RoomScreen), findsOneWidget);
   });
 
   testWidgets('galeri menampilkan semua komponen dasar', (tester) async {
@@ -300,10 +287,10 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('galeri Oyen menggambar arah, pose, dan kostum', (tester) async {
+  testWidgets('galeri Oyen menggambar arah dan pose', (tester) async {
     setScreenSize(tester, const Size(390, 5000));
     await pumpApp(tester, location: AppRoutes.galleryOyen);
-    expect(find.byType(OyenView), findsNWidgets(4 + 7 + 4));
+    expect(find.byType(OyenView), findsNWidgets(4 + 7));
     for (final label in [
       'Oyen jalan, menghadap kanan',
       'Oyen kaget, menghadap bawah',

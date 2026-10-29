@@ -34,54 +34,6 @@ Finder _label(String label) => find.bySemanticsLabel(label);
 }
 
 void main() {
-  group('Beranda', () {
-    testWidgets('logo, Oyen tidur, tagline, dan total bintang', (tester) async {
-      await pumpApp(tester, progress: testProgress(_design));
-      expect(find.text('Ginger'), findsOneWidget);
-      expect(find.text('Logic'), findsOneWidget);
-      expect(_label('Ginger Logic'), findsOneWidget);
-      expect(_label('Oyen tidur, menghadap bawah'), findsOneWidget);
-      expect(
-        find.text('Oyen nggak bisa disuruh. Kamu yang mikir.'),
-        findsOneWidget,
-      );
-      expect(_label('31 dari 60 bintang'), findsOneWidget);
-      expect(find.text('bintang'), findsOneWidget);
-    });
-
-    testWidgets('chip koin di kiri atas (desain 01)', (tester) async {
-      setScreenSize(tester, const Size(390, 844));
-      await pumpApp(tester, progress: testProgressWith(coins: 120));
-      expect(find.text('120'), findsOneWidget);
-      expect(
-        _label('120 koin, tambah koin, bonus harian siap'),
-        findsOneWidget,
-      );
-      final chip = tester.getRect(
-        _label('120 koin, tambah koin, bonus harian siap'),
-      );
-      expect(chip.left, closeTo(24, 0.5));
-      expect(chip.height, 40);
-      expect(chip.top, lessThan(tester.getRect(find.text('Ginger')).top));
-    });
-
-    testWidgets('progres kosong: 0/60', (tester) async {
-      await pumpApp(tester);
-      expect(_label('0 dari 60 bintang'), findsOneWidget);
-    });
-
-    testWidgets('Lemari Kostum dan Pengaturan bisa ditekan', (tester) async {
-      await pumpApp(tester);
-      KoPressable button(String label) => tester.widget<KoPressable>(
-        find.byWidgetPredicate(
-          (w) => w is KoPressable && w.semanticLabel == label,
-        ),
-      );
-      expect(button('Lemari Kostum').onPressed, isNotNull);
-      expect(button('Pengaturan').onPressed, isNotNull);
-    });
-  });
-
   group('peta babak', () {
     testWidgets('Babak 2 seperti desain: selesai, saat ini, terkunci', (
       tester,

@@ -7,7 +7,7 @@ import '../theme/theme.dart';
 import '../widgets/widgets.dart';
 import 'gallery_page.dart';
 
-/// Sprite Oyen: arah hadap, pose, kostum. Cek terhadap
+/// Sprite Oyen: arah hadap dan pose. Cek terhadap
 /// `14-sprite-oyen-arah-pose.html`.
 class GalleryOyenScreen extends StatelessWidget {
   const GalleryOyenScreen({super.key});
@@ -58,23 +58,6 @@ class GalleryOyenScreen extends StatelessWidget {
             ],
           ),
         ),
-        GallerySection(
-          title: 'Kostum',
-          child: GalleryGrid(
-            minWidth: _Spec.costumeMinWidth,
-            children: [
-              for (final (costume, label) in _costumes)
-                _OyenCard(
-                  look: OyenLook(costume: costume),
-                  size: _Spec.costumeSize,
-                  label: label,
-                  minHeight: _Spec.costumeCardHeight,
-                  gap: space.s12,
-                  horizontal: true,
-                ),
-            ],
-          ),
-        ),
       ],
     );
   }
@@ -84,15 +67,12 @@ class GalleryOyenScreen extends StatelessWidget {
 abstract final class _Spec {
   static const double dirSize = 104;
   static const double poseSize = 88;
-  static const double costumeSize = 92;
   static const double cardHeight = 150;
-  static const double costumeCardHeight = 132;
 
   /// Lebar kartu paling sempit sebelum kisi turun satu kolom. Kartu pose
   /// diberi ruang untuk gelembung kaget yang keluar di kanan atas.
   static const double dirMinWidth = 132;
   static const double poseMinWidth = 112;
-  static const double costumeMinWidth = 200;
 }
 
 const _dirs = [
@@ -112,13 +92,6 @@ const _poses = [
   (OyenPose.happy, OyenBubble.none, 'Senang'),
 ];
 
-const _costumes = [
-  (OyenCostume.peci, 'Peci'),
-  (OyenCostume.sarung, 'Sarung'),
-  (OyenCostume.koki, 'Topi koki'),
-  (OyenCostume.kacamata, 'Kacamata'),
-];
-
 class _OyenCard extends StatelessWidget {
   const _OyenCard({
     required this.look,
@@ -127,7 +100,6 @@ class _OyenCard extends StatelessWidget {
     required this.minHeight,
     required this.gap,
     this.alignEnd = false,
-    this.horizontal = false,
   });
 
   final OyenLook look;
@@ -138,9 +110,6 @@ class _OyenCard extends StatelessWidget {
 
   /// Oyen dan label rata bawah (kartu pose).
   final bool alignEnd;
-
-  /// Oyen di kiri label (kartu kostum).
-  final bool horizontal;
 
   @override
   Widget build(BuildContext context) {
@@ -154,25 +123,16 @@ class _OyenCard extends StatelessWidget {
       constraints: BoxConstraints(minHeight: minHeight),
       child: KoCard(
         padding: EdgeInsets.all(context.koSpace.s12),
-        child: horizontal
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  oyen,
-                  SizedBox(width: gap),
-                  Flexible(child: text),
-                ],
-              )
-            : Column(
-                mainAxisAlignment: alignEnd
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.center,
-                children: [
-                  oyen,
-                  SizedBox(height: gap),
-                  text,
-                ],
-              ),
+        child: Column(
+          mainAxisAlignment: alignEnd
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.center,
+          children: [
+            oyen,
+            SizedBox(height: gap),
+            text,
+          ],
+        ),
       ),
     );
   }

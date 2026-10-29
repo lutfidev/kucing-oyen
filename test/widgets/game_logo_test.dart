@@ -31,4 +31,22 @@ void main() {
     );
     semantics.dispose();
   });
+
+  testWidgets('inline: satu baris "Ginger Logic" untuk header kamar', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await pumpThemed(tester, const GameLogo(inline: true));
+    final t = KoTheme.light().extension<KoType>()!;
+    expect(find.text('Ginger Logic', findRichText: true), findsOneWidget);
+    expect(
+      tester.widget<Text>(find.byType(Text)).style!.fontSize,
+      t.logoRow.fontSize,
+    );
+    expect(
+      tester.getSemantics(find.byType(GameLogo)),
+      matchesSemantics(label: 'Ginger Logic', isHeader: true),
+    );
+    semantics.dispose();
+  });
 }

@@ -18,6 +18,9 @@ void main() {
     expect(ru.coinsAmount(1), '1 монета');
     expect(ru.coinsAmount(3), '3 монеты');
     expect(ru.coinsAmount(120), '120 монет');
+    expect(ru.storageCount(1), '1 вещь');
+    expect(ru.storageCount(3), '3 вещи');
+    expect(ru.storageCount(5), '5 вещей');
     expect(ru.nodeStars(2), '2 звезды');
     expect(ru.starsOf(31, 60), '31 из 60 звёзд');
   });
@@ -28,7 +31,8 @@ void main() {
     expect(en.itemsUsed(1), '1 item used');
     expect(en.targetItems(2), 'use 2 items');
     expect(pt.coinsAmount(1), '1 moeda');
-    expect(pt.costumeActionBuy(60), 'Comprar · 60 moedas');
+    expect(pt.storageCount(1), '1 item');
+    expect(pt.storageCount(3), '3 itens');
     // Harga, bukan kekurangan koin.
     expect(en.notEnoughCoins(40), 'Not enough · 40');
     expect(pt.notEnoughCoins(40), 'Moedas insuficientes · 40');

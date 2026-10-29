@@ -25,11 +25,7 @@ class ReplayView extends StatefulWidget {
     required this.session,
     required this.onBack,
     required this.onMap,
-    this.costume = OyenCostume.none,
   });
-
-  /// Kostum Oyen dari Lemari Kostum.
-  final OyenCostume costume;
 
   /// Sesi di fase hasil.
   final LevelSession session;
@@ -126,13 +122,7 @@ class _ReplayViewState extends State<ReplayView>
         SizedBox(height: space.s24),
         Expanded(
           child: ReplayBoard(
-            scene: replayScene(
-              _level.map,
-              _placed,
-              _frames,
-              _trail,
-              _step,
-            ).dressed(widget.costume),
+            scene: replayScene(_level.map, _placed, _frames, _trail, _step),
           ),
         ),
         SizedBox(height: space.s16),

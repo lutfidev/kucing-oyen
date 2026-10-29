@@ -242,7 +242,7 @@ class _TypeScale extends StatelessWidget {
         t.body,
         'Ketemu genangan atau ember, Oyen kaget lalu balik badan.',
       ),
-      ('label', t.label, 'Lemari Kostum'),
+      ('label', t.label, 'Pengaturan'),
       ('overline', t.overline.copyWith(color: c.inkSoft), 'BABAK 1'),
       ('buttonHero', t.buttonHero, 'Main'),
       ('button', t.button, 'Bangunkan Oyen'),

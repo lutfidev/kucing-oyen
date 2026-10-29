@@ -67,6 +67,11 @@ class KoType extends ThemeExtension<KoType> {
     required this.cardTextSmall,
     required this.headingStrong,
     required this.buttonSoft,
+    required this.logoRow,
+    required this.buttonRoom,
+    required this.buttonCard,
+    required this.reaction,
+    required this.buttonDone,
   });
 
   static const standard = KoType(
@@ -370,6 +375,36 @@ class KoType extends ThemeExtension<KoType> {
       fontWeight: FontWeight.w600,
       fontSize: 19,
     ),
+    logoRow: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w700,
+      fontSize: 17,
+    ),
+    buttonRoom: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w700,
+      fontSize: 32,
+    ),
+    buttonCard: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w600,
+      fontSize: 15,
+    ),
+    reaction: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w700,
+      fontSize: 18,
+    ),
+    buttonDone: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontWeight: FontWeight.w700,
+      fontSize: 17,
+    ),
   );
 
   /// Fredoka 700/46, tinggi baris 1,05: "Berhasil!" (layar 06; lembar
@@ -388,7 +423,7 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 700/15: teks biasa.
   final TextStyle body;
 
-  /// Nunito 800/15: label tombol kecil ("Lemari Kostum", "Aturan").
+  /// Nunito 800/15: label tombol kecil ("Hias", "Aturan").
   final TextStyle label;
 
   /// Nunito 800/12, jarak huruf 1.2: "BABAK 1".
@@ -452,7 +487,7 @@ class KoType extends ThemeExtension<KoType> {
 
   final TextStyle logo;
 
-  /// Nunito 700/16: tagline Beranda.
+  /// Nunito 700/16: tagline di gambar toko.
   final TextStyle bodyLarge;
 
   /// Fredoka 600/22: total bintang di Beranda ("31/60").
@@ -501,10 +536,10 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 800/14, tinggi baris 1,35: teks petunjuk yang dibuka.
   final TextStyle hintReveal;
 
-  /// Fredoka 600/17: chip koin Lemari Kostum.
+  /// Fredoka 600/17: total bintang di header kamar.
   final TextStyle numberCoinLarge;
 
-  /// Fredoka 600/16: nama kostum di kartu Lemari Kostum.
+  /// Fredoka 600/16: label kartu Pengaturan dan galeri suara.
   final TextStyle cardLabel;
 
   /// Nama barang di kartu Toko (desain 20).
@@ -524,6 +559,21 @@ class KoType extends ThemeExtension<KoType> {
 
   /// Tombol tutup di sheet beli (desain 20).
   final TextStyle buttonSoft;
+
+  /// Logo satu baris di header kamar (desain 19).
+  final TextStyle logoRow;
+
+  /// Tombol Main di panel bawah kamar.
+  final TextStyle buttonRoom;
+
+  /// Tombol Camilan, Elus, dan Aksesoris di kartu kucing.
+  final TextStyle buttonCard;
+
+  /// Angka reaksi yang melayang di atas kucing ("+10 senang").
+  final TextStyle reaction;
+
+  /// Tombol Selesai menghias.
+  final TextStyle buttonDone;
 
   @override
   KoType copyWith({
@@ -577,6 +627,11 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? cardTextSmall,
     TextStyle? headingStrong,
     TextStyle? buttonSoft,
+    TextStyle? logoRow,
+    TextStyle? buttonRoom,
+    TextStyle? buttonCard,
+    TextStyle? reaction,
+    TextStyle? buttonDone,
   }) {
     return KoType(
       display: display ?? this.display,
@@ -629,6 +684,11 @@ class KoType extends ThemeExtension<KoType> {
       cardTextSmall: cardTextSmall ?? this.cardTextSmall,
       headingStrong: headingStrong ?? this.headingStrong,
       buttonSoft: buttonSoft ?? this.buttonSoft,
+      logoRow: logoRow ?? this.logoRow,
+      buttonRoom: buttonRoom ?? this.buttonRoom,
+      buttonCard: buttonCard ?? this.buttonCard,
+      reaction: reaction ?? this.reaction,
+      buttonDone: buttonDone ?? this.buttonDone,
     );
   }
 
@@ -687,6 +747,11 @@ class KoType extends ThemeExtension<KoType> {
       cardTextSmall: s(cardTextSmall, other.cardTextSmall),
       headingStrong: s(headingStrong, other.headingStrong),
       buttonSoft: s(buttonSoft, other.buttonSoft),
+      logoRow: s(logoRow, other.logoRow),
+      buttonRoom: s(buttonRoom, other.buttonRoom),
+      buttonCard: s(buttonCard, other.buttonCard),
+      reaction: s(reaction, other.reaction),
+      buttonDone: s(buttonDone, other.buttonDone),
     );
   }
 }

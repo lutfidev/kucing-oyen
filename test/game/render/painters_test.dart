@@ -60,14 +60,12 @@ void main() {
     final canvas = Canvas(PictureRecorder());
     for (final pose in OyenPose.values) {
       for (final dir in Direction.values) {
-        for (final costume in OyenCostume.values) {
-          for (final bubble in OyenBubble.values) {
-            paintOyen(
-              canvas,
-              OyenLook(pose: pose, dir: dir, costume: costume, bubble: bubble),
-              size: 62,
-            );
-          }
+        for (final bubble in OyenBubble.values) {
+          paintOyen(
+            canvas,
+            OyenLook(pose: pose, dir: dir, bubble: bubble),
+            size: 62,
+          );
         }
       }
     }
@@ -114,25 +112,16 @@ void main() {
       const OyenLook(
         pose: OyenPose.sleep,
         dir: Direction.left,
-        costume: OyenCostume.peci,
         bubble: OyenBubble.zzz,
       ),
     );
     expect(sleep['notSleep'], isFalse);
     expect(sleep['headT'], 'translate(0 0)');
     expect(sleep['zzzT'], 'translate(-26 16)');
-    expect(sleep['showPeci'], isFalse);
 
-    final box = oyenVals(
-      const OyenLook(
-        pose: OyenPose.box,
-        dir: Direction.up,
-        costume: OyenCostume.sarung,
-      ),
-    );
+    final box = oyenVals(const OyenLook(pose: OyenPose.box, dir: Direction.up));
     expect(box['back'], isFalse);
     expect(box['headT'], 'translate(0 8)');
-    expect(box['showSarung'], isFalse);
 
     final shock = oyenVals(const OyenLook(pose: OyenPose.shock));
     expect(shock['headT'], 'translate(0 -3)');
@@ -141,10 +130,13 @@ void main() {
     expect(shock['mouthO'], isTrue);
     expect(shock['eyeSleepy'], isFalse);
 
-    final glasses = oyenVals(
-      const OyenLook(dir: Direction.up, costume: OyenCostume.kacamata),
+    // Kostum desain dibuang di langkah 23 (Lemari Kostum dihapus).
+    expect(
+      oyenVals(const OyenLook()).keys.where((k) => k.startsWith('show')),
+      isNot(
+        contains(anyOf('showPeci', 'showKoki', 'showGlasses', 'showSarung')),
+      ),
     );
-    expect(glasses['showGlasses'], isFalse);
   });
 
   test('kedip petak menyala: 1 → 0,45 → 1 tiap detik', () {

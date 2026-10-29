@@ -154,11 +154,6 @@ const oyenSvg = r'''
       <sc-if value="{{back}}" hint-placeholder-val="{{ false }}">
         <path d="M30 64 Q50 58 70 64 M27 72 Q50 66 73 72 M31 80 Q50 75 69 80" stroke="#C4651A" stroke-width="3" fill="none" stroke-linecap="round"></path>
       </sc-if>
-      <sc-if value="{{showSarung}}" hint-placeholder-val="{{ false }}">
-        <path d="M23 70 Q50 61 77 70 L76 85 Q50 94 24 85 Z" fill="#2F7F8A"></path>
-        <path d="M35 66 L33 89 M50 63.5 L50 91.5 M65 66 L67 89 M23.5 77.5 Q50 69.5 76.5 77.5" stroke="#BFE6E0" stroke-width="1.6" fill="none" opacity="0.75"></path>
-        <path d="M23 70 Q50 61 77 70" stroke="#1F5E66" stroke-width="2.4" fill="none"></path>
-      </sc-if>
       <ellipse cx="39" cy="{{pawL}}" rx="7" ry="5" fill="#FBD9A8"></ellipse>
       <ellipse cx="61" cy="{{pawR}}" rx="7" ry="5" fill="#FBD9A8"></ellipse>
     </sc-if>
@@ -222,21 +217,6 @@ const oyenSvg = r'''
           </g>
         </sc-if>
 
-        <sc-if value="{{showPeci}}" hint-placeholder-val="{{ false }}">
-          <path d="M31 27 L32.5 15 Q50 8 67.5 15 L69 27 Q50 22.5 31 27 Z" fill="#2B2A33"></path>
-          <path d="M33 23 Q50 18.5 67 23" stroke="#5A5870" stroke-width="1.5" fill="none"></path>
-        </sc-if>
-        <sc-if value="{{showKoki}}" hint-placeholder-val="{{ false }}">
-          <path d="M33 25 L33 12 Q24 6 31 -1 Q37 -9 46 -4 Q51 -11 58 -4 Q67 -8 70 0 Q76 7 67 12 L67 25 Q50 21 33 25 Z" fill="#FFFFFF" stroke="#D9CBB5" stroke-width="1.6" stroke-linejoin="round"></path>
-          <path d="M33 18 Q50 14 67 18" stroke="#D9CBB5" stroke-width="1.4" fill="none"></path>
-        </sc-if>
-        <sc-if value="{{showGlasses}}" hint-placeholder-val="{{ false }}">
-          <g transform="{{faceT}}">
-            <circle cx="37" cy="43" r="10.5" fill="#FFFFFF" fill-opacity="0.18" stroke="#3A2618" stroke-width="2.4"></circle>
-            <circle cx="63" cy="43" r="10.5" fill="#FFFFFF" fill-opacity="0.18" stroke="#3A2618" stroke-width="2.4"></circle>
-            <path d="M47.5 42 Q50 39.5 52.5 42 M26.5 41 L19 38.5 M73.5 41 L81 38.5" stroke="#3A2618" stroke-width="2.2" fill="none" stroke-linecap="round"></path>
-          </g>
-        </sc-if>
       </g>
     </sc-if>
 
@@ -458,23 +438,6 @@ const vasePrangSvg = r'''
         <text x="1" y="6" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="13" fill="#9A3520">PRANG!</text>
 ''';
 
-/// Jejak kaki di latar Beranda (`01-beranda.html`), di koordinat layar
-/// 390×844. Dipotong dua karena dua jejak bawah menempel ke sudut kiri
-/// bawah layar dan dua jejak atas ke sudut kanan atas.
-const homePawsBottomSvg = r'''
-    <g fill="#E7C796">
-      <g transform="translate(46 760) rotate(-20)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
-      <g transform="translate(78 724) rotate(-10)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
-    </g>
-''';
-
-const homePawsTopSvg = r'''
-    <g fill="#E7C796">
-      <g transform="translate(330 140) rotate(25)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
-      <g transform="translate(352 178) rotate(35)"><ellipse cx="0" cy="4" rx="7" ry="6"></ellipse><circle cx="-7" cy="-5" r="2.8"></circle><circle cx="-2.5" cy="-9" r="2.8"></circle><circle cx="2.5" cy="-9" r="2.8"></circle><circle cx="7" cy="-5" r="2.8"></circle></g>
-    </g>
-''';
-
 /// Ikon Babak 1 – Dapur di kartu babak (`02-peta-babak-2-ruang-tamu.html`),
 /// viewBox 36×36: lemari dan mangkuk.
 const chapterKitchenSvg = r'''
@@ -639,20 +602,4 @@ const coinSvg = r'''
 /// 28×28.
 const coinPlainSvg = r'''
 <circle cx="14" cy="14" r="12" fill="#FFC83D"></circle><circle cx="14" cy="14" r="8.5" fill="none" stroke="#E0A100" stroke-width="2"></circle>
-''';
-
-/// Koin label harga kartu kostum (`12-lemari-kostum.html`, 14 px), viewBox
-/// 28×28.
-const coinPriceSvg = r'''
-<circle cx="14" cy="14" r="12" fill="#FFC83D"></circle><circle cx="14" cy="14" r="8.5" fill="none" stroke="#E0A100" stroke-width="2.4"></circle>
-''';
-
-/// Lemari kayu di belakang pratinjau Oyen (`12-lemari-kostum.html`),
-/// viewBox 300×236.
-const closetSvg = r'''
-      <path d="M40 236 V70 Q40 20 90 20 H210 Q260 20 260 70 V236 Z" fill="#E9C9A0"></path>
-      <path d="M58 236 V76 Q58 38 96 38 H204 Q242 38 242 76 V236 Z" fill="#F3DDBB"></path>
-      <path d="M70 52 H230" stroke="#B07A4F" stroke-width="5" stroke-linecap="round"></path>
-      <ellipse cx="150" cy="214" rx="104" ry="20" fill="#D99E66" opacity="0.6"></ellipse>
-      <ellipse cx="150" cy="210" rx="88" ry="14" fill="#E7B98A"></ellipse>
 ''';

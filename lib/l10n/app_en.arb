@@ -71,10 +71,6 @@
   "@play": {
     "description": "Big Play button on the home screen and the map node label."
   },
-  "closet": "Wardrobe",
-  "@closet": {
-    "description": "Costume closet button and screen title."
-  },
   "settings": "Settings",
   "@settings": {
     "description": "Settings button and screen title."
@@ -86,10 +82,6 @@
   "splashTagline": "Let's play!",
   "@splashTagline": {
     "description": "Short line under the logo on the Android splash screen (rendered into an image, keep it very short)."
-  },
-  "starTotalUnit": "stars",
-  "@starTotalUnit": {
-    "description": "Word after the star total on the home screen (\"31/60 stars\")."
   },
   "chapterNumber": "Chapter {n}",
   "@chapterNumber": {
@@ -1262,59 +1254,6 @@
       }
     }
   },
-  "costumeNone": "Plain",
-  "@costumeNone": {
-    "description": "Costume: none."
-  },
-  "costumePeci": "Peci Cap",
-  "@costumePeci": {
-    "description": "Costume: peci (Indonesian cap)."
-  },
-  "costumeSarung": "Sarong",
-  "@costumeSarung": {
-    "description": "Costume: sarong."
-  },
-  "costumeKoki": "Chef Hat",
-  "@costumeKoki": {
-    "description": "Costume: chef hat."
-  },
-  "costumeKacamata": "Glasses",
-  "@costumeKacamata": {
-    "description": "Costume: glasses."
-  },
-  "costumeWearingTag": "Wearing",
-  "@costumeWearingTag": {
-    "description": "Costume card tag: being worn."
-  },
-  "costumeWearingStatus": "wearing",
-  "@costumeWearingStatus": {
-    "description": "Screen reader status: being worn."
-  },
-  "costumeOwnedTag": "Yours",
-  "@costumeOwnedTag": {
-    "description": "Costume card tag: owned."
-  },
-  "costumeOwnedStatus": "yours",
-  "@costumeOwnedStatus": {
-    "description": "Screen reader status: owned."
-  },
-  "costumeActionWearing": "Wearing now",
-  "@costumeActionWearing": {
-    "description": "Closet button: selected costume is worn."
-  },
-  "costumeActionWear": "Wear",
-  "@costumeActionWear": {
-    "description": "Closet button: wear the owned costume."
-  },
-  "costumeActionBuy": "{n, plural, one{Buy · {n} coin} other{Buy · {n} coins}}",
-  "@costumeActionBuy": {
-    "description": "Closet button: buy for n coins.",
-    "placeholders": {
-      "n": {
-        "type": "int"
-      }
-    }
-  },
   "closeCoins": "Close coins",
   "@closeCoins": {
     "description": "Screen reader: close the coin sheet."
@@ -1323,7 +1262,7 @@
   "@coinsTitle": {
     "description": "Coin sheet title."
   },
-  "coinsIntro": "Coins buy hints and outfits for Oyen. Grab the daily bonus, or watch an ad.",
+  "coinsIntro": "Coins buy hints and stuff for Oyen's room. Grab the daily bonus, or watch an ad.",
   "@coinsIntro": {
     "description": "Coin sheet intro."
   },
@@ -1430,7 +1369,7 @@
   "@resetProgress": {
     "description": "Settings button: reset progress."
   },
-  "resetProgressInfo": "Erase stars, coins, outfits, hints, and tutorials, then start again from level 1.",
+  "resetProgressInfo": "Erase stars, coins, room stuff, hints, and tutorials, then start again from level 1.",
   "@resetProgressInfo": {
     "description": "Settings text under the reset button."
   },
@@ -1438,7 +1377,7 @@
   "@resetConfirmTitle": {
     "description": "Reset confirmation title."
   },
-  "resetConfirmBody": "Stars, coins, outfits, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used.",
+  "resetConfirmBody": "Stars, coins, room stuff, hints, and tutorials will be erased. This can't be undone. Today's daily bonus and ads stay used.",
   "@resetConfirmBody": {
     "description": "Reset confirmation text."
   },
@@ -2303,6 +2242,319 @@
       },
       "who": {
         "type": "String"
+      }
+    }
+  },
+  "sadMarkHungry": "Droopy: hungry",
+  "@sadMarkHungry": {
+    "description": "Screen reader label of the thought bubble above a hungry room cat."
+  },
+  "sadMarkSad": "Droopy: wants attention",
+  "@sadMarkSad": {
+    "description": "Screen reader label of the thought bubble above a room cat that needs attention."
+  },
+  "roomEmptyBubble": "Pretty empty in here. To the Shop!",
+  "@roomEmptyBubble": {
+    "description": "Speech bubble in an empty starter room, pointing the player to the shop."
+  },
+  "roomEmptyWall": "Wall decor?",
+  "@roomEmptyWall": {
+    "description": "Short label inside the empty dashed spot on the wall of a starter room."
+  },
+  "roomEmptyWallHint": "Empty. Find wall decor in the Shop",
+  "@roomEmptyWallHint": {
+    "description": "Screen reader label of the empty wall spot; tapping opens the shop."
+  },
+  "roomEmptyFloor": "A bed, maybe?",
+  "@roomEmptyFloor": {
+    "description": "Short label inside the empty dashed spot on the floor of a starter room."
+  },
+  "roomEmptyFloorHint": "Empty. Find a bed or a toy in the Shop",
+  "@roomEmptyFloorHint": {
+    "description": "Screen reader label of the empty floor spot; tapping opens the shop."
+  },
+  "accessories": "Accessories",
+  "@accessories": {
+    "description": "Room menu button that opens the accessories tab of the shop."
+  },
+  "shopHasNew": "something new you can afford",
+  "@shopHasNew": {
+    "description": "Added to a room menu button's screen reader label when something there is affordable and not owned yet."
+  },
+  "menuButtonNew": "{label}, {note}",
+  "@menuButtonNew": {
+    "description": "Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "kittyTapHint": "{name}. Tap to see their card",
+  "@kittyTapHint": {
+    "description": "Screen reader label of a cat in the room.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kittyTapHintHungry": "{name}, hungry. Tap to see their card",
+  "@kittyTapHintHungry": {
+    "description": "Screen reader label of a hungry cat in the room.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "needHunger": "Full",
+  "@needHunger": {
+    "description": "Hunger bar label on a cat card (higher = fuller)."
+  },
+  "needJoy": "Happy",
+  "@needJoy": {
+    "description": "Happiness bar label on a cat card."
+  },
+  "needValueLabel": "{label} {value} out of 100",
+  "@needValueLabel": {
+    "description": "Screen reader label of a need bar.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "needValueLow": "{label} {value} out of 100, almost empty",
+  "@needValueLow": {
+    "description": "Screen reader label of a need bar that is almost empty.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "needLowHunger": "Almost empty! That tummy is rumbling.",
+  "@needLowHunger": {
+    "description": "Warning under an almost empty hunger bar."
+  },
+  "needLowJoy": "Almost empty! Pet them already.",
+  "@needLowJoy": {
+    "description": "Warning under an almost empty happiness bar."
+  },
+  "kittyCardLabel": "{name}'s card",
+  "@kittyCardLabel": {
+    "description": "Screen reader label of the cat card dialog.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kittyCardClose": "Close card",
+  "@kittyCardClose": {
+    "description": "Screen reader label of the close button on a cat card."
+  },
+  "petAction": "Pet",
+  "@petAction": {
+    "description": "Cat card button that pets the cat."
+  },
+  "snackPanel": "Snacks",
+  "@snackPanel": {
+    "description": "Cat card button that opens the snack list."
+  },
+  "snackPick": "Pick from your stock",
+  "@snackPick": {
+    "description": "Heading above the snack list on a cat card."
+  },
+  "snackGive": "Give {name}, {count} in stock",
+  "@snackGive": {
+    "description": "Screen reader label of a snack on a cat card.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snackGiveEmpty": "Give {name}, {count} in stock, all gone",
+  "@snackGiveEmpty": {
+    "description": "Screen reader label of a snack that ran out.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "accessoryPanelTitle": "Yours · swap for free",
+  "@accessoryPanelTitle": {
+    "description": "Heading above the owned accessories on a cat card."
+  },
+  "accessoryShopLink": "Accessory shop",
+  "@accessoryShopLink": {
+    "description": "Link on a cat card to the accessories shop (an arrow icon follows it)."
+  },
+  "accessoryRemove": "Take off",
+  "@accessoryRemove": {
+    "description": "Card in the accessory list that takes the accessory off."
+  },
+  "accessoryWornTag": "Wearing",
+  "@accessoryWornTag": {
+    "description": "Tag on the accessory the cat is wearing."
+  },
+  "accessoryWearLabel": "Put {accessory} on {name}",
+  "@accessoryWearLabel": {
+    "description": "Screen reader label of an accessory on a cat card.",
+    "placeholders": {
+      "accessory": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accessoryWornLabel": "Put {accessory} on {name}, wearing it now",
+  "@accessoryWornLabel": {
+    "description": "Screen reader label of the accessory the cat is wearing.",
+    "placeholders": {
+      "accessory": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accessoryRemoveLabel": "Take {name}'s accessory off",
+  "@accessoryRemoveLabel": {
+    "description": "Screen reader label of the take-off card.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "reactionFed": "+{hunger} full",
+  "@reactionFed": {
+    "description": "Floating text over a cat after a snack.",
+    "placeholders": {
+      "hunger": {
+        "type": "int"
+      }
+    }
+  },
+  "reactionFedJoy": "+{hunger} full, +{joy} happy",
+  "@reactionFedJoy": {
+    "description": "Floating text over a cat after a snack that also makes it happy.",
+    "placeholders": {
+      "hunger": {
+        "type": "int"
+      },
+      "joy": {
+        "type": "int"
+      }
+    }
+  },
+  "reactionJoy": "+{joy} happy",
+  "@reactionJoy": {
+    "description": "Floating text over a cat after petting.",
+    "placeholders": {
+      "joy": {
+        "type": "int"
+      }
+    }
+  },
+  "reactionNice": "Looking sharp!",
+  "@reactionNice": {
+    "description": "Floating text over a cat after putting an accessory on."
+  },
+  "reactionRelieved": "Ahh, free!",
+  "@reactionRelieved": {
+    "description": "Floating text over a cat after taking its accessory off."
+  },
+  "decorate": "Decorate",
+  "@decorate": {
+    "description": "Room button that starts decorate mode."
+  },
+  "decorateDone": "Done",
+  "@decorateDone": {
+    "description": "Button that ends decorate mode."
+  },
+  "decorateHint": "Drag things to a new spot",
+  "@decorateHint": {
+    "description": "Chip shown while decorating."
+  },
+  "zoneWall": "Wall area",
+  "@zoneWall": {
+    "description": "Label of the wall area while decorating."
+  },
+  "zoneFloor": "Floor area",
+  "@zoneFloor": {
+    "description": "Label of the floor area while decorating."
+  },
+  "storage": "Storage",
+  "@storage": {
+    "description": "Title of the storage tray with owned items that are not in the room."
+  },
+  "storageCount": "{count, plural, =1{1 item} other{{count} items}}",
+  "@storageCount": {
+    "description": "Number of items in storage.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storageTapHint": "Tap to place",
+  "@storageTapHint": {
+    "description": "Hint on the storage tray."
+  },
+  "storageEmpty": "Storage is empty. Everything's on display, Oyen is proud.",
+  "@storageEmpty": {
+    "description": "Storage tray when every item is in the room."
+  },
+  "storagePlaceLabel": "Put {item} in the room",
+  "@storagePlaceLabel": {
+    "description": "Screen reader label of an item in storage.",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "storageLabel": "Item storage",
+  "@storageLabel": {
+    "description": "Screen reader label of the storage tray."
+  },
+  "storeItemAction": "Move to storage",
+  "@storeItemAction": {
+    "description": "Screen reader action on a room item while decorating."
+  },
+  "decoratePraise": "Room's looking great!",
+  "@decoratePraise": {
+    "description": "Praise shown after decorating."
+  },
+  "decoratePraiseJoy": "+{joy} Happy for every cat",
+  "@decoratePraiseJoy": {
+    "description": "Bonus line under the decorating praise.",
+    "placeholders": {
+      "joy": {
+        "type": "int"
       }
     }
   }

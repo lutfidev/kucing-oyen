@@ -54,9 +54,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get play => 'Main';
 
   @override
-  String get closet => 'Lemari Kostum';
-
-  @override
   String get settings => 'Pengaturan';
 
   @override
@@ -64,9 +61,6 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get splashTagline => 'Ayo main!';
-
-  @override
-  String get starTotalUnit => 'bintang';
 
   @override
   String chapterNumber(int n) {
@@ -939,44 +933,6 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get costumeNone => 'Polos';
-
-  @override
-  String get costumePeci => 'Peci';
-
-  @override
-  String get costumeSarung => 'Sarung';
-
-  @override
-  String get costumeKoki => 'Topi Koki';
-
-  @override
-  String get costumeKacamata => 'Kacamata';
-
-  @override
-  String get costumeWearingTag => 'Dipakai';
-
-  @override
-  String get costumeWearingStatus => 'dipakai';
-
-  @override
-  String get costumeOwnedTag => 'Punyamu';
-
-  @override
-  String get costumeOwnedStatus => 'punyamu';
-
-  @override
-  String get costumeActionWearing => 'Sedang dipakai';
-
-  @override
-  String get costumeActionWear => 'Pakai';
-
-  @override
-  String costumeActionBuy(int n) {
-    return 'Beli · $n koin';
-  }
-
-  @override
   String get closeCoins => 'Tutup tambah koin';
 
   @override
@@ -984,7 +940,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get coinsIntro =>
-      'Koin buat petunjuk dan kostum Oyen. Ambil bonus tiap hari, atau tonton iklan.';
+      'Koin buat petunjuk dan isi kamar Oyen. Ambil bonus tiap hari, atau tonton iklan.';
 
   @override
   String get dailyBonus => 'Bonus harian';
@@ -1061,14 +1017,14 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get resetProgressInfo =>
-      'Hapus bintang, koin, kostum, petunjuk, dan tutorial, lalu mulai lagi dari level 1.';
+      'Hapus bintang, koin, isi kamar, petunjuk, dan tutorial, lalu mulai lagi dari level 1.';
 
   @override
   String get resetConfirmTitle => 'Hapus semua progres?';
 
   @override
   String get resetConfirmBody =>
-      'Bintang, koin, kostum, petunjuk, dan tutorial dihapus. Ini nggak bisa dibatalkan. Bonus harian dan iklan hari ini tetap terhitung.';
+      'Bintang, koin, isi kamar, petunjuk, dan tutorial dihapus. Ini nggak bisa dibatalkan. Bonus harian dan iklan hari ini tetap terhitung.';
 
   @override
   String get resetConfirm => 'Hapus';
@@ -1677,5 +1633,198 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String shopAccessoryWornLabel(String name, String who) {
     return 'Lihat $name, punyamu, dipakai $who';
+  }
+
+  @override
+  String get sadMarkHungry => 'Lesu: lapar';
+
+  @override
+  String get sadMarkSad => 'Lesu: kurang perhatian';
+
+  @override
+  String get roomEmptyBubble => 'Kamar masih sepi. Ke Toko, yuk!';
+
+  @override
+  String get roomEmptyWall => 'Hiasan dinding?';
+
+  @override
+  String get roomEmptyWallHint => 'Kosong. Cari hiasan dinding di Toko';
+
+  @override
+  String get roomEmptyFloor => 'Kasur, mungkin?';
+
+  @override
+  String get roomEmptyFloorHint => 'Kosong. Cari kasur atau mainan di Toko';
+
+  @override
+  String get accessories => 'Aksesoris';
+
+  @override
+  String get shopHasNew => 'ada yang baru terjangkau';
+
+  @override
+  String menuButtonNew(String label, String note) {
+    return '$label, $note';
+  }
+
+  @override
+  String kittyTapHint(String name) {
+    return '$name. Ketuk untuk lihat kartunya';
+  }
+
+  @override
+  String kittyTapHintHungry(String name) {
+    return '$name, lapar. Ketuk untuk lihat kartunya';
+  }
+
+  @override
+  String get needHunger => 'Lapar';
+
+  @override
+  String get needJoy => 'Senang';
+
+  @override
+  String needValueLabel(String label, int value) {
+    return '$label $value dari 100';
+  }
+
+  @override
+  String needValueLow(String label, int value) {
+    return '$label $value dari 100, hampir habis';
+  }
+
+  @override
+  String get needLowHunger => 'Hampir habis! Perutnya keroncongan.';
+
+  @override
+  String get needLowJoy => 'Hampir habis! Elus dulu, dong.';
+
+  @override
+  String kittyCardLabel(String name) {
+    return 'Kartu $name';
+  }
+
+  @override
+  String get kittyCardClose => 'Tutup kartu';
+
+  @override
+  String get petAction => 'Elus';
+
+  @override
+  String get snackPanel => 'Camilan';
+
+  @override
+  String get snackPick => 'Pilih dari stok';
+
+  @override
+  String snackGive(String name, int count) {
+    return 'Beri $name, stok $count';
+  }
+
+  @override
+  String snackGiveEmpty(String name, int count) {
+    return 'Beri $name, stok $count, habis';
+  }
+
+  @override
+  String get accessoryPanelTitle => 'Punyamu · ganti gratis';
+
+  @override
+  String get accessoryShopLink => 'Toko aksesoris';
+
+  @override
+  String get accessoryRemove => 'Lepas';
+
+  @override
+  String get accessoryWornTag => 'Dipakai';
+
+  @override
+  String accessoryWearLabel(String accessory, String name) {
+    return 'Pasang $accessory di $name';
+  }
+
+  @override
+  String accessoryWornLabel(String accessory, String name) {
+    return 'Pasang $accessory di $name, sedang dipakai';
+  }
+
+  @override
+  String accessoryRemoveLabel(String name) {
+    return 'Lepas aksesoris $name';
+  }
+
+  @override
+  String reactionFed(int hunger) {
+    return '+$hunger kenyang';
+  }
+
+  @override
+  String reactionFedJoy(int hunger, int joy) {
+    return '+$hunger kenyang, +$joy senang';
+  }
+
+  @override
+  String reactionJoy(int joy) {
+    return '+$joy senang';
+  }
+
+  @override
+  String get reactionNice => 'Cakep!';
+
+  @override
+  String get reactionRelieved => 'Lega!';
+
+  @override
+  String get decorate => 'Hias';
+
+  @override
+  String get decorateDone => 'Selesai';
+
+  @override
+  String get decorateHint => 'Seret barang ke tempat baru';
+
+  @override
+  String get zoneWall => 'Area dinding';
+
+  @override
+  String get zoneFloor => 'Area lantai';
+
+  @override
+  String get storage => 'Gudang';
+
+  @override
+  String storageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count barang',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storageTapHint => 'Ketuk untuk menaruh';
+
+  @override
+  String get storageEmpty =>
+      'Gudangnya kosong. Semua barang sudah dipajang, Oyen bangga.';
+
+  @override
+  String storagePlaceLabel(String item) {
+    return 'Taruh $item di kamar';
+  }
+
+  @override
+  String get storageLabel => 'Gudang barang';
+
+  @override
+  String get storeItemAction => 'Simpan ke Gudang';
+
+  @override
+  String get decoratePraise => 'Kamar makin cakep!';
+
+  @override
+  String decoratePraiseJoy(int joy) {
+    return '+$joy Senang untuk semua kucing';
   }
 }

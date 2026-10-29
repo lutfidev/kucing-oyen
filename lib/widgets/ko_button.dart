@@ -41,6 +41,8 @@ class KoButton extends StatelessWidget {
     this.icon,
     this.trailingIcon,
     this.silent = false,
+    this.height,
+    this.style,
   });
 
   final String label;
@@ -58,6 +60,10 @@ class KoButton extends StatelessWidget {
 
   /// Lihat [KoPressable.silent].
   final bool silent;
+
+  /// Tinggi dan gaya label selain ukuran [size] ("Main" di kamar).
+  final double? height;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -92,13 +98,15 @@ class KoButton extends StatelessWidget {
             KoButtonSize.large => shadow.glow,
             KoButtonSize.medium => const <BoxShadow>[],
           };
-    final style = kind == KoButtonKind.secondary
-        ? t.heading
-        : switch (size) {
-            KoButtonSize.hero => t.buttonHero,
-            KoButtonSize.large => t.title,
-            KoButtonSize.medium => t.button,
-          };
+    final style =
+        this.style ??
+        (kind == KoButtonKind.secondary
+            ? t.heading
+            : switch (size) {
+                KoButtonSize.hero => t.buttonHero,
+                KoButtonSize.large => t.title,
+                KoButtonSize.medium => t.button,
+              });
     // Tombol 64 px di layar hasil: ikon kiri 20 px, panah kanan 22 px.
     final (
       double height,
@@ -122,7 +130,7 @@ class KoButton extends StatelessWidget {
       borderWidth: s.border,
       radius: big ? radius.primary : radius.button,
       glow: glow,
-      height: height,
+      height: this.height ?? height,
       padding: EdgeInsets.symmetric(horizontal: space.s24),
       child: Center(
         widthFactor: 1,

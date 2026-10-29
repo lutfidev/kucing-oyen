@@ -90,6 +90,22 @@ void main() {
       expect(taps, 0);
     });
 
+    testWidgets('tinggi dan gaya label bisa diganti', (tester) async {
+      const style = TextStyle(fontSize: 32);
+      await pumpThemed(
+        tester,
+        KoButton(
+          label: 'Main',
+          size: KoButtonSize.hero,
+          height: 70,
+          style: style,
+          onPressed: () {},
+        ),
+      );
+      expect(tester.getSize(find.byType(KoButton)).height, 70);
+      expect(tester.widget<Text>(find.text('Main')).style!.fontSize, 32);
+    });
+
     testWidgets('warna dan tinggi per jenis dan ukuran', (tester) async {
       await pumpThemed(
         tester,

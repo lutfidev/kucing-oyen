@@ -194,10 +194,7 @@ class _BowlPainter extends CustomPainter {
 
 /// Ilustrasi layar Berhasil: Oyen makan dengan bahagia di mangkuknya.
 class SuccessArt extends StatelessWidget {
-  const SuccessArt({super.key, this.costume = OyenCostume.none});
-
-  /// Kostum Oyen dari Lemari Kostum.
-  final OyenCostume costume;
+  const SuccessArt({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +205,7 @@ class SuccessArt extends StatelessWidget {
         Positioned.fromRect(
           rect: ResultArt.successOyen,
           child: OyenView(
-            OyenLook(pose: OyenPose.eat, dir: Direction.down, costume: costume),
+            OyenLook(pose: OyenPose.eat, dir: Direction.down),
             size: ResultArt.successOyen.width,
           ),
         ),
@@ -225,10 +222,7 @@ class SuccessArt extends StatelessWidget {
 /// pintu (`koPeek`), dan "PRANG!" bergoyang (`koShake`). Diam di keadaan
 /// akhir kalau animasi dimatikan.
 class VaseArt extends StatefulWidget {
-  const VaseArt({super.key, this.costume = OyenCostume.none});
-
-  /// Kostum Oyen dari Lemari Kostum.
-  final OyenCostume costume;
+  const VaseArt({super.key});
 
   /// Sudut "PRANG!" di waktu [t] (0..1) satu goyangan: -4° → 4° → -4°,
   /// tiap potongan `ease-in-out`.
@@ -303,11 +297,7 @@ class _VaseArtState extends State<VaseArt> with TickerProviderStateMixin {
           Positioned.fromRect(
             rect: ResultArt.vaseOyen,
             child: OyenView(
-              OyenLook(
-                pose: OyenPose.eat,
-                dir: Direction.down,
-                costume: widget.costume,
-              ),
+              OyenLook(pose: OyenPose.eat, dir: Direction.down),
               size: ResultArt.vaseOyen.width,
             ),
           ),

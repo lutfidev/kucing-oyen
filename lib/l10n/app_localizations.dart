@@ -174,12 +174,6 @@ abstract class AppLocalizations {
   /// **'Play'**
   String get play;
 
-  /// Costume closet button and screen title.
-  ///
-  /// In en, this message translates to:
-  /// **'Wardrobe'**
-  String get closet;
-
   /// Settings button and screen title.
   ///
   /// In en, this message translates to:
@@ -197,12 +191,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Let\'s play!'**
   String get splashTagline;
-
-  /// Word after the star total on the home screen ("31/60 stars").
-  ///
-  /// In en, this message translates to:
-  /// **'stars'**
-  String get starTotalUnit;
 
   /// Chapter number above the chapter name (shown in capitals).
   ///
@@ -1452,78 +1440,6 @@ abstract class AppLocalizations {
   /// **'Oyen {pose, select, idle{standing} walk{walking} sleep{asleep} shock{startled} box{sitting in a box} knock{knocking something over} eat{eating} happy{happy} other{standing}}, facing {dir, select, up{up} right{right} down{down} left{left} other{right}}'**
   String oyenLabel(String pose, String dir);
 
-  /// Costume: none.
-  ///
-  /// In en, this message translates to:
-  /// **'Plain'**
-  String get costumeNone;
-
-  /// Costume: peci (Indonesian cap).
-  ///
-  /// In en, this message translates to:
-  /// **'Peci Cap'**
-  String get costumePeci;
-
-  /// Costume: sarong.
-  ///
-  /// In en, this message translates to:
-  /// **'Sarong'**
-  String get costumeSarung;
-
-  /// Costume: chef hat.
-  ///
-  /// In en, this message translates to:
-  /// **'Chef Hat'**
-  String get costumeKoki;
-
-  /// Costume: glasses.
-  ///
-  /// In en, this message translates to:
-  /// **'Glasses'**
-  String get costumeKacamata;
-
-  /// Costume card tag: being worn.
-  ///
-  /// In en, this message translates to:
-  /// **'Wearing'**
-  String get costumeWearingTag;
-
-  /// Screen reader status: being worn.
-  ///
-  /// In en, this message translates to:
-  /// **'wearing'**
-  String get costumeWearingStatus;
-
-  /// Costume card tag: owned.
-  ///
-  /// In en, this message translates to:
-  /// **'Yours'**
-  String get costumeOwnedTag;
-
-  /// Screen reader status: owned.
-  ///
-  /// In en, this message translates to:
-  /// **'yours'**
-  String get costumeOwnedStatus;
-
-  /// Closet button: selected costume is worn.
-  ///
-  /// In en, this message translates to:
-  /// **'Wearing now'**
-  String get costumeActionWearing;
-
-  /// Closet button: wear the owned costume.
-  ///
-  /// In en, this message translates to:
-  /// **'Wear'**
-  String get costumeActionWear;
-
-  /// Closet button: buy for n coins.
-  ///
-  /// In en, this message translates to:
-  /// **'{n, plural, one{Buy · {n} coin} other{Buy · {n} coins}}'**
-  String costumeActionBuy(int n);
-
   /// Screen reader: close the coin sheet.
   ///
   /// In en, this message translates to:
@@ -1539,7 +1455,7 @@ abstract class AppLocalizations {
   /// Coin sheet intro.
   ///
   /// In en, this message translates to:
-  /// **'Coins buy hints and outfits for Oyen. Grab the daily bonus, or watch an ad.'**
+  /// **'Coins buy hints and stuff for Oyen\'s room. Grab the daily bonus, or watch an ad.'**
   String get coinsIntro;
 
   /// Coin card title: daily bonus.
@@ -1677,7 +1593,7 @@ abstract class AppLocalizations {
   /// Settings text under the reset button.
   ///
   /// In en, this message translates to:
-  /// **'Erase stars, coins, outfits, hints, and tutorials, then start again from level 1.'**
+  /// **'Erase stars, coins, room stuff, hints, and tutorials, then start again from level 1.'**
   String get resetProgressInfo;
 
   /// Reset confirmation title.
@@ -1689,7 +1605,7 @@ abstract class AppLocalizations {
   /// Reset confirmation text.
   ///
   /// In en, this message translates to:
-  /// **'Stars, coins, outfits, hints, and tutorials will be erased. This can\'t be undone. Today\'s daily bonus and ads stay used.'**
+  /// **'Stars, coins, room stuff, hints, and tutorials will be erased. This can\'t be undone. Today\'s daily bonus and ads stay used.'**
   String get resetConfirmBody;
 
   /// Reset confirmation button.
@@ -2717,6 +2633,312 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View {name}, yours, worn by {who}'**
   String shopAccessoryWornLabel(String name, String who);
+
+  /// Screen reader label of the thought bubble above a hungry room cat.
+  ///
+  /// In en, this message translates to:
+  /// **'Droopy: hungry'**
+  String get sadMarkHungry;
+
+  /// Screen reader label of the thought bubble above a room cat that needs attention.
+  ///
+  /// In en, this message translates to:
+  /// **'Droopy: wants attention'**
+  String get sadMarkSad;
+
+  /// Speech bubble in an empty starter room, pointing the player to the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Pretty empty in here. To the Shop!'**
+  String get roomEmptyBubble;
+
+  /// Short label inside the empty dashed spot on the wall of a starter room.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall decor?'**
+  String get roomEmptyWall;
+
+  /// Screen reader label of the empty wall spot; tapping opens the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty. Find wall decor in the Shop'**
+  String get roomEmptyWallHint;
+
+  /// Short label inside the empty dashed spot on the floor of a starter room.
+  ///
+  /// In en, this message translates to:
+  /// **'A bed, maybe?'**
+  String get roomEmptyFloor;
+
+  /// Screen reader label of the empty floor spot; tapping opens the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty. Find a bed or a toy in the Shop'**
+  String get roomEmptyFloorHint;
+
+  /// Room menu button that opens the accessories tab of the shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessories'**
+  String get accessories;
+
+  /// Added to a room menu button's screen reader label when something there is affordable and not owned yet.
+  ///
+  /// In en, this message translates to:
+  /// **'something new you can afford'**
+  String get shopHasNew;
+
+  /// Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}, {note}'**
+  String menuButtonNew(String label, String note);
+
+  /// Screen reader label of a cat in the room.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}. Tap to see their card'**
+  String kittyTapHint(String name);
+
+  /// Screen reader label of a hungry cat in the room.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, hungry. Tap to see their card'**
+  String kittyTapHintHungry(String name);
+
+  /// Hunger bar label on a cat card (higher = fuller).
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get needHunger;
+
+  /// Happiness bar label on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Happy'**
+  String get needJoy;
+
+  /// Screen reader label of a need bar.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} {value} out of 100'**
+  String needValueLabel(String label, int value);
+
+  /// Screen reader label of a need bar that is almost empty.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} {value} out of 100, almost empty'**
+  String needValueLow(String label, int value);
+
+  /// Warning under an almost empty hunger bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost empty! That tummy is rumbling.'**
+  String get needLowHunger;
+
+  /// Warning under an almost empty happiness bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost empty! Pet them already.'**
+  String get needLowJoy;
+
+  /// Screen reader label of the cat card dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s card'**
+  String kittyCardLabel(String name);
+
+  /// Screen reader label of the close button on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Close card'**
+  String get kittyCardClose;
+
+  /// Cat card button that pets the cat.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet'**
+  String get petAction;
+
+  /// Cat card button that opens the snack list.
+  ///
+  /// In en, this message translates to:
+  /// **'Snacks'**
+  String get snackPanel;
+
+  /// Heading above the snack list on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from your stock'**
+  String get snackPick;
+
+  /// Screen reader label of a snack on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Give {name}, {count} in stock'**
+  String snackGive(String name, int count);
+
+  /// Screen reader label of a snack that ran out.
+  ///
+  /// In en, this message translates to:
+  /// **'Give {name}, {count} in stock, all gone'**
+  String snackGiveEmpty(String name, int count);
+
+  /// Heading above the owned accessories on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Yours · swap for free'**
+  String get accessoryPanelTitle;
+
+  /// Link on a cat card to the accessories shop (an arrow icon follows it).
+  ///
+  /// In en, this message translates to:
+  /// **'Accessory shop'**
+  String get accessoryShopLink;
+
+  /// Card in the accessory list that takes the accessory off.
+  ///
+  /// In en, this message translates to:
+  /// **'Take off'**
+  String get accessoryRemove;
+
+  /// Tag on the accessory the cat is wearing.
+  ///
+  /// In en, this message translates to:
+  /// **'Wearing'**
+  String get accessoryWornTag;
+
+  /// Screen reader label of an accessory on a cat card.
+  ///
+  /// In en, this message translates to:
+  /// **'Put {accessory} on {name}'**
+  String accessoryWearLabel(String accessory, String name);
+
+  /// Screen reader label of the accessory the cat is wearing.
+  ///
+  /// In en, this message translates to:
+  /// **'Put {accessory} on {name}, wearing it now'**
+  String accessoryWornLabel(String accessory, String name);
+
+  /// Screen reader label of the take-off card.
+  ///
+  /// In en, this message translates to:
+  /// **'Take {name}\'s accessory off'**
+  String accessoryRemoveLabel(String name);
+
+  /// Floating text over a cat after a snack.
+  ///
+  /// In en, this message translates to:
+  /// **'+{hunger} full'**
+  String reactionFed(int hunger);
+
+  /// Floating text over a cat after a snack that also makes it happy.
+  ///
+  /// In en, this message translates to:
+  /// **'+{hunger} full, +{joy} happy'**
+  String reactionFedJoy(int hunger, int joy);
+
+  /// Floating text over a cat after petting.
+  ///
+  /// In en, this message translates to:
+  /// **'+{joy} happy'**
+  String reactionJoy(int joy);
+
+  /// Floating text over a cat after putting an accessory on.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking sharp!'**
+  String get reactionNice;
+
+  /// Floating text over a cat after taking its accessory off.
+  ///
+  /// In en, this message translates to:
+  /// **'Ahh, free!'**
+  String get reactionRelieved;
+
+  /// Room button that starts decorate mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Decorate'**
+  String get decorate;
+
+  /// Button that ends decorate mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get decorateDone;
+
+  /// Chip shown while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag things to a new spot'**
+  String get decorateHint;
+
+  /// Label of the wall area while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall area'**
+  String get zoneWall;
+
+  /// Label of the floor area while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Floor area'**
+  String get zoneFloor;
+
+  /// Title of the storage tray with owned items that are not in the room.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get storage;
+
+  /// Number of items in storage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
+  String storageCount(int count);
+
+  /// Hint on the storage tray.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to place'**
+  String get storageTapHint;
+
+  /// Storage tray when every item is in the room.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage is empty. Everything\'s on display, Oyen is proud.'**
+  String get storageEmpty;
+
+  /// Screen reader label of an item in storage.
+  ///
+  /// In en, this message translates to:
+  /// **'Put {item} in the room'**
+  String storagePlaceLabel(String item);
+
+  /// Screen reader label of the storage tray.
+  ///
+  /// In en, this message translates to:
+  /// **'Item storage'**
+  String get storageLabel;
+
+  /// Screen reader action on a room item while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to storage'**
+  String get storeItemAction;
+
+  /// Praise shown after decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Room\'s looking great!'**
+  String get decoratePraise;
+
+  /// Bonus line under the decorating praise.
+  ///
+  /// In en, this message translates to:
+  /// **'+{joy} Happy for every cat'**
+  String decoratePraiseJoy(int joy);
 }
 
 class _AppLocalizationsDelegate

@@ -54,10 +54,6 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.divider,
     required this.dimSaturation,
     required this.artMinScale,
-    required this.oyenHome,
-    required this.oyenHomeOverlap,
-    required this.menuButton,
-    required this.starHome,
     required this.node,
     required this.nodeRing,
     required this.nodeDash,
@@ -83,11 +79,6 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.hintButton,
     required this.iconCompact,
     required this.lockedOpacity,
-    required this.costumeCard,
-    required this.costumeArt,
-    required this.oyenCostume,
-    required this.oyenCloset,
-    required this.closetMinScale,
     required this.shopTab,
     required this.shopTabBar,
     required this.shopItemWell,
@@ -123,6 +114,52 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.shopRarityChip,
     required this.shopPreviewChip,
     required this.shopPreviewButton,
+    required this.roomPlay,
+    required this.roomPlayCompact,
+    required this.roomMenuButton,
+    required this.roomMenuButtonCompact,
+    required this.roomCompactHeight,
+    required this.roomDecorateGap,
+    required this.roomHintBorder,
+    required this.roomBubbleTail,
+    required this.roomPraiseTop,
+    required this.roomPraiseInset,
+    required this.roomDecorateButton,
+    required this.roomZoneChip,
+    required this.roomGrip,
+    required this.roomItemOutline,
+    required this.roomLift,
+    required this.roomLiftScale,
+    required this.roomLiftShadow,
+    required this.roomTraySlotWidth,
+    required this.roomTraySlotHeight,
+    required this.roomTraySlotWidthCompact,
+    required this.roomTraySlotHeightCompact,
+    required this.roomTrayArtWidth,
+    required this.roomTrayArtHeight,
+    required this.roomCardTop,
+    required this.roomCardAvatar,
+    required this.roomCardAvatarArt,
+    required this.roomCardAvatarMinWidth,
+    required this.roomCardButton,
+    required this.roomSnackCardWidth,
+    required this.roomSnackCardHeight,
+    required this.roomSnackArtWidth,
+    required this.roomSnackArtHeight,
+    required this.roomSnackArtBox,
+    required this.roomStockBadge,
+    required this.roomEmptyOpacity,
+    required this.roomAccessoryArt,
+    required this.roomAccessoryCard,
+    required this.roomWornTag,
+    required this.needTile,
+    required this.needLabel,
+    required this.needBar,
+    required this.needValue,
+    required this.roomReactionWidth,
+    required this.roomReactionHeight,
+    required this.roomReactionRise,
+    required this.roomHeaderLogoMinWidth,
   });
 
   static const standard = KoSize(
@@ -172,10 +209,6 @@ class KoSize extends ThemeExtension<KoSize> {
     divider: 1.5,
     dimSaturation: 0.7,
     artMinScale: 0.3,
-    oyenHome: 190,
-    oyenHomeOverlap: 34,
-    menuButton: 56,
-    starHome: 26,
     node: 64,
     nodeRing: 4,
     nodeDash: 3,
@@ -201,11 +234,6 @@ class KoSize extends ThemeExtension<KoSize> {
     hintButton: 46,
     iconCompact: 18,
     lockedOpacity: 0.75,
-    costumeCard: 104,
-    costumeArt: 64,
-    oyenCostume: 56,
-    oyenCloset: 168,
-    closetMinScale: 0.5,
     shopTab: 48,
     shopTabBar: 56,
     shopItemWell: 100,
@@ -241,6 +269,52 @@ class KoSize extends ThemeExtension<KoSize> {
     shopRarityChip: 20,
     shopPreviewChip: 22,
     shopPreviewButton: 46,
+    roomPlay: 70,
+    roomPlayCompact: 60,
+    roomMenuButton: 58,
+    roomMenuButtonCompact: 52,
+    roomCompactHeight: 700,
+    roomDecorateGap: 56,
+    roomHintBorder: 2.5,
+    roomBubbleTail: 14,
+    roomPraiseTop: 120,
+    roomPraiseInset: 40,
+    roomDecorateButton: 44,
+    roomZoneChip: 22,
+    roomGrip: 24,
+    roomItemOutline: 4,
+    roomLift: 16,
+    roomLiftScale: 1.06,
+    roomLiftShadow: 18,
+    roomTraySlotWidth: 76,
+    roomTraySlotHeight: 64,
+    roomTraySlotWidthCompact: 64,
+    roomTraySlotHeightCompact: 54,
+    roomTrayArtWidth: 56,
+    roomTrayArtHeight: 46,
+    roomCardTop: 52,
+    roomCardAvatar: 60,
+    roomCardAvatarArt: 54,
+    roomCardAvatarMinWidth: 380,
+    roomCardButton: 54,
+    roomSnackCardWidth: 94,
+    roomSnackCardHeight: 86,
+    roomSnackArtWidth: 44,
+    roomSnackArtHeight: 28,
+    roomSnackArtBox: 30,
+    roomStockBadge: 20,
+    roomEmptyOpacity: 0.45,
+    roomAccessoryArt: 30,
+    roomAccessoryCard: 86,
+    roomWornTag: 18,
+    needTile: 28,
+    needLabel: 54,
+    needBar: 14,
+    needValue: 30,
+    roomReactionWidth: 120,
+    roomReactionHeight: 60,
+    roomReactionRise: 26,
+    roomHeaderLogoMinWidth: 360,
   );
 
   /// Tombol "Main" di Beranda.
@@ -361,17 +435,6 @@ class KoSize extends ThemeExtension<KoSize> {
   /// ilustrasinya disembunyikan.
   final double artMinScale;
 
-  /// Oyen tidur di Beranda dan seberapa jauh logo menutupinya.
-  final double oyenHome;
-
-  final double oyenHomeOverlap;
-
-  /// Tombol Lemari Kostum dan Pengaturan di Beranda.
-  final double menuButton;
-
-  /// Bintang di total bintang Beranda.
-  final double starHome;
-
   /// Node level di peta babak, tebal cincin node saat ini (juga garis kotak
   /// bos), dan tebal garis putus-putus node terkunci.
   final double node;
@@ -442,21 +505,6 @@ class KoSize extends ThemeExtension<KoSize> {
 
   /// Opasitas kartu petunjuk yang belum bisa dibuka.
   final double lockedOpacity;
-
-  /// Kartu kostum di Lemari Kostum.
-  final double costumeCard;
-
-  /// Kotak Oyen kecil di kartu kostum.
-  final double costumeArt;
-
-  /// Oyen di kartu kostum.
-  final double oyenCostume;
-
-  /// Oyen pratinjau di Lemari Kostum.
-  final double oyenCloset;
-
-  /// Skala terkecil pratinjau lemari di layar pendek (selebihnya digulir).
-  final double closetMinScale;
 
   /// Tinggi satu tab Toko (desain 20).
   final double shopTab;
@@ -563,6 +611,138 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Tombol beli, pakai, dan lepas di panel pratinjau (desain 20).
   final double shopPreviewButton;
 
+  /// Tombol Main di panel bawah kamar (desain 19).
+  final double roomPlay;
+
+  /// Tombol Main di layar pendek (catatan `n360`).
+  final double roomPlayCompact;
+
+  /// Tombol Toko, Aksesoris, dan Pengaturan di panel bawah kamar.
+  final double roomMenuButton;
+
+  /// Tombol menu kamar di layar pendek (catatan `n360`).
+  final double roomMenuButtonCompact;
+
+  /// Layar di bawah tinggi ini memakai panel kamar ringkas.
+  final double roomCompactHeight;
+
+  /// Jarak dari atas header kamar ke tombol Hias (desain: 50 → 106).
+  final double roomDecorateGap;
+
+  /// Garis putus-putus bidang kosong kamar baru.
+  final double roomHintBorder;
+
+  /// Ekor gelembung ajakan kamar baru.
+  final double roomBubbleTail;
+
+  /// Jarak pujian menghias dari bawah status bar (desain: top 164 − 44).
+  final double roomPraiseTop;
+
+  /// Jarak kiri-kanan pujian menghias.
+  final double roomPraiseInset;
+
+  /// Tombol Hias, Selesai, dan chip petunjuk menghias (`TombolHias.dc.html`).
+  final double roomDecorateButton;
+
+  /// Label "Area dinding" dan "Area lantai" saat menghias.
+  final double roomZoneChip;
+
+  /// Gagang titik-titik di pojok barang saat menghias.
+  final double roomGrip;
+
+  /// Jarak garis putus-putus dari barang saat menghias.
+  final double roomItemOutline;
+
+  /// Barang yang diangkat naik sejauh ini (dikali skala gambar).
+  final double roomLift;
+
+  /// Barang yang diangkat sedikit membesar.
+  final double roomLiftScale;
+
+  /// Tinggi bayangan elips di bawah barang yang diangkat.
+  final double roomLiftShadow;
+
+  /// Kotak barang di baki Gudang (`BakiGudang.dc.html`).
+  final double roomTraySlotWidth;
+
+  final double roomTraySlotHeight;
+
+  /// Kotak barang Gudang di layar pendek (catatan `n360`).
+  final double roomTraySlotWidthCompact;
+
+  final double roomTraySlotHeightCompact;
+
+  /// Gambar barang di kotak Gudang.
+  final double roomTrayArtWidth;
+
+  final double roomTrayArtHeight;
+
+  /// Jarak kartu kucing dari bawah status bar (desain: top 96 − status bar 44).
+  final double roomCardTop;
+
+  /// Kotak avatar di kartu kucing.
+  final double roomCardAvatar;
+
+  /// Sprite kucing di avatar kartu.
+  final double roomCardAvatarArt;
+
+  /// Avatar kartu disembunyikan di layar lebih sempit dari ini (catatan `n360`).
+  final double roomCardAvatarMinWidth;
+
+  /// Tombol Camilan, Elus, dan Aksesoris di kartu kucing.
+  final double roomCardButton;
+
+  /// Kartu camilan di kartu kucing.
+  final double roomSnackCardWidth;
+
+  final double roomSnackCardHeight;
+
+  /// Gambar camilan di kartu camilan.
+  final double roomSnackArtWidth;
+
+  final double roomSnackArtHeight;
+
+  /// Tinggi tempat gambar camilan.
+  final double roomSnackArtBox;
+
+  /// Badge stok "×N" camilan.
+  final double roomStockBadge;
+
+  /// Kartu camilan yang stoknya habis.
+  final double roomEmptyOpacity;
+
+  /// Ikon aksesoris di kartu kucing.
+  final double roomAccessoryArt;
+
+  /// Tinggi minimum kartu aksesoris di kartu kucing.
+  final double roomAccessoryCard;
+
+  /// Tag "Dipakai" di kartu aksesoris.
+  final double roomWornTag;
+
+  /// Kotak ikon bar kebutuhan (`BarKebutuhan.dc.html`).
+  final double needTile;
+
+  /// Lebar label bar kebutuhan.
+  final double needLabel;
+
+  /// Tinggi bar kebutuhan.
+  final double needBar;
+
+  /// Lebar angka bar kebutuhan.
+  final double needValue;
+
+  /// Kotak angka dan hati yang melayang di atas kucing.
+  final double roomReactionWidth;
+
+  final double roomReactionHeight;
+
+  /// Seberapa jauh angka reaksi naik sebelum hilang.
+  final double roomReactionRise;
+
+  /// Logo header kamar disembunyikan di layar lebih sempit dari ini.
+  final double roomHeaderLogoMinWidth;
+
   @override
   KoSize copyWith({
     double? buttonHero,
@@ -611,10 +791,6 @@ class KoSize extends ThemeExtension<KoSize> {
     double? divider,
     double? dimSaturation,
     double? artMinScale,
-    double? oyenHome,
-    double? oyenHomeOverlap,
-    double? menuButton,
-    double? starHome,
     double? node,
     double? nodeRing,
     double? nodeDash,
@@ -640,11 +816,6 @@ class KoSize extends ThemeExtension<KoSize> {
     double? hintButton,
     double? iconCompact,
     double? lockedOpacity,
-    double? costumeCard,
-    double? costumeArt,
-    double? oyenCostume,
-    double? oyenCloset,
-    double? closetMinScale,
     double? shopTab,
     double? shopTabBar,
     double? shopItemWell,
@@ -680,6 +851,52 @@ class KoSize extends ThemeExtension<KoSize> {
     double? shopRarityChip,
     double? shopPreviewChip,
     double? shopPreviewButton,
+    double? roomPlay,
+    double? roomPlayCompact,
+    double? roomMenuButton,
+    double? roomMenuButtonCompact,
+    double? roomCompactHeight,
+    double? roomDecorateGap,
+    double? roomHintBorder,
+    double? roomBubbleTail,
+    double? roomPraiseTop,
+    double? roomPraiseInset,
+    double? roomDecorateButton,
+    double? roomZoneChip,
+    double? roomGrip,
+    double? roomItemOutline,
+    double? roomLift,
+    double? roomLiftScale,
+    double? roomLiftShadow,
+    double? roomTraySlotWidth,
+    double? roomTraySlotHeight,
+    double? roomTraySlotWidthCompact,
+    double? roomTraySlotHeightCompact,
+    double? roomTrayArtWidth,
+    double? roomTrayArtHeight,
+    double? roomCardTop,
+    double? roomCardAvatar,
+    double? roomCardAvatarArt,
+    double? roomCardAvatarMinWidth,
+    double? roomCardButton,
+    double? roomSnackCardWidth,
+    double? roomSnackCardHeight,
+    double? roomSnackArtWidth,
+    double? roomSnackArtHeight,
+    double? roomSnackArtBox,
+    double? roomStockBadge,
+    double? roomEmptyOpacity,
+    double? roomAccessoryArt,
+    double? roomAccessoryCard,
+    double? roomWornTag,
+    double? needTile,
+    double? needLabel,
+    double? needBar,
+    double? needValue,
+    double? roomReactionWidth,
+    double? roomReactionHeight,
+    double? roomReactionRise,
+    double? roomHeaderLogoMinWidth,
   }) {
     return KoSize(
       buttonHero: buttonHero ?? this.buttonHero,
@@ -728,10 +945,6 @@ class KoSize extends ThemeExtension<KoSize> {
       divider: divider ?? this.divider,
       dimSaturation: dimSaturation ?? this.dimSaturation,
       artMinScale: artMinScale ?? this.artMinScale,
-      oyenHome: oyenHome ?? this.oyenHome,
-      oyenHomeOverlap: oyenHomeOverlap ?? this.oyenHomeOverlap,
-      menuButton: menuButton ?? this.menuButton,
-      starHome: starHome ?? this.starHome,
       node: node ?? this.node,
       nodeRing: nodeRing ?? this.nodeRing,
       nodeDash: nodeDash ?? this.nodeDash,
@@ -757,11 +970,6 @@ class KoSize extends ThemeExtension<KoSize> {
       hintButton: hintButton ?? this.hintButton,
       iconCompact: iconCompact ?? this.iconCompact,
       lockedOpacity: lockedOpacity ?? this.lockedOpacity,
-      costumeCard: costumeCard ?? this.costumeCard,
-      costumeArt: costumeArt ?? this.costumeArt,
-      oyenCostume: oyenCostume ?? this.oyenCostume,
-      oyenCloset: oyenCloset ?? this.oyenCloset,
-      closetMinScale: closetMinScale ?? this.closetMinScale,
       shopTab: shopTab ?? this.shopTab,
       shopTabBar: shopTabBar ?? this.shopTabBar,
       shopItemWell: shopItemWell ?? this.shopItemWell,
@@ -797,6 +1005,57 @@ class KoSize extends ThemeExtension<KoSize> {
       shopRarityChip: shopRarityChip ?? this.shopRarityChip,
       shopPreviewChip: shopPreviewChip ?? this.shopPreviewChip,
       shopPreviewButton: shopPreviewButton ?? this.shopPreviewButton,
+      roomPlay: roomPlay ?? this.roomPlay,
+      roomPlayCompact: roomPlayCompact ?? this.roomPlayCompact,
+      roomMenuButton: roomMenuButton ?? this.roomMenuButton,
+      roomMenuButtonCompact:
+          roomMenuButtonCompact ?? this.roomMenuButtonCompact,
+      roomCompactHeight: roomCompactHeight ?? this.roomCompactHeight,
+      roomDecorateGap: roomDecorateGap ?? this.roomDecorateGap,
+      roomHintBorder: roomHintBorder ?? this.roomHintBorder,
+      roomBubbleTail: roomBubbleTail ?? this.roomBubbleTail,
+      roomPraiseTop: roomPraiseTop ?? this.roomPraiseTop,
+      roomPraiseInset: roomPraiseInset ?? this.roomPraiseInset,
+      roomDecorateButton: roomDecorateButton ?? this.roomDecorateButton,
+      roomZoneChip: roomZoneChip ?? this.roomZoneChip,
+      roomGrip: roomGrip ?? this.roomGrip,
+      roomItemOutline: roomItemOutline ?? this.roomItemOutline,
+      roomLift: roomLift ?? this.roomLift,
+      roomLiftScale: roomLiftScale ?? this.roomLiftScale,
+      roomLiftShadow: roomLiftShadow ?? this.roomLiftShadow,
+      roomTraySlotWidth: roomTraySlotWidth ?? this.roomTraySlotWidth,
+      roomTraySlotHeight: roomTraySlotHeight ?? this.roomTraySlotHeight,
+      roomTraySlotWidthCompact:
+          roomTraySlotWidthCompact ?? this.roomTraySlotWidthCompact,
+      roomTraySlotHeightCompact:
+          roomTraySlotHeightCompact ?? this.roomTraySlotHeightCompact,
+      roomTrayArtWidth: roomTrayArtWidth ?? this.roomTrayArtWidth,
+      roomTrayArtHeight: roomTrayArtHeight ?? this.roomTrayArtHeight,
+      roomCardTop: roomCardTop ?? this.roomCardTop,
+      roomCardAvatar: roomCardAvatar ?? this.roomCardAvatar,
+      roomCardAvatarArt: roomCardAvatarArt ?? this.roomCardAvatarArt,
+      roomCardAvatarMinWidth:
+          roomCardAvatarMinWidth ?? this.roomCardAvatarMinWidth,
+      roomCardButton: roomCardButton ?? this.roomCardButton,
+      roomSnackCardWidth: roomSnackCardWidth ?? this.roomSnackCardWidth,
+      roomSnackCardHeight: roomSnackCardHeight ?? this.roomSnackCardHeight,
+      roomSnackArtWidth: roomSnackArtWidth ?? this.roomSnackArtWidth,
+      roomSnackArtHeight: roomSnackArtHeight ?? this.roomSnackArtHeight,
+      roomSnackArtBox: roomSnackArtBox ?? this.roomSnackArtBox,
+      roomStockBadge: roomStockBadge ?? this.roomStockBadge,
+      roomEmptyOpacity: roomEmptyOpacity ?? this.roomEmptyOpacity,
+      roomAccessoryArt: roomAccessoryArt ?? this.roomAccessoryArt,
+      roomAccessoryCard: roomAccessoryCard ?? this.roomAccessoryCard,
+      roomWornTag: roomWornTag ?? this.roomWornTag,
+      needTile: needTile ?? this.needTile,
+      needLabel: needLabel ?? this.needLabel,
+      needBar: needBar ?? this.needBar,
+      needValue: needValue ?? this.needValue,
+      roomReactionWidth: roomReactionWidth ?? this.roomReactionWidth,
+      roomReactionHeight: roomReactionHeight ?? this.roomReactionHeight,
+      roomReactionRise: roomReactionRise ?? this.roomReactionRise,
+      roomHeaderLogoMinWidth:
+          roomHeaderLogoMinWidth ?? this.roomHeaderLogoMinWidth,
     );
   }
 
@@ -851,10 +1110,6 @@ class KoSize extends ThemeExtension<KoSize> {
       divider: d(divider, other.divider),
       dimSaturation: d(dimSaturation, other.dimSaturation),
       artMinScale: d(artMinScale, other.artMinScale),
-      oyenHome: d(oyenHome, other.oyenHome),
-      oyenHomeOverlap: d(oyenHomeOverlap, other.oyenHomeOverlap),
-      menuButton: d(menuButton, other.menuButton),
-      starHome: d(starHome, other.starHome),
       node: d(node, other.node),
       nodeRing: d(nodeRing, other.nodeRing),
       nodeDash: d(nodeDash, other.nodeDash),
@@ -880,11 +1135,6 @@ class KoSize extends ThemeExtension<KoSize> {
       hintButton: d(hintButton, other.hintButton),
       iconCompact: d(iconCompact, other.iconCompact),
       lockedOpacity: d(lockedOpacity, other.lockedOpacity),
-      costumeCard: d(costumeCard, other.costumeCard),
-      costumeArt: d(costumeArt, other.costumeArt),
-      oyenCostume: d(oyenCostume, other.oyenCostume),
-      oyenCloset: d(oyenCloset, other.oyenCloset),
-      closetMinScale: d(closetMinScale, other.closetMinScale),
       shopTab: d(shopTab, other.shopTab),
       shopTabBar: d(shopTabBar, other.shopTabBar),
       shopItemWell: d(shopItemWell, other.shopItemWell),
@@ -920,6 +1170,67 @@ class KoSize extends ThemeExtension<KoSize> {
       shopRarityChip: d(shopRarityChip, other.shopRarityChip),
       shopPreviewChip: d(shopPreviewChip, other.shopPreviewChip),
       shopPreviewButton: d(shopPreviewButton, other.shopPreviewButton),
+      roomPlay: d(roomPlay, other.roomPlay),
+      roomPlayCompact: d(roomPlayCompact, other.roomPlayCompact),
+      roomMenuButton: d(roomMenuButton, other.roomMenuButton),
+      roomMenuButtonCompact: d(
+        roomMenuButtonCompact,
+        other.roomMenuButtonCompact,
+      ),
+      roomCompactHeight: d(roomCompactHeight, other.roomCompactHeight),
+      roomDecorateGap: d(roomDecorateGap, other.roomDecorateGap),
+      roomHintBorder: d(roomHintBorder, other.roomHintBorder),
+      roomBubbleTail: d(roomBubbleTail, other.roomBubbleTail),
+      roomPraiseTop: d(roomPraiseTop, other.roomPraiseTop),
+      roomPraiseInset: d(roomPraiseInset, other.roomPraiseInset),
+      roomDecorateButton: d(roomDecorateButton, other.roomDecorateButton),
+      roomZoneChip: d(roomZoneChip, other.roomZoneChip),
+      roomGrip: d(roomGrip, other.roomGrip),
+      roomItemOutline: d(roomItemOutline, other.roomItemOutline),
+      roomLift: d(roomLift, other.roomLift),
+      roomLiftScale: d(roomLiftScale, other.roomLiftScale),
+      roomLiftShadow: d(roomLiftShadow, other.roomLiftShadow),
+      roomTraySlotWidth: d(roomTraySlotWidth, other.roomTraySlotWidth),
+      roomTraySlotHeight: d(roomTraySlotHeight, other.roomTraySlotHeight),
+      roomTraySlotWidthCompact: d(
+        roomTraySlotWidthCompact,
+        other.roomTraySlotWidthCompact,
+      ),
+      roomTraySlotHeightCompact: d(
+        roomTraySlotHeightCompact,
+        other.roomTraySlotHeightCompact,
+      ),
+      roomTrayArtWidth: d(roomTrayArtWidth, other.roomTrayArtWidth),
+      roomTrayArtHeight: d(roomTrayArtHeight, other.roomTrayArtHeight),
+      roomCardTop: d(roomCardTop, other.roomCardTop),
+      roomCardAvatar: d(roomCardAvatar, other.roomCardAvatar),
+      roomCardAvatarArt: d(roomCardAvatarArt, other.roomCardAvatarArt),
+      roomCardAvatarMinWidth: d(
+        roomCardAvatarMinWidth,
+        other.roomCardAvatarMinWidth,
+      ),
+      roomCardButton: d(roomCardButton, other.roomCardButton),
+      roomSnackCardWidth: d(roomSnackCardWidth, other.roomSnackCardWidth),
+      roomSnackCardHeight: d(roomSnackCardHeight, other.roomSnackCardHeight),
+      roomSnackArtWidth: d(roomSnackArtWidth, other.roomSnackArtWidth),
+      roomSnackArtHeight: d(roomSnackArtHeight, other.roomSnackArtHeight),
+      roomSnackArtBox: d(roomSnackArtBox, other.roomSnackArtBox),
+      roomStockBadge: d(roomStockBadge, other.roomStockBadge),
+      roomEmptyOpacity: d(roomEmptyOpacity, other.roomEmptyOpacity),
+      roomAccessoryArt: d(roomAccessoryArt, other.roomAccessoryArt),
+      roomAccessoryCard: d(roomAccessoryCard, other.roomAccessoryCard),
+      roomWornTag: d(roomWornTag, other.roomWornTag),
+      needTile: d(needTile, other.needTile),
+      needLabel: d(needLabel, other.needLabel),
+      needBar: d(needBar, other.needBar),
+      needValue: d(needValue, other.needValue),
+      roomReactionWidth: d(roomReactionWidth, other.roomReactionWidth),
+      roomReactionHeight: d(roomReactionHeight, other.roomReactionHeight),
+      roomReactionRise: d(roomReactionRise, other.roomReactionRise),
+      roomHeaderLogoMinWidth: d(
+        roomHeaderLogoMinWidth,
+        other.roomHeaderLogoMinWidth,
+      ),
     );
   }
 }

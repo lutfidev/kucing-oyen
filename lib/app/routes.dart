@@ -4,7 +4,7 @@ import '../screens/shop/shop_tab.dart';
 /// Path semua layar. Rute bersarang supaya tombol kembali Android mengikuti
 /// alur layar: Beranda → peta babak → level.
 abstract final class AppRoutes {
-  /// Beranda (desain 01).
+  /// Beranda: kamar Oyen (desain 19).
   static const home = '/';
 
   /// Galeri token dan komponen untuk cek visual terhadap desain. Tidak ada
@@ -23,9 +23,6 @@ abstract final class AppRoutes {
 
   /// Galeri efek suara dan musik, untuk didengar di perangkat.
   static const gallerySound = '/galeri/suara';
-
-  /// Lemari Kostum (desain 12), dibuka dari Beranda.
-  static const closet = '/kostum';
 
   /// Toko (desain 20), dibuka dari Beranda. Dengan [tab] langsung membuka
   /// tab itu (`/toko?tab=accessories`).

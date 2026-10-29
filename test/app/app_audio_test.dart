@@ -9,7 +9,7 @@ import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/app/sound_player.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
-import 'package:kucing_oren/screens/home/home_screen.dart';
+import 'package:kucing_oren/screens/room/room_screen.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -28,7 +28,7 @@ void main() {
   test('lagu per rute', () {
     expect(musicFor(AppRoutes.home), MusicTrack.home);
     expect(musicFor(AppRoutes.chapter(2)), MusicTrack.home);
-    expect(musicFor(AppRoutes.closet), MusicTrack.home);
+    expect(musicFor(AppRoutes.shop()), MusicTrack.home);
     expect(musicFor(AppRoutes.settings), MusicTrack.home);
     expect(musicFor(AppRoutes.gallery), MusicTrack.home);
     expect(musicFor(AppRoutes.level(13, chapter: 2)), MusicTrack.level);
@@ -42,7 +42,7 @@ void main() {
     await pumpApp(tester, audio: audio);
     expect(player.music, MusicTrack.home);
 
-    GoRouter.of(tester.element(find.byType(HomeScreen)))
+    GoRouter.of(tester.element(find.byType(RoomScreen)))
         .go(AppRoutes.level(1, chapter: 1));
     await tester.pumpAndSettle();
     expect(player.music, MusicTrack.level);

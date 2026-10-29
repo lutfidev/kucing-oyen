@@ -8,7 +8,7 @@ import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/snacks.dart';
-import 'package:kucing_oren/screens/home/home_screen.dart';
+import 'package:kucing_oren/screens/room/room_screen.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
 
 import '../test_helpers.dart';
@@ -72,7 +72,7 @@ void main() {
 
       await tester.tap(find.text('Lihat di kamar'));
       await settle(tester);
-      expect(find.byType(HomeScreen), findsOneWidget);
+      expect(find.byType(RoomScreen), findsOneWidget);
     });
 
     testWidgets('koin pas cukup tetap bisa beli', (tester) async {

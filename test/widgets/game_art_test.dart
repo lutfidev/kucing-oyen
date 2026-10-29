@@ -115,4 +115,26 @@ void main() {
     expect(tester.getSemantics(find.byType(AccessoryIconView)).label, isEmpty);
     semantics.dispose();
   });
+
+  testWidgets('SadMarkView berlabel jenis lesunya, selebar permintaan', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await pumpThemed(
+      tester,
+      const Column(
+        children: [
+          SadMarkView(hungry: true, size: 40),
+          SadMarkView(hungry: false),
+        ],
+      ),
+    );
+    expect(find.bySemanticsLabel('Lesu: lapar'), findsOneWidget);
+    expect(find.bySemanticsLabel('Lesu: kurang perhatian'), findsOneWidget);
+    expect(
+      tester.getSize(find.byType(SadMarkView).first),
+      const Size(40, 40 * 52 / 48),
+    );
+    semantics.dispose();
+  });
 }

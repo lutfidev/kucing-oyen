@@ -102,6 +102,13 @@ void main() {
     expect(roomItemOf(RoomItemId.tikus).width, 46);
   });
 
+  test('karpet digambar rata di lantai, barang lain tidak', () {
+    expect(roomItemOf(RoomItemId.karpet).flat, isTrue);
+    expect(roomItems.where((i) => i.flat).map((i) => i.id), [
+      RoomItemId.karpet,
+    ]);
+  });
+
   group('Spot', () {
     test('dijepit ke 0–1, NaN jadi 0', () {
       expect(Spot(-1, 2), Spot(0, 1));

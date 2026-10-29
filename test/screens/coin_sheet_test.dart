@@ -5,10 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
-import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
-import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -78,7 +76,7 @@ void main() {
     expect(find.text('Tambah Koin'), findsOneWidget);
     expect(
       find.text(
-        'Koin buat petunjuk dan kostum Oyen. '
+        'Koin buat petunjuk dan isi kamar Oyen. '
         'Ambil bonus tiap hari, atau tonton iklan.',
       ),
       findsOneWidget,
@@ -187,30 +185,6 @@ void main() {
     await settle(tester);
     expect(progress.coins, 20);
     expect(_enabled(tester, '+20 koin'), isTrue);
-  });
-
-  testWidgets('Lemari Kostum: chip membuka sheet, saldo baru dipakai', (
-    tester,
-  ) async {
-    setScreenSize(tester, const Size(390, 844));
-    await pumpApp(
-      tester,
-      location: AppRoutes.closet,
-      progress: _progress(coins: 25),
-    );
-    await _tap(
-      tester,
-      find.byKey(ValueKey('costume-${OyenCostume.kacamata.name}')),
-    );
-    expect(find.text('Koin kurang · 45'), findsOneWidget);
-    expect(find.byKey(const ValueKey('coin-badge')), findsNothing);
-
-    await _tap(tester, find.byType(KoCoinChip));
-    expect(find.text('Tambah Koin'), findsOneWidget);
-    await _tap(tester, find.text('+20 koin'));
-    await _tap(tester, find.bySemanticsLabel('Tutup'));
-    expect(find.text('Beli · 45 koin'), findsOneWidget);
-    expect(find.byType(OyenView), findsWidgets);
   });
 
   group('menutup sheet', () {

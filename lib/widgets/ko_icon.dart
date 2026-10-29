@@ -184,14 +184,6 @@ abstract final class KoIcons {
     KoIconShape.path('M8 11V8a4 4 0 0 1 8 0v3'),
   ], strokeWidth: 2.6);
 
-  /// Lemari Kostum (gantungan baju).
-  static const costume = KoIconData([
-    KoIconShape.path('M12 7a2 2 0 1 1 2-2c0 1-2 1.5-2 3'),
-    KoIconShape.path(
-      'M12 8 3 15.5a1.2 1.2 0 0 0 .8 2.1h16.4a1.2 1.2 0 0 0 .8-2.1z',
-    ),
-  ], strokeWidth: 2.2);
-
   /// Pengaturan (penggeser).
   static const settings = KoIconData([
     KoIconShape.path('M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0'),
@@ -337,6 +329,61 @@ abstract final class KoIcons {
     KoIconShape.path('M12 3 4 7v5c0 5 3.4 8 8 9 4.6-1 8-4 8-9V7z'),
     KoIconShape.path('M8.5 12l2.5 2.5 4.5-5'),
   ], strokeWidth: 2.4);
+
+  /// Toko di panel bawah kamar (etalase, `Kamar.dc.html`).
+  static const store = KoIconData([
+    KoIconShape.path('M4 9.5 5.5 4h13L20 9.5'),
+    KoIconShape.path(
+      'M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0',
+    ),
+    KoIconShape.path('M5.5 12v8h13v-8M10 20v-4.5h4V20'),
+  ], strokeWidth: 2.2);
+
+  /// Tombol Hias (rol cat, `TombolHias.dc.html`).
+  static const decorate = KoIconData([
+    KoIconShape.rrect(Rect.fromLTWH(3, 3, 15, 6), 2),
+    KoIconShape.path('M18 6h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-8v3'),
+    KoIconShape.rrect(Rect.fromLTWH(10, 14, 4, 7), 1),
+  ], strokeWidth: 2.2);
+
+  /// Baki Gudang (kotak, `BakiGudang.dc.html`).
+  static const storage = KoIconData([
+    KoIconShape.path('M3 8l9-4 9 4v9l-9 4-9-4z'),
+    KoIconShape.path('M3 8l9 4 9-4M12 12v9'),
+  ], strokeWidth: 2.2);
+
+  /// Elus di kartu kucing (`Kamar.dc.html`).
+  static const heart = KoIconData([
+    KoIconShape.path(
+      'M12 20s-7-4.4-7-9.6A4 4 0 0 1 12 8a4 4 0 0 1 7 2.4C19 15.6 12 20 12 20z',
+    ),
+  ], strokeWidth: 2.4);
+
+  /// Hati yang melayang sesudah dielus (terisi, `Kamar.dc.html`).
+  static const heartFill = KoIconData([
+    KoIconShape.path(
+      'M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z',
+      paint: KoIconPaint.fill,
+    ),
+  ], strokeWidth: 0);
+
+  /// Chip "Seret barang ke tempat baru" (panah empat arah, `Kamar.dc.html`).
+  static const move = KoIconData([
+    KoIconShape.path(
+      'M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3'
+      'M3 12l3 3M21 12l-3-3M21 12l-3 3',
+    ),
+  ], strokeWidth: 2.4);
+
+  /// Gagang seret di pojok barang saat menghias (enam titik).
+  static const grip = KoIconData([
+    KoIconShape.circle(Offset(8, 6), 2.4, paint: KoIconPaint.fill),
+    KoIconShape.circle(Offset(16, 6), 2.4, paint: KoIconPaint.fill),
+    KoIconShape.circle(Offset(8, 12), 2.4, paint: KoIconPaint.fill),
+    KoIconShape.circle(Offset(16, 12), 2.4, paint: KoIconPaint.fill),
+    KoIconShape.circle(Offset(8, 18), 2.4, paint: KoIconPaint.fill),
+    KoIconShape.circle(Offset(16, 18), 2.4, paint: KoIconPaint.fill),
+  ], strokeWidth: 0);
 }
 
 /// Menggambar [KoIconData] seukuran [size] dengan warna [color]. Hiasan

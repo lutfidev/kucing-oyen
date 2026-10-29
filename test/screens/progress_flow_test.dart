@@ -6,7 +6,6 @@ import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/kucing_game.dart';
-import 'package:kucing_oren/game/model/costumes.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/l10n/names.dart';
@@ -232,23 +231,5 @@ void main() {
     );
     await pumpApp(tester, progress: reopened);
     expect(find.bySemanticsLabel('3 dari 60 bintang'), findsOneWidget);
-  });
-
-  testWidgets('kostum yang dipakai tampil di papan level', (tester) async {
-    await pumpApp(
-      tester,
-      location: AppRoutes.level(3, chapter: 1),
-      progress: testProgressWith(
-        best: wonUpTo(2),
-        wardrobe: Wardrobe(
-          owned: {OyenCostume.peci},
-          wearing: OyenCostume.peci,
-        ),
-      ),
-    );
-    final game = tester
-        .widget<GameWidget<KucingGame>>(find.byType(GameWidget<KucingGame>))
-        .game!;
-    expect(game.scene.oyen!.look.costume, OyenCostume.peci);
   });
 }

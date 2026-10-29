@@ -2,20 +2,18 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../game/model/costumes.dart';
 import '../game/model/hints.dart';
 import '../game/model/home.dart';
 import '../game/model/needs.dart';
 import '../game/model/progress.dart';
 import '../game/model/rewards.dart';
 import '../game/model/sounds.dart';
-import '../game/render/oyen.dart';
 import 'language.dart';
 
 /// Tempat menyimpan [Progress], tutorial yang sudah selesai, saldo koin,
-/// tingkat petunjuk yang terbuka, kostum Oyen, rumah Oyen dan kebutuhan
-/// kucingnya, hadiah harian, bahasa, dan sakelar suara di perangkat. Antarmukanya kecil supaya test bisa memakai
-/// [MemoryProgressStore].
+/// tingkat petunjuk yang terbuka, rumah Oyen dan kebutuhan kucingnya,
+/// hadiah harian, bahasa, dan sakelar suara di perangkat. Antarmukanya kecil
+/// supaya test bisa memakai [MemoryProgressStore].
 abstract interface class ProgressStore {
   Future<Progress> load();
   Future<void> save(Progress progress);
@@ -31,11 +29,6 @@ abstract interface class ProgressStore {
   /// Id level → tingkat petunjuk tertinggi yang terbuka (1–3).
   Future<Map<int, int>> loadHints();
   Future<void> saveHints(Map<int, int> tiers);
-
-  /// Kostum yang dimiliki dan dipakai; [Wardrobe.initial] kalau belum
-  /// pernah disimpan.
-  Future<Wardrobe> loadWardrobe();
-  Future<void> saveWardrobe(Wardrobe wardrobe);
 
   /// Barang, tata letak, kucing, aksesoris, dan stok camilan;
   /// [Home.initial] kalau belum pernah disimpan atau rusak.
@@ -72,9 +65,6 @@ class MemoryProgressStore implements ProgressStore {
 
   /// Tingkat petunjuk yang terakhir disimpan.
   Map<int, int> hints = const {};
-
-  /// Kostum yang terakhir disimpan.
-  Wardrobe wardrobe = Wardrobe.initial;
 
   /// Rumah yang terakhir disimpan.
   Home home = Home.initial;
@@ -128,13 +118,6 @@ class MemoryProgressStore implements ProgressStore {
   Future<void> saveHints(Map<int, int> tiers) async => hints = tiers;
 
   @override
-  Future<Wardrobe> loadWardrobe() async => wardrobe;
-
-  @override
-  Future<void> saveWardrobe(Wardrobe wardrobe) async =>
-      this.wardrobe = wardrobe;
-
-  @override
   Future<Home> loadHome() async => home;
 
   @override
@@ -169,8 +152,7 @@ class MemoryProgressStore implements ProgressStore {
 
 /// Simpanan lokal lewat `shared_preferences`: JSON `{"id level": bintang}`,
 /// daftar id level yang tutorialnya selesai, saldo koin, JSON
-/// `{"id level": tingkat petunjuk}`, nama kostum yang dimiliki dan
-/// dipakai, JSON rumah dan kebutuhan kucing, JSON hadiah harian, nama
+/// `{"id level": tingkat petunjuk}`, JSON rumah dan kebutuhan kucing, JSON hadiah harian, nama
 /// bahasa, dan sakelar suara.
 class PrefsProgressStore implements ProgressStore {
   PrefsProgressStore([SharedPreferencesAsync? prefs])
@@ -180,8 +162,10 @@ class PrefsProgressStore implements ProgressStore {
   static const tutorialsKey = 'tutorial.done';
   static const coinsKey = 'coins';
   static const hintsKey = 'hints.tier';
-  static const ownedKey = 'costume.owned';
-  static const wearingKey = 'costume.wearing';
+
+  /// Kunci Lemari Kostum lama (dihapus di langkah 23), dibuang saat rumah
+  /// dimuat.
+  static const oldCostumeKeys = ['costume.owned', 'costume.wearing'];
   static const homeKey = 'home.state';
   static const needsKey = 'home.needs';
   static const rewardsKey = 'rewards.daily';
@@ -265,36 +249,6 @@ class PrefsProgressStore implements ProgressStore {
     }),
   );
 
-  /// Nama kostum yang tidak dikenal dan nilai bertipe salah dibuang;
-  /// [Wardrobe] mengembalikan kostum dipakai yang tidak dimiliki ke Polos.
-  @override
-  Future<Wardrobe> loadWardrobe() async {
-    OyenCostume? parse(String? name) => OyenCostume.values.asNameMap()[name];
-    Future<T?> read<T>(Future<T?> Function() get) async {
-      try {
-        return await get();
-      } on TypeError {
-        return null;
-      }
-    }
-
-    final owned = await read(() => _prefs.getStringList(ownedKey));
-    final wearing = await read(() => _prefs.getString(wearingKey));
-    return Wardrobe(
-      owned: [for (final name in owned ?? const <String>[]) ?parse(name)],
-      wearing: parse(wearing) ?? OyenCostume.none,
-    );
-  }
-
-  @override
-  Future<void> saveWardrobe(Wardrobe wardrobe) => Future.wait([
-    _prefs.setStringList(ownedKey, [
-      for (final c in OyenCostume.values)
-        if (wardrobe.owns(c)) c.name,
-    ]),
-    _prefs.setString(wearingKey, wardrobe.wearing.name),
-  ]);
-
   /// JSON di [key] lewat [parse]; [empty] kalau belum pernah disimpan,
   /// bukan objek JSON, atau bertipe salah.
   Future<T> _loadJson<T>(
@@ -317,8 +271,18 @@ class PrefsProgressStore implements ProgressStore {
     }
   }
 
+  /// Juga membuang simpanan Lemari Kostum lama; gagal hapus diabaikan.
   @override
-  Future<Home> loadHome() => _loadJson(homeKey, Home.fromJson, Home.initial);
+  Future<Home> loadHome() async {
+    for (final key in oldCostumeKeys) {
+      try {
+        await _prefs.remove(key);
+      } on Object {
+        // Tidak apa-apa: kunci ini tidak pernah dibaca lagi.
+      }
+    }
+    return _loadJson(homeKey, Home.fromJson, Home.initial);
+  }
 
   @override
   Future<void> saveHome(Home home) =>

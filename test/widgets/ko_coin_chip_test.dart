@@ -24,14 +24,6 @@ void main() {
 
     await pumpThemed(
       tester,
-      const KoCoinChip(coins: 1, style: KoCoinChipStyle.outlined),
-    );
-    expect(tester.getSize(chip).height, 40);
-    expect(decorationOf(tester, chip).border, isNotNull);
-    expect(decorationOf(tester, chip).boxShadow, isNull);
-
-    await pumpThemed(
-      tester,
       const KoCoinChip(coins: 1, style: KoCoinChipStyle.compact),
     );
     expect(tester.getSize(chip).height, 36);
@@ -83,11 +75,11 @@ void main() {
     );
   });
 
-  testWidgets('outlined yang bisa ditekan turun saat ditekan', (tester) async {
+  testWidgets('compact yang bisa ditekan turun saat ditekan', (tester) async {
     final shadow = KoTheme.light().extension<KoShadow>()!.coinChip;
     await pumpThemed(
       tester,
-      KoCoinChip(coins: 1, style: KoCoinChipStyle.outlined, onPressed: () {}),
+      KoCoinChip(coins: 1, style: KoCoinChipStyle.compact, onPressed: () {}),
     );
     final surface = find
         .descendant(

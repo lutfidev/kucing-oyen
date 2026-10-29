@@ -56,7 +56,6 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.creamDim,
     required this.starShine,
     required this.logo,
-    required this.checker,
     required this.mapFloor,
     required this.plank,
     required this.plankJoint,
@@ -88,6 +87,28 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.tabTrack,
     required this.shortFill,
     required this.priceMuted,
+    required this.roomWall,
+    required this.roomWallStripe,
+    required this.roomWallMark,
+    required this.roomTrimLight,
+    required this.roomFloorBoards,
+    required this.roomFloorLine,
+    required this.needHungerTile,
+    required this.needHungerInk,
+    required this.needJoyTile,
+    required this.needLowTile,
+    required this.heart,
+    required this.roomHintWallLine,
+    required this.roomHintWallInk,
+    required this.roomHintFloorLine,
+    required this.roomHintFloorInk,
+    required this.roomScrim,
+    required this.roomSelectFill,
+    required this.roomZoneLine,
+    required this.roomZoneFill,
+    required this.roomItemDecorFill,
+    required this.roomDragShadow,
+    required this.onWaterDeep,
   });
 
   static const standard = KoColors(
@@ -139,7 +160,6 @@ class KoColors extends ThemeExtension<KoColors> {
     creamDim: Color(0xFFF3E6D2),
     starShine: Color(0xFFFFF1C2),
     logo: Color(0xFFD9700F),
-    checker: Color(0x33E2C08C), // rgba(226,192,140,.20)
     mapFloor: Color(0xFFF3E0C2),
     plank: Color(0x38B07A4F), // rgba(176,122,79,.22)
     plankJoint: Color(0x24B07A4F), // rgba(176,122,79,.14)
@@ -171,6 +191,28 @@ class KoColors extends ThemeExtension<KoColors> {
     tabTrack: Color(0xFFF3E3C6),
     shortFill: Color(0xFFEADBC2),
     priceMuted: Color(0xFF8A7259),
+    roomWall: Color(0xFFFCE6C8),
+    roomWallStripe: Color(0x24E2AA6E), // rgba(226,170,110,.14)
+    roomWallMark: Color(0x80D4A971), // #D4A971, opacity .5,
+    roomTrimLight: Color(0xFFC99466),
+    roomFloorBoards: Color(0xFFEBC896),
+    roomFloorLine: Color(0x40B07A4F), // rgba(176,122,79,.25),
+    needHungerTile: Color(0xFFFDE3C2),
+    needHungerInk: Color(0xFFA9530A),
+    needJoyTile: Color(0xFFCDEFE8),
+    needLowTile: Color(0xFFF6D3CA),
+    heart: Color(0xFFF07F9A),
+    roomHintWallLine: Color(0xFFD9A066),
+    roomHintWallInk: Color(0xFFA9530A),
+    roomHintFloorLine: Color(0xFFC99466),
+    roomHintFloorInk: Color(0xFF8E5A30),
+    roomScrim: Color(0x383B2716), // rgba(59,39,22,.22),
+    roomSelectFill: Color(0x2EF59A33), // rgba(245,154,51,.18),
+    roomZoneLine: Color(0x8C2F86B8), // rgba(47,134,184,.55),
+    roomZoneFill: Color(0x0D2F86B8), // rgba(47,134,184,.05),
+    roomItemDecorFill: Color(0x122F86B8), // rgba(47,134,184,.07),
+    roomDragShadow: Color(0x383B2716), // rgba(59,39,22,.22),
+    onWaterDeep: Color(0xFFFFFFFF),
   );
 
   /// Latar semua layar.
@@ -294,9 +336,6 @@ class KoColors extends ThemeExtension<KoColors> {
   /// "Oren" di logo Beranda.
   final Color logo;
 
-  /// Kotak-kotak latar Beranda.
-  final Color checker;
-
   /// Lantai kayu peta babak, garis antarpapan, dan sambungan papan.
   final Color mapFloor;
 
@@ -358,7 +397,7 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Garis tombol nonaktif di kartu petunjuk yang terkunci.
   final Color disabledLine;
 
-  /// Label harga kostum yang belum dimiliki (desain 12).
+  /// Stok camilan penuh di Toko.
   final Color priceTag;
 
   /// Latar badge "Punyamu" dan "Tinggal di kamar" di Toko (desain 20).
@@ -384,6 +423,72 @@ class KoColors extends ThemeExtension<KoColors> {
 
   /// Angka harga di kartu yang koinnya kurang (desain 20).
   final Color priceMuted;
+
+  /// Dinding kamar (desain 19).
+  final Color roomWall;
+
+  /// Garis tegak dinding kamar.
+  final Color roomWallStripe;
+
+  /// Goresan lantai dan dinding kamar.
+  final Color roomWallMark;
+
+  /// Tepi terang trim kamar.
+  final Color roomTrimLight;
+
+  /// Lantai papan kamar.
+  final Color roomFloorBoards;
+
+  /// Sambungan papan lantai kamar.
+  final Color roomFloorLine;
+
+  /// Kotak ikon bar Lapar.
+  final Color needHungerTile;
+
+  /// Ikon dan angka bar Lapar.
+  final Color needHungerInk;
+
+  /// Kotak ikon bar Senang.
+  final Color needJoyTile;
+
+  /// Kotak ikon bar yang hampir habis.
+  final Color needLowTile;
+
+  /// Hati elusan.
+  final Color heart;
+
+  /// Garis bidang kosong dinding kamar baru.
+  final Color roomHintWallLine;
+
+  /// Teks bidang kosong dinding kamar baru.
+  final Color roomHintWallInk;
+
+  /// Garis bidang kosong lantai kamar baru.
+  final Color roomHintFloorLine;
+
+  /// Teks bidang kosong lantai kamar baru.
+  final Color roomHintFloorInk;
+
+  /// Latar gelap di belakang kartu kucing.
+  final Color roomScrim;
+
+  /// Isi cincin di bawah kucing yang kartunya terbuka.
+  final Color roomSelectFill;
+
+  /// Garis putus-putus area dinding/lantai saat menghias.
+  final Color roomZoneLine;
+
+  /// Isi area dinding/lantai saat menghias.
+  final Color roomZoneFill;
+
+  /// Isi kotak barang saat menghias.
+  final Color roomItemDecorFill;
+
+  /// Bayangan elips di bawah barang yang diangkat.
+  final Color roomDragShadow;
+
+  /// Teks dan ikon di atas `waterDeep` (label area, gagang).
+  final Color onWaterDeep;
 
   @override
   KoColors copyWith({
@@ -435,7 +540,6 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? creamDim,
     Color? starShine,
     Color? logo,
-    Color? checker,
     Color? mapFloor,
     Color? plank,
     Color? plankJoint,
@@ -467,6 +571,28 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? tabTrack,
     Color? shortFill,
     Color? priceMuted,
+    Color? roomWall,
+    Color? roomWallStripe,
+    Color? roomWallMark,
+    Color? roomTrimLight,
+    Color? roomFloorBoards,
+    Color? roomFloorLine,
+    Color? needHungerTile,
+    Color? needHungerInk,
+    Color? needJoyTile,
+    Color? needLowTile,
+    Color? heart,
+    Color? roomHintWallLine,
+    Color? roomHintWallInk,
+    Color? roomHintFloorLine,
+    Color? roomHintFloorInk,
+    Color? roomScrim,
+    Color? roomSelectFill,
+    Color? roomZoneLine,
+    Color? roomZoneFill,
+    Color? roomItemDecorFill,
+    Color? roomDragShadow,
+    Color? onWaterDeep,
   }) {
     return KoColors(
       cream: cream ?? this.cream,
@@ -517,7 +643,6 @@ class KoColors extends ThemeExtension<KoColors> {
       creamDim: creamDim ?? this.creamDim,
       starShine: starShine ?? this.starShine,
       logo: logo ?? this.logo,
-      checker: checker ?? this.checker,
       mapFloor: mapFloor ?? this.mapFloor,
       plank: plank ?? this.plank,
       plankJoint: plankJoint ?? this.plankJoint,
@@ -549,6 +674,28 @@ class KoColors extends ThemeExtension<KoColors> {
       tabTrack: tabTrack ?? this.tabTrack,
       shortFill: shortFill ?? this.shortFill,
       priceMuted: priceMuted ?? this.priceMuted,
+      roomWall: roomWall ?? this.roomWall,
+      roomWallStripe: roomWallStripe ?? this.roomWallStripe,
+      roomWallMark: roomWallMark ?? this.roomWallMark,
+      roomTrimLight: roomTrimLight ?? this.roomTrimLight,
+      roomFloorBoards: roomFloorBoards ?? this.roomFloorBoards,
+      roomFloorLine: roomFloorLine ?? this.roomFloorLine,
+      needHungerTile: needHungerTile ?? this.needHungerTile,
+      needHungerInk: needHungerInk ?? this.needHungerInk,
+      needJoyTile: needJoyTile ?? this.needJoyTile,
+      needLowTile: needLowTile ?? this.needLowTile,
+      heart: heart ?? this.heart,
+      roomHintWallLine: roomHintWallLine ?? this.roomHintWallLine,
+      roomHintWallInk: roomHintWallInk ?? this.roomHintWallInk,
+      roomHintFloorLine: roomHintFloorLine ?? this.roomHintFloorLine,
+      roomHintFloorInk: roomHintFloorInk ?? this.roomHintFloorInk,
+      roomScrim: roomScrim ?? this.roomScrim,
+      roomSelectFill: roomSelectFill ?? this.roomSelectFill,
+      roomZoneLine: roomZoneLine ?? this.roomZoneLine,
+      roomZoneFill: roomZoneFill ?? this.roomZoneFill,
+      roomItemDecorFill: roomItemDecorFill ?? this.roomItemDecorFill,
+      roomDragShadow: roomDragShadow ?? this.roomDragShadow,
+      onWaterDeep: onWaterDeep ?? this.onWaterDeep,
     );
   }
 
@@ -605,7 +752,6 @@ class KoColors extends ThemeExtension<KoColors> {
       creamDim: c(creamDim, other.creamDim),
       starShine: c(starShine, other.starShine),
       logo: c(logo, other.logo),
-      checker: c(checker, other.checker),
       mapFloor: c(mapFloor, other.mapFloor),
       plank: c(plank, other.plank),
       plankJoint: c(plankJoint, other.plankJoint),
@@ -637,6 +783,28 @@ class KoColors extends ThemeExtension<KoColors> {
       tabTrack: c(tabTrack, other.tabTrack),
       shortFill: c(shortFill, other.shortFill),
       priceMuted: c(priceMuted, other.priceMuted),
+      roomWall: c(roomWall, other.roomWall),
+      roomWallStripe: c(roomWallStripe, other.roomWallStripe),
+      roomWallMark: c(roomWallMark, other.roomWallMark),
+      roomTrimLight: c(roomTrimLight, other.roomTrimLight),
+      roomFloorBoards: c(roomFloorBoards, other.roomFloorBoards),
+      roomFloorLine: c(roomFloorLine, other.roomFloorLine),
+      needHungerTile: c(needHungerTile, other.needHungerTile),
+      needHungerInk: c(needHungerInk, other.needHungerInk),
+      needJoyTile: c(needJoyTile, other.needJoyTile),
+      needLowTile: c(needLowTile, other.needLowTile),
+      heart: c(heart, other.heart),
+      roomHintWallLine: c(roomHintWallLine, other.roomHintWallLine),
+      roomHintWallInk: c(roomHintWallInk, other.roomHintWallInk),
+      roomHintFloorLine: c(roomHintFloorLine, other.roomHintFloorLine),
+      roomHintFloorInk: c(roomHintFloorInk, other.roomHintFloorInk),
+      roomScrim: c(roomScrim, other.roomScrim),
+      roomSelectFill: c(roomSelectFill, other.roomSelectFill),
+      roomZoneLine: c(roomZoneLine, other.roomZoneLine),
+      roomZoneFill: c(roomZoneFill, other.roomZoneFill),
+      roomItemDecorFill: c(roomItemDecorFill, other.roomItemDecorFill),
+      roomDragShadow: c(roomDragShadow, other.roomDragShadow),
+      onWaterDeep: c(onWaterDeep, other.onWaterDeep),
     );
   }
 }

@@ -55,6 +55,7 @@ class RoomItem {
     this.defaultY, {
     this.scale = 1,
     this.toy = false,
+    this.flat = false,
   });
 
   final RoomItemId id;
@@ -64,6 +65,10 @@ class RoomItem {
 
   /// Memakainya menaikkan Senang (mainan, lihat `CatNeeds.played`).
   final bool toy;
+
+  /// Digambar rata di lantai, di bawah barang dan kucing lain
+  /// (`flat: true` di `BASE.karpet`, `Kamar.dc.html`).
+  final bool flat;
 
   /// Ukuran gambar `Barang.dc.html` dan skalanya di kamar.
   final double _width;
@@ -185,6 +190,7 @@ const roomItems = [
     80,
     500,
     scale: 1.25,
+    flat: true,
   ),
   RoomItem(
     RoomItemId.tiang,

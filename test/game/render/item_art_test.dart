@@ -141,20 +141,5 @@ void main() {
       expect(at(14, 14.5), _near(0xFFFFC83D));
       expect(at(14, 5.5), _near(0xFFE0A100));
     });
-
-    test('koin harga Lemari Kostum bergaris 2,4 (desain 12)', () async {
-      // Diperbesar 4× lagi supaya selisih garis 0,2 terlihat. Titik 9,6
-      // dari tengah: di dalam garis 2,4 (sampai 9,7), di luar garis 2 (9,5).
-      Future<Color> ringEdge(CoinKind kind) async {
-        final at = await _render(
-          (canvas) => paintCoin(canvas..scale(4), kind: kind),
-          size: CoinArt.viewBox * 4,
-        );
-        return at(14 * 4, (14 - 9.6) * 4);
-      }
-
-      expect(await ringEdge(CoinKind.price), _near(0xFFE0A100));
-      expect(await ringEdge(CoinKind.plain), _near(0xFFFFC83D));
-    });
   });
 }

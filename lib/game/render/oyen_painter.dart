@@ -14,7 +14,6 @@ final _fishBubble = SvgTemplate(fishBubbleSvg).render(const {});
 Map<String, Object> oyenVals(OyenLook look) {
   final pose = look.pose;
   final dir = look.dir;
-  final costume = look.costume;
   final isSleep = pose == OyenPose.sleep;
   final isBox = pose == OyenPose.box;
   final isNormal = !isSleep && !isBox;
@@ -63,10 +62,6 @@ Map<String, Object> oyenVals(OyenLook look) {
     'mouthW': !(shock || happy || eat),
     'mouthO': shock,
     'mouthOpen': happy || eat,
-    'showPeci': costume == OyenCostume.peci && !isSleep,
-    'showKoki': costume == OyenCostume.koki && !isSleep,
-    'showGlasses': costume == OyenCostume.kacamata && front && !isSleep,
-    'showSarung': costume == OyenCostume.sarung && isNormal,
     'showZzz': look.bubble == OyenBubble.zzz,
     'showKaget': look.bubble == OyenBubble.kaget,
     'zzzT': isSleep ? 'translate(-26 16)' : 'translate(0 0)',

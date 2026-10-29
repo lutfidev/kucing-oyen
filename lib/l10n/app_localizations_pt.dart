@@ -66,9 +66,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get play => 'Jogar';
 
   @override
-  String get closet => 'Guarda-roupa';
-
-  @override
   String get settings => 'Configurações';
 
   @override
@@ -76,9 +73,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get splashTagline => 'Bora jogar!';
-
-  @override
-  String get starTotalUnit => 'estrelas';
 
   @override
   String chapterNumber(int n) {
@@ -1004,50 +998,6 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get costumeNone => 'Básico';
-
-  @override
-  String get costumePeci => 'Peci';
-
-  @override
-  String get costumeSarung => 'Sarongue';
-
-  @override
-  String get costumeKoki => 'Chapéu de Chef';
-
-  @override
-  String get costumeKacamata => 'Óculos';
-
-  @override
-  String get costumeWearingTag => 'Usando';
-
-  @override
-  String get costumeWearingStatus => 'usando';
-
-  @override
-  String get costumeOwnedTag => 'Seu';
-
-  @override
-  String get costumeOwnedStatus => 'seu';
-
-  @override
-  String get costumeActionWearing => 'Usando agora';
-
-  @override
-  String get costumeActionWear => 'Usar';
-
-  @override
-  String costumeActionBuy(int n) {
-    String _temp0 = intl.Intl.pluralLogic(
-      n,
-      locale: localeName,
-      other: 'Comprar · $n moedas',
-      one: 'Comprar · $n moeda',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get closeCoins => 'Fechar moedas';
 
   @override
@@ -1055,7 +1005,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get coinsIntro =>
-      'Moedas servem para dicas e roupas do Oyen. Pegue o bônus diário ou veja um anúncio.';
+      'Moedas servem para dicas e coisas pro quarto do Oyen. Pegue o bônus diário ou veja um anúncio.';
 
   @override
   String get dailyBonus => 'Bônus diário';
@@ -1150,14 +1100,14 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get resetProgressInfo =>
-      'Apaga estrelas, moedas, roupas, dicas e tutoriais e recomeça na fase 1.';
+      'Apaga estrelas, moedas, o quarto, dicas e tutoriais e recomeça na fase 1.';
 
   @override
   String get resetConfirmTitle => 'Apagar todo o progresso?';
 
   @override
   String get resetConfirmBody =>
-      'Estrelas, moedas, roupas, dicas e tutoriais serão apagados. Não dá para desfazer. O bônus e os anúncios de hoje continuam contados.';
+      'Estrelas, moedas, o quarto, dicas e tutoriais serão apagados. Não dá para desfazer. O bônus e os anúncios de hoje continuam contados.';
 
   @override
   String get resetConfirm => 'Apagar';
@@ -1828,5 +1778,200 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String shopAccessoryWornLabel(String name, String who) {
     return 'Ver $name, seu, usado por $who';
+  }
+
+  @override
+  String get sadMarkHungry => 'Murchinho: com fome';
+
+  @override
+  String get sadMarkSad => 'Murchinho: quer carinho';
+
+  @override
+  String get roomEmptyBubble => 'Quarto vazio demais. Bora pra Loja!';
+
+  @override
+  String get roomEmptyWall => 'Decoração de parede?';
+
+  @override
+  String get roomEmptyWallHint => 'Vazio. Procure decoração de parede na Loja';
+
+  @override
+  String get roomEmptyFloor => 'Uma caminha, talvez?';
+
+  @override
+  String get roomEmptyFloorHint =>
+      'Vazio. Procure uma caminha ou brinquedo na Loja';
+
+  @override
+  String get accessories => 'Acessórios';
+
+  @override
+  String get shopHasNew => 'tem novidade que cabe no bolso';
+
+  @override
+  String menuButtonNew(String label, String note) {
+    return '$label, $note';
+  }
+
+  @override
+  String kittyTapHint(String name) {
+    return '$name. Toque para ver o cartão';
+  }
+
+  @override
+  String kittyTapHintHungry(String name) {
+    return '$name, com fome. Toque para ver o cartão';
+  }
+
+  @override
+  String get needHunger => 'Barriga';
+
+  @override
+  String get needJoy => 'Alegria';
+
+  @override
+  String needValueLabel(String label, int value) {
+    return '$label $value de 100';
+  }
+
+  @override
+  String needValueLow(String label, int value) {
+    return '$label $value de 100, quase acabando';
+  }
+
+  @override
+  String get needLowHunger => 'Quase acabando! A barriga tá roncando.';
+
+  @override
+  String get needLowJoy => 'Quase acabando! Faz um carinho, vai.';
+
+  @override
+  String kittyCardLabel(String name) {
+    return 'Cartão de $name';
+  }
+
+  @override
+  String get kittyCardClose => 'Fechar cartão';
+
+  @override
+  String get petAction => 'Carinho';
+
+  @override
+  String get snackPanel => 'Petiscos';
+
+  @override
+  String get snackPick => 'Escolha do estoque';
+
+  @override
+  String snackGive(String name, int count) {
+    return 'Dar $name, estoque $count';
+  }
+
+  @override
+  String snackGiveEmpty(String name, int count) {
+    return 'Dar $name, estoque $count, acabou';
+  }
+
+  @override
+  String get accessoryPanelTitle => 'Seus · troca grátis';
+
+  @override
+  String get accessoryShopLink => 'Loja de acessórios';
+
+  @override
+  String get accessoryRemove => 'Tirar';
+
+  @override
+  String get accessoryWornTag => 'Usando';
+
+  @override
+  String accessoryWearLabel(String accessory, String name) {
+    return 'Colocar $accessory em $name';
+  }
+
+  @override
+  String accessoryWornLabel(String accessory, String name) {
+    return 'Colocar $accessory em $name, já está usando';
+  }
+
+  @override
+  String accessoryRemoveLabel(String name) {
+    return 'Tirar o acessório de $name';
+  }
+
+  @override
+  String reactionFed(int hunger) {
+    return '+$hunger barriga';
+  }
+
+  @override
+  String reactionFedJoy(int hunger, int joy) {
+    return '+$hunger barriga, +$joy alegria';
+  }
+
+  @override
+  String reactionJoy(int joy) {
+    return '+$joy alegria';
+  }
+
+  @override
+  String get reactionNice => 'Que chique!';
+
+  @override
+  String get reactionRelieved => 'Ufa, livre!';
+
+  @override
+  String get decorate => 'Decorar';
+
+  @override
+  String get decorateDone => 'Pronto';
+
+  @override
+  String get decorateHint => 'Arraste as coisas pra um lugar novo';
+
+  @override
+  String get zoneWall => 'Área da parede';
+
+  @override
+  String get zoneFloor => 'Área do chão';
+
+  @override
+  String get storage => 'Depósito';
+
+  @override
+  String storageCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count itens',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storageTapHint => 'Toque pra colocar';
+
+  @override
+  String get storageEmpty =>
+      'Depósito vazio. Tudo em exposição, Oyen tá orgulhoso.';
+
+  @override
+  String storagePlaceLabel(String item) {
+    return 'Colocar $item no quarto';
+  }
+
+  @override
+  String get storageLabel => 'Depósito de itens';
+
+  @override
+  String get storeItemAction => 'Guardar no depósito';
+
+  @override
+  String get decoratePraise => 'O quarto tá ficando lindo!';
+
+  @override
+  String decoratePraiseJoy(int joy) {
+    return '+$joy de Alegria pra todos os gatos';
   }
 }
