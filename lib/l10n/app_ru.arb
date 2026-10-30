@@ -472,5 +472,8 @@
   "storageLabel": "Кладовка с вещами",
   "storeItemAction": "Убрать в кладовку",
   "decoratePraise": "Комната всё краше!",
-  "decoratePraiseJoy": "+{joy} радости всем котикам"
+  "decoratePraiseJoy": "+{joy} радости всем котикам",
+  "bowlRefill": "{hours, plural, one{Наполнится через {hours} час} few{Наполнится через {hours} часа} many{Наполнится через {hours} часов} other{Наполнится через {hours} часа}}",
+  "kittyRewardLabel": "{coins, plural, one{{name}: забрать {coins} монету} few{{name}: забрать {coins} монеты} many{{name}: забрать {coins} монет} other{{name}: забрать {coins} монеты}}",
+  "reactionCoins": "{coins, plural, one{+{coins} монета} few{+{coins} монеты} many{+{coins} монет} other{+{coins} монеты}}"
 }

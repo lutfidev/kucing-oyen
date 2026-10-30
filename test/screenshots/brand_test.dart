@@ -241,6 +241,8 @@ void main() {
     // Kunci per potret: aplikasi baru (rute dan progres awal) tiap potret.
     Widget app(String name, String location) => capturable(
       KucingOrenApp(
+        // Kamar diam supaya potretnya selalu sama.
+        roomLife: false,
         key: ValueKey(name),
         progress: testProgressWith(
           best: {...wonUpTo(8), 9: 1, 10: 1, 11: 3, 12: 2},

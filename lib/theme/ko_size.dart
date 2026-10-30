@@ -124,6 +124,11 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.roomBubbleTail,
     required this.roomPraiseTop,
     required this.roomPraiseInset,
+    required this.roomBubbleLabel,
+    required this.roomBubbleLabelPad,
+    required this.roomBowlLabel,
+    required this.roomBowlLabelPad,
+    required this.roomBowlLabelIcon,
     required this.roomDecorateButton,
     required this.roomZoneChip,
     required this.roomGrip,
@@ -279,6 +284,11 @@ class KoSize extends ThemeExtension<KoSize> {
     roomBubbleTail: 14,
     roomPraiseTop: 120,
     roomPraiseInset: 40,
+    roomBubbleLabel: 18,
+    roomBubbleLabelPad: 8,
+    roomBowlLabel: 24,
+    roomBowlLabelPad: 9,
+    roomBowlLabelIcon: 13,
     roomDecorateButton: 44,
     roomZoneChip: 22,
     roomGrip: 24,
@@ -641,6 +651,21 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Jarak kiri-kanan pujian menghias.
   final double roomPraiseInset;
 
+  /// Label "+N" di gelembung koin (`GelembungKoin.dc.html`: tinggi 18).
+  final double roomBubbleLabel;
+
+  /// Jarak kiri-kanan label gelembung koin.
+  final double roomBubbleLabelPad;
+
+  /// Label "Terisi lagi" di atas mangkuk kosong (`Kamar.dc.html`: tinggi 24).
+  final double roomBowlLabel;
+
+  /// Jarak kiri-kanan label mangkuk.
+  final double roomBowlLabelPad;
+
+  /// Ikon jam di label mangkuk.
+  final double roomBowlLabelIcon;
+
   /// Tombol Hias, Selesai, dan chip petunjuk menghias (`TombolHias.dc.html`).
   final double roomDecorateButton;
 
@@ -861,6 +886,11 @@ class KoSize extends ThemeExtension<KoSize> {
     double? roomBubbleTail,
     double? roomPraiseTop,
     double? roomPraiseInset,
+    double? roomBubbleLabel,
+    double? roomBubbleLabelPad,
+    double? roomBowlLabel,
+    double? roomBowlLabelPad,
+    double? roomBowlLabelIcon,
     double? roomDecorateButton,
     double? roomZoneChip,
     double? roomGrip,
@@ -1016,6 +1046,11 @@ class KoSize extends ThemeExtension<KoSize> {
       roomBubbleTail: roomBubbleTail ?? this.roomBubbleTail,
       roomPraiseTop: roomPraiseTop ?? this.roomPraiseTop,
       roomPraiseInset: roomPraiseInset ?? this.roomPraiseInset,
+      roomBubbleLabel: roomBubbleLabel ?? this.roomBubbleLabel,
+      roomBubbleLabelPad: roomBubbleLabelPad ?? this.roomBubbleLabelPad,
+      roomBowlLabel: roomBowlLabel ?? this.roomBowlLabel,
+      roomBowlLabelPad: roomBowlLabelPad ?? this.roomBowlLabelPad,
+      roomBowlLabelIcon: roomBowlLabelIcon ?? this.roomBowlLabelIcon,
       roomDecorateButton: roomDecorateButton ?? this.roomDecorateButton,
       roomZoneChip: roomZoneChip ?? this.roomZoneChip,
       roomGrip: roomGrip ?? this.roomGrip,
@@ -1183,6 +1218,11 @@ class KoSize extends ThemeExtension<KoSize> {
       roomBubbleTail: d(roomBubbleTail, other.roomBubbleTail),
       roomPraiseTop: d(roomPraiseTop, other.roomPraiseTop),
       roomPraiseInset: d(roomPraiseInset, other.roomPraiseInset),
+      roomBubbleLabel: d(roomBubbleLabel, other.roomBubbleLabel),
+      roomBubbleLabelPad: d(roomBubbleLabelPad, other.roomBubbleLabelPad),
+      roomBowlLabel: d(roomBowlLabel, other.roomBowlLabel),
+      roomBowlLabelPad: d(roomBowlLabelPad, other.roomBowlLabelPad),
+      roomBowlLabelIcon: d(roomBowlLabelIcon, other.roomBowlLabelIcon),
       roomDecorateButton: d(roomDecorateButton, other.roomDecorateButton),
       roomZoneChip: d(roomZoneChip, other.roomZoneChip),
       roomGrip: d(roomGrip, other.roomGrip),

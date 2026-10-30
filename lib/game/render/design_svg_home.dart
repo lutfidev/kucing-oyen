@@ -1040,3 +1040,55 @@ const sadMarkSvg = r'''
       <path d="M22 26 L20.5 30 M28 26 L26.5 30 M34 26 L32.5 30" stroke="#6E86A8" stroke-width="2" stroke-linecap="round"></path>
     </sc-if>
 ''';
+
+/// `@keyframes` sprite kucing (`Kucing.dc.html`), disalin utuh.
+const kittyKeyframes = r'''
+@keyframes kcBlink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(0.12)}}
+@keyframes kcTail{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-8deg)}}
+@keyframes kcWag{0%,100%{transform:rotate(5deg)}50%{transform:rotate(-10deg)}}
+@keyframes kcBreathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.04)}}
+@keyframes kcZzz{0%{opacity:0;transform:translate(0,4px)}30%{opacity:1}100%{opacity:0;transform:translate(4px,-8px)}}
+@keyframes kcNom{0%{transform:translateY(0)}100%{transform:translateY(2.6px)}}
+@keyframes kcNuzzle{0%{transform:rotate(-2deg)}100%{transform:rotate(4deg)}}
+@keyframes kcTap{0%{transform:translate(0,0)}100%{transform:translate(1px,-5px)}}
+@keyframes kcScratch{0%{transform:translateY(0)}100%{transform:translateY(5px)}}
+@keyframes kcLick{0%{transform:translateY(0)}100%{transform:translateY(-2.5px)}}
+@keyframes kcTwinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.35;transform:scale(0.6)}}
+@keyframes kcFloat{0%{opacity:0;transform:translateY(4px)}25%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+@keyframes kcRoll{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+@keyframes kcSway{0%{transform:rotate(-7deg)}100%{transform:rotate(7deg)}}
+@keyframes kcSwaySoft{0%{transform:rotate(-2.5deg)}100%{transform:rotate(2.5deg)}}
+''';
+
+/// `@keyframes` barang kamar (`Barang.dc.html`), disalin utuh.
+const roomItemKeyframes = r'''
+@keyframes brgFish{0%{transform:translateX(0) scaleX(1)}45%{transform:translateX(30px) scaleX(1)}50%{transform:translateX(30px) scaleX(-1)}95%{transform:translateX(0) scaleX(-1)}100%{transform:translateX(0) scaleX(1)}}
+@keyframes brgFish2{0%{transform:translateX(0) scaleX(1)}45%{transform:translateX(-26px) scaleX(1)}50%{transform:translateX(-26px) scaleX(-1)}95%{transform:translateX(0) scaleX(-1)}100%{transform:translateX(0) scaleX(1)}}
+@keyframes brgSwing{0%,100%{transform:rotate(14deg)}50%{transform:rotate(-14deg)}}
+@keyframes brgRock{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes brgSway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes brgFeather{0%{transform:rotate(-14deg)}100%{transform:rotate(14deg)}}
+@keyframes brgHop{0%,40%,100%{transform:translate(0,0)}10%{transform:translate(-4px,-7px)}20%{transform:translate(-8px,0)}55%{transform:translate(-8px,0)}65%{transform:translate(-4px,-7px)}75%{transform:translate(0,0)}}
+@keyframes brgGlow{0%,100%{opacity:0.22;transform:scale(0.9)}50%{opacity:0.6;transform:scale(1.06)}}
+@keyframes brgHam{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+@keyframes brgWobble{0%,100%{transform:scale(1,1)}50%{transform:scale(1.05,0.95)}}
+''';
+
+/// `@keyframes` gelembung koin dan tanda lesu (`GelembungKoin.dc.html`,
+/// `TandaLesu.dc.html`), disalin utuh.
+const roomBadgeKeyframes = r'''
+@keyframes gkBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes tlBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+''';
+
+/// Gelembung hadiah koin (`GelembungKoin.dc.html`, viewBox 0 0 64 76).
+const coinBubbleSvg = r'''
+    <ellipse cx="32" cy="34" rx="31" ry="31" fill="#FFC83D" opacity="0.18"></ellipse>
+    <path d="M25 56 L32 68 L39 56 Z" fill="#FFFBF3" stroke="#F0C55A" stroke-width="2.6" stroke-linejoin="round"></path>
+    <circle cx="32" cy="32" r="26" fill="#FFFBF3" stroke="#F0C55A" stroke-width="3"></circle>
+    <path d="M26.6 56.4 L37.4 56.4" stroke="#FFFBF3" stroke-width="3.4"></path>
+    <circle cx="32" cy="25" r="12.5" fill="#FFC83D"></circle>
+    <circle cx="32" cy="25" r="8.6" fill="none" stroke="#E0A100" stroke-width="2"></circle>
+    <path d="M29 21.5h5a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h5" fill="none" stroke="#B57F00" stroke-width="2" stroke-linecap="round"></path>
+    <path d="M52 6 L53.2 9.8 L57 11 L53.2 12.2 L52 16 L50.8 12.2 L47 11 L50.8 9.8 Z" fill="#FFC83D"></path>
+''';

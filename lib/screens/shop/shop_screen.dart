@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/game_audio.dart';
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/accessories.dart';
 import '../../game/model/home_items.dart';
 import '../../game/model/kitties.dart';
 import '../../game/model/snacks.dart';
+import '../../game/model/sounds.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
 import '../../theme/theme.dart';
@@ -62,6 +64,7 @@ class _ShopScreenState extends State<ShopScreen> {
   Future<void> _wear(ProgressController progress, {required bool on}) async {
     final ok = await progress.wearAccessory(_preview, on ? _selected : null);
     if (ok && mounted) {
+      if (on) AudioScope.maybeRead(context)?.play(GameSound.wear);
       _showFlash(
         on ? context.l10n.shopFlashNice : context.l10n.shopFlashRemoved,
       );
@@ -71,6 +74,7 @@ class _ShopScreenState extends State<ShopScreen> {
   Future<void> _buySnack(ProgressController progress, SnackId id) async {
     final price = snackOf(id).price;
     if (await progress.buySnack(id) && mounted) {
+      AudioScope.maybeRead(context)?.play(GameSound.buy);
       _showFlash(context.l10n.shopFlashSpent(price));
     }
   }

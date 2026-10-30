@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/game_audio.dart';
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/accessories.dart';
 import '../../game/model/home_items.dart';
 import '../../game/model/kitties.dart';
+import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
@@ -104,6 +106,7 @@ class _BuySheetState extends State<_BuySheet> {
       BuyAccessory(:final id) => progress.buyAccessory(id),
     };
     if (!mounted) return;
+    if (ok) AudioScope.maybeRead(context)?.play(GameSound.buy);
     setState(() {
       _paying = false;
       _bought = ok;

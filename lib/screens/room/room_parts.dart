@@ -531,3 +531,63 @@ class _InviteBubble extends StatelessWidget {
     );
   }
 }
+
+/// Label "Terisi lagi N jam" di atas mangkuk kosong (`Kamar.dc.html`),
+/// selebar isinya.
+class BowlRefillLabel extends StatelessWidget {
+  const BowlRefillLabel({super.key, required this.hours});
+
+  final int hours;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    final space = context.koSpace;
+    return Container(
+      constraints: BoxConstraints(minHeight: s.roomBowlLabel),
+      padding: EdgeInsets.symmetric(horizontal: s.roomBowlLabelPad),
+      decoration: ShapeDecoration(
+        color: c.surface,
+        shape: StadiumBorder(
+          side: BorderSide(color: c.line, width: space.s2),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          KoIcon(KoIcons.clock, size: s.roomBowlLabelIcon, color: c.inkSoft),
+          SizedBox(width: space.s4),
+          Text(
+            context.l10n.bowlRefill(hours),
+            maxLines: 1,
+            softWrap: false,
+            style: context.koType.tagSmall.copyWith(color: c.inkSoft),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Menaruh anak seukuran aslinya di [at], digeser masuk supaya paling
+/// sedikit [margin] dari tepi kiri dan kanan.
+class KeepInside extends SingleChildLayoutDelegate {
+  const KeepInside(this.at, {this.margin = 0});
+
+  final Offset at;
+  final double margin;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
+      constraints.loosen();
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) => Offset(
+    at.dx.clamp(margin, max(margin, size.width - childSize.width - margin)),
+    at.dy,
+  );
+
+  @override
+  bool shouldRelayout(KeepInside old) => old.at != at || old.margin != margin;
+}

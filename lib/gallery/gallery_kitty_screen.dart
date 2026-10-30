@@ -26,7 +26,7 @@ class GalleryKittyScreen extends StatelessWidget {
       description:
           'Sembilan kucing koleksi dengan 12 pose dan 16 aksesoris, plus 20 '
           'barang kamar, mangkuk bawaan, dan 5 camilan. Sprite 100×100 unit; '
-          'gerakannya ditambahkan di langkah 24.',
+          'gerakannya di halaman Gerak.',
       backTo: AppRoutes.gallery,
       backLabel: 'Kembali ke galeri',
       children: [
@@ -180,6 +180,163 @@ class _ArtCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Gerak kucing dan barang (`AnimasiKucing.dc.html`, desain 21c), berjalan
+/// terus. Diam kalau gerak dikurangi.
+class GalleryMotionScreen extends StatefulWidget {
+  const GalleryMotionScreen({super.key});
+
+  @override
+  State<GalleryMotionScreen> createState() => _GalleryMotionScreenState();
+}
+
+/// Kartu desain 21c: kucing, pose, arah, aksesoris, judul.
+const _motionCats = [
+  (KittyId.oyen, KittyPose.idle, KittyFacing.down, null, 'Kedip'),
+  (KittyId.arang, KittyPose.idle, KittyFacing.down, AccessoryId.kalung, 'Ekor'),
+  (KittyId.oyen, KittyPose.walk1, KittyFacing.right, null, 'Jalan'),
+  (
+    KittyId.mendung,
+    KittyPose.sleep,
+    KittyFacing.down,
+    AccessoryId.beanie,
+    'Tidur',
+  ),
+  (KittyId.oyen, KittyPose.eat, KittyFacing.down, null, 'Makan'),
+  (KittyId.telon, KittyPose.play, KittyFacing.down, AccessoryId.pita, 'Main'),
+  (
+    KittyId.oyen,
+    KittyPose.scratch,
+    KittyFacing.down,
+    AccessoryId.bandana,
+    'Garuk tiang',
+  ),
+  (KittyId.salju, KittyPose.petted, KittyFacing.down, null, 'Dielus'),
+  (
+    KittyId.oyen,
+    KittyPose.happy,
+    KittyFacing.down,
+    AccessoryId.topiPesta,
+    'Senang',
+  ),
+  (
+    KittyId.kopiSusu,
+    KittyPose.walk1,
+    KittyFacing.right,
+    AccessoryId.syal,
+    'Syal saat jalan',
+  ),
+  (
+    KittyId.mochi,
+    KittyPose.idle,
+    KittyFacing.down,
+    AccessoryId.headphone,
+    'Headphone',
+  ),
+];
+
+/// Barang dipakai kucing (null = tidak dipakai) di desain 21c.
+const _motionItems = [
+  (RoomItemId.akuarium, null),
+  (RoomItemId.bola, null),
+  (RoomItemId.catnip, null),
+  (RoomItemId.jam, null),
+  (RoomItemId.pancingan, KittyId.oyen),
+  (RoomItemId.jendelaBurung, KittyId.kopiSusu),
+  (RoomItemId.lampuBulan, null),
+  (RoomItemId.hammock, KittyId.oyen),
+  (RoomItemId.monstera, null),
+  (RoomItemId.terowongan, KittyId.kembang),
+  (RoomItemId.sofaMini, KittyId.bos),
+  (RoomItemId.kasur, KittyId.mendung),
+  (RoomItemId.kardus, KittyId.oyen),
+  (RoomItemId.rak, KittyId.arang),
+];
+
+class _GalleryMotionScreenState extends State<GalleryMotionScreen>
+    with SingleTickerProviderStateMixin {
+  late final _ticker = createTicker(
+    (elapsed) => setState(() => _time = elapsed.inMicroseconds / 1e6),
+  );
+  double _time = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final still = MediaQuery.disableAnimationsOf(context);
+    if (!still && !_ticker.isActive) _ticker.start();
+    if (still && _ticker.isActive) _ticker.stop();
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final time = _ticker.isActive ? _time : null;
+    return GalleryPage(
+      overline: 'Rumah Oyen',
+      title: 'Gerak kucing & barang',
+      description:
+          'Desain 21c: kedip, ekor, napas, jalan dua bingkai, makan, main, '
+          'garuk, dielus, senang, dan barang yang bergerak. Semua fungsi '
+          'waktu; kurangi gerak membuatnya diam.',
+      backTo: AppRoutes.gallery,
+      backLabel: 'Kembali ke galeri',
+      children: [
+        GallerySection(
+          title: 'Kucing',
+          child: GalleryGrid(
+            minWidth: _Spec.poseMinWidth,
+            children: [
+              for (final (kitty, pose, facing, accessory, title) in _motionCats)
+                _ArtCard(
+                  label: title,
+                  height: _Spec.cardHeight,
+                  child: KittyView(
+                    look: KittyLook(
+                      kitty: kitty,
+                      pose: pose == KittyPose.walk1 && time != null
+                          ? KittyLook.walkPose(time)
+                          : pose,
+                      facing: facing,
+                      accessory: accessory,
+                      time: time,
+                    ),
+                    size: _Spec.poseSize,
+                  ),
+                ),
+            ],
+          ),
+        ),
+        GallerySection(
+          title: 'Barang hidup dan dipakai',
+          child: GalleryGrid(
+            minWidth: _Spec.itemMinWidth,
+            children: [
+              for (final (item, user) in _motionItems)
+                _ArtCard(
+                  label: roomItemName(context.l10n, item),
+                  height: _Spec.itemCardHeight,
+                  child: RoomItemView(
+                    id: item,
+                    box: _Spec.itemBox,
+                    time: time,
+                    user: user == null
+                        ? null
+                        : KittyLook(kitty: user, time: time),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

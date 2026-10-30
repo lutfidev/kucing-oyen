@@ -16,9 +16,11 @@ import 'routes.dart';
 
 /// [roomRandom] membuat pengacak posisi kucing tiap kamar dibuka; null =
 /// acak sungguhan (test memberi seed supaya gambarnya selalu sama).
+/// [roomLife] = kucing kamar bergerak sendiri.
 GoRouter createRouter({
   String initialLocation = AppRoutes.home,
   Random Function()? roomRandom,
+  bool roomLife = true,
 }) {
   return GoRouter(
     initialLocation: initialLocation,
@@ -27,7 +29,8 @@ GoRouter createRouter({
     routes: [
       GoRoute(
         path: AppRoutes.home,
-        builder: (context, state) => RoomScreen(random: roomRandom?.call()),
+        builder: (context, state) =>
+            RoomScreen(random: roomRandom?.call(), life: roomLife),
         routes: [
           GoRoute(
             path: 'galeri',
@@ -44,6 +47,10 @@ GoRouter createRouter({
               GoRoute(
                 path: 'kucing',
                 builder: (context, state) => const GalleryKittyScreen(),
+              ),
+              GoRoute(
+                path: 'gerak',
+                builder: (context, state) => const GalleryMotionScreen(),
               ),
               GoRoute(
                 path: 'suara',

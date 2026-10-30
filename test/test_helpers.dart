@@ -104,7 +104,9 @@ void setTextScale(WidgetTester tester, double scale) {
 /// Pompa aplikasi lengkap di [location] dengan [progress] (default:
 /// progres kosong), [audio] (default: [testAudio]), dan persetujuan iklan
 /// [consent] (default tidak ada), lalu [settle]. Posisi kucing di kamar
-/// memakai [roomRandom] (default `Random(1)`, jadi selalu sama).
+/// memakai [roomRandom] (default `Random(1)`, jadi selalu sama). Kucing
+/// kamar diam kecuali [roomLife] (rutinitas dan animasi jalan terus, jadi
+/// test-nya memakai [settle], bukan `pumpAndSettle`).
 /// Mengembalikan progres yang dipakai.
 Future<ProgressController> pumpApp(
   WidgetTester tester, {
@@ -113,6 +115,7 @@ Future<ProgressController> pumpApp(
   GameAudio? audio,
   AdConsent? consent,
   Random Function()? roomRandom,
+  bool roomLife = false,
 }) async {
   final controller = progress ?? testProgress();
   await tester.pumpWidget(
@@ -122,6 +125,7 @@ Future<ProgressController> pumpApp(
       consent: consent,
       initialLocation: location,
       roomRandom: roomRandom ?? () => Random(1),
+      roomLife: roomLife,
     ),
   );
   await settle(tester);

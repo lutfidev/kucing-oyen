@@ -23,6 +23,7 @@ class KucingOrenApp extends StatefulWidget {
     this.consent,
     this.initialLocation = AppRoutes.home,
     this.roomRandom,
+    this.roomLife = true,
   });
 
   /// Data level dan progres pemain, dibagikan ke semua layar. Tidak boleh
@@ -42,6 +43,10 @@ class KucingOrenApp extends StatefulWidget {
   /// Pengacak posisi kucing di kamar ([createRouter]); null = acak.
   final Random Function()? roomRandom;
 
+  /// Kucing kamar bergerak sendiri ([createRouter]); test mematikannya
+  /// kecuali yang menguji rutinitas.
+  final bool roomLife;
+
   @override
   State<KucingOrenApp> createState() => _KucingOrenAppState();
 }
@@ -51,6 +56,7 @@ class _KucingOrenAppState extends State<KucingOrenApp>
   late final GoRouter _router = createRouter(
     initialLocation: widget.initialLocation,
     roomRandom: widget.roomRandom,
+    roomLife: widget.roomLife,
   );
   final ThemeData _theme = KoTheme.light();
   late final GameAudio _audio =

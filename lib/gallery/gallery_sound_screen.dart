@@ -28,6 +28,12 @@ class GallerySoundScreen extends StatelessWidget {
     (GameSound.star, 'Bintang'),
     (GameSound.bored, 'Oyen bosan'),
     (GameSound.coin, 'Koin'),
+    (GameSound.purr, 'Dengkur (dielus)'),
+    (GameSound.meow, 'Meong (diketuk)'),
+    (GameSound.munch, 'Makan camilan'),
+    (GameSound.reward, 'Hadiah koin kucing'),
+    (GameSound.buy, 'Beli di Toko'),
+    (GameSound.wear, 'Pasang aksesoris'),
   ];
 
   static const _tracks = [

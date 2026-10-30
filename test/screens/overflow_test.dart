@@ -59,6 +59,7 @@ final galleryRoutes = <String>[
   AppRoutes.galleryOyen,
   AppRoutes.galleryKitty,
   AppRoutes.gallerySound,
+  AppRoutes.galleryMotion,
 ];
 
 const sizes = <Size>[
@@ -112,6 +113,7 @@ void main() {
     (AppRoutes.galleryOyen, find.text('Senang')),
     (AppRoutes.galleryKitty, find.text('Puding Ikan')),
     (AppRoutes.gallerySound, find.text('Lagu level')),
+    (AppRoutes.galleryMotion, find.text('Rak Dinding')),
   ]) {
     testWidgets('$route bisa digulir sampai bawah di 360×640, teks 130%', (
       tester,
@@ -124,7 +126,8 @@ void main() {
         300,
         scrollable: find.byType(Scrollable).first,
       );
-      await tester.pumpAndSettle();
+      // Galeri gerak bergerak terus: `settle`, bukan `pumpAndSettle`.
+      await settle(tester);
       expect(tester.takeException(), isNull);
     });
   }
@@ -391,6 +394,35 @@ void _cases(AppLanguage language) {
         setTextScale(tester, scale);
         await pumpApp(tester, progress: fullRoom());
         expect(find.byType(KittyView), findsNWidgets(KittyId.values.length));
+        expect(tester.takeException(), isNull);
+      });
+      testWidgets('tanpa overflow: kamar hidup dengan gelembung hadiah dan '
+          'label mangkuk @ $label, teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        final now = DateTime(2026, 10, 29, 9);
+        var room = Room();
+        for (final item in shopItems) {
+          room = room.buy(item.id);
+        }
+        await pumpApp(
+          tester,
+          roomLife: true,
+          progress: testProgressWith(
+            coins: 99999,
+            language: language,
+            clock: () => now,
+            home: Home(room: room, kitties: KittyId.values),
+            needs: HomeNeeds(
+              bowl: Bowl(
+                filledAt: now.subtract(const Duration(minutes: 30)),
+                eaten: KittyId.values,
+              ),
+            ),
+          ),
+        );
+        expect(find.byType(CoinBubbleView), findsWidgets);
+        expect(find.text(l.bowlRefill(4)), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
       testWidgets('tanpa overflow: mode hias @ $label, '

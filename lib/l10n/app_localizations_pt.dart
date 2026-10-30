@@ -1974,4 +1974,37 @@ class AppLocalizationsPt extends AppLocalizations {
   String decoratePraiseJoy(int joy) {
     return '+$joy de Alegria pra todos os gatos';
   }
+
+  @override
+  String bowlRefill(int hours) {
+    String _temp0 = intl.Intl.pluralLogic(
+      hours,
+      locale: localeName,
+      other: 'Enche de novo em $hours horas',
+      one: 'Enche de novo em $hours hora',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String kittyRewardLabel(int coins, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      coins,
+      locale: localeName,
+      other: 'Pegar $coins moedas de $name',
+      one: 'Pegar $coins moeda de $name',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reactionCoins(int coins) {
+    String _temp0 = intl.Intl.pluralLogic(
+      coins,
+      locale: localeName,
+      other: '+$coins moedas',
+      one: '+$coins moeda',
+    );
+    return '$_temp0';
+  }
 }

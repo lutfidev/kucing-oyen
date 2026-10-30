@@ -19,12 +19,14 @@ Future<ProgressController> pumpRoom(
   ProgressController? progress,
   Size size = const Size(390, 844),
   Random Function()? random,
+  bool life = false,
 }) async {
   setScreenSize(tester, size);
   return pumpApp(
     tester,
     progress: progress ?? testProgressWith(),
     roomRandom: random,
+    roomLife: life,
   );
 }
 

@@ -1,11 +1,15 @@
 import 'dart:ui';
 
 import '../model/accessories.dart';
+import 'css_animation.dart';
 import 'design_svg_home.dart';
 import 'kitty.dart';
 import 'svg_template.dart';
 
-final _template = SvgTemplate(kittySvg);
+final _template = SvgTemplate(
+  kittySvg,
+  keyframes: CssKeyframes.parse(kittyKeyframes),
+);
 final _cache = <KittyLook, SvgDrawing>{};
 
 /// Aksesoris yang digambar di dalam grup kepala (grup `a` desain).
@@ -58,10 +62,6 @@ const _tailLie = (
   'M92 98 C91.2 98 90.6 98 90 98',
 );
 
-/// Gaya animasi desain: langkah 22 menggambar sprite diam, jadi semuanya
-/// kosong. Langkah 24 menggantinya dengan fungsi `KittyLook.time`.
-const _still = '';
-
 List<Map<String, Object>> _patches(List<FurPatch> patches) => [
   for (final p in patches)
     {'cx': p.cx, 'cy': p.cy, 'rx': p.rx, 'ry': p.ry, 'f': p.fill},
@@ -109,6 +109,42 @@ Map<String, Object> kittyVals(KittyLook look) {
   };
   final accessory = look.accessory;
   final a = {for (final id in _headGroup) id.name: accessory == id};
+  // Gaya animasi desain (`A()` di `Kucing.dc.html`); kosong = diam.
+  final anim = look.time != null;
+  String A(String style) => anim ? style : '';
+  final tailOrigin = switch (tail) {
+    _ when identical(tail, _tailUp) => '73px 72px',
+    _ when identical(tail, _tailPlay) => '73px 74px',
+    _ when identical(tail, _tailScratch) => '32px 86px',
+    _ when identical(tail, _tailLie) => '92px 88px',
+    _ => '73px 77px',
+  };
+  final tailAnim = switch (pose) {
+    KittyPose.happy ||
+    KittyPose.petted ||
+    KittyPose.play => 'kcWag 0.9s ease-in-out infinite',
+    _ when walking => 'kcTail 0.9s ease-in-out infinite',
+    KittyPose.rebah => 'kcTail 3.4s ease-in-out infinite',
+    KittyPose.lesu => 'none',
+    _ => 'kcTail 2.6s ease-in-out infinite',
+  };
+  final eyeOpen = pose == KittyPose.idle || walking || play || isRebah;
+  final dl = c.delay;
+  final headAnim = pose == KittyPose.eat
+      ? A('animation: kcNom 0.45s ease-in-out infinite alternate')
+      : petted
+      ? A(
+          'transform-origin: 50px 64px; '
+          'animation: kcNuzzle 0.9s ease-in-out infinite alternate',
+        )
+      : '';
+  final sleepAnim = A(
+    'transform-origin: 52px 88px; '
+    'animation: kcBreathe 3.2s ease-in-out infinite; animation-delay: ${dl}s',
+  );
+  const twinkle =
+      'transform-box: fill-box; transform-origin: center; '
+      'animation: kcTwinkle 1.2s ease-in-out infinite';
   return {
     'c': {
       'fur': c.fur,
@@ -198,27 +234,59 @@ Map<String, Object> kittyVals(KittyLook look) {
     'acc2On': accessory != null && _topGroup.contains(accessory),
     'accT': isSleep ? 'translate(-2 30.8) scale(0.72)' : headT,
     'dangle2': !isLie && !isSleep,
-    'noteOn': false,
-    'tailStyle': _still,
-    'headAnim': _still,
-    'sleepAnim': _still,
-    'accAnim': _still,
-    'syalAnim': _still,
-    'noteAnim': _still,
-    'crownTw': _still,
-    'blinkStyle': _still,
-    'zzzAnim': _still,
-    'tapAnim': _still,
-    'ballAnim': _still,
-    'scratchA': _still,
-    'scratchB': _still,
-    'lickAnim': _still,
-    'tw1': _still,
-    'tw2': _still,
-    'tw3': _still,
-    'heartAnim': _still,
-    'heartAnim2': _still,
+    'noteOn': anim && !isSleep,
+    'tailStyle': A('transform-origin: $tailOrigin; animation: $tailAnim'),
+    'headAnim': headAnim,
+    'sleepAnim': sleepAnim,
+    'accAnim': isSleep ? sleepAnim : headAnim,
+    'syalAnim': walking
+        ? A(
+            'transform-origin: 64px 69px; '
+            'animation: kcSway 0.44s ease-in-out infinite alternate',
+          )
+        : A(
+            'transform-origin: 64px 69px; '
+            'animation: kcSwaySoft 2.6s ease-in-out infinite alternate',
+          ),
+    'noteAnim': A('animation: kcFloat 2.2s ease-out infinite'),
+    'crownTw': A(twinkle),
+    'blinkStyle': eyeOpen
+        ? A(
+            'transform-box: fill-box; transform-origin: center; '
+            'animation: kcBlink 4.6s infinite; animation-delay: ${dl}s',
+          )
+        : '',
+    'zzzAnim': A('animation: kcZzz 2.4s ease-out infinite'),
+    'tapAnim': A('animation: kcTap 0.5s ease-in-out infinite alternate'),
+    'ballAnim': A(
+      'transform-box: fill-box; transform-origin: center; '
+      'animation: kcRoll 1s ease-in-out infinite',
+    ),
+    'scratchA': A('animation: kcScratch 0.35s ease-in-out infinite alternate'),
+    'scratchB': A(
+      'animation: kcScratch 0.35s ease-in-out infinite alternate; '
+      'animation-delay: -0.17s',
+    ),
+    'lickAnim': A('animation: kcLick 0.6s ease-in-out infinite alternate'),
+    'tw1': A(twinkle),
+    'tw2': A('$twinkle; animation-delay: -0.4s'),
+    'tw3': A('$twinkle; animation-delay: -0.8s'),
+    'heartAnim': A('animation: kcFloat 1.6s ease-out infinite'),
+    'heartAnim2': A(
+      'animation: kcFloat 1.6s ease-out infinite; animation-delay: -0.8s',
+    ),
   };
+}
+
+/// Gambar [look] di koordinat sprite desain (100×100). Sprite diam
+/// ([KittyLook.time] null) disimpan di cache; yang bergerak digambar ulang
+/// per waktu.
+SvgDrawing kittyDrawing(KittyLook look) {
+  final time = look.time;
+  if (time == null) {
+    return _cache.putIfAbsent(look, () => _template.render(kittyVals(look)));
+  }
+  return _template.render(kittyVals(look), time: time);
 }
 
 /// Menggambar kucing kamar seukuran [size] px di pojok kiri atas kanvas.
@@ -229,13 +297,7 @@ void paintKitty(
   KittyLook look, {
   double size = KittyLook.viewBox,
 }) {
-  // Kunci cache tanpa waktu: `kittyVals` belum memakai `time`, jadi satu
-  // gambar berlaku untuk semua waktu dan cache tidak tumbuh per bingkai.
-  // Langkah 24 yang membuat nilainya bergantung waktu harus mengubah ini.
-  final drawing = _cache.putIfAbsent(
-    look.copyWith(time: 0),
-    () => _template.render(kittyVals(look)),
-  );
+  final drawing = kittyDrawing(look);
   canvas.save();
   canvas.scale(size / KittyLook.viewBox);
   drawing.paint(canvas);

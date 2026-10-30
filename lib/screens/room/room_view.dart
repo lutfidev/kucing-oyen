@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/semantics.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/game_audio.dart';
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/accessories.dart';
@@ -11,6 +14,8 @@ import '../../game/model/home.dart';
 import '../../game/model/home_items.dart';
 import '../../game/model/kitties.dart';
 import '../../game/model/needs.dart';
+import '../../game/model/room_life.dart';
+import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
@@ -62,19 +67,56 @@ bool accessoriesHaveAffordable(Home home, int coins) =>
 /// Aksesoris, Pengaturan). Kamar digambar dari tepi atas layar sampai
 /// panel bawah; header di bawah status bar.
 class RoomView extends StatefulWidget {
-  const RoomView({super.key, required this.progress, this.random});
+  const RoomView({
+    super.key,
+    required this.progress,
+    this.random,
+    this.life = true,
+  });
 
   final ProgressController progress;
 
-  /// Pengacak posisi kucing; null = acak sungguhan.
+  /// Pengacak posisi kucing dan rutinitasnya; null = acak sungguhan.
   final Random? random;
+
+  /// Kamar hidup (desain 21c): kucing berkedip, berjalan ke barang, dan
+  /// memakainya; barang bergerak. False = kamar diam (test layar lain).
+  final bool life;
 
   @override
   State<RoomView> createState() => _RoomViewState();
 }
 
-class _RoomViewState extends State<RoomView> {
-  late final List<Spot> _slots = shuffledKittySlots(widget.random ?? Random());
+/// Rentang tempat kucing di lantai kamar desain, untuk kecepatan jalan.
+final _designFloor = RoomGeometry(const Size(designRoomWidth, designRoomHeight))
+    .rangeOf(RoomZone.floor, const Size.square(kittyRoomSize));
+
+/// Selang penyegaran bar kebutuhan, gelembung hadiah, dan label mangkuk.
+const roomRefreshInterval = Duration(seconds: 30);
+
+class _RoomViewState extends State<RoomView>
+    with SingleTickerProviderStateMixin {
+  late final Random _random = widget.random ?? Random();
+  late final List<Spot> _slots = shuffledKittySlots(_random);
+  late final RoomLife _life = RoomLife(
+    random: _random,
+    spanX: _designFloor.width,
+    spanY: _designFloor.height,
+  );
+
+  /// Jam kamar: memajukan rutinitas dan waktu animasi. Hanya jalan kalau
+  /// kamar hidup dan gerak tidak dikurangi; `TickerMode` mematikannya saat
+  /// layar lain menutupi kamar.
+  late final Ticker _ticker = createTicker(_tick);
+  Duration _lastTick = Duration.zero;
+  double _time = 0;
+  Timer? _refresh;
+
+  /// Gerak dikurangi (`disableAnimations`): semua loop berhenti.
+  bool _still = false;
+
+  /// Animasi kucing dan barang sedang jalan.
+  bool get _animating => widget.life && !_still;
 
   ProgressController get _progress => widget.progress;
 
@@ -114,12 +156,168 @@ class _RoomViewState extends State<RoomView> {
   Spot _spotOf(KittyId kitty) =>
       _empty && kitty == KittyId.oyen ? starterOyenSpot : _slots[kitty.index];
 
-  void _select(KittyId kitty) => setState(() => _selected = kitty);
+  /// Tempat kucing sekarang: dari rutinitas kalau kamar hidup.
+  Spot _catSpot(KittyId kitty) =>
+      widget.life ? _life.of(kitty).spot : _spotOf(kitty);
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.life) {
+      _syncKitties();
+      _refresh = Timer.periodic(roomRefreshInterval, (_) => _refreshNeeds());
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _still = MediaQuery.disableAnimationsOf(context);
+    if (_animating && !_ticker.isActive) {
+      _lastTick = Duration.zero;
+      _ticker.start();
+    } else if (!_animating && _ticker.isActive) {
+      _ticker.stop();
+    }
+    if (widget.life && _still) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _eatWithoutWalking());
+    }
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    _refresh?.cancel();
+    super.dispose();
+  }
+
+  void _sound(GameSound sound) => AudioScope.maybeRead(context)?.play(sound);
+
+  void _tick(Duration elapsed) {
+    // Bingkai yang tertunda lama (aplikasi dijeda) tidak melompatkan kucing.
+    final dt = ((elapsed - _lastTick).inMicroseconds / 1e6).clamp(0.0, 0.1);
+    _lastTick = elapsed;
+    _time += dt;
+    _life.paused = _selected != null || _decorating || _reaction != null;
+    for (final event in _life.advance(dt)) {
+      switch (event) {
+        case ReachedBowl(:final kitty):
+          _eatFromBowl(kitty);
+        case UsedToy(:final kitty, :final item):
+          _progress.play(kitty, item);
+      }
+    }
+    setState(() {});
+  }
+
+  Future<void> _eatFromBowl(KittyId kitty) async {
+    if (await _progress.eatFromBowl(kitty) && mounted) {
+      _sound(GameSound.munch);
+    }
+  }
+
+  /// Kurangi gerak: kucing tidak berjalan, jadi yang lapar langsung makan
+  /// dari mangkuk (kebutuhan tetap berjalan).
+  void _eatWithoutWalking() {
+    if (!mounted || !_still) return;
+    for (final kitty in _progress.home.kitties) {
+      if (_progress.canEatFromBowl(kitty)) _eatFromBowl(kitty);
+    }
+  }
+
+  void _refreshNeeds() {
+    if (!mounted) return;
+    setState(() {});
+    _eatWithoutWalking();
+  }
+
+  /// Kucing yang dimiliki, kebutuhannya, dan tempat memakai tiap barang
+  /// ke rutinitas.
+  void _syncKitties([RoomGeometry? geo]) {
+    final home = _progress.home;
+    final placed = home.room.placed;
+    _life.sync(
+      homes: {for (final kitty in home.kitties) kitty: _spotOf(kitty)},
+      targets: geo == null || _decorating
+          ? const {}
+          : {
+              for (final MapEntry(key: id, value: spot) in placed.entries)
+                id: _standSpot(geo, id, spot),
+            },
+      uses: {for (final id in placed.keys) id: roomItemOf(id).use},
+      toys: {
+        for (final id in placed.keys)
+          if (roomItemOf(id).toy) id,
+      },
+      hungry: {
+        for (final kitty in home.kitties)
+          if (_progress.canEatFromBowl(kitty)) kitty,
+      },
+      sad: {
+        for (final kitty in home.kitties)
+          if (_progress.catNeeds(kitty).isSad) kitty,
+      },
+    );
+  }
+
+  /// Tempat kucing berdiri sebelum memakai barang [id] di [spot]: kakinya
+  /// di kaki kucing yang digambar barang itu saat dipakai.
+  Spot _standSpot(RoomGeometry geo, RoomItemId id, Spot spot) {
+    final box = geo.boxOf(roomItemOf(id), spot);
+    final mirror = _mirrored(geo, id, box);
+    final cat = RoomItemArt.catBox(
+      id,
+      RoomItemArt.inUseBox(id, box, mirror: mirror),
+      mirror: mirror,
+    );
+    final size = geo.catSize(KittyId.salju);
+    final range = geo.rangeOf(RoomZone.floor, Size.square(size));
+    final left = cat.center.dx - size / 2;
+    final top = cat.top + (cat.height - size) * catFeetFactor;
+    return Spot(
+      range.width == 0 ? 0 : (left - range.left) / range.width,
+      range.height == 0 ? 0 : (top - range.top) / range.height,
+    );
+  }
+
+  void _select(KittyId kitty) {
+    _sound(GameSound.meow);
+    setState(() => _selected = kitty);
+  }
 
   void _closeCard() => setState(() => _selected = null);
 
-  void _react(KittyId kitty, RoomReaction reaction) =>
-      setState(() => _reaction = (reaction, kitty, ++_reactions));
+  void _react(KittyId kitty, RoomReaction reaction) {
+    if (reaction.sound case final sound?) _sound(sound);
+    if (widget.life) {
+      _life.react(
+        kitty,
+        reaction.pose,
+        ReactionOverlay.duration.inMilliseconds / 1000,
+      );
+    }
+    setState(() => _reaction = (reaction, kitty, ++_reactions));
+  }
+
+  void _reactionDone() {
+    final kitty = _reaction?.$2;
+    if (widget.life && kitty != null) _life.rest(kitty);
+    setState(() => _reaction = null);
+  }
+
+  /// Ambil hadiah koin kucing yang dirawat (gelembung).
+  Future<void> _claim(KittyId kitty) async {
+    final l = context.l10n;
+    if (!await _progress.claimKittyReward(kitty) || !mounted) return;
+    _react(
+      kitty,
+      RoomReaction(
+        text: l.reactionCoins(kittyRewardCoins),
+        hearts: false,
+        sound: GameSound.reward,
+      ),
+    );
+  }
 
   void _openShop([ShopTab tab = ShopTab.items]) =>
       context.go(AppRoutes.shop(tab: tab));
@@ -128,6 +326,7 @@ class _RoomViewState extends State<RoomView> {
     _decorating = true;
     _selected = null;
     _reaction = null;
+    _life.interrupt();
   });
 
   /// Selesai menghias (juga tombol kembali sistem): kembali ke mode normal,
@@ -299,8 +498,8 @@ class _RoomViewState extends State<RoomView> {
               ReactionOverlay(
                 key: ValueKey(n),
                 reaction: r,
-                anchor: geo.catBoxOf(kitty, _spotOf(kitty)),
-                onDone: () => setState(() => _reaction = null),
+                anchor: geo.catBoxOf(kitty, _catSpot(kitty)),
+                onDone: _reactionDone,
               ),
             if (praise case (final bonus, final n))
               Positioned(
@@ -324,6 +523,7 @@ class _RoomViewState extends State<RoomView> {
 
   Widget _room(RoomGeometry geo) {
     _geo = geo;
+    if (widget.life) _syncKitties(geo);
     final c = context.koColors;
     final s = context.koSize;
     final space = context.koSpace;
@@ -337,7 +537,10 @@ class _RoomViewState extends State<RoomView> {
         ...home.room.placed,
         if (dragging != null && dragSpot != null) dragging: dragSpot,
       },
-      cats: {for (final kitty in home.kitties) kitty: _spotOf(kitty)},
+      cats: {
+        for (final kitty in home.kitties)
+          if (!widget.life || !_life.of(kitty).isInItem) kitty: _catSpot(kitty),
+      },
       geo: geo,
     );
     // Barang yang diangkat digambar paling depan.
@@ -408,6 +611,44 @@ class _RoomViewState extends State<RoomView> {
                 child: SadMarkView(
                   hungry: needs.hunger <= sadThreshold,
                   size: RoomArt.sadMarkViewBox.width * geo.artScale,
+                  time: _animating ? _time : null,
+                ),
+              )
+            else if (widget.life && _progress.canClaimKittyReward(sprite.kitty))
+              Positioned(
+                // Desain: gelembung di (163, 362) untuk Oyen 116 di (137, 430).
+                left: sprite.box.left + sprite.box.width * 26 / oyenRoomSize,
+                top: sprite.box.top - sprite.box.width * 68 / oyenRoomSize,
+                child: CoinBubbleView(
+                  key: ValueKey('reward-${sprite.kitty.name}'),
+                  coins: kittyRewardCoins,
+                  label: context.l10n.kittyRewardLabel(
+                    kittyRewardCoins,
+                    kittyName(context.l10n, sprite.kitty),
+                  ),
+                  size: RoomArt.coinBubbleViewBox.width * geo.artScale,
+                  time: _animating ? _time : null,
+                  onTap: () => _claim(sprite.kitty),
+                ),
+              ),
+        if (!_decorating && widget.life)
+          if ((_bowlRefill(now), home.room.placed[RoomItemId.mangkuk]) case (
+            final hours?,
+            final spot?,
+          ))
+            if (geo.boxOf(roomItemOf(RoomItemId.mangkuk), spot) case final bowl)
+              Positioned.fill(
+                child: CustomSingleChildLayout(
+                  // Desain: label di (282, 566) untuk mangkuk di (298, 596),
+                  // dijepit supaya tidak keluar tepi kamar.
+                  delegate: KeepInside(
+                    Offset(
+                      bowl.left - 16 * geo.artScale,
+                      bowl.top - 30 * geo.artScale,
+                    ),
+                    margin: context.koSpace.s8,
+                  ),
+                  child: BowlRefillLabel(hours: hours),
                 ),
               ),
         if (empty && !_decorating)
@@ -455,6 +696,28 @@ class _RoomViewState extends State<RoomView> {
     );
   }
 
+  /// Barang dipakai digambar terbalik kalau kotak biasanya keluar tepi
+  /// kiri atau kanan kamar (mis. tiang garukan di pojok kiri).
+  bool _mirrored(RoomGeometry geo, RoomItemId id, Rect box) {
+    final plain = RoomItemArt.inUseBox(id, box);
+    if (plain.left >= 0 && plain.right <= geo.room.width) return false;
+    final flipped = RoomItemArt.inUseBox(id, box, mirror: true);
+    double outside(Rect r) =>
+        max(0.0, -r.left) + max(0.0, r.right - geo.room.width);
+    return outside(flipped) < outside(plain);
+  }
+
+  /// Jam sampai mangkuk terisi lagi (dibulatkan ke atas), atau null kalau
+  /// mangkuknya tidak kosong.
+  int? _bowlRefill(DateTime now) {
+    final home = _progress.home;
+    final bowl = _progress.needs.bowl;
+    if (!bowl.isEmptyFor(home.kitties, now)) return null;
+    final at = bowl.refillAt(now);
+    if (at == null) return null;
+    return max(1, (at.difference(now).inMinutes / 60).ceil());
+  }
+
   Widget _itemSprite(
     ItemSprite sprite,
     RoomGeometry geo,
@@ -463,10 +726,37 @@ class _RoomViewState extends State<RoomView> {
   }) {
     final s = context.koSize;
     final id = sprite.id;
+    final user = widget.life && !_decorating ? _life.userOf(id) : null;
+    final time = _animating ? _time : null;
+    if (user != null) {
+      final mirror = _mirrored(geo, id, sprite.box);
+      final box = RoomItemArt.inUseBox(id, sprite.box, mirror: mirror);
+      return Positioned.fromRect(
+        key: ValueKey(id),
+        rect: box,
+        child: _kittyButton(
+          user,
+          RoomItemView(
+            id: id,
+            box: box.size,
+            full: id != RoomItemId.mangkuk || bowlFull,
+            time: time,
+            mirror: mirror,
+            user: KittyLook(
+              kitty: user,
+              accessory: _progress.home.closet.wearingOf(user),
+              time: time,
+            ),
+          ),
+        ),
+      );
+    }
     Widget art = RoomItemView(
       id: id,
       box: sprite.box.size,
       full: id != RoomItemId.mangkuk || bowlFull,
+      // Barang diam tidak digambar ulang tiap bingkai.
+      time: RoomItemArt.isAnimated(id) ? time : null,
     );
     if (_decorating) {
       final l = context.l10n;
@@ -504,10 +794,10 @@ class _RoomViewState extends State<RoomView> {
     return Positioned.fromRect(key: ValueKey(id), rect: sprite.box, child: art);
   }
 
-  Widget _kitty(KittyId kitty, Rect box) {
+  /// Kucing yang bisa diketuk untuk membuka kartunya.
+  Widget _kittyButton(KittyId kitty, Widget child) {
     final l = context.l10n;
-    final needs = _progress.catNeeds(kitty);
-    final hungry = needs.hunger <= sadThreshold;
+    final hungry = _progress.catNeeds(kitty).hunger <= sadThreshold;
     final name = kittyName(l, kitty);
     return Semantics(
       button: true,
@@ -517,14 +807,44 @@ class _RoomViewState extends State<RoomView> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => _select(kitty),
-        child: KittyView(
-          look: KittyLook(
-            kitty: kitty,
-            pose: needs.isSad ? KittyPose.lesu : KittyPose.idle,
-            accessory: _progress.home.closet.wearingOf(kitty),
-          ),
-          size: box.width,
+        child: child,
+      ),
+    );
+  }
+
+  Widget _kitty(KittyId kitty, Rect box) {
+    final needs = _progress.catNeeds(kitty);
+    var pose = needs.isSad ? KittyPose.lesu : KittyPose.idle;
+    var facing = KittyFacing.down;
+    if (widget.life && !_decorating) {
+      final cat = _life.of(kitty);
+      pose = switch (cat.pose) {
+        LifePose.idle => KittyPose.idle,
+        LifePose.lick => KittyPose.lick,
+        LifePose.walk => KittyLook.walkPose(cat.elapsed),
+        LifePose.sad => KittyPose.lesu,
+        LifePose.happy => KittyPose.happy,
+        LifePose.petted => KittyPose.petted,
+        LifePose.eat => KittyPose.eat,
+      };
+      facing = switch (cat.heading) {
+        LifeHeading.down => KittyFacing.down,
+        LifeHeading.left => KittyFacing.left,
+        LifeHeading.right => KittyFacing.right,
+      };
+    }
+    return _kittyButton(
+      kitty,
+      KittyView(
+        look: KittyLook(
+          kitty: kitty,
+          pose: pose,
+          facing: facing,
+          accessory: _progress.home.closet.wearingOf(kitty),
+          // Desain: kucing tidak dianimasikan selama mode hias.
+          time: _animating && !_decorating ? _time : null,
         ),
+        size: box.width,
       ),
     );
   }

@@ -305,34 +305,65 @@ class RoomItemView extends StatelessWidget {
     required this.id,
     required this.box,
     this.full = true,
+    this.time,
+    this.user,
+    this.mirror = false,
   });
 
   final RoomItemId id;
   final Size box;
   final bool full;
 
+  /// Detik animasi barang; null = diam.
+  final double? time;
+
+  /// Kucing yang sedang memakai barang ini; [box] = kotak dipakai
+  /// ([RoomItemArt.inUseBox]).
+  final KittyLook? user;
+
+  /// Dicerminkan (barang dipakai di tepi kamar).
+  final bool mirror;
+
   @override
   Widget build(BuildContext context) {
     return Semantics(
       image: true,
       label: roomItemName(context.l10n, id),
-      child: CustomPaint(size: box, painter: _RoomItemPainter(id, full)),
+      child: CustomPaint(
+        size: box,
+        painter: _RoomItemPainter(id, full, time, user, mirror),
+      ),
     );
   }
 }
 
 class _RoomItemPainter extends CustomPainter {
-  _RoomItemPainter(this.id, this.full);
+  _RoomItemPainter(this.id, this.full, this.time, this.user, this.mirror);
 
   final RoomItemId id;
   final bool full;
+  final double? time;
+  final KittyLook? user;
+  final bool mirror;
 
   @override
-  void paint(Canvas canvas, Size size) =>
-      paintRoomItemArt(canvas, id, box: size, full: full);
+  void paint(Canvas canvas, Size size) => paintRoomItemArt(
+    canvas,
+    id,
+    box: size,
+    full: full,
+    time: time,
+    user: user,
+    mirror: mirror,
+  );
 
   @override
-  bool shouldRepaint(_RoomItemPainter old) => old.id != id || old.full != full;
+  bool shouldRepaint(_RoomItemPainter old) =>
+      old.id != id ||
+      old.full != full ||
+      old.time != time ||
+      old.user != user ||
+      old.mirror != mirror;
 }
 
 /// Camilan yang diskalakan supaya muat dan dipusatkan di [box].
@@ -402,23 +433,126 @@ class _AccessoryIconPainter extends CustomPainter {
 
 /// Tanda lesu di atas kucing kamar selebar [size] (`TandaLesu.dc.html`).
 class SadMarkView extends StatelessWidget {
-  const SadMarkView({super.key, required this.hungry, this.size = 48});
+  const SadMarkView({
+    super.key,
+    required this.hungry,
+    this.size = 48,
+    this.time,
+  });
 
   final bool hungry;
   final double size;
 
+  /// Detik naik-turun (`tlBob`); null = diam.
+  final double? time;
+
   @override
   Widget build(BuildContext context) {
     final box = RoomArt.sadMarkViewBox;
+    final scale = size / box.width;
     return Semantics(
       image: true,
       label: sadMarkLabel(context.l10n, hungry: hungry),
-      child: CustomPaint(
-        size: box * (size / box.width),
-        painter: _SadMarkPainter(hungry),
+      child: Transform.translate(
+        offset: Offset(0, RoomArt.sadMarkBob(time) * scale),
+        child: CustomPaint(size: box * scale, painter: _SadMarkPainter(hungry)),
       ),
     );
   }
+}
+
+/// Gelembung hadiah koin di atas kucing yang dirawat (desain 21,
+/// `GelembungKoin.dc.html`) selebar [size]: koin, kilau, dan label "+N".
+/// Diketuk untuk mengambil hadiahnya.
+class CoinBubbleView extends StatelessWidget {
+  const CoinBubbleView({
+    super.key,
+    required this.coins,
+    required this.label,
+    required this.onTap,
+    this.size = 64,
+    this.time,
+  });
+
+  final int coins;
+
+  /// Label pembaca layar.
+  final String label;
+  final VoidCallback onTap;
+  final double size;
+
+  /// Detik naik-turun (`gkBob`); null = diam.
+  final double? time;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    final box = RoomArt.coinBubbleViewBox;
+    final scale = size / box.width;
+    return Semantics(
+      button: true,
+      label: label,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: Transform.translate(
+          offset: Offset(0, RoomArt.coinBubbleBob(time) * scale),
+          child: SizedBox.fromSize(
+            size: box * scale,
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                const Positioned.fill(
+                  child: CustomPaint(painter: _CoinBubblePainter()),
+                ),
+                Positioned(
+                  top: RoomArt.coinBubbleLabelTop * scale,
+                  child: Container(
+                    height: s.roomBubbleLabel * scale,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: s.roomBubbleLabelPad * scale,
+                    ),
+                    alignment: Alignment.center,
+                    decoration: ShapeDecoration(
+                      color: c.ink,
+                      shape: const StadiumBorder(),
+                    ),
+                    child: Text(
+                      '+$coins',
+                      maxLines: 1,
+                      softWrap: false,
+                      textScaler: TextScaler.noScaling,
+                      style: context.koType.badge.copyWith(
+                        color: c.cream,
+                        fontWeight: FontWeight.w700,
+                        fontSize: context.koType.badge.fontSize! * scale,
+                        height: 1,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CoinBubblePainter extends CustomPainter {
+  const _CoinBubblePainter();
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      paintCoinBubble(canvas, width: size.width);
+
+  @override
+  bool shouldRepaint(_CoinBubblePainter old) => false;
 }
 
 class _SadMarkPainter extends CustomPainter {

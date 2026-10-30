@@ -2939,6 +2939,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'+{joy} Happy for every cat'**
   String decoratePraiseJoy(int joy);
+
+  /// Label over the empty shared food bowl in the cat room: hours until it refills.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}}'**
+  String bowlRefill(int hours);
+
+  /// Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward.
+  ///
+  /// In en, this message translates to:
+  /// **'{coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}}'**
+  String kittyRewardLabel(int coins, String name);
+
+  /// Floating text over a cat after collecting its coin reward.
+  ///
+  /// In en, this message translates to:
+  /// **'{coins, plural, one{+{coins} coin} other{+{coins} coins}}'**
+  String reactionCoins(int coins);
 }
 
 class _AppLocalizationsDelegate

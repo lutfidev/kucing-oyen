@@ -1996,4 +1996,43 @@ class AppLocalizationsRu extends AppLocalizations {
   String decoratePraiseJoy(int joy) {
     return '+$joy радости всем котикам';
   }
+
+  @override
+  String bowlRefill(int hours) {
+    String _temp0 = intl.Intl.pluralLogic(
+      hours,
+      locale: localeName,
+      other: 'Наполнится через $hours часа',
+      many: 'Наполнится через $hours часов',
+      few: 'Наполнится через $hours часа',
+      one: 'Наполнится через $hours час',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String kittyRewardLabel(int coins, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      coins,
+      locale: localeName,
+      other: '$name: забрать $coins монеты',
+      many: '$name: забрать $coins монет',
+      few: '$name: забрать $coins монеты',
+      one: '$name: забрать $coins монету',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reactionCoins(int coins) {
+    String _temp0 = intl.Intl.pluralLogic(
+      coins,
+      locale: localeName,
+      other: '+$coins монеты',
+      many: '+$coins монет',
+      few: '+$coins монеты',
+      one: '+$coins монета',
+    );
+    return '$_temp0';
+  }
 }

@@ -23,6 +23,7 @@ abstract final class AppRoutes {
 
   /// Galeri efek suara dan musik, untuk didengar di perangkat.
   static const gallerySound = '/galeri/suara';
+  static const galleryMotion = '/galeri/gerak';
 
   /// Toko (desain 20), dibuka dari Beranda. Dengan [tab] langsung membuka
   /// tab itu (`/toko?tab=accessories`).
