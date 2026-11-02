@@ -136,7 +136,7 @@ void main() {
             find.descendant(
               of: find.ancestor(
                 of: _label(previous),
-                matching: find.byType(LevelNode),
+                matching: find.byType(PictureNode),
               ),
               matching: find.byType(Row),
             ),

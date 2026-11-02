@@ -73,6 +73,16 @@ abstract final class PictureMapArt {
   static const tokenSpriteAt = Offset(4, 12);
   static const tokenOffset = Offset(18, -92);
 
+  /// Node (`TitikLevel`): chip nomor keluar 6 px di kiri bawah, gembok 8 px
+  /// di kanan atas, keduanya bercincin krem 2,5 px; gambar benda terkunci
+  /// pudar 0,45; bintang berjarak 1 px; denyut membesar sampai 1,4.
+  static const double chipOut = 6;
+  static const double lockOut = 8;
+  static const double ringOut = 2.5;
+  static const double lockedIconOpacity = 0.45;
+  static const double starGap = 1;
+  static const double pulseScale = 1.4;
+
   /// Layar kecil (`n360`): jalur dirapatkan 12%.
   static const double compactRowFactor = 0.88;
 

@@ -62,6 +62,7 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.shadowNode,
     required this.nodeLocked,
     required this.nodeLockedInk,
+    required this.nodeLockedEdge,
     required this.boss,
     required this.bossEdge,
     required this.brickEdge,
@@ -166,6 +167,7 @@ class KoColors extends ThemeExtension<KoColors> {
     shadowNode: Color(0x38965014), // rgba(150,80,20,.22)
     nodeLocked: Color(0xFFE8D6B8),
     nodeLockedInk: Color(0xFF8A7259),
+    nodeLockedEdge: Color(0xFFD5BE98),
     boss: Color(0xFFE3C9A6),
     bossEdge: Color(0xFFB28A64),
     brickEdge: Color(0xFF8E3220),
@@ -350,6 +352,9 @@ class KoColors extends ThemeExtension<KoColors> {
   final Color nodeLocked;
 
   final Color nodeLockedInk;
+
+  /// Bayangan padat node terkunci.
+  final Color nodeLockedEdge;
 
   /// Kotak level bos dan bayangan padatnya.
   final Color boss;
@@ -546,6 +551,7 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? shadowNode,
     Color? nodeLocked,
     Color? nodeLockedInk,
+    Color? nodeLockedEdge,
     Color? boss,
     Color? bossEdge,
     Color? brickEdge,
@@ -649,6 +655,7 @@ class KoColors extends ThemeExtension<KoColors> {
       shadowNode: shadowNode ?? this.shadowNode,
       nodeLocked: nodeLocked ?? this.nodeLocked,
       nodeLockedInk: nodeLockedInk ?? this.nodeLockedInk,
+      nodeLockedEdge: nodeLockedEdge ?? this.nodeLockedEdge,
       boss: boss ?? this.boss,
       bossEdge: bossEdge ?? this.bossEdge,
       brickEdge: brickEdge ?? this.brickEdge,
@@ -758,6 +765,7 @@ class KoColors extends ThemeExtension<KoColors> {
       shadowNode: c(shadowNode, other.shadowNode),
       nodeLocked: c(nodeLocked, other.nodeLocked),
       nodeLockedInk: c(nodeLockedInk, other.nodeLockedInk),
+      nodeLockedEdge: c(nodeLockedEdge, other.nodeLockedEdge),
       boss: c(boss, other.boss),
       bossEdge: c(bossEdge, other.bossEdge),
       brickEdge: c(brickEdge, other.brickEdge),
