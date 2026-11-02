@@ -324,6 +324,46 @@ void main() {
     });
   });
 
+  testWidgets('layar kecil 360×640: node 54, jalur dirapatkan 12%', (
+    tester,
+  ) async {
+    setScreenSize(tester, const Size(360, 640));
+    await pumpApp(
+      tester,
+      location: AppRoutes.chapter(1),
+      progress: testProgress(wonUpTo(9)),
+    );
+    final node = find.ancestor(
+      of: _label('Level 9, 3 bintang'),
+      matching: find.byType(PictureNode),
+    );
+    final pressable = find.descendant(
+      of: node,
+      matching: find.byType(KoPressable),
+    );
+    final scale = _scale(tester);
+    expect(tester.getRect(pressable).width, closeTo(54 * scale, 0.01));
+    final first = tester.getCenter(_label('Level 1, 3 bintang'));
+    final boss = tester.getCenter(
+      _label('Level 10, bos Pesta Ikan Asin, main sekarang'),
+    );
+    expect(boss.dy - first.dy, closeTo((724 - 262) * 0.88 * scale, 0.5));
+    expect(
+      tester
+          .getRect(
+            find.descendant(
+              of: find.ancestor(
+                of: _label('Level 10, bos Pesta Ikan Asin, main sekarang'),
+                matching: find.byType(PictureNode),
+              ),
+              matching: find.byType(KoPressable),
+            ),
+          )
+          .width,
+      closeTo(84 * scale, 0.01),
+    );
+  });
+
   group('Oyen berjalan', () {
     final chapters = chaptersOf(testLevels);
 

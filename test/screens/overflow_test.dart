@@ -25,6 +25,7 @@ import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/screens/settings/settings_parts.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
+import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -171,6 +172,57 @@ void _cases(AppLanguage language) {
           expect(tester.takeException(), isNull);
         });
       }
+    }
+  }
+
+  // Peta bergambar: Oyen sedang berjalan (level 12 → 13), dan kartu
+  // "Babak baru terbuka!" sesudah bos Babak 1.
+  for (final size in sizes) {
+    for (final scale in textScales) {
+      final label = '${size.width.toInt()}×${size.height.toInt()}';
+      testWidgets(
+        'tanpa overflow: Oyen berjalan @ $label, teks ${scale * 100}%',
+        (tester) async {
+          setScreenSize(tester, size);
+          setTextScale(tester, scale);
+          await pumpApp(
+            tester,
+            location: AppRoutes.chapter(2, from: 12),
+            progress: p(best: wonUpTo(12)),
+            wait: false,
+          );
+          await pumpFor(tester, const Duration(milliseconds: 800));
+          expect(tester.takeException(), isNull);
+          expect(find.byType(LevelView), findsNothing);
+        },
+      );
+
+      testWidgets(
+        'tanpa overflow: kartu babak baru @ $label, teks ${scale * 100}%',
+        (tester) async {
+          setScreenSize(tester, size);
+          setTextScale(tester, scale);
+          await pumpApp(
+            tester,
+            location: AppRoutes.chapter(2, intro: true),
+            progress: p(best: wonUpTo(10)),
+          );
+          await pumpFor(tester, const Duration(milliseconds: 500));
+          expect(tester.takeException(), isNull);
+          final button = find.text(l.chapterIntroEnter);
+          await tester.ensureVisible(button);
+          await tester.pump();
+          final rect = tester.getRect(button);
+          expect(rect.bottom, lessThanOrEqualTo(size.height));
+          expect(rect.left, greaterThanOrEqualTo(0));
+          expect(rect.right, lessThanOrEqualTo(size.width));
+          final title = tester.getRect(
+            find.text(l.chapterIntroOverline.toUpperCase()),
+          );
+          expect(title.left, greaterThanOrEqualTo(0));
+          expect(title.right, lessThanOrEqualTo(size.width));
+        },
+      );
     }
   }
 

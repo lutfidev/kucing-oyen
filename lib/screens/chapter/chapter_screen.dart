@@ -181,6 +181,10 @@ class _ChapterViewState extends State<ChapterView>
     super.dispose();
   }
 
+  /// Layar kecil (`n360`): node lebih kecil, jalur dirapatkan.
+  bool get _compact =>
+      MediaQuery.sizeOf(context).height < context.koSize.roomCompactHeight;
+
   /// Indeks [walkFrom] di babak ini kalau Oyen harus berjalan darinya.
   int? get _walkStart {
     final from = widget.walkFrom;
@@ -252,11 +256,11 @@ class _ChapterViewState extends State<ChapterView>
   MapTokenSpot? _token() {
     final walk = _walk;
     if (walk != null) {
-      final from = ChapterMap.pointOf(_walkIndex);
-      final to = ChapterMap.pointOf(_walkIndex + 1);
+      final from = ChapterMap.pointOf(_walkIndex, compact: _compact);
+      final to = ChapterMap.pointOf(_walkIndex + 1, compact: _compact);
       final walking = walk.walking;
       return MapTokenSpot(
-        at: ChapterMap.onRoad(_walkIndex, walk.t),
+        at: ChapterMap.onRoad(_walkIndex, walk.t, compact: _compact),
         pose: walking
             ? KittyLook.walkPose(_last.inMicroseconds / 1e6)
             : KittyPose.idle,
@@ -272,7 +276,7 @@ class _ChapterViewState extends State<ChapterView>
     );
     if (index == null) return null;
     return MapTokenSpot(
-      at: ChapterMap.pointOf(index),
+      at: ChapterMap.pointOf(index, compact: _compact),
       pose: _atBossHappy ? KittyPose.happy : KittyPose.idle,
     );
   }
@@ -288,7 +292,7 @@ class _ChapterViewState extends State<ChapterView>
           walkFrom: widget.walkFrom,
         );
     if (index == null) return 0;
-    final at = ChapterMap.pointOf(index);
+    final at = ChapterMap.pointOf(index, compact: _compact);
     const token = PictureMapArt.tokenSize;
     final middle =
         (at.dy + PictureMapArt.tokenOffset.dy + token.height / 2) * _scale;
@@ -379,6 +383,7 @@ class _ChapterViewState extends State<ChapterView>
                       onPlay: widget.onPlay,
                       token: _token(),
                       oyenAccessory: widget.oyenAccessory,
+                      compact: _compact,
                     ),
                   ),
                 ),

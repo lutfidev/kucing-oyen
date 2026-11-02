@@ -158,11 +158,21 @@ class PictureNode extends StatelessWidget {
                   shadow.pressNode - 1,
                 ),
               ),
-              child: KoDashedBorder(
-                color: boss ? c.brick : c.muted,
-                radius: radius,
-                width: s.nodeDash,
-                child: face,
+              // Garis putus-putus di belakang chip nomor dan gembok.
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  Positioned.fill(
+                    child: KoDashedBorder(
+                      color: boss ? c.brick : c.muted,
+                      radius: radius,
+                      width: s.nodeDash,
+                      child: const SizedBox.expand(),
+                    ),
+                  ),
+                  face,
+                ],
               ),
             ),
           )
