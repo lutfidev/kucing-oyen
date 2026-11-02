@@ -17,7 +17,7 @@ import 'tutorial.dart';
 /// [LevelView]. Bintang (dan koin bintang baru) dicatat saat layar hasil
 /// dibuka. Kartu aturan mengikuti progres, petunjuk dan saldo dari
 /// [ProgressController], dan tutorial level tampil sampai selesai sekali.
-class LevelScreen extends StatelessWidget {
+class LevelScreen extends StatefulWidget {
   const LevelScreen({super.key, required this.chapter, required this.levelId});
 
   /// Nomor babak di path; null kalau bukan angka.
@@ -27,9 +27,19 @@ class LevelScreen extends StatelessWidget {
   final int? levelId;
 
   @override
+  State<LevelScreen> createState() => _LevelScreenState();
+}
+
+class _LevelScreenState extends State<LevelScreen> {
+  /// (level, sudah pernah dimenangkan) saat level itu dibuka: menang bos
+  /// lagi tidak menampilkan kartu "Babak baru terbuka!".
+  (int, bool)? _opened;
+
+  @override
   Widget build(BuildContext context) {
     final progress = ProgressScope.read(context);
-    final id = levelId;
+    final chapter = widget.chapter;
+    final id = widget.levelId;
     final level = id == null ? null : progress.levelById(id);
     // Kembali ke peta babak level itu; kalau levelnya tidak ada, ke peta
     // di path, atau Beranda kalau path-nya juga bukan babak.
@@ -42,6 +52,9 @@ class LevelScreen extends StatelessWidget {
         backLabel: backTo == null ? l.backToHome : l.backToMap,
         onBack: back,
       );
+    }
+    if (_opened?.$1 != level.id) {
+      _opened = (level.id, progress.progress.isWon(level.id));
     }
     return LevelView(
       key: ValueKey(level.id),
@@ -63,15 +76,20 @@ class LevelScreen extends StatelessWidget {
     );
   }
 
-  /// "Lanjut": level berikutnya; sesudah level terakhir kembali ke peta.
+  /// "Lanjut": peta babak level berikutnya, tempat Oyen berjalan dari
+  /// level ini lalu level berikutnya terbuka sendiri. Sesudah bos: peta
+  /// babak berikutnya (kartu babak baru kalau bos baru pertama kali
+  /// menang); sesudah level terakhir: peta babak itu dengan Oyen di bos.
   void _next(BuildContext context, List<Level> levels, Level level) {
     final i = levels.indexOf(level);
     final next = i + 1 < levels.length ? levels[i + 1] : null;
-    context.go(
-      next == null
-          ? AppRoutes.chapter(level.chapter)
-          : AppRoutes.level(next.id, chapter: next.chapter),
-    );
+    context.go(switch (next) {
+      final next? when next.chapter != level.chapter => AppRoutes.chapter(
+        next.chapter,
+        intro: _opened?.$2 == false,
+      ),
+      _ => AppRoutes.chapter(level.chapter, from: level.id),
+    });
   }
 }
 

@@ -23,6 +23,9 @@ abstract final class PictureMapArt {
     Offset(196, 724),
   ];
 
+  /// Lebar layar desain.
+  static const double screenWidth = 390;
+
   /// Peta yang digulir mulai di y 140 layar desain (awal pudar judul).
   static const double mapTop = 140;
 
@@ -143,6 +146,9 @@ final _paw = SvgTemplate(mapPawSvg).render(const {});
 final _icon = SvgTemplate(mapNodeIconSvg);
 final _icons = <String, SvgDrawing>{};
 final _tokenBase = SvgTemplate(mapTokenBaseSvg).render(const {});
+final _introConfetti = SvgTemplate(chapterIntroConfettiSvg).render(const {});
+final _introDoor = SvgTemplate(chapterIntroDoorSvg).render(const {});
+final _introPaws = SvgTemplate(chapterIntroPawsSvg).render(const {});
 
 /// Dekor ruangan babak [chapter] (1 dapur, selain itu ruang tamu), area
 /// bos, dan jalur lewat [points], di koordinat layar desain.
@@ -187,3 +193,12 @@ void paintNodeIcon(Canvas canvas, String object, {required double size}) {
 
 /// Alas token Oyen di kotak 64×76.
 void paintTokenBase(Canvas canvas) => _tokenBase.paint(canvas);
+
+/// Konfeti kartu "Babak baru terbuka!" di koordinat layar desain 390×844.
+void paintChapterIntroConfetti(Canvas canvas) => _introConfetti.paint(canvas);
+
+/// Pintu di gambar kartu "Babak baru terbuka!" (kotak 300×150).
+void paintChapterIntroDoor(Canvas canvas) => _introDoor.paint(canvas);
+
+/// Dua jejak di gambar kartu "Babak baru terbuka!" (kotak 80×30).
+void paintChapterIntroPaws(Canvas canvas) => _introPaws.paint(canvas);

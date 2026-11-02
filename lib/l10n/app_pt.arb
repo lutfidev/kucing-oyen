@@ -476,5 +476,9 @@
   "decoratePraiseJoy": "+{joy} de Alegria pra todos os gatos",
   "bowlRefill": "{hours, plural, one{Enche de novo em {hours} hora} other{Enche de novo em {hours} horas}}",
   "kittyRewardLabel": "{coins, plural, one{Pegar {coins} moeda de {name}} other{Pegar {coins} moedas de {name}}}",
-  "reactionCoins": "{coins, plural, one{+{coins} moeda} other{+{coins} moedas}}"
+  "reactionCoins": "{coins, plural, one{+{coins} moeda} other{+{coins} moedas}}",
+  "chapterIntroOverline": "Capítulo novo liberado!",
+  "chapterIntroEnter": "Bora entrar!",
+  "chapterIntroInfo": "{count, plural, =1{1 nível novo} other{{count} níveis novos}} · Chefão: {boss}",
+  "chapterIntroLabel": "Capítulo novo liberado"
 }

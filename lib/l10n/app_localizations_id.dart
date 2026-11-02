@@ -1852,4 +1852,23 @@ class AppLocalizationsId extends AppLocalizations {
   String reactionCoins(int coins) {
     return '+$coins koin';
   }
+
+  @override
+  String get chapterIntroOverline => 'Babak baru terbuka!';
+
+  @override
+  String get chapterIntroEnter => 'Ayo masuk!';
+
+  @override
+  String chapterIntroInfo(int count, String boss) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count level baru',
+    );
+    return '$_temp0 · Bos: $boss';
+  }
+
+  @override
+  String get chapterIntroLabel => 'Babak baru terbuka';
 }

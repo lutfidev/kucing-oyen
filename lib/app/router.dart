@@ -70,8 +70,11 @@ GoRouter createRouter({
           ),
           GoRoute(
             path: 'babak/:chapter',
-            builder: (context, state) =>
-                ChapterScreen(chapter: _number(state, 'chapter')),
+            builder: (context, state) => ChapterScreen(
+              chapter: _number(state, 'chapter'),
+              walkFrom: int.tryParse(state.uri.queryParameters['dari'] ?? ''),
+              intro: state.uri.queryParameters['baru'] == '1',
+            ),
             routes: [
               GoRoute(
                 path: 'level/:id',

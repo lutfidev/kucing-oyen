@@ -10,6 +10,7 @@ import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/accessories.dart';
 import '../../game/model/chapter.dart';
+import '../../game/model/kitties.dart';
 import '../../game/model/map_walk.dart';
 import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
@@ -18,14 +19,29 @@ import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'chapter_header.dart';
+import 'chapter_intro.dart';
 import 'chapter_map.dart';
 
-/// Rute `/babak/:chapter`: peta babak dari [ProgressScope].
+/// Rute `/babak/:chapter`: peta babak dari [ProgressScope]. Dari "Lanjut",
+/// [walkFrom] = level yang baru dimenangkan dan [intro] = babak ini baru
+/// terbuka.
 class ChapterScreen extends StatelessWidget {
-  const ChapterScreen({super.key, required this.chapter});
+  const ChapterScreen({
+    super.key,
+    required this.chapter,
+    this.walkFrom,
+    this.intro = false,
+  });
 
   /// Nomor babak; null kalau path-nya bukan angka.
   final int? chapter;
+
+  /// `?dari=`: diteruskan hanya kalau level itu ada di babak ini dan
+  /// bukan bosnya, atau bos babak terakhir (Oyen berdiri di bos).
+  final int? walkFrom;
+
+  /// `?baru=1`: kartu "Babak baru terbuka!" (desain 23c).
+  final bool intro;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +56,12 @@ class ChapterScreen extends StatelessWidget {
     final other = i > 0
         ? chapters[i - 1]
         : (i + 1 < chapters.length ? chapters[i + 1] : null);
+    final from = walkFrom;
+    final ids = current.ids.toList();
+    final validFrom =
+        from != null &&
+        ids.contains(from) &&
+        (from != current.boss.id || current == chapters.last);
     return ChapterView(
       key: ValueKey(current.number),
       chapter: current,
@@ -49,6 +71,9 @@ class ChapterScreen extends StatelessWidget {
       onOpen: (chapter) => context.go(AppRoutes.chapter(chapter.number)),
       onPlay: (level) =>
           context.go(AppRoutes.level(level.id, chapter: level.chapter)),
+      walkFrom: validFrom ? from : null,
+      intro: intro && current.isUnlocked(controller.progress),
+      oyenAccessory: controller.home.closet.wearingOf(KittyId.oyen),
     );
   }
 }
@@ -71,6 +96,7 @@ class ChapterView extends StatefulWidget {
     required this.onOpen,
     required this.onPlay,
     this.walkFrom,
+    this.intro = false,
     this.oyenAccessory,
   });
 
@@ -83,6 +109,9 @@ class ChapterView extends StatefulWidget {
 
   /// Level yang baru dimenangkan lewat "Lanjut"; null = tanpa jalan.
   final int? walkFrom;
+
+  /// Kartu "Babak baru terbuka!" di atas peta sampai ditutup.
+  final bool intro;
 
   /// Aksesoris yang sedang dipakai Oyen di rumah.
   final AccessoryId? oyenAccessory;
@@ -121,6 +150,7 @@ class _ChapterViewState extends State<ChapterView>
   int _walkIndex = 0;
   bool _announced = false;
   bool _pendingWalk = true;
+  late bool _introOpen = widget.intro;
 
   @override
   void didChangeDependencies() {
@@ -134,6 +164,7 @@ class _ChapterViewState extends State<ChapterView>
   @override
   void didUpdateWidget(ChapterView old) {
     super.didUpdateWidget(old);
+    if (widget.intro && !old.intro) _introOpen = true;
     if (old.walkFrom != widget.walkFrom) {
       _startWalk();
       final scroll = _scroll;
@@ -270,7 +301,13 @@ class _ChapterViewState extends State<ChapterView>
     final c = context.koColors;
     final kitchen = widget.chapter.number == 1;
     return PopScope(
-      onPopInvokedWithResult: (_, _) => _cancel(),
+      canPop: !_introOpen,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _introOpen) {
+          setState(() => _introOpen = false);
+        }
+        _cancel();
+      },
       child: Scaffold(
         backgroundColor: kitchen ? c.mapKitchen : c.mapFloor,
         body: Stack(
@@ -296,6 +333,13 @@ class _ChapterViewState extends State<ChapterView>
                 child: Listener(
                   behavior: HitTestBehavior.opaque,
                   onPointerDown: (_) => _cancel(),
+                ),
+              ),
+            if (_introOpen)
+              Positioned.fill(
+                child: ChapterIntroCard(
+                  chapter: widget.chapter,
+                  onClose: () => setState(() => _introOpen = false),
                 ),
               ),
           ],

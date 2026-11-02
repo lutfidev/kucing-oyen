@@ -61,6 +61,7 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.plankJoint,
     required this.mapKitchen,
     required this.mapKitchenTile,
+    required this.introScrim,
     required this.shadowNode,
     required this.nodeLocked,
     required this.nodeLockedInk,
@@ -168,6 +169,7 @@ class KoColors extends ThemeExtension<KoColors> {
     plankJoint: Color(0x24B07A4F), // rgba(176,122,79,.14)
     mapKitchen: Color(0xFFF5EBDD),
     mapKitchenTile: Color(0x388FD3F0),
+    introScrim: Color(0xB8FFF4E2),
     shadowNode: Color(0x38965014), // rgba(150,80,20,.22)
     nodeLocked: Color(0xFFE8D6B8),
     nodeLockedInk: Color(0xFF8A7259),
@@ -354,6 +356,9 @@ class KoColors extends ThemeExtension<KoColors> {
 
   /// Kotak ubin biru peta Babak 1 (conic-gradient 22%, 56 px).
   final Color mapKitchenTile;
+
+  /// Lapisan krem 72% di belakang kartu "Babak baru terbuka!" (desain 23c).
+  final Color introScrim;
 
   /// Bayangan lembut node level yang sudah selesai.
   final Color shadowNode;
@@ -560,6 +565,7 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? plankJoint,
     Color? mapKitchen,
     Color? mapKitchenTile,
+    Color? introScrim,
     Color? shadowNode,
     Color? nodeLocked,
     Color? nodeLockedInk,
@@ -666,6 +672,7 @@ class KoColors extends ThemeExtension<KoColors> {
       plankJoint: plankJoint ?? this.plankJoint,
       mapKitchen: mapKitchen ?? this.mapKitchen,
       mapKitchenTile: mapKitchenTile ?? this.mapKitchenTile,
+      introScrim: introScrim ?? this.introScrim,
       shadowNode: shadowNode ?? this.shadowNode,
       nodeLocked: nodeLocked ?? this.nodeLocked,
       nodeLockedInk: nodeLockedInk ?? this.nodeLockedInk,
@@ -778,6 +785,7 @@ class KoColors extends ThemeExtension<KoColors> {
       plankJoint: c(plankJoint, other.plankJoint),
       mapKitchen: c(mapKitchen, other.mapKitchen),
       mapKitchenTile: c(mapKitchenTile, other.mapKitchenTile),
+      introScrim: c(introScrim, other.introScrim),
       shadowNode: c(shadowNode, other.shadowNode),
       nodeLocked: c(nodeLocked, other.nodeLocked),
       nodeLockedInk: c(nodeLockedInk, other.nodeLockedInk),

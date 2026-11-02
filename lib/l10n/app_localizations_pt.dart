@@ -2012,4 +2012,24 @@ class AppLocalizationsPt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get chapterIntroOverline => 'Capítulo novo liberado!';
+
+  @override
+  String get chapterIntroEnter => 'Bora entrar!';
+
+  @override
+  String chapterIntroInfo(int count, String boss) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count níveis novos',
+      one: '1 nível novo',
+    );
+    return '$_temp0 · Chefão: $boss';
+  }
+
+  @override
+  String get chapterIntroLabel => 'Capítulo novo liberado';
 }

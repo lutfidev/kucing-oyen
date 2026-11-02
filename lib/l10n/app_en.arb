@@ -2596,5 +2596,29 @@
         "type": "int"
       }
     }
+  },
+  "chapterIntroOverline": "New chapter unlocked!",
+  "@chapterIntroOverline": {
+    "description": "Overline on the card shown over the map when a new chapter is unlocked for the first time (after beating the chapter 1 boss)."
+  },
+  "chapterIntroEnter": "Let's go in!",
+  "@chapterIntroEnter": {
+    "description": "Button that closes the new-chapter card and shows the new map."
+  },
+  "chapterIntroInfo": "{count, plural, =1{1 new level} other{{count} new levels}} · Boss: {boss}",
+  "@chapterIntroInfo": {
+    "description": "Line under the new-chapter title: number of levels and the boss name.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "boss": {
+        "type": "String"
+      }
+    }
+  },
+  "chapterIntroLabel": "New chapter unlocked",
+  "@chapterIntroLabel": {
+    "description": "Screen reader name of the new-chapter card (dialog)."
   }
 }

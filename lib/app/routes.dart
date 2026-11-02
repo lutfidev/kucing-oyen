@@ -33,8 +33,15 @@ abstract final class AppRoutes {
   /// Pengaturan (tidak ada di desain), dibuka dari Beranda.
   static const settings = '/pengaturan';
 
-  /// Peta babak nomor [number] (desain 02).
-  static String chapter(int number) => '/babak/$number';
+  /// Peta babak nomor [number] (desain 23). Dari "Lanjut": [from] = level
+  /// yang baru dimenangkan (Oyen berjalan darinya, `?dari=12`), [intro] =
+  /// babak ini baru terbuka (kartu "Babak baru terbuka!", `?baru=1`).
+  static String chapter(int number, {int? from, bool intro = false}) {
+    final query = [if (from != null) 'dari=$from', if (intro) 'baru=1'];
+    return query.isEmpty
+        ? '/babak/$number'
+        : '/babak/$number?${query.join('&')}';
+  }
 
   /// Layar level nomor [id] (fase atur, desain 03), di bawah peta babaknya
   /// supaya tombol kembali menuju peta itu.
