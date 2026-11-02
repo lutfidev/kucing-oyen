@@ -13,6 +13,7 @@ export 'kitty.dart';
 export 'kitty_painter.dart';
 export 'map_art.dart';
 export 'oyen.dart';
+export 'picture_map_art.dart';
 export 'oyen_painter.dart';
 export 'result_art.dart';
 export 'room_art.dart';

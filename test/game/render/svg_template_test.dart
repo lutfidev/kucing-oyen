@@ -142,6 +142,21 @@ void main() {
     expect(m[1] * x + m[5] * y + m[13], closeTo(50, 1e-9));
   });
 
+  test('transform skewY di sekitar transform-origin', () {
+    final calls = _record(
+      SvgTemplate('''
+<rect x="204" y="22" width="34" height="118" fill="#C99466" transform="skewY(45)" transform-origin="204 22"></rect>
+''').render({}),
+    );
+    final m = calls[1].positionalArguments[0] as Float64List;
+    // skewY(45): y' = y + tan(45°)·x, di sekitar (204, 22): titik
+    // (214, 22) turun 10 px, titik asal tetap.
+    expect(m[0] * 214 + m[4] * 22 + m[12], closeTo(214, 1e-9));
+    expect(m[1] * 214 + m[5] * 22 + m[13], closeTo(32, 1e-9));
+    expect(m[0] * 204 + m[4] * 22 + m[12], closeTo(204, 1e-9));
+    expect(m[1] * 204 + m[5] * 22 + m[13], closeTo(22, 1e-9));
+  });
+
   test('bounds: semua bentuk sesudah transform, tanpa tebal garis', () {
     final drawing = SvgTemplate('''
 <rect x="0" y="0" width="10" height="4" fill="#000000" stroke="#000000" stroke-width="6"></rect>

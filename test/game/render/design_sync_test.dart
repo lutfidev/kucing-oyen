@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/render/design_svg.dart';
 import 'package:kucing_oren/game/render/design_svg_home.dart';
 import 'package:kucing_oren/game/render/map_art.dart';
+import 'package:kucing_oren/game/render/picture_map_art.dart';
 import 'package:kucing_oren/game/render/result_art.dart';
 import 'package:kucing_oren/game/render/room_art.dart';
 
@@ -329,6 +330,52 @@ void main() {
 
     test('TandaLesu.dc.html', () {
       expect(_lf(sadMarkSvg), _innerHome('TandaLesu.dc.html'));
+    });
+
+    group('peta bergambar (desain 23)', () {
+      test('SVG peta, jejak, node, token, dan kartu pindah disalin utuh', () {
+        final map = _readHome('PetaBergambar.dc.html');
+        for (final svg in [
+          pictureMapSvg,
+          mapPawSvg,
+          chapterIntroConfettiSvg,
+          chapterIntroDoorSvg,
+          chapterIntroPawsSvg,
+        ]) {
+          expect(map, contains(_lf(svg)));
+        }
+        expect(_readHome('TitikLevel.dc.html'), contains(_lf(mapNodeIconSvg)));
+        expect(_lf(mapTokenBaseSvg), _innerHome('TokenOyenPeta.dc.html'));
+      });
+
+      test('benda node sama dengan daftar TitikLevel dan D1/D2', () {
+        final node = _readHome('TitikLevel.dc.html');
+        final list = PictureMapArt.objects.map((o) => "'$o'").join(', ');
+        expect(node, contains('const list = [$list];'));
+        final map = _readHome('PetaBergambar.dc.html');
+        for (final o in PictureMapArt.objects) {
+          expect(map, contains("['$o', "), reason: o);
+        }
+      });
+
+      test('titik, jejak kaki, dan letak token sama dengan desain', () {
+        final map = _readHome('PetaBergambar.dc.html');
+        final pts = PictureMapArt.points
+            .map((p) => '[${p.dx.toInt()}, ${p.dy.toInt()}]')
+            .join(', ');
+        expect(map, contains('const pts = [$pts];'));
+        expect(map, contains('[0.38, 0.62].forEach'));
+        expect(map, contains('const off = k === 0 ? 5 : -5;'));
+        expect(map, contains('(i < curIdx ? 0.95 : 0.35)'));
+        final o = PictureMapArt.tokenOffset;
+        expect(
+          map,
+          contains(
+            'tx = p[0] + ${o.dx.toInt()}; ty = p[1] - ${-o.dy.toInt()};',
+          ),
+        );
+        expect(map, contains('const c1 = [p1[0] + (p2[0] - p0[0]) / 6'));
+      });
     });
   }, skip: homeMissing);
 }

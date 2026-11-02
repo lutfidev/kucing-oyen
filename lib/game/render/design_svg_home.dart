@@ -1092,3 +1092,238 @@ const coinBubbleSvg = r'''
     <path d="M29 21.5h5a2 2 0 0 1 0 4h-4a2 2 0 0 0 0 4h5" fill="none" stroke="#B57F00" stroke-width="2" stroke-linecap="round"></path>
     <path d="M52 6 L53.2 9.8 L57 11 L53.2 12.2 L52 16 L50.8 12.2 L47 11 L50.8 9.8 Z" fill="#FFC83D"></path>
 ''';
+
+/// viewBox 0 0 390 844 (`PetaBergambar.dc.html`): dekor ruangan per babak (`isDapur`/`isTamu`), area bos, dan jalur `{{roadD}}`.
+const pictureMapSvg = r'''
+    <sc-if value="{{isDapur}}" hint-placeholder-val="{{ false }}">
+      <rect x="352" y="250" width="70" height="420" rx="10" fill="#E9F1F5" stroke="#7C8FA6" stroke-width="3"></rect>
+      <path d="M352 330 H392 M352 420 H392 M352 510 H392 M352 600 H392" stroke="#7C8FA6" stroke-width="2"></path>
+      <circle cx="372" cy="290" r="9" fill="#D9DEE3" stroke="#7C8FA6" stroke-width="2"></circle>
+      <circle cx="372" cy="372" r="9" fill="#D9DEE3" stroke="#7C8FA6" stroke-width="2"></circle>
+      <rect x="-30" y="300" width="60" height="150" rx="12" fill="#C99466"></rect>
+      <rect x="-30" y="300" width="60" height="150" rx="12" fill="none" stroke="#B07A4F" stroke-width="3"></rect>
+      <rect x="40" y="470" width="300" height="110" rx="34" fill="#E58A62" opacity="0.2"></rect>
+      <rect x="52" y="482" width="276" height="86" rx="26" fill="none" stroke="#E58A62" stroke-width="2.5" stroke-dasharray="3 8" opacity="0.6"></rect>
+    </sc-if>
+    <sc-if value="{{isTamu}}" hint-placeholder-val="{{ true }}">
+      <ellipse cx="195" cy="430" rx="176" ry="128" fill="#E58A62" opacity="0.18"></ellipse>
+      <ellipse cx="195" cy="430" rx="150" ry="104" fill="none" stroke="#E58A62" stroke-width="3" stroke-dasharray="3 9" opacity="0.5"></ellipse>
+      <rect x="350" y="400" width="70" height="170" rx="18" fill="#E58A62" opacity="0.7"></rect>
+      <rect x="362" y="414" width="40" height="142" rx="12" fill="#D9704A" opacity="0.7"></rect>
+      <circle cx="18" cy="330" r="26" fill="#5FAE5A" opacity="0.6"></circle>
+      <circle cx="18" cy="330" r="14" fill="#C8673F" opacity="0.7"></circle>
+    </sc-if>
+    <rect x="30" y="636" width="330" height="170" rx="30" fill="#C2492F" opacity="0.14"></rect>
+    <rect x="44" y="650" width="302" height="142" rx="22" fill="none" stroke="#C2492F" stroke-width="3" stroke-dasharray="2 9" opacity="0.4"></rect>
+    <path d="{{roadD}}" stroke="#FFF4E2" stroke-width="34" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"></path>
+    <path d="{{roadD}}" stroke="#E2C79C" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="2 12"></path>
+  
+''';
+
+/// Jejak kaki di jalur, viewBox -10 -12 20 20 (`PetaBergambar.dc.html`).
+const mapPawSvg = r'''
+<g fill="#B07A4F"><ellipse cx="0" cy="3" rx="5" ry="4.3"></ellipse><circle cx="-5.2" cy="-3.6" r="2"></circle><circle cx="-1.8" cy="-6.6" r="2"></circle><circle cx="1.8" cy="-6.6" r="2"></circle><circle cx="5.2" cy="-3.6" r="2"></circle></g>
+''';
+
+/// Benda di node level, viewBox 0 0 48 48 (`TitikLevel.dc.html`): satu `sc-if b.<benda>` per benda.
+const mapNodeIconSvg = r'''
+        <sc-if value="{{b.kulkas}}" hint-placeholder-val="{{ false }}">
+          <rect x="12" y="4" width="24" height="40" rx="4" fill="#E9F1F5" stroke="#7C8FA6" stroke-width="2"></rect>
+          <path d="M12 18 H36" stroke="#7C8FA6" stroke-width="2"></path>
+          <path d="M31 9 V14 M31 23 V31" stroke="#7C8FA6" stroke-width="2.6" stroke-linecap="round"></path>
+          <circle cx="19" cy="28" r="2.8" fill="#F59A33"></circle>
+          <rect x="16" y="8" width="7" height="5" rx="1" fill="#FFC83D"></rect>
+        </sc-if>
+        <sc-if value="{{b.kompor}}" hint-placeholder-val="{{ false }}">
+          <rect x="5" y="20" width="38" height="20" rx="3" fill="#D9DEE3" stroke="#7C8FA6" stroke-width="2"></rect>
+          <path d="M13 19 Q11 12 15 8 Q15 13 18 13 Q19 16 17 19 Z" fill="#F59A33"></path>
+          <ellipse cx="15" cy="20" rx="7" ry="2.4" fill="#3B2716"></ellipse>
+          <ellipse cx="32" cy="17" rx="9" ry="3.6" fill="#6B4F3A"></ellipse>
+          <path d="M40 16 L46 12" stroke="#6B4F3A" stroke-width="2.6" stroke-linecap="round"></path>
+          <circle cx="14" cy="31" r="2.4" fill="#3B2716"></circle>
+          <circle cx="24" cy="31" r="2.4" fill="#3B2716"></circle>
+          <circle cx="34" cy="31" r="2.4" fill="#3B2716"></circle>
+        </sc-if>
+        <sc-if value="{{b.rakPiring}}" hint-placeholder-val="{{ false }}">
+          <rect x="10" y="10" width="6" height="27" rx="3" fill="#FFFBF3" stroke="#5FB2DE" stroke-width="2"></rect>
+          <rect x="18" y="8" width="6" height="29" rx="3" fill="#FFFBF3" stroke="#5FB2DE" stroke-width="2"></rect>
+          <rect x="26" y="10" width="6" height="27" rx="3" fill="#FFFBF3" stroke="#F59A33" stroke-width="2"></rect>
+          <rect x="34" y="12" width="5" height="25" rx="2.5" fill="#FFFBF3" stroke="#5FB2DE" stroke-width="2"></rect>
+          <rect x="5" y="35" width="38" height="7" rx="2" fill="#B07A4F"></rect>
+          <path d="M8 42 V45 M40 42 V45" stroke="#8E5A30" stroke-width="2.4" stroke-linecap="round"></path>
+        </sc-if>
+        <sc-if value="{{b.tudungSaji}}" hint-placeholder-val="{{ false }}">
+          <ellipse cx="24" cy="38" rx="21" ry="4.5" fill="#FFFBF3" stroke="#CDB48C" stroke-width="1.6"></ellipse>
+          <path d="M6 37 Q6 11 24 9 Q42 11 42 37 Z" fill="#E8B04A"></path>
+          <path d="M9 30 Q24 24 39 30 M8 22 Q24 15 40 22 M14 14 Q24 10 34 14" stroke="#C2492F" stroke-width="2" fill="none"></path>
+          <path d="M16 12 L14 36 M24 9 V37 M32 12 L34 36" stroke="#2BB5A0" stroke-width="1.6" opacity="0.8"></path>
+          <circle cx="24" cy="8" r="3.2" fill="#C2492F"></circle>
+        </sc-if>
+        <sc-if value="{{b.penanakNasi}}" hint-placeholder-val="{{ false }}">
+          <rect x="8" y="17" width="32" height="24" rx="9" fill="#FFFBF3" stroke="#7C8FA6" stroke-width="2"></rect>
+          <path d="M8 21 Q24 6 40 21 Z" fill="#E9F1F5" stroke="#7C8FA6" stroke-width="2" stroke-linejoin="round"></path>
+          <path d="M20 10 H28" stroke="#7C8FA6" stroke-width="3" stroke-linecap="round"></path>
+          <circle cx="24" cy="30" r="2.8" fill="#F07F6A"></circle>
+          <path d="M15 34 Q18 32 21 34 M27 34 Q30 32 33 34" stroke="#F07F9A" stroke-width="1.6" fill="none" stroke-linecap="round"></path>
+        </sc-if>
+        <sc-if value="{{b.wastafel}}" hint-placeholder-val="{{ false }}">
+          <path d="M28 22 V12 Q28 7 22 7 H17" stroke="#7C8FA6" stroke-width="3.2" fill="none" stroke-linecap="round"></path>
+          <path d="M17 11 Q19.4 14.6 17 16.4 Q14.6 14.6 17 11 Z" fill="#8FD3F0"></path>
+          <path d="M5 22 H43 L38 38 Q24 43 10 38 Z" fill="#E9F1F5" stroke="#7C8FA6" stroke-width="2" stroke-linejoin="round"></path>
+          <rect x="8" y="15" width="9" height="6" rx="2" fill="#FFC83D"></rect>
+          <circle cx="36" cy="18" r="2.4" fill="#8FD3F0" stroke="#5FB2DE" stroke-width="1"></circle>
+        </sc-if>
+        <sc-if value="{{b.cobek}}" hint-placeholder-val="{{ false }}">
+          <path d="M30 27 L40 12" stroke="#8A7E76" stroke-width="6" stroke-linecap="round"></path>
+          <ellipse cx="24" cy="33" rx="19" ry="8.5" fill="#6B6058"></ellipse>
+          <ellipse cx="24" cy="30" rx="15" ry="5" fill="#8A7E76"></ellipse>
+          <ellipse cx="24" cy="30" rx="10" ry="3" fill="#C2492F"></ellipse>
+          <path d="M6 14 Q12 9 17 15" stroke="#C2492F" stroke-width="3.6" fill="none" stroke-linecap="round"></path>
+          <path d="M6 14 L4 11" stroke="#4E9A4A" stroke-width="2" stroke-linecap="round"></path>
+        </sc-if>
+        <sc-if value="{{b.galon}}" hint-placeholder-val="{{ false }}">
+          <rect x="20" y="4" width="8" height="8" rx="2" fill="#2F86B8"></rect>
+          <rect x="13" y="11" width="22" height="32" rx="7" fill="#BFE7F7" stroke="#2F86B8" stroke-width="2"></rect>
+          <path d="M13 21 H35 M13 32 H35" stroke="#2F86B8" stroke-width="1.4" opacity="0.6"></path>
+          <path d="M18 15 V40" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" opacity="0.7"></path>
+        </sc-if>
+        <sc-if value="{{b.kalengKerupuk}}" hint-placeholder-val="{{ false }}">
+          <rect x="11" y="14" width="26" height="29" rx="4" fill="#E9F1F5" fill-opacity="0.9" stroke="#7C8FA6" stroke-width="2"></rect>
+          <path d="M15 24 Q18 20 21 24 Q24 20 27 24 Q30 20 33 24 L33 30 Q30 34 27 30 Q24 34 21 30 Q18 34 15 30 Z" fill="#F2D49B"></path>
+          <path d="M15 34 Q18 31 21 34 Q24 31 27 34 Q30 31 33 34 L33 40 L15 40 Z" fill="#F2D49B"></path>
+          <rect x="9" y="8" width="30" height="8" rx="3" fill="#C2492F"></rect>
+        </sc-if>
+        <sc-if value="{{b.pestaIkanAsin}}" hint-placeholder-val="{{ false }}">
+          <path d="M4 8 Q24 16 44 8" stroke="#6B4F3A" stroke-width="1" fill="none"></path>
+          <path d="M9 10 L12 17 L15 11 Z" fill="#F59A33"></path>
+          <path d="M19 12.6 L22 19 L25 13.2 Z" fill="#2BB5A0"></path>
+          <path d="M30 12.4 L33 18.6 L36 11.6 Z" fill="#E0565B"></path>
+          <ellipse cx="24" cy="38" rx="21" ry="7" fill="#FFFBF3" stroke="#CDB48C" stroke-width="1.6"></ellipse>
+          <path d="M6 33 Q13 27 22 30 L29 26 L27 33 L29 40 L22 36 Q13 39 6 33 Z" fill="#D9C08E" stroke="#A88A55" stroke-width="1.2" stroke-linejoin="round"></path>
+          <path d="M15 27 Q22 21 31 24 L38 20 L36 27 L38 34 L31 30 Q22 33 15 27 Z" fill="#E3CD9C" stroke="#A88A55" stroke-width="1.2" stroke-linejoin="round"></path>
+          <circle cx="9.6" cy="32.4" r="1.2" fill="#3B2716"></circle>
+          <circle cx="18.6" cy="26.4" r="1.2" fill="#3B2716"></circle>
+          <circle cx="39" cy="37" r="4" fill="#C2492F" stroke="#9A3520" stroke-width="1"></circle>
+        </sc-if>
+        <sc-if value="{{b.sofa}}" hint-placeholder-val="{{ false }}">
+          <rect x="9" y="11" width="30" height="16" rx="5" fill="#E58A62"></rect>
+          <rect x="7" y="24" width="34" height="11" rx="4" fill="#D9704A"></rect>
+          <rect x="3" y="19" width="9" height="18" rx="4" fill="#E58A62"></rect>
+          <rect x="36" y="19" width="9" height="18" rx="4" fill="#E58A62"></rect>
+          <path d="M24 13 V25" stroke="#C2492F" stroke-width="1.4" opacity="0.6"></path>
+          <path d="M8 37 V42 M40 37 V42" stroke="#8E5A30" stroke-width="2.6" stroke-linecap="round"></path>
+          <rect x="14" y="15" width="8" height="7" rx="2" fill="#FFC83D"></rect>
+        </sc-if>
+        <sc-if value="{{b.mejaTamu}}" hint-placeholder-val="{{ false }}">
+          <path d="M5 26 V30 Q24 38 43 30 V26" fill="#8E5A30"></path>
+          <ellipse cx="24" cy="26" rx="19" ry="6" fill="#B07A4F"></ellipse>
+          <path d="M11 32 V42 M37 32 V42" stroke="#8E5A30" stroke-width="2.8" stroke-linecap="round"></path>
+          <rect x="18" y="12" width="12" height="12" rx="3" fill="#E9F1F5" stroke="#7C8FA6" stroke-width="1.6"></rect>
+          <rect x="17" y="9" width="14" height="4" rx="1.6" fill="#C2492F"></rect>
+          <circle cx="22" cy="19" r="1.6" fill="#F2B84B"></circle>
+          <circle cx="26" cy="20" r="1.6" fill="#F2B84B"></circle>
+        </sc-if>
+        <sc-if value="{{b.rakTV}}" hint-placeholder-val="{{ false }}">
+          <rect x="7" y="7" width="34" height="22" rx="3" fill="#3B2716"></rect>
+          <rect x="9.5" y="9.5" width="29" height="17" rx="2" fill="#5E8FB0"></rect>
+          <path d="M13 22 L18 15 L22 19 L26 13 L35 22 Z" fill="#8FD3F0" opacity="0.7"></path>
+          <rect x="4" y="30" width="40" height="12" rx="2" fill="#B07A4F"></rect>
+          <path d="M24 30 V42 M15 36 H18 M30 36 H33" stroke="#8E5A30" stroke-width="1.6" stroke-linecap="round"></path>
+        </sc-if>
+        <sc-if value="{{b.potBunga}}" hint-placeholder-val="{{ false }}">
+          <path d="M24 28 Q20 18 14 14 M24 28 Q26 16 31 10 M24 28 Q30 22 37 20" stroke="#4E9A4A" stroke-width="2.4" fill="none" stroke-linecap="round"></path>
+          <ellipse cx="18" cy="20" rx="4" ry="2" fill="#5FAE5A" transform="rotate(30 18 20)"></ellipse>
+          <circle cx="14" cy="13" r="4" fill="#F07F9A"></circle>
+          <circle cx="31" cy="9" r="4" fill="#FFC83D"></circle>
+          <circle cx="37" cy="19" r="3.4" fill="#F07F9A"></circle>
+          <path d="M13 28 H35 L32 43 H16 Z" fill="#C8673F"></path>
+          <rect x="11" y="25" width="26" height="5" rx="2" fill="#DB7B4E"></rect>
+        </sc-if>
+        <sc-if value="{{b.lampu}}" hint-placeholder-val="{{ false }}">
+          <ellipse cx="24" cy="18" rx="16" ry="9" fill="#FFE6A8" opacity="0.45"></ellipse>
+          <path d="M14 5 H34 L38 19 H10 Z" fill="#FFE6A8" stroke="#D9A92E" stroke-width="2" stroke-linejoin="round"></path>
+          <path d="M24 19 V40" stroke="#6B4F3A" stroke-width="3" stroke-linecap="round"></path>
+          <ellipse cx="24" cy="42" rx="10" ry="3" fill="#6B4F3A"></ellipse>
+        </sc-if>
+        <sc-if value="{{b.kipas}}" hint-placeholder-val="{{ false }}">
+          <path d="M24 32 V40" stroke="#7C8FA6" stroke-width="3" stroke-linecap="round"></path>
+          <ellipse cx="24" cy="42" rx="10" ry="3" fill="#7C8FA6"></ellipse>
+          <circle cx="24" cy="18" r="14" fill="#E9F1F5" stroke="#7C8FA6" stroke-width="2"></circle>
+          <ellipse cx="24" cy="11" rx="3.6" ry="6.5" fill="#8FD3F0"></ellipse>
+          <ellipse cx="30" cy="22" rx="3.6" ry="6.5" fill="#8FD3F0" transform="rotate(120 30 22)"></ellipse>
+          <ellipse cx="18" cy="22" rx="3.6" ry="6.5" fill="#8FD3F0" transform="rotate(240 18 22)"></ellipse>
+          <circle cx="24" cy="18" r="3" fill="#2F86B8"></circle>
+        </sc-if>
+        <sc-if value="{{b.jamDinding}}" hint-placeholder-val="{{ false }}">
+          <circle cx="24" cy="24" r="18" fill="#FFFBF3" stroke="#B07A4F" stroke-width="4"></circle>
+          <path d="M24 9 V12 M24 36 V39 M9 24 H12 M36 24 H39" stroke="#3B2716" stroke-width="2" stroke-linecap="round"></path>
+          <path d="M24 24 V14 M24 24 L31 28" stroke="#3B2716" stroke-width="2.6" stroke-linecap="round"></path>
+          <circle cx="24" cy="24" r="2.2" fill="#F59A33"></circle>
+        </sc-if>
+        <sc-if value="{{b.rakBuku}}" hint-placeholder-val="{{ false }}">
+          <rect x="8" y="4" width="32" height="40" rx="2" fill="#B07A4F"></rect>
+          <rect x="11" y="7" width="26" height="15" fill="#8E5A30"></rect>
+          <rect x="11" y="25" width="26" height="16" fill="#8E5A30"></rect>
+          <rect x="12" y="9" width="4" height="13" fill="#2F86B8"></rect>
+          <rect x="17" y="11" width="4" height="11" fill="#FFC83D"></rect>
+          <rect x="22" y="8" width="3.6" height="14" fill="#E0565B"></rect>
+          <rect x="27" y="12" width="9" height="4" fill="#2BB5A0" transform="rotate(-18 31 14)"></rect>
+          <rect x="12" y="28" width="5" height="13" fill="#F59A33"></rect>
+          <rect x="18" y="27" width="4" height="14" fill="#5FAE5A"></rect>
+          <rect x="23" y="29" width="4" height="12" fill="#F07F9A"></rect>
+        </sc-if>
+        <sc-if value="{{b.toplesKue}}" hint-placeholder-val="{{ false }}">
+          <rect x="10" y="16" width="28" height="27" rx="7" fill="#E9F1F5" stroke="#7C8FA6" stroke-width="2"></rect>
+          <rect x="8" y="9" width="32" height="8" rx="3" fill="#C2492F"></rect>
+          <circle cx="24" cy="6" r="3" fill="#9A3520"></circle>
+          <circle cx="17" cy="35" r="4" fill="#F2B84B"></circle>
+          <circle cx="25" cy="36" r="4" fill="#F2B84B"></circle>
+          <circle cx="31" cy="29" r="4" fill="#F2B84B"></circle>
+          <circle cx="20" cy="27" r="4" fill="#F2B84B"></circle>
+          <circle cx="17" cy="34" r="1" fill="#C9650C"></circle>
+          <circle cx="25" cy="35" r="1" fill="#C9650C"></circle>
+          <circle cx="31" cy="28" r="1" fill="#C9650C"></circle>
+          <circle cx="20" cy="26" r="1" fill="#C9650C"></circle>
+        </sc-if>
+        <sc-if value="{{b.ketupat}}" hint-placeholder-val="{{ false }}">
+          <path d="M24 4 L41 21 L24 38 L7 21 Z" fill="#7DBE6E" stroke="#3F7A3A" stroke-width="2" stroke-linejoin="round"></path>
+          <path d="M15.5 12.5 L32.5 29.5 M32.5 12.5 L15.5 29.5 M19.75 8.25 L36.75 25.25 M28.25 8.25 L11.25 25.25" stroke="#4E9447" stroke-width="1.6"></path>
+          <path d="M24 38 Q21 42 18 46 M24 38 Q27 42 31 45" stroke="#3F7A3A" stroke-width="2.2" fill="none" stroke-linecap="round"></path>
+        </sc-if>
+      
+''';
+
+/// Alas token Oyen di peta, viewBox 0 0 64 76 (`TokenOyenPeta.dc.html`).
+const mapTokenBaseSvg = r'''
+    <ellipse cx="32" cy="69" rx="25" ry="7" fill="#7A4A1F" opacity="0.22"></ellipse>
+    <ellipse cx="32" cy="66" rx="22" ry="7" fill="#FFFBF3" stroke="#F59A33" stroke-width="3"></ellipse>
+  
+''';
+
+/// Konfeti kartu "Babak baru terbuka!", viewBox 0 0 390 844 (`PetaBergambar.dc.html`).
+const chapterIntroConfettiSvg = r'''
+      <rect x="48" y="196" width="12" height="6" rx="2" fill="#F59A33" transform="rotate(30 54 199)"></rect>
+      <rect x="320" y="226" width="12" height="6" rx="2" fill="#2BB5A0" transform="rotate(-25 326 229)"></rect>
+      <rect x="300" y="676" width="12" height="6" rx="2" fill="#E0565B" transform="rotate(40 306 679)"></rect>
+      <rect x="70" y="650" width="12" height="6" rx="2" fill="#2F86B8" transform="rotate(-35 76 653)"></rect>
+      <circle cx="340" cy="300" r="5" fill="#FFC83D"></circle>
+      <circle cx="40" cy="560" r="4" fill="#F59A33"></circle>
+      <path d="M90 250 L93 259 L102 262 L93 265 L90 274 L87 265 L78 262 L87 259 Z" fill="#FFC83D"></path>
+      <path d="M300 590 L302 596 L308 598 L302 600 L300 606 L298 600 L292 598 L298 596 Z" fill="#FFC83D"></path>
+    
+''';
+
+/// Pintu di kartu "Babak baru terbuka!", viewBox 0 0 300 150 (`PetaBergambar.dc.html`).
+const chapterIntroDoorSvg = r'''
+          <rect x="196" y="14" width="76" height="126" rx="6" fill="#B07A4F"></rect>
+          <rect x="204" y="22" width="60" height="118" rx="4" fill="#5E3B22"></rect>
+          <rect x="204" y="22" width="34" height="118" fill="#C99466" transform="skewY(8)" transform-origin="204 22"></rect>
+          <circle cx="232" cy="86" r="3" fill="#FFC83D"></circle>
+          <path d="M248 40 L253 52 M244 34 L240 28" stroke="#FFE6A8" stroke-width="3" stroke-linecap="round"></path>
+        
+''';
+
+/// Jejak di kartu "Babak baru terbuka!", viewBox 0 0 80 30 (`PetaBergambar.dc.html`).
+const chapterIntroPawsSvg = r'''
+<g fill="#B07A4F"><ellipse cx="12" cy="18" rx="5" ry="4.3"></ellipse><ellipse cx="34" cy="12" rx="5" ry="4.3"></ellipse></g>
+''';
