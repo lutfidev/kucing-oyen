@@ -23,6 +23,7 @@
   "chapterLocked": "Закрыто",
   "statusDone": "пройдено",
   "statusLocked": "закрыто",
+  "mapOyenArrived": "Ойен добрался до уровня {id}.",
   "statusPlayNow": "играть сейчас",
   "nodeStars": "{n, plural, one{{n} звезда} few{{n} звезды} many{{n} звёзд} other{{n} звезды}}",
   "levelNodeLabel": "Уровень {id}, {status}",

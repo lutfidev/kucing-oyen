@@ -103,6 +103,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get statusLocked => 'bloqueado';
 
   @override
+  String mapOyenArrived(int id) {
+    return 'Oyen chegou ao nível $id.';
+  }
+
+  @override
   String get statusPlayNow => 'jogar agora';
 
   @override

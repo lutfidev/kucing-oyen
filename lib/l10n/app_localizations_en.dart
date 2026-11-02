@@ -103,6 +103,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusLocked => 'locked';
 
   @override
+  String mapOyenArrived(int id) {
+    return 'Oyen made it to level $id.';
+  }
+
+  @override
   String get statusPlayNow => 'play now';
 
   @override

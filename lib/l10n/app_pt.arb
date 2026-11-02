@@ -23,6 +23,7 @@
   "chapterLocked": "Bloqueado",
   "statusDone": "concluído",
   "statusLocked": "bloqueado",
+  "mapOyenArrived": "Oyen chegou ao nível {id}.",
   "statusPlayNow": "jogar agora",
   "nodeStars": "{n, plural, one{{n} estrela} other{{n} estrelas}}",
   "levelNodeLabel": "Fase {id}, {status}",

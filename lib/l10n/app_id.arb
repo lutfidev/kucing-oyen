@@ -23,6 +23,7 @@
   "chapterLocked": "Terkunci",
   "statusDone": "selesai",
   "statusLocked": "terkunci",
+  "mapOyenArrived": "Oyen sampai di level {id}.",
   "statusPlayNow": "main sekarang",
   "nodeStars": "{n} bintang",
   "levelNodeLabel": "Level {id}, {status}",

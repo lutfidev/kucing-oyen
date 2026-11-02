@@ -113,6 +113,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get statusLocked => 'закрыто';
 
   @override
+  String mapOyenArrived(int id) {
+    return 'Ойен добрался до уровня $id.';
+  }
+
+  @override
   String get statusPlayNow => 'играть сейчас';
 
   @override

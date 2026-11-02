@@ -1,11 +1,16 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/semantics.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
+import '../../game/model/accessories.dart';
 import '../../game/model/chapter.dart';
+import '../../game/model/map_walk.dart';
 import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
@@ -48,9 +53,14 @@ class ChapterScreen extends StatelessWidget {
   }
 }
 
-/// Peta babak (desain 02): judul tetap di atas, peta di bawahnya bisa
-/// digulir kalau layarnya pendek. Peta selebar layar dengan skala lebar
-/// layar ÷ 390, dan dibuka dengan level saat ini di tengah.
+/// Peta babak bergambar (desain 23): judul tetap di atas, peta di bawahnya
+/// bisa digulir kalau layarnya pendek. Peta selebar layar dengan skala
+/// lebar layar ÷ 390, dan dibuka dengan token Oyen di tengah.
+///
+/// Dengan [walkFrom] (dari "Lanjut" level itu), Oyen berjalan dari node
+/// level itu ke node berikutnya lalu level berikutnya dibuka sendiri
+/// ([MapWalk]); sentuhan apa pun atau tombol kembali membatalkan
+/// pembukaannya. Saat pembaca layar aktif, tidak ada pembukaan otomatis.
 class ChapterView extends StatefulWidget {
   const ChapterView({
     super.key,
@@ -60,6 +70,8 @@ class ChapterView extends StatefulWidget {
     required this.onBack,
     required this.onOpen,
     required this.onPlay,
+    this.walkFrom,
+    this.oyenAccessory,
   });
 
   final Chapter chapter;
@@ -69,72 +81,248 @@ class ChapterView extends StatefulWidget {
   final ValueChanged<Chapter> onOpen;
   final ValueChanged<Level> onPlay;
 
+  /// Level yang baru dimenangkan lewat "Lanjut"; null = tanpa jalan.
+  final int? walkFrom;
+
+  /// Aksesoris yang sedang dipakai Oyen di rumah.
+  final AccessoryId? oyenAccessory;
+
+  /// Node tempat token berdiri: node sesudah [walkFrom] kalau sah (level
+  /// babak ini, bukan bos), bos kalau [walkFrom] = bos, selain itu level
+  /// saat ini; bos kalau babak selesai; null kalau babak terkunci.
+  static int? tokenIndexOf(
+    Chapter chapter,
+    Progress progress, {
+    int? walkFrom,
+  }) {
+    final ids = chapter.ids.toList();
+    final from = walkFrom == null ? -1 : ids.indexOf(walkFrom);
+    if (from >= 0) return math.min(from + 1, ids.length - 1);
+    if (!chapter.isUnlocked(progress)) return null;
+    final current = progress.current(ids);
+    return current == null ? ids.length - 1 : ids.indexOf(current);
+  }
+
   @override
   State<ChapterView> createState() => _ChapterViewState();
 }
 
-class _ChapterViewState extends State<ChapterView> {
+class _ChapterViewState extends State<ChapterView>
+    with SingleTickerProviderStateMixin {
   ScrollController? _scroll;
+  double _scale = 1;
+  double _viewport = 0;
+
+  late final Ticker _ticker = createTicker(_onTick);
+  Duration _last = Duration.zero;
+
+  /// Jalan yang sedang berlangsung, dari node [_walkIndex].
+  MapWalk? _walk;
+  int _walkIndex = 0;
+  bool _announced = false;
+  bool _pendingWalk = true;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_pendingWalk) {
+      _pendingWalk = false;
+      _startWalk();
+    }
+  }
+
+  @override
+  void didUpdateWidget(ChapterView old) {
+    super.didUpdateWidget(old);
+    if (old.walkFrom != widget.walkFrom) {
+      _startWalk();
+      final scroll = _scroll;
+      if (scroll != null && scroll.hasClients) {
+        scroll.jumpTo(_initialOffset());
+      }
+    }
+  }
 
   @override
   void dispose() {
+    _ticker.dispose();
     _scroll?.dispose();
     super.dispose();
   }
 
-  /// Gulir awal: level saat ini di tengah tempat peta.
-  double _initialOffset(double scale, double viewport) {
-    final levels = widget.chapter.levels;
-    final id = widget.progress.current(widget.chapter.ids);
-    if (id == null) return 0;
-    final index = levels.indexWhere((level) => level.id == id);
-    final y = ChapterMap.pointOf(index).dy * scale;
-    final max = ChapterMap.size.height * scale - viewport;
-    return (y - viewport / 2).clamp(0, math.max(0, max)).toDouble();
+  /// Indeks [walkFrom] di babak ini kalau Oyen harus berjalan darinya.
+  int? get _walkStart {
+    final from = widget.walkFrom;
+    if (from == null) return null;
+    final ids = widget.chapter.ids.toList();
+    final i = ids.indexOf(from);
+    return i >= 0 && i + 1 < ids.length ? i : null;
+  }
+
+  /// Oyen berdiri senang di bos sesudah bos dimenangkan lewat "Lanjut".
+  bool get _atBossHappy =>
+      widget.walkFrom != null && widget.walkFrom == widget.chapter.boss.id;
+
+  void _startWalk() {
+    _ticker.stop();
+    _walk = null;
+    _announced = false;
+    final start = _walkStart;
+    if (start == null) return;
+    final media = MediaQuery.of(context);
+    _walkIndex = start;
+    _walk = MapWalk(
+      autoOpen: !media.accessibleNavigation,
+      still: media.disableAnimations,
+    );
+    _last = Duration.zero;
+    _ticker.start();
+  }
+
+  void _onTick(Duration elapsed) {
+    final walk = _walk;
+    if (walk == null || !mounted) return;
+    walk.tick((elapsed - _last).inMicroseconds / 1e6);
+    _last = elapsed;
+    if (walk.takeOpen()) {
+      _ticker.stop();
+      widget.onPlay(widget.chapter.levels[_walkIndex + 1]);
+      return;
+    }
+    if (walk.arrived && !walk.autoOpen && !_announced) {
+      _announced = true;
+      _announce(widget.chapter.levels[_walkIndex + 1].id);
+    }
+    if (walk.done) _ticker.stop();
+    setState(() {});
+  }
+
+  void _announce(int id) => unawaited(
+    SemanticsService.sendAnnouncement(
+      View.of(context),
+      context.l10n.mapOyenArrived(id),
+      Directionality.of(context),
+    ),
+  );
+
+  /// Sentuhan atau kembali selama jalan: level tidak dibuka sendiri.
+  void _cancel() {
+    final walk = _walk;
+    if (walk == null || walk.cancelled) return;
+    setState(walk.cancel);
+  }
+
+  bool get _capturing {
+    final walk = _walk;
+    return walk != null && walk.autoOpen && !walk.cancelled && !walk.done;
+  }
+
+  /// Token Oyen sekarang (koordinat peta), atau null.
+  MapTokenSpot? _token() {
+    final walk = _walk;
+    if (walk != null) {
+      final from = ChapterMap.pointOf(_walkIndex);
+      final to = ChapterMap.pointOf(_walkIndex + 1);
+      final walking = walk.walking;
+      return MapTokenSpot(
+        at: ChapterMap.onRoad(_walkIndex, walk.t),
+        pose: walking
+            ? KittyLook.walkPose(_last.inMicroseconds / 1e6)
+            : KittyPose.idle,
+        facing: walking
+            ? (to.dx >= from.dx ? KittyFacing.right : KittyFacing.left)
+            : KittyFacing.down,
+      );
+    }
+    final index = ChapterView.tokenIndexOf(
+      widget.chapter,
+      widget.progress,
+      walkFrom: widget.walkFrom,
+    );
+    if (index == null) return null;
+    return MapTokenSpot(
+      at: ChapterMap.pointOf(index),
+      pose: _atBossHappy ? KittyPose.happy : KittyPose.idle,
+    );
+  }
+
+  /// Gulir awal: token Oyen di tengah tempat peta.
+  double _initialOffset() {
+    final start = _walkStart;
+    final index =
+        start ??
+        ChapterView.tokenIndexOf(
+          widget.chapter,
+          widget.progress,
+          walkFrom: widget.walkFrom,
+        );
+    if (index == null) return 0;
+    final at = ChapterMap.pointOf(index);
+    const token = PictureMapArt.tokenSize;
+    final middle =
+        (at.dy + PictureMapArt.tokenOffset.dy + token.height / 2) * _scale;
+    final max = ChapterMap.size.height * _scale - _viewport;
+    return (middle - _viewport / 2).clamp(0, math.max(0, max)).toDouble();
   }
 
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
-    return Scaffold(
-      backgroundColor: c.mapFloor,
-      body: CustomMultiChildLayout(
-        delegate: _HeaderOverMap(),
-        children: [
-          LayoutId(id: _Slot.map, child: _map(context)),
-          LayoutId(
-            id: _Slot.header,
-            child: ChapterHeader(
-              chapter: widget.chapter,
-              other: widget.other,
-              progress: widget.progress,
-              onBack: widget.onBack,
-              onOpen: widget.onOpen,
+    final kitchen = widget.chapter.number == 1;
+    return PopScope(
+      onPopInvokedWithResult: (_, _) => _cancel(),
+      child: Scaffold(
+        backgroundColor: kitchen ? c.mapKitchen : c.mapFloor,
+        body: Stack(
+          children: [
+            CustomMultiChildLayout(
+              delegate: _HeaderOverMap(),
+              children: [
+                LayoutId(id: _Slot.map, child: _map(context)),
+                LayoutId(
+                  id: _Slot.header,
+                  child: ChapterHeader(
+                    chapter: widget.chapter,
+                    other: widget.other,
+                    progress: widget.progress,
+                    onBack: widget.onBack,
+                    onOpen: widget.onOpen,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+            if (_capturing)
+              Positioned.fill(
+                child: Listener(
+                  behavior: HitTestBehavior.opaque,
+                  onPointerDown: (_) => _cancel(),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _map(BuildContext context) {
     final c = context.koColors;
+    final kitchen = widget.chapter.number == 1;
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
-        final viewport = constraints.maxHeight;
-        final scale = width / ChapterMap.size.width;
-        final height = ChapterMap.size.height * scale;
-        _scroll ??= ScrollController(
-          initialScrollOffset: _initialOffset(scale, viewport),
-        );
+        _viewport = constraints.maxHeight;
+        _scale = width / ChapterMap.size.width;
+        final height = ChapterMap.size.height * _scale;
+        _scroll ??= ScrollController(initialScrollOffset: _initialOffset());
         return SingleChildScrollView(
           controller: _scroll,
           child: CustomPaint(
-            painter: _Floor(c.plank, c.plankJoint, scale),
+            painter: kitchen
+                ? _Tiles(c.mapKitchenTile, _scale)
+                : _Floor(c.plank, c.plankJoint, _scale),
             child: SizedBox(
               width: width,
-              height: math.max(height, viewport),
+              height: math.max(height, _viewport),
               child: Align(
                 alignment: Alignment.topCenter,
                 child: SizedBox(
@@ -145,6 +333,8 @@ class _ChapterViewState extends State<ChapterView> {
                       chapter: widget.chapter,
                       progress: widget.progress,
                       onPlay: widget.onPlay,
+                      token: _token(),
+                      oyenAccessory: widget.oyenAccessory,
                     ),
                   ),
                 ),
@@ -185,8 +375,8 @@ class _HeaderOverMap extends MultiChildLayoutDelegate {
 }
 
 /// Lantai kayu: garis antarpapan tiap 48 px dan sambungan papan tiap
-/// 142 px (`repeating-linear-gradient` desain 02), di koordinat layar
-/// desain dikali [scale]. Peta mulai di y [MapArt.mapTop] layar desain.
+/// 142 px (`repeating-linear-gradient` desain 23), di koordinat layar
+/// desain dikali [scale]. Peta mulai di y [_origin] layar desain.
 class _Floor extends CustomPainter {
   _Floor(this.plank, this.joint, this.scale);
 
@@ -201,9 +391,9 @@ class _Floor extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final rows = Paint()..color = plank;
-    final first = ((MapArt.mapTop - _row) / _row).floor();
+    final first = ((_origin - _row) / _row).floor();
     for (var k = first; ; k++) {
-      final top = (k * _row + _row - _line - MapArt.mapTop) * scale;
+      final top = (k * _row + _row - _line - _origin) * scale;
       if (top > size.height) break;
       canvas.drawRect(Rect.fromLTWH(0, top, size.width, _line * scale), rows);
     }
@@ -221,6 +411,47 @@ class _Floor extends CustomPainter {
   @override
   bool shouldRepaint(_Floor old) =>
       old.plank != plank || old.joint != joint || old.scale != scale;
+}
+
+/// y layar desain di atas peta yang digulir.
+const _origin = PictureMapArt.mapTop - PictureMapArt.topPad;
+
+/// Ubin dapur: kotak 28 px biru di kanan atas dan kiri bawah tiap petak
+/// 56 px (`conic-gradient` desain 23d), di koordinat layar desain dikali
+/// [scale].
+class _Tiles extends CustomPainter {
+  _Tiles(this.tile, this.scale);
+
+  final Color tile;
+  final double scale;
+
+  static const double _cell = 56;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = tile;
+    const half = _cell / 2;
+    final first = (_origin / _cell).floor();
+    for (var row = first; ; row++) {
+      final top = (row * _cell - _origin) * scale;
+      if (top > size.height) break;
+      for (var col = 0; col * _cell * scale < size.width; col++) {
+        final left = col * _cell * scale;
+        canvas
+          ..drawRect(
+            Rect.fromLTWH(left + half * scale, top, half * scale, half * scale),
+            paint,
+          )
+          ..drawRect(
+            Rect.fromLTWH(left, top + half * scale, half * scale, half * scale),
+            paint,
+          );
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_Tiles old) => old.tile != tile || old.scale != scale;
 }
 
 class _NotFound extends StatelessWidget {

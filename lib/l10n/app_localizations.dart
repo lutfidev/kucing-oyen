@@ -240,6 +240,12 @@ abstract class AppLocalizations {
   /// **'locked'**
   String get statusLocked;
 
+  /// Screen reader announcement when Oyen finishes walking to the next level on the chapter map (no auto-open while a screen reader is on).
+  ///
+  /// In en, this message translates to:
+  /// **'Oyen made it to level {id}.'**
+  String mapOyenArrived(int id);
+
   /// Screen reader status of the level to play now.
   ///
   /// In en, this message translates to:

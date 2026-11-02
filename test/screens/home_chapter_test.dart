@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/screens/chapter/chapter_header.dart';
+import 'package:kucing_oren/game/model/chapter.dart';
 import 'package:kucing_oren/screens/chapter/chapter_map.dart';
+import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
+import 'package:kucing_oren/screens/chapter/map_token.dart';
 import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
@@ -18,20 +23,22 @@ Finder _label(String label) => find.bySemanticsLabel(label);
 /// Jejak kaki di peta: (jelas, pudar).
 (int, int) _paws(WidgetTester tester) {
   final opacities = tester
-      .widgetList<Opacity>(
-        find.ancestor(
-          of: find.byWidgetPredicate(
-            (w) => w is KoIcon && w.icon == KoIcons.steps,
-          ),
-          matching: find.byType(Opacity),
-        ),
-      )
-      .map((o) => o.opacity);
+      .widgetList<MapPaw>(find.byType(MapPaw))
+      .map((p) => p.opacity);
   return (
-    opacities.where((o) => o == MapArt.pawOpacity).length,
-    opacities.where((o) => o == MapArt.pawDimOpacity).length,
+    opacities.where((o) => o == PictureMapArt.pawOpacity).length,
+    opacities.where((o) => o == PictureMapArt.pawDimOpacity).length,
   );
 }
+
+/// Skala peta: lebar layar ÷ 390.
+double _scale(WidgetTester tester) =>
+    tester.getSize(find.byType(Scaffold).last).width / 390;
+
+/// Titik pijakan token Oyen (tengah node tempatnya berdiri), dari kotaknya.
+Offset _tokenFoot(WidgetTester tester) =>
+    tester.getRect(find.byType(MapToken)).topLeft -
+    PictureMapArt.tokenOffset * _scale(tester);
 
 void main() {
   group('peta babak', () {
@@ -223,7 +230,7 @@ void main() {
       );
       final node = tester.getCenter(_label('Level 11, main sekarang'));
       const scale = 412 / 390;
-      expect(node.dx, closeTo(MapArt.points.first.dx * scale, 0.5));
+      expect(node.dx, closeTo(PictureMapArt.points.first.dx * scale, 0.5));
     });
 
     testWidgets('layar pendek: dibuka dengan level saat ini terlihat', (
@@ -245,6 +252,261 @@ void main() {
       await tester.drag(find.byType(Scrollable), const Offset(0, 600));
       await settle(tester);
       expect(_label('Level 1, 3 bintang').hitTestable(), findsOneWidget);
+    });
+  });
+
+  group('token Oyen dan latar', () {
+    testWidgets('token di kanan atas node level saat ini', (tester) async {
+      setScreenSize(tester, const Size(390, 844));
+      await pumpApp(
+        tester,
+        location: AppRoutes.chapter(2),
+        progress: testProgress(_design),
+      );
+      final token = tester.getRect(find.byType(MapToken));
+      final center = tester.getCenter(_label('Level 13, main sekarang'));
+      expect(token.left, closeTo(center.dx + 18, 0.5));
+      expect(token.top, closeTo(center.dy - 92, 0.5));
+    });
+
+    testWidgets('babak selesai: token di bos', (tester) async {
+      await pumpApp(
+        tester,
+        location: AppRoutes.chapter(1),
+        progress: testProgress(wonUpTo(12)),
+      );
+      final boss = tester.getCenter(
+        _label('Level 10, bos Pesta Ikan Asin, 3 bintang'),
+      );
+      expect((_tokenFoot(tester) - boss).distance, lessThan(0.5));
+    });
+
+    testWidgets('babak terkunci: tanpa token', (tester) async {
+      await pumpApp(tester, location: AppRoutes.chapter(2));
+      expect(find.byType(MapToken), findsNothing);
+    });
+
+    for (final size in const [Size(390, 844), Size(360, 640)]) {
+      testWidgets('gulir awal: token level 2 utuh di bawah judul $size', (
+        tester,
+      ) async {
+        setScreenSize(tester, size);
+        await pumpApp(
+          tester,
+          location: AppRoutes.chapter(1),
+          progress: testProgress({1: 3}),
+        );
+        final token = tester.getRect(find.byType(MapToken));
+        final header = tester.getRect(find.byType(ChapterHeader));
+        expect(token.top, greaterThanOrEqualTo(header.bottom));
+        expect(token.bottom, lessThanOrEqualTo(size.height));
+      });
+    }
+
+    testWidgets('latar Babak 1: ubin dapur', (tester) async {
+      await pumpApp(tester, location: AppRoutes.chapter(1));
+      expect(
+        tester.widget<Scaffold>(find.byType(Scaffold).last).backgroundColor,
+        KoColors.standard.mapKitchen,
+      );
+    });
+
+    testWidgets('latar Babak 2: lantai papan', (tester) async {
+      await pumpApp(
+        tester,
+        location: AppRoutes.chapter(2),
+        progress: testProgress(wonUpTo(10)),
+      );
+      expect(
+        tester.widget<Scaffold>(find.byType(Scaffold).last).backgroundColor,
+        KoColors.standard.mapFloor,
+      );
+    });
+  });
+
+  group('Oyen berjalan', () {
+    final chapters = chaptersOf(testLevels);
+
+    /// [ChapterView] babak [chapter] dengan level 1–[won] menang, dibuka
+    /// dari "Lanjut" level [from]. Mengembalikan level yang dibuka.
+    Future<List<int>> pumpWalk(
+      WidgetTester tester, {
+      required int won,
+      required int? from,
+      int chapter = 2,
+    }) async {
+      final opened = <int>[];
+      await tester.pumpWidget(
+        testApp(
+          home: ChapterView(
+            chapter: chapters[chapter - 1],
+            other: chapters[2 - chapter],
+            progress: testProgress(wonUpTo(won)).progress,
+            onBack: () {},
+            onOpen: (_) {},
+            onPlay: (level) => opened.add(level.id),
+            walkFrom: from,
+          ),
+        ),
+      );
+      return opened;
+    }
+
+    Offset nodeCenter(WidgetTester tester, String label) =>
+        tester.getCenter(_label(label));
+
+    Future<void> pumpTime(WidgetTester tester, double seconds) async {
+      for (var t = 0.0; t < seconds - 1e-9; t += 1 / 60) {
+        await tester.pump(const Duration(microseconds: 16667));
+      }
+    }
+
+    testWidgets('jalan menyusuri jalur lalu level berikutnya terbuka sekali', (
+      tester,
+    ) async {
+      final opened = await pumpWalk(tester, won: 12, from: 12);
+      final from = nodeCenter(tester, 'Level 12, 3 bintang');
+      final to = nodeCenter(tester, 'Level 13, main sekarang');
+      expect((_tokenFoot(tester) - from).distance, lessThan(0.5));
+      await pumpTime(tester, 0.8);
+      final mid = _tokenFoot(tester);
+      expect((mid - from).distance, greaterThan(10));
+      expect((mid - to).distance, greaterThan(10));
+      final pose = tester.widget<KittyView>(find.byType(KittyView)).look.pose;
+      expect(pose, anyOf(KittyPose.walk1, KittyPose.walk2));
+      await pumpTime(tester, 0.5);
+      expect((_tokenFoot(tester) - to).distance, lessThan(0.5));
+      expect(opened, isEmpty);
+      await pumpTime(tester, 0.4);
+      expect(opened, [13]);
+      await pumpTime(tester, 1);
+      expect(opened, [13]);
+    });
+
+    testWidgets('ketukan membatalkan buka otomatis tanpa menekan node', (
+      tester,
+    ) async {
+      final opened = await pumpWalk(tester, won: 12, from: 12);
+      await pumpTime(tester, 0.5);
+      await tester.tap(_label('Level 12, 3 bintang'), warnIfMissed: false);
+      await pumpTime(tester, 3);
+      expect(opened, isEmpty);
+      final to = nodeCenter(tester, 'Level 13, main sekarang');
+      expect((_tokenFoot(tester) - to).distance, lessThan(0.5));
+      // Sesudah sampai, node bisa diketuk lagi seperti biasa.
+      await tester.tap(_label('Level 13, main sekarang'));
+      expect(opened, [13]);
+    });
+
+    testWidgets('kembali sistem membatalkan buka otomatis', (tester) async {
+      final opened = <int>[];
+      final navigator = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(
+        testApp(
+          home: Navigator(
+            key: navigator,
+            onGenerateRoute: (_) =>
+                MaterialPageRoute<void>(builder: (_) => const SizedBox()),
+          ),
+        ),
+      );
+      unawaited(
+        navigator.currentState!.push(
+          MaterialPageRoute<void>(
+            builder: (_) => ChapterView(
+              chapter: chapters[1],
+              other: chapters[0],
+              progress: testProgress(wonUpTo(12)).progress,
+              onBack: () {},
+              onOpen: (_) {},
+              onPlay: (level) => opened.add(level.id),
+              walkFrom: 12,
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await pumpTime(tester, 0.5);
+      await navigator.currentState!.maybePop();
+      await pumpTime(tester, 3);
+      expect(opened, isEmpty);
+    });
+
+    testWidgets('layar dibuang di tengah jalan: tanpa buka, tanpa error', (
+      tester,
+    ) async {
+      final opened = await pumpWalk(tester, won: 12, from: 12);
+      await pumpTime(tester, 0.5);
+      await tester.pumpWidget(testApp(home: const SizedBox()));
+      await pumpTime(tester, 3);
+      expect(opened, isEmpty);
+    });
+
+    testWidgets('kurangi gerak: langsung di tujuan, buka sesudah 0,6 detik', (
+      tester,
+    ) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      final opened = await pumpWalk(tester, won: 12, from: 12);
+      await tester.pump();
+      final to = nodeCenter(tester, 'Level 13, main sekarang');
+      expect((_tokenFoot(tester) - to).distance, lessThan(0.5));
+      await pumpTime(tester, 0.5);
+      expect(opened, isEmpty);
+      await pumpTime(tester, 0.2);
+      expect(opened, [13]);
+    });
+
+    testWidgets('pembaca layar: tanpa buka otomatis, sampai diumumkan', (
+      tester,
+    ) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(accessibleNavigation: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      final opened = await pumpWalk(tester, won: 12, from: 12);
+      await pumpTime(tester, 3);
+      expect(opened, isEmpty);
+      expect(
+        tester.takeAnnouncements().map((a) => a.message),
+        contains('Oyen sampai di level 13.'),
+      );
+      await tester.tap(_label('Level 13, main sekarang'));
+      expect(opened, [13]);
+    });
+
+    testWidgets('sesudah level 20: Oyen senang di bos, tanpa buka', (
+      tester,
+    ) async {
+      final opened = await pumpWalk(tester, won: 20, from: 20);
+      await pumpTime(tester, 3);
+      expect(opened, isEmpty);
+      final boss = nodeCenter(tester, 'Level 20, bos Hari Lebaran, 3 bintang');
+      expect((_tokenFoot(tester) - boss).distance, lessThan(0.5));
+      expect(
+        tester.widget<KittyView>(find.byType(KittyView)).look.pose,
+        KittyPose.happy,
+      );
+    });
+
+    testWidgets('walkFrom datang belakangan (peta di bawah level)', (
+      tester,
+    ) async {
+      await pumpWalk(tester, won: 12, from: null);
+      await settle(tester);
+      final to = nodeCenter(tester, 'Level 13, main sekarang');
+      expect((_tokenFoot(tester) - to).distance, lessThan(0.5));
+      // Lanjut dari level 12 ke peta yang sama (ChapterView tetap terpasang).
+      final opened = await pumpWalk(tester, won: 12, from: 12);
+      await tester.pump();
+      final from = nodeCenter(tester, 'Level 12, 3 bintang');
+      expect((_tokenFoot(tester) - from).distance, lessThan(0.5));
+      await pumpTime(tester, 1.7);
+      expect(opened, [13]);
     });
   });
 

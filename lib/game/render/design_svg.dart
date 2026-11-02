@@ -461,44 +461,6 @@ const chapterLivingRoomSvg = r'''
 </g>
 ''';
 
-/// Area bos di peta babak (`02-peta-babak-2-ruang-tamu.html`), di
-/// koordinat layar 390×844.
-const bossAreaSvg = r'''
-    <rect x="30" y="626" width="330" height="168" rx="30" fill="#C2492F" opacity="0.16"></rect>
-    <rect x="44" y="640" width="302" height="140" rx="22" fill="none" stroke="#C2492F" stroke-width="3" stroke-dasharray="2 9" opacity="0.4"></rect>
-''';
-
-/// Ketupat bos Babak 2 "Hari Lebaran" (`02-peta-babak-2-ruang-tamu.html`),
-/// viewBox 64×64.
-const bossKetupatSvg = r'''
-<g opacity="0.8"><path d="M32 6 L54 28 L32 50 L10 28 Z" fill="#7DBE6E" stroke="#3F7A3A" stroke-width="2.4" stroke-linejoin="round"></path><path d="M21 17 L43 39 M43 17 L21 39 M26.5 11.5 L48.5 33.5 M37.5 11.5 L15.5 33.5" stroke="#4E9447" stroke-width="2"></path><path d="M32 50 Q28 56 24 62 M32 50 Q36 56 41 61" stroke="#3F7A3A" stroke-width="2.6" fill="none" stroke-linecap="round"></path></g>
-''';
-
-/// Bos Babak 1 "Pesta Ikan Asin", viewBox 64×64. Tidak ada di desain
-/// (desain 02 hanya punya ketupat bos Babak 2): sepasang ikan asin
-/// `Tile.dc.html` yang berlawanan arah, dengan opasitas grup
-/// [bossKetupatSvg].
-const bossFishSvg = r'''
-<g opacity="0.8">
-<g transform="translate(30 23) scale(1.3) translate(-25.5 -25)">
-    <g transform="rotate(-24 25 25)">
-      <path d="M34 25 L43 18 L42 32 Z" fill="#B49C74" stroke="#7E6848" stroke-width="1.4" stroke-linejoin="round"></path>
-      <path d="M8 25 Q21 13 34 25 Q21 37 8 25 Z" fill="#CDB892" stroke="#7E6848" stroke-width="1.4"></path>
-      <path d="M19 20.5 V29.5 M24 19.5 V30.5 M29 21 V29" stroke="#8D7656" stroke-width="1.1" opacity="0.8"></path>
-      <circle cx="13" cy="24" r="1.7" fill="#3A2618"></circle>
-    </g>
-</g>
-<g transform="translate(34 42) scale(-1.3 1.3) translate(-25.5 -25)">
-    <g transform="rotate(-24 25 25)">
-      <path d="M34 25 L43 18 L42 32 Z" fill="#B49C74" stroke="#7E6848" stroke-width="1.4" stroke-linejoin="round"></path>
-      <path d="M8 25 Q21 13 34 25 Q21 37 8 25 Z" fill="#CDB892" stroke="#7E6848" stroke-width="1.4"></path>
-      <path d="M19 20.5 V29.5 M24 19.5 V30.5 M29 21 V29" stroke="#8D7656" stroke-width="1.1" opacity="0.8"></path>
-      <circle cx="13" cy="24" r="1.7" fill="#3A2618"></circle>
-    </g>
-</g>
-</g>
-''';
-
 // ── Kartu aturan dan tutorial ───────────────────────────────────────────
 
 /// Gambar kartu aturan 1–4 (`05-kartu-aturan-oyen.html`), viewBox 76×76:

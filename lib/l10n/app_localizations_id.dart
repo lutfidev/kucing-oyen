@@ -91,6 +91,11 @@ class AppLocalizationsId extends AppLocalizations {
   String get statusLocked => 'terkunci';
 
   @override
+  String mapOyenArrived(int id) {
+    return 'Oyen sampai di level $id.';
+  }
+
+  @override
   String get statusPlayNow => 'main sekarang';
 
   @override
