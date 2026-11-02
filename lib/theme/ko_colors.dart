@@ -59,9 +59,13 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.mapFloor,
     required this.plank,
     required this.plankJoint,
+    required this.mapKitchen,
+    required this.mapKitchenTile,
+    required this.introScrim,
     required this.shadowNode,
     required this.nodeLocked,
     required this.nodeLockedInk,
+    required this.nodeLockedEdge,
     required this.boss,
     required this.bossEdge,
     required this.brickEdge,
@@ -163,9 +167,13 @@ class KoColors extends ThemeExtension<KoColors> {
     mapFloor: Color(0xFFF3E0C2),
     plank: Color(0x38B07A4F), // rgba(176,122,79,.22)
     plankJoint: Color(0x24B07A4F), // rgba(176,122,79,.14)
+    mapKitchen: Color(0xFFF5EBDD),
+    mapKitchenTile: Color(0x388FD3F0),
+    introScrim: Color(0xB8FFF4E2),
     shadowNode: Color(0x38965014), // rgba(150,80,20,.22)
     nodeLocked: Color(0xFFE8D6B8),
     nodeLockedInk: Color(0xFF8A7259),
+    nodeLockedEdge: Color(0xFFD5BE98),
     boss: Color(0xFFE3C9A6),
     bossEdge: Color(0xFFB28A64),
     brickEdge: Color(0xFF8E3220),
@@ -343,6 +351,15 @@ class KoColors extends ThemeExtension<KoColors> {
 
   final Color plankJoint;
 
+  /// Lantai ubin peta Babak 1 Dapur (desain 23d).
+  final Color mapKitchen;
+
+  /// Kotak ubin biru peta Babak 1 (conic-gradient 22%, 56 px).
+  final Color mapKitchenTile;
+
+  /// Lapisan krem 72% di belakang kartu "Babak baru terbuka!" (desain 23c).
+  final Color introScrim;
+
   /// Bayangan lembut node level yang sudah selesai.
   final Color shadowNode;
 
@@ -350,6 +367,9 @@ class KoColors extends ThemeExtension<KoColors> {
   final Color nodeLocked;
 
   final Color nodeLockedInk;
+
+  /// Bayangan padat node terkunci.
+  final Color nodeLockedEdge;
 
   /// Kotak level bos dan bayangan padatnya.
   final Color boss;
@@ -543,9 +563,13 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? mapFloor,
     Color? plank,
     Color? plankJoint,
+    Color? mapKitchen,
+    Color? mapKitchenTile,
+    Color? introScrim,
     Color? shadowNode,
     Color? nodeLocked,
     Color? nodeLockedInk,
+    Color? nodeLockedEdge,
     Color? boss,
     Color? bossEdge,
     Color? brickEdge,
@@ -646,9 +670,13 @@ class KoColors extends ThemeExtension<KoColors> {
       mapFloor: mapFloor ?? this.mapFloor,
       plank: plank ?? this.plank,
       plankJoint: plankJoint ?? this.plankJoint,
+      mapKitchen: mapKitchen ?? this.mapKitchen,
+      mapKitchenTile: mapKitchenTile ?? this.mapKitchenTile,
+      introScrim: introScrim ?? this.introScrim,
       shadowNode: shadowNode ?? this.shadowNode,
       nodeLocked: nodeLocked ?? this.nodeLocked,
       nodeLockedInk: nodeLockedInk ?? this.nodeLockedInk,
+      nodeLockedEdge: nodeLockedEdge ?? this.nodeLockedEdge,
       boss: boss ?? this.boss,
       bossEdge: bossEdge ?? this.bossEdge,
       brickEdge: brickEdge ?? this.brickEdge,
@@ -755,9 +783,13 @@ class KoColors extends ThemeExtension<KoColors> {
       mapFloor: c(mapFloor, other.mapFloor),
       plank: c(plank, other.plank),
       plankJoint: c(plankJoint, other.plankJoint),
+      mapKitchen: c(mapKitchen, other.mapKitchen),
+      mapKitchenTile: c(mapKitchenTile, other.mapKitchenTile),
+      introScrim: c(introScrim, other.introScrim),
       shadowNode: c(shadowNode, other.shadowNode),
       nodeLocked: c(nodeLocked, other.nodeLocked),
       nodeLockedInk: c(nodeLockedInk, other.nodeLockedInk),
+      nodeLockedEdge: c(nodeLockedEdge, other.nodeLockedEdge),
       boss: c(boss, other.boss),
       bossEdge: c(bossEdge, other.bossEdge),
       brickEdge: c(brickEdge, other.brickEdge),

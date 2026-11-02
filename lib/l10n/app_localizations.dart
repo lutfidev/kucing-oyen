@@ -240,6 +240,12 @@ abstract class AppLocalizations {
   /// **'locked'**
   String get statusLocked;
 
+  /// Screen reader announcement when Oyen finishes walking to the next level on the chapter map (no auto-open while a screen reader is on).
+  ///
+  /// In en, this message translates to:
+  /// **'Oyen made it to level {id}.'**
+  String mapOyenArrived(int id);
+
   /// Screen reader status of the level to play now.
   ///
   /// In en, this message translates to:
@@ -2957,6 +2963,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{coins, plural, one{+{coins} coin} other{+{coins} coins}}'**
   String reactionCoins(int coins);
+
+  /// Overline on the card shown over the map when a new chapter is unlocked for the first time (after beating the chapter 1 boss).
+  ///
+  /// In en, this message translates to:
+  /// **'New chapter unlocked!'**
+  String get chapterIntroOverline;
+
+  /// Button that closes the new-chapter card and shows the new map.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s go in!'**
+  String get chapterIntroEnter;
+
+  /// Line under the new-chapter title: number of levels and the boss name.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 new level} other{{count} new levels}} · Boss: {boss}'**
+  String chapterIntroInfo(int count, String boss);
+
+  /// Screen reader name of the new-chapter card (dialog).
+  ///
+  /// In en, this message translates to:
+  /// **'New chapter unlocked'**
+  String get chapterIntroLabel;
 }
 
 class _AppLocalizationsDelegate

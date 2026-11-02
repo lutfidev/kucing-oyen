@@ -61,6 +61,10 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.boss,
     required this.bossArt,
     required this.bossBadge,
+    required this.nodeIcon,
+    required this.nodeChip,
+    required this.nodeCompact,
+    required this.bossCompact,
     required this.chapterCard,
     required this.chapterIcon,
     required this.iconMicro,
@@ -214,13 +218,17 @@ class KoSize extends ThemeExtension<KoSize> {
     divider: 1.5,
     dimSaturation: 0.7,
     artMinScale: 0.3,
-    node: 64,
+    node: 66,
     nodeRing: 4,
     nodeDash: 3,
     mapStar: 17,
-    boss: 96,
-    bossArt: 64,
-    bossBadge: 32,
+    boss: 100,
+    bossArt: 74,
+    bossBadge: 28,
+    nodeIcon: 46,
+    nodeChip: 26,
+    nodeCompact: 54,
+    bossCompact: 84,
     chapterCard: 52,
     chapterIcon: 36,
     iconMicro: 12,
@@ -462,6 +470,18 @@ class KoSize extends ThemeExtension<KoSize> {
   final double bossArt;
 
   final double bossBadge;
+
+  /// Gambar benda di node level (gambar bos: bossArt).
+  final double nodeIcon;
+
+  /// Chip nomor di kiri bawah node bergambar.
+  final double nodeChip;
+
+  /// Node level di layar kecil (n360).
+  final double nodeCompact;
+
+  /// Kotak bos di layar kecil (n360).
+  final double bossCompact;
 
   /// Kartu babak lain di bawah judul peta dan ikonnya.
   final double chapterCard;
@@ -823,6 +843,10 @@ class KoSize extends ThemeExtension<KoSize> {
     double? boss,
     double? bossArt,
     double? bossBadge,
+    double? nodeIcon,
+    double? nodeChip,
+    double? nodeCompact,
+    double? bossCompact,
     double? chapterCard,
     double? chapterIcon,
     double? iconMicro,
@@ -982,6 +1006,10 @@ class KoSize extends ThemeExtension<KoSize> {
       boss: boss ?? this.boss,
       bossArt: bossArt ?? this.bossArt,
       bossBadge: bossBadge ?? this.bossBadge,
+      nodeIcon: nodeIcon ?? this.nodeIcon,
+      nodeChip: nodeChip ?? this.nodeChip,
+      nodeCompact: nodeCompact ?? this.nodeCompact,
+      bossCompact: bossCompact ?? this.bossCompact,
       chapterCard: chapterCard ?? this.chapterCard,
       chapterIcon: chapterIcon ?? this.chapterIcon,
       iconMicro: iconMicro ?? this.iconMicro,
@@ -1152,6 +1180,10 @@ class KoSize extends ThemeExtension<KoSize> {
       boss: d(boss, other.boss),
       bossArt: d(bossArt, other.bossArt),
       bossBadge: d(bossBadge, other.bossBadge),
+      nodeIcon: d(nodeIcon, other.nodeIcon),
+      nodeChip: d(nodeChip, other.nodeChip),
+      nodeCompact: d(nodeCompact, other.nodeCompact),
+      bossCompact: d(bossCompact, other.bossCompact),
       chapterCard: d(chapterCard, other.chapterCard),
       chapterIcon: d(chapterIcon, other.chapterIcon),
       iconMicro: d(iconMicro, other.iconMicro),

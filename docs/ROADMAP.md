@@ -38,7 +38,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 22. Toko dan aksesoris
 - [x] 23. Kamar Oyen sebagai Beranda, tanpa Lemari Kostum
 - [x] 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
-- [ ] 25. Peta bergambar dan Oyen berjalan ke level berikutnya
+- [x] 25. Peta bergambar dan Oyen berjalan ke level berikutnya
 - [ ] 26. Potret toko dan rapi-rapi rumah Oyen
 
 Langkah 15–17 dipecah dari "Polish dan rilis Android" lama (diskusi dengan pemilik repo, 19 Okt 2026). Keputusan pasar, bahasa, iklan, dan isi Pengaturan dicatat di `docs/DESIGN_NOTES.md` bagian "Sebelum langkah 15"; prompt di bawah tidak perlu menanyakannya lagi.
@@ -436,7 +436,7 @@ Selesai: `SvgTemplate` mengevaluasi `@keyframes` desain pada waktu tertentu (`cs
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 24", dan perbarui bagian "Struktur" di `CLAUDE.md`.
 
-## 25. Peta bergambar dan Oyen berjalan ke level berikutnya
+## 25. Peta bergambar dan Oyen berjalan ke level berikutnya ✅
 
 **Hasil:**
 - Peta babak berupa ilustrasi ruangan, dengan titik level bergambar dan token Oyen.

@@ -103,6 +103,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statusLocked => 'locked';
 
   @override
+  String mapOyenArrived(int id) {
+    return 'Oyen made it to level $id.';
+  }
+
+  @override
   String get statusPlayNow => 'play now';
 
   @override
@@ -1989,4 +1994,24 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get chapterIntroOverline => 'New chapter unlocked!';
+
+  @override
+  String get chapterIntroEnter => 'Let\'s go in!';
+
+  @override
+  String chapterIntroInfo(int count, String boss) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count new levels',
+      one: '1 new level',
+    );
+    return '$_temp0 · Boss: $boss';
+  }
+
+  @override
+  String get chapterIntroLabel => 'New chapter unlocked';
 }

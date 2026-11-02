@@ -90,6 +90,9 @@ const _fullPages = <String, (String, double)>{
 
 const _size = Size(390, 844);
 
+/// Satu bingkai saat memajukan animasi per bingkai.
+const _frame = Duration(milliseconds: 16);
+
 void main() {
   final folder = '${_size.width.toInt()}x${_size.height.toInt()}';
 
@@ -524,6 +527,54 @@ void main() {
             ),
           );
           await settle(tester);
+          await capture(tester, path);
+        });
+      }, skip: !screenshotsEnabled);
+    }
+  }
+
+  // Peta bergambar (desain 23) di keempat bahasa: Babak 1 seperti 23d
+  // (level 7 saat ini), Babak 2 seperti 23a, kartu "Babak baru terbuka!"
+  // (23c), dan Oyen di tengah jalan 12 → 13 (23b, hanya Indonesia).
+  const kitchenProgress = {1: 3, 2: 3, 3: 2, 4: 3, 5: 1, 6: 2};
+  for (final language in AppLanguage.supported) {
+    final maps = <String, (String, Map<int, int>, Duration?)>{
+      '23-peta-babak-1': (AppRoutes.chapter(1), kitchenProgress, null),
+      '23-peta-babak-2': (AppRoutes.chapter(2), _designProgress, null),
+      '23-peta-babak-baru': (
+        AppRoutes.chapter(2, intro: true),
+        wonUpTo(10),
+        null,
+      ),
+      if (language == AppLanguage.id)
+        '23-peta-jalan': (
+          AppRoutes.chapter(2, from: 12),
+          wonUpTo(12),
+          const Duration(milliseconds: 800),
+        ),
+    };
+    for (final MapEntry(key: name, value: (location, best, walk))
+        in maps.entries) {
+      final path = '$folder/${language.name}/$name';
+      testWidgets(path, (tester) async {
+        setScreenSize(tester, _size);
+        await withShadows(() async {
+          await tester.pumpWidget(
+            capturable(
+              KucingOrenApp(
+                roomLife: false,
+                progress: testProgressWith(best: best, language: language),
+                initialLocation: location,
+              ),
+            ),
+          );
+          if (walk == null) {
+            await settle(tester);
+          } else {
+            for (var t = Duration.zero; t < walk; t += _frame) {
+              await tester.pump(_frame);
+            }
+          }
           await capture(tester, path);
         });
       }, skip: !screenshotsEnabled);

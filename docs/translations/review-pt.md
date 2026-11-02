@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-476 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+481 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -48,6 +48,7 @@ for the store listing at the end.
 | `chapterLocked` | Locked | Bloqueado | Badge on a locked chapter card. | |
 | `statusDone` | done | concluído | Screen reader status of a finished chapter (lowercase). | |
 | `statusLocked` | locked | bloqueado | Screen reader status of a locked level or chapter (lowercase). | |
+| `mapOyenArrived` | Oyen made it to level {id}. | Oyen chegou ao nível {id}. | Screen reader announcement when Oyen finishes walking to the next level on the chapter map (no auto-open while a screen reader is on). Placeholders: `{id}`. | |
 | `statusPlayNow` | play now | jogar agora | Screen reader status of the level to play now. | |
 | `nodeStars` | {n, plural, one{{n} star} other{{n} stars}} | {n, plural, one{{n} estrela} other{{n} estrelas}} | Screen reader: stars earned on a level node. Placeholders: `{n}`. | |
 | `levelNodeLabel` | Level {id}, {status} | Fase {id}, {status} | Screen reader label of a level node on the map. Placeholders: `{id}`, `{status}`. | |
@@ -501,6 +502,10 @@ for the store listing at the end.
 | `bowlRefill` | {hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}} | {hours, plural, one{Enche de novo em {hours} hora} other{Enche de novo em {hours} horas}} | Label over the empty shared food bowl in the cat room: hours until it refills. Placeholders: `{hours}`. | |
 | `kittyRewardLabel` | {coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}} | {coins, plural, one{Pegar {coins} moeda de {name}} other{Pegar {coins} moedas de {name}}} | Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward. Placeholders: `{coins}`, `{name}`. | |
 | `reactionCoins` | {coins, plural, one{+{coins} coin} other{+{coins} coins}} | {coins, plural, one{+{coins} moeda} other{+{coins} moedas}} | Floating text over a cat after collecting its coin reward. Placeholders: `{coins}`. | |
+| `chapterIntroOverline` | New chapter unlocked! | Capítulo novo liberado! | Overline on the card shown over the map when a new chapter is unlocked for the first time (after beating the chapter 1 boss). | |
+| `chapterIntroEnter` | Let's go in! | Bora entrar! | Button that closes the new-chapter card and shows the new map. | |
+| `chapterIntroInfo` | {count, plural, =1{1 new level} other{{count} new levels}} · Boss: {boss} | {count, plural, =1{1 nível novo} other{{count} níveis novos}} · Chefão: {boss} | Line under the new-chapter title: number of levels and the boss name. Placeholders: `{count}`, `{boss}`. | |
+| `chapterIntroLabel` | New chapter unlocked | Capítulo novo liberado | Screen reader name of the new-chapter card (dialog). | |
 
 ---
 

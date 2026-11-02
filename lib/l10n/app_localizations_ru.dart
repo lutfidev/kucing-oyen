@@ -113,6 +113,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get statusLocked => 'закрыто';
 
   @override
+  String mapOyenArrived(int id) {
+    return 'Ойен добрался до уровня $id.';
+  }
+
+  @override
   String get statusPlayNow => 'играть сейчас';
 
   @override
@@ -2035,4 +2040,26 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get chapterIntroOverline => 'Новая глава открыта!';
+
+  @override
+  String get chapterIntroEnter => 'Заходим!';
+
+  @override
+  String chapterIntroInfo(int count, String boss) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count новых уровня',
+      many: '$count новых уровней',
+      few: '$count новых уровня',
+      one: '$count новый уровень',
+    );
+    return '$_temp0 · Босс: $boss';
+  }
+
+  @override
+  String get chapterIntroLabel => 'Новая глава открыта';
 }

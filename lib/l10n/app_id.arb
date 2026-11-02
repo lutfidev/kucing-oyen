@@ -23,6 +23,7 @@
   "chapterLocked": "Terkunci",
   "statusDone": "selesai",
   "statusLocked": "terkunci",
+  "mapOyenArrived": "Oyen sampai di level {id}.",
   "statusPlayNow": "main sekarang",
   "nodeStars": "{n} bintang",
   "levelNodeLabel": "Level {id}, {status}",
@@ -475,5 +476,9 @@
   "decoratePraiseJoy": "+{joy} Senang untuk semua kucing",
   "bowlRefill": "{hours, plural, other{Terisi lagi {hours} jam}}",
   "kittyRewardLabel": "Ambil {coins} koin dari {name}",
-  "reactionCoins": "+{coins} koin"
+  "reactionCoins": "+{coins} koin",
+  "chapterIntroOverline": "Babak baru terbuka!",
+  "chapterIntroEnter": "Ayo masuk!",
+  "chapterIntroInfo": "{count, plural, other{{count} level baru}} · Bos: {boss}",
+  "chapterIntroLabel": "Babak baru terbuka"
 }

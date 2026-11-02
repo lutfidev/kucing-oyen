@@ -9,7 +9,9 @@ import 'package:kucing_oren/game/kucing_game.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/l10n/names.dart';
+import 'package:kucing_oren/screens/chapter/chapter_intro.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
+import 'package:kucing_oren/screens/chapter/map_token.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
@@ -169,45 +171,103 @@ void main() {
     );
   });
 
-  testWidgets('Lanjut sesudah level 20 kembali ke peta Babak 2', (
-    tester,
-  ) async {
-    final progress = testProgress(wonUpTo(19));
-    await pumpApp(
+  group('Lanjut: Oyen berjalan di peta', () {
+    /// Menang di level [id] (solusi data level) lalu mengetuk "Lanjut".
+    Future<ProgressController> winAndNext(
+      WidgetTester tester,
+      int id, {
+      required Map<int, int> best,
+    }) async {
+      final progress = testProgress(best);
+      await pumpApp(
+        tester,
+        location: AppRoutes.level(id, chapter: testLevels[id - 1].chapter),
+        progress: progress,
+      );
+      await _place(tester, testLevels[id - 1].solution);
+      await _play(tester);
+      expect(find.text('Berhasil!'), findsOneWidget);
+      await tester.tap(find.text('Lanjut'));
+      await tester.pump();
+      await tester.pump();
+      return progress;
+    }
+
+    testWidgets('peta tampil dulu, lalu level berikutnya terbuka sendiri', (
       tester,
-      location: AppRoutes.level(20, chapter: 2),
-      progress: progress,
-    );
-    await _place(tester, testLevels[19].solution);
-    await _play(tester);
-    expect(find.text('Berhasil!'), findsOneWidget);
+    ) async {
+      await winAndNext(tester, 1, best: {});
+      expect(find.byType(ChapterView), findsOneWidget);
+      expect(find.byType(LevelView), findsNothing);
+      expect(find.byType(MapToken), findsOneWidget);
+      await pumpFor(tester, const Duration(milliseconds: 1700));
+      await tester.pumpAndSettle();
+      expect(find.text('Level 2 · Belok Kanan'), findsOneWidget);
 
-    await tester.tap(find.text('Lanjut'));
-    await settle(tester);
-    expect(find.byType(ChapterView), findsOneWidget);
-    expect(find.byType(LevelView), findsNothing);
-    expect(
-      find.bySemanticsLabel('Level 20, bos Hari Lebaran, 3 bintang'),
-      findsOneWidget,
-    );
-    expect(progress.progress.totalStars, 60);
-  });
+      await tester.tap(_back('Kembali ke peta'));
+      await settle(tester);
+      expect(find.byType(LevelView), findsNothing);
+      expect(find.bySemanticsLabel('Level 2, main sekarang'), findsOneWidget);
+    });
 
-  testWidgets('Lanjut sesudah bos Babak 1 membuka level 11', (tester) async {
-    await pumpApp(
+    testWidgets('ketukan selama Oyen berjalan: tetap di peta', (tester) async {
+      await winAndNext(tester, 1, best: {});
+      await pumpFor(tester, const Duration(milliseconds: 500));
+      await tester.tapAt(const Offset(200, 500));
+      await pumpFor(tester, const Duration(seconds: 3));
+      expect(find.byType(LevelView), findsNothing);
+      expect(find.bySemanticsLabel('Level 2, main sekarang'), findsOneWidget);
+    });
+
+    testWidgets('level lama: membuka level sesudahnya, peta kembali normal', (
       tester,
-      location: AppRoutes.level(10, chapter: 1),
-      progress: testProgress(wonUpTo(9)),
-    );
-    await _place(tester, testLevels[9].solution);
-    await _play(tester);
-    await tester.tap(find.text('Lanjut'));
-    await settle(tester);
-    expect(find.text('Level 11 · Meja Tamu'), findsOneWidget);
+    ) async {
+      await winAndNext(tester, 3, best: wonUpTo(8));
+      await pumpFor(tester, const Duration(milliseconds: 1700));
+      await tester.pumpAndSettle();
+      expect(find.text('Level 4 · Ikan Terdekat'), findsOneWidget);
 
-    await tester.tap(_back('Kembali ke peta'));
-    await settle(tester);
-    expect(find.text('Ruang Tamu'), findsOneWidget);
+      await tester.tap(_back('Kembali ke peta'));
+      await settle(tester);
+      expect(find.bySemanticsLabel('Level 9, main sekarang'), findsOneWidget);
+    });
+
+    testWidgets('sesudah level 10 pertama kali: Babak 2 dan kartu babak baru', (
+      tester,
+    ) async {
+      await winAndNext(tester, 10, best: wonUpTo(9));
+      await pumpFor(tester, const Duration(milliseconds: 500));
+      expect(find.text('Ruang Tamu'), findsWidgets);
+      expect(find.byType(ChapterIntroCard), findsOneWidget);
+      expect(find.text('10 level baru · Bos: Hari Lebaran'), findsOneWidget);
+      await tester.tap(find.text('Ayo masuk!'));
+      await pumpFor(tester, const Duration(seconds: 3));
+      expect(find.byType(ChapterIntroCard), findsNothing);
+      expect(find.byType(LevelView), findsNothing);
+      expect(find.bySemanticsLabel('Level 11, main sekarang'), findsOneWidget);
+    });
+
+    testWidgets('level 10 diulang: Babak 2 tanpa kartu, tanpa buka', (
+      tester,
+    ) async {
+      await winAndNext(tester, 10, best: wonUpTo(12));
+      await pumpFor(tester, const Duration(seconds: 3));
+      expect(find.text('Ruang Tamu'), findsWidgets);
+      expect(find.byType(ChapterIntroCard), findsNothing);
+      expect(find.byType(LevelView), findsNothing);
+    });
+
+    testWidgets('sesudah level 20: Oyen di bos, tanpa buka', (tester) async {
+      final progress = await winAndNext(tester, 20, best: wonUpTo(19));
+      await pumpFor(tester, const Duration(seconds: 3));
+      expect(find.byType(ChapterView), findsOneWidget);
+      expect(find.byType(LevelView), findsNothing);
+      expect(
+        find.bySemanticsLabel('Level 20, bos Hari Lebaran, 3 bintang'),
+        findsOneWidget,
+      );
+      expect(progress.progress.totalStars, 60);
+    });
   });
 
   testWidgets('progres dimuat lagi saat aplikasi dibuka ulang', (tester) async {

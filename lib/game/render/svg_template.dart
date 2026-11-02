@@ -17,7 +17,8 @@ import 'css_animation.dart';
 /// Hanya subset yang dipakai desain: elemen `g`, `rect`, `circle`,
 /// `ellipse`, `path`, `text`; atribut `fill`, `stroke`, `stroke-width`,
 /// `stroke-linecap`, `stroke-linejoin`, `stroke-dasharray`, `opacity`
-/// (juga di `g`), `fill-opacity`, `transform` (translate, scale, rotate), dan
+/// (juga di `g`), `fill-opacity`, `transform` (translate, scale, rotate, skewY)
+/// dengan `transform-origin` "x y", dan
 /// atribut huruf. Atribut `style` berisi animasi CSS desain
 /// ([CssStyle]) yang dievaluasi pada waktu `time` dengan [keyframes].
 /// Elemen lain membuat [render] gagal supaya tidak ada yang hilang diam-diam.
@@ -226,7 +227,9 @@ class _Emitter {
       };
       // `transform` tidak diwariskan, jadi selalu milik elemen ini.
       final transform = attrs['transform'];
-      var m = transform == null ? matrix : matrix * _parseTransform(transform);
+      var m = transform == null
+          ? matrix
+          : matrix * _parseTransform(transform, attrs['transform-origin']);
       final style = attrs.remove('style');
       if ((time, style) case (final t?, final style?)
           when style.trim().isNotEmpty) {
@@ -628,9 +631,18 @@ class _Affine {
       : Float64List.fromList([a, b, 0, 0, c, d, 0, 0, 0, 0, 1, 0, e, f, 0, 1]);
 }
 
-final _transformPattern = RegExp(r'(translate|scale|rotate)\s*\(([^)]*)\)');
+final _transformPattern = RegExp(
+  r'(translate|scale|rotate|skewY)\s*\(([^)]*)\)',
+);
 
-_Affine _parseTransform(String value) {
+/// [value] di sekitar titik `transform-origin` [origin] ("x y"), kalau ada.
+_Affine _parseTransform(String value, [String? origin]) {
+  if (origin != null) {
+    final o = _numbers(origin);
+    return _Affine.translate(o[0], o[1]) *
+        _parseTransform(value) *
+        _Affine.translate(-o[0], -o[1]);
+  }
   var m = _Affine.identity;
   var index = 0;
   for (final t in _transformPattern.allMatches(value)) {
@@ -644,6 +656,7 @@ _Affine _parseTransform(String value) {
         switch (t[1]) {
           'translate' => _Affine.translate(n[0], n.length > 1 ? n[1] : 0),
           'scale' => _Affine(n[0], 0, 0, n.length > 1 ? n[1] : n[0], 0, 0),
+          'skewY' => _Affine(1, math.tan(n[0] * math.pi / 180), 0, 1, 0, 0),
           _ when n.length == 3 =>
             _Affine.translate(n[1], n[2]) *
                 _Affine.rotate(n[0]) *

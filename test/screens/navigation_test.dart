@@ -1,9 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/routes.dart';
+import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/gallery/gallery_board_screen.dart';
 import 'package:kucing_oren/gallery/gallery_oyen_screen.dart';
 import 'package:kucing_oren/gallery/gallery_screen.dart';
+import 'package:kucing_oren/screens/chapter/chapter_intro.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
 import 'package:kucing_oren/screens/room/room_screen.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
@@ -143,6 +145,40 @@ void main() {
     await settle(tester);
     expect(find.text('Ruang Tamu'), findsOneWidget);
     expect(find.bySemanticsLabel('Level 11, main sekarang'), findsOneWidget);
+    // Hanya membuka peta: Oyen tidak berjalan, level tidak terbuka sendiri.
+    await pumpFor(tester, const Duration(seconds: 3));
+    expect(find.byType(LevelView), findsNothing);
+    expect(find.byType(ChapterIntroCard), findsNothing);
+  });
+
+  group('alamat peta dengan dari= yang rusak: peta biasa tanpa jalan', () {
+    for (final query in [
+      'dari=abc',
+      'dari=99',
+      'dari=15',
+      'dari=10',
+      'baru=x',
+    ]) {
+      testWidgets('/babak/1?$query', (tester) async {
+        await pumpApp(
+          tester,
+          location: '${AppRoutes.chapter(1)}?$query',
+          progress: testProgress(wonUpTo(3)),
+        );
+        await pumpFor(tester, const Duration(seconds: 3));
+        expect(find.byType(ChapterView), findsOneWidget);
+        expect(find.byType(LevelView), findsNothing);
+        expect(find.byType(ChapterIntroCard), findsNothing);
+        expect(tester.takeException(), isNull);
+      });
+    }
+  });
+
+  test('alamat peta dari "Lanjut"', () {
+    expect(AppRoutes.chapter(1), '/babak/1');
+    expect(AppRoutes.chapter(1, from: 3), '/babak/1?dari=3');
+    expect(AppRoutes.chapter(2, intro: true), '/babak/2?baru=1');
+    expect(musicFor(AppRoutes.chapter(2, from: 12)), MusicTrack.home);
   });
 
   testWidgets('kartu babak membuka babak lain kalau terbuka', (tester) async {

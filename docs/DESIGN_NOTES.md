@@ -408,3 +408,43 @@ Kucing di kamar bergerak sendiri, barang ikut bergerak, dan kucing yang dirawat 
 - **Test**: `pumpApp`/`pumpRoom` membuat kamar diam (`roomLife: false`), karena test kamar lama memakai `pumpAndSettle` dan mengetuk kucing yang kalau hidup bisa masuk ke barang. Kamar hidup diuji di `room_life_test.dart` (`roomLife: true`, `settle`), plus overflow dan potret `19-kamar-hadiah`/`19-kamar-hidup`. Potret lain memakai kamar diam supaya selalu sama.
 - **Galeri gerak** `/galeri/gerak`: kartu desain 21c (kucing dan barang hidup/dipakai), bergerak terus (overflow memakai `settle`).
 - **Belum dikerjakan**: tag "Baru!" untuk kucing baru, Zzz/hati/kilau di luar sprite selain yang ada di `Kucing.dc.html`, dan gelembung untuk kucing di dalam barang.
+
+## Langkah 25: Peta bergambar
+
+Peta babak jadi ilustrasi ruangan (desain 23), dan "Lanjut" memperlihatkan Oyen berjalan ke level berikutnya. Spesifikasi di `docs/superpowers/specs/2026-11-02-peta-bergambar-design.md`, rencana di `docs/superpowers/plans/2026-11-02-peta-bergambar.md`. Pemilik repo menyerahkan keputusan yang belum diputuskan roadmap, spesifikasi, dan desain kepada saya (2 November 2026).
+
+- **Gambar disalin, bukan diketik ulang.** Dekor ruangan per babak, area bos, dan jalur (`{{roadD}}`) adalah satu SVG `pictureMapSvg`. Ikon 20 benda node ada di `mapNodeIconSvg`, satu `sc-if b.<benda>` per benda. Selain itu ada alas token, konfeti, pintu, dan jejak kartu pindah babak. Semuanya di `design_svg_home.dart` dan dijaga `design_sync_test`. `SvgTemplate` kini mengenal `skewY` dan atribut `transform-origin`, yang dipakai pintu kartu pindah.
+- **Jalur** memakai kurva desain (kontrol `p1 + (p2 − p0)/6`, ujung diulang). `PictureMapArt.roadD` menghasilkan atribut `d` yang sama persis dengan desain (`toFixed(1)`), dan `onRoad` memberi titik di kurva untuk Oyen berjalan.
+- **Node bergambar** (`PictureNode`, `TitikLevel.dc.html`): benda per level urut daftar `D1`/`D2`. Ukuran node 66 dan bos 100; di layar kecil 54 dan 84.
+  - **Label "Main"** pindah ke bawah node di level 4 dan 7 (dan 14 dan 17), seperti di peta lama. Tanpa itu, label menutupi bintang node di atasnya. Desain hanya memperlihatkan level 13 dan 7, dan level 7 di 23d juga berlabel di bawah.
+  - **Garis putus-putus node terkunci** digambar di belakang chip nomor dan gembok.
+  - **Label pembaca layar** tetap "Level N, keadaan" dan "Level N, bos X, keadaan". Nama benda ("Kulkas", "Rak TV") tidak dibacakan dan tidak diterjemahkan, karena gambar benda hanya hiasan.
+- **Token Oyen** (`MapToken`): alas elips + sprite Oyen 56 px, di titik node + (18, −92) seperti desain, memakai aksesoris yang sedang dipakai Oyen di kamar.
+  - **Sasaran token**: level saat ini, bos kalau babak selesai, dan tanpa token kalau babak terkunci.
+  - **Selama jalan** token mengikuti jalur dengan geser yang sama, jadi Oyen tetap di kanan atas node dari awal sampai akhir. Bingkai 23b memusatkan token di jalur, tapi itu membuat token melompat di awal dan akhir jalan.
+- **Ruang kosong 56 px di atas peta**: di desain, token di level 2 dan 12 setengah tertutup pudar judul. Peta yang digulir kini mulai 56 px lebih bawah, jadi token itu utuh saat gulir paling atas, juga dengan teks 130%. Gulir awal menaruh tengah token di tengah tempat peta.
+- **Latar**:
+  - **Babak 1**: ubin `#F5EBDD` dengan kotak biru 22% di kanan atas dan kiri bawah tiap petak 56 px (`conic-gradient`).
+  - **Babak 2**: lantai papan lama (garis tiap 48 px, sambungan tiap 142 px).
+  - **Keduanya** dihitung dari layar desain, jadi pola menyambung dengan header.
+- **Layar kecil** (tinggi di bawah `roomCompactHeight` 700): jarak vertikal titik dirapatkan 12% dari titik pertama (`n360`). Dekor dan area bos tetap di tempat desain, jadi tinggi peta tidak berubah.
+- **"Lanjut"** membuka `/babak/n?dari=<id>`. `ChapterView` menjalankan `MapWalk`: jeda 0,3 detik, jalan 1 detik dengan `easeInOut` dan bingkai `walk1`/`walk2` menghadap kiri/kanan, diam 0,25 detik, lalu level berikutnya dibuka.
+  - **Sentuhan** di mana saja (termasuk header dan gulir) membatalkan pembukaan lewat lapisan penangkap yang menelan sentuhan itu, jadi node di bawahnya tidak ikut tertekan. Oyen tetap menyelesaikan jalannya. Kembali sistem juga membatalkan.
+  - **Kurangi gerak**: Oyen langsung di tujuan, level terbuka sesudah 0,6 detik, dan tetap bisa dibatalkan.
+  - **Pembaca layar aktif**: tanpa pembukaan otomatis. Saat Oyen sampai diumumkan "Oyen sampai di level N.", dan level dibuka lewat node.
+  - **Peta di bawah level**: karena rute level bersarang di bawah peta, `?dari=` biasanya datang lewat `didUpdateWidget` peta yang sudah terpasang. Jalan dimulai ulang di sana, dan gulir menuju token.
+  - **Kembali ke peta** dari level yang terbuka sendiri membuka peta tanpa `?dari=`: token kembali ke level saat ini, juga sesudah mengulang level lama.
+- **Detail jalan (dari review)**:
+  - **Arah hadap** mengikuti arah jalur di titik itu. Jalur yang hampir lurus naik/turun (|dx| < ½|dy|, mis. level 3 → 4) membuat Oyen menghadap depan.
+  - **Bingkai yang tertunda** (aplikasi di latar) dibatasi 0,1 detik, jadi level tidak langsung terbuka begitu aplikasi kembali.
+  - **Level yang terbuka di atas peta** tidak membuat peta di bawahnya melompat ke level saat ini.
+  - **Pembaca layar** tidak bisa mencapai peta selama kartu babak baru terbuka (`BlockSemantics`).
+  - **Gambar dekor dan jalur** di-cache per babak dan ukuran layar.
+- **Sesudah level 10**: peta Babak 2 dengan Oyen di level 11, tanpa jalan dan tanpa buka otomatis.
+  - **Kartu "Babak baru terbuka!"** (23c) hanya muncul kalau bos belum pernah menang saat levelnya dibuka (`LevelScreen` mencatat `isWon` waktu dibuka, `?baru=1`). Tidak ada simpanan baru.
+  - **Letak kartu**: di tengah layar (di desain 844 kartu ±370 px di y 236 juga di tengah), selebar paling banyak 342, dan bisa digulir di layar pendek dengan teks besar.
+  - **Cara menutup**: "Ayo masuk!", ketuk latar, atau kembali sistem.
+- **Sesudah level 20**: peta Babak 2 dengan Oyen berdiri senang (`happy`) di bos, tanpa buka otomatis.
+- **Alamat rusak** (`dari` bukan angka, bukan level babak itu, atau bos yang bukan bos terakhir) diabaikan, dan `baru` di babak terkunci juga diabaikan.
+- **Tidak dipakai**: kartu "Berhasil!" di peta prototipe 23 (layar hasil langkah 8 tetap) dan suara jalan.
+- **Dibuang**: gambar dan letak peta desain 02 (`MapArt.points`, jejak lama, area bos, ketupat, ikan asin bos, `_Floor` versi lama). Ikon kartu babak tetap dari desain 02.
