@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/screens/chapter/chapter_header.dart';
@@ -13,6 +14,7 @@ import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
+import 'result_fixtures.dart' show pumpFor;
 
 /// Progres contoh desain: Babak 1 selesai dengan 26 bintang, level 11
 /// (3 bintang) dan 12 (2 bintang) menang.
@@ -533,6 +535,46 @@ void main() {
       );
     });
 
+    testWidgets(
+      'lompatan waktu besar (aplikasi di latar): tidak langsung buka',
+      (tester) async {
+        final opened = await pumpWalk(tester, won: 12, from: 12);
+        await pumpTime(tester, 0.5);
+        await tester.pump(const Duration(seconds: 30));
+        expect(opened, isEmpty);
+        await pumpTime(tester, 1.6);
+        expect(opened, [13]);
+      },
+    );
+
+    testWidgets('arah hadap mengikuti jalur: turun lurus = hadap depan', (
+      tester,
+    ) async {
+      // Level 3 → 4 di Babak 1 hampir lurus ke bawah (dx −6, dy 96).
+      await pumpWalk(tester, won: 3, from: 3, chapter: 1);
+      await pumpTime(tester, 0.8);
+      final look = tester.widget<KittyView>(find.byType(KittyView)).look;
+      expect(look.pose, anyOf(KittyPose.walk1, KittyPose.walk2));
+      expect(look.facing, KittyFacing.down);
+    });
+
+    testWidgets('walkFrom hilang (level dibuka di atas peta): gulir diam', (
+      tester,
+    ) async {
+      setScreenSize(tester, const Size(360, 640));
+      await pumpWalk(tester, won: 18, from: 12);
+      final offset = tester
+          .state<ScrollableState>(find.byType(Scrollable))
+          .position
+          .pixels;
+      await pumpWalk(tester, won: 18, from: null);
+      await tester.pump();
+      expect(
+        tester.state<ScrollableState>(find.byType(Scrollable)).position.pixels,
+        offset,
+      );
+    });
+
     testWidgets('walkFrom datang belakangan (peta di bawah level)', (
       tester,
     ) async {
@@ -547,6 +589,55 @@ void main() {
       expect((_tokenFoot(tester) - from).distance, lessThan(0.5));
       await pumpTime(tester, 1.7);
       expect(opened, [13]);
+    });
+  });
+
+  group('temuan review', () {
+    // Lanjut dari dalam aplikasi: peta sudah terpasang dan tergulir ke
+    // level 9, lalu level 3 dimainkan ulang dan "Lanjut" kembali ke peta
+    // yang sama (`didUpdateWidget`). Token harus terlihat di bawah judul.
+    for (final scale in const [1.0, 1.3]) {
+      testWidgets('Lanjut di peta yang sudah tergulir, teks ${scale * 100}%', (
+        tester,
+      ) async {
+        setScreenSize(tester, const Size(360, 640));
+        setTextScale(tester, scale);
+        await pumpApp(
+          tester,
+          location: AppRoutes.chapter(1),
+          progress: testProgress(wonUpTo(8)),
+        );
+        final router = GoRouter.of(tester.element(find.byType(ChapterView)));
+        router.go(AppRoutes.level(3, chapter: 1));
+        await tester.pumpAndSettle();
+        router.go(AppRoutes.chapter(1, from: 3));
+        await tester.pump();
+        await tester.pump();
+        final token = tester.getRect(find.byType(MapToken));
+        final header = tester.getRect(find.byType(ChapterHeader));
+        expect(token.top, greaterThanOrEqualTo(header.bottom - 1));
+        expect(token.bottom, lessThanOrEqualTo(640));
+        await pumpFor(tester, const Duration(milliseconds: 1700));
+        await tester.pumpAndSettle();
+        expect(find.text('Level 4 · Ikan Terdekat'), findsOneWidget);
+      });
+    }
+
+    testWidgets('kartu babak baru menutup peta dari pembaca layar', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await pumpApp(
+        tester,
+        location: AppRoutes.chapter(2, intro: true),
+        progress: testProgress(wonUpTo(10)),
+      );
+      expect(find.bySemanticsLabel('Babak baru terbuka'), findsOneWidget);
+      expect(find.bySemanticsLabel('Level 11, main sekarang'), findsNothing);
+      await tester.tap(find.text('Ayo masuk!'));
+      await settle(tester);
+      expect(find.bySemanticsLabel('Level 11, main sekarang'), findsOneWidget);
+      semantics.dispose();
     });
   });
 

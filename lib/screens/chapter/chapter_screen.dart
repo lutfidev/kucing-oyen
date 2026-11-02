@@ -142,6 +142,9 @@ class _ChapterViewState extends State<ChapterView>
   double _scale = 1;
   double _viewport = 0;
 
+  /// Bingkai terpanjang yang dimajukan sekaligus (detik).
+  static const double _maxFrame = 0.1;
+
   late final Ticker _ticker = createTicker(_onTick);
   Duration _last = Duration.zero;
 
@@ -167,8 +170,10 @@ class _ChapterViewState extends State<ChapterView>
     if (widget.intro && !old.intro) _introOpen = true;
     if (old.walkFrom != widget.walkFrom) {
       _startWalk();
+      // Tanpa walkFrom (level terbuka di atas peta): peta diam di bawah
+      // halaman level yang sedang masuk, tidak melompat ke level saat ini.
       final scroll = _scroll;
-      if (scroll != null && scroll.hasClients) {
+      if (widget.walkFrom != null && scroll != null && scroll.hasClients) {
         scroll.jumpTo(_initialOffset());
       }
     }
@@ -217,7 +222,10 @@ class _ChapterViewState extends State<ChapterView>
   void _onTick(Duration elapsed) {
     final walk = _walk;
     if (walk == null || !mounted) return;
-    walk.tick((elapsed - _last).inMicroseconds / 1e6);
+    // Bingkai yang tertunda (aplikasi di latar) dibatasi supaya Oyen tetap
+    // terlihat berjalan dan level tidak langsung terbuka.
+    final dt = (elapsed - _last).inMicroseconds / 1e6;
+    walk.tick(math.min(dt, _maxFrame));
     _last = elapsed;
     if (walk.takeOpen()) {
       _ticker.stop();
@@ -256,17 +264,13 @@ class _ChapterViewState extends State<ChapterView>
   MapTokenSpot? _token() {
     final walk = _walk;
     if (walk != null) {
-      final from = ChapterMap.pointOf(_walkIndex, compact: _compact);
-      final to = ChapterMap.pointOf(_walkIndex + 1, compact: _compact);
       final walking = walk.walking;
       return MapTokenSpot(
         at: ChapterMap.onRoad(_walkIndex, walk.t, compact: _compact),
         pose: walking
             ? KittyLook.walkPose(_last.inMicroseconds / 1e6)
             : KittyPose.idle,
-        facing: walking
-            ? (to.dx >= from.dx ? KittyFacing.right : KittyFacing.left)
-            : KittyFacing.down,
+        facing: walking ? _facing(walk.t) : KittyFacing.down,
       );
     }
     final index = ChapterView.tokenIndexOf(
@@ -280,6 +284,29 @@ class _ChapterViewState extends State<ChapterView>
       pose: _atBossHappy ? KittyPose.happy : KittyPose.idle,
     );
   }
+
+  /// Arah hadap selama jalan, dari arah jalur di [t]: hampir lurus naik
+  /// atau turun = hadap depan, selain itu kiri/kanan.
+  KittyFacing _facing(double t) {
+    final d =
+        ChapterMap.onRoad(
+          _walkIndex,
+          math.min(1, t + _tangentStep),
+          compact: _compact,
+        ) -
+        ChapterMap.onRoad(
+          _walkIndex,
+          math.max(0, t - _tangentStep),
+          compact: _compact,
+        );
+    if (d.dx.abs() < d.dy.abs() * _sideways) return KittyFacing.down;
+    return d.dx > 0 ? KittyFacing.right : KittyFacing.left;
+  }
+
+  /// Jarak di kurva untuk arah jalur, dan perbandingan dx/dy di bawahnya
+  /// Oyen menghadap depan.
+  static const double _tangentStep = 0.02;
+  static const double _sideways = 0.5;
 
   /// Gulir awal: token Oyen di tengah tempat peta.
   double _initialOffset() {

@@ -434,6 +434,12 @@ Peta babak jadi ilustrasi ruangan (desain 23), dan "Lanjut" memperlihatkan Oyen 
   - **Pembaca layar aktif**: tanpa pembukaan otomatis. Saat Oyen sampai diumumkan "Oyen sampai di level N.", dan level dibuka lewat node.
   - **Peta di bawah level**: karena rute level bersarang di bawah peta, `?dari=` biasanya datang lewat `didUpdateWidget` peta yang sudah terpasang. Jalan dimulai ulang di sana, dan gulir menuju token.
   - **Kembali ke peta** dari level yang terbuka sendiri membuka peta tanpa `?dari=`: token kembali ke level saat ini, juga sesudah mengulang level lama.
+- **Detail jalan (dari review)**:
+  - **Arah hadap** mengikuti arah jalur di titik itu. Jalur yang hampir lurus naik/turun (|dx| < ½|dy|, mis. level 3 → 4) membuat Oyen menghadap depan.
+  - **Bingkai yang tertunda** (aplikasi di latar) dibatasi 0,1 detik, jadi level tidak langsung terbuka begitu aplikasi kembali.
+  - **Level yang terbuka di atas peta** tidak membuat peta di bawahnya melompat ke level saat ini.
+  - **Pembaca layar** tidak bisa mencapai peta selama kartu babak baru terbuka (`BlockSemantics`).
+  - **Gambar dekor dan jalur** di-cache per babak dan ukuran layar.
 - **Sesudah level 10**: peta Babak 2 dengan Oyen di level 11, tanpa jalan dan tanpa buka otomatis.
   - **Kartu "Babak baru terbuka!"** (23c) hanya muncul kalau bos belum pernah menang saat levelnya dibuka (`LevelScreen` mencatat `isWon` waktu dibuka, `?baru=1`). Tidak ada simpanan baru.
   - **Letak kartu**: di tengah layar (di desain 844 kartu ±370 px di y 236 juga di tengah), selebar paling banyak 342, dan bisa digulir di layar pendek dengan teks besar.

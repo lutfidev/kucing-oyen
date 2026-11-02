@@ -156,13 +156,23 @@ void paintPictureMap(
   Canvas canvas, {
   required int chapter,
   required List<Offset> points,
-}) => _map
-    .render({
-      'isDapur': chapter == 1,
-      'isTamu': chapter != 1,
-      'roadD': PictureMapArt.roadD(points),
-    })
-    .paint(canvas);
+}) {
+  final road = PictureMapArt.roadD(points);
+  _maps
+      .putIfAbsent(
+        (chapter == 1, road),
+        () => _map.render({
+          'isDapur': chapter == 1,
+          'isTamu': chapter != 1,
+          'roadD': road,
+        }),
+      )
+      .paint(canvas);
+}
+
+/// Gambar peta per (dapur, jalur): dua babak kali dua ukuran layar, jadi
+/// tidak diurai ulang tiap bingkai selama gulir dan jalan.
+final _maps = <(bool, String), SvgDrawing>{};
 
 /// Satu jejak kaki dengan tengah di (0, 0), ukuran desain 18.
 void paintMapPaw(Canvas canvas) {

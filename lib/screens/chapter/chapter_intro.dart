@@ -32,6 +32,9 @@ class ChapterIntroCard extends StatefulWidget {
   static const double side = 24;
   static const double padding = 22;
 
+  /// Tinggi baris judul babak (`line-height: 1.05`).
+  static const double titleHeight = 1.05;
+
   /// Masuk: geser dari −24 px sambil muncul.
   static const slide = Duration(milliseconds: 400);
   static const double slideFrom = -24;
@@ -60,6 +63,10 @@ class _ChapterIntroCardState extends State<ChapterIntroCard>
     vsync: this,
     duration: ChapterIntroCard.slide,
   );
+  late final CurvedAnimation _curve = CurvedAnimation(
+    parent: _enter,
+    curve: Curves.easeOut,
+  );
 
   @override
   void didChangeDependencies() {
@@ -73,6 +80,7 @@ class _ChapterIntroCardState extends State<ChapterIntroCard>
 
   @override
   void dispose() {
+    _curve.dispose();
     _enter.dispose();
     super.dispose();
   }
@@ -83,120 +91,123 @@ class _ChapterIntroCardState extends State<ChapterIntroCard>
     final space = context.koSpace;
     final l = context.l10n;
     final chapter = widget.chapter;
-    final curve = CurvedAnimation(parent: _enter, curve: Curves.easeOut);
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Semantics(
-            button: true,
-            label: l.close,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: widget.onClose,
-              child: ColoredBox(color: c.introScrim),
-            ),
-          ),
-        ),
-        Positioned.fill(
-          child: IgnorePointer(
-            child: FittedBox(
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.topCenter,
-              child: const CustomPaint(
-                size: Size(390, 844),
-                painter: _Confetti(),
+    final curve = _curve;
+    // Peta di belakang kartu tidak bisa dicapai pembaca layar.
+    return BlockSemantics(
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Semantics(
+              button: true,
+              label: l.close,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: widget.onClose,
+                child: ColoredBox(color: c.introScrim),
               ),
             ),
           ),
-        ),
-        Positioned.fill(
-          child: SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(ChapterIntroCard.side),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth:
-                        PictureMapArt.screenWidth - 2 * ChapterIntroCard.side,
-                  ),
-                  child: AnimatedBuilder(
-                    animation: curve,
-                    builder: (context, child) => Opacity(
-                      opacity: curve.value,
-                      child: Transform.translate(
-                        offset: Offset(
-                          0,
-                          ChapterIntroCard.slideFrom * (1 - curve.value),
-                        ),
-                        child: child,
-                      ),
+          Positioned.fill(
+            child: IgnorePointer(
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.topCenter,
+                child: const CustomPaint(
+                  size: Size(390, 844),
+                  painter: _Confetti(),
+                ),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(ChapterIntroCard.side),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth:
+                          PictureMapArt.screenWidth - 2 * ChapterIntroCard.side,
                     ),
-                    child: Semantics(
-                      scopesRoute: true,
-                      namesRoute: true,
-                      explicitChildNodes: true,
-                      label: l.chapterIntroLabel,
-                      child: Container(
-                        key: ChapterIntroCard.cardKey,
-                        padding: EdgeInsets.fromLTRB(
-                          ChapterIntroCard.padding,
-                          ChapterIntroCard.padding,
-                          ChapterIntroCard.padding,
-                          space.s24,
-                        ),
-                        decoration: BoxDecoration(
-                          color: c.surface,
-                          borderRadius: BorderRadius.circular(
-                            context.koRadius.boss,
+                    child: AnimatedBuilder(
+                      animation: curve,
+                      builder: (context, child) => Opacity(
+                        opacity: curve.value,
+                        child: Transform.translate(
+                          offset: Offset(
+                            0,
+                            ChapterIntroCard.slideFrom * (1 - curve.value),
                           ),
-                          boxShadow: [
-                            ...KoShadow.solid(
-                              c.lineDeep,
-                              context.koShadow.press,
-                            ),
-                            ...context.koShadow.dialog,
-                          ],
+                          child: child,
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              l.chapterIntroOverline.toUpperCase(),
-                              textAlign: TextAlign.center,
-                              style: context.koType.overlineLarge.copyWith(
-                                color: c.orangeDeep,
-                              ),
+                      ),
+                      child: Semantics(
+                        scopesRoute: true,
+                        namesRoute: true,
+                        explicitChildNodes: true,
+                        label: l.chapterIntroLabel,
+                        child: Container(
+                          key: ChapterIntroCard.cardKey,
+                          padding: EdgeInsets.fromLTRB(
+                            ChapterIntroCard.padding,
+                            ChapterIntroCard.padding,
+                            ChapterIntroCard.padding,
+                            space.s24,
+                          ),
+                          decoration: BoxDecoration(
+                            color: c.surface,
+                            borderRadius: BorderRadius.circular(
+                              context.koRadius.boss,
                             ),
-                            SizedBox(height: space.s8),
-                            Text(
-                              chapterTitle(l, chapter),
-                              textAlign: TextAlign.center,
-                              style: context.koType.headline.copyWith(
-                                color: c.ink,
-                                height: 1.05,
+                            boxShadow: [
+                              ...KoShadow.solid(
+                                c.lineDeep,
+                                context.koShadow.press,
                               ),
-                            ),
-                            SizedBox(height: space.s14),
-                            const _Picture(),
-                            SizedBox(height: space.s8),
-                            Text(
-                              l.chapterIntroInfo(
-                                chapter.levels.length,
-                                bossName(l, chapter),
+                              ...context.koShadow.dialog,
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                l.chapterIntroOverline.toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: context.koType.overlineLarge.copyWith(
+                                  color: c.orangeDeep,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                              style: context.koType.paragraph.copyWith(
-                                color: c.inkSoft,
+                              SizedBox(height: space.s8),
+                              Text(
+                                chapterTitle(l, chapter),
+                                textAlign: TextAlign.center,
+                                style: context.koType.headline.copyWith(
+                                  color: c.ink,
+                                  height: ChapterIntroCard.titleHeight,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: space.s14),
-                            KoButton(
-                              label: l.chapterIntroEnter,
-                              kind: KoButtonKind.primary,
-                              size: KoButtonSize.large,
-                              onPressed: widget.onClose,
-                            ),
-                          ],
+                              SizedBox(height: space.s14),
+                              const _Picture(),
+                              SizedBox(height: space.s8),
+                              Text(
+                                l.chapterIntroInfo(
+                                  chapter.levels.length,
+                                  bossName(l, chapter),
+                                ),
+                                textAlign: TextAlign.center,
+                                style: context.koType.paragraph.copyWith(
+                                  color: c.inkSoft,
+                                ),
+                              ),
+                              SizedBox(height: space.s14),
+                              KoButton(
+                                label: l.chapterIntroEnter,
+                                kind: KoButtonKind.primary,
+                                size: KoButtonSize.large,
+                                onPressed: widget.onClose,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -205,8 +216,8 @@ class _ChapterIntroCardState extends State<ChapterIntroCard>
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
