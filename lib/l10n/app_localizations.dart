@@ -2999,6 +2999,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New chapter unlocked'**
   String get chapterIntroLabel;
+
+  /// Tag above a cat that was just adopted and whose card hasn't been opened yet.
+  ///
+  /// In en, this message translates to:
+  /// **'New!'**
+  String get kittyNewTag;
+
+  /// Screen reader label of a newly adopted cat in the room (shows a "New!" tag).
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, new. Tap to see their card'**
+  String kittyTapHintNew(String name);
+
+  /// Screen reader label of a newly adopted cat in the room that is also hungry.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, new, hungry. Tap to see their card'**
+  String kittyTapHintNewHungry(String name);
+
+  /// Short note on a cat card when a snack is tapped but the cat's Full and Happy bars are both at 100. {name} is the cat's name.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is already full and happy. Save it for later!'**
+  String snackFullNote(String name);
+
+  /// Short note on a cat card when a snack that is out of stock is tapped.
+  ///
+  /// In en, this message translates to:
+  /// **'All gone. Grab more snacks in the Shop!'**
+  String get snackEmptyNote;
 }
 
 class _AppLocalizationsDelegate

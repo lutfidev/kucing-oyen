@@ -2022,4 +2022,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chapterIntroLabel => 'New chapter unlocked';
+
+  @override
+  String get kittyNewTag => 'New!';
+
+  @override
+  String kittyTapHintNew(String name) {
+    return '$name, new. Tap to see their card';
+  }
+
+  @override
+  String kittyTapHintNewHungry(String name) {
+    return '$name, new, hungry. Tap to see their card';
+  }
+
+  @override
+  String snackFullNote(String name) {
+    return '$name is already full and happy. Save it for later!';
+  }
+
+  @override
+  String get snackEmptyNote => 'All gone. Grab more snacks in the Shop!';
 }

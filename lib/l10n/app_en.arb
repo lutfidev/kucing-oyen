@@ -2636,5 +2636,40 @@
   "chapterIntroLabel": "New chapter unlocked",
   "@chapterIntroLabel": {
     "description": "Screen reader name of the new-chapter card (dialog)."
+  },
+  "kittyNewTag": "New!",
+  "@kittyNewTag": {
+    "description": "Tag above a cat that was just adopted and whose card hasn't been opened yet."
+  },
+  "kittyTapHintNew": "{name}, new. Tap to see their card",
+  "@kittyTapHintNew": {
+    "description": "Screen reader label of a newly adopted cat in the room (shows a \"New!\" tag).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kittyTapHintNewHungry": "{name}, new, hungry. Tap to see their card",
+  "@kittyTapHintNewHungry": {
+    "description": "Screen reader label of a newly adopted cat in the room that is also hungry.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "snackFullNote": "{name} is already full and happy. Save it for later!",
+  "@snackFullNote": {
+    "description": "Short note on a cat card when a snack is tapped but the cat's Full and Happy bars are both at 100. {name} is the cat's name.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "snackEmptyNote": "All gone. Grab more snacks in the Shop!",
+  "@snackEmptyNote": {
+    "description": "Short note on a cat card when a snack that is out of stock is tapped."
   }
 }

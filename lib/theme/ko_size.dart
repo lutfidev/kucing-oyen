@@ -157,6 +157,7 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.roomSnackArtHeight,
     required this.roomSnackArtBox,
     required this.roomStockBadge,
+    required this.roomNewTag,
     required this.roomEmptyOpacity,
     required this.roomAccessoryArt,
     required this.roomAccessoryCard,
@@ -321,6 +322,7 @@ class KoSize extends ThemeExtension<KoSize> {
     roomSnackArtHeight: 28,
     roomSnackArtBox: 30,
     roomStockBadge: 20,
+    roomNewTag: 24,
     roomEmptyOpacity: 0.45,
     roomAccessoryArt: 30,
     roomAccessoryCard: 86,
@@ -753,6 +755,9 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Badge stok "×N" camilan.
   final double roomStockBadge;
 
+  /// Tinggi tag "Baru!" di atas kucing baru (desain 19).
+  final double roomNewTag;
+
   /// Kartu camilan yang stoknya habis.
   final double roomEmptyOpacity;
 
@@ -939,6 +944,7 @@ class KoSize extends ThemeExtension<KoSize> {
     double? roomSnackArtHeight,
     double? roomSnackArtBox,
     double? roomStockBadge,
+    double? roomNewTag,
     double? roomEmptyOpacity,
     double? roomAccessoryArt,
     double? roomAccessoryCard,
@@ -1106,6 +1112,7 @@ class KoSize extends ThemeExtension<KoSize> {
       roomSnackArtHeight: roomSnackArtHeight ?? this.roomSnackArtHeight,
       roomSnackArtBox: roomSnackArtBox ?? this.roomSnackArtBox,
       roomStockBadge: roomStockBadge ?? this.roomStockBadge,
+      roomNewTag: roomNewTag ?? this.roomNewTag,
       roomEmptyOpacity: roomEmptyOpacity ?? this.roomEmptyOpacity,
       roomAccessoryArt: roomAccessoryArt ?? this.roomAccessoryArt,
       roomAccessoryCard: roomAccessoryCard ?? this.roomAccessoryCard,
@@ -1288,6 +1295,7 @@ class KoSize extends ThemeExtension<KoSize> {
       roomSnackArtHeight: d(roomSnackArtHeight, other.roomSnackArtHeight),
       roomSnackArtBox: d(roomSnackArtBox, other.roomSnackArtBox),
       roomStockBadge: d(roomStockBadge, other.roomStockBadge),
+      roomNewTag: d(roomNewTag, other.roomNewTag),
       roomEmptyOpacity: d(roomEmptyOpacity, other.roomEmptyOpacity),
       roomAccessoryArt: d(roomAccessoryArt, other.roomAccessoryArt),
       roomAccessoryCard: d(roomAccessoryCard, other.roomAccessoryCard),

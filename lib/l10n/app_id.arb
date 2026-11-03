@@ -482,5 +482,10 @@
   "chapterIntroOverline": "Babak baru terbuka!",
   "chapterIntroEnter": "Ayo masuk!",
   "chapterIntroInfo": "{count, plural, other{{count} level baru}} · Bos: {boss}",
-  "chapterIntroLabel": "Babak baru terbuka"
+  "chapterIntroLabel": "Babak baru terbuka",
+  "kittyNewTag": "Baru!",
+  "kittyTapHintNew": "{name}, baru. Ketuk untuk lihat kartunya",
+  "kittyTapHintNewHungry": "{name}, baru, lapar. Ketuk untuk lihat kartunya",
+  "snackFullNote": "{name} sudah kenyang dan senang. Simpan buat nanti!",
+  "snackEmptyNote": "Stoknya habis. Beli camilan lagi di Toko!"
 }

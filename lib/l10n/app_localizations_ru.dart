@@ -2070,4 +2070,25 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get chapterIntroLabel => 'Новая глава открыта';
+
+  @override
+  String get kittyNewTag => 'Новый!';
+
+  @override
+  String kittyTapHintNew(String name) {
+    return '$name, новенький. Нажми, чтобы открыть карточку';
+  }
+
+  @override
+  String kittyTapHintNewHungry(String name) {
+    return '$name, новенький, хочет есть. Нажми, чтобы открыть карточку';
+  }
+
+  @override
+  String snackFullNote(String name) {
+    return '$name уже сыт и доволен. Прибереги на потом!';
+  }
+
+  @override
+  String get snackEmptyNote => 'Закончилось. Купи ещё вкусняшек в Магазине!';
 }

@@ -2040,4 +2040,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get chapterIntroLabel => 'Capítulo novo liberado';
+
+  @override
+  String get kittyNewTag => 'Novo!';
+
+  @override
+  String kittyTapHintNew(String name) {
+    return '$name, novo. Toque para ver o cartão';
+  }
+
+  @override
+  String kittyTapHintNewHungry(String name) {
+    return '$name, novo, com fome. Toque para ver o cartão';
+  }
+
+  @override
+  String snackFullNote(String name) {
+    return '$name já está cheio e feliz. Guarde para depois!';
+  }
+
+  @override
+  String get snackEmptyNote => 'Acabou. Compre mais petiscos na Loja!';
 }

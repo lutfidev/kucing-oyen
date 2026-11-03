@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/app/progress_scope.dart';
+import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
@@ -314,6 +316,90 @@ void main() {
           geo.boxOf(kardus, kardus.defaultSpot).shift(room.topLeft).topLeft,
         ),
       );
+    });
+  });
+
+  group('tag "Baru!"', () {
+    ProgressController fresh({Home? home}) => testProgressWith(
+      home: home ?? Home(room: fullRoom()).adopt(KittyId.salju),
+    );
+    Finder tag() => find.text('Baru!');
+
+    testWidgets('di atas kucing baru seperti desain', (tester) async {
+      await pumpRoom(tester, progress: fresh());
+      expect(tag(), findsOneWidget);
+      final cat = tester.getRect(kittyView(KittyId.salju));
+      final box = tester.getRect(
+        find.ancestor(of: tag(), matching: find.byType(DecoratedBox)).first,
+      );
+      final (_, geo) = roomOf(tester);
+      // Desain: tengah kotak kucing − 26, atas kotak − 14, tinggi 24.
+      expect(box.left, moreOrLessEquals(cat.center.dx - 26 * geo.artScale));
+      expect(box.top, moreOrLessEquals(cat.top - 14 * geo.artScale));
+      expect(box.height, moreOrLessEquals(24));
+    });
+
+    testWidgets('kucing lama tanpa tag', (tester) async {
+      await pumpRoom(
+        tester,
+        progress: testProgressWith(home: Home(kitties: {KittyId.salju})),
+      );
+      expect(tag(), findsNothing);
+    });
+
+    testWidgets('hilang saat kartunya dibuka dan tersimpan', (tester) async {
+      final progress = fresh();
+      await pumpRoom(tester, progress: progress);
+      await tester.tap(kittyView(KittyId.salju));
+      await tester.pumpAndSettle();
+      expect(tag(), findsNothing);
+      expect(progress.home.isFresh(KittyId.salju), isFalse);
+      final store = progress.store as MemoryProgressStore;
+      expect(store.home.isFresh(KittyId.salju), isFalse);
+    });
+
+    testWidgets('disembunyikan selama menghias', (tester) async {
+      await pumpRoom(tester, progress: fresh());
+      await tester.tap(find.text('Hias'));
+      await tester.pumpAndSettle();
+      expect(tag(), findsNothing);
+      await tester.tap(find.text('Selesai'));
+      await tester.pump();
+      expect(tag(), findsOneWidget);
+    });
+
+    testWidgets('pembaca layar mendengar "baru"', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await pumpRoom(tester, progress: fresh());
+      expect(
+        find.bySemanticsLabel('Salju, baru. Ketuk untuk lihat kartunya'),
+        findsOneWidget,
+      );
+      // Tag hanya hiasan; tidak dibacakan dua kali.
+      expect(find.bySemanticsLabel('Baru!'), findsNothing);
+      semantics.dispose();
+    });
+
+    testWidgets('dibeli di Toko lalu kembali ke kamar: bertanda baru', (
+      tester,
+    ) async {
+      setScreenSize(tester, const Size(390, 844));
+      await pumpApp(
+        tester,
+        location: '/toko?tab=kitties',
+        progress: testProgressWith(coins: 300),
+      );
+      final card = find.byKey(const ValueKey('shop-kitty-salju'));
+      await tester.ensureVisible(card);
+      await settle(tester);
+      await tester.tap(card);
+      await settle(tester);
+      await tester.tap(find.byKey(const ValueKey('buy-confirm')));
+      await settle(tester);
+      await tester.tap(find.byKey(const ValueKey('buy-room')));
+      await settle(tester);
+      expect(find.byType(RoomView), findsOneWidget);
+      expect(tag(), findsOneWidget);
     });
   });
 }

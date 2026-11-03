@@ -574,8 +574,45 @@ class BowlRefillLabel extends StatelessWidget {
   }
 }
 
+/// Tag "Baru!" di atas kucing yang baru diadopsi (desain 19, keadaan
+/// `salju`). Hanya hiasan: pembaca layar mendengarnya di label kucing.
+class NewKittyTag extends StatelessWidget {
+  const NewKittyTag({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    return ExcludeSemantics(
+      child: IgnorePointer(
+        child: Container(
+          height: s.roomNewTag,
+          padding: EdgeInsets.symmetric(horizontal: context.koSpace.s10),
+          decoration: BoxDecoration(
+            color: c.success,
+            borderRadius: BorderRadius.circular(context.koRadius.pill),
+            boxShadow: KoShadow.solid(
+              c.successDeep,
+              context.koShadow.pressIcon,
+            ),
+          ),
+          child: Center(
+            widthFactor: 1,
+            child: Text(
+              context.l10n.kittyNewTag,
+              maxLines: 1,
+              softWrap: false,
+              style: context.koType.newTag.copyWith(color: c.onSuccess),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Menaruh anak seukuran aslinya di [at], digeser masuk supaya paling
-/// sedikit [margin] dari tepi kiri dan kanan.
+/// sedikit [margin] dari tepi kiri, kanan, dan atas.
 class KeepInside extends SingleChildLayoutDelegate {
   const KeepInside(this.at, {this.margin = 0});
 
@@ -589,7 +626,7 @@ class KeepInside extends SingleChildLayoutDelegate {
   @override
   Offset getPositionForChild(Size size, Size childSize) => Offset(
     at.dx.clamp(margin, max(margin, size.width - childSize.width - margin)),
-    at.dy,
+    max(margin, at.dy),
   );
 
   @override

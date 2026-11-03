@@ -482,5 +482,10 @@
   "chapterIntroOverline": "Capítulo novo liberado!",
   "chapterIntroEnter": "Bora entrar!",
   "chapterIntroInfo": "{count, plural, =1{1 nível novo} other{{count} níveis novos}} · Chefão: {boss}",
-  "chapterIntroLabel": "Capítulo novo liberado"
+  "chapterIntroLabel": "Capítulo novo liberado",
+  "kittyNewTag": "Novo!",
+  "kittyTapHintNew": "{name}, novo. Toque para ver o cartão",
+  "kittyTapHintNewHungry": "{name}, novo, com fome. Toque para ver o cartão",
+  "snackFullNote": "{name} já está cheio e feliz. Guarde para depois!",
+  "snackEmptyNote": "Acabou. Compre mais petiscos na Loja!"
 }

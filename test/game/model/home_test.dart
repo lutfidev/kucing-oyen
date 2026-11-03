@@ -108,7 +108,12 @@ void main() {
     });
 
     test('JSON lama tanpa field = tidak ada yang baru; rusak dibuang', () {
-      expect(Home.fromJson({'kitties': ['salju']}).fresh, isEmpty);
+      expect(
+        Home.fromJson({
+          'kitties': ['salju'],
+        }).fresh,
+        isEmpty,
+      );
       final home = Home.fromJson({
         'kitties': ['salju', 'arang'],
         'fresh': ['salju', 'bos', 'harimau', 3, 'oyen'],

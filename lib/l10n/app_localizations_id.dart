@@ -1879,4 +1879,25 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get chapterIntroLabel => 'Babak baru terbuka';
+
+  @override
+  String get kittyNewTag => 'Baru!';
+
+  @override
+  String kittyTapHintNew(String name) {
+    return '$name, baru. Ketuk untuk lihat kartunya';
+  }
+
+  @override
+  String kittyTapHintNewHungry(String name) {
+    return '$name, baru, lapar. Ketuk untuk lihat kartunya';
+  }
+
+  @override
+  String snackFullNote(String name) {
+    return '$name sudah kenyang dan senang. Simpan buat nanti!';
+  }
+
+  @override
+  String get snackEmptyNote => 'Stoknya habis. Beli camilan lagi di Toko!';
 }
