@@ -193,6 +193,30 @@ void main() {
     expect(tester.widget<RoomItemView>(bowl).full, isFalse);
   });
 
+  // Mangkuk terisi 4 jam sesudah isi dimulai: sisa < 60 menit = sebentar
+  // lagi, tepat 60 menit = 1 jam, 61 menit = 2 jam.
+  for (final (elapsed, text) in [
+    (210, 'Terisi sebentar lagi'),
+    (239, 'Terisi sebentar lagi'),
+    (180, 'Terisi lagi 1 jam'),
+    (179, 'Terisi lagi 2 jam'),
+  ]) {
+    testWidgets('mangkuk kosong, $elapsed menit: "$text"', (tester) async {
+      final progress = testProgressWith(
+        clock: () => roomNow,
+        needs: HomeNeeds(
+          cats: {KittyId.oyen: CatNeeds(hunger: 90, joy: 90, at: roomNow)},
+          bowl: Bowl(
+            filledAt: roomNow.subtract(Duration(minutes: elapsed)),
+            eaten: const [KittyId.oyen],
+          ),
+        ),
+      );
+      await _pump(tester, progress: progress);
+      expect(find.text(text), findsOneWidget);
+    });
+  }
+
   testWidgets('ketuk kucing mengeong, elus mendengkur; efek mati = senyap', (
     tester,
   ) async {
