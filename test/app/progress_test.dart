@@ -581,11 +581,13 @@ void main() {
       expect(await c.feed(KittyId.oyen, SnackId.ikanAsin), isFalse);
       expect(c.home.pantry.countOf(SnackId.ikanAsin), 1);
       expect(await c.pet(KittyId.oyen), isFalse);
-      // Batas elus jam ini tidak terpakai: tiga elusan sesudah Senang turun.
-      now = now.add(hour * 8);
-      for (var i = 0; i < 3; i++) {
-        expect(await c.pet(KittyId.oyen), isTrue);
-      }
+      // Batas elus jam ini tidak terpakai: masih di jam yang sama, Senang
+      // sudah di bawah 100, jatah elus masih utuh dan elusan diterima.
+      now = now.add(const Duration(minutes: 10));
+      expect(c.catNeeds(KittyId.oyen).isJoyFull, isFalse);
+      expect(c.catNeeds(KittyId.oyen).petWindowJoy, 0);
+      expect(await c.pet(KittyId.oyen), isTrue);
+      expect(c.catNeeds(KittyId.oyen).petWindowJoy, petJoy);
     });
 
     test('main: hanya mainan yang ditaruh, sekali per 30 menit', () async {

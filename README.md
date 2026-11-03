@@ -12,7 +12,7 @@ Game puzzle mobile tentang kucing oren yang cuma mau ke mangkuknya kalau jalanny
 ![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)
 ![Status](https://img.shields.io/badge/status-menuju%20rilis-F39A33)
 
-<img src="docs/screenshots/01-beranda.png" width="200" alt="Beranda">
+<img src="docs/screenshots/01-kamar.png" width="200" alt="Kamar Oyen">
 <img src="docs/screenshots/03-fase-atur-level-13.png" width="200" alt="Fase atur level 13">
 <img src="docs/screenshots/04-fase-jalan-langkah-5-jeda-x2.png" width="200" alt="Oyen berjalan">
 <img src="docs/screenshots/06-berhasil-level-13.png" width="200" alt="Berhasil, tiga bintang">
@@ -27,8 +27,8 @@ Kamu tidak mengendalikan Oyen. Selagi Oyen tidur, kamu menaruh **ikan asin**, **
 - **3 bintang per level**: sampai mangkuk, vas Ibu aman, dan benda paling sedikit.
 - **Putar ulang** langkah demi langkah untuk melihat di mana tebakanmu meleset.
 - **Petunjuk** bertingkat yang dibuka dengan koin atau iklan, plus kartu aturan dan tutorial interaktif.
-- **Lemari Kostum**: peci, sarung, topi koki, dan kacamata untuk Oyen.
-- **Koin** dari bintang baru, bonus harian, dan iklan berhadiah.
+- **Kamar Oyen** sebagai Beranda: hias dengan barang dari **Toko**, adopsi delapan kucing lain, beri camilan dan elusan, dan pasang **aksesoris** (pita, bandana, beanie, sampai mahkota) di kucing mana saja.
+- **Koin** dari bintang baru, bonus harian, kucing yang dirawat, dan iklan berhadiah.
 - **Empat bahasa**: Inggris, Indonesia, Portugis Brasil, dan Rusia, dengan nada santai yang sama. Bahasa awal mengikuti HP; bisa diganti di **Pengaturan** (juga lihat tutorial lagi dan reset progres).
 
 ## Aturan Oyen
@@ -45,10 +45,10 @@ Level gagal kalau Oyen mondar-mandir di keadaan yang sama atau lewat 80 langkah.
 
 <div align="center">
 
-<img src="docs/screenshots/02-peta-babak-1-level-4.png" width="200" alt="Peta Babak 1">
+<img src="docs/screenshots/02-peta-babak-1.png" width="200" alt="Peta Babak 1">
 <img src="docs/screenshots/07-vas-pecah-level-13.png" width="200" alt="Vas Ibu pecah">
 <img src="docs/screenshots/09-putar-ulang-langkah-4.png" width="200" alt="Putar ulang">
-<img src="docs/screenshots/12-lemari-kostum.png" width="200" alt="Lemari Kostum">
+<img src="docs/screenshots/20-toko-aksesoris.png" width="200" alt="Toko aksesoris">
 
 </div>
 
@@ -88,10 +88,10 @@ flutter test test/screenshots --dart-define=SCREENSHOTS=true
 | Folder | Isi |
 | --- | --- |
 | `lib/game/sim/` | Simulasi dan solver Oyen, Dart murni tanpa Flutter |
-| `lib/game/model/` | Sesi level, fase jalan, putar ulang, progres, petunjuk, kostum, hadiah |
+| `lib/game/model/` | Sesi level, fase jalan, putar ulang, progres, petunjuk, hadiah, rumah Oyen (kamar, kucing, aksesoris, camilan, kebutuhan) |
 | `lib/game/render/` | Gambar petak, papan, Oyen, dan ilustrasi lewat `Canvas` |
 | `lib/game/` | `KucingGame` (Flame) dan komponen papan |
-| `lib/screens/` | Beranda, peta babak, level, hasil, putar ulang, Lemari Kostum, Tambah Koin |
+| `lib/screens/` | Kamar Oyen (Beranda), Toko, peta babak, level, hasil, putar ulang, Tambah Koin, Pengaturan |
 | `lib/widgets/`, `lib/theme/` | Komponen dasar dan token desain |
 | `lib/app/` | Router, progres tersimpan, iklan berhadiah |
 | `assets/levels/` | Data 20 level: peta, baki, target bintang, solusi |
