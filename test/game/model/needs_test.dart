@@ -100,6 +100,15 @@ void main() {
       expect(played.played(at(hour * 7)), isNull);
     });
 
+    test('penuh menurut angka yang tampil', () {
+      expect(full.isFull, isTrue);
+      expect(full.isJoyFull, isTrue);
+      expect(CatNeeds(hunger: 99.6, joy: 99.5, at: t0).isFull, isTrue);
+      expect(CatNeeds(hunger: 100, joy: 99.4, at: t0).isFull, isFalse);
+      expect(CatNeeds(hunger: 99.4, joy: 100, at: t0).isFull, isFalse);
+      expect(CatNeeds(hunger: 99.4, joy: 100, at: t0).isJoyFull, isTrue);
+    });
+
     test('lesu kalau Lapar atau Senang ≤ 20', () {
       expect(full.isSad, isFalse);
       expect(CatNeeds(hunger: 20, joy: 90, at: t0).isSad, isTrue);

@@ -36,8 +36,10 @@ O QUE TEM
 • Replay passo a passo pra ver exatamente onde o Oyen errou (ou acertou)
 • Cartas de regras e tutoriais curtinhos que ensinam enquanto você joga
 • Travou? Dicas revelam um quadrado por vez, pagas com moedas ou um anúncio curto opcional
-• Moedas por estrelas novas, bônus diário e anúncios opcionais
-• Guarda-roupa do Oyen: peci, sarongue, chapéu de chef e óculos
+• Moedas por estrelas novas, bônus diário, gatos bem cuidados e anúncios opcionais
+• Um quarto pro Oyen decorar do seu jeito: caminha almofadada, arranhador, aquário, tapete e mais coisas da Loja
+• Adote mais oito gatos, do Carvão, todo pretinho, até o Chefe, que vive de terno. Dê petiscos e carinho, e eles pagam em moedas
+• Acessórios pra todos os gatos: fitinha, bandana, gorro, chapéu de chef e até Coroa de Rei
 • Música tranquila e efeitos fofos (dá pra desligar cada um)
 • Inglês, indonésio, português do Brasil e russo
 

@@ -2790,6 +2790,12 @@ abstract class AppLocalizations {
   /// **'Give {name}, {count} in stock, all gone'**
   String snackGiveEmpty(String name, int count);
 
+  /// Screen reader label of a snack while the cat's Hunger and Joy bars are both full (the button is off).
+  ///
+  /// In en, this message translates to:
+  /// **'Give {name}, {count} in stock, already full and happy'**
+  String snackGiveFull(String name, int count);
+
   /// Heading above the owned accessories on a cat card.
   ///
   /// In en, this message translates to:
@@ -2951,6 +2957,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}}'**
   String bowlRefill(int hours);
+
+  /// Label over the empty shared food bowl in the cat room when it refills in under an hour.
+  ///
+  /// In en, this message translates to:
+  /// **'Refills any minute now'**
+  String get bowlRefillSoon;
 
   /// Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward.
   ///

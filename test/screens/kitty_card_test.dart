@@ -159,6 +159,49 @@ void main() {
     semantics.dispose();
   });
 
+  testWidgets('bar penuh: camilan mati, elus hanya hati', (tester) async {
+    final semantics = tester.ensureSemantics();
+    final progress = await pumpRoom(
+      tester,
+      progress: withNeeds({
+        KittyId.oyen: (100, 100),
+      }, home: Home(pantry: Pantry({SnackId.ikanAsin: 2}))),
+    );
+    await openCard(tester);
+    await tapInCard(tester, 'Camilan');
+    await tester.pumpAndSettle();
+    expect(
+      find.bySemanticsLabel(l10nId.snackGiveFull('Ikan Asin', 2)),
+      findsOneWidget,
+    );
+    await tapInCard(tester, 'Ikan Asin');
+    await tester.pumpAndSettle();
+    expect(progress.home.pantry.countOf(SnackId.ikanAsin), 2);
+    await tapInCard(tester, 'Elus');
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('+10 senang'), findsNothing);
+    expect(find.byKey(const ValueKey('reaction-hearts')), findsOneWidget);
+    await tester.pumpAndSettle();
+    semantics.dispose();
+  });
+
+  testWidgets('Lapar penuh tapi Senang belum: camilan tetap bisa', (
+    tester,
+  ) async {
+    final progress = await pumpRoom(
+      tester,
+      progress: withNeeds({
+        KittyId.oyen: (100, 50),
+      }, home: Home(pantry: Pantry({SnackId.ikanAsin: 2}))),
+    );
+    await openCard(tester);
+    await tapInCard(tester, 'Camilan');
+    await tester.pumpAndSettle();
+    await tapInCard(tester, 'Ikan Asin');
+    await tester.pumpAndSettle();
+    expect(progress.home.pantry.countOf(SnackId.ikanAsin), 1);
+  });
+
   testWidgets('ketukan ganda camilan hanya memotong satu stok', (tester) async {
     final progress = await pumpRoom(
       tester,

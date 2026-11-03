@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-481 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+483 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -473,6 +473,7 @@ for the store listing at the end.
 | `snackPick` | Pick from your stock | Выбери из запасов | Heading above the snack list on a cat card. | |
 | `snackGive` | Give {name}, {count} in stock | Дать: {name}, в запасе {count} | Screen reader label of a snack on a cat card. Placeholders: `{name}`, `{count}`. | |
 | `snackGiveEmpty` | Give {name}, {count} in stock, all gone | Дать: {name}, в запасе {count}, закончилось | Screen reader label of a snack that ran out. Placeholders: `{name}`, `{count}`. | |
+| `snackGiveFull` | Give {name}, {count} in stock, already full and happy | Дать: {name}, в запасе {count}, уже сыт и доволен | Screen reader label of a snack while the cat's Hunger and Joy bars are both full (the button is off). Placeholders: `{name}`, `{count}`. | |
 | `accessoryPanelTitle` | Yours · swap for free | Твои · меняй бесплатно | Heading above the owned accessories on a cat card. | |
 | `accessoryShopLink` | Accessory shop | Магазин аксессуаров | Link on a cat card to the accessories shop (an arrow icon follows it). | |
 | `accessoryRemove` | Take off | Снять | Card in the accessory list that takes the accessory off. | |
@@ -500,6 +501,7 @@ for the store listing at the end.
 | `decoratePraise` | Room's looking great! | Комната всё краше! | Praise shown after decorating. | |
 | `decoratePraiseJoy` | +{joy} Happy for every cat | +{joy} радости всем котикам | Bonus line under the decorating praise. Placeholders: `{joy}`. | |
 | `bowlRefill` | {hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}} | {hours, plural, one{Наполнится через {hours} час} few{Наполнится через {hours} часа} many{Наполнится через {hours} часов} other{Наполнится через {hours} часа}} | Label over the empty shared food bowl in the cat room: hours until it refills. Placeholders: `{hours}`. | |
+| `bowlRefillSoon` | Refills any minute now | Скоро наполнится | Label over the empty shared food bowl in the cat room when it refills in under an hour. | |
 | `kittyRewardLabel` | {coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}} | {coins, plural, one{{name}: забрать {coins} монету} few{{name}: забрать {coins} монеты} many{{name}: забрать {coins} монет} other{{name}: забрать {coins} монеты}} | Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward. Placeholders: `{coins}`, `{name}`. | |
 | `reactionCoins` | {coins, plural, one{+{coins} coin} other{+{coins} coins}} | {coins, plural, one{+{coins} монета} few{+{coins} монеты} many{+{coins} монет} other{+{coins} монеты}} | Floating text over a cat after collecting its coin reward. Placeholders: `{coins}`. | |
 | `chapterIntroOverline` | New chapter unlocked! | Новая глава открыта! | Overline on the card shown over the map when a new chapter is unlocked for the first time (after beating the chapter 1 boss). | |
@@ -549,8 +551,10 @@ WHAT'S INSIDE
 • Step-by-step replay so you can see exactly where Oyen went wrong (or right)
 • Rule cards and short tutorials that teach as you go
 • Stuck? Hints reveal one tile at a time, paid with coins or a short optional video ad
-• Coins from new stars, a daily bonus, and optional ads
-• A wardrobe for Oyen: peci cap, sarong, chef hat, and glasses
+• Coins from new stars, a daily bonus, happy cats, and optional ads
+• A room for Oyen to decorate your way: cushion bed, scratching post, aquarium, rug, and more from the Shop
+• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Treat them to snacks and pets, and they pay you back in coins
+• Accessories for every cat: ribbons, bandanas, beanies, chef hats, all the way up to a King's Crown
 • Calm music and cute sound effects (each can be switched off)
 • English, Indonesian, Brazilian Portuguese, and Russian
 
@@ -606,8 +610,10 @@ Ginger Logic: Котоголоволомка
 • Повтор по шагам: видно, где именно Ойен свернул не туда (или туда)
 • Карточки правил и короткое обучение прямо по ходу игры
 • Застрял? Подсказки открывают по одной клетке за монеты или за короткую рекламу по желанию
-• Монеты за новые звёзды, ежедневный бонус и реклама по желанию
-• Гардероб Ойена: пеци, саронг, поварской колпак и очки
+• Монеты за новые звёзды, ежедневный бонус, довольных котов и рекламу по желанию
+• Комната Ойена, которую можно обустроить по-своему: матрасик-подушка, когтеточка, аквариум, коврик и другие вещи из Магазина
+• Заведи ещё восемь котов, от чёрного Уголька до Босса, который всегда в костюме. Угощай и гладь их, а они отплатят монетами
+• Аксессуары для всех котов: лента, бандана, шапка-бини, колпак шефа и даже Королевская корона
 • Спокойная музыка и милые звуки (каждое можно выключить)
 • Английский, индонезийский, бразильский португальский и русский
 

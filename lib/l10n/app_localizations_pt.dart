@@ -1878,6 +1878,11 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String snackGiveFull(String name, int count) {
+    return 'Dar $name, estoque $count, já está cheio e feliz';
+  }
+
+  @override
   String get accessoryPanelTitle => 'Seus · troca grátis';
 
   @override
@@ -1990,6 +1995,9 @@ class AppLocalizationsPt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get bowlRefillSoon => 'Enche de novo daqui a pouco';
 
   @override
   String kittyRewardLabel(int coins, String name) {

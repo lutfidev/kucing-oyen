@@ -309,6 +309,7 @@ class _KittyCardState extends State<KittyCard> {
     final s = context.koSize;
     final space = context.koSpace;
     final pantry = _progress.home.pantry;
+    final full = _progress.catNeeds(_kitty).isFull;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -326,6 +327,7 @@ class _KittyCardState extends State<KittyCard> {
                   child: _SnackCard(
                     id: snack.id,
                     count: pantry.countOf(snack.id),
+                    full: full,
                     onPressed: () => _feed(snack.id),
                   ),
                 ),
@@ -591,11 +593,15 @@ class _SnackCard extends StatelessWidget {
   const _SnackCard({
     required this.id,
     required this.count,
+    required this.full,
     required this.onPressed,
   });
 
   final SnackId id;
   final int count;
+
+  /// Lapar dan Senang sudah 100: tombol mati supaya stok tidak terbuang.
+  final bool full;
   final VoidCallback onPressed;
 
   @override
@@ -606,15 +612,18 @@ class _SnackCard extends StatelessWidget {
     final space = context.koSpace;
     final l = context.l10n;
     final empty = count <= 0;
+    final off = empty || full;
     final name = snackName(l, id);
     final card = KoPressable(
-      onPressed: empty ? null : onPressed,
+      onPressed: off ? null : onPressed,
       semanticLabel: empty
           ? l.snackGiveEmpty(name, count)
+          : full
+          ? l.snackGiveFull(name, count)
           : l.snackGive(name, count),
       color: c.cream,
       edgeColor: c.lineDeep,
-      depth: empty ? 0 : context.koShadow.pressIcon,
+      depth: off ? 0 : context.koShadow.pressIcon,
       borderColor: c.line,
       borderWidth: s.border,
       radius: context.koRadius.slot,
@@ -660,7 +669,7 @@ class _SnackCard extends StatelessWidget {
         ),
       ),
     );
-    return empty ? Opacity(opacity: s.roomEmptyOpacity, child: card) : card;
+    return off ? Opacity(opacity: s.roomEmptyOpacity, child: card) : card;
   }
 }
 

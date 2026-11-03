@@ -10,6 +10,7 @@ import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
+import 'package:kucing_oren/screens/room/room_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
 
@@ -191,6 +192,64 @@ void main() {
     expect(find.text('Terisi lagi 3 jam'), findsOneWidget);
     final bowl = itemView(RoomItemId.mangkuk);
     expect(tester.widget<RoomItemView>(bowl).full, isFalse);
+  });
+
+  // Mangkuk terisi 4 jam sesudah isi dimulai: sisa < 60 menit = sebentar
+  // lagi, tepat 60 menit = 1 jam, 61 menit = 2 jam.
+  for (final (elapsed, text) in [
+    (210, 'Terisi sebentar lagi'),
+    (239, 'Terisi sebentar lagi'),
+    (180, 'Terisi lagi 1 jam'),
+    (179, 'Terisi lagi 2 jam'),
+  ]) {
+    testWidgets('mangkuk kosong, $elapsed menit: "$text"', (tester) async {
+      final progress = testProgressWith(
+        clock: () => roomNow,
+        needs: HomeNeeds(
+          cats: {KittyId.oyen: CatNeeds(hunger: 90, joy: 90, at: roomNow)},
+          bowl: Bowl(
+            filledAt: roomNow.subtract(Duration(minutes: elapsed)),
+            eaten: const [KittyId.oyen],
+          ),
+        ),
+      );
+      await _pump(tester, progress: progress);
+      expect(find.text(text), findsOneWidget);
+    });
+  }
+
+  testWidgets('jam HP mundur saat kamar terbuka: kamar tetap jalan', (
+    tester,
+  ) async {
+    var now = roomNow;
+    final progress = testProgressWith(
+      home: _furnished(),
+      clock: () => now,
+      needs: HomeNeeds(
+        cats: {KittyId.oyen: CatNeeds(hunger: 60, joy: 60, at: roomNow)},
+        bowl: Bowl(
+          filledAt: roomNow.subtract(const Duration(minutes: 70)),
+          eaten: const [KittyId.oyen],
+        ),
+      ),
+    );
+    await _pump(tester, progress: progress);
+    expect(find.text('Terisi lagi 3 jam'), findsOneWidget);
+
+    now = roomNow.subtract(const Duration(hours: 3));
+    progress.refreshDay();
+    await tester.pump(roomRefreshInterval);
+    await settle(tester, max: const Duration(seconds: 1));
+    expect(tester.takeException(), isNull);
+    final needs = progress.catNeeds(KittyId.oyen);
+    expect(needs.hunger, inInclusiveRange(0, 100));
+    expect(needs.joy, inInclusiveRange(0, 100));
+    expect(find.textContaining('-'), findsNothing);
+
+    await tester.tap(kittyView(KittyId.oyen));
+    await settle(tester, max: const Duration(seconds: 1));
+    expect(tester.takeException(), isNull);
+    expect(find.text('60'), findsNWidgets(2));
   });
 
   testWidgets('ketuk kucing mengeong, elus mendengkur; efek mati = senyap', (

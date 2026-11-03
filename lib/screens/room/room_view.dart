@@ -633,7 +633,7 @@ class _RoomViewState extends State<RoomView>
               ),
         if (!_decorating && widget.life)
           if ((_bowlRefill(now), home.room.placed[RoomItemId.mangkuk]) case (
-            final hours?,
+            final left?,
             final spot?,
           ))
             if (geo.boxOf(roomItemOf(RoomItemId.mangkuk), spot) case final bowl)
@@ -648,7 +648,7 @@ class _RoomViewState extends State<RoomView>
                     ),
                     margin: context.koSpace.s8,
                   ),
-                  child: BowlRefillLabel(hours: hours),
+                  child: BowlRefillLabel(left: left),
                 ),
               ),
         if (empty && !_decorating)
@@ -707,15 +707,16 @@ class _RoomViewState extends State<RoomView>
     return outside(flipped) < outside(plain);
   }
 
-  /// Jam sampai mangkuk terisi lagi (dibulatkan ke atas), atau null kalau
-  /// mangkuknya tidak kosong.
-  int? _bowlRefill(DateTime now) {
+  /// Sisa waktu sampai mangkuk terisi lagi, atau null kalau mangkuknya
+  /// tidak kosong.
+  Duration? _bowlRefill(DateTime now) {
     final home = _progress.home;
     final bowl = _progress.needs.bowl;
     if (!bowl.isEmptyFor(home.kitties, now)) return null;
     final at = bowl.refillAt(now);
     if (at == null) return null;
-    return max(1, (at.difference(now).inMinutes / 60).ceil());
+    final left = at.difference(now);
+    return left.isNegative ? Duration.zero : left;
   }
 
   Widget _itemSprite(

@@ -91,6 +91,12 @@ class CatNeeds {
   /// Lapar atau Senang ≤ [sadThreshold].
   bool get isSad => hunger <= sadThreshold || joy <= sadThreshold;
 
+  /// Senang tampil 100 (dibulatkan seperti angka di kartu kucing).
+  bool get isJoyFull => joy.round() >= maxNeed;
+
+  /// Lapar dan Senang tampil 100: camilan tidak menambah apa pun.
+  bool get isFull => hunger.round() >= maxNeed && isJoyFull;
+
   /// Lapar < [bowlHungerLimit].
   bool get canEatFromBowl => hunger < bowlHungerLimit;
 

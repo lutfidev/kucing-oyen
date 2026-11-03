@@ -533,11 +533,13 @@ class _InviteBubble extends StatelessWidget {
 }
 
 /// Label "Terisi lagi N jam" di atas mangkuk kosong (`Kamar.dc.html`),
-/// selebar isinya.
+/// selebar isinya. N dibulatkan ke atas; sisa di bawah satu jam = "Terisi
+/// sebentar lagi".
 class BowlRefillLabel extends StatelessWidget {
-  const BowlRefillLabel({super.key, required this.hours});
+  const BowlRefillLabel({super.key, required this.left});
 
-  final int hours;
+  /// Sisa waktu sampai mangkuk terisi.
+  final Duration left;
 
   @override
   Widget build(BuildContext context) {
@@ -559,7 +561,9 @@ class BowlRefillLabel extends StatelessWidget {
           KoIcon(KoIcons.clock, size: s.roomBowlLabelIcon, color: c.inkSoft),
           SizedBox(width: space.s4),
           Text(
-            context.l10n.bowlRefill(hours),
+            left < const Duration(hours: 1)
+                ? context.l10n.bowlRefillSoon
+                : context.l10n.bowlRefill((left.inSeconds / 3600).ceil()),
             maxLines: 1,
             softWrap: false,
             style: context.koType.tagSmall.copyWith(color: c.inkSoft),

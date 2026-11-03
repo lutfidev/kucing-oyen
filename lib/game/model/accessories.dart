@@ -82,10 +82,11 @@ class AccessoryCloset {
   AccessoryCloset({
     Iterable<AccessoryId> owned = const [],
     Map<KittyId, AccessoryId> wearing = const {},
-  }) : this._(Set.unmodifiable(owned), wearing);
+  }) : this._(owned.toSet(), wearing);
 
-  AccessoryCloset._(this.owned, Map<KittyId, AccessoryId> wearing)
-    : wearing = Map.unmodifiable({
+  AccessoryCloset._(Set<AccessoryId> owned, Map<KittyId, AccessoryId> wearing)
+    : owned = Set.unmodifiable(owned),
+      wearing = Map.unmodifiable({
         for (final MapEntry(:key, :value) in wearing.entries)
           if (owned.contains(value)) key: value,
       });

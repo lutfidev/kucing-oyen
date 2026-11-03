@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-481 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+483 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -473,6 +473,7 @@ for the store listing at the end.
 | `snackPick` | Pick from your stock | Escolha do estoque | Heading above the snack list on a cat card. | |
 | `snackGive` | Give {name}, {count} in stock | Dar {name}, estoque {count} | Screen reader label of a snack on a cat card. Placeholders: `{name}`, `{count}`. | |
 | `snackGiveEmpty` | Give {name}, {count} in stock, all gone | Dar {name}, estoque {count}, acabou | Screen reader label of a snack that ran out. Placeholders: `{name}`, `{count}`. | |
+| `snackGiveFull` | Give {name}, {count} in stock, already full and happy | Dar {name}, estoque {count}, já está cheio e feliz | Screen reader label of a snack while the cat's Hunger and Joy bars are both full (the button is off). Placeholders: `{name}`, `{count}`. | |
 | `accessoryPanelTitle` | Yours · swap for free | Seus · troca grátis | Heading above the owned accessories on a cat card. | |
 | `accessoryShopLink` | Accessory shop | Loja de acessórios | Link on a cat card to the accessories shop (an arrow icon follows it). | |
 | `accessoryRemove` | Take off | Tirar | Card in the accessory list that takes the accessory off. | |
@@ -500,6 +501,7 @@ for the store listing at the end.
 | `decoratePraise` | Room's looking great! | O quarto tá ficando lindo! | Praise shown after decorating. | |
 | `decoratePraiseJoy` | +{joy} Happy for every cat | +{joy} de Alegria pra todos os gatos | Bonus line under the decorating praise. Placeholders: `{joy}`. | |
 | `bowlRefill` | {hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}} | {hours, plural, one{Enche de novo em {hours} hora} other{Enche de novo em {hours} horas}} | Label over the empty shared food bowl in the cat room: hours until it refills. Placeholders: `{hours}`. | |
+| `bowlRefillSoon` | Refills any minute now | Enche de novo daqui a pouco | Label over the empty shared food bowl in the cat room when it refills in under an hour. | |
 | `kittyRewardLabel` | {coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}} | {coins, plural, one{Pegar {coins} moeda de {name}} other{Pegar {coins} moedas de {name}}} | Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward. Placeholders: `{coins}`, `{name}`. | |
 | `reactionCoins` | {coins, plural, one{+{coins} coin} other{+{coins} coins}} | {coins, plural, one{+{coins} moeda} other{+{coins} moedas}} | Floating text over a cat after collecting its coin reward. Placeholders: `{coins}`. | |
 | `chapterIntroOverline` | New chapter unlocked! | Capítulo novo liberado! | Overline on the card shown over the map when a new chapter is unlocked for the first time (after beating the chapter 1 boss). | |
@@ -549,8 +551,10 @@ WHAT'S INSIDE
 • Step-by-step replay so you can see exactly where Oyen went wrong (or right)
 • Rule cards and short tutorials that teach as you go
 • Stuck? Hints reveal one tile at a time, paid with coins or a short optional video ad
-• Coins from new stars, a daily bonus, and optional ads
-• A wardrobe for Oyen: peci cap, sarong, chef hat, and glasses
+• Coins from new stars, a daily bonus, happy cats, and optional ads
+• A room for Oyen to decorate your way: cushion bed, scratching post, aquarium, rug, and more from the Shop
+• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Treat them to snacks and pets, and they pay you back in coins
+• Accessories for every cat: ribbons, bandanas, beanies, chef hats, all the way up to a King's Crown
 • Calm music and cute sound effects (each can be switched off)
 • English, Indonesian, Brazilian Portuguese, and Russian
 
@@ -606,8 +610,10 @@ O QUE TEM
 • Replay passo a passo pra ver exatamente onde o Oyen errou (ou acertou)
 • Cartas de regras e tutoriais curtinhos que ensinam enquanto você joga
 • Travou? Dicas revelam um quadrado por vez, pagas com moedas ou um anúncio curto opcional
-• Moedas por estrelas novas, bônus diário e anúncios opcionais
-• Guarda-roupa do Oyen: peci, sarongue, chapéu de chef e óculos
+• Moedas por estrelas novas, bônus diário, gatos bem cuidados e anúncios opcionais
+• Um quarto pro Oyen decorar do seu jeito: caminha almofadada, arranhador, aquário, tapete e mais coisas da Loja
+• Adote mais oito gatos, do Carvão, todo pretinho, até o Chefe, que vive de terno. Dê petiscos e carinho, e eles pagam em moedas
+• Acessórios pra todos os gatos: fitinha, bandana, gorro, chapéu de chef e até Coroa de Rei
 • Música tranquila e efeitos fofos (dá pra desligar cada um)
 • Inglês, indonésio, português do Brasil e russo
 

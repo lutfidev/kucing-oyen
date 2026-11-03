@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-481 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+483 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -473,6 +473,7 @@ for the store listing at the end.
 | `snackPick` | Pick from your stock | Pilih dari stok | Heading above the snack list on a cat card. | |
 | `snackGive` | Give {name}, {count} in stock | Beri {name}, stok {count} | Screen reader label of a snack on a cat card. Placeholders: `{name}`, `{count}`. | |
 | `snackGiveEmpty` | Give {name}, {count} in stock, all gone | Beri {name}, stok {count}, habis | Screen reader label of a snack that ran out. Placeholders: `{name}`, `{count}`. | |
+| `snackGiveFull` | Give {name}, {count} in stock, already full and happy | Beri {name}, stok {count}, sudah kenyang dan senang | Screen reader label of a snack while the cat's Hunger and Joy bars are both full (the button is off). Placeholders: `{name}`, `{count}`. | |
 | `accessoryPanelTitle` | Yours · swap for free | Punyamu · ganti gratis | Heading above the owned accessories on a cat card. | |
 | `accessoryShopLink` | Accessory shop | Toko aksesoris | Link on a cat card to the accessories shop (an arrow icon follows it). | |
 | `accessoryRemove` | Take off | Lepas | Card in the accessory list that takes the accessory off. | |
@@ -500,6 +501,7 @@ for the store listing at the end.
 | `decoratePraise` | Room's looking great! | Kamar makin cakep! | Praise shown after decorating. | |
 | `decoratePraiseJoy` | +{joy} Happy for every cat | +{joy} Senang untuk semua kucing | Bonus line under the decorating praise. Placeholders: `{joy}`. | |
 | `bowlRefill` | {hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}} | {hours, plural, other{Terisi lagi {hours} jam}} | Label over the empty shared food bowl in the cat room: hours until it refills. Placeholders: `{hours}`. | |
+| `bowlRefillSoon` | Refills any minute now | Terisi sebentar lagi | Label over the empty shared food bowl in the cat room when it refills in under an hour. | |
 | `kittyRewardLabel` | {coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}} | Ambil {coins} koin dari {name} | Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward. Placeholders: `{coins}`, `{name}`. | |
 | `reactionCoins` | {coins, plural, one{+{coins} coin} other{+{coins} coins}} | +{coins} koin | Floating text over a cat after collecting its coin reward. Placeholders: `{coins}`. | |
 | `chapterIntroOverline` | New chapter unlocked! | Babak baru terbuka! | Overline on the card shown over the map when a new chapter is unlocked for the first time (after beating the chapter 1 boss). | |
@@ -549,8 +551,10 @@ WHAT'S INSIDE
 • Step-by-step replay so you can see exactly where Oyen went wrong (or right)
 • Rule cards and short tutorials that teach as you go
 • Stuck? Hints reveal one tile at a time, paid with coins or a short optional video ad
-• Coins from new stars, a daily bonus, and optional ads
-• A wardrobe for Oyen: peci cap, sarong, chef hat, and glasses
+• Coins from new stars, a daily bonus, happy cats, and optional ads
+• A room for Oyen to decorate your way: cushion bed, scratching post, aquarium, rug, and more from the Shop
+• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Treat them to snacks and pets, and they pay you back in coins
+• Accessories for every cat: ribbons, bandanas, beanies, chef hats, all the way up to a King's Crown
 • Calm music and cute sound effects (each can be switched off)
 • English, Indonesian, Brazilian Portuguese, and Russian
 

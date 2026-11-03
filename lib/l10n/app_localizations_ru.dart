@@ -1899,6 +1899,11 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String snackGiveFull(String name, int count) {
+    return 'Дать: $name, в запасе $count, уже сыт и доволен';
+  }
+
+  @override
   String get accessoryPanelTitle => 'Твои · меняй бесплатно';
 
   @override
@@ -2014,6 +2019,9 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get bowlRefillSoon => 'Скоро наполнится';
 
   @override
   String kittyRewardLabel(int coins, String name) {

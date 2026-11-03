@@ -104,4 +104,9 @@ void main() {
       );
     });
   });
+
+  test('owned hasil beli tidak bisa diubah', () {
+    final closet = AccessoryCloset().buy(AccessoryId.pita);
+    expect(() => closet.owned.add(AccessoryId.kalung), throwsUnsupportedError);
+  });
 }

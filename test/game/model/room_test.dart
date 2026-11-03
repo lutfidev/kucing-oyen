@@ -98,4 +98,9 @@ void main() {
     expect(Room.fromJson({'owned': 'x', 'placed': 3}), Room.initial);
     expect(Room.fromJson({}), Room.initial);
   });
+
+  test('owned hasil beli tidak bisa diubah', () {
+    final room = Room().buy(RoomItemId.bola);
+    expect(() => room.owned.add(RoomItemId.jam), throwsUnsupportedError);
+  });
 }

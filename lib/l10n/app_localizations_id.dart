@@ -1732,6 +1732,11 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
+  String snackGiveFull(String name, int count) {
+    return 'Beri $name, stok $count, sudah kenyang dan senang';
+  }
+
+  @override
   String get accessoryPanelTitle => 'Punyamu · ganti gratis';
 
   @override
@@ -1842,6 +1847,9 @@ class AppLocalizationsId extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get bowlRefillSoon => 'Terisi sebentar lagi';
 
   @override
   String kittyRewardLabel(int coins, String name) {
