@@ -2409,6 +2409,18 @@
       }
     }
   },
+  "snackGiveFull": "Give {name}, {count} in stock, already full and happy",
+  "@snackGiveFull": {
+    "description": "Screen reader label of a snack while the cat's Hunger and Joy bars are both full (the button is off).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "accessoryPanelTitle": "Yours · swap for free",
   "@accessoryPanelTitle": {
     "description": "Heading above the owned accessories on a cat card."
@@ -2575,6 +2587,10 @@
         "type": "int"
       }
     }
+  },
+  "bowlRefillSoon": "Refills any minute now",
+  "@bowlRefillSoon": {
+    "description": "Label over the empty shared food bowl in the cat room when it refills in under an hour."
   },
   "kittyRewardLabel": "{coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}}",
   "@kittyRewardLabel": {

@@ -575,6 +575,19 @@ void main() {
       expect(storeOf(c).needs.of(KittyId.oyen, now).joy, closeTo(80, 1e-9));
     });
 
+    test('bar penuh: camilan dan elus ditolak tanpa memakai apa pun', () async {
+      final c = controller(home: Home(pantry: Pantry({SnackId.ikanAsin: 1})));
+      expect(c.catNeeds(KittyId.oyen).isFull, isTrue);
+      expect(await c.feed(KittyId.oyen, SnackId.ikanAsin), isFalse);
+      expect(c.home.pantry.countOf(SnackId.ikanAsin), 1);
+      expect(await c.pet(KittyId.oyen), isFalse);
+      // Batas elus jam ini tidak terpakai: tiga elusan sesudah Senang turun.
+      now = now.add(hour * 8);
+      for (var i = 0; i < 3; i++) {
+        expect(await c.pet(KittyId.oyen), isTrue);
+      }
+    });
+
     test('main: hanya mainan yang ditaruh, sekali per 30 menit', () async {
       final c = controller(home: owning([RoomItemId.bola, RoomItemId.kardus]));
       now = now.add(hour * 8);
@@ -708,7 +721,10 @@ void main() {
 
     test('urutan tulis memihak pemain', () async {
       final store = FailingProgressStore();
-      final c = controller(store, coins: 500);
+      // Oyen tidak penuh lagi supaya camilan dan elus diterima.
+      var now = DateTime(2026, 10, 30, 8);
+      final c = controller(store, coins: 500, clock: () => now);
+      now = now.add(const Duration(hours: 4));
 
       await c.record(1, 3);
       expect(store.writes, ['coins', 'progress']);
@@ -845,7 +861,10 @@ void main() {
           'needs',
         },
       );
-      final c = controller(store, coins: 500);
+      // Oyen tidak penuh lagi supaya camilan dan elus diterima.
+      var now = DateTime(2026, 10, 30, 8);
+      final c = controller(store, coins: 500, clock: () => now);
+      now = now.add(const Duration(hours: 4));
       await c.record(1, 3);
       await c.unlockHint(13, 1, HintPay.coins);
       await c.claimDailyBonus();

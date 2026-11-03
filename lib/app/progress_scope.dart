@@ -326,6 +326,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   Future<bool> feed(KittyId kitty, SnackId snack) async {
     final pantry = _home.pantry.take(snack);
     if (!_home.ownsKitty(kitty) || pantry == null) return false;
+    if (catNeeds(kitty).isFull) return false;
     return _changeHome(
       {_Part.home, _Part.needs},
       home: _home.copyWith(pantry: pantry),
@@ -335,7 +336,9 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// Mengelus [kitty]; gagal kalau batas elus jam ini habis.
   Future<bool> pet(KittyId kitty) async {
-    final needs = _home.ownsKitty(kitty) ? _needs.pet(kitty, clock()) : null;
+    final needs = _home.ownsKitty(kitty) && !catNeeds(kitty).isJoyFull
+        ? _needs.pet(kitty, clock())
+        : null;
     if (needs == null) return false;
     return _changeHome({_Part.needs}, needs: needs);
   }
