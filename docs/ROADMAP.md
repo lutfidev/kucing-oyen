@@ -40,10 +40,18 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
 - [x] 25. Peta bergambar dan Oyen berjalan ke level berikutnya
 - [x] 26. Potret toko dan rapi-rapi rumah Oyen
+- [ ] 27. Rapi-rapi kamar: tag "Baru!", gelembung hadiah, label mangkuk, camilan penuh
+- [ ] 28. Kamar: barang yang sedang dipakai (tempat berdiri, barang dinding, cermin)
+- [ ] 29. Aksesibilitas, suara, dan putar ulang
+- [ ] 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
+- [ ] 31. Tinggi baris teks mengikuti desain
+- [ ] 32. Cek di HP dan persiapan rilis produksi
 
 Langkah 15–17 dipecah dari "Polish dan rilis Android" lama (diskusi dengan pemilik repo, 19 Okt 2026). Keputusan pasar, bahasa, iklan, dan isi Pengaturan dicatat di `docs/DESIGN_NOTES.md` bagian "Sebelum langkah 15"; prompt di bawah tidak perlu menanyakannya lagi.
 
 Langkah 21–26 (rumah Oyen) diputuskan saat brainstorming 26 Okt 2026 dan dikerjakan sesudah langkah 18–20. Desainnya sudah dibuat pemilik repo di Claude Design (28 Okt 2026); lihat bagian "Sebelum langkah 21" di bawah.
+
+Langkah 27–32 berisi semua saran dan temuan kecil review yang belum dikerjakan sampai langkah 26, dikumpulkan 3 Nov 2026 dari badan PR #1–#32 dan dicek masih berlaku di kode. Daftar lengkapnya ada di bagian "Sesudah langkah 26" di bawah.
 
 ---
 
@@ -505,3 +513,145 @@ Selesai: `SvgTemplate` mengevaluasi `@keyframes` desain pada waktu tertentu (`cs
 > - **Jalankan ulang** `brand_test.dart` dan potret layar.
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 26".
+
+## Sesudah langkah 26: saran yang tersisa
+
+Dikumpulkan 3 Nov 2026 dari bagian "Saran", "Belum dikerjakan", dan "Wajib sebelum rilis" di semua badan PR (#1–#32; tidak ada komentar review di GitHub). Saran yang sudah selesai di langkah lain tidak dimasukkan. Langkah 19 mengambil saran PR #4–#18, langkah 20 sisanya, dan langkah 26 saran PR langkah 21–25 (#26–#31), jadi saran PR #24 dan #25 (langkah 19–20) belum pernah diambil.
+
+| # | Saran | Sumber | Langkah |
+|---|---|---|---|
+| 1 | Tag "Baru!" untuk kucing baru (butuh simpanan "sudah dilihat") | PR #28, #30, #32 | 27 |
+| 2 | Gelembung hadiah untuk kucing yang sedang di dalam barang | PR #30, #32 | 27 |
+| 3 | Label mangkuk bisa lebih dari 4 jam kalau jam HP mundur; jepit ke `bowlRefillHours` | PR #32 | 27 |
+| 4 | Tombol camilan yang mati karena bar penuh tidak memberi umpan balik saat diketuk | PR #32 | 27 |
+| 5 | Tempat berdiri memakai ukuran kucing 96, jadi Oyen (116) bergeser saat mulai memakai barang | PR #30, #32 | 28 |
+| 6 | Barang dinding membuat kucing "melompat" ke dinding | PR #30 | 28 |
+| 7 | Barang yang dicerminkan ikut mencerminkan corak kucing, aksesoris, dan Zzz | PR #30, #32 | 28 |
+| 8 | Lapisan semantik papan dibangun ulang tiap bingkai seretan | PR #24 | 29 |
+| 9 | Teks tutorial level 3 (dan petunjuk baki) menyuruh menyeret, juga untuk pengguna pembaca layar | PR #24 | 29 |
+| 10 | `AudioPool` yang gagal dibuat tersimpan gagal sepanjang sesi | PR #24 | 29 |
+| 11 | Tombol putar di putar ulang tidak melakukan apa pun kalau hanya ada langkah 0 | PR #25 | 29 |
+| 12 | Dibuka langsung di level (`--route`) memutar lagu Beranda sebentar | PR #18 | 29 |
+| 13 | `ko_pressable.dart` (lapisan widget) mengimpor `lib/app/game_audio.dart` | PR #18 | 29 |
+| 14 | `SvgTemplate` belum menolak CSS yang tidak didukung (`alternate` + easing tidak simetris, origin px + `fill-box`, opasitas animasi di elemen ber-`opacity`) | PR #30, #32 | 30 |
+| 15 | Berkas tinjauan terjemahan bisa basi tanpa ketahuan (dicek 3 Nov: masih sesuai ARB) | PR #25 | 30 |
+| 16 | `docs/translations/README.md`: peninjau mengisi salinan, bukan berkas yang di-commit | PR #25 | 30 |
+| 17 | `KoType` tidak menulis `height` di sebagian besar gaya, jadi tinggi baris ikut Material (1,43) | PR #25 | 31 |
+| 18 | Kinerja sprite kucing di HP murah (±2,8 ms per bingkai untuk 9 kucing di desktop) | PR #30, #32 | 32 |
+| 19 | Cek di HP: bunyi pertama efek telat atau tidak, TalkBack di papan, ikon dan ikon tema, splash Android 12+ dan lama, formulir UMP, iklan uji, pesan Gradle `bundleRelease` tanpa `-v` | PR #18, #19, #23, #24 | 32 |
+| 20 | Wajib produksi: ID AdMob asli, keystore + `android/key.properties`, unggah ulang kebijakan privasi (berlaku 3 Nov 2026) | PR #19, #32 | 32 |
+| 21 | Masukan penutur asli untuk terjemahan Inggris, Portugis Brasil, dan Rusia | PR #17, #25 | 32 |
+| 22 | Tab Toko "Accessories"/"Аксессуары" terpotong jadi "Accessori…"/"Аксессуа…" di 360 dp (terlihat di potret toko `02-toko-aksesoris` en dan ru; `overflow_test` tidak menangkap elipsis). PR #32 hanya mengecek potret `id` dan `ru` dengan mata | cek ulang PR #32 | 27 |
+| 23 | Potret dev `01-beranda` di `test/screenshots/screenshot_test.dart` sekarang memotret kamar (sama dengan `19-kamar`), dan komentarnya masih menyebut contoh desain Beranda lama | cek ulang PR #32 | 30 |
+
+Aturan untuk langkah 27–32: sebelum mengubah, pastikan sarannya masih berlaku di kode; kalau sudah beres, tulis di PR dan lewati. Perilaku yang bisa diuji dikerjakan dengan test yang gagal dulu. Teks baru masuk keempat ARB. Keputusan dicatat di `docs/DESIGN_NOTES.md` bagian "Langkah N".
+
+## 27. Rapi-rapi kamar: tag "Baru!", gelembung hadiah, label mangkuk, camilan penuh
+
+**Hasil:** saran 1–4 dan 22 di tabel di atas selesai.
+
+> **Baca dulu:**
+> - `docs/DESIGN_NOTES.md` bagian "Langkah 23", "Langkah 24", dan "Langkah 26"
+> - desain kamar di `docs/design/rumah-oyen/project/` (cari tag "Baru!" dan gelembung koin)
+> - `lib/screens/room/` (`room_view.dart`, `room_parts.dart`, `kitty_card.dart`), `lib/game/model/home.dart`, `needs.dart`, `lib/app/progress_controller.dart`, `progress_store.dart`
+> - PR #30 dan #32 (`gh pr view <nomor>`)
+>
+> **Lalu:**
+> - **Tag "Baru!"** untuk kucing yang baru diadopsi, persis seperti desain. Butuh simpanan "sudah dilihat": tambahkan ke model rumah (Dart murni, `toJson`/`fromJson` membuang entri rusak), simpan lewat antrean `ProgressController` dengan urutan yang memihak pemain, ikut `resetProgress`. Putuskan kapan tag hilang (usulan: saat kartu kucing itu pertama dibuka). Pembaca layar ikut mendengar "baru".
+> - **Gelembung hadiah** juga untuk kucing yang sedang di dalam barang (sekarang hanya di luar barang). Letakkan di atas kotak kucing di barang (`RoomItemArt.inUseBox`/`catBox`); ketukannya tetap `claimKittyReward` dan tetap di dalam layar (`KeepInside`).
+> - **Label mangkuk** dijepit ke `bowlRefillHours` kalau jam HP mundur.
+> - **Camilan mati karena bar penuh**: beri umpan balik saat diketuk (usulan: pesan singkat di kartu, juga diumumkan pembaca layar). Samakan dengan camilan yang stoknya habis kalau masuk akal.
+> - **Tab Toko terpotong**: label tab "Accessories" (en) dan "Аксессуары" (ru) tampil dengan elipsis di 360 dp. Buat keempat label tab muat utuh, mis. mengecil seperti `FittedBox` di tombol lain atau padding tab yang lebih rapat (tanpa mengganti terjemahan kecuali perlu). Tambahkan test yang gagal kalau label tab terpotong (bandingkan lebar teks dengan lebar tab di 360×640, teks 100% dan 130%, keempat bahasa), lalu buat ulang potret toko (`brand_test.dart --dart-define=BRAND=true`) dan periksa dengan mata keenam potret di **keempat** bahasa.
+> - Test widget di `test/screens/room_screen_test.dart`, `room_life_test.dart`, `kitty_card_test.dart`, `shop_screen_test.dart`; tambah keadaan baru ke `overflow_test`.
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 27".
+
+## 28. Kamar: barang yang sedang dipakai (tempat berdiri, barang dinding, cermin)
+
+**Hasil:** saran 5–7 selesai; kucing masuk dan keluar barang tanpa geser atau lompat yang aneh, dan barang yang dicerminkan tidak membalik corak, aksesoris, atau tulisan.
+
+> **Baca dulu:**
+> - `docs/DESIGN_NOTES.md` bagian "Langkah 24"
+> - `docs/design/rumah-oyen/project/Barang.dc.html` dan `Kucing.dc.html`
+> - `lib/game/model/room_life.dart`, `lib/screens/room/room_geometry.dart`, `room_view.dart`, gambar barang dan kucing kamar di `lib/game/render/` (`RoomItemArt.inUse`/`inUseBox`, `paintRoomItemArt(user:, mirror:)`, `KittyLook`)
+> - PR #30 (`gh pr view 30`)
+>
+> **Lalu:**
+> - **Tempat berdiri** sebelum memakai barang memakai ukuran kucing yang benar (Oyen 116, lainnya 96), supaya Oyen tidak bergeser saat mulai memakai barang. Test di `room_life_test` (model) dan `room_geometry_test`.
+> - **Barang dinding**: kucing sekarang "melompat" dari lantai ke dinding. Putuskan transisinya dengan `superpowers:brainstorming` (usulan: jalan ke bawah barang, lalu lompat singkat atau pudar); kurangi gerak tetap langsung pindah.
+> - **Cermin**: barang yang dicerminkan (di tepi kamar) ikut mencerminkan corak kucing, aksesoris, dan Zzz. Cerminkan hanya barang dan arah hadap kucing, lalu gambar kucing dengan `KittyFacing` yang sesuai; tulisan tidak boleh terbalik. Test piksel di `room_item_art_test`/`kitty_test`.
+> - Cek lewat potret layar kamar hidup (`--dart-define=SCREENSHOTS=true`).
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 28".
+
+## 29. Aksesibilitas, suara, dan putar ulang
+
+**Hasil:** saran 8–13 selesai atau diputuskan.
+
+> **Baca dulu:**
+> - `docs/DESIGN_NOTES.md` bagian "Langkah 19" dan "Langkah 20"
+> - `lib/screens/level/` (`level_view.dart`, `level_board.dart`, `board_semantics.dart`, `tutorial.dart`, `tray_panel.dart`), `lib/app/sound_player.dart`, `game_audio.dart`, `app.dart`, `lib/widgets/ko_pressable.dart`, `lib/screens/replay/`
+> - PR #18, #24, dan #25 (`gh pr view <nomor>`)
+>
+> **Lalu:**
+> - **Semantik papan saat menyeret**: `BoardSemantics` tidak dibangun ulang tiap bingkai seretan (pembaca layar tidak menyeret). Ukur dulu; test bahwa semantik tetap benar sesudah seretan selesai.
+> - **Teks menyeret untuk pembaca layar**: tutorial level 3 ("Seret ikan ke lantai...") dan petunjuk baki memakai kalimat ketuk saat pembaca layar aktif (`MediaQuery.accessibleNavigation`); teks baru di keempat ARB; test di `rules_tutorial_test` dan `level_view_test` grup `tanpa seret`.
+> - **`AudioPool` gagal**: hapus dari cache `_pools` kalau pembuatannya gagal, supaya dicoba lagi di `play` berikutnya; test di `sound_player_test`.
+> - **Putar ulang hanya langkah 0**: tombol putar dimatikan (tidak mungkin terjadi dengan aturan sekarang, tapi jangan jadi tombol yang tampak hidup tanpa aksi); test dengan hasil buatan.
+> - **Lagu Beranda saat dibuka langsung di level**: cek apakah hanya terjadi lewat `flutter run --route` (dev). Kalau ya, catat dan lewati; kalau pemain bisa mengalaminya, mulai lagu sesuai rute awal.
+> - **Lapisan widget**: pindahkan `tapSound` ke berkas tipis supaya `lib/widgets/` tidak mengimpor `lib/app/game_audio.dart`, asal perilakunya tidak berubah. Perbarui Struktur di `CLAUDE.md`.
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 29".
+
+## 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
+
+**Hasil:** saran 14–16 dan 23 selesai; CSS desain yang tidak didukung gagal keras di test, dan berkas tinjauan terjemahan tidak bisa basi diam-diam.
+
+> **Baca dulu:**
+> - `lib/game/render/css_animation.dart`, `SvgTemplate`, `test/game/render/css_animation_test.dart`, `design_sync_test.dart`
+> - `tool/translations/make_review.py`, `docs/translations/README.md`, `.claude/commands/check.md`
+> - PR #25 dan #30 (`gh pr view <nomor>`)
+>
+> **Lalu:**
+> - **`SvgTemplate`/`CssStyle`** melempar (atau test sinkron desain gagal) untuk kasus yang belum didukung: `alternate` dengan easing tidak simetris, `transform-origin` px dengan `transform-box: fill-box`, dan opasitas animasi di elemen yang sudah punya `opacity`. Semua SVG desain yang sekarang dipakai harus tetap lolos; test per kasus.
+> - **Berkas terjemahan basi**: tambahkan pengaman (usulan: `make_review.py --check` menulis ke folder sementara lalu membandingkan, dijalankan `/check` dan satu test yang dilewati kalau Python tidak ada). Pesan gagalnya menyuruh menjalankan ulang skrip.
+> - **`docs/translations/README.md`**: jelaskan bahwa peninjau mengisi salinan berkas (kolom *Feedback*), bukan berkas yang di-commit, karena berkas itu ditimpa skrip.
+> - **Potret dev `01-beranda`** (`test/screenshots/screenshot_test.dart`): Beranda sekarang kamar Oyen dan sudah dipotret sebagai `19-kamar`. Hapus atau ganti nama `01-beranda`, `01-beranda-baru-360x640`, dan `01-beranda` per bahasa supaya tidak dobel, perbaiki komentar `_designProgress`, lalu sesuaikan Struktur di `CLAUDE.md` (bagian `test/screenshots/`).
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 30".
+
+## 31. Tinggi baris teks mengikuti desain
+
+**Hasil:** saran 17 selesai; setiap gaya `KoType` menulis `height` dari `line-height` desain (atau nilai yang sengaja dipilih dan dicatat), dan tidak ada lagi tinggi baris bawaan Material.
+
+> **Baca dulu:**
+> - `docs/DESIGN_NOTES.md` bagian "Langkah 4" dan "Langkah 20"
+> - `lib/theme/` (`KoType`, `KoTheme.light()`), `test/theme/theme_test.dart`
+> - token tipografi di `docs/design/source/13-design-token-komponen-ui.html` dan `line-height` di komponen `*.dc.html` (juga `docs/design/rumah-oyen/project/`)
+> - PR #25 (`gh pr view 25`)
+>
+> **Lalu:**
+> - Buat tabel gaya `KoType` → `line-height` desain (tidak tertulis di desain = `normal` browser; putuskan nilainya dan catat).
+> - Tulis `height` di setiap gaya; `theme_test` menjaga ke-15 gaya `TextTheme` dan semua gaya `KoType` menulis `height`, seperti penjaga `letterSpacing`.
+> - Perubahannya terlihat di semua layar: ambil potret layar sebelum dan sesudah (`--dart-define=SCREENSHOTS=true`), bandingkan dengan desain, jalankan `overflow_test` di keempat bahasa, dan ulangi `brand_test.dart --dart-define=BRAND=true` kalau potret toko berubah.
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 31".
+
+## 32. Cek di HP dan persiapan rilis produksi
+
+**Hasil:** saran 18–21 dicek di HP asli dan diselesaikan atau dicatat; yang hanya bisa dikerjakan pemilik repo tercantum sebagai daftar periksa di PR.
+
+> **Baca dulu:**
+> - `docs/store/README.md`, `docs/DESIGN_NOTES.md` bagian "Langkah 17", "Langkah 18", dan "Langkah 24"
+> - catatan crash release di `CLAUDE.md` (bagian Android)
+> - PR #18, #19, #23, #24, #30, #32 (`gh pr view <nomor>`)
+>
+> **Lalu:**
+> - **Tanya dulu ke pemilik repo**: HP Android yang tersambung (`adb devices`; PR #29 memakai Xiaomi 24117RN76O), ada tidaknya HP murah untuk uji kinerja, ID AdMob asli, apakah keystore sudah dibuat, apakah kebijakan privasi sudah diunggah ulang, dan apakah sudah ada masukan penutur asli.
+> - **Cek di HP** (build debug dan release, laporkan per butir di PR): ikon dan ikon tema di launcher, splash Android 12+ (dan versi lama kalau ada), formulir UMP, iklan uji petunjuk dan koin, bunyi pertama tiap efek (telat atau tidak), TalkBack di papan (taruh, pindah, kembalikan), dan pesan `flutter build appbundle` tanpa `android/key.properties` dan tanpa `-v`.
+> - **Kinerja kamar hidup** di mode profil dengan kamar penuh: ukur waktu bingkai. Kalau sprite kucing yang digambar ulang tiap bingkai jadi masalah, cache per bingkai animasi dengan test; kalau tidak, catat angkanya dan lewati.
+> - **Masukan terjemahan** (kalau ada): terapkan ke ARB dan listing toko, lalu `flutter gen-l10n`, `make_review.py`, dan `overflow_test`.
+> - **Kalau pemilik repo memberi ID AdMob asli**: tempel di `lib/app/ad_ids.dart` dan `admobAppId` di `android/app/build.gradle.kts`, perbarui `ad_ids_test`/`android_project_test`. Keystore dan kunci tidak pernah masuk repo.
+> - Sisanya (keystore, unggah kebijakan privasi, Data safety, rating konten, unggah bundle) ditulis sebagai daftar periksa di badan PR, mengikuti `docs/store/README.md`.
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 32".
