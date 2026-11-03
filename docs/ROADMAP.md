@@ -40,7 +40,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 24. Kamar hidup: animasi, rutinitas, kebutuhan, dan hadiah
 - [x] 25. Peta bergambar dan Oyen berjalan ke level berikutnya
 - [x] 26. Potret toko dan rapi-rapi rumah Oyen
-- [ ] 27. Rapi-rapi kamar: tag "Baru!", gelembung hadiah, label mangkuk, camilan penuh
+- [x] 27. Rapi-rapi kamar: tag "Baru!", gelembung hadiah, label mangkuk, camilan penuh
 - [ ] 28. Kamar: barang yang sedang dipakai (tempat berdiri, barang dinding, cermin)
 - [ ] 29. Aksesibilitas, suara, dan putar ulang
 - [ ] 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
@@ -546,7 +546,7 @@ Dikumpulkan 3 Nov 2026 dari bagian "Saran", "Belum dikerjakan", dan "Wajib sebel
 
 Aturan untuk langkah 27–32: sebelum mengubah, pastikan sarannya masih berlaku di kode; kalau sudah beres, tulis di PR dan lewati. Perilaku yang bisa diuji dikerjakan dengan test yang gagal dulu. Teks baru masuk keempat ARB. Keputusan dicatat di `docs/DESIGN_NOTES.md` bagian "Langkah N".
 
-## 27. Rapi-rapi kamar: tag "Baru!", gelembung hadiah, label mangkuk, camilan penuh
+## 27. Rapi-rapi kamar: tag "Baru!", gelembung hadiah, label mangkuk, camilan penuh ✅
 
 **Hasil:** saran 1–4 dan 22 di tabel di atas selesai.
 
