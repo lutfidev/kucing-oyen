@@ -12,10 +12,25 @@ class Home {
     Iterable<KittyId> kitties = const [],
     AccessoryCloset? closet,
     Pantry? pantry,
-  }) : room = room ?? Room.initial,
-       kitties = Set.unmodifiable({KittyId.oyen, ...kitties}),
-       closet = closet ?? AccessoryCloset.initial,
-       pantry = pantry ?? Pantry.empty;
+    Iterable<KittyId> fresh = const [],
+  }) : this._(
+         room ?? Room.initial,
+         Set.unmodifiable({KittyId.oyen, ...kitties}),
+         closet ?? AccessoryCloset.initial,
+         pantry ?? Pantry.empty,
+         fresh,
+       );
+
+  Home._(
+    this.room,
+    this.kitties,
+    this.closet,
+    this.pantry,
+    Iterable<KittyId> fresh,
+  ) : fresh = Set.unmodifiable({
+        for (final k in fresh)
+          if (k != KittyId.oyen && kitties.contains(k)) k,
+      });
 
   /// Awal permainan: hanya Oyen dan mangkuk.
   static final initial = Home();
@@ -28,22 +43,38 @@ class Home {
   final AccessoryCloset closet;
   final Pantry pantry;
 
+  /// Kucing yang baru diadopsi dan kartunya belum pernah dibuka (tag
+  /// "Baru!"); Oyen tidak pernah baru.
+  final Set<KittyId> fresh;
+
   bool ownsKitty(KittyId id) => kitties.contains(id);
 
   /// Belum dimiliki dan [coins] cukup untuk harganya.
   bool canBuyKitty(KittyId id, int coins) =>
       !ownsKitty(id) && coins >= kittyOf(id).price;
 
+  bool isFresh(KittyId id) => fresh.contains(id);
+
+  /// [id] mulai tinggal di kamar dan ditandai baru.
+  Home adopt(KittyId id) =>
+      copyWith(kitties: {...kitties, id}, fresh: {...fresh, id});
+
+  /// Kartu [id] sudah dibuka: tanda barunya hilang.
+  Home seen(KittyId id) =>
+      isFresh(id) ? copyWith(fresh: {...fresh}..remove(id)) : this;
+
   Home copyWith({
     Room? room,
     Iterable<KittyId>? kitties,
     AccessoryCloset? closet,
     Pantry? pantry,
+    Iterable<KittyId>? fresh,
   }) => Home(
     room: room ?? this.room,
     kitties: kitties ?? this.kitties,
     closet: closet ?? this.closet,
     pantry: pantry ?? this.pantry,
+    fresh: fresh ?? this.fresh,
   );
 
   Map<String, Object?> toJson() => {
@@ -54,9 +85,14 @@ class Home {
     ],
     'closet': closet.toJson(),
     'pantry': pantry.toJson(),
+    'fresh': [
+      for (final k in KittyId.values)
+        if (fresh.contains(k)) k.name,
+    ],
   };
 
-  /// Bagian yang rusak kembali ke awal. Aksesoris yang dipakai kucing
+  /// Bagian yang rusak kembali ke awal; simpanan tanpa `fresh` = tidak ada
+  /// kucing baru. Aksesoris yang dipakai kucing
   /// yang tidak dimiliki dibuang.
   factory Home.fromJson(Map<String, dynamic> json) {
     T part<T>(String key, T Function(Map<String, dynamic>) parse, T empty) =>
@@ -86,6 +122,10 @@ class Home {
         },
       ),
       pantry: part('pantry', Pantry.fromJson, Pantry.empty),
+      fresh: [
+        if (json['fresh'] case final List list)
+          for (final name in list) ?names[name],
+      ],
     );
   }
 
@@ -96,11 +136,18 @@ class Home {
       other.kitties.length == kitties.length &&
       other.kitties.containsAll(kitties) &&
       other.closet == closet &&
-      other.pantry == pantry;
+      other.pantry == pantry &&
+      other.fresh.length == fresh.length &&
+      other.fresh.containsAll(fresh);
 
   @override
-  int get hashCode =>
-      Object.hash(room, Object.hashAllUnordered(kitties), closet, pantry);
+  int get hashCode => Object.hash(
+    room,
+    Object.hashAllUnordered(kitties),
+    closet,
+    pantry,
+    Object.hashAllUnordered(fresh),
+  );
 
   @override
   String toString() => 'Home(${toJson()})';

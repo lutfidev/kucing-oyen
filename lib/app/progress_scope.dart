@@ -263,15 +263,23 @@ class ProgressController extends ChangeNotifier implements HintSource {
     );
   }
 
-  /// Membeli kucing [id]; bar-nya mulai penuh sekarang.
+  /// Membeli kucing [id]; bar-nya mulai penuh sekarang dan ia bertanda
+  /// "Baru!" sampai [seeKitty].
   Future<bool> buyKitty(KittyId id) async {
     if (!_home.canBuyKitty(id, _coins)) return false;
     return _changeHome(
       {_Part.home, _Part.needs},
-      home: _home.copyWith(kitties: {..._home.kitties, id}),
+      home: _home.adopt(id),
       needs: _needs.adopted(id, clock()),
       coins: -kittyOf(id).price,
     );
+  }
+
+  /// Kartu [kitty] dibuka: tag "Baru!"-nya hilang. False tanpa efek kalau
+  /// [kitty] tidak bertanda baru.
+  Future<bool> seeKitty(KittyId kitty) async {
+    if (!_home.isFresh(kitty)) return false;
+    return _changeHome({_Part.home}, home: _home.seen(kitty));
   }
 
   /// Membeli aksesoris [id] untuk semua kucing; belum dipakai.

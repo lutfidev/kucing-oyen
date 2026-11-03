@@ -277,6 +277,17 @@ class Bowl {
       ? filledAt!.add(const Duration(hours: bowlRefillHours))
       : null;
 
+  /// Sisa waktu sampai isi berikutnya, paling lama [bowlRefillHours] (jam
+  /// yang mundur ke sebelum [filledAt] tidak memperpanjangnya); null kalau
+  /// tidak ada isi yang berjalan.
+  Duration? refillIn(DateTime now) {
+    final at = refillAt(now);
+    if (at == null) return null;
+    const most = Duration(hours: bowlRefillHours);
+    final left = at.difference(now);
+    return left > most ? most : left;
+  }
+
   /// Semua [kitties] sudah makan dari isi yang berjalan (mangkuk tampil
   /// kosong).
   bool isEmptyFor(Iterable<KittyId> kitties, DateTime now) =>

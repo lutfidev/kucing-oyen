@@ -208,6 +208,15 @@ void main() {
       expect(bowl.hasEaten(KittyId.oyen, t0.subtract(hour * 5)), isTrue);
     });
 
+    test('refillIn: sisa waktu, dijepit ke 0…4 jam kalau jam mundur', () {
+      final bowl = Bowl.full.eat(KittyId.oyen, t0);
+      expect(Bowl.full.refillIn(t0), isNull);
+      expect(bowl.refillIn(at(hour)), hour * 3);
+      expect(bowl.refillIn(at(hour * 4)), isNull);
+      expect(bowl.refillIn(t0.subtract(hour * 5)), hour * bowlRefillHours);
+      expect(bowl.refillIn(t0.subtract(minute)), hour * bowlRefillHours);
+    });
+
     test('JSON pulang-pergi; rusak dibuang', () {
       final bowl = Bowl.full.eat(KittyId.oyen, t0).eat(KittyId.bos, t0);
       expect(Bowl.fromJson(bowl.toJson()), bowl);

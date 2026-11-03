@@ -520,6 +520,31 @@ void main() {
       expect(c.catNeeds(KittyId.salju).hunger, closeTo(50, 1e-9));
     });
 
+    test('kucing baru bertanda "Baru!" sampai kartunya dibuka', () async {
+      final c = controller(coins: 300);
+      expect(await c.buyKitty(KittyId.salju), isTrue);
+      expect(c.home.isFresh(KittyId.salju), isTrue);
+      expect(storeOf(c).home.isFresh(KittyId.salju), isTrue);
+      var notified = 0;
+      c.addListener(() => notified++);
+      expect(await c.seeKitty(KittyId.oyen), isFalse);
+      expect(notified, 0);
+      expect(await c.seeKitty(KittyId.salju), isTrue);
+      expect(c.home.isFresh(KittyId.salju), isFalse);
+      expect(storeOf(c).home.isFresh(KittyId.salju), isFalse);
+      expect(notified, 1);
+      expect(await c.seeKitty(KittyId.salju), isFalse);
+      expect(notified, 1);
+    });
+
+    test('reset progres membuang tanda kucing baru', () async {
+      final c = controller(coins: 300);
+      await c.buyKitty(KittyId.salju);
+      await c.resetProgress();
+      expect(c.home.fresh, isEmpty);
+      expect(storeOf(c).home.fresh, isEmpty);
+    });
+
     test('aksesoris: dipakai beberapa kucing, diganti, dilepas', () async {
       final c = controller(coins: 1000, home: Home(kitties: {KittyId.arang}));
       expect(await c.wearAccessory(KittyId.oyen, AccessoryId.pita), isFalse);
