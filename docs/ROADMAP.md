@@ -541,12 +541,14 @@ Dikumpulkan 3 Nov 2026 dari bagian "Saran", "Belum dikerjakan", dan "Wajib sebel
 | 19 | Cek di HP: bunyi pertama efek telat atau tidak, TalkBack di papan, ikon dan ikon tema, splash Android 12+ dan lama, formulir UMP, iklan uji, pesan Gradle `bundleRelease` tanpa `-v` | PR #18, #19, #23, #24 | 32 |
 | 20 | Wajib produksi: ID AdMob asli, keystore + `android/key.properties`, unggah ulang kebijakan privasi (berlaku 3 Nov 2026) | PR #19, #32 | 32 |
 | 21 | Masukan penutur asli untuk terjemahan Inggris, Portugis Brasil, dan Rusia | PR #17, #25 | 32 |
+| 22 | Tab Toko "Accessories"/"Аксессуары" terpotong jadi "Accessori…"/"Аксессуа…" di 360 dp (terlihat di potret toko `02-toko-aksesoris` en dan ru; `overflow_test` tidak menangkap elipsis). PR #32 hanya mengecek potret `id` dan `ru` dengan mata | cek ulang PR #32 | 27 |
+| 23 | Potret dev `01-beranda` di `test/screenshots/screenshot_test.dart` sekarang memotret kamar (sama dengan `19-kamar`), dan komentarnya masih menyebut contoh desain Beranda lama | cek ulang PR #32 | 30 |
 
 Aturan untuk langkah 27–32: sebelum mengubah, pastikan sarannya masih berlaku di kode; kalau sudah beres, tulis di PR dan lewati. Perilaku yang bisa diuji dikerjakan dengan test yang gagal dulu. Teks baru masuk keempat ARB. Keputusan dicatat di `docs/DESIGN_NOTES.md` bagian "Langkah N".
 
 ## 27. Rapi-rapi kamar: tag "Baru!", gelembung hadiah, label mangkuk, camilan penuh
 
-**Hasil:** saran 1–4 di tabel di atas selesai.
+**Hasil:** saran 1–4 dan 22 di tabel di atas selesai.
 
 > **Baca dulu:**
 > - `docs/DESIGN_NOTES.md` bagian "Langkah 23", "Langkah 24", dan "Langkah 26"
@@ -559,7 +561,8 @@ Aturan untuk langkah 27–32: sebelum mengubah, pastikan sarannya masih berlaku 
 > - **Gelembung hadiah** juga untuk kucing yang sedang di dalam barang (sekarang hanya di luar barang). Letakkan di atas kotak kucing di barang (`RoomItemArt.inUseBox`/`catBox`); ketukannya tetap `claimKittyReward` dan tetap di dalam layar (`KeepInside`).
 > - **Label mangkuk** dijepit ke `bowlRefillHours` kalau jam HP mundur.
 > - **Camilan mati karena bar penuh**: beri umpan balik saat diketuk (usulan: pesan singkat di kartu, juga diumumkan pembaca layar). Samakan dengan camilan yang stoknya habis kalau masuk akal.
-> - Test widget di `test/screens/room_screen_test.dart`, `room_life_test.dart`, `kitty_card_test.dart`; tambah keadaan baru ke `overflow_test`.
+> - **Tab Toko terpotong**: label tab "Accessories" (en) dan "Аксессуары" (ru) tampil dengan elipsis di 360 dp. Buat keempat label tab muat utuh, mis. mengecil seperti `FittedBox` di tombol lain atau padding tab yang lebih rapat (tanpa mengganti terjemahan kecuali perlu). Tambahkan test yang gagal kalau label tab terpotong (bandingkan lebar teks dengan lebar tab di 360×640, teks 100% dan 130%, keempat bahasa), lalu buat ulang potret toko (`brand_test.dart --dart-define=BRAND=true`) dan periksa dengan mata keenam potret di **keempat** bahasa.
+> - Test widget di `test/screens/room_screen_test.dart`, `room_life_test.dart`, `kitty_card_test.dart`, `shop_screen_test.dart`; tambah keadaan baru ke `overflow_test`.
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 27".
 
@@ -602,7 +605,7 @@ Aturan untuk langkah 27–32: sebelum mengubah, pastikan sarannya masih berlaku 
 
 ## 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
 
-**Hasil:** saran 14–16 selesai; CSS desain yang tidak didukung gagal keras di test, dan berkas tinjauan terjemahan tidak bisa basi diam-diam.
+**Hasil:** saran 14–16 dan 23 selesai; CSS desain yang tidak didukung gagal keras di test, dan berkas tinjauan terjemahan tidak bisa basi diam-diam.
 
 > **Baca dulu:**
 > - `lib/game/render/css_animation.dart`, `SvgTemplate`, `test/game/render/css_animation_test.dart`, `design_sync_test.dart`
@@ -613,6 +616,7 @@ Aturan untuk langkah 27–32: sebelum mengubah, pastikan sarannya masih berlaku 
 > - **`SvgTemplate`/`CssStyle`** melempar (atau test sinkron desain gagal) untuk kasus yang belum didukung: `alternate` dengan easing tidak simetris, `transform-origin` px dengan `transform-box: fill-box`, dan opasitas animasi di elemen yang sudah punya `opacity`. Semua SVG desain yang sekarang dipakai harus tetap lolos; test per kasus.
 > - **Berkas terjemahan basi**: tambahkan pengaman (usulan: `make_review.py --check` menulis ke folder sementara lalu membandingkan, dijalankan `/check` dan satu test yang dilewati kalau Python tidak ada). Pesan gagalnya menyuruh menjalankan ulang skrip.
 > - **`docs/translations/README.md`**: jelaskan bahwa peninjau mengisi salinan berkas (kolom *Feedback*), bukan berkas yang di-commit, karena berkas itu ditimpa skrip.
+> - **Potret dev `01-beranda`** (`test/screenshots/screenshot_test.dart`): Beranda sekarang kamar Oyen dan sudah dipotret sebagai `19-kamar`. Hapus atau ganti nama `01-beranda`, `01-beranda-baru-360x640`, dan `01-beranda` per bahasa supaya tidak dobel, perbaiki komentar `_designProgress`, lalu sesuaikan Struktur di `CLAUDE.md` (bagian `test/screenshots/`).
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 30".
 
