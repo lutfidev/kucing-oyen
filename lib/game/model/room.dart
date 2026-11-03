@@ -9,15 +9,16 @@ class Room {
     Map<RoomItemId, Spot> placed = const {},
   }) {
     final all = {RoomItemId.mangkuk, ...owned};
-    return Room._(Set.unmodifiable(all), {
+    return Room._(all, {
       RoomItemId.mangkuk: roomItemOf(RoomItemId.mangkuk).defaultSpot,
       for (final MapEntry(:key, :value) in placed.entries)
         if (all.contains(key)) key: value,
     });
   }
 
-  Room._(this.owned, Map<RoomItemId, Spot> placed)
-    : placed = Map.unmodifiable(placed);
+  Room._(Set<RoomItemId> owned, Map<RoomItemId, Spot> placed)
+    : owned = Set.unmodifiable(owned),
+      placed = Map.unmodifiable(placed);
 
   /// Awal permainan: kamar kosong dengan mangkuk.
   static final initial = Room();
