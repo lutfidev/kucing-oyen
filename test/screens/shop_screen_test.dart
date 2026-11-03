@@ -1,6 +1,8 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/game_audio.dart';
+import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/accessories.dart';
@@ -10,8 +12,11 @@ import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
+import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/screens/room/room_screen.dart';
+import 'package:kucing_oren/screens/shop/shop_parts.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
+import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
 
@@ -526,5 +531,57 @@ void main() {
     expect(playedBy(audio), isNot(contains(GameSound.wear)));
     await tapCard(tester, 'buy-wear');
     expect(playedBy(audio), contains(GameSound.wear));
+  });
+
+  group('label tab muat utuh', () {
+    for (final language in AppLanguage.supported) {
+      for (final scale in [1.0, 1.3]) {
+        testWidgets(
+          '${language.name}, 360×640, teks ${(scale * 100).round()}%',
+          (tester) async {
+            setScreenSize(tester, const Size(360, 640));
+            setTextScale(tester, scale);
+            await pumpApp(
+              tester,
+              location: AppRoutes.shop(),
+              progress: testProgressWith(language: language),
+            );
+            final l = lookupAppLocalizations(Locale(language.name));
+            for (final label in [
+              l.shopTabItems,
+              l.shopTabKitties,
+              l.shopTabAccessories,
+              l.shopTabSnacks,
+            ]) {
+              final text = find.descendant(
+                of: find.byType(ShopTabs),
+                matching: find.text(label),
+              );
+              final paragraph = tester.renderObject<RenderParagraph>(text);
+              // Tidak terpotong: lebar paragraf = lebar teks utuhnya.
+              expect(paragraph.didExceedMaxLines, isFalse, reason: label);
+              expect(
+                paragraph.size.width,
+                moreOrLessEquals(
+                  paragraph.getMaxIntrinsicWidth(double.infinity),
+                  epsilon: 0.01,
+                ),
+                reason: label,
+              );
+              // Dan yang tampil tidak melewati tab-nya.
+              final tab = find.ancestor(
+                of: text,
+                matching: find.byType(KoPressable),
+              );
+              expect(
+                tester.getRect(text).width,
+                lessThanOrEqualTo(tester.getRect(tab).width),
+                reason: label,
+              );
+            }
+          },
+        );
+      }
+    }
   });
 }
