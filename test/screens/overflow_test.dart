@@ -392,7 +392,9 @@ void _cases(AppLanguage language) {
       });
       // Kamar penuh: semua barang ditaruh, sembilan kucing beraksesoris,
       // Oyen lesu, stok camilan dan aksesoris lengkap, saldo 5 digit.
-      ProgressController fullRoom() {
+      // [fresh]: semua kucing tamu bertanda "Baru!"; [fullOyen]: bar Oyen
+      // penuh (camilan hanya memberi pesan).
+      ProgressController fullRoom({bool fresh = false, bool fullOyen = false}) {
         final now = DateTime(2026, 10, 29, 9);
         var room = Room();
         for (final item in shopItems) {
@@ -416,18 +418,27 @@ void _cases(AppLanguage language) {
             kitties: KittyId.values,
             closet: closet,
             pantry: Pantry({for (final s in SnackId.values) s: 99}),
+            fresh: fresh ? KittyId.values : const [],
           ),
           needs: HomeNeeds(
-            cats: {KittyId.oyen: CatNeeds(hunger: 12, joy: 8, at: now)},
+            cats: {
+              KittyId.oyen: fullOyen
+                  ? CatNeeds(hunger: 100, joy: 100, at: now)
+                  : CatNeeds(hunger: 12, joy: 8, at: now),
+            },
           ),
         );
       }
 
-      Future<void> openOyenCard(WidgetTester tester) async {
+      Future<void> openOyenCard(
+        WidgetTester tester, {
+        bool hungry = true,
+      }) async {
         final handle = tester.ensureSemantics();
+        final name = kittyName(l, KittyId.oyen);
         tester.semantics.tap(
           find.semantics.byLabel(
-            l.kittyTapHintHungry(kittyName(l, KittyId.oyen)),
+            hungry ? l.kittyTapHintHungry(name) : l.kittyTapHint(name),
           ),
         );
         await tester.pumpAndSettle();
@@ -476,6 +487,38 @@ void _cases(AppLanguage language) {
         expect(find.byType(CoinBubbleView), findsWidgets);
         expect(find.text(l.bowlRefill(4)), findsOneWidget);
         expect(tester.takeException(), isNull);
+      });
+      testWidgets('tanpa overflow: kamar penuh kucing baru @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpApp(tester, progress: fullRoom(fresh: true));
+        expect(
+          find.text(l.kittyNewTag),
+          findsNWidgets(KittyId.values.length - 1),
+        );
+        expect(tester.takeException(), isNull);
+      });
+      testWidgets('tanpa overflow: pesan camilan bar penuh @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpApp(tester, progress: fullRoom(fullOyen: true));
+        await openOyenCard(tester, hungry: false);
+        await tester.tap(inCard(l.snackPanel));
+        await tester.pumpAndSettle();
+        final first = inCard(snackName(l, SnackId.values.first));
+        await tester.ensureVisible(first);
+        await tester.pumpAndSettle();
+        await tester.tap(first);
+        await tester.pump();
+        final note = inCard(l.snackFullNote(kittyName(l, KittyId.oyen)));
+        expect(note, findsOneWidget);
+        await tester.ensureVisible(note);
+        await tester.pump();
+        expect(note.hitTestable(), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        await tester.pump(const Duration(seconds: 2));
       });
       testWidgets('tanpa overflow: mode hias @ $label, '
           'teks ${scale * 100}%', (tester) async {

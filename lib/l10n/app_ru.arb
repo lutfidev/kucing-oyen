@@ -482,5 +482,10 @@
   "chapterIntroOverline": "Новая глава открыта!",
   "chapterIntroEnter": "Заходим!",
   "chapterIntroInfo": "{count, plural, one{{count} новый уровень} few{{count} новых уровня} many{{count} новых уровней} other{{count} новых уровня}} · Босс: {boss}",
-  "chapterIntroLabel": "Новая глава открыта"
+  "chapterIntroLabel": "Новая глава открыта",
+  "kittyNewTag": "Новый!",
+  "kittyTapHintNew": "{name}, новенький. Нажми, чтобы открыть карточку",
+  "kittyTapHintNewHungry": "{name}, новенький, хочет есть. Нажми, чтобы открыть карточку",
+  "snackFullNote": "{name} уже сыт и доволен. Прибереги на потом!",
+  "snackEmptyNote": "Закончилось. Купи ещё вкусняшек в Магазине!"
 }

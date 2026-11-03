@@ -283,6 +283,7 @@ class _RoomViewState extends State<RoomView>
   void _select(KittyId kitty) {
     _sound(GameSound.meow);
     setState(() => _selected = kitty);
+    _progress.seeKitty(kitty);
   }
 
   void _closeCard() => setState(() => _selected = null);
@@ -550,8 +551,13 @@ class _RoomViewState extends State<RoomView>
       for (final sprite in sprites)
         if (sprite is ItemSprite && sprite.id == dragging) sprite,
     ];
+    final catBoxes = _catBoxes(sprites, geo);
     final empty = _empty;
     final top = MediaQuery.paddingOf(context).top + space.s6;
+    // Tag dan gelembung tidak naik ke bawah header dan tombol Hias, yang
+    // digambar di atasnya dan menelan ketukan.
+    final overlayTop =
+        top + s.roomDecorateGap + s.roomDecorateButton + space.s8;
     return Stack(
       key: const ValueKey('room-area'),
       clipBehavior: Clip.none,
@@ -602,33 +608,55 @@ class _RoomViewState extends State<RoomView>
               ),
             },
         if (!_decorating)
-          for (final sprite in sprites.whereType<KittySprite>())
-            if (_progress.catNeeds(sprite.kitty) case final needs
-                when needs.isSad)
+          for (final MapEntry(key: kitty, value: box) in catBoxes.entries)
+            if (_progress.catNeeds(kitty) case final needs when needs.isSad)
               Positioned(
-                left: sprite.box.left + sprite.box.width * 0.19,
-                top: sprite.box.top - sprite.box.width * 0.19,
+                left: box.left + box.width * 0.19,
+                top: box.top - box.width * 0.19,
                 child: SadMarkView(
                   hungry: needs.hunger <= sadThreshold,
                   size: RoomArt.sadMarkViewBox.width * geo.artScale,
                   time: _animating ? _time : null,
                 ),
               )
-            else if (widget.life && _progress.canClaimKittyReward(sprite.kitty))
-              Positioned(
-                // Desain: gelembung di (163, 362) untuk Oyen 116 di (137, 430).
-                left: sprite.box.left + sprite.box.width * 26 / oyenRoomSize,
-                top: sprite.box.top - sprite.box.width * 68 / oyenRoomSize,
-                child: CoinBubbleView(
-                  key: ValueKey('reward-${sprite.kitty.name}'),
-                  coins: kittyRewardCoins,
-                  label: context.l10n.kittyRewardLabel(
-                    kittyRewardCoins,
-                    kittyName(context.l10n, sprite.kitty),
+            else if (home.isFresh(kitty))
+              Positioned.fill(
+                child: CustomSingleChildLayout(
+                  // Desain: tag di tengah kotak kucing (kiri − 26 untuk
+                  // "Baru!" selebar ±52), atas − 14.
+                  delegate: KeepInside(
+                    Offset(box.center.dx, box.top - 14 * geo.artScale),
+                    margin: space.s8,
+                    top: overlayTop,
+                    centered: true,
                   ),
-                  size: RoomArt.coinBubbleViewBox.width * geo.artScale,
-                  time: _animating ? _time : null,
-                  onTap: () => _claim(sprite.kitty),
+                  child: const NewKittyTag(),
+                ),
+              )
+            else if (widget.life && _progress.canClaimKittyReward(kitty))
+              Positioned.fill(
+                child: CustomSingleChildLayout(
+                  // Desain: gelembung di (163, 362) untuk Oyen 116 di
+                  // (137, 430); dijepit supaya tidak keluar tepi kamar.
+                  delegate: KeepInside(
+                    Offset(
+                      box.left + box.width * 26 / oyenRoomSize,
+                      box.top - box.width * 68 / oyenRoomSize,
+                    ),
+                    margin: space.s8,
+                    top: overlayTop,
+                  ),
+                  child: CoinBubbleView(
+                    key: ValueKey('reward-${kitty.name}'),
+                    coins: kittyRewardCoins,
+                    label: context.l10n.kittyRewardLabel(
+                      kittyRewardCoins,
+                      kittyName(context.l10n, kitty),
+                    ),
+                    size: RoomArt.coinBubbleViewBox.width * geo.artScale,
+                    time: _animating ? _time : null,
+                    onTap: () => _claim(kitty),
+                  ),
                 ),
               ),
         if (!_decorating && widget.life)
@@ -696,6 +724,28 @@ class _RoomViewState extends State<RoomView>
     );
   }
 
+  /// Kotak tiap kucing di kamar: sprite-nya sendiri, atau kotak kucing di
+  /// barang yang sedang dipakainya.
+  Map<KittyId, Rect> _catBoxes(List<RoomSprite> sprites, RoomGeometry geo) {
+    final boxes = <KittyId, Rect>{};
+    for (final sprite in sprites) {
+      switch (sprite) {
+        case KittySprite(:final kitty):
+          boxes[kitty] = sprite.box;
+        case ItemSprite(:final id):
+          final user = widget.life && !_decorating ? _life.userOf(id) : null;
+          if (user == null) continue;
+          final mirror = _mirrored(geo, id, sprite.box);
+          boxes[user] = RoomItemArt.catBox(
+            id,
+            RoomItemArt.inUseBox(id, sprite.box, mirror: mirror),
+            mirror: mirror,
+          );
+      }
+    }
+    return boxes;
+  }
+
   /// Barang dipakai digambar terbalik kalau kotak biasanya keluar tepi
   /// kiri atau kanan kamar (mis. tiang garukan di pojok kiri).
   bool _mirrored(RoomGeometry geo, RoomItemId id, Rect box) {
@@ -710,13 +760,9 @@ class _RoomViewState extends State<RoomView>
   /// Sisa waktu sampai mangkuk terisi lagi, atau null kalau mangkuknya
   /// tidak kosong.
   Duration? _bowlRefill(DateTime now) {
-    final home = _progress.home;
     final bowl = _progress.needs.bowl;
-    if (!bowl.isEmptyFor(home.kitties, now)) return null;
-    final at = bowl.refillAt(now);
-    if (at == null) return null;
-    final left = at.difference(now);
-    return left.isNegative ? Duration.zero : left;
+    if (!bowl.isEmptyFor(_progress.home.kitties, now)) return null;
+    return bowl.refillIn(now);
   }
 
   Widget _itemSprite(
@@ -799,10 +845,16 @@ class _RoomViewState extends State<RoomView>
   Widget _kittyButton(KittyId kitty, Widget child) {
     final l = context.l10n;
     final hungry = _progress.catNeeds(kitty).hunger <= sadThreshold;
+    final fresh = _progress.home.isFresh(kitty);
     final name = kittyName(l, kitty);
     return Semantics(
       button: true,
-      label: hungry ? l.kittyTapHintHungry(name) : l.kittyTapHint(name),
+      label: switch ((fresh, hungry)) {
+        (true, true) => l.kittyTapHintNewHungry(name),
+        (true, false) => l.kittyTapHintNew(name),
+        (false, true) => l.kittyTapHintHungry(name),
+        (false, false) => l.kittyTapHint(name),
+      },
       excludeSemantics: true,
       onTap: () => _select(kitty),
       child: GestureDetector(

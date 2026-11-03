@@ -10,6 +10,7 @@ import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
+import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/screens/room/room_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -171,6 +172,76 @@ void main() {
     expect(progress.canClaimKittyReward(KittyId.oyen), isFalse);
   });
 
+  testWidgets('gelembung hadiah juga di atas kucing di dalam barang', (
+    tester,
+  ) async {
+    final progress = testProgressWith(
+      home: _furnished(),
+      clock: () => roomNow,
+      coins: 5,
+      needs: HomeNeeds(
+        cats: {KittyId.oyen: CatNeeds(hunger: 90, joy: 90, at: roomNow)},
+      ),
+    );
+    await _pump(tester, progress: progress);
+    expect(
+      await _until(tester, () => _inUseBy(KittyId.oyen).evaluate().isNotEmpty),
+      isTrue,
+    );
+    final view = tester.widget<RoomItemView>(_inUseBy(KittyId.oyen));
+    final cat = RoomItemArt.catBox(
+      view.id,
+      tester.getRect(_inUseBy(KittyId.oyen)),
+      mirror: view.mirror,
+    );
+    final bubble = find.byKey(const ValueKey('reward-oyen'));
+    expect(bubble, findsOneWidget);
+    final rect = tester.getRect(bubble);
+    // Letak sebanding desain, dijepit di dalam kamar.
+    expect(rect.top, moreOrLessEquals(cat.top - cat.width * 68 / 116));
+    final (room, _) = roomOf(tester);
+    expect(rect.left, greaterThanOrEqualTo(room.left));
+    expect(rect.right, lessThanOrEqualTo(room.right));
+    expect(
+      rect.left,
+      moreOrLessEquals(
+        (cat.left + cat.width * 26 / 116).clamp(
+          room.left + 8,
+          room.right - 8 - rect.width,
+        ),
+      ),
+    );
+    await tester.tap(bubble);
+    await tester.pump();
+    expect(progress.coins, 5 + kittyRewardCoins);
+    await settle(tester);
+    expect(bubble, findsNothing);
+  });
+
+  testWidgets('kucing baru: tag "Baru!" dulu, gelembung sesudah kartu dibuka', (
+    tester,
+  ) async {
+    final progress = withNeeds({
+      KittyId.oyen: (90, 90),
+      KittyId.salju: (90, 90),
+    }, home: Home(kitties: {KittyId.salju}).adopt(KittyId.salju));
+    final semantics = tester.ensureSemantics();
+    await _pump(tester, progress: progress);
+    expect(find.text('Baru!'), findsOneWidget);
+    expect(find.byKey(const ValueKey('reward-salju')), findsNothing);
+    expect(find.byKey(const ValueKey('reward-oyen')), findsOneWidget);
+    // Kucing bergerak terus: diketuk lewat pembaca layar.
+    tester.semantics.tap(
+      find.semantics.byLabel('Salju, baru. Ketuk untuk lihat kartunya'),
+    );
+    await settle(tester, max: const Duration(seconds: 1));
+    tester.semantics.tap(find.semantics.byLabel('Tutup kartu'));
+    await settle(tester, max: const Duration(seconds: 1));
+    expect(find.text('Baru!'), findsNothing);
+    expect(find.byKey(const ValueKey('reward-salju')), findsOneWidget);
+    semantics.dispose();
+  });
+
   testWidgets('kucing lesu tidak memunculkan gelembung', (tester) async {
     await _pump(tester, progress: withNeeds({KittyId.oyen: (10, 90)}));
     expect(find.byType(CoinBubbleView), findsNothing);
@@ -245,6 +316,8 @@ void main() {
     expect(needs.hunger, inInclusiveRange(0, 100));
     expect(needs.joy, inInclusiveRange(0, 100));
     expect(find.textContaining('-'), findsNothing);
+    // Isi mangkuk tidak bertambah lama karena jam mundur.
+    expect(find.text('Terisi lagi 4 jam'), findsOneWidget);
 
     await tester.tap(kittyView(KittyId.oyen));
     await settle(tester, max: const Duration(seconds: 1));

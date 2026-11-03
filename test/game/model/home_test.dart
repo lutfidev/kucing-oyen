@@ -42,6 +42,7 @@ void main() {
           .buy(AccessoryId.pita)
           .wear(KittyId.arang, AccessoryId.pita),
       pantry: Pantry({SnackId.susu: 2}),
+      fresh: {KittyId.arang},
     );
     expect(Home.fromJson(home.toJson()), home);
     expect(Home.fromJson(Home.initial.toJson()), Home.initial);
@@ -72,6 +73,53 @@ void main() {
     expect(home.closet.wearing, {
       KittyId.oyen: AccessoryId.pita,
       KittyId.arang: AccessoryId.pita,
+    });
+  });
+
+  group('kucing baru (tag "Baru!")', () {
+    test('hanya kucing yang dimiliki, tanpa Oyen', () {
+      final home = Home(
+        kitties: {KittyId.salju},
+        fresh: {KittyId.oyen, KittyId.salju, KittyId.arang},
+      );
+      expect(home.fresh, {KittyId.salju});
+      expect(home.isFresh(KittyId.salju), isTrue);
+      expect(home.isFresh(KittyId.oyen), isFalse);
+      expect(Home.initial.fresh, isEmpty);
+    });
+
+    test('adopt menambah kucing sekaligus menandainya baru', () {
+      final home = Home.initial.adopt(KittyId.salju);
+      expect(home.kitties, {KittyId.oyen, KittyId.salju});
+      expect(home.fresh, {KittyId.salju});
+    });
+
+    test('seen menghapus tanda; kucing lama tetap sama', () {
+      final home = Home.initial.adopt(KittyId.salju).adopt(KittyId.arang);
+      final seen = home.seen(KittyId.salju);
+      expect(seen.fresh, {KittyId.arang});
+      expect(seen.kitties, home.kitties);
+      expect(identical(seen.seen(KittyId.salju), seen), isTrue);
+    });
+
+    test('copyWith mempertahankan tanda', () {
+      final home = Home.initial.adopt(KittyId.salju);
+      expect(home.copyWith(pantry: Pantry.empty).fresh, {KittyId.salju});
+    });
+
+    test('JSON lama tanpa field = tidak ada yang baru; rusak dibuang', () {
+      expect(
+        Home.fromJson({
+          'kitties': ['salju'],
+        }).fresh,
+        isEmpty,
+      );
+      final home = Home.fromJson({
+        'kitties': ['salju', 'arang'],
+        'fresh': ['salju', 'bos', 'harimau', 3, 'oyen'],
+      });
+      expect(home.fresh, {KittyId.salju});
+      expect(Home.fromJson({'fresh': 'x'}).fresh, isEmpty);
     });
   });
 }

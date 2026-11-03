@@ -471,3 +471,24 @@ Peta babak jadi ilustrasi ruangan (desain 23), dan "Lanjut" memperlihatkan Oyen 
   - corak kucing, aksesoris, dan Zzz yang ikut dicerminkan di barang yang dicerminkan;
   - penolakan kasus CSS yang tidak dipakai di `SvgTemplate`;
   - uji kinerja sprite kucing di HP murah.
+
+## Langkah 27: Rapi-rapi kamar
+
+Saran 1–4 dan 22 dari tabel "Sesudah langkah 26" di `docs/ROADMAP.md`. Pemilik repo menyerahkan keputusan yang belum diputuskan prompt roadmap kepada saya (3 November 2026).
+
+- **Tag "Baru!"** (`Kamar.dc.html`, keadaan `salju`):
+  - **Gaya**: pil `success` tinggi 24 dengan bayangan padat `successDeep` 3 px dan tulisan Fredoka 700/14 `onSuccess`. Letaknya di tengah kotak kucing (desain: kiri −26 untuk "Baru!" selebar ±52, jadi tag yang lebih lebar seperti "Новый!" tetap di tengah) dan atas kotak −14 (dikali `artScale`, pil tidak), dijepit `KeepInside`.
+  - **Simpanan**: `Home.fresh` berisi kucing yang sudah diadopsi tapi kartunya belum pernah dibuka. Disimpan di JSON rumah (`fresh`), jadi beli kucing dan tandanya tersimpan sekaligus, dan ikut terhapus saat reset progres. Simpanan lama tanpa field ini berarti tidak ada kucing baru, jadi kucing lama tidak tiba-tiba bertanda. Yang disimpan "kucing baru", bukan "sudah dilihat", supaya simpanan lama tidak perlu dimigrasi.
+  - **Kapan hilang**: saat kucing itu diketuk dan kartunya terbuka (`ProgressController.seeKitty`).
+  - **Kapan disembunyikan**: selama mode hias, dan kalau kucingnya lesu (tanda lesu lebih penting, letaknya juga sama).
+  - **Pembaca layar**: tag sendiri tidak dibacakan. Label kucing jadi "Salju, baru. Ketuk untuk lihat kartunya", ditambah "lapar" kalau kucingnya juga lapar.
+  - **Gelembung hadiah kucing baru** menunggu sampai tag hilang, karena gelembung dan tag bertumpuk di atas kotak kucing. Kucing yang baru diadopsi barnya penuh, jadi tanpa aturan ini keduanya selalu muncul bersamaan. Hadiahnya tidak hilang, hanya tertunda sampai kartu dibuka.
+- **Gelembung hadiah dan tanda lesu untuk kucing di dalam barang**: letaknya dihitung dari `RoomItemArt.catBox` di kotak dipakai, dengan perbandingan desain yang sama seperti kucing yang berdiri sendiri.
+  - **Tetap di dalam layar**: gelembung dan tag dijepit `KeepInside` 8 px dari tepi kiri dan kanan, dan tidak naik ke bawah header dan tombol Hias (yang digambar di atasnya dan menelan ketukan). Contohnya kucing di hammock atau lampu bulan di atas dinding, atau tiang garukan di tepi kamar.
+  - **Tanda lesu ikut**: kucing lesu yang makan di mangkuk ikut memunculkan tanda lesunya.
+- **Label mangkuk**: `Bowl.refillIn(now)` dijepit ke `bowlRefillHours`, jadi jam HP yang mundur menampilkan paling lama "Terisi lagi 4 jam". Isinya sendiri tetap datang di `filledAt` + 4 jam, jadi kalau jam mundur lebih dari 4 jam, label itu bertahan lebih lama dari 4 jam sungguhan. Isi mangkuk tidak dimajukan supaya jam mundur tidak bisa dipakai untuk makan lebih sering.
+- **Camilan yang mati** (stok habis atau bar penuh) tetap pudar, tapi ketukannya dijawab pesan di bawah daftar camilan. Pesannya bergaya `ShopFlash` (1,3 detik, `liveRegion`, jadi juga diumumkan pembaca layar; tiap ketukan membuat pesan baru, jadi ketukan kedua diumumkan lagi). Pesan muncul di bawah baris camilan, jadi kartu memanjang sebentar tanpa menggeser camilan yang diketuk. Bar penuh: "Salju sudah kenyang dan senang. Simpan buat nanti!". Stok habis: "Stoknya habis. Beli camilan lagi di Toko!". Stok tidak berkurang.
+- **Tab Toko**: label tab dibungkus `FittedBox(scaleDown)` tanpa elipsis, jadi label yang panjang sedikit mengecil, bukan terpotong. Terjemahan tidak diganti.
+  - **Kasus yang ternyata terpotong**: test baru di `shop_screen_test` menunjukkan label juga terpotong di id dan pt dengan teks 130%, bukan hanya en dan ru di 100%.
+  - **Potret toko** `02-toko-aksesoris` en dan ru dibuat ulang. Keenam potret di keempat bahasa diperiksa dengan mata.
+

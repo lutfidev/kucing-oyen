@@ -151,11 +151,16 @@ class _Tab extends StatelessWidget {
         children: [
           KoIcon(icon, size: s.iconCompact, color: ink),
           SizedBox(height: space.s2 + 1),
-          Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: context.koType.tag.copyWith(color: ink),
+          // Label panjang ("Accessories", "Аксессуары") mengecil supaya
+          // tetap utuh di layar 360, bukan terpotong elipsis.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              maxLines: 1,
+              softWrap: false,
+              style: context.koType.tag.copyWith(color: ink),
+            ),
           ),
         ],
       ),

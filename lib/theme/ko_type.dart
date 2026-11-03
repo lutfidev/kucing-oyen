@@ -55,6 +55,7 @@ class KoType extends ThemeExtension<KoType> {
     required this.cardBody,
     required this.cardBodyStrong,
     required this.numberRule,
+    required this.newTag,
     required this.dialogTitle,
     required this.numberCoin,
     required this.numberTier,
@@ -302,6 +303,12 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 14,
       fontWeight: FontWeight.w700,
     ),
+    newTag: TextStyle(
+      fontFamily: KoFonts.fredoka,
+      fontFamilyFallback: _fredokaFallback,
+      fontSize: 14,
+      fontWeight: FontWeight.w700,
+    ),
     dialogTitle: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
@@ -524,6 +531,9 @@ class KoType extends ThemeExtension<KoType> {
   /// Fredoka 700/14: nomor kartu aturan.
   final TextStyle numberRule;
 
+  /// Fredoka 700/14: tag "Baru!" di atas kucing yang baru diadopsi.
+  final TextStyle newTag;
+
   /// Fredoka 600/22, tinggi baris 1,25: teks besar kartu tutorial.
   final TextStyle dialogTitle;
 
@@ -615,6 +625,7 @@ class KoType extends ThemeExtension<KoType> {
     TextStyle? cardBody,
     TextStyle? cardBodyStrong,
     TextStyle? numberRule,
+    TextStyle? newTag,
     TextStyle? dialogTitle,
     TextStyle? numberCoin,
     TextStyle? numberTier,
@@ -672,6 +683,7 @@ class KoType extends ThemeExtension<KoType> {
       cardBody: cardBody ?? this.cardBody,
       cardBodyStrong: cardBodyStrong ?? this.cardBodyStrong,
       numberRule: numberRule ?? this.numberRule,
+      newTag: newTag ?? this.newTag,
       dialogTitle: dialogTitle ?? this.dialogTitle,
       numberCoin: numberCoin ?? this.numberCoin,
       numberTier: numberTier ?? this.numberTier,
@@ -735,6 +747,7 @@ class KoType extends ThemeExtension<KoType> {
       cardBody: s(cardBody, other.cardBody),
       cardBodyStrong: s(cardBodyStrong, other.cardBodyStrong),
       numberRule: s(numberRule, other.numberRule),
+      newTag: s(newTag, other.newTag),
       dialogTitle: s(dialogTitle, other.dialogTitle),
       numberCoin: s(numberCoin, other.numberCoin),
       numberTier: s(numberTier, other.numberTier),

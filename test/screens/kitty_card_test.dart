@@ -140,7 +140,9 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('camilan habis: tombolnya mati', (tester) async {
+  testWidgets('camilan habis: tidak memberi, tapi ketukannya dijawab', (
+    tester,
+  ) async {
     final semantics = tester.ensureSemantics();
     final progress = await pumpRoom(
       tester,
@@ -154,12 +156,27 @@ void main() {
       findsOneWidget,
     );
     await tapInCard(tester, 'Tuna Kaleng');
-    await tester.pumpAndSettle();
     expect(progress.catNeeds(KittyId.oyen).hunger, 40);
+    // Ketukan tetap dijawab: pesan singkat di kartu, diumumkan.
+    final note = inCard(find.text(l10nId.snackEmptyNote));
+    expect(note, findsOneWidget);
+    expect(
+      tester.getSemantics(note),
+      matchesSemantics(label: l10nId.snackEmptyNote, isLiveRegion: true),
+    );
+    // Ketukan kedua membuat pesan baru, jadi diumumkan lagi.
+    final first = tester.element(note);
+    await tester.tap(inCard(find.text('Tuna Kaleng')));
+    await tester.pump();
+    expect(identical(tester.element(note), first), isFalse);
+    await tester.pump(const Duration(milliseconds: 1300));
+    expect(note, findsNothing);
     semantics.dispose();
   });
 
-  testWidgets('bar penuh: camilan mati, elus hanya hati', (tester) async {
+  testWidgets('bar penuh: camilan hanya memberi pesan, elus hanya hati', (
+    tester,
+  ) async {
     final semantics = tester.ensureSemantics();
     final progress = await pumpRoom(
       tester,
@@ -175,8 +192,10 @@ void main() {
       findsOneWidget,
     );
     await tapInCard(tester, 'Ikan Asin');
-    await tester.pumpAndSettle();
     expect(progress.home.pantry.countOf(SnackId.ikanAsin), 2);
+    expect(inCard(find.text(l10nId.snackFullNote('Oyen'))), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 1300));
+    expect(find.text(l10nId.snackFullNote('Oyen')), findsNothing);
     await tapInCard(tester, 'Elus');
     await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('+10 senang'), findsNothing);

@@ -17,6 +17,7 @@ import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../shop/shop_parts.dart' show ShopFlash;
 import '../shop/shop_tab.dart';
 import 'room_reaction.dart';
 
@@ -53,17 +54,38 @@ class _KittyCardState extends State<KittyCard> {
   /// ganda tidak memberi dua camilan.
   Timer? _cooldown;
 
+  /// Pesan singkat di panel Camilan saat camilan yang mati diketuk.
+  String? _note;
+  Timer? _noteTimer;
+
+  /// Naik tiap pesan, supaya pesan yang sama diumumkan lagi.
+  int _notes = 0;
+
   @override
   void dispose() {
     _cooldown?.cancel();
+    _noteTimer?.cancel();
     super.dispose();
+  }
+
+  void _showNote(String text) {
+    _noteTimer?.cancel();
+    _noteTimer = Timer(ShopFlash.duration, () {
+      if (mounted) setState(() => _note = null);
+    });
+    setState(() {
+      _note = text;
+      _notes++;
+    });
   }
 
   ProgressController get _progress => widget.progress;
   KittyId get _kitty => widget.kitty;
 
-  void _toggle(_Panel panel) =>
-      setState(() => _panel = _panel == panel ? null : panel);
+  void _toggle(_Panel panel) => setState(() {
+    _panel = _panel == panel ? null : panel;
+    _note = null;
+  });
 
   Future<void> _run(
     Future<bool> Function() action,
@@ -308,12 +330,14 @@ class _KittyCardState extends State<KittyCard> {
   Widget _snacks() {
     final s = context.koSize;
     final space = context.koSpace;
+    final l = context.l10n;
     final pantry = _progress.home.pantry;
     final full = _progress.catNeeds(_kitty).isFull;
+    final note = _note;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _panelTitle(context.l10n.snackPick.toUpperCase()),
+        _panelTitle(l.snackPick.toUpperCase()),
         SizedBox(height: space.s8),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -328,13 +352,21 @@ class _KittyCardState extends State<KittyCard> {
                     id: snack.id,
                     count: pantry.countOf(snack.id),
                     full: full,
-                    onPressed: () => _feed(snack.id),
+                    onPressed: () => pantry.countOf(snack.id) <= 0
+                        ? _showNote(l.snackEmptyNote)
+                        : full
+                        ? _showNote(l.snackFullNote(kittyName(l, _kitty)))
+                        : _feed(snack.id),
                   ),
                 ),
               ],
             ],
           ),
         ),
+        if (note != null) ...[
+          SizedBox(height: space.s4),
+          ShopFlash(note, key: ValueKey(_notes)),
+        ],
       ],
     );
   }
@@ -600,8 +632,10 @@ class _SnackCard extends StatelessWidget {
   final SnackId id;
   final int count;
 
-  /// Lapar dan Senang sudah 100: tombol mati supaya stok tidak terbuang.
+  /// Lapar dan Senang sudah 100: kartu pudar supaya stok tidak terbuang.
   final bool full;
+
+  /// Juga dipanggil saat kartu pudar, supaya ketukannya dijawab pesan.
   final VoidCallback onPressed;
 
   @override
@@ -615,7 +649,7 @@ class _SnackCard extends StatelessWidget {
     final off = empty || full;
     final name = snackName(l, id);
     final card = KoPressable(
-      onPressed: off ? null : onPressed,
+      onPressed: onPressed,
       semanticLabel: empty
           ? l.snackGiveEmpty(name, count)
           : full
