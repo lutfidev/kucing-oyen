@@ -140,7 +140,9 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('camilan habis: tidak memberi, tapi ketukannya dijawab', (tester) async {
+  testWidgets('camilan habis: tidak memberi, tapi ketukannya dijawab', (
+    tester,
+  ) async {
     final semantics = tester.ensureSemantics();
     final progress = await pumpRoom(
       tester,
@@ -162,12 +164,19 @@ void main() {
       tester.getSemantics(note),
       matchesSemantics(label: l10nId.snackEmptyNote, isLiveRegion: true),
     );
+    // Ketukan kedua membuat pesan baru, jadi diumumkan lagi.
+    final first = tester.element(note);
+    await tester.tap(inCard(find.text('Tuna Kaleng')));
+    await tester.pump();
+    expect(identical(tester.element(note), first), isFalse);
     await tester.pump(const Duration(milliseconds: 1300));
     expect(note, findsNothing);
     semantics.dispose();
   });
 
-  testWidgets('bar penuh: camilan hanya memberi pesan, elus hanya hati', (tester) async {
+  testWidgets('bar penuh: camilan hanya memberi pesan, elus hanya hati', (
+    tester,
+  ) async {
     final semantics = tester.ensureSemantics();
     final progress = await pumpRoom(
       tester,

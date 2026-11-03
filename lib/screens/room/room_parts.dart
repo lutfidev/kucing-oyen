@@ -612,23 +612,38 @@ class NewKittyTag extends StatelessWidget {
 }
 
 /// Menaruh anak seukuran aslinya di [at], digeser masuk supaya paling
-/// sedikit [margin] dari tepi kiri, kanan, dan atas.
+/// sedikit [margin] dari tepi kiri dan kanan dan tidak di atas [top].
+/// [centered]: [at] adalah tengah atas anak, bukan pojok kiri atasnya.
 class KeepInside extends SingleChildLayoutDelegate {
-  const KeepInside(this.at, {this.margin = 0});
+  const KeepInside(
+    this.at, {
+    this.margin = 0,
+    this.top = double.negativeInfinity,
+    this.centered = false,
+  });
 
   final Offset at;
   final double margin;
+  final double top;
+  final bool centered;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
       constraints.loosen();
 
   @override
-  Offset getPositionForChild(Size size, Size childSize) => Offset(
-    at.dx.clamp(margin, max(margin, size.width - childSize.width - margin)),
-    max(margin, at.dy),
-  );
+  Offset getPositionForChild(Size size, Size childSize) {
+    final x = centered ? at.dx - childSize.width / 2 : at.dx;
+    return Offset(
+      x.clamp(margin, max(margin, size.width - childSize.width - margin)),
+      max(top, at.dy),
+    );
+  }
 
   @override
-  bool shouldRelayout(KeepInside old) => old.at != at || old.margin != margin;
+  bool shouldRelayout(KeepInside old) =>
+      old.at != at ||
+      old.margin != margin ||
+      old.top != top ||
+      old.centered != centered;
 }

@@ -554,6 +554,10 @@ class _RoomViewState extends State<RoomView>
     final catBoxes = _catBoxes(sprites, geo);
     final empty = _empty;
     final top = MediaQuery.paddingOf(context).top + space.s6;
+    // Tag dan gelembung tidak naik ke bawah header dan tombol Hias, yang
+    // digambar di atasnya dan menelan ketukan.
+    final overlayTop =
+        top + s.roomDecorateGap + s.roomDecorateButton + space.s8;
     return Stack(
       key: const ValueKey('room-area'),
       clipBehavior: Clip.none,
@@ -618,13 +622,13 @@ class _RoomViewState extends State<RoomView>
             else if (home.isFresh(kitty))
               Positioned.fill(
                 child: CustomSingleChildLayout(
-                  // Desain: tag di tengah kotak kucing − 26, atas − 14.
+                  // Desain: tag di tengah kotak kucing (kiri − 26 untuk
+                  // "Baru!" selebar ±52), atas − 14.
                   delegate: KeepInside(
-                    Offset(
-                      box.center.dx - 26 * geo.artScale,
-                      box.top - 14 * geo.artScale,
-                    ),
+                    Offset(box.center.dx, box.top - 14 * geo.artScale),
                     margin: space.s8,
+                    top: overlayTop,
+                    centered: true,
                   ),
                   child: const NewKittyTag(),
                 ),
@@ -640,6 +644,7 @@ class _RoomViewState extends State<RoomView>
                       box.top - box.width * 68 / oyenRoomSize,
                     ),
                     margin: space.s8,
+                    top: overlayTop,
                   ),
                   child: CoinBubbleView(
                     key: ValueKey('reward-${kitty.name}'),

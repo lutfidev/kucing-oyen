@@ -58,6 +58,9 @@ class _KittyCardState extends State<KittyCard> {
   String? _note;
   Timer? _noteTimer;
 
+  /// Naik tiap pesan, supaya pesan yang sama diumumkan lagi.
+  int _notes = 0;
+
   @override
   void dispose() {
     _cooldown?.cancel();
@@ -70,7 +73,10 @@ class _KittyCardState extends State<KittyCard> {
     _noteTimer = Timer(ShopFlash.duration, () {
       if (mounted) setState(() => _note = null);
     });
-    setState(() => _note = text);
+    setState(() {
+      _note = text;
+      _notes++;
+    });
   }
 
   ProgressController get _progress => widget.progress;
@@ -357,7 +363,10 @@ class _KittyCardState extends State<KittyCard> {
             ],
           ),
         ),
-        if (note != null) ...[SizedBox(height: space.s4), ShopFlash(note)],
+        if (note != null) ...[
+          SizedBox(height: space.s4),
+          ShopFlash(note, key: ValueKey(_notes)),
+        ],
       ],
     );
   }

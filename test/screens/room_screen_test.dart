@@ -10,6 +10,7 @@ import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
+import 'package:kucing_oren/screens/room/room_parts.dart';
 import 'package:kucing_oren/screens/room/room_view.dart';
 import 'package:kucing_oren/screens/settings/settings_screen.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
@@ -319,6 +320,25 @@ void main() {
     });
   });
 
+  group('KeepInside', () {
+    const room = Size(390, 600);
+    const child = Size(60, 30);
+    test('dijepit ke tepi kiri, kanan, dan batas atas', () {
+      const keep = KeepInside(Offset(-20, 10), margin: 8, top: 120);
+      expect(keep.getPositionForChild(room, child), const Offset(8, 120));
+      const right = KeepInside(Offset(380, 300), margin: 8, top: 120);
+      expect(right.getPositionForChild(room, child), const Offset(322, 300));
+    });
+    test('centered: [at] = tengah atas anak', () {
+      const keep = KeepInside(Offset(200, 300), centered: true);
+      expect(keep.getPositionForChild(room, child), const Offset(170, 300));
+    });
+    test('tanpa batas atas boleh di atas kamar', () {
+      const keep = KeepInside(Offset(100, -10));
+      expect(keep.getPositionForChild(room, child), const Offset(100, -10));
+    });
+  });
+
   group('tag "Baru!"', () {
     ProgressController fresh({Home? home}) => testProgressWith(
       home: home ?? Home(room: fullRoom()).adopt(KittyId.salju),
@@ -333,8 +353,10 @@ void main() {
         find.ancestor(of: tag(), matching: find.byType(DecoratedBox)).first,
       );
       final (_, geo) = roomOf(tester);
-      // Desain: tengah kotak kucing − 26, atas kotak − 14, tinggi 24.
-      expect(box.left, moreOrLessEquals(cat.center.dx - 26 * geo.artScale));
+      // Desain: di tengah kotak kucing (kiri − 26 untuk "Baru!"), atas
+      // kotak − 14, tinggi 24.
+      expect(box.center.dx, moreOrLessEquals(cat.center.dx));
+      expect(box.left, moreOrLessEquals(cat.center.dx - 26, epsilon: 3));
       expect(box.top, moreOrLessEquals(cat.top - 14 * geo.artScale));
       expect(box.height, moreOrLessEquals(24));
     });
