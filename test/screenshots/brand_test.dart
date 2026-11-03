@@ -7,17 +7,25 @@
 // (lib/game/render/brand_art.dart), bukan gambar ulang. Tanpa define di
 // atas, semua dilewati.
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/app.dart';
 import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/routes.dart';
+import 'package:kucing_oren/game/model/accessories.dart';
+import 'package:kucing_oren/game/model/home.dart';
+import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/run_clock.dart';
+import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/l10n/names.dart';
+import 'package:kucing_oren/screens/shop/shop_tab.dart';
 import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
@@ -234,19 +242,22 @@ void main() {
     );
   }, skip: !brandEnabled);
 
-  // Potret layar ponsel 1080×1920 (360×640 × 3) per bahasa.
+  // Potret layar ponsel 1080×1920 (360×640 × 3) per bahasa. Kamar tampil
+  // pertama (langkah 26).
   for (final language in AppLanguage.supported) {
     final l = lookupAppLocalizations(Locale(language.name));
     final folder = '$_store/screenshots/${language.name}';
     // Kunci per potret: aplikasi baru (rute dan progres awal) tiap potret.
     Widget app(String name, String location) => capturable(
       KucingOrenApp(
-        // Kamar diam supaya potretnya selalu sama.
+        // Kamar diam dan posisi kucing ber-seed supaya potretnya selalu sama.
         roomLife: false,
+        roomRandom: () => Random(1),
         key: ValueKey(name),
         progress: testProgressWith(
           best: {...wonUpTo(8), 9: 1, 10: 1, 11: 3, 12: 2},
-          coins: 120,
+          coins: 480,
+          home: _storeHome(),
           language: language,
         ),
         initialLocation: location,
@@ -269,10 +280,22 @@ void main() {
 
     final level13 = AppRoutes.level(13, chapter: 2);
     testWidgets('${language.name}/toko', (tester) async {
-      await shoot(tester, '01-beranda', AppRoutes.home, () async {});
-      await shoot(tester, '02-peta-babak-2', AppRoutes.chapter(2), () async {});
-      await shoot(tester, '03-fase-atur-level-13', level13, () async {});
-      await shoot(tester, '04-fase-jalan-level-13', level13, () async {
+      await shoot(tester, '01-kamar', AppRoutes.home, () async {});
+      await shoot(
+        tester,
+        '02-toko-aksesoris',
+        AppRoutes.shop(tab: ShopTab.accessories),
+        () async {
+          // Pratinjau aksesoris yang belum dimiliki di Oyen, tanpa membeli.
+          await tester.tap(
+            find.byKey(const ValueKey('shop-accessory-jepitBunga')),
+          );
+          await settle(tester);
+        },
+      );
+      await shoot(tester, '03-peta-babak-2', AppRoutes.chapter(2), () async {});
+      await shoot(tester, '04-fase-atur-level-13', level13, () async {});
+      await shoot(tester, '05-fase-jalan-level-13', level13, () async {
         await placeItems(tester, [
           (itemName(l, Item.water), 3, 3),
           (itemName(l, Item.fish), 2, 4),
@@ -294,6 +317,49 @@ void main() {
       });
     }, skip: !brandEnabled);
   }
+}
+
+/// Rumah Oyen di potret toko: kamar penuh, empat kucing tamu (tiga
+/// beraksesoris), dan beberapa aksesoris dimiliki.
+Home _storeHome() {
+  var room = Room();
+  for (final id in const [
+    RoomItemId.karpet,
+    RoomItemId.lukisan,
+    RoomItemId.rak,
+    RoomItemId.tiang,
+    RoomItemId.kasur,
+    RoomItemId.bola,
+    RoomItemId.kardus,
+    RoomItemId.monstera,
+    RoomItemId.catnip,
+  ]) {
+    room = room.buy(id);
+  }
+  return Home(
+    room: room,
+    kitties: const [
+      KittyId.salju,
+      KittyId.arang,
+      KittyId.mendung,
+      KittyId.mochi,
+    ],
+    closet: AccessoryCloset(
+      owned: const [
+        AccessoryId.pita,
+        AccessoryId.kalung,
+        AccessoryId.bandana,
+        AccessoryId.beanie,
+      ],
+      wearing: const {
+        KittyId.oyen: AccessoryId.bandana,
+        KittyId.salju: AccessoryId.pita,
+        KittyId.arang: AccessoryId.kalung,
+        KittyId.mochi: AccessoryId.beanie,
+      },
+    ),
+    pantry: Pantry(const {SnackId.ikanAsin: 3, SnackId.biskuit: 5}),
+  );
 }
 
 /// Feature graphic (512×250 dp, dipotret ×2): Oyen tidur di kiri, logo
