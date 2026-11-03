@@ -22,7 +22,7 @@ Gradle mencetak peringatan "Ginger Logic: ..." saat build release kalau ID aplik
 | `listing-id.md`, `listing-pt.md`, `listing-ru.md` | Listing toko → Kelola terjemahan → Indonesia, Portugis (Brasil), Rusia |
 | `icon-512.png` | Ikon aplikasi (512×512) |
 | `feature-graphic.png` | Grafis fitur (1024×500) |
-| `screenshots/<bahasa>/*.png` | Screenshot ponsel per bahasa (1080×1920, 6 gambar) |
+| `screenshots/<bahasa>/*.png` | Screenshot ponsel per bahasa (1080×1920, 6 gambar, unggah urut nama: kamar, Toko aksesoris, peta, fase atur, fase jalan, berhasil) |
 | `privacy/index.html` | Kebijakan privasi (diunggah ke situs, lalu URL-nya ditempel) |
 
 Gambar dibuat ulang dengan:
@@ -64,7 +64,7 @@ Hasilnya `build/app/outputs/bundle/release/app-release.aab`. Unggah ke Play Cons
 
 ## Konten aplikasi (Play Console → Kebijakan dan program → Konten aplikasi)
 
-Jawaban di bawah dicek terhadap panduan Google pada 20 Okt 2026. Pengembang tetap bertanggung jawab atas jawabannya; cek ulang kalau SDK atau fitur berubah.
+Jawaban di bawah dicek terhadap panduan Google pada 20 Okt 2026, dan dicek ulang 3 Nov 2026 sesudah rumah Oyen (langkah 21–26): tidak ada SDK, izin, atau pengiriman data baru, jadi jawabannya tetap. Pengembang tetap bertanggung jawab atas jawabannya; cek ulang kalau SDK atau fitur berubah.
 
 ### Kebijakan privasi
 
@@ -100,7 +100,7 @@ Sumber: [Google Mobile Ads SDK: data disclosure](https://developers.google.com/a
   | Info dan performa aplikasi | Diagnostik | Iklan atau pemasaran, Analitik, Pencegahan penipuan |
   | ID perangkat atau lainnya | ID iklan, ID set aplikasi | Iklan atau pemasaran, Analitik, Pencegahan penipuan |
 
-- Progres game (bintang, koin, kostum, pengaturan) **tidak dideklarasikan**: hanya disimpan di perangkat dan tidak pernah dikirim ke pengembang. Auto Backup Android (cadangan ke akun Google pemain, aktif di manifest) dikelola Google, terenkripsi ujung ke ujung di Android 9+ dengan kunci layar, dan tidak bisa dibaca pengembang; panduan Data safety tidak menyebutnya, jadi tidak dideklarasikan sebagai pengumpulan oleh aplikasi. Kebijakan privasi tetap menyebutnya.
+- Progres game (bintang, koin, petunjuk, isi rumah Oyen, kebutuhan kucing, hadiah harian, pengaturan) **tidak dideklarasikan**: hanya disimpan di perangkat dan tidak pernah dikirim ke pengembang. Auto Backup Android (cadangan ke akun Google pemain, aktif di manifest) dikelola Google, terenkripsi ujung ke ujung di Android 9+ dengan kunci layar, dan tidak bisa dibaca pengembang; panduan Data safety tidak menyebutnya, jadi tidak dideklarasikan sebagai pengumpulan oleh aplikasi. Kebijakan privasi tetap menyebutnya.
 
 ### Rating konten (kuesioner IARC)
 

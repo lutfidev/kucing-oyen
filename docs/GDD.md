@@ -574,8 +574,8 @@ Versi pertama berisi 20 level di dokumen ini, gratis, dengan iklan berhadiah seb
 
 | Sumber | Bentuk |
 | --- | --- |
-| Iklan berhadiah | Membuka petunjuk tingkat 1–3 |
-| Kostum Oyen | Peci, sarung, topi koki, kacamata; kosmetik saja |
+| Iklan berhadiah | Membuka petunjuk tingkat 1–3, atau +20 koin (paling banyak 10 kali sehari) |
+| Aksesoris | Pita, bandana, beanie, topi koki, mahkota, dll.; dibeli sekali dengan koin dan bisa dipakai semua kucing; kosmetik saja (menggantikan Kostum Oyen sejak langkah 23) |
 | Paket babak | Babak 3–5 dibeli per babak atau sekaligus |
 | Hapus iklan | Pembelian sekali bayar |
 
@@ -591,6 +591,8 @@ Versi pertama berisi 20 level di dokumen ini, gratis, dengan iklan berhadiah seb
 **Sesudah versi pertama: rumah Oyen** (langkah 21–26 roadmap, diputuskan 26 Okt 2026). Beranda menjadi kamar Oyen yang bisa dihias dengan barang dari Toko, berisi kucing koleksi (hanya di kamar, tidak ikut puzzle) yang punya kebutuhan dan memberi hadiah koin kalau dirawat. Aksesoris (pita, bandana, beanie, topi koki, kacamata bulat, dll.) dibeli sekali dan bisa dipakai semua kucing; Lemari Kostum beserta peci dan sarung dihapus. Peta babak menjadi ilustrasi ruangan. Koin tetap dari bintang, bonus harian, dan iklan berhadiah pilihan pemain (10 per hari). Aturan Oyen, level, dan bintang tidak berubah. Rinciannya di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`.
 
 ## Prompt Claude Design
+
+> **Catatan (langkah 26):** prompt ini dipakai untuk desain versi pertama dan disimpan sebagai sejarah. Beranda dan Lemari Kostum di dalamnya (layar 1 dan 12) sudah diganti rumah Oyen: Beranda adalah kamar Oyen (desain 19), Lemari Kostum diganti Toko dengan tab Aksesoris (desain 20), dan peta babak menjadi ilustrasi ruangan (desain 23). Aturan main tidak berubah. Desain rumah Oyen ada di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`.
 
 Salin seluruh blok di bawah ke Claude Design. Layar gameplay sengaja memakai peta Level 13 yang sudah dicek, supaya mockup cocok dengan data level yang nanti dibangun di Flutter.
 

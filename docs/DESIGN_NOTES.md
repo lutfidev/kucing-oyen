@@ -448,3 +448,26 @@ Peta babak jadi ilustrasi ruangan (desain 23), dan "Lanjut" memperlihatkan Oyen 
 - **Alamat rusak** (`dari` bukan angka, bukan level babak itu, atau bos yang bukan bos terakhir) diabaikan, dan `baru` di babak terkunci juga diabaikan.
 - **Tidak dipakai**: kartu "Berhasil!" di peta prototipe 23 (layar hasil langkah 8 tetap) dan suara jalan.
 - **Dibuang**: gambar dan letak peta desain 02 (`MapArt.points`, jejak lama, area bos, ketupat, ikan asin bos, `_Floor` versi lama). Ikon kartu babak tetap dari desain 02.
+
+## Langkah 26: Potret toko dan rapi-rapi rumah Oyen
+
+- **Potret ponsel** (`brand_test.dart`, 360×640 × 3, enam per bahasa, urut nama): `01-kamar`, `02-toko-aksesoris`, `03-peta-babak-2`, `04-fase-atur-level-13`, `05-fase-jalan-level-13`, `06-berhasil-level-13`. `01-beranda` dan `12-lemari-kostum` dihapus.
+  - **Kamar potret**: karpet, lukisan, rak, tiang garukan, kasur, bola, kardus, monstera, pot catnip; kucing tamu Salju, Arang, Mendung, Mochi; Oyen memakai bandana, Salju pita, Arang kalung, Mochi beanie; saldo 480; kamar diam dengan `roomRandom` ber-seed. Jendela burung dan sofa mini tidak dipakai karena menumpuk dengan jendela kamar dan menutupi kucing.
+  - **Toko aksesoris**: Jepit Bunga (belum dimiliki) diketuk, jadi pratinjau tampil di Oyen dengan tombol Beli, tanpa membeli.
+- **Feature graphic** tidak diubah: isinya Oyen tidur tanpa kostum dan logo, bukan Beranda lama.
+- **Listing** empat bahasa: butir lemari kostum diganti tiga butir (kamar yang bisa dihias, delapan kucing yang bisa diadopsi, aksesoris), dan sumber koin menyebut kucing yang dirawat.
+- **Kebijakan privasi** empat bahasa menyebut isi kamar Oyen, bukan kostum; tanggal berlaku 3 Nov 2026 (perlu diunggah ulang).
+- **Data safety** dicek ulang: sejak 20 Okt tidak ada SDK, izin, atau pengiriman data baru. Jawaban tetap; daftar progres yang hanya di perangkat diperbarui.
+- **GDD**: tabel Monetisasi menyebut aksesoris dan iklan koin; prompt Claude Design lama diberi catatan bahwa Beranda dan Lemari Kostum sudah diganti.
+- **Saran kecil dari PR 21–25 yang dikerjakan**:
+  - `owned` hasil `Room.buy`/`AccessoryCloset.buy` tidak bisa diubah.
+  - **Bar penuh**: kalau Lapar dan Senang tampil 100 (`CatNeeds.isFull`, dibulatkan seperti angka kartu), tombol camilan mati dan `feed` ditolak, jadi stok tidak terbuang. Kalau Senang tampil 100 (`isJoyFull`), `pet` ditolak tanpa memakai jatah elus jam itu, dan kartu hanya memunculkan hati. Camilan tetap bisa kalau salah satu bar belum penuh (camilan juga menambah Senang).
+  - **Label mangkuk**: sisa di bawah satu jam = "Terisi sebentar lagi" (`bowlRefillSoon`); selain itu jam dibulatkan ke atas seperti sebelumnya.
+  - **Test jam mundur** di kamar hidup.
+- **Saran yang belum dikerjakan**:
+  - tag "Baru!" (butuh simpanan "sudah dilihat");
+  - gelembung hadiah untuk kucing yang sedang di dalam barang;
+  - tempat berdiri Oyen (116) yang memakai ukuran kucing 96;
+  - corak kucing, aksesoris, dan Zzz yang ikut dicerminkan di barang yang dicerminkan;
+  - penolakan kasus CSS yang tidak dipakai di `SvgTemplate`;
+  - uji kinerja sprite kucing di HP murah.

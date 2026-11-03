@@ -36,8 +36,10 @@ ISINYA
 • Putar ulang langkah demi langkah, jadi kelihatan persis di mana Oyen belok salah (atau benar)
 • Kartu aturan dan tutorial singkat yang mengajari sambil main
 • Buntu? Petunjuk membuka satu petak sekali buka, dibayar koin atau iklan video singkat (boleh dilewati)
-• Koin dari bintang baru, bonus harian, dan iklan pilihan
-• Lemari kostum Oyen: peci, sarung, topi koki, dan kacamata
+• Koin dari bintang baru, bonus harian, kucing yang dirawat, dan iklan pilihan
+• Kamar Oyen yang bisa dihias sesukamu: kasur bantal, tiang garukan, akuarium, karpet, dan barang lain dari Toko
+• Adopsi delapan kucing lain, dari si hitam Arang sampai Bos yang selalu pakai jas. Kasih camilan dan elusan, nanti mereka balas pakai koin
+• Aksesoris untuk semua kucing: pita, bandana, beanie, topi koki, sampai Mahkota Raja
 • Musik santai dan efek suara lucu (masing-masing bisa dimatikan)
 • Bahasa Inggris, Indonesia, Portugis Brasil, dan Rusia
 
