@@ -349,6 +349,9 @@ class StorageTray extends StatelessWidget {
 }
 
 class _TraySlot extends StatelessWidget {
+  /// Tinggi baris nama barang (`BakiGudang.dc.html`: `line-height: 1.15`).
+  static const double nameHeight = 1.15;
+
   const _TraySlot({
     required this.id,
     required this.compact,
@@ -409,7 +412,10 @@ class _TraySlot extends StatelessWidget {
                   name,
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  style: context.koType.tagTiny.copyWith(color: c.ink),
+                  style: context.koType.tagTiny.copyWith(
+                    color: c.ink,
+                    height: nameHeight,
+                  ),
                 ),
               ],
             ),
