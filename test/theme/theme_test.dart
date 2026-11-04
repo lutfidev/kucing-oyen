@@ -228,6 +228,10 @@ void main() {
       multiLine: true,
       dotAll: true,
     ).allMatches(source).toList();
+    // Setiap field gaya punya satu blok di `standard`; gaya yang ditulis
+    // dengan bentuk lain tidak terbaca dan membuat jumlahnya beda.
+    final fields = RegExp(r'^  final TextStyle \w+;', multiLine: true);
+    expect(blocks.length, fields.allMatches(source).length);
     expect(blocks.length, greaterThan(50));
     for (final block in blocks) {
       final body = block.group(2)!;

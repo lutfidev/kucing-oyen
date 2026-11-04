@@ -321,6 +321,9 @@ class _Lock extends StatelessWidget {
 /// Node level saat ini: cincin berdenyut di belakangnya dan label "Main"
 /// di atasnya (atau di bawahnya, [labelBelow]).
 class _Current extends StatelessWidget {
+  /// Tinggi baris label "Main" (`TitikLevel.dc.html`: `line-height: 1.2`).
+  static const double labelHeight = 1.2;
+
   const _Current({
     required this.ring,
     required this.child,
@@ -360,7 +363,10 @@ class _Current extends StatelessWidget {
                 child: Text(
                   context.l10n.play,
                   maxLines: 1,
-                  style: context.koType.tagSmall.copyWith(color: c.cream),
+                  style: context.koType.tagSmall.copyWith(
+                    color: c.cream,
+                    height: labelHeight,
+                  ),
                 ),
               ),
             ),

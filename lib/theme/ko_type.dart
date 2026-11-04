@@ -323,7 +323,7 @@ class KoType extends ThemeExtension<KoType> {
       fontFamily: KoFonts.nunito,
       fontSize: 12,
       fontWeight: FontWeight.w800,
-      height: 1.2,
+      height: KoType.nunitoNormal,
       leadingDistribution: _even,
     ),
     headingLarge: TextStyle(
@@ -612,8 +612,8 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 800/12,5: badge "Selesai" di kartu babak.
   final TextStyle tag;
 
-  /// Nunito 800/12, tinggi baris 1,2: label "Main" di atas node level saat
-  /// ini (`TitikLevel.dc.html`).
+  /// Nunito 800/12: label "Main" di atas node level saat ini, keterangan
+  /// kecil di kamar.
   final TextStyle tagSmall;
 
   /// Fredoka 700/24, tinggi baris 1,1: judul "Putar Ulang" (desain 09).

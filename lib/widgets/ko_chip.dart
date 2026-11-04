@@ -51,6 +51,7 @@ class KoChip extends StatelessWidget {
         padding: EdgeInsetsDirectional.only(
           start: large ? space.s16 : (leading == null ? space.s14 : space.s8),
           end: large ? space.s16 : space.s14,
+          top: large ? s.stepChipTop : 0,
         ),
         decoration: BoxDecoration(
           color: dark ? c.ink : c.cream,
