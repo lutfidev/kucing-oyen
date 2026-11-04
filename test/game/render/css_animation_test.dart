@@ -170,6 +170,14 @@ void main() {
           keyframes: _kitty,
         );
         expect(() => bad.render({}, time: 0.7), throwsFormatException);
+        // Juga sebelum animasinya mulai (delay positif).
+        final delayed = SvgTemplate(
+          '<$el opacity="0.5" style="animation: kcZzz 2.4s ease-out infinite; '
+          'animation-delay: 5s" '
+          'x="0" y="0" width="1" height="1" fill="#000000">$body</$el>',
+          keyframes: _kitty,
+        );
+        expect(() => delayed.render({}, time: 0.7), throwsFormatException);
         expect(bad.render({}).length, 1);
       }
     });

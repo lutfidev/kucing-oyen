@@ -146,6 +146,9 @@ class CssKeyframes {
   final List<(double, List<CssTransformFn>)> _transform;
   final List<(double, double)> _opacity;
 
+  /// Ada keyframe yang menulis `opacity`.
+  bool get animatesOpacity => _opacity.isNotEmpty;
+
   /// Semua `@keyframes` di [css] menurut namanya.
   static Map<String, CssKeyframes> parse(String css) {
     final out = <String, CssKeyframes>{};

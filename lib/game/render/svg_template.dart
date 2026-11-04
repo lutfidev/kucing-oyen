@@ -234,6 +234,16 @@ class _Emitter {
       if ((time, style) case (final t?, final style?)
           when style.trim().isNotEmpty) {
         final css = CssStyle.parse(style);
+        // CSS mengganti atribut `opacity`; desain tidak memakai keduanya di
+        // satu elemen, jadi gagal (di waktu mana pun, juga sebelum delay)
+        // daripada salah diam-diam.
+        if (el.attrs.containsKey('opacity') &&
+            (keyframes[css.animation]?.animatesOpacity ?? false)) {
+          throw FormatException(
+            'opacity dan animasi opasitas di satu elemen',
+            style,
+          );
+        }
         if (css.frameAt(t, keyframes) case final frame?) {
           if (transform != null && frame.transform != null) {
             // CSS mengganti atribut `transform`, bukan menambahnya.
@@ -248,17 +258,7 @@ class _Emitter {
             (ox, oy) = (box.center.dx, box.center.dy);
           }
           m = m * _Affine.of(frame.matrix(ox, oy));
-          if (frame.opacity case final o?) {
-            // CSS mengganti atribut `opacity`; desain tidak memakai
-            // keduanya di satu elemen, jadi gagal daripada salah diam-diam.
-            if (el.attrs.containsKey('opacity')) {
-              throw FormatException(
-                'opacity dan animasi opasitas di satu elemen',
-                style,
-              );
-            }
-            attrs['opacity'] = '$o';
-          }
+          if (frame.opacity case final o?) attrs['opacity'] = '$o';
         }
       }
       switch (el.name) {
