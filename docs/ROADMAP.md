@@ -42,7 +42,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 26. Potret toko dan rapi-rapi rumah Oyen
 - [x] 27. Rapi-rapi kamar: tag "Baru!", gelembung hadiah, label mangkuk, camilan penuh
 - [x] 28. Kamar: barang yang sedang dipakai (tempat berdiri, barang dinding, cermin)
-- [ ] 29. Aksesibilitas, suara, dan putar ulang
+- [x] 29. Aksesibilitas, suara, dan putar ulang
 - [ ] 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
 - [ ] 31. Tinggi baris teks mengikuti desain
 - [ ] 32. Cek di HP dan persiapan rilis produksi
@@ -584,9 +584,11 @@ Aturan untuk langkah 27–32: sebelum mengubah, pastikan sarannya masih berlaku 
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 28".
 
-## 29. Aksesibilitas, suara, dan putar ulang
+## 29. Aksesibilitas, suara, dan putar ulang ✅
 
 **Hasil:** saran 8–13 selesai atau diputuskan.
+
+Selesai: semantik papan tidak dibangun ulang selama seretan, kalimat pilih-lalu-ketuk untuk pembaca layar (petunjuk baki, tutorial level 3), `AudioPool` yang gagal dicoba lagi, tombol putar mati kalau hanya ada langkah 0, `tapSound` pindah ke `lib/widgets/tap_sound.dart`. Lagu Beranda saat dibuka langsung di level hanya terjadi lewat `flutter run --route`, jadi dilewati. Keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 29".
 
 > **Baca dulu:**
 > - `docs/DESIGN_NOTES.md` bagian "Langkah 19" dan "Langkah 20"
