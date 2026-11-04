@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../app/game_audio.dart';
 import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/l10n.dart';
@@ -52,13 +51,17 @@ String tutorialTitle(AppLocalizations l, Tutorial tutorial) =>
       _ => l.tutorial6Title,
     };
 
-/// Teks kecil kartu tutorial.
-String tutorialBody(AppLocalizations l, Tutorial tutorial) =>
-    switch (tutorial.levelId) {
-      1 => l.tutorial1Body,
-      3 => l.tutorial3Body,
-      _ => l.tutorial6Body,
-    };
+/// Teks kecil kartu tutorial. [tap] = pembaca layar aktif: memilih lalu
+/// mengetuk, bukan menyeret.
+String tutorialBody(
+  AppLocalizations l,
+  Tutorial tutorial, {
+  bool tap = false,
+}) => switch (tutorial.levelId) {
+  1 => l.tutorial1Body,
+  3 => tap ? l.tutorial3BodyTap : l.tutorial3Body,
+  _ => l.tutorial6Body,
+};
 
 /// Overlay tutorial (desain 11): layar digelapkan kecuali [target] yang
 /// disorot dengan cincin berdenyut, tangan penunjuk di atasnya, kartu
@@ -277,7 +280,11 @@ class _TutorialCard extends StatelessWidget {
                   ),
                   SizedBox(height: space.s6),
                   Text(
-                    tutorialBody(context.l10n, tutorial),
+                    tutorialBody(
+                      context.l10n,
+                      tutorial,
+                      tap: MediaQuery.accessibleNavigationOf(context),
+                    ),
                     textAlign: TextAlign.center,
                     style: t.bodySmall.copyWith(color: c.inkSoft),
                   ),

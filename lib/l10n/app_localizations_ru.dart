@@ -268,6 +268,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get trayHintBottom => 'светлую клетку';
 
   @override
+  String get trayHintTapTop => 'Выбери вещь,';
+
+  @override
+  String get trayHintTapBottom => 'и нажми на клетку';
+
+  @override
   String get itemFish => 'Солёная рыбка';
 
   @override
@@ -829,6 +835,10 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get tutorial3Body =>
       'Перетащи рыбку на пол. Если её видно по прямой, он сразу побежит за ней.';
+
+  @override
+  String get tutorial3BodyTap =>
+      'Возьми рыбку из вещей и нажми на клетку пола. Если её видно по прямой, он сразу побежит за ней.';
 
   @override
   String get tutorial6Title => 'Ойен боится воды. Очень.';

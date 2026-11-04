@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../app/game_audio.dart';
+import 'tap_sound.dart';
 
 /// Permukaan tombol dengan bayangan padat di bawahnya ("press" di lembar
 /// token). Saat jari menempel, permukaan turun setinggi [depth] dan bayangan

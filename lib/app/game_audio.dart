@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 
 import '../game/model/sounds.dart';
+import '../widgets/tap_sound.dart';
 import 'progress_store.dart';
 import 'rewarded_ads.dart';
 import 'sound_player.dart';
@@ -141,8 +142,16 @@ class _PausingAds implements RewardedAds {
 
 /// Membagikan [GameAudio] ke bawah.
 class AudioScope extends InheritedNotifier<GameAudio> {
-  const AudioScope({super.key, required GameAudio audio, required super.child})
-    : super(notifier: audio);
+  /// Juga memasang [TapSoundScope], jadi tombol `lib/widgets/` berbunyi tap
+  /// lewat [audio].
+  AudioScope({super.key, required GameAudio audio, required Widget child})
+    : super(
+        notifier: audio,
+        child: TapSoundScope(
+          play: () => audio.play(GameSound.tap),
+          child: child,
+        ),
+      );
 
   /// Dibangun ulang saat sakelar berubah (Pengaturan).
   static GameAudio of(BuildContext context) {
@@ -156,13 +165,3 @@ class AudioScope extends InheritedNotifier<GameAudio> {
   static GameAudio? maybeRead(BuildContext context) =>
       context.getInheritedWidgetOfExactType<AudioScope>()?.notifier;
 }
-
-/// [action] yang lebih dulu membunyikan [GameSound.tap]; null tetap null
-/// (tombol nonaktif senyap).
-VoidCallback? tapSound(BuildContext context, VoidCallback? action) =>
-    action == null
-    ? null
-    : () {
-        AudioScope.maybeRead(context)?.play(GameSound.tap);
-        action();
-      };

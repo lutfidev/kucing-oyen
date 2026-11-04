@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-483 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+491 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -89,6 +89,8 @@ for the store listing at the end.
 | `clearBoard` | Clear the board | Kosongkan papan | Button: return all placed items to the tray. | |
 | `trayHintTop` | Drop on a | Taruh di petak | Tray hint, first line: "Place on a / glowing tile". | |
 | `trayHintBottom` | glowing tile | yang menyala | Tray hint, second line. | |
+| `trayHintTapTop` | Pick an item, | Pilih benda, | Tray hint with a screen reader on, first line: "Pick an item, / then tap a tile" (no dragging). | |
+| `trayHintTapBottom` | then tap a tile | lalu ketuk petak | Tray hint with a screen reader on, second line. | |
 | `itemFish` | Salted fish | Ikan asin | Item name: salted fish. | |
 | `itemWater` | Water bucket | Ember air | Item name: water bucket. | |
 | `itemBox` | Box | Kardus | Item name: cardboard box. | |
@@ -210,6 +212,7 @@ for the store listing at the end.
 | `tutorial1Body` | Oyen walks to the bowl alone. You just watch. | Dia jalan sendiri ke mangkuknya. Kamu tinggal nonton. | Tutorial level 1, small text. | |
 | `tutorial3Title` | Oyen can't resist salted fish! | Oyen nggak tahan bau ikan asin! | Tutorial level 3 (fish), big text. | |
 | `tutorial3Body` | Drag a fish onto the floor. If Oyen sees it in a straight line, the chase is on. | Seret ikan ke lantai. Kalau kelihatan lurus, dia langsung mengejarnya. | Tutorial level 3, small text. | |
+| `tutorial3BodyTap` | Pick the fish in the tray, then tap a floor tile. If Oyen sees it in a straight line, the chase is on. | Pilih ikan di baki, lalu ketuk petak lantai. Kalau kelihatan lurus, dia langsung mengejarnya. | Tutorial level 3, small text with a screen reader on (pick and tap instead of dragging). | |
 | `tutorial6Title` | Oyen hates water. Like, really. | Oyen takut air. Banget. | Tutorial level 6 (bucket), big text. | |
 | `tutorial6Body` | Put the bucket in the way. Water ahead means a spooked cat and a U-turn. | Taruh ember di jalannya. Ketemu air, dia kaget lalu putar balik. | Tutorial level 6, small text. | |
 | `tutorialLabel` | Tutorial | Tutorial | Screen reader label of the tutorial card. | |
@@ -508,6 +511,11 @@ for the store listing at the end.
 | `chapterIntroEnter` | Let's go in! | Ayo masuk! | Button that closes the new-chapter card and shows the new map. | |
 | `chapterIntroInfo` | {count, plural, =1{1 new level} other{{count} new levels}} · Boss: {boss} | {count, plural, other{{count} level baru}} · Bos: {boss} | Line under the new-chapter title: number of levels and the boss name. Placeholders: `{count}`, `{boss}`. | |
 | `chapterIntroLabel` | New chapter unlocked | Babak baru terbuka | Screen reader name of the new-chapter card (dialog). | |
+| `kittyNewTag` | New! | Baru! | Tag above a cat that was just adopted and whose card hasn't been opened yet. | |
+| `kittyTapHintNew` | {name}, new. Tap to see their card | {name}, baru. Ketuk untuk lihat kartunya | Screen reader label of a newly adopted cat in the room (shows a "New!" tag). Placeholders: `{name}`. | |
+| `kittyTapHintNewHungry` | {name}, new, hungry. Tap to see their card | {name}, baru, lapar. Ketuk untuk lihat kartunya | Screen reader label of a newly adopted cat in the room that is also hungry. Placeholders: `{name}`. | |
+| `snackFullNote` | {name} is already full and happy. Save it for later! | {name} sudah kenyang dan senang. Simpan buat nanti! | Short note on a cat card when a snack is tapped but the cat's Full and Happy bars are both at 100. {name} is the cat's name. Placeholders: `{name}`. | |
+| `snackEmptyNote` | All gone. Grab more snacks in the Shop! | Stoknya habis. Beli camilan lagi di Toko! | Short note on a cat card when a snack that is out of stock is tapped. | |
 
 ---
 

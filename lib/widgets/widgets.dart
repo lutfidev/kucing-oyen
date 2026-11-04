@@ -13,4 +13,5 @@ export 'ko_icon_button.dart';
 export 'ko_pressable.dart';
 export 'ko_sheet.dart';
 export 'ko_star.dart';
+export 'tap_sound.dart';
 export 'tray_slot.dart';

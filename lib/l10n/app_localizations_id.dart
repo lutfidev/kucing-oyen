@@ -232,6 +232,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get trayHintBottom => 'yang menyala';
 
   @override
+  String get trayHintTapTop => 'Pilih benda,';
+
+  @override
+  String get trayHintTapBottom => 'lalu ketuk petak';
+
+  @override
   String get itemFish => 'Ikan asin';
 
   @override
@@ -782,6 +788,10 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get tutorial3Body =>
       'Seret ikan ke lantai. Kalau kelihatan lurus, dia langsung mengejarnya.';
+
+  @override
+  String get tutorial3BodyTap =>
+      'Pilih ikan di baki, lalu ketuk petak lantai. Kalau kelihatan lurus, dia langsung mengejarnya.';
 
   @override
   String get tutorial6Title => 'Oyen takut air. Banget.';

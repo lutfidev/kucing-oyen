@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/sound_player.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
@@ -42,7 +43,68 @@ class _Deck implements MusicDeck {
   Future<void> dispose() async => disposed = true;
 }
 
+/// Pool efek palsu: menghitung bunyi yang dimulai.
+class _Pool implements AudioPool {
+  int started = 0;
+
+  @override
+  Future<StopFunction> start({double volume = 1.0}) async {
+    started++;
+    return () async {};
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
 void main() {
+  group('efek suara', () {
+    test(
+      'pool yang gagal dibuat dicoba lagi saat diputar berikutnya',
+      () async {
+        final made = <GameSound>[];
+        var fail = true;
+        final pool = _Pool();
+        final player = AudioplayersSoundPlayer(
+          setUpContext: false,
+          newPool: (sound) async {
+            made.add(sound);
+            if (fail) throw StateError('pool gagal');
+            return pool;
+          },
+        );
+        await player.preload();
+        expect(made, GameSound.values);
+
+        fail = false;
+        await player.play(GameSound.tap);
+        expect(pool.started, 1);
+        await player.play(GameSound.tap);
+        expect(pool.started, 2);
+        // Pool yang berhasil dipakai ulang, tidak dibuat lagi.
+        expect(made.where((s) => s == GameSound.tap), hasLength(2));
+      },
+    );
+  });
+
+  test(
+    'pool yang selalu gagal dicoba paling banyak maxPoolTries kali',
+    () async {
+      var made = 0;
+      final player = AudioplayersSoundPlayer(
+        setUpContext: false,
+        newPool: (sound) async {
+          made++;
+          throw StateError('pool gagal');
+        },
+      );
+      for (var i = 0; i < 10; i++) {
+        await player.play(GameSound.tap);
+      }
+      expect(made, AudioplayersSoundPlayer.maxPoolTries);
+    },
+  );
+
   late List<_Deck> decks;
   late List<bool> failNext;
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
+import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
@@ -53,6 +54,25 @@ Finder _stepButton(String label) =>
 Future<void> _tapStep(WidgetTester tester, String label) async {
   await tester.tap(_stepButton(label));
   await tester.pumpAndSettle();
+}
+
+/// Sesi buatan dengan hasil tanpa langkah (tidak mungkin dengan aturan
+/// sekarang: Oyen selalu bergerak minimal satu langkah).
+class _NoStepSession implements LevelSession {
+  _NoStepSession(this.level);
+
+  @override
+  final Level level;
+
+  @override
+  SimResult get result =>
+      const SimResult(win: true, vaseBroken: false, steps: 0, trace: []);
+
+  @override
+  List<Placement> get placed => const [];
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 void main() {
@@ -366,6 +386,22 @@ void main() {
       }
       expect(_sliderValue(tester), 1);
       expect(find.byType(ReplayPlayButton), findsNothing);
+    });
+
+    testWidgets('hanya langkah 0: tombol putar mati', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await _pumpReplay(tester, _NoStepSession(levels[12]));
+      final play = tester.widget<KoPressable>(_stepButton('Putar otomatis'));
+      expect(play.onPressed, isNull);
+      expect(
+        tester.getSemantics(_stepButton('Putar otomatis')),
+        isSemantics(isButton: true, hasEnabledState: true, isEnabled: false),
+      );
+      await tester.tap(_stepButton('Putar otomatis'));
+      await tester.pump(ReplayView.autoStepTime);
+      expect(_stepButton('Jeda'), findsNothing);
+      expect(_sliderValue(tester), 0);
+      semantics.dispose();
     });
 
     testWidgets('pembaca layar: label tombol dan caption', (tester) async {

@@ -349,6 +349,14 @@
   "@trayHintBottom": {
     "description": "Tray hint, second line."
   },
+  "trayHintTapTop": "Pick an item,",
+  "@trayHintTapTop": {
+    "description": "Tray hint with a screen reader on, first line: \"Pick an item, / then tap a tile\" (no dragging)."
+  },
+  "trayHintTapBottom": "then tap a tile",
+  "@trayHintTapBottom": {
+    "description": "Tray hint with a screen reader on, second line."
+  },
   "itemFish": "Salted fish",
   "@itemFish": {
     "description": "Item name: salted fish."
@@ -1060,6 +1068,10 @@
   "tutorial3Body": "Drag a fish onto the floor. If Oyen sees it in a straight line, the chase is on.",
   "@tutorial3Body": {
     "description": "Tutorial level 3, small text."
+  },
+  "tutorial3BodyTap": "Pick the fish in the tray, then tap a floor tile. If Oyen sees it in a straight line, the chase is on.",
+  "@tutorial3BodyTap": {
+    "description": "Tutorial level 3, small text with a screen reader on (pick and tap instead of dragging)."
   },
   "tutorial6Title": "Oyen hates water. Like, really.",
   "@tutorial6Title": {

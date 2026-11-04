@@ -34,15 +34,36 @@ class BoardTileSemantics {
 /// Lapisan pembaca layar di atas papan Flame: [BoardScene.columns] ×
 /// [BoardScene.rows] petak urut baris, tanpa gambar. Sentuhan jari tembus
 /// ke papan di bawahnya; hanya aksi pembaca layar yang ditangani di sini.
-class BoardSemantics extends StatelessWidget {
+class BoardSemantics extends StatefulWidget {
   const BoardSemantics({super.key, required this.tiles})
     : assert(tiles.length == BoardScene.columns * BoardScene.rows);
 
+  /// Daftar yang sama (identik) dengan sebelumnya tidak dibangun ulang,
+  /// mis. selama seretan.
   final List<BoardTileSemantics> tiles;
 
   @override
+  State<BoardSemantics> createState() => _BoardSemanticsState();
+}
+
+class _BoardSemanticsState extends State<BoardSemantics> {
+  List<BoardTileSemantics>? _builtFor;
+  Widget? _built;
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    // Hot reload: bangun ulang supaya perubahan [_tile] terlihat.
+    _built = null;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
+    final tiles = widget.tiles;
+    final built = _built;
+    if (built != null && identical(tiles, _builtFor)) return built;
+    _builtFor = tiles;
+    return _built = Column(
       children: [
         for (var r = 0; r < BoardScene.rows; r++)
           Expanded(
