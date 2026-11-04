@@ -1,8 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/game/model/accessories.dart';
+import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/render/css_animation.dart';
 import 'package:kucing_oren/game/render/design_svg_home.dart';
+import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/render/svg_template.dart';
 
 final _kitty = CssKeyframes.parse(kittyKeyframes);
@@ -77,6 +81,41 @@ void main() {
     expect(() => cssEase('steps', 0.5), throwsFormatException);
   });
 
+  test(
+    'alternate dengan easing tidak simetris: putaran balik = waktu dibalik',
+    () {
+      // Web Animations: easing keyframe dipakai pada kemajuan berarah, jadi
+      // ease-in yang diputar balik tampak seperti ease-out (CSS Animations 1,
+      // `animation-direction`).
+      final fade = CssKeyframes.parse(
+        '@keyframes fade { from { opacity: 0 } to { opacity: 1 } }',
+      );
+      final style = CssStyle.parse(
+        'animation: fade 1s ease-in infinite alternate',
+      );
+      for (final x in [0.1, 0.25, 0.6, 0.9]) {
+        final forward = style.frameAt(x, fade)!.opacity!;
+        expect(forward, closeTo(cssEase('ease-in', x), 1e-9));
+        // Putaran ke-2 (balik) pada 1 + (1 − x) sama dengan putaran maju di x.
+        expect(style.frameAt(2 - x, fade)!.opacity, closeTo(forward, 1e-9));
+      }
+      // Awal putaran balik bergerak cepat (seperti ease-out), bukan pelan.
+      final start = 1 - style.frameAt(1.1, fade)!.opacity!;
+      expect(start, greaterThan(0.1));
+    },
+  );
+
+  test('fill-box hanya dengan origin center', () {
+    for (final style in [
+      'transform-box: fill-box; transform-origin: 4px 6px; '
+          'animation: kcTwinkle 1.2s ease-in-out infinite',
+      'transform-box: fill-box; animation: kcTwinkle 1.2s ease-in-out infinite',
+      'transform-origin: center; animation: kcTwinkle 1.2s ease-in-out infinite',
+    ]) {
+      expect(() => CssStyle.parse(style), throwsFormatException, reason: style);
+    }
+  });
+
   test('gaya tidak dikenal gagal, gaya kosong tanpa animasi', () {
     expect(() => CssStyle.parse('color: red'), throwsFormatException);
     expect(CssStyle.parse('').frameAt(1, _kitty), isNull);
@@ -118,6 +157,73 @@ void main() {
       expect(() => bad.render({}, time: 0.5), throwsFormatException);
       expect(bad.render({}).length, 1);
     });
+
+    test('opasitas animasi di elemen ber-opacity gagal', () {
+      // CSS mengganti atribut `opacity`, bukan mengalikannya.
+      for (final el in ['rect', 'g']) {
+        final body = el == 'g'
+            ? '<rect x="0" y="0" width="1" height="1" fill="#000000"></rect>'
+            : '';
+        final bad = SvgTemplate(
+          '<$el opacity="0.5" style="animation: kcZzz 2.4s ease-out infinite" '
+          'x="0" y="0" width="1" height="1" fill="#000000">$body</$el>',
+          keyframes: _kitty,
+        );
+        expect(() => bad.render({}, time: 0.7), throwsFormatException);
+        expect(bad.render({}).length, 1);
+      }
+    });
+  });
+
+  test('semua gambar bergerak desain lolos di berbagai waktu', () {
+    final canvas = Canvas(PictureRecorder());
+    const times = [0.0, 0.37, 1.3, 2.9, 7.1];
+    for (final time in times) {
+      for (final kitty in KittyId.values) {
+        for (final pose in KittyPose.values) {
+          for (final facing in KittyFacing.values) {
+            for (final toy in KittyToy.values) {
+              paintKitty(
+                canvas,
+                KittyLook(
+                  kitty: kitty,
+                  pose: pose,
+                  facing: facing,
+                  toy: toy,
+                  time: time,
+                ),
+              );
+            }
+          }
+        }
+      }
+      // Aksesoris tidak bergantung corak: cukup satu kucing per pose.
+      for (final pose in KittyPose.values) {
+        for (final accessory in AccessoryId.values) {
+          paintKitty(
+            canvas,
+            KittyLook(
+              kitty: KittyId.oyen,
+              pose: pose,
+              accessory: accessory,
+              time: time,
+            ),
+          );
+        }
+      }
+      for (final id in RoomItemId.values) {
+        for (final full in [true, false]) {
+          paintRoomItemArt(canvas, id, full: full, time: time);
+          paintRoomItemArt(
+            canvas,
+            id,
+            full: full,
+            time: time,
+            user: KittyLook(kitty: KittyId.oyen, time: time),
+          );
+        }
+      }
+    }
   });
 
   test('animated: hanya template yang punya atribut style', () {

@@ -244,15 +244,20 @@ class _Emitter {
           }
           var (ox, oy) = (css.originX, css.originY);
           if (css.centerOrigin) {
-            if (!css.fillBox) {
-              throw FormatException('origin center tanpa fill-box', style);
-            }
             final box = _localBounds(el, vals, inherited);
             (ox, oy) = (box.center.dx, box.center.dy);
           }
           m = m * _Affine.of(frame.matrix(ox, oy));
           if (frame.opacity case final o?) {
-            attrs['opacity'] = '${_num(attrs, 'opacity', 1) * o}';
+            // CSS mengganti atribut `opacity`; desain tidak memakai
+            // keduanya di satu elemen, jadi gagal daripada salah diam-diam.
+            if (el.attrs.containsKey('opacity')) {
+              throw FormatException(
+                'opacity dan animasi opasitas di satu elemen',
+                style,
+              );
+            }
+            attrs['opacity'] = '$o';
           }
         }
       }
