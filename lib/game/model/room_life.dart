@@ -244,7 +244,8 @@ class RoomLife {
       }
     }
     _targets = {
-      for (final MapEntry(:key, :value) in targets.entries) key: Map.of(value),
+      for (final MapEntry(:key, :value) in targets.entries)
+        if (!lifeDecorOnly.contains(key)) key: Map.of(value),
     };
     _uses = Map.of(uses);
     _toys = Set.of(toys);
@@ -270,16 +271,26 @@ class RoomLife {
     }
   }
 
-  /// Kucing [kitty] berhenti di tempat (reaksi selesai).
+  /// Kucing [kitty] berhenti di tempat (reaksi selesai). Kucing yang
+  /// sedang di atas (barang dinding atau lompatan ke sana) melanjutkan
+  /// kegiatannya, supaya tidak pindah mendadak ke lantai.
   void rest(KittyId kitty) {
-    if (_cats[kitty] case final cat?) _rest(cat);
+    final cat = _cats[kitty];
+    if (cat == null || _isRaised(cat)) return;
+    _rest(cat);
   }
 
+  /// Kucing di barang dinding atau sedang melompat ke atau darinya.
+  static bool _isRaised(CatLife cat) =>
+      cat.hops > 0 && (cat.isHopping || cat.activity == CatActivity.using);
+
   /// Kucing [kitty] bereaksi dengan [pose] selama [seconds], lalu lanjut
-  /// dari langkah berikutnya. Barang yang dipakainya dilepas.
+  /// dari langkah berikutnya. Barang yang dipakainya dilepas, kecuali
+  /// kucing yang sedang di atas: ia tetap di barang dinding atau
+  /// lompatannya (reaksinya hanya tampil di atasnya).
   void react(KittyId kitty, LifePose pose, double seconds) {
     final cat = _cats[kitty];
-    if (cat == null) return;
+    if (cat == null || _isRaised(cat)) return;
     cat
       ..item = null
       ..activity = CatActivity.reacting

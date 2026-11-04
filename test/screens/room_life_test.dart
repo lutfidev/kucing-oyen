@@ -12,6 +12,7 @@ import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/screens/room/room_geometry.dart';
+import 'package:kucing_oren/screens/room/room_reaction.dart';
 import 'package:kucing_oren/screens/room/room_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -463,6 +464,50 @@ void main() {
       // Tidak ada perpindahan mendadak antar bingkai.
       expect(biggestJump, lessThan(20));
     });
+
+    testWidgets(
+      'dielus di jendela burung: tetap di jendela, reaksi di atasnya',
+      (tester) async {
+        final home = Home(
+          room: Room().buy(RoomItemId.jendelaBurung).buy(RoomItemId.tiang),
+        );
+        await _pump(
+          tester,
+          progress: withNeeds({KittyId.oyen: (80, 50)}, home: home),
+        );
+        for (
+          var i = 0;
+          i < 3000 && inUse(RoomItemId.jendelaBurung).evaluate().isEmpty;
+          i++
+        ) {
+          await tester.pump(const Duration(milliseconds: 16));
+        }
+        final window = tester.getRect(inUse(RoomItemId.jendelaBurung));
+        final cat = userBox(tester, RoomItemId.jendelaBurung);
+        await tester.tap(inUse(RoomItemId.jendelaBurung));
+        await tester.pump();
+        final pet = find.text('Elus');
+        await tester.ensureVisible(pet);
+        await tester.pump();
+        await tester.tap(pet);
+        await tester.pump();
+        await tester.binding.handlePopRoute();
+        await tester.pump();
+        // Oyen tidak turun ke lantai: jendelanya masih menggambar Oyen.
+        expect(inUse(RoomItemId.jendelaBurung), findsOneWidget);
+        expect(tester.getRect(inUse(RoomItemId.jendelaBurung)), window);
+        expect(kittyView(KittyId.oyen), findsNothing);
+        // Reaksi melayang di atas Oyen di jendela, bukan di lantai.
+        final reaction = tester.getRect(find.byType(ReactionOverlay));
+        expect((reaction.center.dx - cat.center.dx).abs(), lessThan(4));
+        expect(reaction.bottom, lessThan(cat.center.dy));
+        for (var i = 0; i < 30; i++) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        expect(find.byType(ReactionOverlay), findsNothing);
+        expect(kittyView(KittyId.oyen), findsNothing);
+      },
+    );
 
     testWidgets('lukisan dan jam dinding tidak pernah dipakai', (tester) async {
       final home = Home(

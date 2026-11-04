@@ -233,7 +233,13 @@ void main() {
         lessThanOrEqualTo(stand.width / 2),
       );
       expect(geo.feetOf(stand), closeTo(post.bottom, 0.01));
-      expect(perch.center.dx, closeTo(post.center.dx, 0.01));
+      // Di puncak tiang, dijepit supaya tetap di dalam kamar (tiang di
+      // pojok kiri).
+      expect(perch.left, greaterThanOrEqualTo(0));
+      expect(
+        (perch.center.dx - post.center.dx).abs(),
+        lessThanOrEqualTo(perch.width / 2),
+      );
       expect(geo.feetOf(perch), lessThan(post.top + post.height * 0.1));
       expect(perch.width, geo.catSize(KittyId.oyen));
       expect(

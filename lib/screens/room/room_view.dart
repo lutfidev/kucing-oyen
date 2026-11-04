@@ -123,8 +123,15 @@ class _RoomViewState extends State<RoomView>
   /// Geometri kamar terakhir (untuk seretan dan letak reaksi).
   RoomGeometry? _geo;
 
-  /// Rute tiap kucing ke tiap barang (lompatan ke barang dinding).
+  /// Rute tiap kucing ke tiap barang (lompatan ke barang dinding), dan
+  /// keadaan kamar yang menghasilkannya (rute dihitung ulang hanya kalau
+  /// keadaan itu berubah).
   Map<(RoomItemId, KittyId), ItemPath> _paths = const {};
+  Object? _pathsKey;
+
+  /// Kotak tiap kucing yang tampil di bingkai terakhir (di lantai, di
+  /// dalam barang, atau melompat), untuk letak reaksi.
+  Map<KittyId, Rect> _shownBoxes = const {};
 
   /// Kucing yang kartunya terbuka.
   KittyId? _selected;
@@ -239,13 +246,22 @@ class _RoomViewState extends State<RoomView>
   void _syncKitties([RoomGeometry? geo]) {
     final home = _progress.home;
     final placed = home.room.placed;
-    _paths = geo == null || _decorating
-        ? const {}
-        : {
-            for (final id in placed.keys)
-              for (final kitty in home.kitties)
-                (id, kitty): ?geo.pathTo(kitty, id, placed),
-          };
+    final key = (
+      geo?.room,
+      _decorating,
+      Object.hashAllUnordered(placed.entries.map((e) => (e.key, e.value))),
+      Object.hashAllUnordered(home.kitties),
+    );
+    if (key != _pathsKey) {
+      _pathsKey = key;
+      _paths = geo == null || _decorating
+          ? const {}
+          : {
+              for (final id in placed.keys)
+                for (final kitty in home.kitties)
+                  (id, kitty): ?geo.pathTo(kitty, id, placed),
+            };
+    }
     _life.sync(
       homes: {for (final kitty in home.kitties) kitty: _spotOf(kitty)},
       targets: {
@@ -491,7 +507,8 @@ class _RoomViewState extends State<RoomView>
               ReactionOverlay(
                 key: ValueKey(n),
                 reaction: r,
-                anchor: geo.catBoxOf(kitty, _catSpot(kitty)),
+                anchor:
+                    _shownBoxes[kitty] ?? geo.catBoxOf(kitty, _catSpot(kitty)),
                 onDone: _reactionDone,
               ),
             if (praise case (final bonus, final n))
@@ -548,6 +565,7 @@ class _RoomViewState extends State<RoomView>
       for (final kitty in home.kitties) kitty: ?_hopBox(kitty, geo),
     };
     final catBoxes = {..._catBoxes(sprites, geo), ...hopping};
+    _shownBoxes = catBoxes;
     final empty = _empty;
     final top = MediaQuery.paddingOf(context).top + space.s6;
     // Tag dan gelembung tidak naik ke bawah header dan tombol Hias, yang
@@ -608,7 +626,7 @@ class _RoomViewState extends State<RoomView>
           Positioned.fromRect(
             key: ValueKey(kitty),
             rect: box,
-            child: _kitty(kitty, box, facing: _hopFacing(kitty, geo)),
+            child: _kitty(kitty, box, hopFacing: _hopFacing(kitty, geo)),
           ),
         if (!_decorating)
           for (final MapEntry(key: kitty, value: box) in catBoxes.entries)
@@ -886,11 +904,10 @@ class _RoomViewState extends State<RoomView>
     );
   }
 
-  Widget _kitty(KittyId kitty, Rect box, {KittyFacing? facing}) {
+  Widget _kitty(KittyId kitty, Rect box, {KittyFacing? hopFacing}) {
     final needs = _progress.catNeeds(kitty);
     var pose = needs.isSad ? KittyPose.lesu : KittyPose.idle;
-    final hopFacing = facing;
-    facing = KittyFacing.down;
+    var facing = KittyFacing.down;
     if (widget.life && !_decorating) {
       final cat = _life.of(kitty);
       pose = switch (cat.pose) {

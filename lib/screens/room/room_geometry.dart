@@ -22,7 +22,8 @@ const kittyRoomSize = 96.0;
 const catFeetFactor = 0.92;
 
 /// Lompatan kucing ke barang dinding, dalam px desain (dikali `artScale`):
-/// paling tinggi [catHopUp] per lompatan, dan pijakan paling jauh
+/// paling tinggi [catHopUp] untuk lompatan ke barang dinding (naik ke
+/// pijakan tidak dibatasi: kucing memanjat perabot), dan pijakan paling jauh
 /// [catHopDepth] dari kaki dinding (ke depan) dan [catHopSide] ke samping
 /// dari kucing di barangnya.
 const catHopUp = 100.0;
@@ -236,7 +237,10 @@ class RoomGeometry {
         continue;
       }
       if (best == null || side < best.$1) {
-        best = (side, box, catBoxAtFeet(kitty, box.center.dx, surface));
+        // Kucing di pijakan dekat tepi tetap di dalam kamar.
+        final size = catSize(kitty);
+        final x = box.center.dx.clamp(size / 2, room.width - size / 2);
+        best = (side, box, catBoxAtFeet(kitty, x, surface));
       }
     }
     if (best == null) return null;

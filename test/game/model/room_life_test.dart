@@ -376,4 +376,68 @@ void main() {
     expect(cat.spot, stand);
     expect(life.users, isEmpty);
   });
+
+  test('reaksi di barang dinding: kucing tetap di barangnya, tidak turun', () {
+    final life = _life(3);
+    _sync(
+      life,
+      targets: const {},
+      routes: {
+        RoomItemId.rak: {KittyId.oyen: LifeRoute(Spot(0.3, 0), hops: 1)},
+      },
+    );
+    final cat = life.of(KittyId.oyen);
+    while (cat.activity != CatActivity.using) {
+      life.advance(_frame);
+    }
+    for (final pose in [LifePose.petted, LifePose.happy]) {
+      life.react(KittyId.oyen, pose, 1.6);
+      life.rest(KittyId.oyen);
+      expect(cat.activity, CatActivity.using);
+      expect(cat.item, RoomItemId.rak);
+      expect(life.userOf(RoomItemId.rak), KittyId.oyen);
+    }
+    // Lalu turun lewat rutenya seperti biasa.
+    while (cat.activity == CatActivity.using) {
+      life.advance(_frame);
+    }
+    expect(cat.activity, CatActivity.descending);
+  });
+
+  test('reaksi di tengah lompatan: lompatannya tidak putus', () {
+    final life = _life(3);
+    _sync(
+      life,
+      targets: const {},
+      routes: {
+        RoomItemId.rak: {KittyId.oyen: LifeRoute(Spot(0.3, 0), hops: 2)},
+      },
+    );
+    final cat = life.of(KittyId.oyen);
+    while (cat.activity != CatActivity.climbing) {
+      life.advance(_frame);
+    }
+    life.advance(lifeHopSeconds);
+    final progress = cat.hopProgress;
+    life.react(KittyId.oyen, LifePose.petted, 1.6);
+    life.rest(KittyId.oyen);
+    expect(cat.activity, CatActivity.climbing);
+    expect(cat.hopProgress, progress);
+  });
+
+  test('lukisan dan jam tidak dituju walau diberi rute', () {
+    final life = _life(3);
+    life.sync(
+      homes: {KittyId.oyen: Spot(0.5, 0.5)},
+      targets: {
+        RoomItemId.lukisan: {KittyId.oyen: LifeRoute(Spot(0.2, 0))},
+        RoomItemId.jam: {KittyId.oyen: LifeRoute(Spot(0.8, 0))},
+      },
+      uses: const {
+        RoomItemId.lukisan: ItemUse.watch,
+        RoomItemId.jam: ItemUse.play,
+      },
+    );
+    _run(life, 60, () => expect(life.of(KittyId.oyen).item, isNull));
+  });
 }
