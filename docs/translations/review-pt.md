@@ -5,7 +5,9 @@ Ginger Logic is a casual puzzle game for phones: the player places fish, water b
 **How to review.** Read each line the way a player would see it in the game.
 Write a better version in the *Feedback* column only where the text sounds
 wrong, stiff, or unnatural; leave it empty when it is fine. The same goes
-for the store listing at the end.
+for the store listing at the end. Fill in your own copy of this file and
+send it back: the copy in the repository is regenerated from the game
+files and anything written there is overwritten.
 
 - **Tone:** casual, warm, and a little funny, like a friend telling the
   story of a stubborn cat. Short is better: most lines sit on small buttons
