@@ -206,6 +206,50 @@ void main() {
       expect(cat.left, greaterThan(box.left));
     });
 
+    test(
+      'dicerminkan: Zzz tetap terbaca, hanya bergeser bersama kucing',
+      () async {
+        const id = RoomItemId.kasur;
+        final use = RoomItemArt.inUse(id);
+        const sleeper = KittyLook(kitty: KittyId.oyen);
+        Future<Set<(int, int)>> blue(bool mirror) async {
+          // Kotak lebar supaya Zzz yang keluar sprite tetap tergambar.
+          const pad = 40.0;
+          final size = Size(
+            use.size.width + 2 * pad,
+            use.size.height + 2 * pad,
+          );
+          final sample = await _sampler(
+            (c) => paintRoomItemArt(
+              c..translate(pad, pad),
+              id,
+              user: sleeper,
+              mirror: mirror,
+            ),
+            size,
+          );
+          final target = _hex('#2F86B8');
+          return {
+            for (var y = 0.0; y < size.height; y++)
+              for (var x = 0.0; x < size.width; x++)
+                if (sample(x, y) == target) (x.toInt(), y.toInt()),
+          };
+        }
+
+        final plain = await blue(false);
+        expect(plain, isNotEmpty);
+        final mirrored = await blue(true);
+        final plainCat = RoomItemArt.catBox(id, Offset.zero & use.size);
+        final mirroredCat = RoomItemArt.catBox(
+          id,
+          Offset.zero & use.size,
+          mirror: true,
+        );
+        final dx = (mirroredCat.left - plainCat.left).round();
+        expect(mirrored, {for (final (x, y) in plain) (x + dx, y)});
+      },
+    );
+
     test('semua barang dipakai semua kucing tergambar', () {
       final canvas = Canvas(PictureRecorder());
       for (final id in RoomItemId.values) {

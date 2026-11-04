@@ -337,7 +337,8 @@ void _fit(Canvas canvas, Size art, Size box) {
 /// isi mangkuk. [time] = detik animasi barang (null = diam). Dengan [user]
 /// barangnya digambar sedang dipakai kucing itu (pose, mainan, dan tiang
 /// mengikuti barangnya; kotaknya [RoomItemArt.inUseBox]). [mirror]
-/// mencerminkan barang yang dipakai beserta kucingnya.
+/// mencerminkan barang yang dipakai; kucingnya pindah ke sisi lain dan
+/// badannya dibalik, tapi tulisan di sprite tetap terbaca.
 void paintRoomItemArt(
   Canvas canvas,
   RoomItemId id, {
@@ -367,10 +368,6 @@ void paintRoomItemArt(
     canvas.restore();
     return;
   }
-  if (mirror) {
-    canvas.translate(art.width, 0);
-    canvas.scale(-1, 1);
-  }
   final (back, front) = _hidesSelf.contains(id)
       ? (null, null)
       : _layers(code, full, time);
@@ -378,6 +375,10 @@ void paintRoomItemArt(
     if (layer == null) return;
     final (x, y, _, _) = _viewBox(code);
     canvas.save();
+    if (mirror) {
+      canvas.translate(art.width, 0);
+      canvas.scale(-1, 1);
+    }
     canvas.translate(use.artOffset.dx, use.artOffset.dy);
     if (id == RoomItemId.lukisan) {
       // Lukisan miring saat diketuk kucing (`ip` desain).
@@ -391,13 +392,17 @@ void paintRoomItemArt(
   }
 
   paintLayer(back);
+  // Kucingnya tidak dicerminkan dengan kanvas: badannya dibalik `flipT`
+  // ([KittyLook.mirror]) supaya Zzz dan "purr~" tetap terbaca.
+  final cat = RoomItemArt.catBox(id, Offset.zero & art, mirror: mirror);
   canvas.save();
-  canvas.translate(use.catOffset.dx, use.catOffset.dy);
+  canvas.translate(cat.left, cat.top);
   paintKitty(
     canvas,
     user!.copyWith(
       pose: use.pose,
       facing: KittyFacing.down,
+      mirror: mirror,
       toy: switch (id) {
         RoomItemId.bola => KittyToy.ball,
         RoomItemId.tikus => KittyToy.mouse,
