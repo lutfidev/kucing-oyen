@@ -34,14 +34,16 @@ import '../test_helpers.dart';
 import 'capture.dart';
 import 'scenes.dart';
 
-/// Progres seperti contoh desain: Babak 1 selesai dengan 26 bintang, level
-/// 11 dan 12 menang (5 bintang), level 13 sedang dimainkan (total 31/60).
+/// Progres seperti contoh peta desain 02 dan 23: Babak 1 selesai dengan 26
+/// bintang, level 11 dan 12 menang (5 bintang), level 13 sedang dimainkan
+/// (total 31/60, juga di chip bintang kamar).
 final _designProgress = {...wonUpTo(8), 9: 1, 10: 1, 11: 3, 12: 2};
 
-/// Rute dan progresnya.
+/// Rute dan progresnya. Kamar penuh dipotret terpisah (`19-kamar`); di sini
+/// kamar baru yang hanya berisi mangkuk.
 final _screens = <String, (String, Map<int, int>)>{
-  '01-beranda': (AppRoutes.home, _designProgress),
-  '01-beranda-baru-360x640': (AppRoutes.home, const {}),
+  '19-kamar-baru': (AppRoutes.home, _designProgress),
+  '19-kamar-baru-360x640': (AppRoutes.home, const {}),
   '02-peta-babak-2': (AppRoutes.chapter(2), _designProgress),
   '02-peta-babak-2-360x640': (AppRoutes.chapter(2), _designProgress),
   '02-peta-babak-2-bos': (AppRoutes.chapter(2), wonUpTo(19, stars: 2)),
@@ -483,15 +485,15 @@ void main() {
     }, skip: !screenshotsEnabled);
   }
 
-  // Beranda, fase atur level 13, dan Pengaturan di keempat bahasa
-  // (folder per bahasa); Rusia juga di layar kecil.
+  // Kamar baru (Beranda), fase atur level 13, dan Pengaturan di keempat
+  // bahasa (folder per bahasa); Rusia juga di layar kecil.
   for (final language in AppLanguage.supported) {
     final screens = <String, (String, Size)>{
-      '01-beranda': (AppRoutes.home, _size),
+      '19-kamar-baru': (AppRoutes.home, _size),
       '03-fase-atur-level-13': (AppRoutes.level(13, chapter: 2), _size),
       '15-pengaturan': (AppRoutes.settings, _size),
       if (language == AppLanguage.ru) ...{
-        '01-beranda-360x640': (AppRoutes.home, const Size(360, 640)),
+        '19-kamar-baru-360x640': (AppRoutes.home, const Size(360, 640)),
         '03-fase-atur-level-13-360x640': (
           AppRoutes.level(13, chapter: 2),
           const Size(360, 640),
