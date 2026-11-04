@@ -141,6 +141,9 @@ class _TrayHint extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.koType;
     final space = context.koSpace;
+    final l = context.l10n;
+    // Pembaca layar tidak menyeret: benda dipilih lalu petaknya diketuk.
+    final tap = MediaQuery.accessibleNavigationOf(context);
     return Padding(
       padding: EdgeInsetsDirectional.only(start: space.s4),
       child: FittedBox(
@@ -150,10 +153,14 @@ class _TrayHint extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(context.l10n.trayHintTop, maxLines: 1, style: t.labelSmall),
+            Text(
+              tap ? l.trayHintTapTop : l.trayHintTop,
+              maxLines: 1,
+              style: t.labelSmall,
+            ),
             SizedBox(height: space.s2),
             Text(
-              context.l10n.trayHintBottom,
+              tap ? l.trayHintTapBottom : l.trayHintBottom,
               maxLines: 1,
               style: t.caption.copyWith(color: context.koColors.inkSoft),
             ),

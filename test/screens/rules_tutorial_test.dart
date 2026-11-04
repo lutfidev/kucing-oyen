@@ -299,6 +299,22 @@ void main() {
       expect(progress.isTutorialDone(3), isTrue);
     });
 
+    testWidgets('level 3 dengan pembaca layar: teks pilih lalu ketuk', (
+      tester,
+    ) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(accessibleNavigation: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      final semantics = tester.ensureSemantics();
+      await _openLevel(tester, 3, tutorialsDone: {});
+      expect(find.text(l10nId.tutorial3BodyTap), findsOneWidget);
+      expect(find.text(l10nId.tutorial3Body), findsNothing);
+      expect(l10nId.tutorial3BodyTap, isNot(contains('Seret')));
+      semantics.dispose();
+    });
+
     testWidgets('level 3: tombol Bangunkan Oyen tertutup overlay', (
       tester,
     ) async {

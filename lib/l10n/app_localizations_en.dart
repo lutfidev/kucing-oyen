@@ -256,6 +256,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trayHintBottom => 'glowing tile';
 
   @override
+  String get trayHintTapTop => 'Pick an item,';
+
+  @override
+  String get trayHintTapBottom => 'then tap a tile';
+
+  @override
   String get itemFish => 'Salted fish';
 
   @override
@@ -822,6 +828,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tutorial3Body =>
       'Drag a fish onto the floor. If Oyen sees it in a straight line, the chase is on.';
+
+  @override
+  String get tutorial3BodyTap =>
+      'Pick the fish in the tray, then tap a floor tile. If Oyen sees it in a straight line, the chase is on.';
 
   @override
   String get tutorial6Title => 'Oyen hates water. Like, really.';

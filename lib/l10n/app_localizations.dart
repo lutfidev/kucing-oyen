@@ -486,6 +486,18 @@ abstract class AppLocalizations {
   /// **'glowing tile'**
   String get trayHintBottom;
 
+  /// Tray hint with a screen reader on, first line: "Pick an item, / then tap a tile" (no dragging).
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an item,'**
+  String get trayHintTapTop;
+
+  /// Tray hint with a screen reader on, second line.
+  ///
+  /// In en, this message translates to:
+  /// **'then tap a tile'**
+  String get trayHintTapBottom;
+
   /// Item name: salted fish.
   ///
   /// In en, this message translates to:
@@ -1211,6 +1223,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Drag a fish onto the floor. If Oyen sees it in a straight line, the chase is on.'**
   String get tutorial3Body;
+
+  /// Tutorial level 3, small text with a screen reader on (pick and tap instead of dragging).
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the fish in the tray, then tap a floor tile. If Oyen sees it in a straight line, the chase is on.'**
+  String get tutorial3BodyTap;
 
   /// Tutorial level 6 (bucket), big text.
   ///

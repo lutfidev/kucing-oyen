@@ -21,7 +21,7 @@ for the store listing at the end.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-483 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+491 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -89,6 +89,8 @@ for the store listing at the end.
 | `clearBoard` | Clear the board | Limpar o tabuleiro | Button: return all placed items to the tray. | |
 | `trayHintTop` | Drop on a | Solte num | Tray hint, first line: "Place on a / glowing tile". | |
 | `trayHintBottom` | glowing tile | quadrado aceso | Tray hint, second line. | |
+| `trayHintTapTop` | Pick an item, | Escolha um item, | Tray hint with a screen reader on, first line: "Pick an item, / then tap a tile" (no dragging). | |
+| `trayHintTapBottom` | then tap a tile | depois toque num quadrado | Tray hint with a screen reader on, second line. | |
 | `itemFish` | Salted fish | Peixe salgado | Item name: salted fish. | |
 | `itemWater` | Water bucket | Balde de água | Item name: water bucket. | |
 | `itemBox` | Box | Caixa | Item name: cardboard box. | |
@@ -210,6 +212,7 @@ for the store listing at the end.
 | `tutorial1Body` | Oyen walks to the bowl alone. You just watch. | Ele vai sozinho até a tigela. Você só assiste. | Tutorial level 1, small text. | |
 | `tutorial3Title` | Oyen can't resist salted fish! | Oyen não resiste a peixe salgado! | Tutorial level 3 (fish), big text. | |
 | `tutorial3Body` | Drag a fish onto the floor. If Oyen sees it in a straight line, the chase is on. | Arraste o peixe para o chão. Se estiver em linha reta, ele sai correndo atrás. | Tutorial level 3, small text. | |
+| `tutorial3BodyTap` | Pick the fish in the tray, then tap a floor tile. If Oyen sees it in a straight line, the chase is on. | Escolha o peixe nos itens e toque num quadrado do chão. Se estiver em linha reta, ele sai correndo atrás. | Tutorial level 3, small text with a screen reader on (pick and tap instead of dragging). | |
 | `tutorial6Title` | Oyen hates water. Like, really. | Oyen morre de medo de água. | Tutorial level 6 (bucket), big text. | |
 | `tutorial6Body` | Put the bucket in the way. Water ahead means a spooked cat and a U-turn. | Coloque o balde no caminho. Deu de cara com água, ele se assusta e dá meia-volta. | Tutorial level 6, small text. | |
 | `tutorialLabel` | Tutorial | Tutorial | Screen reader label of the tutorial card. | |
@@ -508,6 +511,11 @@ for the store listing at the end.
 | `chapterIntroEnter` | Let's go in! | Bora entrar! | Button that closes the new-chapter card and shows the new map. | |
 | `chapterIntroInfo` | {count, plural, =1{1 new level} other{{count} new levels}} · Boss: {boss} | {count, plural, =1{1 nível novo} other{{count} níveis novos}} · Chefão: {boss} | Line under the new-chapter title: number of levels and the boss name. Placeholders: `{count}`, `{boss}`. | |
 | `chapterIntroLabel` | New chapter unlocked | Capítulo novo liberado | Screen reader name of the new-chapter card (dialog). | |
+| `kittyNewTag` | New! | Novo! | Tag above a cat that was just adopted and whose card hasn't been opened yet. | |
+| `kittyTapHintNew` | {name}, new. Tap to see their card | {name}, novo. Toque para ver o cartão | Screen reader label of a newly adopted cat in the room (shows a "New!" tag). Placeholders: `{name}`. | |
+| `kittyTapHintNewHungry` | {name}, new, hungry. Tap to see their card | {name}, novo, com fome. Toque para ver o cartão | Screen reader label of a newly adopted cat in the room that is also hungry. Placeholders: `{name}`. | |
+| `snackFullNote` | {name} is already full and happy. Save it for later! | {name} já está cheio e feliz. Guarde para depois! | Short note on a cat card when a snack is tapped but the cat's Full and Happy bars are both at 100. {name} is the cat's name. Placeholders: `{name}`. | |
+| `snackEmptyNote` | All gone. Grab more snacks in the Shop! | Acabou. Compre mais petiscos na Loja! | Short note on a cat card when a snack that is out of stock is tapped. | |
 
 ---
 

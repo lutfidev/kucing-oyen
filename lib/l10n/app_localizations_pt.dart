@@ -256,6 +256,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get trayHintBottom => 'quadrado aceso';
 
   @override
+  String get trayHintTapTop => 'Escolha um item,';
+
+  @override
+  String get trayHintTapBottom => 'depois toque num quadrado';
+
+  @override
   String get itemFish => 'Peixe salgado';
 
   @override
@@ -835,6 +841,10 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get tutorial3Body =>
       'Arraste o peixe para o chão. Se estiver em linha reta, ele sai correndo atrás.';
+
+  @override
+  String get tutorial3BodyTap =>
+      'Escolha o peixe nos itens e toque num quadrado do chão. Se estiver em linha reta, ele sai correndo atrás.';
 
   @override
   String get tutorial6Title => 'Oyen morre de medo de água.';

@@ -1418,6 +1418,19 @@ void main() {
       handle.dispose();
     });
 
+    testWidgets('petunjuk baki: pilih lalu ketuk, bukan taruh', (tester) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(accessibleNavigation: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      final handle = await open(tester);
+      expect(find.text('Pilih benda,'), findsOneWidget);
+      expect(find.text('lalu ketuk petak'), findsOneWidget);
+      expect(find.text('Taruh di petak'), findsNothing);
+      handle.dispose();
+    });
+
     testWidgets('selama seretan petak tidak dibangun ulang; sesudahnya benar', (
       tester,
     ) async {
