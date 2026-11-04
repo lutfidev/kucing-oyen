@@ -541,18 +541,22 @@ class ReplayPlayButton extends StatelessWidget {
   });
 
   final bool playing;
-  final VoidCallback onPressed;
+
+  /// Null = mati (tidak ada langkah untuk diputar), warna tombol mati
+  /// [KoButton].
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
     final s = context.koSize;
     final l = context.l10n;
+    final enabled = onPressed != null;
     return KoPressable(
       onPressed: onPressed,
       semanticLabel: playing ? l.pause : l.replayPlay,
-      color: c.orange,
-      edgeColor: c.orangeDeep,
+      color: enabled ? c.orange : c.disabled,
+      edgeColor: enabled ? c.orangeDeep : c.muted,
       depth: context.koShadow.press,
       circle: true,
       width: s.control,
@@ -561,7 +565,7 @@ class ReplayPlayButton extends StatelessWidget {
         child: KoIcon(
           playing ? KoIcons.pause : KoIcons.resume,
           size: s.iconMedium,
-          color: c.ink,
+          color: enabled ? c.ink : c.onDisabled,
         ),
       ),
     );

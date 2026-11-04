@@ -89,7 +89,6 @@ class _ReplayViewState extends State<ReplayView>
       setState(_ticker.stop);
       return;
     }
-    if (_last == 0) return;
     setState(() {
       if (_step == _last) _step = 0;
       _sinceStep = Duration.zero;
@@ -142,7 +141,10 @@ class _ReplayViewState extends State<ReplayView>
         Row(
           children: [
             if (!_reduceMotion) ...[
-              ReplayPlayButton(playing: _playing, onPressed: _togglePlay),
+              ReplayPlayButton(
+                playing: _playing,
+                onPressed: _last == 0 ? null : _togglePlay,
+              ),
               SizedBox(width: space.s12),
             ],
             Expanded(
