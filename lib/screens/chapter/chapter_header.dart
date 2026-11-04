@@ -12,6 +12,9 @@ import '../../widgets/widgets.dart';
 /// babak, lalu kartu babak lain. Latarnya krem dan memudar setinggi
 /// [MapArt.headerFade] di bawah, menutupi peta yang digulir.
 class ChapterHeader extends StatelessWidget {
+  /// Tinggi baris judul babak (`PetaBergambar.dc.html`: `line-height: 1.05`).
+  static const double titleHeight = 1.05;
+
   const ChapterHeader({
     super.key,
     required this.chapter,
@@ -76,7 +79,10 @@ class ChapterHeader extends StatelessWidget {
                           Text(
                             chapterName(context.l10n, chapter),
                             maxLines: 1,
-                            style: t.title.copyWith(color: c.ink),
+                            style: t.title.copyWith(
+                              color: c.ink,
+                              height: titleHeight,
+                            ),
                           ),
                         ),
                       ],

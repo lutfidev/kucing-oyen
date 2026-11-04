@@ -218,4 +218,95 @@ void main() {
       expect(style!.letterSpacing, 0, reason: name);
     }
   });
+
+  test('semua gaya KoType menulis tinggi baris dan membaginya rata', () {
+    // Gaya tanpa height mewarisi tinggi baris Material (1,43) lewat
+    // DefaultTextStyle. Dibaca dari sumber supaya gaya baru ikut dicek.
+    final source = File('lib/theme/ko_type.dart').readAsStringSync();
+    final blocks = RegExp(
+      r'^    (\w+): TextStyle\((.*?)^    \),',
+      multiLine: true,
+      dotAll: true,
+    ).allMatches(source).toList();
+    // Setiap field gaya punya satu blok di `standard`; gaya yang ditulis
+    // dengan bentuk lain tidak terbaca dan membuat jumlahnya beda.
+    final fields = RegExp(r'^  final TextStyle \w+;', multiLine: true);
+    expect(blocks.length, fields.allMatches(source).length);
+    expect(blocks.length, greaterThan(50));
+    for (final block in blocks) {
+      final body = block.group(2)!;
+      expect(body, contains('height: '), reason: block.group(1));
+      expect(
+        body,
+        contains('leadingDistribution: _even,'),
+        reason: block.group(1),
+      );
+    }
+    expect(source, contains('const _even = TextLeadingDistribution.even;'));
+    const t = KoType.standard;
+    expect(t.display.height, 1.05);
+    expect(t.title.height, KoType.fredokaNormal);
+    expect(t.body.height, KoType.nunitoNormal);
+    expect(t.numberMedium.height, 1);
+  });
+
+  testWidgets('teks tidak mendapat tinggi baris Material', (tester) async {
+    await tester.pumpWidget(testApp(home: const Scaffold(body: Text('x'))));
+    final context = tester.element(find.text('x'));
+    final inherited = DefaultTextStyle.of(context).style;
+    expect(inherited.height, KoType.nunitoNormal);
+    expect(inherited.leadingDistribution, TextLeadingDistribution.even);
+
+    final text = Theme.of(context).textTheme;
+    const t = KoType.standard;
+    final mapped = {
+      'displayLarge': (text.displayLarge, t.display),
+      'displayMedium': (text.displayMedium, t.number),
+      'headlineMedium': (text.headlineMedium, t.title),
+      'titleLarge': (text.titleLarge, t.heading),
+      'bodyMedium': (text.bodyMedium, t.body),
+      'labelLarge': (text.labelLarge, t.label),
+      'labelSmall': (text.labelSmall, t.overline),
+    };
+    for (final MapEntry(key: name, value: (style, ko)) in mapped.entries) {
+      expect(style!.height, ko.height, reason: name);
+      expect(style.leadingDistribution, ko.leadingDistribution, reason: name);
+    }
+    final others = {
+      'displaySmall': text.displaySmall,
+      'headlineLarge': text.headlineLarge,
+      'headlineSmall': text.headlineSmall,
+      'titleMedium': text.titleMedium,
+      'titleSmall': text.titleSmall,
+      'bodyLarge': text.bodyLarge,
+      'bodySmall': text.bodySmall,
+      'labelMedium': text.labelMedium,
+    };
+    for (final MapEntry(key: name, value: style) in others.entries) {
+      expect(style!.height, KoType.nunitoNormal, reason: name);
+      expect(
+        style.leadingDistribution,
+        TextLeadingDistribution.even,
+        reason: name,
+      );
+    }
+  });
+
+  test('tinggi baris normal sama dengan metrik font yang dibundel', () {
+    // Satu baris teks tanpa height = tinggi baris normal font itu.
+    double lineOf(String family) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: 'Hg',
+          style: TextStyle(fontFamily: family, fontSize: 1000),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      addTearDown(painter.dispose);
+      return painter.height / 1000;
+    }
+
+    expect(lineOf(KoFonts.fredoka), closeTo(KoType.fredokaNormal, 0.002));
+    expect(lineOf(KoFonts.nunito), closeTo(KoType.nunitoNormal, 0.002));
+  });
 }

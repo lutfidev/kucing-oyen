@@ -31,6 +31,7 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.dashGap,
     required this.ghostOpacity,
     required this.chipSmall,
+    required this.stepChipTop,
     required this.dot,
     required this.captionBox,
     required this.stepBadge,
@@ -196,6 +197,7 @@ class KoSize extends ThemeExtension<KoSize> {
     dashGap: 4,
     ghostOpacity: 0.28,
     chipSmall: 32,
+    stepChipTop: 9,
     dot: 10,
     captionBox: 56,
     stepBadge: 30,
@@ -393,6 +395,10 @@ class KoSize extends ThemeExtension<KoSize> {
 
   /// Chip status fase jalan ("Vas aman", "2 benda dipakai").
   final double chipSmall;
+
+  /// Jarak atas chip "Langkah" besar (desain 04: `padding-top: 9px`, isi
+  /// sejajar garis dasar huruf).
+  final double stepChipTop;
 
   /// Titik warna di chip status vas.
   final double dot;
@@ -818,6 +824,7 @@ class KoSize extends ThemeExtension<KoSize> {
     double? dashGap,
     double? ghostOpacity,
     double? chipSmall,
+    double? stepChipTop,
     double? dot,
     double? captionBox,
     double? stepBadge,
@@ -982,6 +989,7 @@ class KoSize extends ThemeExtension<KoSize> {
       dashGap: dashGap ?? this.dashGap,
       ghostOpacity: ghostOpacity ?? this.ghostOpacity,
       chipSmall: chipSmall ?? this.chipSmall,
+      stepChipTop: stepChipTop ?? this.stepChipTop,
       dot: dot ?? this.dot,
       captionBox: captionBox ?? this.captionBox,
       stepBadge: stepBadge ?? this.stepBadge,
@@ -1157,6 +1165,7 @@ class KoSize extends ThemeExtension<KoSize> {
       dashGap: d(dashGap, other.dashGap),
       ghostOpacity: d(ghostOpacity, other.ghostOpacity),
       chipSmall: d(chipSmall, other.chipSmall),
+      stepChipTop: d(stepChipTop, other.stepChipTop),
       dot: d(dot, other.dot),
       captionBox: d(captionBox, other.captionBox),
       stepBadge: d(stepBadge, other.stepBadge),

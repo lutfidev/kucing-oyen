@@ -14,6 +14,9 @@ import 'shop_tab.dart';
 /// Bar atas Toko: tombol kembali, judul, dan saldo koin yang membuka sheet
 /// Tambah Koin ([onCoins]). Titik merah di chip = bonus harian siap.
 class ShopBar extends StatelessWidget {
+  /// Tinggi baris judul "Toko" (`Toko.dc.html`: `line-height: 1`).
+  static const double titleHeight = 1;
+
   const ShopBar({
     super.key,
     required this.coins,
@@ -48,7 +51,10 @@ class ShopBar extends StatelessWidget {
               child: Text(
                 context.l10n.shop,
                 maxLines: 1,
-                style: context.koType.headlineSmall.copyWith(color: c.ink),
+                style: context.koType.headlineSmall.copyWith(
+                  color: c.ink,
+                  height: titleHeight,
+                ),
               ),
             ),
           ),
@@ -116,6 +122,9 @@ KoIconData _iconOf(ShopTab tab) => switch (tab) {
 };
 
 class _Tab extends StatelessWidget {
+  /// Tinggi baris label tab (`TabToko.dc.html`: `line-height: 1`).
+  static const double labelHeight = 1;
+
   const _Tab({
     required this.tab,
     required this.label,
@@ -159,7 +168,10 @@ class _Tab extends StatelessWidget {
               label,
               maxLines: 1,
               softWrap: false,
-              style: context.koType.tag.copyWith(color: ink),
+              style: context.koType.tag.copyWith(
+                color: ink,
+                height: labelHeight,
+              ),
             ),
           ),
         ],
@@ -494,6 +506,9 @@ class ShopGrid extends StatelessWidget {
 /// di kotak, nama, deskripsi, lalu "Adopsi · N", badge "Tinggal di kamar",
 /// atau harga pudar beserta selisih koinnya.
 class KittyCard extends StatelessWidget {
+  /// Tinggi baris nama kucing (`KartuToko.dc.html`: `line-height: 1`).
+  static const double nameHeight = 1;
+
   const KittyCard({
     super.key,
     required this.id,
@@ -561,7 +576,10 @@ class KittyCard extends StatelessWidget {
                   name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: context.koType.button.copyWith(color: c.ink),
+                  style: context.koType.button.copyWith(
+                    color: c.ink,
+                    height: nameHeight,
+                  ),
                 ),
                 SizedBox(height: space.s6),
                 Text(
@@ -668,6 +686,9 @@ class _PriceChip extends StatelessWidget {
 /// Kartu satu camilan (`KartuToko.dc.html`, jenis makanan): gambar, nama,
 /// deskripsi, stok, dan tombol beli yang langsung menambah stok.
 class SnackCard extends StatelessWidget {
+  /// Tinggi baris nama camilan (`KartuToko.dc.html`: `line-height: 1.1`).
+  static const double nameHeight = 1.1;
+
   const SnackCard({
     super.key,
     required this.id,
@@ -733,7 +754,10 @@ class SnackCard extends StatelessWidget {
                   name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: context.koType.chip.copyWith(color: c.ink),
+                  style: context.koType.chip.copyWith(
+                    color: c.ink,
+                    height: nameHeight,
+                  ),
                 ),
                 SizedBox(height: space.s4),
                 Text(

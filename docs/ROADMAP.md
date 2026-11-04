@@ -44,7 +44,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 28. Kamar: barang yang sedang dipakai (tempat berdiri, barang dinding, cermin)
 - [x] 29. Aksesibilitas, suara, dan putar ulang
 - [x] 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
-- [ ] 31. Tinggi baris teks mengikuti desain
+- [x] 31. Tinggi baris teks mengikuti desain
 - [ ] 32. Cek di HP dan persiapan rilis produksi
 
 Langkah 15–17 dipecah dari "Polish dan rilis Android" lama (diskusi dengan pemilik repo, 19 Okt 2026). Keputusan pasar, bahasa, iklan, dan isi Pengaturan dicatat di `docs/DESIGN_NOTES.md` bagian "Sebelum langkah 15"; prompt di bawah tidak perlu menanyakannya lagi.

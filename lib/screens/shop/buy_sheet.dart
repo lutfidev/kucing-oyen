@@ -164,13 +164,19 @@ class _BuySheetState extends State<_BuySheet> {
         Text(
           title,
           textAlign: TextAlign.center,
-          style: context.koType.title.copyWith(color: c.ink),
+          style: context.koType.title.copyWith(
+            color: c.ink,
+            height: _titleHeight,
+          ),
         ),
         SizedBox(height: space.s8),
         Text(
           body,
           textAlign: TextAlign.center,
-          style: context.koType.paragraph.copyWith(color: c.inkSoft),
+          style: context.koType.paragraph.copyWith(
+            color: c.inkSoft,
+            height: _bodyHeight,
+          ),
         ),
         SizedBox(height: space.s16),
         if (target is BuyAccessory && !_bought) ...[
@@ -312,3 +318,7 @@ class _Art extends StatelessWidget {
     );
   }
 }
+
+/// Tinggi baris judul dan isi sheet beli (`SheetBeli.dc.html`: 1.1 dan 1.4).
+const double _titleHeight = 1.1;
+const double _bodyHeight = 1.4;

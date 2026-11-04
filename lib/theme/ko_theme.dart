@@ -30,10 +30,16 @@ abstract final class KoTheme {
     );
     // Setiap gaya menulis jarak hurufnya sendiri (0 kalau desain tidak
     // menulis). Tanpa itu, gaya yang null diisi jarak huruf Material (0,25 di
-    // bodyMedium) dan diwariskan ke semua teks lewat DefaultTextStyle.
+    // bodyMedium) dan diwariskan ke semua teks lewat DefaultTextStyle. Tinggi
+    // baris sama: gaya KoType selalu menulis height, sisanya memakai tinggi
+    // baris normal Nunito (font bawaan tema) supaya 1,43 Material tidak ikut.
     TextStyle flat(TextStyle style) =>
         style.letterSpacing == null ? style.copyWith(letterSpacing: 0) : style;
-    const none = TextStyle(letterSpacing: 0);
+    const none = TextStyle(
+      letterSpacing: 0,
+      height: KoType.nunitoNormal,
+      leadingDistribution: TextLeadingDistribution.even,
+    );
     final textTheme = TextTheme(
       displayLarge: flat(t.display),
       displayMedium: flat(t.number),

@@ -73,10 +73,19 @@ void main() {
       final number = tester.widget<Text>(find.text('6')).style!;
       expect((number.fontFamily, number.fontSize), (KoFonts.fredoka, 24));
       // Label dan angka sejajar garis dasar huruf.
-      expect(
-        tester.getBottomLeft(find.text('Langkah')).dy,
-        lessThan(tester.getBottomLeft(find.text('6')).dy),
-      );
+      double baseline(String text) {
+        final box = tester.renderObject<RenderBox>(find.text(text));
+        return box.localToGlobal(Offset.zero).dy +
+            box.getDryBaseline(box.constraints, TextBaseline.alphabetic)!;
+      }
+
+      expect(baseline('Langkah'), closeTo(baseline('6'), 0.01));
+      expect(number.height, 1);
+      // Desain 04: padding-top 9 lalu baris angka setinggi 24 (line-height
+      // 1), jadi garis dasar 9 + (24 − 1,21 × 24) / 2 + 0,974 × 24 ≈ 29,9 px
+      // dari tepi atas chip.
+      final top = tester.getTopLeft(find.byType(KoChip)).dy;
+      expect(baseline('6') - top, closeTo(29.86, 0.5));
     });
   });
 

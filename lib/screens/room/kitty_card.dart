@@ -259,12 +259,18 @@ class _KittyCardState extends State<KittyCard> {
             children: [
               Text(
                 kittyName(l, _kitty),
-                style: t.headingLarge.copyWith(color: c.ink),
+                style: t.headingLarge.copyWith(
+                  color: c.ink,
+                  height: _nameHeight,
+                ),
               ),
               SizedBox(height: space.s2),
               Text(
                 kittyDesc(l, _kitty),
-                style: t.cardText.copyWith(color: c.inkSoft),
+                style: t.cardText.copyWith(
+                  color: c.inkSoft,
+                  height: _descHeight,
+                ),
               ),
             ],
           ),
@@ -681,7 +687,11 @@ class _SnackCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: space.s2),
-              Text(name, maxLines: 1, style: t.tag.copyWith(color: c.ink)),
+              Text(
+                name,
+                maxLines: 1,
+                style: t.tag.copyWith(color: c.ink, height: _optionHeight),
+              ),
               SizedBox(height: space.s2),
               Container(
                 height: s.roomStockBadge,
@@ -760,7 +770,7 @@ class _AccessoryOption extends StatelessWidget {
             Text(
               name,
               textAlign: TextAlign.center,
-              style: t.tag.copyWith(color: c.ink),
+              style: t.tag.copyWith(color: c.ink, height: _optionHeight),
             ),
             if (on && id != null) ...[
               SizedBox(height: space.s2),
@@ -784,3 +794,9 @@ class _AccessoryOption extends StatelessWidget {
     );
   }
 }
+
+/// Tinggi baris kartu kucing (`Kamar.dc.html`): nama 1.05, deskripsi 1.3,
+/// nama camilan dan aksesoris 1.1.
+const double _nameHeight = 1.05;
+const double _descHeight = 1.3;
+const double _optionHeight = 1.1;

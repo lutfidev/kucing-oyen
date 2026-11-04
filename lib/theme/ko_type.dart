@@ -75,6 +75,17 @@ class KoType extends ThemeExtension<KoType> {
     required this.buttonDone,
   });
 
+  /// Tinggi baris `normal` browser untuk Fredoka: (ascent 974 + descent
+  /// 236) / 1000 dari metrik font (`USE_TYPO_METRICS`). Dipakai gaya yang
+  /// desainnya tidak menulis `line-height`.
+  static const double fredokaNormal = 1.21;
+
+  /// Tinggi baris `normal` browser untuk Nunito: (1011 + 353) / 1000.
+  static const double nunitoNormal = 1.364;
+
+  /// Setiap gaya menulis `height` (dari `line-height` desain, atau `normal`
+  /// font kalau desain tidak menulis) dan membagi ruangnya rata seperti CSS.
+  /// Tanpa itu, teks mewarisi tinggi baris Material (1,43 di `bodyMedium`).
   static const standard = KoType(
     display: TextStyle(
       fontFamily: KoFonts.fredoka,
@@ -82,119 +93,159 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 46,
       fontWeight: FontWeight.w700,
       height: 1.05,
+      leadingDistribution: _even,
     ),
     title: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 26,
       fontWeight: FontWeight.w700,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     heading: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 20,
       fontWeight: FontWeight.w600,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     number: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 30,
       fontWeight: FontWeight.w700,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     body: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 15,
       fontWeight: FontWeight.w700,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     label: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 15,
       fontWeight: FontWeight.w800,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     overline: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 12,
       fontWeight: FontWeight.w800,
       letterSpacing: 1.2,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     buttonHero: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 34,
       fontWeight: FontWeight.w700,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     button: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 22,
       fontWeight: FontWeight.w700,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     chip: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 18,
       fontWeight: FontWeight.w600,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     numberSmall: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 20,
       fontWeight: FontWeight.w700,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     badge: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 14,
       fontWeight: FontWeight.w600,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     labelSmall: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 13,
       fontWeight: FontWeight.w800,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     chipLabel: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 14,
       fontWeight: FontWeight.w800,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     bodySmall: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 14,
       fontWeight: FontWeight.w700,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     caption: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 12,
       fontWeight: FontWeight.w700,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     numberMedium: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 24,
       fontWeight: FontWeight.w700,
+      height: 1,
+      leadingDistribution: _even,
     ),
     numberBadge: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 15,
       fontWeight: FontWeight.w700,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     paragraph: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 15,
       fontWeight: FontWeight.w700,
       height: 1.3,
+      leadingDistribution: _even,
     ),
     controlLabel: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 13,
       fontWeight: FontWeight.w700,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     overlineLarge: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 13,
       fontWeight: FontWeight.w800,
       letterSpacing: 1.2,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     headline: TextStyle(
       fontFamily: KoFonts.fredoka,
@@ -202,6 +253,7 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 32,
       fontWeight: FontWeight.w700,
       height: 1.1,
+      leadingDistribution: _even,
     ),
     headlineSmall: TextStyle(
       fontFamily: KoFonts.fredoka,
@@ -209,55 +261,70 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 28,
       fontWeight: FontWeight.w700,
       height: 1.1,
+      leadingDistribution: _even,
     ),
     numberCompact: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 22,
       fontWeight: FontWeight.w700,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     logoSmall: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 54,
       fontWeight: FontWeight.w700,
-      height: 0.88,
       letterSpacing: -0.5,
+      height: 0.88,
+      leadingDistribution: _even,
     ),
     logo: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 82,
       fontWeight: FontWeight.w700,
-      height: 0.88,
       letterSpacing: -0.5,
+      height: 0.88,
+      leadingDistribution: _even,
     ),
     bodyLarge: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 16,
       fontWeight: FontWeight.w700,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     numberChip: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 22,
       fontWeight: FontWeight.w600,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     numberChipSmall: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 15,
       fontWeight: FontWeight.w600,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     tag: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 12.5,
       fontWeight: FontWeight.w800,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     tagSmall: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 12,
       fontWeight: FontWeight.w800,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     headingLarge: TextStyle(
       fontFamily: KoFonts.fredoka,
@@ -265,18 +332,22 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 24,
       fontWeight: FontWeight.w700,
       height: 1.1,
+      leadingDistribution: _even,
     ),
     paragraphSmall: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 14,
       fontWeight: FontWeight.w700,
       height: 1.3,
+      leadingDistribution: _even,
     ),
     numberTick: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 13,
       fontWeight: FontWeight.w600,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     cardTitle: TextStyle(
       fontFamily: KoFonts.fredoka,
@@ -284,30 +355,37 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 17,
       fontWeight: FontWeight.w600,
       height: 1.2,
+      leadingDistribution: _even,
     ),
     cardBody: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 13.5,
       fontWeight: FontWeight.w700,
       height: 1.35,
+      leadingDistribution: _even,
     ),
     cardBodyStrong: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 13.5,
       fontWeight: FontWeight.w800,
       height: 1.4,
+      leadingDistribution: _even,
     ),
     numberRule: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 14,
       fontWeight: FontWeight.w700,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     newTag: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 14,
       fontWeight: FontWeight.w700,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     dialogTitle: TextStyle(
       fontFamily: KoFonts.fredoka,
@@ -315,59 +393,74 @@ class KoType extends ThemeExtension<KoType> {
       fontSize: 22,
       fontWeight: FontWeight.w600,
       height: 1.25,
+      leadingDistribution: _even,
     ),
     numberCoin: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 16,
       fontWeight: FontWeight.w600,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     numberTier: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 16,
       fontWeight: FontWeight.w700,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     hintReveal: TextStyle(
       fontFamily: KoFonts.nunito,
       fontSize: 14,
       fontWeight: FontWeight.w800,
       height: 1.35,
+      leadingDistribution: _even,
     ),
     numberCoinLarge: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 17,
       fontWeight: FontWeight.w600,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     cardLabel: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontSize: 16,
       fontWeight: FontWeight.w600,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     cardName: TextStyle(
       fontFamily: KoFonts.nunito,
       fontWeight: FontWeight.w800,
       fontSize: 15,
       height: 1.2,
+      leadingDistribution: _even,
     ),
     tagTiny: TextStyle(
       fontFamily: KoFonts.nunito,
       fontWeight: FontWeight.w800,
       fontSize: 11,
+      height: KoType.nunitoNormal,
+      leadingDistribution: _even,
     ),
     cardText: TextStyle(
       fontFamily: KoFonts.nunito,
       fontWeight: FontWeight.w700,
       fontSize: 13,
       height: 1.35,
+      leadingDistribution: _even,
     ),
     cardTextSmall: TextStyle(
       fontFamily: KoFonts.nunito,
       fontWeight: FontWeight.w700,
       fontSize: 12.5,
       height: 1.3,
+      leadingDistribution: _even,
     ),
     headingStrong: TextStyle(
       fontFamily: KoFonts.fredoka,
@@ -375,42 +468,55 @@ class KoType extends ThemeExtension<KoType> {
       fontWeight: FontWeight.w700,
       fontSize: 20,
       height: 1.05,
+      leadingDistribution: _even,
     ),
     buttonSoft: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontWeight: FontWeight.w600,
       fontSize: 19,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     logoRow: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontWeight: FontWeight.w700,
       fontSize: 17,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     buttonRoom: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontWeight: FontWeight.w700,
       fontSize: 32,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     buttonCard: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontWeight: FontWeight.w600,
       fontSize: 15,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     reaction: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontWeight: FontWeight.w700,
       fontSize: 18,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
     buttonDone: TextStyle(
       fontFamily: KoFonts.fredoka,
       fontFamilyFallback: _fredokaFallback,
       fontWeight: FontWeight.w700,
       fontSize: 17,
+      height: KoType.fredokaNormal,
+      leadingDistribution: _even,
     ),
   );
 
@@ -464,7 +570,7 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 700/12: keterangan kecil ("yang menyala").
   final TextStyle caption;
 
-  /// Fredoka 700/24: angka "Langkah" di bar atas fase jalan.
+  /// Fredoka 700/24, tinggi baris 1: angka "Langkah" di bar atas fase jalan.
   final TextStyle numberMedium;
 
   /// Fredoka 700/15: nomor langkah di lingkaran caption.
@@ -506,7 +612,8 @@ class KoType extends ThemeExtension<KoType> {
   /// Nunito 800/12,5: badge "Selesai" di kartu babak.
   final TextStyle tag;
 
-  /// Nunito 800/12: label "Main" di atas node level saat ini.
+  /// Nunito 800/12: label "Main" di atas node level saat ini, keterangan
+  /// kecil di kamar.
   final TextStyle tagSmall;
 
   /// Fredoka 700/24, tinggi baris 1,1: judul "Putar Ulang" (desain 09).
@@ -771,3 +878,7 @@ class KoType extends ThemeExtension<KoType> {
 
 /// Fredoka tidak punya semua glyph (panah, ↻); Nunito sebagai cadangan.
 const _fredokaFallback = [KoFonts.nunito];
+
+/// Ruang tinggi baris dibagi rata di atas dan bawah huruf, seperti CSS
+/// (Flutter bawaan membaginya menurut ascent dan descent font).
+const _even = TextLeadingDistribution.even;
