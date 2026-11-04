@@ -2,6 +2,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/screens/room/room_geometry.dart';
 
 void main() {
@@ -153,4 +154,187 @@ void main() {
       expect(sprites.skip(2).whereType<KittySprite>(), hasLength(1));
     },
   );
+
+  group('rute ke barang', () {
+    final geo = RoomGeometry(const Size(390, 652));
+
+    Map<RoomItemId, Spot> placedAt(Map<RoomItemId, (double, double)> at) => {
+      for (final MapEntry(key: id, value: (x, y)) in at.entries)
+        id: spotAt(roomItemOf(id), x, y),
+    };
+
+    Map<RoomItemId, Spot> defaults(Iterable<RoomItemId> ids) => {
+      for (final id in ids) id: roomItemOf(id).defaultSpot,
+    };
+
+    test('barang lantai: kaki dan tengah kucing tepat di kucing barangnya', () {
+      for (final kitty in [KittyId.oyen, KittyId.salju]) {
+        for (final id in [RoomItemId.kasur, RoomItemId.kardus]) {
+          final placed = defaults([id]);
+          final path = geo.pathTo(kitty, id, placed)!;
+          expect(path.hops, 0);
+          final stand = geo.catBoxOf(kitty, path.stand);
+          final user = geo.userBoxOf(
+            id,
+            geo.boxOf(roomItemOf(id), placed[id]!),
+          );
+          expect(stand.width, geo.catSize(kitty), reason: '$kitty $id');
+          expect(stand.center.dx, closeTo(user.center.dx, 0.01));
+          expect(geo.feetOf(stand), closeTo(geo.feetOf(user), 0.01));
+          expect(path.boxes, [stand, user]);
+        }
+      }
+    });
+
+    test('lukisan dan jam hanya hiasan: tidak punya rute', () {
+      final placed = defaults([
+        RoomItemId.lukisan,
+        RoomItemId.jam,
+        RoomItemId.tiang,
+      ]);
+      expect(geo.pathTo(KittyId.oyen, RoomItemId.lukisan, placed), isNull);
+      expect(geo.pathTo(KittyId.oyen, RoomItemId.jam, placed), isNull);
+    });
+
+    test('rak rendah: satu lompatan langsung dari lantai', () {
+      final placed = placedAt({RoomItemId.rak: (150, 340)});
+      final path = geo.pathTo(KittyId.salju, RoomItemId.rak, placed)!;
+      expect(path.hops, 1);
+      expect(path.boxes, hasLength(2));
+      final stand = path.boxes.first;
+      expect(geo.catBoxOf(KittyId.salju, path.stand), stand);
+      // Berdiri di lantai paling belakang, di bawah raknya.
+      expect(path.stand.y, 0);
+      final user = path.boxes.last;
+      expect(stand.center.dx, closeTo(user.center.dx, 0.01));
+    });
+
+    test('jendela tinggi tanpa pijakan: tidak bisa dinaiki', () {
+      final placed = placedAt({RoomItemId.jendelaBurung: (30, 160)});
+      expect(
+        geo.pathTo(KittyId.oyen, RoomItemId.jendelaBurung, placed),
+        isNull,
+      );
+    });
+
+    test('jendela tinggi dengan tiang di dekatnya: lewat puncak tiang', () {
+      final placed = defaults([RoomItemId.jendelaBurung, RoomItemId.tiang]);
+      final path = geo.pathTo(KittyId.oyen, RoomItemId.jendelaBurung, placed)!;
+      expect(path.hops, 2);
+      final [stand, perch, user] = path.boxes;
+      final post = geo.boxOf(
+        roomItemOf(RoomItemId.tiang),
+        placed[RoomItemId.tiang]!,
+      );
+      // Berdiri di depan tiang, lalu naik ke puncaknya.
+      // Di depan tiang (dijepit ke lantai kalau tiangnya di pojok).
+      expect(
+        (stand.center.dx - post.center.dx).abs(),
+        lessThanOrEqualTo(stand.width / 2),
+      );
+      expect(geo.feetOf(stand), closeTo(post.bottom, 0.01));
+      expect(perch.center.dx, closeTo(post.center.dx, 0.01));
+      expect(geo.feetOf(perch), lessThan(post.top + post.height * 0.1));
+      expect(perch.width, geo.catSize(KittyId.oyen));
+      expect(
+        user,
+        geo.userBoxOf(
+          RoomItemId.jendelaBurung,
+          geo.boxOf(
+            roomItemOf(RoomItemId.jendelaBurung),
+            placed[RoomItemId.jendelaBurung]!,
+          ),
+        ),
+      );
+    });
+
+    test('pijakan yang jauh dari barang dinding tidak dipakai', () {
+      final placed = {
+        ...placedAt({RoomItemId.jendelaBurung: (30, 160)}),
+        ...placedAt({RoomItemId.tiang: (330, 480)}),
+      };
+      expect(
+        geo.pathTo(KittyId.oyen, RoomItemId.jendelaBurung, placed),
+        isNull,
+      );
+    });
+
+    test('pijakan terdekat yang dipilih', () {
+      final placed = {
+        ...placedAt({RoomItemId.hammock: (230, 240)}),
+        ...placedAt({RoomItemId.akuarium: (180, 446)}),
+        ...placedAt({RoomItemId.tiang: (300, 330)}),
+      };
+      final path = geo.pathTo(KittyId.salju, RoomItemId.hammock, placed)!;
+      final post = geo.boxOf(
+        roomItemOf(RoomItemId.tiang),
+        placed[RoomItemId.tiang]!,
+      );
+      final tank = geo.boxOf(
+        roomItemOf(RoomItemId.akuarium),
+        placed[RoomItemId.akuarium]!,
+      );
+      final user = path.boxes.last;
+      final nearest =
+          (post.center.dx - user.center.dx).abs() <
+              (tank.center.dx - user.center.dx).abs()
+          ? post
+          : tank;
+      expect(path.boxes[1].center.dx, closeTo(nearest.center.dx, 0.01));
+    });
+
+    test(
+      'posisi bawaan kamar penuh: barang dinding yang bisa dipakai punya rute',
+      () {
+        final placed = defaults(roomItems.map((i) => i.id));
+        for (final id in [
+          RoomItemId.rak,
+          RoomItemId.hammock,
+          RoomItemId.jendelaBurung,
+          RoomItemId.lampuBulan,
+        ]) {
+          for (final kitty in [KittyId.oyen, KittyId.mochi]) {
+            expect(
+              geo.pathTo(kitty, id, placed),
+              isNotNull,
+              reason: '$id $kitty',
+            );
+          }
+        }
+      },
+    );
+
+    test('kotak lompat: mulai, tengah melengkung ke atas, dan akhir', () {
+      const a = Rect.fromLTWH(0, 100, 50, 50);
+      const b = Rect.fromLTWH(100, 0, 30, 30);
+      expect(hopBox([a, b], 0, arc: 20), rectMoreOrLessEquals(a));
+      expect(hopBox([a, b], 1, arc: 20), rectMoreOrLessEquals(b));
+      final mid = hopBox([a, b], 0.5, arc: 20);
+      expect(mid.width, closeTo(40, 0.01));
+      expect(mid.top, lessThan((a.top + b.top) / 2));
+      // Dua lompatan: separuh jalan = pijakan.
+      const c = Rect.fromLTWH(200, -50, 30, 30);
+      expect(hopBox([a, b, c], 0.5, arc: 20), rectMoreOrLessEquals(b));
+    });
+
+    test('barang dipakai dicerminkan kalau kotaknya keluar tepi', () {
+      final tiang = roomItemOf(RoomItemId.tiang);
+      final box = geo.boxOf(tiang, tiang.defaultSpot);
+      expect(geo.mirrorsInUse(RoomItemId.tiang, box), isTrue);
+      final kasur = roomItemOf(RoomItemId.kasur);
+      expect(
+        geo.mirrorsInUse(RoomItemId.kasur, geo.boxOf(kasur, kasur.defaultSpot)),
+        isFalse,
+      );
+      final user = geo.userBoxOf(RoomItemId.tiang, box);
+      expect(
+        user,
+        RoomItemArt.catBox(
+          RoomItemId.tiang,
+          RoomItemArt.inUseBox(RoomItemId.tiang, box, mirror: true),
+          mirror: true,
+        ),
+      );
+    });
+  });
 }

@@ -1,7 +1,10 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import '../../game/model/home_items.dart';
 import '../../game/model/kitties.dart';
+import '../../game/model/room_life.dart';
+import '../../game/render/room_item_art.dart';
 
 // Ukuran kamar di `Kamar.dc.html` (layar 390×844, panel bawah mulai 652):
 // dinding 0–412, trim 412–426, lantai 426–652.
@@ -17,6 +20,50 @@ const kittyRoomSize = 96.0;
 
 /// Kaki kucing di 92% tinggi kotak sprite: dipakai untuk urutan gambar.
 const catFeetFactor = 0.92;
+
+/// Lompatan kucing ke barang dinding, dalam px desain (dikali `artScale`):
+/// paling tinggi [catHopUp] per lompatan, dan pijakan paling jauh
+/// [catHopDepth] dari kaki dinding (ke depan) dan [catHopSide] ke samping
+/// dari kucing di barangnya.
+const catHopUp = 100.0;
+const catHopDepth = 120.0;
+const catHopSide = 120.0;
+
+/// Lengkung lompatan (px desain, dikali `artScale`).
+const catHopArc = 18.0;
+
+/// Barang lantai yang bisa jadi pijakan, dan tinggi permukaannya dari tepi
+/// atas gambar (px gambar desain): puncak tiang, sandaran sofa, bibir
+/// kardus, tutup akuarium. Atap rumah kucing runcing, jadi bukan pijakan.
+const perchTops = <RoomItemId, double>{
+  RoomItemId.tiang: 4,
+  RoomItemId.sofaMini: 8,
+  RoomItemId.kardus: 24,
+  RoomItemId.akuarium: 4,
+};
+
+/// Rute seekor kucing ke barang: [stand] = tempat berdiri di lantai,
+/// [boxes] = kotak kucing dari tempat berdiri, pijakan (kalau ada), sampai
+/// kucing di dalam barang. [hops] = jumlah lompatan (0 = barang lantai).
+class ItemPath {
+  const ItemPath(this.stand, this.boxes, {required this.hops});
+
+  final Spot stand;
+  final List<Rect> boxes;
+  final int hops;
+}
+
+/// Kotak kucing yang sedang melompat sepanjang [boxes] pada kemajuan
+/// [progress] 0–1 (lompatan sama panjang), melengkung setinggi [arc].
+Rect hopBox(List<Rect> boxes, double progress, {required double arc}) {
+  final hops = boxes.length - 1;
+  final p = progress.clamp(0.0, 1.0) * hops;
+  final i = math.min(p.floor(), hops - 1);
+  final raw = p - i;
+  final t = raw * raw * (3 - 2 * raw);
+  final box = Rect.lerp(boxes[i], boxes[i + 1], t)!;
+  return box.translate(0, -math.sin(math.pi * raw) * arc);
+}
 
 /// Peta [Spot] ke kotak layar untuk kamar seukuran [room]. Lebar
 /// mengikuti `scale`, gambar mengikuti `artScale` (rata-rata skala lebar
@@ -94,6 +141,112 @@ class RoomGeometry {
   }
 
   double feetOf(Rect catBox) => catBox.top + catBox.height * catFeetFactor;
+
+  /// [Spot] kucing [kitty] untuk kotak sprite [box] (kebalikan [catBoxOf],
+  /// dijepit ke lantai).
+  Spot catSpotAt(KittyId kitty, Rect box) {
+    final range = rangeOf(RoomZone.floor, Size.square(catSize(kitty)));
+    double unit(double v, double from, double span) =>
+        span == 0 ? 0 : (v - from) / span;
+    return Spot(
+      unit(box.left, range.left, range.width),
+      unit(box.top, range.top, range.height),
+    );
+  }
+
+  /// Kotak kucing [kitty] dengan tengah di [centerX] dan kaki di [feet].
+  Rect catBoxAtFeet(KittyId kitty, double centerX, double feet) {
+    final size = catSize(kitty);
+    return Rect.fromLTWH(
+      centerX - size / 2,
+      feet - size * catFeetFactor,
+      size,
+      size,
+    );
+  }
+
+  /// Barang dipakai digambar terbalik kalau kotak biasanya keluar tepi
+  /// kiri atau kanan kamar (mis. tiang garukan di pojok kiri).
+  bool mirrorsInUse(RoomItemId id, Rect box) {
+    final plain = RoomItemArt.inUseBox(id, box);
+    if (plain.left >= 0 && plain.right <= room.width) return false;
+    final flipped = RoomItemArt.inUseBox(id, box, mirror: true);
+    double outside(Rect r) =>
+        math.max(0.0, -r.left) + math.max(0.0, r.right - room.width);
+    return outside(flipped) < outside(plain);
+  }
+
+  /// Kotak kucing di barang [id] (kotak diam [box]) yang sedang dipakai.
+  Rect userBoxOf(RoomItemId id, Rect box) {
+    final mirror = mirrorsInUse(id, box);
+    return RoomItemArt.catBox(
+      id,
+      RoomItemArt.inUseBox(id, box, mirror: mirror),
+      mirror: mirror,
+    );
+  }
+
+  /// Rute kucing [kitty] untuk memakai barang [id] di kamar berisi
+  /// [placed], atau null kalau tidak bisa dipakai (hiasan saja, atau
+  /// barang dinding yang terlalu tinggi tanpa pijakan di dekatnya).
+  ///
+  /// Barang lantai: berdiri dengan kaki dan tengah di kucing barangnya.
+  /// Barang dinding: lompat langsung dari lantai paling belakang kalau
+  /// cukup rendah, selain itu lewat pijakan terdekat (berdiri di depannya,
+  /// naik ke permukaannya, lalu ke barangnya).
+  ItemPath? pathTo(KittyId kitty, RoomItemId id, Map<RoomItemId, Spot> placed) {
+    final spot = placed[id];
+    if (spot == null || lifeDecorOnly.contains(id)) return null;
+    final item = roomItemOf(id);
+    final user = userBoxOf(id, boxOf(item, spot));
+    final userFeet = feetOf(user);
+    final range = rangeOf(RoomZone.floor, Size.square(catSize(kitty)));
+    Rect onFloor(double centerX, double feet) {
+      final box = catBoxAtFeet(kitty, centerX, feet);
+      final left = box.left.clamp(range.left, range.right);
+      final top = box.top.clamp(range.top, range.bottom);
+      return Offset(left, top) & box.size;
+    }
+
+    ItemPath path(List<Rect> boxes, int hops) =>
+        ItemPath(catSpotAt(kitty, boxes.first), boxes, hops: hops);
+
+    if (item.zone == RoomZone.floor) {
+      return path([onFloor(user.center.dx, userFeet), user], 0);
+    }
+    final base = floor.top;
+    final up = catHopUp * artScale;
+    if (base - userFeet <= up) {
+      return path([onFloor(user.center.dx, userFeet), user], 1);
+    }
+    (double, Rect, Rect)? best;
+    for (final MapEntry(key: perchId, value: perchSpot) in placed.entries) {
+      final top = perchTops[perchId];
+      if (top == null) continue;
+      final perch = roomItemOf(perchId);
+      final box = boxOf(perch, perchSpot);
+      final surface =
+          box.top + top * box.height / RoomItemArt.sizeOf(perchId).height;
+      final side = (box.center.dx - user.center.dx).abs();
+      // Tinggi dihitung dari lantai, bukan dari layar: pijakan yang lebih
+      // depan tampak lebih rendah di layar, padahal setinggi barangnya.
+      if (box.bottom - base > catHopDepth * artScale ||
+          side > catHopSide * artScale ||
+          (base - userFeet) - (box.bottom - surface) > up) {
+        continue;
+      }
+      if (best == null || side < best.$1) {
+        best = (side, box, catBoxAtFeet(kitty, box.center.dx, surface));
+      }
+    }
+    if (best == null) return null;
+    final (_, perchBox, onPerch) = best;
+    return path([
+      onFloor(perchBox.center.dx, perchBox.bottom),
+      onPerch,
+      user,
+    ], 2);
+  }
 
   /// Kotak tetap desain (jendela, bidang kosong, panduan zona) ke layar.
   /// Tepi atas di dinding atau lantai mengikuti zonanya; ukuran ikut
