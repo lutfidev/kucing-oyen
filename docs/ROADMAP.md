@@ -41,7 +41,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 25. Peta bergambar dan Oyen berjalan ke level berikutnya
 - [x] 26. Potret toko dan rapi-rapi rumah Oyen
 - [x] 27. Rapi-rapi kamar: tag "Baru!", gelembung hadiah, label mangkuk, camilan penuh
-- [ ] 28. Kamar: barang yang sedang dipakai (tempat berdiri, barang dinding, cermin)
+- [x] 28. Kamar: barang yang sedang dipakai (tempat berdiri, barang dinding, cermin)
 - [ ] 29. Aksesibilitas, suara, dan putar ulang
 - [ ] 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
 - [ ] 31. Tinggi baris teks mengikuti desain
@@ -566,7 +566,7 @@ Aturan untuk langkah 27–32: sebelum mengubah, pastikan sarannya masih berlaku 
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 27".
 
-## 28. Kamar: barang yang sedang dipakai (tempat berdiri, barang dinding, cermin)
+## 28. Kamar: barang yang sedang dipakai (tempat berdiri, barang dinding, cermin) ✅
 
 **Hasil:** saran 5–7 selesai; kucing masuk dan keluar barang tanpa geser atau lompat yang aneh, dan barang yang dicerminkan tidak membalik corak, aksesoris, atau tulisan.
 
