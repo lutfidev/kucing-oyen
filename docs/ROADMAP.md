@@ -43,7 +43,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 27. Rapi-rapi kamar: tag "Baru!", gelembung hadiah, label mangkuk, camilan penuh
 - [x] 28. Kamar: barang yang sedang dipakai (tempat berdiri, barang dinding, cermin)
 - [x] 29. Aksesibilitas, suara, dan putar ulang
-- [ ] 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
+- [x] 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
 - [ ] 31. Tinggi baris teks mengikuti desain
 - [ ] 32. Cek di HP dan persiapan rilis produksi
 
@@ -605,9 +605,11 @@ Selesai: semantik papan tidak dibangun ulang selama seretan, kalimat pilih-lalu-
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 29".
 
-## 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
+## 30. Alat dan render: `SvgTemplate` dan berkas terjemahan ✅
 
 **Hasil:** saran 14–16 dan 23 selesai; CSS desain yang tidak didukung gagal keras di test, dan berkas tinjauan terjemahan tidak bisa basi diam-diam.
+
+Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity` gagal keras; `alternate` dengan easing tidak simetris ternyata sudah benar dan dikunci test; `make_review.py --check` di `/check` dan `review_files_test`; peninjau mengisi salinan; potret `01-beranda` jadi `19-kamar-baru`. Keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 30".
 
 > **Baca dulu:**
 > - `lib/game/render/css_animation.dart`, `SvgTemplate`, `test/game/render/css_animation_test.dart`, `design_sync_test.dart`
