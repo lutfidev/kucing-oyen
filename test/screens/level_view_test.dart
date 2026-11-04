@@ -14,6 +14,7 @@ import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/l10n/names.dart';
+import 'package:kucing_oren/screens/level/board_semantics.dart';
 import 'package:kucing_oren/screens/level/level_bar.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/level/run_panel.dart';
@@ -1414,6 +1415,38 @@ void main() {
         isSemantics(isSelected: false),
       );
       expect(_glowing(tester), isEmpty);
+      handle.dispose();
+    });
+
+    testWidgets('selama seretan petak tidak dibangun ulang; sesudahnya benar', (
+      tester,
+    ) async {
+      final handle = await open(tester);
+      List<BoardTileSemantics> tiles() =>
+          tester.widget<BoardSemantics>(find.byType(BoardSemantics)).tiles;
+      final before = tiles();
+      final gesture = await _dragToTile(
+        tester,
+        Item.fish,
+        2,
+        4,
+        release: false,
+      );
+      final dragging = tiles();
+      expect(identical(dragging, before), isFalse);
+      for (final dx in const [8.0, -8.0, 8.0]) {
+        await gesture.moveBy(Offset(dx, 0));
+        await tester.pump();
+        expect(identical(tiles(), dragging), isTrue);
+      }
+      await gesture.up();
+      await tester.pump();
+      expect(identical(tiles(), dragging), isFalse);
+      expect(
+        node('Baris 5, kolom 3: Ikan asin, kamu yang taruh').evaluate(),
+        hasLength(1),
+      );
+      expect(node('Ikan asin, sisa 0').evaluate(), hasLength(1));
       handle.dispose();
     });
 

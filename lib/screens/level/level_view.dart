@@ -146,6 +146,12 @@ class _LevelViewState extends State<LevelView>
   final _slotKeys = {for (final item in Item.values) item: GlobalKey()};
   _ItemDrag? _drag;
 
+  /// Petak pembaca layar dan seretan tempat petak itu dibuat. Selama satu
+  /// seretan isinya tidak berubah (pembaca layar tidak menyeret, papan baru
+  /// berubah saat dilepas), jadi tidak dibangun ulang tiap bingkai.
+  List<BoardTileSemantics>? _tiles;
+  _ItemDrag? _tilesDrag;
+
   /// Benda yang dipilih pembaca layar; null = tidak ada.
   _Pick? _picked;
 
@@ -414,6 +420,16 @@ class _LevelViewState extends State<LevelView>
 
   /// Petak papan untuk pembaca layar di fase atur, urut baris.
   List<BoardTileSemantics> _tileSemantics() {
+    final drag = _drag;
+    final cached = _tiles;
+    if (drag != null && identical(drag, _tilesDrag) && cached != null) {
+      return cached;
+    }
+    _tilesDrag = drag;
+    return _tiles = _buildTileSemantics();
+  }
+
+  List<BoardTileSemantics> _buildTileSemantics() {
     final l = context.l10n;
     final board = _level.board;
     final marks = hintMarks(_level, widget.hints?.hintTier(_level.id) ?? 0);
