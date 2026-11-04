@@ -5,9 +5,10 @@ import 'dart:math' as math;
 ///
 /// Hanya subset yang dipakai desain: fungsi transform `rotate`,
 /// `translate(X|Y)`, `scale(X|Y)`, properti `opacity`, `transform-origin`
-/// (px atau `center`), `transform-box: fill-box`, `animation` (nama, durasi,
-/// easing, `infinite`, `alternate`), dan `animation-delay`. Yang lain
-/// membuat pengurai gagal supaya tidak ada gerak yang hilang diam-diam.
+/// px (di koordinat pengguna) atau `center` (hanya bersama
+/// `transform-box: fill-box`), `animation` (nama, durasi, easing,
+/// `infinite`, `alternate`), dan `animation-delay`. Yang lain membuat
+/// pengurai gagal supaya tidak ada gerak yang hilang atau salah diam-diam.
 
 /// Satu fungsi transform, dinormalkan: `rotate` [derajat], `translate`
 /// [x, y], `scale` [x, y].
@@ -144,6 +145,9 @@ class CssKeyframes {
 
   final List<(double, List<CssTransformFn>)> _transform;
   final List<(double, double)> _opacity;
+
+  /// Ada keyframe yang menulis `opacity`.
+  bool get animatesOpacity => _opacity.isNotEmpty;
 
   /// Semua `@keyframes` di [css] menurut namanya.
   static Map<String, CssKeyframes> parse(String css) {
@@ -349,10 +353,22 @@ class CssStyle {
           throw FormatException('Gaya CSS tidak dikenal', key);
       }
     }
+    final fillBox = d['transform-box'] == 'fill-box';
+    // Dengan `fill-box`, origin px dihitung dari pojok kotak isi (dan origin
+    // bawaan SVG 0 0 = pojok itu juga), bukan dari koordinat pengguna.
+    // Desain hanya memakai `fill-box` bersama `center`.
+    if (fillBox != center) {
+      throw FormatException(
+        fillBox
+            ? 'fill-box hanya didukung dengan transform-origin: center'
+            : 'transform-origin: center hanya didukung dengan fill-box',
+        style,
+      );
+    }
     return CssStyle(
       originX: originX,
       originY: originY,
-      fillBox: d['transform-box'] == 'fill-box',
+      fillBox: fillBox,
       centerOrigin: center,
       animation: name,
       duration: duration,
@@ -387,6 +403,8 @@ class CssStyle {
     final cycles = elapsed / duration;
     final iteration = cycles.floor();
     var p = cycles - iteration;
+    // Putaran balik memakai kemajuan berarah, lalu easing per segmen
+    // (Web Animations), jadi easing ikut terbalik: ease-in tampak ease-out.
     if (alternate && iteration.isOdd) p = 1 - p;
     return frames.at(p, easing);
   }

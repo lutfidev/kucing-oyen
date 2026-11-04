@@ -1,14 +1,20 @@
 """Membuat berkas tinjauan terjemahan di docs/translations/ dari ARB.
 
-Pakai:  python tool/translations/make_review.py
+Pakai:  python tool/translations/make_review.py          (tulis ulang)
+        python tool/translations/make_review.py --check  (cek saja)
 
 Satu berkas per bahasa yang ditinjau penutur asli (Inggris, Portugis
 Brasil, Rusia): setiap kunci ARB dengan teks Inggris, teks bahasa itu,
 deskripsi, placeholder, dan kolom masukan kosong, lalu listing toko dari
 docs/store/. Jalankan ulang setiap kali ARB atau listing berubah.
+
+--check tidak menulis apa pun: keluar dengan kode 1 kalau ada berkas yang
+basi (berbeda dari hasil skrip), dipakai /check dan
+test/l10n/review_files_test.dart.
 """
 
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -26,7 +32,9 @@ GUIDE = """\
 **How to review.** Read each line the way a player would see it in the game.
 Write a better version in the *Feedback* column only where the text sounds
 wrong, stiff, or unnatural; leave it empty when it is fine. The same goes
-for the store listing at the end.
+for the store listing at the end. Fill in your own copy of this file and
+send it back: the copy in the repository is regenerated from the game
+files and anything written there is overwritten.
 
 - **Tone:** casual, warm, and a little funny, like a friend telling the
   story of a stubborn cat. Short is better: most lines sit on small buttons
@@ -130,13 +138,41 @@ def shift(path):
     return "\n".join(out)
 
 
+def check():
+    stale = []
+    for lang, name in LANGUAGES.items():
+        path = OUT / f"review-{lang}.md"
+        # Akhir baris diabaikan: git di Windows bisa menulis CRLF.
+        current = (
+            path.read_bytes().decode("utf-8").replace("\r\n", "\n")
+            if path.exists()
+            else None
+        )
+        if current != review(lang, name):
+            stale.append(path.relative_to(ROOT).as_posix())
+    if stale:
+        print("Berkas tinjauan terjemahan basi (ARB atau listing berubah):")
+        for path in stale:
+            print(f"  {path}")
+        print("Jalankan ulang: python tool/translations/make_review.py")
+        return 1
+    print("Berkas tinjauan terjemahan sesuai ARB dan listing.")
+    return 0
+
+
 def main():
+    if sys.argv[1:] == ["--check"]:
+        return check()
+    if sys.argv[1:]:
+        print(__doc__)
+        return 2
     OUT.mkdir(parents=True, exist_ok=True)
     for lang, name in LANGUAGES.items():
         path = OUT / f"review-{lang}.md"
         path.write_text(review(lang, name), encoding="utf-8", newline="\n")
         print(path.relative_to(ROOT))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
