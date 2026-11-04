@@ -123,6 +123,16 @@ class _RoomViewState extends State<RoomView>
   /// Geometri kamar terakhir (untuk seretan dan letak reaksi).
   RoomGeometry? _geo;
 
+  /// Rute tiap kucing ke tiap barang (lompatan ke barang dinding), dan
+  /// keadaan kamar yang menghasilkannya (rute dihitung ulang hanya kalau
+  /// keadaan itu berubah).
+  Map<(RoomItemId, KittyId), ItemPath> _paths = const {};
+  Object? _pathsKey;
+
+  /// Kotak tiap kucing yang tampil di bingkai terakhir (di lantai, di
+  /// dalam barang, atau melompat), untuk letak reaksi.
+  Map<KittyId, Rect> _shownBoxes = const {};
+
   /// Kucing yang kartunya terbuka.
   KittyId? _selected;
 
@@ -236,14 +246,32 @@ class _RoomViewState extends State<RoomView>
   void _syncKitties([RoomGeometry? geo]) {
     final home = _progress.home;
     final placed = home.room.placed;
-    _life.sync(
-      homes: {for (final kitty in home.kitties) kitty: _spotOf(kitty)},
-      targets: geo == null || _decorating
+    final key = (
+      geo?.room,
+      _decorating,
+      Object.hashAllUnordered(placed.entries.map((e) => (e.key, e.value))),
+      Object.hashAllUnordered(home.kitties),
+    );
+    if (key != _pathsKey) {
+      _pathsKey = key;
+      _paths = geo == null || _decorating
           ? const {}
           : {
-              for (final MapEntry(key: id, value: spot) in placed.entries)
-                id: _standSpot(geo, id, spot),
-            },
+              for (final id in placed.keys)
+                for (final kitty in home.kitties)
+                  (id, kitty): ?geo.pathTo(kitty, id, placed),
+            };
+    }
+    _life.sync(
+      homes: {for (final kitty in home.kitties) kitty: _spotOf(kitty)},
+      targets: {
+        for (final id in placed.keys)
+          id: {
+            for (final kitty in home.kitties)
+              if (_paths[(id, kitty)] case final path?)
+                kitty: LifeRoute(path.stand, hops: path.hops),
+          },
+      },
       uses: {for (final id in placed.keys) id: roomItemOf(id).use},
       toys: {
         for (final id in placed.keys)
@@ -257,26 +285,6 @@ class _RoomViewState extends State<RoomView>
         for (final kitty in home.kitties)
           if (_progress.catNeeds(kitty).isSad) kitty,
       },
-    );
-  }
-
-  /// Tempat kucing berdiri sebelum memakai barang [id] di [spot]: kakinya
-  /// di kaki kucing yang digambar barang itu saat dipakai.
-  Spot _standSpot(RoomGeometry geo, RoomItemId id, Spot spot) {
-    final box = geo.boxOf(roomItemOf(id), spot);
-    final mirror = _mirrored(geo, id, box);
-    final cat = RoomItemArt.catBox(
-      id,
-      RoomItemArt.inUseBox(id, box, mirror: mirror),
-      mirror: mirror,
-    );
-    final size = geo.catSize(KittyId.salju);
-    final range = geo.rangeOf(RoomZone.floor, Size.square(size));
-    final left = cat.center.dx - size / 2;
-    final top = cat.top + (cat.height - size) * catFeetFactor;
-    return Spot(
-      range.width == 0 ? 0 : (left - range.left) / range.width,
-      range.height == 0 ? 0 : (top - range.top) / range.height,
     );
   }
 
@@ -499,7 +507,8 @@ class _RoomViewState extends State<RoomView>
               ReactionOverlay(
                 key: ValueKey(n),
                 reaction: r,
-                anchor: geo.catBoxOf(kitty, _catSpot(kitty)),
+                anchor:
+                    _shownBoxes[kitty] ?? geo.catBoxOf(kitty, _catSpot(kitty)),
                 onDone: _reactionDone,
               ),
             if (praise case (final bonus, final n))
@@ -540,7 +549,8 @@ class _RoomViewState extends State<RoomView>
       },
       cats: {
         for (final kitty in home.kitties)
-          if (!widget.life || !_life.of(kitty).isInItem) kitty: _catSpot(kitty),
+          if (!widget.life || _life.of(kitty).activity.onFloor)
+            kitty: _catSpot(kitty),
       },
       geo: geo,
     );
@@ -551,7 +561,11 @@ class _RoomViewState extends State<RoomView>
       for (final sprite in sprites)
         if (sprite is ItemSprite && sprite.id == dragging) sprite,
     ];
-    final catBoxes = _catBoxes(sprites, geo);
+    final hopping = {
+      for (final kitty in home.kitties) kitty: ?_hopBox(kitty, geo),
+    };
+    final catBoxes = {..._catBoxes(sprites, geo), ...hopping};
+    _shownBoxes = catBoxes;
     final empty = _empty;
     final top = MediaQuery.paddingOf(context).top + space.s6;
     // Tag dan gelembung tidak naik ke bawah header dan tombol Hias, yang
@@ -607,6 +621,13 @@ class _RoomViewState extends State<RoomView>
                 ),
               ),
             },
+        // Kucing yang melompat ke atau dari barang dinding, paling depan.
+        for (final MapEntry(key: kitty, value: box) in hopping.entries)
+          Positioned.fromRect(
+            key: ValueKey(kitty),
+            rect: box,
+            child: _kitty(kitty, box, hopFacing: _hopFacing(kitty, geo)),
+          ),
         if (!_decorating)
           for (final MapEntry(key: kitty, value: box) in catBoxes.entries)
             if (_progress.catNeeds(kitty) case final needs when needs.isSad)
@@ -735,26 +756,44 @@ class _RoomViewState extends State<RoomView>
         case ItemSprite(:final id):
           final user = widget.life && !_decorating ? _life.userOf(id) : null;
           if (user == null) continue;
-          final mirror = _mirrored(geo, id, sprite.box);
-          boxes[user] = RoomItemArt.catBox(
-            id,
-            RoomItemArt.inUseBox(id, sprite.box, mirror: mirror),
-            mirror: mirror,
-          );
+          boxes[user] = geo.userBoxOf(id, sprite.box);
       }
     }
     return boxes;
   }
 
-  /// Barang dipakai digambar terbalik kalau kotak biasanya keluar tepi
-  /// kiri atau kanan kamar (mis. tiang garukan di pojok kiri).
-  bool _mirrored(RoomGeometry geo, RoomItemId id, Rect box) {
-    final plain = RoomItemArt.inUseBox(id, box);
-    if (plain.left >= 0 && plain.right <= geo.room.width) return false;
-    final flipped = RoomItemArt.inUseBox(id, box, mirror: true);
-    double outside(Rect r) =>
-        max(0.0, -r.left) + max(0.0, r.right - geo.room.width);
-    return outside(flipped) < outside(plain);
+  /// Rute lompatan kucing [kitty] yang sedang naik atau turun, urut dari
+  /// tempatnya sekarang; null kalau tidak sedang melompat.
+  List<Rect>? _hopBoxes(KittyId kitty) {
+    if (!widget.life || _decorating) return null;
+    final cat = _life.of(kitty);
+    final item = cat.item;
+    if (!cat.isHopping || item == null) return null;
+    final boxes = _paths[(item, kitty)]?.boxes;
+    if (boxes == null) return null;
+    return cat.activity == CatActivity.descending
+        ? boxes.reversed.toList()
+        : boxes;
+  }
+
+  Rect? _hopBox(KittyId kitty, RoomGeometry geo) {
+    final boxes = _hopBoxes(kitty);
+    if (boxes == null) return null;
+    return hopBox(
+      boxes,
+      _life.of(kitty).hopProgress,
+      arc: catHopArc * geo.artScale,
+    );
+  }
+
+  /// Arah hadap selama melompat: ke lompatan yang sedang dijalani.
+  KittyFacing _hopFacing(KittyId kitty, RoomGeometry geo) {
+    final boxes = _hopBoxes(kitty)!;
+    final hops = boxes.length - 1;
+    final i = min((_life.of(kitty).hopProgress * hops).floor(), hops - 1);
+    final dx = boxes[i + 1].center.dx - boxes[i].center.dx;
+    if (dx.abs() < geo.artScale) return KittyFacing.down;
+    return dx < 0 ? KittyFacing.left : KittyFacing.right;
   }
 
   /// Sisa waktu sampai mangkuk terisi lagi, atau null kalau mangkuknya
@@ -776,7 +815,7 @@ class _RoomViewState extends State<RoomView>
     final user = widget.life && !_decorating ? _life.userOf(id) : null;
     final time = _animating ? _time : null;
     if (user != null) {
-      final mirror = _mirrored(geo, id, sprite.box);
+      final mirror = geo.mirrorsInUse(id, sprite.box);
       final box = RoomItemArt.inUseBox(id, sprite.box, mirror: mirror);
       return Positioned.fromRect(
         key: ValueKey(id),
@@ -865,7 +904,7 @@ class _RoomViewState extends State<RoomView>
     );
   }
 
-  Widget _kitty(KittyId kitty, Rect box) {
+  Widget _kitty(KittyId kitty, Rect box, {KittyFacing? hopFacing}) {
     final needs = _progress.catNeeds(kitty);
     var pose = needs.isSad ? KittyPose.lesu : KittyPose.idle;
     var facing = KittyFacing.down;
@@ -886,6 +925,7 @@ class _RoomViewState extends State<RoomView>
         LifeHeading.right => KittyFacing.right,
       };
     }
+    facing = hopFacing ?? facing;
     return _kittyButton(
       kitty,
       KittyView(

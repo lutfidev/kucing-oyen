@@ -184,7 +184,7 @@ Map<String, Object> kittyVals(KittyLook look) {
     },
     'a': a,
     'b': {for (final id in _topGroup) id.name: accessory == id},
-    'flipT': look.facing == KittyFacing.right
+    'flipT': (look.facing == KittyFacing.right) != look.mirror
         ? 'translate(100 0) scale(-1 1)'
         : 'translate(0 0)',
     'headT': headT,

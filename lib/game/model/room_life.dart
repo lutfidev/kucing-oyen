@@ -17,11 +17,29 @@ enum CatActivity {
   /// Makan di mangkuk (memakai mangkuk).
   eating,
 
+  /// Melompat dari tempat berdiri ke barang dinding lewat pijakannya.
+  climbing,
+
+  /// Melompat turun dari barang dinding ke tempat berdirinya.
+  descending,
+
   /// Lesu: tidak berkeliling, hanya ke mangkuk kalau boleh makan.
   sad,
 
   /// Bereaksi karena dielus, diberi camilan, atau memakai aksesoris.
   reacting,
+}
+
+extension CatActivityPlace on CatActivity {
+  /// Kucing digambar sendiri di lantai (tidak di dalam barang dan tidak
+  /// sedang melompat).
+  bool get onFloor => switch (this) {
+    CatActivity.using ||
+    CatActivity.eating ||
+    CatActivity.climbing ||
+    CatActivity.descending => false,
+    _ => true,
+  };
 }
 
 /// Pose kucing di luar barang. Barang yang dipakai menentukan pose kucing
@@ -72,8 +90,15 @@ const lifeUseSeconds = 3.0;
 const lifeSleepSeconds = 6.0;
 const lifeEatSeconds = 3.0;
 
+/// Lama satu lompatan ke atau dari barang dinding (detik).
+const lifeHopSeconds = 0.45;
+
 /// Kecepatan jalan dalam px desain per detik (21c: ±70 px/detik).
 const lifeWalkSpeed = 70.0;
+
+/// Barang yang hanya hiasan, tidak pernah dipakai kucing kamar (lukisan
+/// dan jam dinding tidak punya pijakan yang masuk akal).
+const lifeDecorOnly = {RoomItemId.lukisan, RoomItemId.jam};
 
 /// Bobot undian tujuan: diam di tempat, dan barang menurut kegunaannya.
 const lifeIdleWeight = 3;
@@ -87,6 +112,26 @@ const lifeUseWeights = <ItemUse, int>{
   ItemUse.sit: 2,
   ItemUse.eat: 0,
 };
+
+/// Cara satu kucing memakai satu barang: [stand] = tempat berdiri di lantai
+/// sebelum memakai (kotak kucing seukuran kucing itu), [hops] = jumlah
+/// lompatan dari situ ke barangnya (0 = barang lantai, langsung dipakai).
+class LifeRoute {
+  const LifeRoute(this.stand, {this.hops = 0});
+
+  final Spot stand;
+  final int hops;
+
+  @override
+  bool operator ==(Object other) =>
+      other is LifeRoute && other.stand == stand && other.hops == hops;
+
+  @override
+  int get hashCode => Object.hash(stand, hops);
+
+  @override
+  String toString() => 'LifeRoute($stand, $hops)';
+}
 
 /// Keadaan satu kucing.
 class CatLife {
@@ -106,6 +151,17 @@ class CatLife {
 
   /// Detik sejak kegiatan ini mulai (untuk bingkai jalan).
   double elapsed = 0;
+
+  /// Jumlah lompatan ke barang yang dituju atau dipakai.
+  int hops = 0;
+
+  /// Kemajuan naik atau turun, 0–1 (lompatan ke-`floor(p * hops)`).
+  double get hopProgress =>
+      hops == 0 ? 0 : (elapsed / (hops * lifeHopSeconds)).clamp(0.0, 1.0);
+
+  /// Melompat naik atau turun dari barang dinding.
+  bool get isHopping =>
+      activity == CatActivity.climbing || activity == CatActivity.descending;
 
   /// Memakai barang (termasuk makan): kucingnya digambar barang itu.
   bool get isInItem =>
@@ -134,7 +190,7 @@ class RoomLife {
   bool paused = false;
 
   final _cats = <KittyId, CatLife>{};
-  Map<RoomItemId, Spot> _targets = const {};
+  Map<RoomItemId, Map<KittyId, LifeRoute>> _targets = const {};
   Map<RoomItemId, ItemUse> _uses = const {};
   Set<RoomItemId> _toys = const {};
   Set<KittyId> _hungry = const {};
@@ -149,6 +205,9 @@ class RoomLife {
     for (final cat in _cats.values) ?cat.item: cat.kitty,
   };
 
+  LifeRoute? _routeOf(RoomItemId? item, KittyId kitty) =>
+      item == null ? null : _targets[item]?[kitty];
+
   /// Kucing yang memakai [item] sekarang (bukan sekadar menuju).
   KittyId? userOf(RoomItemId item) {
     for (final cat in _cats.values) {
@@ -158,12 +217,13 @@ class RoomLife {
   }
 
   /// Menyamakan isi kamar: kucing ([homes] = tempat awal kucing baru),
-  /// tempat berdiri untuk memakai tiap barang ([targets]), kegunaannya,
-  /// mainan, kucing yang boleh makan dari mangkuk, dan yang lesu. Tujuan
-  /// yang hilang atau pindah membatalkan perjalanan dan pemakaiannya.
+  /// rute tiap kucing ke tiap barang ([targets]; barang tanpa rute untuk
+  /// seekor kucing tidak dituju kucing itu), kegunaannya, mainan, kucing
+  /// yang boleh makan dari mangkuk, dan yang lesu. Rute yang hilang atau
+  /// berubah membatalkan perjalanan dan pemakaiannya.
   void sync({
     required Map<KittyId, Spot> homes,
-    required Map<RoomItemId, Spot> targets,
+    required Map<RoomItemId, Map<KittyId, LifeRoute>> targets,
     required Map<RoomItemId, ItemUse> uses,
     Set<RoomItemId> toys = const {},
     Set<KittyId> hungry = const {},
@@ -178,9 +238,15 @@ class RoomLife {
     }
     for (final cat in _cats.values) {
       final item = cat.item;
-      if (item != null && _targets[item] != targets[item]) _rest(cat);
+      if (item != null &&
+          _routeOf(item, cat.kitty) != targets[item]?[cat.kitty]) {
+        _rest(cat);
+      }
     }
-    _targets = Map.of(targets);
+    _targets = {
+      for (final MapEntry(:key, :value) in targets.entries)
+        if (!lifeDecorOnly.contains(key)) key: Map.of(value),
+    };
     _uses = Map.of(uses);
     _toys = Set.of(toys);
     _hungry = Set.of(hungry);
@@ -205,23 +271,34 @@ class RoomLife {
     }
   }
 
-  /// Kucing [kitty] berhenti di tempat (reaksi selesai).
+  /// Kucing [kitty] berhenti di tempat (reaksi selesai). Kucing yang
+  /// sedang di atas (barang dinding atau lompatan ke sana) melanjutkan
+  /// kegiatannya, supaya tidak pindah mendadak ke lantai.
   void rest(KittyId kitty) {
-    if (_cats[kitty] case final cat?) _rest(cat);
+    final cat = _cats[kitty];
+    if (cat == null || _isRaised(cat)) return;
+    _rest(cat);
   }
 
+  /// Kucing di barang dinding atau sedang melompat ke atau darinya.
+  static bool _isRaised(CatLife cat) =>
+      cat.hops > 0 && (cat.isHopping || cat.activity == CatActivity.using);
+
   /// Kucing [kitty] bereaksi dengan [pose] selama [seconds], lalu lanjut
-  /// dari langkah berikutnya. Barang yang dipakainya dilepas.
+  /// dari langkah berikutnya. Barang yang dipakainya dilepas, kecuali
+  /// kucing yang sedang di atas: ia tetap di barang dinding atau
+  /// lompatannya (reaksinya hanya tampil di atasnya).
   void react(KittyId kitty, LifePose pose, double seconds) {
     final cat = _cats[kitty];
-    if (cat == null) return;
+    if (cat == null || _isRaised(cat)) return;
     cat
       ..item = null
       ..activity = CatActivity.reacting
       ..pose = pose
       ..heading = LifeHeading.down
       ..remaining = seconds
-      ..elapsed = 0;
+      ..elapsed = 0
+      ..hops = 0;
   }
 
   /// Maju [seconds] detik; peristiwa yang terjadi selama itu.
@@ -235,7 +312,19 @@ class RoomLife {
         continue;
       }
       cat.remaining -= seconds;
-      if (cat.remaining <= 0) _next(cat, events);
+      if (cat.remaining > 0) continue;
+      switch (cat.activity) {
+        case CatActivity.climbing:
+          _arrive(cat, events);
+        case CatActivity.using when cat.hops > 0:
+          cat
+            ..activity = CatActivity.descending
+            ..pose = LifePose.walk
+            ..elapsed = 0
+            ..remaining = cat.hops * lifeHopSeconds;
+        default:
+          _next(cat, events);
+      }
     }
     return events;
   }
@@ -248,11 +337,12 @@ class RoomLife {
       ..pose = sad ? LifePose.sad : LifePose.idle
       ..heading = LifeHeading.down
       ..remaining = lifeIdleSeconds
-      ..elapsed = 0;
+      ..elapsed = 0
+      ..hops = 0;
   }
 
   void _walk(CatLife cat, double seconds, List<LifeEvent> events) {
-    final target = _targets[cat.item];
+    final target = _routeOf(cat.item, cat.kitty)?.stand;
     if (target == null) return _rest(cat);
     final dx = (target.x - cat.spot.x) * spanX;
     final dy = (target.y - cat.spot.y) * spanY;
@@ -260,11 +350,21 @@ class RoomLife {
     final step = lifeWalkSpeed * seconds;
     if (distance <= step) {
       cat.spot = target;
-      _arrive(cat, events);
+      _reach(cat, events);
       return;
     }
     final f = step / distance;
     cat.spot = Spot(cat.spot.x + dx * f / spanX, cat.spot.y + dy * f / spanY);
+  }
+
+  /// Sampai di tempat berdiri: barang dinding dinaiki dulu.
+  void _reach(CatLife cat, List<LifeEvent> events) {
+    if (cat.hops == 0) return _arrive(cat, events);
+    cat
+      ..activity = CatActivity.climbing
+      ..pose = LifePose.walk
+      ..elapsed = 0
+      ..remaining = cat.hops * lifeHopSeconds;
   }
 
   void _arrive(CatLife cat, List<LifeEvent> events) {
@@ -290,11 +390,15 @@ class RoomLife {
   void _next(CatLife cat, List<LifeEvent> events) {
     final taken = users.keys.toSet();
     final bowl = _uses.entries
-        .where((e) => e.value == ItemUse.eat && _targets.containsKey(e.key))
+        .where(
+          (e) => e.value == ItemUse.eat && _routeOf(e.key, cat.kitty) != null,
+        )
         .map((e) => e.key)
         .firstOrNull;
     final wasEating = cat.activity == CatActivity.eating;
-    cat.item = null;
+    cat
+      ..item = null
+      ..hops = 0;
     if (bowl != null &&
         !wasEating &&
         _hungry.contains(cat.kitty) &&
@@ -306,7 +410,7 @@ class RoomLife {
       (null, lifeIdleWeight),
       for (final MapEntry(key: item, value: use) in _uses.entries)
         if (!taken.contains(item) &&
-            _targets.containsKey(item) &&
+            _routeOf(item, cat.kitty) != null &&
             (lifeUseWeights[use] ?? 0) > 0)
           (item, lifeUseWeights[use]!),
     ];
@@ -325,9 +429,11 @@ class RoomLife {
   }
 
   void _go(CatLife cat, RoomItemId item, List<LifeEvent> events) {
-    final target = _targets[item]!;
+    final route = _routeOf(item, cat.kitty)!;
+    final target = route.stand;
     cat
       ..item = item
+      ..hops = route.hops
       ..activity = CatActivity.walking
       ..pose = LifePose.walk
       ..elapsed = 0
@@ -336,6 +442,6 @@ class RoomLife {
           : target.x > cat.spot.x
           ? LifeHeading.right
           : LifeHeading.down;
-    if (target == cat.spot) _arrive(cat, events);
+    if (target == cat.spot) _reach(cat, events);
   }
 }

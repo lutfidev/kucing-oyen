@@ -414,6 +414,7 @@ class KittyLook {
     this.accessory,
     this.toy = KittyToy.ball,
     this.post = true,
+    this.mirror = false,
     this.time,
   });
 
@@ -431,6 +432,12 @@ class KittyLook {
   /// Tiang garukan di pose [KittyPose.scratch]; false kalau tiangnya sudah
   /// digambar barangnya sendiri.
   final bool post;
+
+  /// Badan dicerminkan (`flipT` desain) tanpa mengubah pose atau arah:
+  /// kucing di barang yang dicerminkan. Corak dan aksesoris ikut terbalik
+  /// seperti kucing yang menghadap kanan; Zzz, hati, "purr~", dan kilau
+  /// (di luar `flipT`) tidak.
+  final bool mirror;
 
   final double? time;
 
@@ -454,6 +461,7 @@ class KittyLook {
     bool clearAccessory = false,
     KittyToy? toy,
     bool? post,
+    bool? mirror,
     double? time,
     bool still = false,
   }) => KittyLook(
@@ -463,6 +471,7 @@ class KittyLook {
     accessory: clearAccessory ? null : accessory ?? this.accessory,
     toy: toy ?? this.toy,
     post: post ?? this.post,
+    mirror: mirror ?? this.mirror,
     time: still ? null : time ?? this.time,
   );
 
@@ -475,14 +484,16 @@ class KittyLook {
       other.accessory == accessory &&
       other.toy == toy &&
       other.post == post &&
+      other.mirror == mirror &&
       other.time == time;
 
   @override
   int get hashCode =>
-      Object.hash(kitty, pose, facing, accessory, toy, post, time);
+      Object.hash(kitty, pose, facing, accessory, toy, post, mirror, time);
 
   @override
   String toString() =>
       'KittyLook(${kitty.name}, ${pose.name}, ${facing.name}, '
-      '${accessory?.name}, ${toy.name}, post: $post, time: $time)';
+      '${accessory?.name}, ${toy.name}, post: $post, '
+      'mirror: $mirror, time: $time)';
 }

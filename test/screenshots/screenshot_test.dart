@@ -653,6 +653,74 @@ void main() {
     });
   }, skip: !screenshotsEnabled);
 
+  // Barang dinding dan cermin (langkah 28): Oyen naik ke jendela burung
+  // lewat puncak tiang, lalu memakai barang di tepi kamar (dicerminkan).
+  testWidgets('$folder/19-kamar-lompat', (tester) async {
+    setScreenSize(tester, _size);
+    Finder inUse(RoomItemId id) => find.byWidgetPredicate(
+      (w) => w is RoomItemView && w.id == id && w.user != null,
+    );
+    bool hopping() =>
+        find
+            .byWidgetPredicate(
+              (w) => w is KittyView && w.look.kitty == KittyId.oyen,
+            )
+            .evaluate()
+            .isNotEmpty &&
+        tester
+                .getRect(
+                  find
+                      .byWidgetPredicate(
+                        (w) => w is KittyView && w.look.kitty == KittyId.oyen,
+                      )
+                      .first,
+                )
+                .bottom <
+            430;
+    Future<bool> until(bool Function() done) async {
+      for (var i = 0; i < 6000 && !done(); i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      return done();
+    }
+
+    await withShadows(() async {
+      await tester.pumpWidget(
+        capturable(
+          KucingOrenApp(
+            progress: testProgressWith(
+              coins: 470,
+              best: _designProgress,
+              home: Home(
+                room: Room()
+                    .buy(RoomItemId.jendelaBurung)
+                    .buy(RoomItemId.tiang)
+                    .buy(RoomItemId.lampuBulan)
+                    .buy(RoomItemId.akuarium)
+                    .buy(RoomItemId.lukisan),
+              ),
+              clock: () => roomNow,
+            ),
+            roomRandom: () => Random(2),
+          ),
+        ),
+      );
+      for (final (name, done) in [
+        ('lompat', hopping),
+        (
+          'jendela',
+          () => inUse(RoomItemId.jendelaBurung).evaluate().isNotEmpty,
+        ),
+        ('lampu', () => inUse(RoomItemId.lampuBulan).evaluate().isNotEmpty),
+        ('tiang', () => inUse(RoomItemId.tiang).evaluate().isNotEmpty),
+      ]) {
+        if (await until(done)) {
+          await capture(tester, '$folder/19-kamar-$name');
+        }
+      }
+    });
+  }, skip: !screenshotsEnabled);
+
   for (final small in [false, true]) {
     final suffix = small ? '-360x640' : '';
     testWidgets('$folder/19-kamar$suffix', (tester) async {

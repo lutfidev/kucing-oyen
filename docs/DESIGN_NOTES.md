@@ -492,3 +492,27 @@ Saran 1–4 dan 22 dari tabel "Sesudah langkah 26" di `docs/ROADMAP.md`. Pemilik
   - **Kasus yang ternyata terpotong**: test baru di `shop_screen_test` menunjukkan label juga terpotong di id dan pt dengan teks 130%, bukan hanya en dan ru di 100%.
   - **Potret toko** `02-toko-aksesoris` en dan ru dibuat ulang. Keenam potret di keempat bahasa diperiksa dengan mata.
 
+## Langkah 28: Barang yang sedang dipakai
+
+Saran 5–7 dari tabel "Sesudah langkah 26" di `docs/ROADMAP.md`. Desain tidak menggambar perpindahan ke barang dinding maupun barang yang dicerminkan, jadi keputusan di bawah keputusan saya atas arahan pemilik repo (4 November 2026): kucing naik ke barang dinding lewat pijakan, tidak teleport, dan barang yang tidak punya pijakan masuk akal tidak dinaiki; cermin mengikuti desain.
+
+- **Tempat berdiri per kucing**: `RoomLife.sync(targets:)` kini berisi `LifeRoute` per barang per kucing, dihitung `RoomGeometry.pathTo` dengan ukuran kucing itu (Oyen 116, lainnya 96). Kaki dan tengah kucing yang berdiri = kaki dan tengah kucing di barangnya, jadi tidak ada geseran saat mulai memakai. Ukuran kucing di barang tetap dari tabel `cats` desain (sama untuk semua kucing), jadi Oyen mengecil sedikit di dalam barang seperti di desain.
+- **Lukisan dan jam dinding hanya hiasan** (`lifeDecorOnly`): tidak pernah dipakai kucing kamar. Gambar "dipakai"-nya tetap ada di galeri gerak (artboard desain 21c).
+- **Barang dinding** (rak, hammock, jendela burung, lampu bulan):
+  - **Tinggi** dihitung dari lantai, bukan dari layar: tinggi kaki kucing di barang di atas kaki dinding, dikurangi tinggi pijakan di atas lantai. Pijakan yang lebih depan tampak lebih rendah di layar padahal setinggi barangnya.
+  - **Lompat langsung** dari lantai paling belakang kalau tingginya paling banyak `catHopUp` 100 px desain (kira-kira setinggi kucing), mis. rak yang dipasang rendah.
+  - **Lewat pijakan** kalau lebih tinggi. Pijakan (`perchTops`) = barang lantai yang punya permukaan datar: puncak tiang garukan, sandaran sofa mini, bibir kardus, tutup akuarium. Atap rumah kucing runcing, jadi bukan pijakan. Pijakan harus paling jauh `catHopDepth` 120 px desain dari kaki dinding dan `catHopSide` 120 px ke samping dari kucing di barangnya, dan sisa tingginya paling banyak `catHopUp`. Kalau ada beberapa, dipilih yang paling dekat ke samping. Kucing berjalan ke depan pijakan, melompat ke permukaannya, lalu ke barangnya.
+  - **Tanpa pijakan**: barang itu tidak dituju. Memindahkan atau membeli pijakan langsung membuka atau menutup rutenya (rute dihitung ulang tiap bingkai; rute yang berubah membatalkan perjalanan kucing ke situ).
+  - **Gerak**: `CatActivity.climbing`/`descending`, `lifeHopSeconds` 0,45 detik per lompatan, kotak kucing di-*lerp* antar kotak rute (ukurannya ikut berubah ke ukuran kucing di barang) dengan lengkung `catHopArc` 18 px desain, kurva *smoothstep*, pose jalan, menghadap arah lompatan. Kucing yang melompat digambar paling depan. Selesai memakai, kucing turun lewat rute yang sama. Mainan (jendela burung) dihitung dipakai saat sampai di dalamnya, bukan saat mulai naik.
+  - **Kurangi gerak**: tidak berubah; kamar tanpa Ticker, jadi kucing tidak berjalan atau melompat sama sekali.
+  - **Dicek dengan mata**: kamar penuh di posisi bawaan memberi rute ke keempat barang dinding (jendela lewat tiang, hammock dan lampu lewat akuarium, rak langsung). Potret `19-kamar-lompat`, `-jendela`, `-lampu`, dan `-tiang` (`screenshot_test`).
+- **Lompatan pertama** (lantai ke pijakan) tidak dibatasi `catHopUp`: kucing memanjat perabot, jadi puncak tiang (±144 px desain) tetap boleh. Kucing di pijakan dekat tepi dijepit supaya tetap di dalam kamar.
+- **Reaksi di atas**: kucing yang sedang di barang dinding atau di tengah lompatan tidak turun saat dielus, diberi camilan, memakai aksesoris, atau hadiahnya diambil. Kegiatannya berlanjut (rutinitas tetap dijeda selama reaksi), dan reaksi melayang di atas kotak kucing yang sedang tampil, bukan di tempat berdirinya. Pose reaksinya tidak tampil karena barangnya yang menggambar kucing itu.
+- **Rute dihitung ulang** hanya kalau ukuran kamar, mode hias, barang yang ditaruh, atau kucing berubah (temuan review).
+- **Diterima apa adanya** (temuan Minor review):
+  - Pijakan yang sedang dipakai kucing lain (di kardus, di sofa, menggaruk tiang) tetap bisa dilewati.
+  - Kucing yang melompat selalu digambar paling depan.
+  - Ukuran layar berubah (putar, layar terbelah) membatalkan perjalanan dan pemakaian, jadi kucing di barang dinding kembali ke lantai.
+  - Lingkaran pilihan kucing tidak digambar untuk kucing yang melompat atau di dalam barang.
+- **Cermin** (`KittyLook.mirror`): barang yang dicerminkan tetap dibalik dengan kanvas, tapi kucingnya digambar di sisi lain barang dengan `flipT` desain (seperti kucing menghadap kanan), tanpa membalik kanvas. Corak dan aksesoris ikut terbalik seperti di desain; Zzz, hati, "purr~", dan kilau berada di luar `flipT`, jadi tetap terbaca. Berbeda dengan `facing: right`, `mirror` tidak mengubah pose duduk menjadi menyamping, jadi kucing di barang tetap berpose seperti tabel `cats`. Logika cermin (`mirrorsInUse`, `userBoxOf`) pindah dari `RoomView` ke `RoomGeometry`.
+

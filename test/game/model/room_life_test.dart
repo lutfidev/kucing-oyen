@@ -19,25 +19,33 @@ const _uses = {
   RoomItemId.kasur: ItemUse.sleep,
   RoomItemId.bola: ItemUse.play,
   RoomItemId.mangkuk: ItemUse.eat,
+  RoomItemId.rak: ItemUse.sit,
+  RoomItemId.jendelaBurung: ItemUse.watch,
 };
 
 void _sync(
   RoomLife life, {
   Set<KittyId> kitties = const {KittyId.oyen},
   Map<RoomItemId, Spot>? targets,
+  Map<RoomItemId, Map<KittyId, LifeRoute>> routes = const {},
   Set<KittyId> hungry = const {},
   Set<KittyId> sad = const {},
 }) => life.sync(
   homes: {for (final k in kitties) k: Spot(0.5, 0.5)},
-  targets:
-      targets ??
-      {
-        RoomItemId.kasur: _bed,
-        RoomItemId.bola: _ball,
-        RoomItemId.mangkuk: _bowl,
-      },
+  targets: {
+    for (final MapEntry(key: item, value: spot)
+        in (targets ??
+                {
+                  RoomItemId.kasur: _bed,
+                  RoomItemId.bola: _ball,
+                  RoomItemId.mangkuk: _bowl,
+                })
+            .entries)
+      item: {for (final k in kitties) k: LifeRoute(spot)},
+    ...routes,
+  },
   uses: _uses,
-  toys: const {RoomItemId.bola},
+  toys: const {RoomItemId.bola, RoomItemId.jendelaBurung},
   hungry: hungry,
   sad: sad,
 );
@@ -218,7 +226,12 @@ void main() {
     final oyen = life.of(KittyId.oyen).spot;
     life.sync(
       homes: {KittyId.oyen: Spot(0.5, 0.5), KittyId.mochi: Spot(0.1, 0.1)},
-      targets: {RoomItemId.kasur: _bed},
+      targets: {
+        RoomItemId.kasur: {
+          KittyId.oyen: LifeRoute(_bed),
+          KittyId.mochi: LifeRoute(_bed),
+        },
+      },
       uses: _uses,
     );
     expect(life.of(KittyId.oyen).spot, oyen);
@@ -235,5 +248,196 @@ void main() {
     }
 
     expect(trace(9), trace(9));
+  });
+
+  test('tempat berdiri per kucing: tiap kucing ke tempatnya sendiri', () {
+    final oyenSpot = Spot(0.9, 0.2);
+    final saljuSpot = Spot(0.85, 0.25);
+    for (final (kitty, spot) in [
+      (KittyId.oyen, oyenSpot),
+      (KittyId.salju, saljuSpot),
+    ]) {
+      final life = _life(3);
+      _sync(
+        life,
+        kitties: {kitty},
+        targets: const {},
+        routes: {
+          RoomItemId.kasur: {
+            KittyId.oyen: LifeRoute(oyenSpot),
+            KittyId.salju: LifeRoute(saljuSpot),
+          },
+        },
+      );
+      while (!life.of(kitty).isInItem) {
+        life.advance(_frame);
+      }
+      expect(life.of(kitty).spot, spot);
+    }
+  });
+
+  test('barang tanpa rute untuk kucing itu tidak pernah dituju', () {
+    final life = _life(3);
+    _sync(
+      life,
+      kitties: {KittyId.oyen, KittyId.salju},
+      targets: const {},
+      routes: {
+        RoomItemId.kasur: {KittyId.salju: LifeRoute(_bed)},
+      },
+    );
+    _run(life, 60, () {
+      expect(life.of(KittyId.oyen).item, isNull);
+    });
+    expect(life.of(KittyId.salju).item, anyOf(isNull, RoomItemId.kasur));
+  });
+
+  test('barang dinding: naik, pakai, lalu turun lewat pijakannya', () {
+    final life = _life(3);
+    final stand = Spot(0.3, 0);
+    _sync(
+      life,
+      targets: const {},
+      routes: {
+        RoomItemId.jendelaBurung: {KittyId.oyen: LifeRoute(stand, hops: 2)},
+      },
+    );
+    final cat = life.of(KittyId.oyen);
+    final seen = <CatActivity>[];
+    final events = _run(life, 40, () {
+      if (seen.lastOrNull != cat.activity) seen.add(cat.activity);
+      if (cat.activity case CatActivity.climbing || CatActivity.descending) {
+        expect(cat.isInItem, isFalse);
+        expect(cat.spot, stand);
+        expect(life.users[RoomItemId.jendelaBurung], KittyId.oyen);
+        expect(life.userOf(RoomItemId.jendelaBurung), isNull);
+        expect(cat.hops, 2);
+        expect(cat.hopProgress, inInclusiveRange(0, 1));
+      }
+    });
+    final climb = seen.indexOf(CatActivity.climbing);
+    expect(climb, greaterThan(0));
+    expect(seen.sublist(climb - 1, climb + 3), [
+      CatActivity.walking,
+      CatActivity.climbing,
+      CatActivity.using,
+      CatActivity.descending,
+    ]);
+    expect(
+      events,
+      contains(const UsedToy(KittyId.oyen, RoomItemId.jendelaBurung)),
+    );
+  });
+
+  test('naik dan turun masing-masing lifeHopSeconds per lompatan', () {
+    final life = _life(3);
+    _sync(
+      life,
+      targets: const {},
+      routes: {
+        RoomItemId.rak: {KittyId.oyen: LifeRoute(Spot(0.5, 0.5), hops: 2)},
+      },
+    );
+    final cat = life.of(KittyId.oyen);
+    while (cat.activity != CatActivity.climbing) {
+      life.advance(_frame);
+    }
+    expect(cat.hopProgress, 0);
+    life.advance(lifeHopSeconds);
+    expect(cat.activity, CatActivity.climbing);
+    expect(cat.hopProgress, closeTo(0.5, 1e-9));
+    life.advance(lifeHopSeconds + 0.01);
+    expect(cat.activity, CatActivity.using);
+    while (cat.activity == CatActivity.using) {
+      life.advance(_frame);
+    }
+    expect(cat.activity, CatActivity.descending);
+    expect(cat.hopProgress, 0);
+    life.advance(lifeHopSeconds * 2 + 0.01);
+    expect(cat.activity, isNot(CatActivity.descending));
+  });
+
+  test('dijeda di tengah lompatan: kucing turun di tempat berdirinya', () {
+    final life = _life(3);
+    final stand = Spot(0.3, 0);
+    _sync(
+      life,
+      targets: const {},
+      routes: {
+        RoomItemId.rak: {KittyId.oyen: LifeRoute(stand, hops: 1)},
+      },
+    );
+    final cat = life.of(KittyId.oyen);
+    while (cat.activity != CatActivity.climbing) {
+      life.advance(_frame);
+    }
+    life.interrupt();
+    expect(cat.activity, CatActivity.idle);
+    expect(cat.spot, stand);
+    expect(life.users, isEmpty);
+  });
+
+  test('reaksi di barang dinding: kucing tetap di barangnya, tidak turun', () {
+    final life = _life(3);
+    _sync(
+      life,
+      targets: const {},
+      routes: {
+        RoomItemId.rak: {KittyId.oyen: LifeRoute(Spot(0.3, 0), hops: 1)},
+      },
+    );
+    final cat = life.of(KittyId.oyen);
+    while (cat.activity != CatActivity.using) {
+      life.advance(_frame);
+    }
+    for (final pose in [LifePose.petted, LifePose.happy]) {
+      life.react(KittyId.oyen, pose, 1.6);
+      life.rest(KittyId.oyen);
+      expect(cat.activity, CatActivity.using);
+      expect(cat.item, RoomItemId.rak);
+      expect(life.userOf(RoomItemId.rak), KittyId.oyen);
+    }
+    // Lalu turun lewat rutenya seperti biasa.
+    while (cat.activity == CatActivity.using) {
+      life.advance(_frame);
+    }
+    expect(cat.activity, CatActivity.descending);
+  });
+
+  test('reaksi di tengah lompatan: lompatannya tidak putus', () {
+    final life = _life(3);
+    _sync(
+      life,
+      targets: const {},
+      routes: {
+        RoomItemId.rak: {KittyId.oyen: LifeRoute(Spot(0.3, 0), hops: 2)},
+      },
+    );
+    final cat = life.of(KittyId.oyen);
+    while (cat.activity != CatActivity.climbing) {
+      life.advance(_frame);
+    }
+    life.advance(lifeHopSeconds);
+    final progress = cat.hopProgress;
+    life.react(KittyId.oyen, LifePose.petted, 1.6);
+    life.rest(KittyId.oyen);
+    expect(cat.activity, CatActivity.climbing);
+    expect(cat.hopProgress, progress);
+  });
+
+  test('lukisan dan jam tidak dituju walau diberi rute', () {
+    final life = _life(3);
+    life.sync(
+      homes: {KittyId.oyen: Spot(0.5, 0.5)},
+      targets: {
+        RoomItemId.lukisan: {KittyId.oyen: LifeRoute(Spot(0.2, 0))},
+        RoomItemId.jam: {KittyId.oyen: LifeRoute(Spot(0.8, 0))},
+      },
+      uses: const {
+        RoomItemId.lukisan: ItemUse.watch,
+        RoomItemId.jam: ItemUse.play,
+      },
+    );
+    _run(life, 60, () => expect(life.of(KittyId.oyen).item, isNull));
   });
 }

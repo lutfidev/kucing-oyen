@@ -11,6 +11,8 @@ import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/render.dart';
+import 'package:kucing_oren/screens/room/room_geometry.dart';
+import 'package:kucing_oren/screens/room/room_reaction.dart';
 import 'package:kucing_oren/screens/room/room_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -377,5 +379,149 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
     expect(tester.widget<KittyView>(room.first).look, look);
+  });
+
+  group('barang dipakai', () {
+    Finder inUse(RoomItemId id) => find.byWidgetPredicate(
+      (w) => w is RoomItemView && w.id == id && w.user != null,
+    );
+
+    /// Kotak kucing yang digambar barang [id] yang sedang dipakai.
+    Rect userBox(WidgetTester tester, RoomItemId id) {
+      final view = tester.widget<RoomItemView>(inUse(id));
+      return RoomItemArt.catBox(
+        id,
+        tester.getRect(inUse(id)),
+        mirror: view.mirror,
+      );
+    }
+
+    double feet(Rect r) => r.top + r.height * catFeetFactor;
+
+    for (final kitty in [KittyId.oyen, KittyId.mochi]) {
+      testWidgets('${kitty.name} tidak bergeser saat mulai memakai kasur', (
+        tester,
+      ) async {
+        final home = Home(
+          room: Room().buy(RoomItemId.kasur),
+          kitties: {KittyId.oyen, kitty},
+        );
+        await _pump(tester, progress: testProgressWith(home: home, coins: 0));
+        Rect? last;
+        bool used() =>
+            inUse(RoomItemId.kasur).evaluate().isNotEmpty &&
+            tester.widget<RoomItemView>(inUse(RoomItemId.kasur)).user!.kitty ==
+                kitty;
+        for (var i = 0; i < 12000 && !used(); i++) {
+          if (kittyView(kitty).evaluate().isNotEmpty) {
+            last = tester.getRect(kittyView(kitty).first);
+          }
+          await tester.pump(const Duration(milliseconds: 16));
+        }
+        expect(used(), isTrue);
+        final cat = userBox(tester, RoomItemId.kasur);
+        expect(last, isNotNull);
+        // Satu bingkai jalan (70 px/detik) = ±1 px.
+        expect((last!.center.dx - cat.center.dx).abs(), lessThan(3));
+        expect((feet(last) - feet(cat)).abs(), lessThan(3));
+      });
+    }
+
+    testWidgets('jendela burung dinaiki lewat puncak tiang, tanpa teleport', (
+      tester,
+    ) async {
+      final home = Home(
+        room: Room().buy(RoomItemId.jendelaBurung).buy(RoomItemId.tiang),
+      );
+      await _pump(tester, progress: testProgressWith(home: home, coins: 0));
+      final post = tester.getRect(itemView(RoomItemId.tiang));
+      var aboveFloor = false;
+      var previous = Rect.zero;
+      var biggestJump = 0.0;
+      for (
+        var i = 0;
+        i < 2400 && inUse(RoomItemId.jendelaBurung).evaluate().isEmpty;
+        i++
+      ) {
+        await tester.pump(const Duration(milliseconds: 16));
+        if (kittyView(KittyId.oyen).evaluate().isEmpty) continue;
+        final rect = tester.getRect(kittyView(KittyId.oyen).first);
+        if (feet(rect) < post.center.dy) aboveFloor = true;
+        if (previous != Rect.zero) {
+          biggestJump = max(
+            biggestJump,
+            (rect.center - previous.center).distance,
+          );
+        }
+        previous = rect;
+      }
+      expect(inUse(RoomItemId.jendelaBurung), findsOneWidget);
+      // Oyen sempat berada di atas tiang sebelum masuk ke jendela.
+      expect(aboveFloor, isTrue);
+      // Bingkai terakhir sebelum masuk sudah di kucing jendelanya.
+      final cat = userBox(tester, RoomItemId.jendelaBurung);
+      expect((previous.center - cat.center).distance, lessThan(12));
+      // Tidak ada perpindahan mendadak antar bingkai.
+      expect(biggestJump, lessThan(20));
+    });
+
+    testWidgets(
+      'dielus di jendela burung: tetap di jendela, reaksi di atasnya',
+      (tester) async {
+        final home = Home(
+          room: Room().buy(RoomItemId.jendelaBurung).buy(RoomItemId.tiang),
+        );
+        await _pump(
+          tester,
+          progress: withNeeds({KittyId.oyen: (80, 50)}, home: home),
+        );
+        for (
+          var i = 0;
+          i < 3000 && inUse(RoomItemId.jendelaBurung).evaluate().isEmpty;
+          i++
+        ) {
+          await tester.pump(const Duration(milliseconds: 16));
+        }
+        final window = tester.getRect(inUse(RoomItemId.jendelaBurung));
+        final cat = userBox(tester, RoomItemId.jendelaBurung);
+        await tester.tap(inUse(RoomItemId.jendelaBurung));
+        await tester.pump();
+        final pet = find.text('Elus');
+        await tester.ensureVisible(pet);
+        await tester.pump();
+        await tester.tap(pet);
+        await tester.pump();
+        await tester.binding.handlePopRoute();
+        await tester.pump();
+        // Oyen tidak turun ke lantai: jendelanya masih menggambar Oyen.
+        expect(inUse(RoomItemId.jendelaBurung), findsOneWidget);
+        expect(tester.getRect(inUse(RoomItemId.jendelaBurung)), window);
+        expect(kittyView(KittyId.oyen), findsNothing);
+        // Reaksi melayang di atas Oyen di jendela, bukan di lantai.
+        final reaction = tester.getRect(find.byType(ReactionOverlay));
+        expect((reaction.center.dx - cat.center.dx).abs(), lessThan(4));
+        expect(reaction.bottom, lessThan(cat.center.dy));
+        for (var i = 0; i < 30; i++) {
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        expect(find.byType(ReactionOverlay), findsNothing);
+        expect(kittyView(KittyId.oyen), findsNothing);
+      },
+    );
+
+    testWidgets('lukisan dan jam dinding tidak pernah dipakai', (tester) async {
+      final home = Home(
+        room: Room()
+            .buy(RoomItemId.lukisan)
+            .buy(RoomItemId.jam)
+            .buy(RoomItemId.tiang),
+      );
+      await _pump(tester, progress: testProgressWith(home: home, coins: 0));
+      for (var i = 0; i < 600; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(inUse(RoomItemId.lukisan), findsNothing);
+        expect(inUse(RoomItemId.jam), findsNothing);
+      }
+    });
   });
 }

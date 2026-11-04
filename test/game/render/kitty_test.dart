@@ -207,4 +207,58 @@ void main() {
     expect(identical(kittyDrawing(moving), kittyDrawing(moving)), isFalse);
     expect(look.copyWith(time: 1).copyWith(still: true), look);
   });
+
+  group('dicerminkan', () {
+    /// Piksel berwarna [color] (persis) di kotak 0..180 sekitar sprite.
+    Future<Set<(int, int)>> pixelsOf(KittyLook look, String color) async {
+      final sample = await _sampler(look);
+      final target = _hex(color);
+      return {
+        for (var y = -_margin; y < 100 + _margin; y++)
+          for (var x = -_margin; x < 100 + _margin; x++)
+            if (sample(x, y) == target) (x.toInt(), y.toInt()),
+      };
+    }
+
+    test('Zzz tidak terbalik, badan terbalik', () async {
+      const look = KittyLook(kitty: KittyId.oyen, pose: KittyPose.sleep);
+      final mirrored = look.copyWith(mirror: true);
+      final zzz = await pixelsOf(look, '#2F86B8');
+      expect(zzz, isNotEmpty);
+      expect(await pixelsOf(mirrored, '#2F86B8'), zzz);
+      final fur = kittyPalette[KittyId.oyen]!.fur;
+      final body = await pixelsOf(look, fur);
+      final flippedBody = await pixelsOf(mirrored, fur);
+      expect(flippedBody, isNot(body));
+      // Badan dicerminkan di sumbu x = 50 (flipT desain).
+      final expected = {for (final (x, y) in body) (99 - x, y)};
+      final same = flippedBody.intersection(expected).length;
+      expect(same / body.length, greaterThan(0.9));
+    });
+
+    test('"purr~" dan hati tidak terbalik', () async {
+      const look = KittyLook(kitty: KittyId.salju, pose: KittyPose.petted);
+      for (final color in ['#A8456E', '#F07F9A']) {
+        final plain = await pixelsOf(look, color);
+        expect(plain, isNotEmpty, reason: color);
+        expect(
+          await pixelsOf(look.copyWith(mirror: true), color),
+          plain,
+          reason: color,
+        );
+      }
+    });
+
+    test('mirror ikut kesamaan dan cache', () {
+      const look = KittyLook(kitty: KittyId.oyen);
+      expect(look.copyWith(mirror: true), isNot(look));
+      expect(
+        identical(
+          kittyDrawing(look.copyWith(mirror: true)),
+          kittyDrawing(look),
+        ),
+        isFalse,
+      );
+    });
+  });
 }
