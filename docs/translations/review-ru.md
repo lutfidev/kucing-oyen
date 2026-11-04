@@ -90,7 +90,7 @@ for the store listing at the end.
 | `trayHintTop` | Drop on a | Ставь на | Tray hint, first line: "Place on a / glowing tile". | |
 | `trayHintBottom` | glowing tile | светлую клетку | Tray hint, second line. | |
 | `trayHintTapTop` | Pick an item, | Выбери вещь, | Tray hint with a screen reader on, first line: "Pick an item, / then tap a tile" (no dragging). | |
-| `trayHintTapBottom` | then tap a tile | потом нажми на клетку | Tray hint with a screen reader on, second line. | |
+| `trayHintTapBottom` | then tap a tile | и нажми на клетку | Tray hint with a screen reader on, second line. | |
 | `itemFish` | Salted fish | Солёная рыбка | Item name: salted fish. | |
 | `itemWater` | Water bucket | Ведро воды | Item name: water bucket. | |
 | `itemBox` | Box | Коробка | Item name: cardboard box. | |
@@ -212,7 +212,7 @@ for the store listing at the end.
 | `tutorial1Body` | Oyen walks to the bowl alone. You just watch. | Он сам дойдёт до миски. Тебе остаётся смотреть. | Tutorial level 1, small text. | |
 | `tutorial3Title` | Oyen can't resist salted fish! | Ойен обожает солёную рыбку! | Tutorial level 3 (fish), big text. | |
 | `tutorial3Body` | Drag a fish onto the floor. If Oyen sees it in a straight line, the chase is on. | Перетащи рыбку на пол. Если её видно по прямой, он сразу побежит за ней. | Tutorial level 3, small text. | |
-| `tutorial3BodyTap` | Pick the fish in the tray, then tap a floor tile. If Oyen sees it in a straight line, the chase is on. | Выбери рыбку среди вещей и нажми на клетку пола. Если её видно по прямой, он сразу побежит за ней. | Tutorial level 3, small text with a screen reader on (pick and tap instead of dragging). | |
+| `tutorial3BodyTap` | Pick the fish in the tray, then tap a floor tile. If Oyen sees it in a straight line, the chase is on. | Возьми рыбку из вещей и нажми на клетку пола. Если её видно по прямой, он сразу побежит за ней. | Tutorial level 3, small text with a screen reader on (pick and tap instead of dragging). | |
 | `tutorial6Title` | Oyen hates water. Like, really. | Ойен боится воды. Очень. | Tutorial level 6 (bucket), big text. | |
 | `tutorial6Body` | Put the bucket in the way. Water ahead means a spooked cat and a U-turn. | Поставь ведро на пути. Увидит воду — испугается и повернёт назад. | Tutorial level 6, small text. | |
 | `tutorialLabel` | Tutorial | Обучение | Screen reader label of the tutorial card. | |

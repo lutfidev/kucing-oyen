@@ -87,6 +87,24 @@ void main() {
     );
   });
 
+  test(
+    'pool yang selalu gagal dicoba paling banyak maxPoolTries kali',
+    () async {
+      var made = 0;
+      final player = AudioplayersSoundPlayer(
+        setUpContext: false,
+        newPool: (sound) async {
+          made++;
+          throw StateError('pool gagal');
+        },
+      );
+      for (var i = 0; i < 10; i++) {
+        await player.play(GameSound.tap);
+      }
+      expect(made, AudioplayersSoundPlayer.maxPoolTries);
+    },
+  );
+
   late List<_Deck> decks;
   late List<bool> failNext;
 

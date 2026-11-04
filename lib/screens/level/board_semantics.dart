@@ -51,6 +51,13 @@ class _BoardSemanticsState extends State<BoardSemantics> {
   Widget? _built;
 
   @override
+  void reassemble() {
+    super.reassemble();
+    // Hot reload: bangun ulang supaya perubahan [_tile] terlihat.
+    _built = null;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final tiles = widget.tiles;
     final built = _built;

@@ -259,7 +259,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get trayHintTapTop => 'Escolha um item,';
 
   @override
-  String get trayHintTapBottom => 'depois toque num quadrado';
+  String get trayHintTapBottom => 'e toque no quadrado';
 
   @override
   String get itemFish => 'Peixe salgado';

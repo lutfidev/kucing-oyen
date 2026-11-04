@@ -90,7 +90,7 @@ for the store listing at the end.
 | `trayHintTop` | Drop on a | Solte num | Tray hint, first line: "Place on a / glowing tile". | |
 | `trayHintBottom` | glowing tile | quadrado aceso | Tray hint, second line. | |
 | `trayHintTapTop` | Pick an item, | Escolha um item, | Tray hint with a screen reader on, first line: "Pick an item, / then tap a tile" (no dragging). | |
-| `trayHintTapBottom` | then tap a tile | depois toque num quadrado | Tray hint with a screen reader on, second line. | |
+| `trayHintTapBottom` | then tap a tile | e toque no quadrado | Tray hint with a screen reader on, second line. | |
 | `itemFish` | Salted fish | Peixe salgado | Item name: salted fish. | |
 | `itemWater` | Water bucket | Balde de água | Item name: water bucket. | |
 | `itemBox` | Box | Caixa | Item name: cardboard box. | |

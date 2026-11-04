@@ -271,7 +271,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get trayHintTapTop => 'Выбери вещь,';
 
   @override
-  String get trayHintTapBottom => 'потом нажми на клетку';
+  String get trayHintTapBottom => 'и нажми на клетку';
 
   @override
   String get itemFish => 'Солёная рыбка';
@@ -838,7 +838,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tutorial3BodyTap =>
-      'Выбери рыбку среди вещей и нажми на клетку пола. Если её видно по прямой, он сразу побежит за ней.';
+      'Возьми рыбку из вещей и нажми на клетку пола. Если её видно по прямой, он сразу побежит за ней.';
 
   @override
   String get tutorial6Title => 'Ойен боится воды. Очень.';

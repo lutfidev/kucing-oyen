@@ -1447,10 +1447,21 @@ void main() {
       );
       final dragging = tiles();
       expect(identical(dragging, before), isFalse);
+      Semantics firstTile() => tester.widget<Semantics>(
+        find
+            .descendant(
+              of: find.byType(BoardSemantics),
+              matching: find.byType(Semantics),
+            )
+            .first,
+      );
+      final tile = firstTile();
       for (final dx in const [8.0, -8.0, 8.0]) {
         await gesture.moveBy(Offset(dx, 0));
         await tester.pump();
         expect(identical(tiles(), dragging), isTrue);
+        // Petaknya juga tidak dibangun ulang.
+        expect(identical(firstTile(), tile), isTrue);
       }
       await gesture.up();
       await tester.pump();

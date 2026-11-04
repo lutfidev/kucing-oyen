@@ -12,7 +12,7 @@ void main() {
     for (final file in files) {
       for (final line in file.readAsLinesSync()) {
         if (RegExp(
-          r'''^(import|export) ['"](\.\./(app|screens)/|package:kucing_oren/(app|screens)/)''',
+          r'''^(import|export) ['"]((\.\./)+(app|screens)/|package:kucing_oren/(app|screens)/)''',
         ).hasMatch(line)) {
           bad.add('${file.path}: $line');
         }

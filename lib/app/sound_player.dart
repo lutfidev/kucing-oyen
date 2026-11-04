@@ -97,6 +97,14 @@ class AudioplayersSoundPlayer implements SoundPlayer {
   static const _maxOverlap = 3;
 
   final _pools = <GameSound, Future<AudioPool>>{};
+
+  /// Berapa kali pool tiap suara gagal dibuat.
+  final _poolFailures = <GameSound, int>{};
+
+  /// Pool yang gagal sebanyak ini tidak dicoba lagi sepanjang sesi: tiap
+  /// percobaan yang gagal meninggalkan satu pemutar native (`AudioPool`
+  /// membuat `AudioPlayer` sebelum sumbernya dimuat).
+  static const maxPoolTries = 3;
   MusicDeck? _music;
   MusicTrack? _track;
 
@@ -122,13 +130,16 @@ class AudioplayersSoundPlayer implements SoundPlayer {
       _queue = _queue.then((_) => _safe(action));
 
   /// Pool yang gagal dibuat dibuang dari cache, jadi dicoba lagi saat suara
-  /// itu diputar berikutnya.
+  /// itu diputar berikutnya, paling banyak [maxPoolTries] kali.
   Future<AudioPool> _pool(GameSound sound) {
     final cached = _pools[sound];
     if (cached != null) return cached;
     late final Future<AudioPool> pool;
     pool = _newPool(sound).catchError((Object error, StackTrace stack) {
-      if (identical(_pools[sound], pool)) _pools.remove(sound);
+      final failures = _poolFailures[sound] = (_poolFailures[sound] ?? 0) + 1;
+      if (failures < maxPoolTries && identical(_pools[sound], pool)) {
+        _pools.remove(sound);
+      }
       Error.throwWithStackTrace(error, stack);
     });
     return _pools[sound] = pool;
