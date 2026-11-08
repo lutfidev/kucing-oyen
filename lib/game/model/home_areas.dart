@@ -117,7 +117,8 @@ class HomeAreas {
   HomeAreas sync(Home before, Home after) {
     var next = HomeAreas._({
       for (final e in placed.entries)
-        if (after.room.owns(e.key) && after.room.isPlaced(e.key))
+        if (after.room.owns(e.key) &&
+            !(before.room.isPlaced(e.key) && !after.room.isPlaced(e.key)))
           e.key: e.value,
     });
     for (final id in RoomItemId.values) {

@@ -133,7 +133,8 @@ extension HouseholdController on ProgressController {
     var routine = _household.routine;
     for (final entry in routine.activities.entries) {
       final facility = entry.value.facility;
-      if (facility != null && !normal.placed.containsKey(facility)) {
+      if (facility != null &&
+          normal.placed[facility]?.area != entry.value.kind.area) {
         routine = routine.interrupt(entry.key);
       }
     }
@@ -160,6 +161,24 @@ extension _HouseholdTransactions on ProgressController {
     for (final at in [_needs.bowl.filledAt, _needs.decoratedAt]) {
       if (at != null && at.isAfter(now)) now = at;
     }
+    for (final day in [
+      ..._needs.rewardDays.values,
+      _rewards.bonusDay,
+      _rewards.adDay,
+    ]) {
+      if (day == null || day < 0 || day > 376200) continue;
+      final date = DateTime.fromMillisecondsSinceEpoch(
+        day * Duration.millisecondsPerDay,
+        isUtc: true,
+      );
+      final floor = DateTime(date.year, date.month, date.day);
+      if (floor.isAfter(now)) now = floor;
+    }
+    // Observe a high-water mark in memory too: getters and ordinary snapshot
+    // writes must not let a later wall-clock rollback restore needs.
+    if (now.isAfter(_household.effectiveAt)) {
+      _household = _household.copyWith(effectiveAt: now);
+    }
     return now;
   }
 
@@ -183,9 +202,11 @@ extension _HouseholdTransactions on ProgressController {
       return Future.value(false);
     }
     _homeBusy = true;
+    _homeSpend = change.coins < 0 ? -change.coins : 0;
     final task = _saving.then((_) async {
       final actual = rebuild == null ? change : rebuild();
       if (actual == null) return false;
+      if (_coins + actual.coins < 0) return false;
       final candidate = ProgressSnapshot(
         progress: _progress,
         tutorials: _tutorialsDone,
@@ -207,7 +228,10 @@ extension _HouseholdTransactions on ProgressController {
       }
       _home = candidate.home;
       _needs = candidate.needs;
-      _household = candidate.household;
+      final observed = _effectiveNow;
+      _household = candidate.household.copyWith(
+        effectiveAt: candidate.household.time(observed),
+      );
       // Puzzle/ads may have added coins while storage was awaiting. Preserve
       // that newer delta; their queued save writes the combined snapshot next.
       _coins += actual.coins;
@@ -216,6 +240,7 @@ extension _HouseholdTransactions on ProgressController {
     _saving = task.then<void>((_) {});
     return task.whenComplete(() {
       _homeBusy = false;
+      _homeSpend = 0;
       _notifyHousehold();
     });
   }

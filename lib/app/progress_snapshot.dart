@@ -59,7 +59,18 @@ class ProgressSnapshot {
       return raw is Map<String, dynamic> ? parse(raw) : backup;
     }
 
-    final home = part('home', Home.fromJson, fallback.home);
+    final backupHome = fallback.home.toJson();
+    final rawHome = json['home'];
+    final homeJson = <String, dynamic>{...backupHome};
+    if (rawHome is Map<String, dynamic>) {
+      for (final key in ['room', 'closet', 'pantry']) {
+        if (rawHome[key] is Map<String, dynamic>) homeJson[key] = rawHome[key];
+      }
+      for (final key in ['kitties', 'fresh']) {
+        if (rawHome[key] is List) homeJson[key] = rawHome[key];
+      }
+    }
+    final home = Home.fromJson(homeJson);
     final rawHints = json['hints'];
     return ProgressSnapshot(
       progress: part('progress', Progress.fromJson, fallback.progress),

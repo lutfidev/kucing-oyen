@@ -184,12 +184,37 @@ class HomeRoutine {
       for (final e in locations.entries)
         if (cats.contains(e.key)) e.key: e.value,
     };
+    var live = journeys.where((j) => j.cats.every(cats.contains)).toList();
+    HomeArea? freeArea() => HomeArea.values
+        .where(
+          (a) =>
+              map.values.where((v) => v == a).length +
+                  live
+                      .where(
+                        (j) =>
+                            !j.committed &&
+                            j.other == null &&
+                            j.from != j.to &&
+                            j.to == a,
+                      )
+                      .length <
+              a.capacity,
+        )
+        .firstOrNull;
     for (final k in KittyId.values.where(cats.contains)) {
       if (map.containsKey(k)) continue;
-      final area = HomeArea.values.firstWhere(
-        (a) =>
-            map.values.where((v) => v == a).length + reserved(a) < a.capacity,
-      );
+      var area = freeArea();
+      // Adoption can fill the last raw vacancy while a trip reserves it.
+      // Reclaim only a pre-threshold empty-slot reservation, at the safe
+      // origin. Its invitation remains queued and can reroute via a swap.
+      while (area == null) {
+        final reclaim = live
+            .where((j) => !j.committed && j.other == null && j.from != j.to)
+            .lastOrNull;
+        if (reclaim == null) throw StateError('Invalid household capacity');
+        live = live.where((j) => j.id != reclaim.id).toList();
+        area = freeArea();
+      }
       map[k] = area;
     }
     return _copy(
@@ -202,7 +227,7 @@ class HomeRoutine {
         for (final e in activities.entries)
           if (cats.contains(e.key)) e.key: e.value,
       },
-      journeys: journeys.where((j) => j.cats.every(cats.contains)).toList(),
+      journeys: live,
     );
   }
 
@@ -542,7 +567,10 @@ class HomeRoutine {
           }
           when id > 0 && left.isFinite && left >= 0) {
         final kind = HomeActivity.values.asNameMap()[name];
+        final rawFacility = (entry('activities') as Map)['facility'];
+        final facility = RoomItemId.values.asNameMap()[rawFacility];
         if (kind != null &&
+            (rawFacility == null || facility != null) &&
             kind != HomeActivity.rest &&
             state.locations[k] == kind.area &&
             left <= kind.seconds &&
@@ -554,8 +582,7 @@ class HomeRoutine {
             kind,
             left.toDouble(),
             player: player,
-            facility: RoomItemId.values
-                .asNameMap()[(entry('activities') as Map)['facility']],
+            facility: facility,
           );
           serial = max(serial, id);
         }

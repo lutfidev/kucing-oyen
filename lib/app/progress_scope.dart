@@ -68,10 +68,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
        _tutorialsDone = Set.unmodifiable(tutorialsDone),
        _hints = Map.unmodifiable(hints),
        _home = home ?? Home.initial,
-       _needs = (needs ?? HomeNeeds.empty).withKitties(
-         (home ?? Home.initial).kitties,
-         (clock ?? DateTime.now)(),
-       ),
+       _needs = needs ?? HomeNeeds.empty,
        clock = clock ?? DateTime.now,
        _seenDay = dayNumber((clock ?? DateTime.now)()),
        hintAds = hintAds ?? FakeRewardedAds(),
@@ -79,6 +76,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
        chapters = List.unmodifiable(chaptersOf(levels)) {
     _household = household ?? Household.migrate(_home, this.clock());
     _household = _household.copyWith(effectiveAt: _effectiveNow);
+    _needs = _needs.withKitties(_home.kitties, _effectiveNow);
   }
 
   /// Memuat progres, tutorial, koin, petunjuk, rumah, kebutuhan
@@ -110,7 +108,10 @@ class ProgressController extends ChangeNotifier implements HintSource {
       household: Household.migrate(
         home,
         now,
-        existing: home != Home.initial || progress.totalStars > 0,
+        existing:
+            home != Home.initial ||
+            progress.totalStars > 0 ||
+            needs.cats.isNotEmpty,
       ),
     );
     final raw = store is SnapshotStore
@@ -223,7 +224,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     switch (pay) {
       case HintPay.coins:
         final cost = hintCost(tier);
-        if (_coins < cost) return HintUnlock.notEnoughCoins;
+        if (_coins - _homeSpend < cost) return HintUnlock.notEnoughCoins;
         _coins -= cost;
       case HintPay.ad:
         _unlocking.add(levelId);
@@ -251,6 +252,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   late Household _household;
   final _homePauses = <HouseholdPause>{};
   bool _homeBusy = false;
+  int _homeSpend = 0;
   _HomeChange? _pendingHome;
   _HomeChange? Function()? _pendingHomeRebuild;
   void _notifyHousehold() => notifyListeners();

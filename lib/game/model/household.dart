@@ -100,16 +100,29 @@ class Household {
     DateTime now,
   ) {
     final at = json['at'];
+    final areas = json['areas'] is Map<String, dynamic>
+        ? HomeAreas.fromJson(json['areas'] as Map<String, dynamic>, home)
+        : HomeAreas.migrate(home);
+    var routine = json['routine'] is Map<String, dynamic>
+        ? HomeRoutine.fromJson(
+            json['routine'] as Map<String, dynamic>,
+            home.kitties,
+          )
+        : HomeRoutine.initial(home.kitties);
+    for (final e in routine.activities.entries) {
+      final facility = e.value.facility;
+      if (facility == null) continue; // Free structural ball/brush/rest area.
+      final usable =
+          home.room.owns(facility) &&
+          areas.placed[facility]?.area == e.value.kind.area &&
+          (e.value.kind == HomeActivity.eat
+              ? facility == RoomItemId.mangkuk
+              : e.value.kind == HomeActivity.play && roomItemOf(facility).toy);
+      if (!usable) routine = routine.interrupt(e.key);
+    }
     return Household(
-      areas: json['areas'] is Map<String, dynamic>
-          ? HomeAreas.fromJson(json['areas'] as Map<String, dynamic>, home)
-          : HomeAreas.migrate(home),
-      routine: json['routine'] is Map<String, dynamic>
-          ? HomeRoutine.fromJson(
-              json['routine'] as Map<String, dynamic>,
-              home.kitties,
-            )
-          : HomeRoutine.initial(home.kitties),
+      areas: areas,
+      routine: routine,
       effectiveAt: at is int && at >= 0 && at <= 32503680000000
           ? DateTime.fromMillisecondsSinceEpoch(at)
           : now,
