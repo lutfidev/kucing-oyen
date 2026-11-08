@@ -28,6 +28,11 @@ class GalleryScreen extends StatelessWidget {
             runSpacing: space.s16,
             children: [
               KoButton(
+                label: 'Aset v2',
+                kind: KoButtonKind.secondary,
+                onPressed: () => context.go(AppRoutes.galleryV2),
+              ),
+              KoButton(
                 label: 'Elemen papan',
                 kind: KoButtonKind.secondary,
                 onPressed: () => context.go(AppRoutes.galleryBoard),

@@ -1,0 +1,4424 @@
+{
+  "version": 2,
+  "source": "tool/art_v2/generate.py",
+  "license": "Original project artwork; see LICENSE.txt",
+  "canvas": [
+    128,
+    128
+  ],
+  "headAnchors": {
+    "headTop": [
+      64,
+      34
+    ],
+    "headSideLeft": [
+      38,
+      46
+    ],
+    "headSideRight": [
+      90,
+      46
+    ],
+    "face": [
+      64,
+      65
+    ],
+    "neck": [
+      64,
+      86
+    ]
+  },
+  "assets": {
+    "cats/oyen-body": {
+      "file": "cats/oyen-body.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/oyen-body-back": {
+      "file": "cats/oyen-body-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/oyen-tail": {
+      "file": "cats/oyen-tail.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/oyen-paw": {
+      "file": "cats/oyen-paw.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/oyen-head-open": {
+      "file": "cats/oyen-head-open.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/oyen-head-closed": {
+      "file": "cats/oyen-head-closed.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/oyen-head-happy": {
+      "file": "cats/oyen-head-happy.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/oyen-head-startled": {
+      "file": "cats/oyen-head-startled.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/oyen-head-tired": {
+      "file": "cats/oyen-head-tired.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/oyen-head-back": {
+      "file": "cats/oyen-head-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/oyen-head-side": {
+      "file": "cats/oyen-head-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/oyen-head-closed-side": {
+      "file": "cats/oyen-head-closed-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/oyen-head-happy-side": {
+      "file": "cats/oyen-head-happy-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/oyen-head-startled-side": {
+      "file": "cats/oyen-head-startled-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/oyen-head-tired-side": {
+      "file": "cats/oyen-head-tired-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-body": {
+      "file": "cats/salju-body.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/salju-body-back": {
+      "file": "cats/salju-body-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/salju-tail": {
+      "file": "cats/salju-tail.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/salju-paw": {
+      "file": "cats/salju-paw.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/salju-head-open": {
+      "file": "cats/salju-head-open.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-head-closed": {
+      "file": "cats/salju-head-closed.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-head-happy": {
+      "file": "cats/salju-head-happy.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-head-startled": {
+      "file": "cats/salju-head-startled.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-head-tired": {
+      "file": "cats/salju-head-tired.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-head-back": {
+      "file": "cats/salju-head-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-head-side": {
+      "file": "cats/salju-head-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-head-closed-side": {
+      "file": "cats/salju-head-closed-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-head-happy-side": {
+      "file": "cats/salju-head-happy-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-head-startled-side": {
+      "file": "cats/salju-head-startled-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/salju-head-tired-side": {
+      "file": "cats/salju-head-tired-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-body": {
+      "file": "cats/telon-body.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/telon-body-back": {
+      "file": "cats/telon-body-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/telon-tail": {
+      "file": "cats/telon-tail.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/telon-paw": {
+      "file": "cats/telon-paw.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/telon-head-open": {
+      "file": "cats/telon-head-open.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-head-closed": {
+      "file": "cats/telon-head-closed.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-head-happy": {
+      "file": "cats/telon-head-happy.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-head-startled": {
+      "file": "cats/telon-head-startled.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-head-tired": {
+      "file": "cats/telon-head-tired.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-head-back": {
+      "file": "cats/telon-head-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-head-side": {
+      "file": "cats/telon-head-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-head-closed-side": {
+      "file": "cats/telon-head-closed-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-head-happy-side": {
+      "file": "cats/telon-head-happy-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-head-startled-side": {
+      "file": "cats/telon-head-startled-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/telon-head-tired-side": {
+      "file": "cats/telon-head-tired-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-body": {
+      "file": "cats/arang-body.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/arang-body-back": {
+      "file": "cats/arang-body-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/arang-tail": {
+      "file": "cats/arang-tail.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/arang-paw": {
+      "file": "cats/arang-paw.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/arang-head-open": {
+      "file": "cats/arang-head-open.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-head-closed": {
+      "file": "cats/arang-head-closed.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-head-happy": {
+      "file": "cats/arang-head-happy.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-head-startled": {
+      "file": "cats/arang-head-startled.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-head-tired": {
+      "file": "cats/arang-head-tired.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-head-back": {
+      "file": "cats/arang-head-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-head-side": {
+      "file": "cats/arang-head-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-head-closed-side": {
+      "file": "cats/arang-head-closed-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-head-happy-side": {
+      "file": "cats/arang-head-happy-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-head-startled-side": {
+      "file": "cats/arang-head-startled-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/arang-head-tired-side": {
+      "file": "cats/arang-head-tired-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-body": {
+      "file": "cats/mendung-body.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/mendung-body-back": {
+      "file": "cats/mendung-body-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/mendung-tail": {
+      "file": "cats/mendung-tail.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/mendung-paw": {
+      "file": "cats/mendung-paw.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/mendung-head-open": {
+      "file": "cats/mendung-head-open.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-head-closed": {
+      "file": "cats/mendung-head-closed.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-head-happy": {
+      "file": "cats/mendung-head-happy.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-head-startled": {
+      "file": "cats/mendung-head-startled.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-head-tired": {
+      "file": "cats/mendung-head-tired.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-head-back": {
+      "file": "cats/mendung-head-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-head-side": {
+      "file": "cats/mendung-head-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-head-closed-side": {
+      "file": "cats/mendung-head-closed-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-head-happy-side": {
+      "file": "cats/mendung-head-happy-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-head-startled-side": {
+      "file": "cats/mendung-head-startled-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mendung-head-tired-side": {
+      "file": "cats/mendung-head-tired-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-body": {
+      "file": "cats/kopiSusu-body.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/kopiSusu-body-back": {
+      "file": "cats/kopiSusu-body-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/kopiSusu-tail": {
+      "file": "cats/kopiSusu-tail.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/kopiSusu-paw": {
+      "file": "cats/kopiSusu-paw.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/kopiSusu-head-open": {
+      "file": "cats/kopiSusu-head-open.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-head-closed": {
+      "file": "cats/kopiSusu-head-closed.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-head-happy": {
+      "file": "cats/kopiSusu-head-happy.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-head-startled": {
+      "file": "cats/kopiSusu-head-startled.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-head-tired": {
+      "file": "cats/kopiSusu-head-tired.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-head-back": {
+      "file": "cats/kopiSusu-head-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-head-side": {
+      "file": "cats/kopiSusu-head-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-head-closed-side": {
+      "file": "cats/kopiSusu-head-closed-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-head-happy-side": {
+      "file": "cats/kopiSusu-head-happy-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-head-startled-side": {
+      "file": "cats/kopiSusu-head-startled-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kopiSusu-head-tired-side": {
+      "file": "cats/kopiSusu-head-tired-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-body": {
+      "file": "cats/mochi-body.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/mochi-body-back": {
+      "file": "cats/mochi-body-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/mochi-tail": {
+      "file": "cats/mochi-tail.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/mochi-paw": {
+      "file": "cats/mochi-paw.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/mochi-head-open": {
+      "file": "cats/mochi-head-open.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-head-closed": {
+      "file": "cats/mochi-head-closed.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-head-happy": {
+      "file": "cats/mochi-head-happy.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-head-startled": {
+      "file": "cats/mochi-head-startled.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-head-tired": {
+      "file": "cats/mochi-head-tired.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-head-back": {
+      "file": "cats/mochi-head-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-head-side": {
+      "file": "cats/mochi-head-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-head-closed-side": {
+      "file": "cats/mochi-head-closed-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-head-happy-side": {
+      "file": "cats/mochi-head-happy-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-head-startled-side": {
+      "file": "cats/mochi-head-startled-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/mochi-head-tired-side": {
+      "file": "cats/mochi-head-tired-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-body": {
+      "file": "cats/bos-body.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/bos-body-back": {
+      "file": "cats/bos-body-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/bos-tail": {
+      "file": "cats/bos-tail.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/bos-paw": {
+      "file": "cats/bos-paw.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/bos-head-open": {
+      "file": "cats/bos-head-open.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-head-closed": {
+      "file": "cats/bos-head-closed.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-head-happy": {
+      "file": "cats/bos-head-happy.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-head-startled": {
+      "file": "cats/bos-head-startled.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-head-tired": {
+      "file": "cats/bos-head-tired.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-head-back": {
+      "file": "cats/bos-head-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-head-side": {
+      "file": "cats/bos-head-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-head-closed-side": {
+      "file": "cats/bos-head-closed-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-head-happy-side": {
+      "file": "cats/bos-head-happy-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-head-startled-side": {
+      "file": "cats/bos-head-startled-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/bos-head-tired-side": {
+      "file": "cats/bos-head-tired-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-body": {
+      "file": "cats/kembang-body.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/kembang-body-back": {
+      "file": "cats/kembang-body-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/kembang-tail": {
+      "file": "cats/kembang-tail.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/kembang-paw": {
+      "file": "cats/kembang-paw.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ]
+    },
+    "cats/kembang-head-open": {
+      "file": "cats/kembang-head-open.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-head-closed": {
+      "file": "cats/kembang-head-closed.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-head-happy": {
+      "file": "cats/kembang-head-happy.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-head-startled": {
+      "file": "cats/kembang-head-startled.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-head-tired": {
+      "file": "cats/kembang-head-tired.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-head-back": {
+      "file": "cats/kembang-head-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-head-side": {
+      "file": "cats/kembang-head-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-head-closed-side": {
+      "file": "cats/kembang-head-closed-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-head-happy-side": {
+      "file": "cats/kembang-head-happy-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-head-startled-side": {
+      "file": "cats/kembang-head-startled-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "cats/kembang-head-tired-side": {
+      "file": "cats/kembang-head-tired-side.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "anchors": {
+        "headTop": [
+          64,
+          34
+        ],
+        "headSideLeft": [
+          38,
+          46
+        ],
+        "headSideRight": [
+          90,
+          46
+        ],
+        "face": [
+          64,
+          65
+        ],
+        "neck": [
+          64,
+          86
+        ]
+      }
+    },
+    "accessories/pita": {
+      "file": "accessories/pita.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headSideRight"
+    },
+    "accessories/jepitBunga": {
+      "file": "accessories/jepitBunga.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headSideLeft"
+    },
+    "accessories/bandana": {
+      "file": "accessories/bandana.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "neck"
+    },
+    "accessories/dasiKupu": {
+      "file": "accessories/dasiKupu.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "neck"
+    },
+    "accessories/kalung": {
+      "file": "accessories/kalung.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "neck"
+    },
+    "accessories/syal": {
+      "file": "accessories/syal.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "neck"
+    },
+    "accessories/beanie": {
+      "file": "accessories/beanie.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headTop"
+    },
+    "accessories/topiKoki": {
+      "file": "accessories/topiKoki.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headTop"
+    },
+    "accessories/baret": {
+      "file": "accessories/baret.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headTop"
+    },
+    "accessories/kacamata": {
+      "file": "accessories/kacamata.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "face"
+    },
+    "accessories/headphone": {
+      "file": "accessories/headphone.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headTop"
+    },
+    "accessories/tandukRusa": {
+      "file": "accessories/tandukRusa.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headTop"
+    },
+    "accessories/topiPesta": {
+      "file": "accessories/topiPesta.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headTop"
+    },
+    "accessories/topiPenyihir": {
+      "file": "accessories/topiPenyihir.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headTop"
+    },
+    "accessories/mahkota": {
+      "file": "accessories/mahkota.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headTop"
+    },
+    "accessories/mahkotaRaja": {
+      "file": "accessories/mahkotaRaja.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "headTop"
+    },
+    "accessories/kacamata-back": {
+      "file": "accessories/kacamata-back.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "face"
+    },
+    "accessories/kalung-back": {
+      "file": "accessories/kalung-back.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "neck"
+    },
+    "accessories/dasiKupu-back": {
+      "file": "accessories/dasiKupu-back.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "neck"
+    },
+    "accessories/bandana-back": {
+      "file": "accessories/bandana-back.svg",
+      "width": 100,
+      "height": 80,
+      "pivot": [
+        50,
+        45
+      ],
+      "anchor": "neck"
+    },
+    "items/tikus-back": {
+      "file": "items/tikus-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/tikus-front": {
+      "file": "items/tikus-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/akuarium-back": {
+      "file": "items/akuarium-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": true
+    },
+    "items/akuarium-front": {
+      "file": "items/akuarium-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": true
+    },
+    "items/rumah-back": {
+      "file": "items/rumah-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": true
+    },
+    "items/rumah-front": {
+      "file": "items/rumah-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": true
+    },
+    "items/kasur-back": {
+      "file": "items/kasur-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": true
+    },
+    "items/kasur-front": {
+      "file": "items/kasur-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": true
+    },
+    "items/catnip-back": {
+      "file": "items/catnip-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/catnip-front": {
+      "file": "items/catnip-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/jam-back": {
+      "file": "items/jam-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/jam-front": {
+      "file": "items/jam-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/kardus-back": {
+      "file": "items/kardus-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": true
+    },
+    "items/kardus-front": {
+      "file": "items/kardus-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": true
+    },
+    "items/bola-back": {
+      "file": "items/bola-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/bola-front": {
+      "file": "items/bola-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/karpet-back": {
+      "file": "items/karpet-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/karpet-front": {
+      "file": "items/karpet-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/tiang-back": {
+      "file": "items/tiang-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/tiang-front": {
+      "file": "items/tiang-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/lukisan-back": {
+      "file": "items/lukisan-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/lukisan-front": {
+      "file": "items/lukisan-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/rak-back": {
+      "file": "items/rak-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/rak-front": {
+      "file": "items/rak-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/pancingan-back": {
+      "file": "items/pancingan-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/pancingan-front": {
+      "file": "items/pancingan-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/lampuBulan-back": {
+      "file": "items/lampuBulan-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/lampuBulan-front": {
+      "file": "items/lampuBulan-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/bantalIkan-back": {
+      "file": "items/bantalIkan-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/bantalIkan-front": {
+      "file": "items/bantalIkan-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/monstera-back": {
+      "file": "items/monstera-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": false
+    },
+    "items/monstera-front": {
+      "file": "items/monstera-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": false
+    },
+    "items/terowongan-back": {
+      "file": "items/terowongan-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": true
+    },
+    "items/terowongan-front": {
+      "file": "items/terowongan-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": true
+    },
+    "items/hammock-back": {
+      "file": "items/hammock-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": true
+    },
+    "items/hammock-front": {
+      "file": "items/hammock-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": true
+    },
+    "items/sofaMini-back": {
+      "file": "items/sofaMini-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": true
+    },
+    "items/sofaMini-front": {
+      "file": "items/sofaMini-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": true
+    },
+    "items/jendelaBurung-back": {
+      "file": "items/jendelaBurung-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": true
+    },
+    "items/jendelaBurung-front": {
+      "file": "items/jendelaBurung-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": true
+    },
+    "items/mangkuk-back": {
+      "file": "items/mangkuk-back.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "back",
+      "occludes": true
+    },
+    "items/mangkuk-front": {
+      "file": "items/mangkuk-front.svg",
+      "width": 128,
+      "height": 128,
+      "pivot": [
+        64,
+        116
+      ],
+      "interaction": [
+        64,
+        86
+      ],
+      "footY": 116,
+      "layer": "front",
+      "occludes": true
+    },
+    "rooms/santai-wall": {
+      "file": "rooms/santai-wall.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "wall"
+    },
+    "rooms/santai-floor": {
+      "file": "rooms/santai-floor.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "floor"
+    },
+    "rooms/santai-decor": {
+      "file": "rooms/santai-decor.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "decor"
+    },
+    "rooms/makan-wall": {
+      "file": "rooms/makan-wall.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "wall"
+    },
+    "rooms/makan-floor": {
+      "file": "rooms/makan-floor.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "floor"
+    },
+    "rooms/makan-decor": {
+      "file": "rooms/makan-decor.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "decor"
+    },
+    "rooms/main-wall": {
+      "file": "rooms/main-wall.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "wall"
+    },
+    "rooms/main-floor": {
+      "file": "rooms/main-floor.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "floor"
+    },
+    "rooms/main-decor": {
+      "file": "rooms/main-decor.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "decor"
+    },
+    "rooms/rawat-wall": {
+      "file": "rooms/rawat-wall.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "wall"
+    },
+    "rooms/rawat-floor": {
+      "file": "rooms/rawat-floor.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "floor"
+    },
+    "rooms/rawat-decor": {
+      "file": "rooms/rawat-decor.svg",
+      "width": 390,
+      "height": 390,
+      "pivot": [
+        0,
+        0
+      ],
+      "layer": "decor"
+    }
+  },
+  "animation": {
+    "walkFrames": 8,
+    "walkSeconds": 0.8,
+    "reactionFrames": 4,
+    "cache": "finite static parts; no frame cache"
+  }
+}
