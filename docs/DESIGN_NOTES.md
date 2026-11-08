@@ -38,6 +38,14 @@ Pilihan teknis vector mempertahankan proporsi/palet/outline A dengan permukaan r
 
 Token dan komponen baru ada di `KoUi`/`lib/widgets/v2/`, galeri `/galeri/ui-v2`. Tema dipasang per layar selama migrasi, dengan label empat bahasa. Ink di atas oranye terang; oranye gelap hanya bayangan tombol karena tidak memenuhi kontras 4,5:1 untuk teks normal. Fredoka memakai fallback NunitoUi untuk Cyrillic, regular Nunito dibundel dengan SIL OFL. Navigasi ringkas mempertahankan kata utuh pada teks 130%; tombol puzzle terpisah dari aktivitas Bermain. [Render, verifikasi dan batas](design-v2/ui/REVIEW.md). Model/simpanan dan layar pemain yang dijadwalkan berikutnya masih mengikuti fondasi sebelumnya.
 
+## Model rumah langkah 4 — 8 November 2026
+
+Fondasi `HomeArea`/`HomeAreas`/`HomeRoutine`/`Household` memisahkan empat area, slot barang, perjalanan, ajakan dan kegiatan dari renderer. Penempatan v2 tidak mengikuti koordinat atau status penempatan kamar v1; kepemilikan tetap katalog yang sama. Bola/alas/sikat dasar adalah fasilitas struktural gratis. Jangkar slot diskret, ambang perjalanan 0,5 detik dan pendekatan 1 detik adalah keputusan implementasi, bukan perubahan durasi kegiatan atau kuota.
+
+Progres gameplay produksi memakai satu snapshot JSON versi 2, dengan backup mentah v1 sebelum tulisan pertama; audio mempertahankan kuncinya. Aksi rumah pada store atomik baru terlihat setelah simpan sukses. Penempatan, ID kegiatan, kebutuhan dan hadiah dipulihkan bersama, waktu efektif mencakup timestamp serta hari hadiah tersimpan. Bila adopsi mengisi slot kosong terakhir yang sedang dipesan, perjalanan tunggal yang belum melewati ambang dibatalkan pada asal aman dan ajakannya tetap antre untuk dihitung ulang. Tidak memotong perjalanan berpasangan atau yang sudah commit. [Kontrak, hasil dan batas](design-v2/model/REVIEW.md).
+
+Layar rumah v1 belum menjalankan scheduler v2. Integrasi layar, alasan pause/lifecycle/iklan, ringkasan migrasi dan preferensi sistem Kurangi gerak mengikuti langkah 5–9/12–13. Tidak ada angka ekonomi atau aturan simulator yang berubah.
+
 ## Baseline sebelum paket aset v2
 
 - [Baseline performa kamar lama](performance-room-2026-11-08.md): 9 kucing, 21 barang termasuk mangkuk; sebelum/sesudah optimasi SVG, bingkai di atas 16,67 ms turun dari 14,3% menjadi 2,61%. Ini bukan kelulusan tampilan baru.
