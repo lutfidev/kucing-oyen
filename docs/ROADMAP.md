@@ -28,7 +28,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 1. Spesifikasi lengkap desain baru dan alur rumah
 - [x] 2. Aset kucing, furnitur, ruangan, dan animasi baru
 - [x] 3. Fondasi UI dan komponen sesuai desain baru
-- [ ] 4. Model banyak area, rutinitas, dan migrasi progres
+- [x] 4. Model banyak area, rutinitas, dan migrasi progres
 - [ ] 5. Beranda Santai dan perpindahan area
 - [ ] 6. Area Makan: otomatis dan ajakan pemain
 - [ ] 7. Area Bermain: otomatis dan ajakan pemain
@@ -85,6 +85,8 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 **Selesai jika:** galeri sesuai mockup, semua keadaan tekan/nonaktif/loading jelas, teks muat dan test komponen lulus.
 
 ## 4. Model banyak area, rutinitas, dan migrasi progres
+
+**Selesai implementasi pada 8 November 2026:** [kontrak dan verifikasi model](design-v2/model/REVIEW.md). Empat area dan slot barang, scheduler ajakan/otomatis/FIFO/fairness, perjalanan berpasangan dan pembatalan, pause serta keadaan aktivitas tersimpan. Snapshot gameplay versi 2/backup v1, transaksi rumah sesudah simpan sukses, pemulihan per bagian dan waktu efektif monotonik. Enam temuan review independen ditutup dengan regresi; 29 test baru, total 2.870 test lulus (135 skip historis), analyze/format/cek terjemahan/generator bersih. Layar pemain tetap v1 selama migrasi; penggerak lifecycle dan tampilan area dimulai langkah 5 setelah PR langkah ini di-merge.
 
 **Baca/ubah:** `lib/game/model/home.dart`, `room.dart`, `room_life.dart`, `needs.dart`; `lib/app/progress_scope.dart`, `progress_store.dart`; test model/progres.
 
