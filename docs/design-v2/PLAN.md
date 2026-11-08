@@ -10,13 +10,13 @@
 - [x] Tulis inventaris seluruh rute, sheet, keadaan dan kriteria pemeriksaan.
 - [x] Tulis token, tata letak ponsel, arah karakter/ruangan/aset, gerak dan aksesibilitas.
 - [x] Buat tiga papan mockup konsep dan wireframe untuk varian layar/sheet.
-- [ ] Pemilik repo meninjau dan menyepakati usulan perilaku serta visual.
-- [ ] Revisi sesuai tinjauan, tandai spesifikasi diterima, baru centang langkah 1 roadmap.
-- [ ] Setelah langkah selesai, finalisasi PR sesuai alur repo; merge dilakukan pemilik repo.
+- [x] Pemilik repo meninjau dan menyepakati usulan perilaku serta visual pada 8 November 2026.
+- [x] Revisi sesuai tinjauan, tandai spesifikasi diterima, baru centang langkah 1 roadmap.
+- [x] Finalisasi bahan PR #40; merge tetap dilakukan pemilik repo.
 
 ## Tinjauan yang dibutuhkan
 
-Usulan awal: empat area gratis; kapasitas Santai/Makan/Main/Rawat 3/2/2/2; ajakan antre tanpa memotong kegiatan; perawatan elus+sikat tanpa mandi/kebutuhan kebersihan; hadiah rumah 10/kucing/hari diklaim bersama; makanan/cooldown mengikuti v1. Seluruhnya dapat direvisi sebelum implementasi. Pemilik repo belum memberi persetujuan untuk usulan ini.
+Disetujui pada 8 November 2026: empat area gratis; kapasitas Santai/Makan/Main/Rawat 3/2/2/2; ajakan antre tanpa memotong kegiatan; perawatan elus+sikat tanpa mandi/kebutuhan kebersihan; hadiah rumah 10/kucing/hari diklaim bersama; makanan/cooldown mengikuti v1. Persetujuan eksplisit pemilik repo: “okee setuju sih sudah bagus hihi”. Masukan berikutnya akan disampaikan dan dicatat sebagai revisi spesifikasi.
 
 Gambar AI mengandung beberapa penyimpangan; baca koreksi di mockups/README.md. Wireframe membantu menilai struktur, bukan seni final. Langkah 2 tetap mencakup galeri dan tinjauan seluruh sembilan karakter/animasi.
 

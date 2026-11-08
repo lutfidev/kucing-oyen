@@ -590,7 +590,7 @@ Versi pertama berisi 20 level di dokumen ini, gratis, dengan iklan berhadiah seb
 
 ## Rumah Oyen dan desain baru
 
-Draf spesifikasi langkah 1 tersedia di [docs/design-v2](design-v2/README.md), mencakup alur empat area, kebutuhan/hadiah, migrasi dan seluruh keluarga layar. Seluruh aturan baru di sana masih usulan untuk tinjauan pemilik repo; angka dan perilaku runtime lama tidak berubah dalam langkah dokumentasi ini.
+Spesifikasi langkah 1 di [docs/design-v2](design-v2/README.md) disetujui pemilik repo pada 8 November 2026, mencakup alur empat area, kebutuhan/hadiah, migrasi dan seluruh keluarga layar. Implementasi mengikuti roadmap berikutnya; perilaku runtime lama tidak berubah dalam langkah dokumentasi ini.
 
 Rumah, koleksi kucing, aksesoris dan kebutuhan sudah tersedia pada runtime. Pada 8 November 2026 pemilik repo memilih perombakan seluruh visual mengikuti konsep A (satu area per layar), termasuk bentuk kucing. Rumah baru mendukung aktivitas otomatis dan ajakan pemain; rincian area, aturan kebutuhan dan hadiah ditetapkan pada langkah 1 roadmap baru.
 

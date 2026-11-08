@@ -18,13 +18,13 @@ Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lam
 - Simpanan lama harus dimigrasikan saat rumah menjadi beberapa area. Penomoran ulang roadmap tidak mereset progres pemain.
 - Aset/kode runtime lama diganti bertahap ketika penggantinya siap. Gambar dokumentasi lama dibuang agar tidak menjadi acuan yang keliru.
 
-## Keputusan terbuka untuk langkah 1
+## Persetujuan langkah 1 — 8 November 2026
 
-Draf konkret tersedia di [paket desain v2](design-v2/README.md), branch `feat/design-v2-spec`: spesifikasi, inventaris layar/keadaan, token, tiga papan mockup dan wireframe. **Belum disetujui pemilik repo.** Usulan: area gratis, kapasitas 3/2/2/2, antrean ajakan, elus+sikat tanpa mandi, hadiah gabungan dengan nominal v1. Status ini tidak mengubah keputusan terbuka di bawah atau perilaku aplikasi.
+Pemilik repo menyetujui arah visual dan usulan aturan setelah meninjau [paket desain v2](design-v2/README.md), branch `feat/design-v2-spec`, PR #40. Persetujuan eksplisit: “okee setuju sih sudah bagus hihi”; masukan selanjutnya akan disampaikan dan dicatat sebagai revisi. Disepakati: empat area gratis, kapasitas 3/2/2/2, antrean ajakan, elus+sikat tanpa mandi/kebutuhan kebersihan, hadiah gabungan dengan nominal v1. Langkah 1 selesai; runtime belum berubah.
 
 Snapshot kode aplikasi lama telah dibuat dan di-push atas permintaan pemilik repo di branch [`archive/v1-desain-lama`](https://github.com/lutfidev/kucing-oyen/tree/archive/v1-desain-lama), commit `3c472b1`. Arsip tidak digunakan untuk pengembangan desain baru; dokumentasi snapshot sudah memuat arah redesign.
 
-Rincian empat area, kapasitas kucing, perpindahan/antrean, prioritas ajakan, pembatalan, hadiah, hias per area, dan pengenalan fitur. Mandi, kebutuhan kebersihan, hadiah gabungan serta batas 3–4 kucing per layar belum merupakan aturan final.
+Rincian empat area, perpindahan/antrean, prioritas ajakan, pembatalan, hadiah, hias per area, pengenalan fitur dan migrasi mengikuti SPEC. Koreksi penyimpangan gambar dalam mockups/README.md tetap berlaku.
 
 Target visual, aset/animasi dan seluruh keadaan layar dijabarkan dalam spesifikasi baru sebelum implementasi. Jangan menyalin ukuran dari HTML desain lama yang sudah dihapus.
 

@@ -1,6 +1,6 @@
 # Desain v2 — bahan tinjauan langkah 1
 
-Status: **DRAF, belum disetujui pemilik repo**. Runtime masih desain v1.
+Status: **DISETUJUI pemilik repo pada 8 November 2026** setelah tinjauan mockup dan usulan aturan. Langkah 1 selesai. Runtime masih desain v1; implementasi mengikuti langkah 2–16. Masukan selanjutnya dicatat sebagai revisi spesifikasi.
 
 - [Spesifikasi](SPEC.md): aturan usulan dan batas implementasi.
 - [Inventaris layar dan keadaan](SCREENS.md): cakupan rute, sheet, dan keadaan gagal.

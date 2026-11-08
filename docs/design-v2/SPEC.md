@@ -1,12 +1,12 @@
-# Spesifikasi v2 — usulan untuk ditinjau
+# Spesifikasi v2 — disetujui
 
-8 November 2026 · langkah 1 · **DRAF, belum persetujuan implementasi**.
+8 November 2026 · langkah 1 · **DISETUJUI pemilik repo**.
 
 ## Batas dan hasil yang dituju
 
-Seluruh tampilan mengikuti konsep A: satu area per layar, kucing besar dan bulat, ruangan hangat berlapis, kontrol ringkas. Fondasi Flutter + Flame, 20 level, simulator, solver, ekonomi puzzle, empat bahasa, suara, dan iklan dipertahankan. Dokumen ini mengusulkan perilaku rumah yang sebelumnya belum diputuskan. Hanya pilihan konsep A, perubahan seluruh visual, serta aktivitas otomatis dan ajakan yang sudah disepakati pemilik repo.
+Seluruh tampilan mengikuti konsep A: satu area per layar, kucing besar dan bulat, ruangan hangat berlapis, kontrol ringkas. Fondasi Flutter + Flame, 20 level, simulator, solver, ekonomi puzzle, empat bahasa, suara, dan iklan dipertahankan. Pemilik repo menyetujui arah visual dan usulan aturan dalam dokumen ini pada 8 November 2026 setelah tinjauan paket desain. Spesifikasi menjadi dasar implementasi bertahap; masukan selanjutnya dicatat sebagai revisi.
 
-Implementasi berjalan bertahap sesuai roadmap 2–16 setelah spesifikasi diterima. Tidak ada perubahan runtime pada langkah 1. Seluruh angka baru di bawah adalah usulan konkret untuk ditinjau, bukan hasil pengujian pemain.
+Implementasi berjalan bertahap sesuai roadmap 2–16. Tidak ada perubahan runtime pada langkah 1. Angka di bawah menjadi baseline desain yang disetujui, bukan hasil pengujian pemain; ukuran, biaya aset dan performa tetap diverifikasi saat implementasi.
 
 ## Struktur rumah dan navigasi
 
@@ -104,9 +104,9 @@ Hias memakai pratinjau draf: pilih barang, slot/seret, Pindah area, Simpan ke Gu
 
 Hasil punya varian menang 1/2/3 bintang, sampai mangkuk dengan vas pecah, dan bosan karena loop/batas langkah. Vas pecah bukan kegagalan mencapai mangkuk. Putar ulang memiliki langkah 0, akhir, jeda, kecepatan, maju/mundur, jejak dan peristiwa; semua dari hasil simulasi, bukan jalur ilustrasi mockup. Tutorial hanya mengenalkan fitur yang relevan, bisa dilewati; pengenalan area tidak menghalangi Main Puzzle. Pengaturan mempertahankan bahasa, audio, privasi, tentang, reset; opsi Kurangi gerak ditambahkan dan menghormati preferensi sistem.
 
-## Syarat penerimaan sebelum langkah 2
+## Penerimaan langkah 1
 
-- Pemilik repo menyetujui arah visual, kapasitas 3/2/2/2, empat area gratis, antrean/ajakan, perawatan elus+sikat tanpa mandi, dan hadiah gabungan dengan nominal lama.
-- Setiap baris inventaris memiliki rencana keadaan dan kontrol; mockup konsep serta koreksinya ditinjau, ukuran ponsel ditetapkan di VISUAL.md.
-- Catat perubahan usulan hasil tinjauan di DESIGN_NOTES.md; jangan mengubah label draf menjadi final hanya karena dokumen sudah ditulis.
-- Setelah disetujui, perbarui status roadmap dan buat rencana implementasi langkah 2. Tes visual/performa runtime baru dilakukan bersama implementasi, bukan dianggap lulus dari gambar konsep.
+- [x] Pemilik repo menyetujui pada 8 November 2026: arah visual, kapasitas 3/2/2/2, empat area gratis, antrean/ajakan, perawatan elus+sikat tanpa mandi, dan hadiah gabungan dengan nominal lama.
+- [x] Setiap baris inventaris memiliki rencana keadaan dan kontrol; mockup konsep serta koreksinya ditinjau, ukuran ponsel ditetapkan di VISUAL.md.
+- [x] Persetujuan eksplisit pemilik repo dicatat di DESIGN_NOTES.md. Koreksi gambar tertulis tetap berlaku.
+- [x] Langkah 1 roadmap dicentang. Berikutnya susun rencana implementasi langkah 2 setelah PR #40 di-merge. Tes visual/performa runtime baru dilakukan bersama implementasi, bukan dianggap lulus dari gambar konsep.

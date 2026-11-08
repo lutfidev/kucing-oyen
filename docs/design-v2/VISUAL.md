@@ -1,6 +1,6 @@
-# Token visual dan arahan aset — draf
+# Token visual dan arahan aset — baseline disetujui
 
-Angka ini usulan untuk implementasi dan pengukuran berikutnya. Acuan gaya tetap sisi kiri konsep A. Jangan menyalin outline atau proporsi kucing renderer v1.
+Disetujui sebagai arahan desain langkah 1 pada 8 November 2026. Angka teknis tetap target awal untuk implementasi dan pengukuran berikutnya. Acuan gaya tetap sisi kiri konsep A. Jangan menyalin outline atau proporsi kucing renderer v1.
 
 ## Token
 

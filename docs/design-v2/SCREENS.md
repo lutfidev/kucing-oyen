@@ -1,6 +1,6 @@
 # Inventaris layar, sheet, dan keadaan
 
-Audit sumber: `lib/app/routes.dart`, `router.dart`, seluruh `lib/screens/`, dan galeri pada 8 November 2026. **Draf** desain; kolom gambar menunjukkan templat visual, bukan bukti implementasi. Varian rinci memakai kerangka di [wireframes](mockups/wireframes/index.html). Seluruh wireframe berukuran logis 390×844; adaptasi layar kecil mengikuti VISUAL.md.
+Audit sumber: `lib/app/routes.dart`, `router.dart`, seluruh `lib/screens/`, dan galeri pada 8 November 2026. **Disetujui** sebagai cakupan desain langkah 1; kolom gambar menunjukkan templat visual, bukan bukti implementasi. Varian rinci memakai kerangka di [wireframes](mockups/wireframes/index.html). Seluruh wireframe berukuran logis 390×844; adaptasi layar kecil mengikuti VISUAL.md.
 
 ## Rute pemain
 

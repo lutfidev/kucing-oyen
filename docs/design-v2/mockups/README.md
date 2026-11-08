@@ -1,6 +1,6 @@
 # Mockup konsep v2
 
-**Draf untuk tinjauan, bukan screenshot atau aset runtime.** Dibuat 8 November 2026 dengan alat imagegen bawaan, skill imagegen, menggunakan sisi kiri konsep A sebagai referensi. Prompt lengkap disimpan di [PROMPTS.md](PROMPTS.md). Referensi proyek dibuat dengan imagegen pada sesi sebelumnya; tidak menambahkan sumber seni pihak ketiga. Hak atas keluaran mengikuti ketentuan layanan alat; jangan mencantumkan lisensi open-source pihak ketiga yang tidak ada.
+**Konsep visual disetujui, bukan screenshot atau aset runtime.** Dibuat 8 November 2026 dengan alat imagegen bawaan, skill imagegen, menggunakan sisi kiri konsep A sebagai referensi. Prompt lengkap disimpan di [PROMPTS.md](PROMPTS.md). Referensi proyek dibuat dengan imagegen pada sesi sebelumnya; tidak menambahkan sumber seni pihak ketiga. Hak atas keluaran mengikuti ketentuan layanan alat; jangan mencantumkan lisensi open-source pihak ketiga yang tidak ada.
 
 | Berkas | Isi | Resolusi dan batas |
 | --- | --- | --- |
@@ -9,7 +9,9 @@
 | [03-pendukung.png](03-pendukung.png) | Toko, koleksi/kartu, Pengaturan, hadiah/koin | 1024×1536; panel gabungan untuk menunjukkan keluarga komponen |
 | [wireframes/index.html](wireframes/index.html) | layar dan sheet tambahan, termasuk keadaan gagal | diagram UI logis 390×844, dibuat dari kode; bisa dibuka lokal tanpa server |
 
-## Hasil inspeksi dan koreksi yang mengikat draf
+## Status persetujuan dan koreksi
+
+Arah visual dan usulan aturan disetujui pemilik repo pada 8 November 2026. Gambar dan label DRAF pada wireframe dipertahankan sebagai asal bahan tinjauan; status aktif mengikuti SPEC dan README paket desain. Koreksi di bawah tetap berlaku dan tidak digantikan teks/gambar AI.
 
 - Papan 01 mengikuti proporsi kucing, tekstur, outline, ruangan dan komposisi A. Santai masih punya mangkuk di pintu: hapus pada runtime; makan hanya di area Makan.
 - Papan 01 menggambar dua mangkuk dan tombol Isi mangkuk: implementasi hanya satu mangkuk/jatah bersama mengikuti SPEC; ganti kontrol dengan Ajak makan/status siklus otomatis. Tidak mengusulkan stok pakan berbayar.
