@@ -34,6 +34,10 @@ Sumber vector orisinal diproduksi di `assets/art/v2/` melalui generator determin
 
 Pilihan teknis vector mempertahankan proporsi/palet/outline A dengan permukaan rata tanpa grain raster. Sumber sekitar 258 KB, entry APK sekitar 79 KB terkompresi, tanpa atlas atau frame cache; laporan pengukuran host dan keterbatasan HP ada di [tinjauan aset](design-v2/assets/REVIEW.md). Penggunaan pada rumah/puzzle dan profil perangkat mengikuti langkah berikutnya; ikon/splash/materi toko belum diganti.
 
+## Fondasi UI langkah 3 — 8 November 2026
+
+Token dan komponen baru ada di `KoUi`/`lib/widgets/v2/`, galeri `/galeri/ui-v2`. Tema dipasang per layar selama migrasi, dengan label empat bahasa. Ink di atas oranye terang; oranye gelap hanya bayangan tombol karena tidak memenuhi kontras 4,5:1 untuk teks normal. Fredoka memakai fallback NunitoUi untuk Cyrillic, regular Nunito dibundel dengan SIL OFL. Navigasi ringkas mempertahankan kata utuh pada teks 130%; tombol puzzle terpisah dari aktivitas Bermain. [Render, verifikasi dan batas](design-v2/ui/REVIEW.md). Model/simpanan dan layar pemain yang dijadwalkan berikutnya masih mengikuti fondasi sebelumnya.
+
 ## Baseline sebelum paket aset v2
 
 - [Baseline performa kamar lama](performance-room-2026-11-08.md): 9 kucing, 21 barang termasuk mangkuk; sebelum/sesudah optimasi SVG, bingkai di atas 16,67 ms turun dari 14,3% menjadi 2,61%. Ini bukan kelulusan tampilan baru.

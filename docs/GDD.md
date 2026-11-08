@@ -18,6 +18,8 @@ Kucing Oren adalah game puzzle mobile untuk semua umur: pemain tidak mengendalik
 
 Paket seni desain v2 langkah 2 tersedia untuk tinjauan pada [galeri aset](design-v2/assets/REVIEW.md), dengan empat area berlapis dan satu rig karakter rumah/puzzle. Integrasi layar mengikuti roadmap; paket ini tidak mengubah urutan aturan atau hasil solver di bawah.
 
+Fondasi UI langkah 3 tersedia di [galeri komponen v2](design-v2/ui/REVIEW.md): header, tab empat area, kartu/kebutuhan, sheet dan CTA Main Puzzle. Komponen menerima data model; aturan aktivitas dan migrasi diterapkan pada langkah 4, integrasi layar rumah mulai langkah 5.
+
 ## Aturan Oyen
 
 Setiap langkah, Oyen mengecek aturan dari atas ke bawah dan menjalankan aturan pertama yang cocok. Satu langkah = satu aksi. Urutan ini final dan dipakai solver; "jatuhkan barang" sengaja ditaruh sebelum "lihat ikan" supaya Oyen tetap iseng meski sedang mengejar ikan.

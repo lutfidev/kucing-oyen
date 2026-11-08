@@ -7,6 +7,7 @@ Status: **DISETUJUI pemilik repo pada 8 November 2026** setelah tinjauan mockup 
 - [Token dan arahan aset](VISUAL.md): ukuran, karakter, furnitur, animasi, aksesibilitas.
 - [Mockup](mockups/README.md): gambar konsep baru, sumber, prompt, dan koreksi yang wajib diikuti.
 - [Aset produksi langkah 2](assets/REVIEW.md): render sembilan karakter, aksesoris, barang, empat area, ukuran dan hasil pemeriksaan. Galeri `/galeri/aset-v2`.
+- [Fondasi UI langkah 3](ui/REVIEW.md): komponen, render empat bahasa dan pemeriksaan responsif. Galeri `/galeri/ui-v2`.
 - [Rencana penyelesaian langkah 1](PLAN.md): hasil yang tersedia dan syarat persetujuan.
 
 Konsep A pada [referensi terpilih](../design-brief/rumah-oyen-area/preview-perbandingan.png) menjadi acuan gaya. Gambar AI menunjukkan arah seni; angka, aturan, dan cakupan mengikuti dokumen tertulis. Gambar bukan screenshot aplikasi atau aset runtime.
