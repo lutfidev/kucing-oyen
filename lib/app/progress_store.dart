@@ -9,6 +9,7 @@ import '../game/model/progress.dart';
 import '../game/model/rewards.dart';
 import '../game/model/sounds.dart';
 import 'language.dart';
+import 'progress_snapshot.dart';
 
 /// Tempat menyimpan [Progress], tutorial yang sudah selesai, saldo koin,
 /// tingkat petunjuk yang terbuka, rumah Oyen dan kebutuhan kucingnya,
@@ -154,7 +155,7 @@ class MemoryProgressStore implements ProgressStore {
 /// daftar id level yang tutorialnya selesai, saldo koin, JSON
 /// `{"id level": tingkat petunjuk}`, JSON rumah dan kebutuhan kucing, JSON hadiah harian, nama
 /// bahasa, dan sakelar suara.
-class PrefsProgressStore implements ProgressStore {
+class PrefsProgressStore implements ProgressStore, SnapshotStore {
   PrefsProgressStore([SharedPreferencesAsync? prefs])
     : _prefs = prefs ?? SharedPreferencesAsync();
 
@@ -172,23 +173,64 @@ class PrefsProgressStore implements ProgressStore {
   static const languageKey = 'settings.language';
   static const musicKey = 'settings.music';
   static const effectsKey = 'settings.sfx';
+  static const snapshotKey = 'progress.snapshot.v2';
+  static const legacyBackupKey = 'progress.backup.v1';
 
   final SharedPreferencesAsync _prefs;
+
+  @override
+  Future<Map<String, dynamic>?> readSnapshot() async {
+    final json = await _loadJson<Map<String, dynamic>?>(
+      snapshotKey,
+      (v) => v,
+      null,
+    );
+    if (json == null) return null;
+    // Never overwrite a save from a newer application with this schema.
+    if (json['version'] is int && (json['version'] as int) > 2) {
+      throw StateError('Unsupported progress snapshot version');
+    }
+    return json['version'] == 2 ? json : null;
+  }
+
+  @override
+  Future<void> writeSnapshot(Map<String, Object?> snapshot) async {
+    // Preserve exact raw legacy values, including sound settings, before the
+    // first migration write. A failed backup prevents replacing valid state.
+    if (await _prefs.getString(legacyBackupKey) == null) {
+      final backup = <String, Object?>{};
+      Future<void> read(String key, Future<Object?> Function() get) async {
+        try {
+          backup[key] = await get();
+        } on TypeError {
+          backup[key] = null;
+        }
+      }
+
+      for (final k in [
+        key,
+        hintsKey,
+        homeKey,
+        needsKey,
+        rewardsKey,
+        languageKey,
+      ]) {
+        await read(k, () => _prefs.getString(k));
+      }
+      await read(tutorialsKey, () => _prefs.getStringList(tutorialsKey));
+      await read(coinsKey, () => _prefs.getInt(coinsKey));
+      await read(musicKey, () => _prefs.getBool(musicKey));
+      await read(effectsKey, () => _prefs.getBool(effectsKey));
+      await _prefs.setString(legacyBackupKey, jsonEncode(backup));
+    }
+    await _prefs.setString(snapshotKey, jsonEncode(snapshot));
+  }
 
   /// Data yang tidak bisa dibaca dianggap kosong, supaya aplikasi tetap
   /// terbuka.
   @override
   Future<Progress> load() async {
-    final raw = await _prefs.getString(key);
-    if (raw == null) return Progress.empty;
-    try {
-      final json = jsonDecode(raw);
-      return json is Map<String, dynamic>
-          ? Progress.fromJson(json)
-          : Progress.empty;
-    } on FormatException {
-      return Progress.empty;
-    }
+    return _loadJson(key, Progress.fromJson, Progress.empty);
   }
 
   @override
@@ -197,10 +239,16 @@ class PrefsProgressStore implements ProgressStore {
 
   /// Id yang bukan angka dibuang.
   @override
-  Future<Set<int>> loadTutorials() async => {
-    for (final id in await _prefs.getStringList(tutorialsKey) ?? const [])
-      ?int.tryParse(id),
-  };
+  Future<Set<int>> loadTutorials() async {
+    try {
+      return {
+        for (final id in await _prefs.getStringList(tutorialsKey) ?? const [])
+          ?int.tryParse(id),
+      };
+    } on TypeError {
+      return {};
+    }
+  }
 
   @override
   Future<void> saveTutorials(Set<int> levels) => _prefs.setStringList(
@@ -225,9 +273,9 @@ class PrefsProgressStore implements ProgressStore {
   /// Entri yang tidak sah (id bukan angka, tingkat bukan 1–3) dibuang.
   @override
   Future<Map<int, int>> loadHints() async {
-    final raw = await _prefs.getString(hintsKey);
-    if (raw == null) return const {};
     try {
+      final raw = await _prefs.getString(hintsKey);
+      if (raw == null) return const {};
       final json = jsonDecode(raw);
       if (json is! Map<String, dynamic>) return const {};
       return {
@@ -237,6 +285,8 @@ class PrefsProgressStore implements ProgressStore {
             id: tier,
       };
     } on FormatException {
+      return const {};
+    } on TypeError {
       return const {};
     }
   }
