@@ -46,6 +46,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
 - [x] 31. Tinggi baris teks mengikuti desain
 - [ ] 32. Cek di HP dan persiapan rilis produksi
+- [ ] 33. Rapikan informasi dan tata letak kamar Oyen
 
 Langkah 15–17 dipecah dari "Polish dan rilis Android" lama (diskusi dengan pemilik repo, 19 Okt 2026). Keputusan pasar, bahasa, iklan, dan isi Pengaturan dicatat di `docs/DESIGN_NOTES.md` bagian "Sebelum langkah 15"; prompt di bawah tidak perlu menanyakannya lagi.
 
@@ -643,6 +644,8 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 
 ## 32. Cek di HP dan persiapan rilis produksi
 
+**Kemajuan 8 Nov 2026:** pengukuran awal mode profil kamar penuh (9 kucing, 21 barang termasuk mangkuk) selesai di Xiaomi 24117RN76O. Sebanyak 14,3% bingkai melewati anggaran 16,67 ms. Pembentukan SVG animasi sudah dioptimalkan dengan cache varian terbatas dan test kesamaan piksel; pengukuran ulang HP menunggu layar dibuka kuncinya. Data tes memakai simpanan memori dan progres asli tetap aman. Hasil serta batas pengujian: [catatan performa](performance-room-2026-11-08.md). TalkBack dilewati atas permintaan pemilik repo; langkah ini belum selesai.
+
 **Hasil:** saran 18–21 dicek di HP asli dan diselesaikan atau dicatat; yang hanya bisa dikerjakan pemilik repo tercantum sebagai daftar periksa di PR.
 
 > **Baca dulu:**
@@ -659,3 +662,22 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 > - Sisanya (keystore, unggah kebijakan privasi, Data safety, rating konten, unggah bundle) ditulis sebagai daftar periksa di badan PR, mengikuti `docs/store/README.md`.
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 32".
+
+## 33. Rapikan informasi dan tata letak kamar Oyen
+
+**Waktu:** setelah langkah 32 selesai. Disepakati pemilik repo pada 8 Nov 2026; belum dikerjakan.
+
+**Masalah:** pada potret HP dengan kamar awal (Oyen dan mangkuk), bagian tengah terasa kosong sementara area bawah padat. Gelembung ajakan ke Toko terlalu lebar dan label waktu isi ulang mangkuk terlalu dekat dengan Oyen. Ekspresi sedih belum cukup menjelaskan kebutuhan kucing atau tindakan yang bisa dilakukan pemain.
+
+> **Baca dulu:**
+> - desain kamar di `docs/design/rumah-oyen/project/`
+> - `lib/screens/room/`, komponen gelembung dan label mangkuk, serta model kebutuhan kucing
+> - `docs/DESIGN_NOTES.md` bagian "Langkah 23", "Langkah 24", dan "Langkah 31"
+>
+> **Lalu:**
+> - Sepakati revisi desain sebelum implementasi: ukuran, posisi, dan kapan gelembung ajakan ke Toko muncul; posisi label isi ulang mangkuk; keseimbangan ruang kamar awal dan kamar penuh.
+> - Buat kebutuhan Oyen dan tindakan yang dapat dilakukan lebih jelas ketika ia tampak sedih, tanpa menambah kepadatan informasi.
+> - Pertahankan kejelasan tombol Main dan navigasi bawah yang dinilai sudah baik oleh pemilik repo.
+> - Verifikasi kamar awal dan penuh, keempat bahasa, layar kecil, dan teks 130%; periksa potret layar dan sesuaikan aset toko bila tampilannya berubah.
+>
+> Catat keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 33".

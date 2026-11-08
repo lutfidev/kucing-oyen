@@ -62,6 +62,8 @@ Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kar
 
 Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API penting.
 
+- Profil kamar (langkah 32): `tool/profile_room.dart` dijalankan dengan `flutter run --profile -t tool/profile_room.dart -d <device>`, memakai `MemoryProgressStore` (9 kucing beraksesoris, 20 barang toko + mangkuk), pemanasan 15 detik dan pengukuran `FrameTiming` 60 detik; progres pemain tidak dibaca/ditulis. HP harus terbuka dan kamar tetap di depan. Hasil dan batas pengujian di `docs/performance-room-2026-11-08.md`. `SvgTemplate.bind` menghasilkan `SvgAnimation`: varian template disiapkan sekali dan waktu animasi tetap tepat. `kittyDrawing` memakai cache LRU maksimal 96 varian animasi, tidak menyimpan setiap waktu; sprite diam tetap di cache lama. `test/game/render/svg_binding_test.dart` membandingkan piksel/bounds dengan renderer acuan, termasuk pergantian varian setelah eviksi dan validasi CSS saat binding.
+
 ## Aturan penting
 
 - Logika simulasi ditulis sebagai Dart murni di `lib/game/sim/`, tanpa import Flame atau Flutter, supaya bisa diuji dengan unit test.
