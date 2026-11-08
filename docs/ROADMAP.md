@@ -667,6 +667,14 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 
 **Waktu:** setelah langkah 32 selesai. Disepakati pemilik repo pada 8 Nov 2026; belum dikerjakan.
 
+**Bahan brainstorming 8 Nov 2026 (belum keputusan desain):**
+
+- **Ide pemilik repo:** tempat khusus untuk kucing lain beraktivitas, misalnya mandi, makan, dan aktivitas lain; dibahas sesudah melihat kamar penuh terlalu ramai.
+- **Usul asisten untuk dibahas:** beranda sebagai ruang santai, dengan area makan, istirahat/bermain, dan perawatan yang dapat dikunjungi terpisah. Kucing yang sedang beraktivitas berada di area terkait, sehingga seluruh koleksi tidak harus berkumpul di beranda.
+- **Alternatif yang belum dipilih:** tetap satu kamar dengan kucing tampil bergantian, atau beberapa area/ruangan. Batas 3–4 kucing yang terlihat dan satu tombol hadiah gabungan baru usul asisten, belum disetujui pemilik repo.
+- **Hal yang perlu diputuskan:** perpindahan kucing otomatis atau pilihan pemain; hubungan area dengan kebutuhan Lapar/Senang yang sudah ada; apakah mandi hanya interaksi lucu atau mekanik baru. Usul asisten: mulai dengan aktivitas opsional dan hindari menambah kewajiban perawatan yang mengalihkan perhatian dari puzzle.
+- Perubahan beberapa ruangan/aktivitas merupakan perluasan fitur: sepakati konsep dan lingkupnya dahulu, lalu tentukan langkah tersendiri bila terlalu besar untuk perapian UI langkah 33. Belum mengubah GDD, aturan kebutuhan, atau kode game.
+
 **Masalah:** pada potret HP dengan kamar awal (Oyen dan mangkuk), bagian tengah terasa kosong sementara area bawah padat. Gelembung ajakan ke Toko terlalu lebar dan label waktu isi ulang mangkuk terlalu dekat dengan Oyen. Ekspresi sedih belum cukup menjelaskan kebutuhan kucing atau tindakan yang bisa dilakukan pemain.
 
 > **Baca dulu:**
