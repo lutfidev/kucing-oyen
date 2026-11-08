@@ -644,7 +644,7 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 
 ## 32. Cek di HP dan persiapan rilis produksi
 
-**Kemajuan 8 Nov 2026:** pengukuran awal mode profil kamar penuh (9 kucing, 21 barang termasuk mangkuk) selesai di Xiaomi 24117RN76O. Sebanyak 14,3% bingkai melewati anggaran 16,67 ms. Pembentukan SVG animasi sudah dioptimalkan dengan cache varian terbatas dan test kesamaan piksel; pengukuran ulang HP menunggu layar dibuka kuncinya. Data tes memakai simpanan memori dan progres asli tetap aman. Hasil serta batas pengujian: [catatan performa](performance-room-2026-11-08.md). TalkBack dilewati atas permintaan pemilik repo; langkah ini belum selesai.
+**Kemajuan 8 Nov 2026:** tes mode profil kamar penuh (9 kucing, 21 barang termasuk mangkuk) selesai sebelum dan sesudah optimasi di Xiaomi 24117RN76O. Bingkai di atas 16,67 ms turun dari 14,3% menjadi 2,61%; build rata-rata turun dari 13,47 menjadi 8,21 ms. Varian SVG animasi di-cache secara terbatas dan dijaga test kesamaan piksel. Versi release beroptimasi, progres asli (80 koin, 9/60 bintang), dan pengaturan layar sudah dipulihkan. Hasil serta batas pengujian: [catatan performa](performance-room-2026-11-08.md). TalkBack dilewati atas permintaan pemilik repo; langkah ini belum selesai karena masih ada pemeriksaan dan persiapan produksi lain.
 
 **Hasil:** saran 18–21 dicek di HP asli dan diselesaikan atau dicatat; yang hanya bisa dikerjakan pemilik repo tercantum sebagai daftar periksa di PR.
 

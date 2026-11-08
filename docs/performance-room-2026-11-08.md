@@ -1,6 +1,6 @@
 # Pengukuran kamar penuh — 8 Nov 2026
 
-Status: pengukuran awal selesai; optimasi pembentukan SVG sudah dibuat dan lolos test lokal. Pengukuran ulang di HP masih menunggu layar dibuka kuncinya. Langkah 32 belum selesai.
+Status: pengukuran awal dan pengukuran ulang sesudah optimasi selesai. Beban berkurang, tetapi masih ada bingkai di atas anggaran 60 fps. Langkah 32 belum selesai karena masih ada pemeriksaan dan persiapan produksi lain.
 
 ## Kondisi
 
@@ -44,8 +44,32 @@ flutter run --profile -t tool/profile_room.dart -d <device>
 
 Tunggu 15 detik pemanasan dan 60 detik pengukuran, lalu baca baris `ROOM_PROFILE_RESULT` di log Flutter. Kembalikan build biasa dari `lib/main.dart` setelah tes; jangan membuat rilis produksi dari entrypoint profil.
 
+## Pengukuran ulang sesudah optimasi (09.39–09.41 WIB)
+
+HP dibuka kuncinya, kamar penuh diverifikasi lewat potret layar, dan pengaturan tetap menyala saat USB tersambung diaktifkan sementara (nilai awal 0, nilai tes 2, dikembalikan ke 0 setelah tes). Kondisi data, pemanasan, dan lama pengukuran sama dengan tes awal. Tidak ada kesalahan Flutter yang tercatat pada log proses tes ini.
+
+| Metrik | Sebelum | Sesudah |
+| --- | --- | --- |
+| Bingkai tercatat selama 60 detik | 3.235 | 3.792 |
+| Build rata-rata (ms) | 13,471 | 8,207 |
+| Build P50 / P90 / P99 (ms) | 12,375 / 17,235 / 22,289 | 7,537 / 9,733 / 18,517 |
+| Build maksimum (ms) | 28,498 | 28,876 |
+| Raster rata-rata (ms) | 12,263 | 10,571 |
+| Raster P50 / P90 / P99 (ms) | 11,963 / 13,694 / 18,299 | 10,041 / 13,176 / 17,017 |
+| Raster maksimum (ms) | 27,047 | 19,656 |
+| Build atau raster >16,67 ms | 463 (14,3%) | 99 (2,61%) |
+| Build atau raster >8,33 ms | 3.235 | 3.736 |
+
+Build rata-rata turun sekitar 39%; porsi bingkai di atas 16,67 ms turun sekitar 82% relatif terhadap tes awal. Ini satu pengukuran sebelum dan sesudah pada satu HP: suhu dan aktivitas sistem tidak dikontrol, serta jalur rutinitas kucing dapat berbeda karena waktu antarbingkai. Angka ini menunjukkan perbaikan pada kondisi tes, bukan jaminan FPS stabil di semua perangkat. Jangan menyebut hasil ini bebas stutter atau stabil 120 fps. Bingkai lambat yang tersisa dan pengujian HP spek lebih rendah tetap menjadi batas hasil.
+
+Hasil log sesudah optimasi:
+
+```json
+{"frames":3792,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":8.207055643459917,"p50_ms":7.537,"p90_ms":9.733,"p99_ms":18.517,"max_ms":28.876},"raster":{"mean_ms":10.571090981012631,"p50_ms":10.041,"p90_ms":13.176,"p99_ms":17.017,"max_ms":19.656},"over_16_67ms":99,"over_8_33ms":3736}
+```
+
 ## Pemulihan dan pengujian manual
 
-Versi release biasa dipasang kembali setelah tes. Potret layar sesudah pemulihan menunjukkan progres asli tetap ada: 80 koin, 9/60 bintang, kamar awal Oyen dan mangkuk. Data kamar penuh tidak ditulis ke penyimpanan pemain.
+Versi release biasa dengan optimasi dipasang kembali setelah tes ulang. Potret layar sesudah pemulihan menunjukkan progres asli tetap ada: 80 koin, 9/60 bintang, kamar awal Oyen dan mangkuk. Data kamar penuh tidak ditulis ke penyimpanan pemain. Pengaturan layar tetap menyala saat USB tersambung sudah dikembalikan ke nilai awal 0; proses aplikasi release berjalan dan buffer crash kosong saat diperiksa.
 
 Pemilik repo melaporkan pengujian manual debug dan release berjalan baik untuk gameplay, suara, iklan Tambah Koin dan hadiahnya; ikon dan splash juga dinilai baik. Ini laporan manual, bukan pengukuran latensi audio. TalkBack dilewati atas permintaan pemilik repo. Formulir UMP, iklan petunjuk, ikon tema, dan splash Android versi lama belum diverifikasi secara terpisah.
