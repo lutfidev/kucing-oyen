@@ -10,6 +10,7 @@ abstract final class AppRoutes {
   /// Galeri token dan komponen untuk cek visual terhadap desain. Tidak ada
   /// tombolnya di aplikasi; buka dengan `flutter run --route /galeri`.
   static const gallery = '/galeri';
+  static const galleryUiV2 = '/galeri/ui-v2';
   static const galleryV2 = '/galeri/aset-v2';
 
   /// Galeri petak dan papan (desain 15, 17, 18).

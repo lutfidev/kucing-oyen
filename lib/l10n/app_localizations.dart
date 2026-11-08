@@ -3047,6 +3047,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All gone. Grab more snacks in the Shop!'**
   String get snackEmptyNote;
+
+  /// V2 UI foundation: uiAreaLounge
+  ///
+  /// In en, this message translates to:
+  /// **'Lounge'**
+  String get uiAreaLounge;
+
+  /// V2 UI foundation: uiAreaDining
+  ///
+  /// In en, this message translates to:
+  /// **'Dining'**
+  String get uiAreaDining;
+
+  /// V2 UI foundation: uiAreaPlay
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get uiAreaPlay;
+
+  /// V2 UI foundation: uiAreaCare
+  ///
+  /// In en, this message translates to:
+  /// **'Care'**
+  String get uiAreaCare;
+
+  /// V2 UI foundation: uiPlayPuzzle
+  ///
+  /// In en, this message translates to:
+  /// **'Play Puzzle'**
+  String get uiPlayPuzzle;
+
+  /// V2 UI foundation: uiHome
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get uiHome;
+
+  /// V2 UI foundation: uiCollection
+  ///
+  /// In en, this message translates to:
+  /// **'Collection'**
+  String get uiCollection;
+
+  /// V2 UI foundation: uiShop
+  ///
+  /// In en, this message translates to:
+  /// **'Shop'**
+  String get uiShop;
+
+  /// V2 UI foundation: uiLowNeed
+  ///
+  /// In en, this message translates to:
+  /// **'Low needs'**
+  String get uiLowNeed;
+
+  /// V2 UI foundation: uiInviting
+  ///
+  /// In en, this message translates to:
+  /// **'Inviting…'**
+  String get uiInviting;
+
+  /// V2 UI foundation: uiInvite
+  ///
+  /// In en, this message translates to:
+  /// **'Invite to area'**
+  String get uiInvite;
+
+  /// V2 UI foundation: uiViewActivity
+  ///
+  /// In en, this message translates to:
+  /// **'View activity'**
+  String get uiViewActivity;
+
+  /// V2 UI foundation: uiActivityNote
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an activity for Oyen. The invitation will wait for the current activity.'**
+  String get uiActivityNote;
 }
 
 class _AppLocalizationsDelegate

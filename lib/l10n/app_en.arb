@@ -2683,5 +2683,57 @@
   "snackEmptyNote": "All gone. Grab more snacks in the Shop!",
   "@snackEmptyNote": {
     "description": "Short note on a cat card when a snack that is out of stock is tapped."
+  },
+  "uiAreaLounge": "Lounge",
+  "@uiAreaLounge": {
+    "description": "V2 UI foundation: uiAreaLounge"
+  },
+  "uiAreaDining": "Dining",
+  "@uiAreaDining": {
+    "description": "V2 UI foundation: uiAreaDining"
+  },
+  "uiAreaPlay": "Play",
+  "@uiAreaPlay": {
+    "description": "V2 UI foundation: uiAreaPlay"
+  },
+  "uiAreaCare": "Care",
+  "@uiAreaCare": {
+    "description": "V2 UI foundation: uiAreaCare"
+  },
+  "uiPlayPuzzle": "Play Puzzle",
+  "@uiPlayPuzzle": {
+    "description": "V2 UI foundation: uiPlayPuzzle"
+  },
+  "uiHome": "Home",
+  "@uiHome": {
+    "description": "V2 UI foundation: uiHome"
+  },
+  "uiCollection": "Collection",
+  "@uiCollection": {
+    "description": "V2 UI foundation: uiCollection"
+  },
+  "uiShop": "Shop",
+  "@uiShop": {
+    "description": "V2 UI foundation: uiShop"
+  },
+  "uiLowNeed": "Low needs",
+  "@uiLowNeed": {
+    "description": "V2 UI foundation: uiLowNeed"
+  },
+  "uiInviting": "Inviting…",
+  "@uiInviting": {
+    "description": "V2 UI foundation: uiInviting"
+  },
+  "uiInvite": "Invite to area",
+  "@uiInvite": {
+    "description": "V2 UI foundation: uiInvite"
+  },
+  "uiViewActivity": "View activity",
+  "@uiViewActivity": {
+    "description": "V2 UI foundation: uiViewActivity"
+  },
+  "uiActivityNote": "Choose an activity for Oyen. The invitation will wait for the current activity.",
+  "@uiActivityNote": {
+    "description": "V2 UI foundation: uiActivityNote"
   }
 }

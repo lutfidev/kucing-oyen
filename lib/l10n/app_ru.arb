@@ -490,5 +490,18 @@
   "kittyTapHintNew": "{name}, новенький. Нажми, чтобы открыть карточку",
   "kittyTapHintNewHungry": "{name}, новенький, хочет есть. Нажми, чтобы открыть карточку",
   "snackFullNote": "{name} уже сыт и доволен. Прибереги на потом!",
-  "snackEmptyNote": "Закончилось. Купи ещё вкусняшек в Магазине!"
+  "snackEmptyNote": "Закончилось. Купи ещё вкусняшек в Магазине!",
+  "uiAreaLounge": "Отдых",
+  "uiAreaDining": "Еда",
+  "uiAreaPlay": "Игры",
+  "uiAreaCare": "Уход",
+  "uiPlayPuzzle": "Играть в головоломку",
+  "uiHome": "Дом",
+  "uiCollection": "Коллекция",
+  "uiShop": "Магазин",
+  "uiLowNeed": "Низкая потребность",
+  "uiInviting": "Приглашаем…",
+  "uiInvite": "Позвать в зону",
+  "uiViewActivity": "Посмотреть занятие",
+  "uiActivityNote": "Выберите занятие для Ойена. Приглашение подождёт окончания текущего занятия."
 }

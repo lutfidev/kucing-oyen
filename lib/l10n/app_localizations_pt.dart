@@ -2071,4 +2071,44 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get snackEmptyNote => 'Acabou. Compre mais petiscos na Loja!';
+
+  @override
+  String get uiAreaLounge => 'Descanso';
+
+  @override
+  String get uiAreaDining => 'Comida';
+
+  @override
+  String get uiAreaPlay => 'Brincadeiras';
+
+  @override
+  String get uiAreaCare => 'Cuidados';
+
+  @override
+  String get uiPlayPuzzle => 'Jogar quebra-cabeça';
+
+  @override
+  String get uiHome => 'Casa';
+
+  @override
+  String get uiCollection => 'Coleção';
+
+  @override
+  String get uiShop => 'Loja';
+
+  @override
+  String get uiLowNeed => 'Necessidade baixa';
+
+  @override
+  String get uiInviting => 'Convidando…';
+
+  @override
+  String get uiInvite => 'Convidar para a área';
+
+  @override
+  String get uiViewActivity => 'Ver atividade';
+
+  @override
+  String get uiActivityNote =>
+      'Escolha uma atividade para Oyen. O convite vai esperar a atividade atual terminar.';
 }
