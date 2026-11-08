@@ -49,6 +49,12 @@ class AreaSlot {
   final RoomZone zone;
   final int index;
   bool get valid => index >= 0 && index < (zone == RoomZone.floor ? 4 : 3);
+
+  /// Normalized anchor centers on the v2 room canvas. The center strip stays
+  /// available for doorway travel and built-in activity animations.
+  Spot get anchor => zone == RoomZone.wall
+      ? Spot([.16, .5, .84][index], .25)
+      : Spot(index.isEven ? .18 : .82, index < 2 ? .62 : .88);
   Map<String, Object?> toJson() => {
     'area': area.name,
     'zone': zone.name,
@@ -90,8 +96,9 @@ class HomeAreas {
       RoomItemId.mangkuk: const AreaSlot(HomeArea.makan, RoomZone.floor, 0),
     });
     for (final id in RoomItemId.values) {
-      if (id != RoomItemId.mangkuk && home.room.isPlaced(id))
+      if (id != RoomItemId.mangkuk && home.room.isPlaced(id)) {
         areas = areas._add(home, id);
+      }
     }
     return areas;
   }
@@ -115,8 +122,9 @@ class HomeAreas {
     });
     for (final id in RoomItemId.values) {
       if (after.room.isPlaced(id) &&
-          (!before.room.owns(id) || !before.room.isPlaced(id)))
+          (!before.room.owns(id) || !before.room.isPlaced(id))) {
         next = next._add(after, id);
+      }
     }
     return next;
   }
@@ -128,8 +136,9 @@ class HomeAreas {
         !allowedItemAreas(id).contains(slot.area) ||
         placed.entries.any((e) => e.key != id && e.value == slot) ||
         (id == RoomItemId.mangkuk &&
-            slot != const AreaSlot(HomeArea.makan, RoomZone.floor, 0)))
+            slot != const AreaSlot(HomeArea.makan, RoomZone.floor, 0))) {
       return this;
+    }
     return HomeAreas._({...placed, id: slot});
   }
 
@@ -138,8 +147,20 @@ class HomeAreas {
       ? this
       : HomeAreas._({...placed}..remove(id));
   Map<String, Object?> toJson() => {
-    'placed': {for (final e in placed.entries) e.key.name: e.value.toJson()},
+    'placed': {
+      for (final id in RoomItemId.values)
+        if (placed.containsKey(id)) id.name: placed[id]!.toJson(),
+    },
   };
+  @override
+  bool operator ==(Object other) =>
+      other is HomeAreas &&
+      placed.length == other.placed.length &&
+      placed.entries.every((e) => other.placed[e.key] == e.value);
+  @override
+  int get hashCode => Object.hashAllUnordered(
+    placed.entries.map((e) => Object.hash(e.key, e.value)),
+  );
   factory HomeAreas.fromJson(Map<String, dynamic> json, Home home) {
     var result = HomeAreas._({
       RoomItemId.mangkuk: const AreaSlot(HomeArea.makan, RoomZone.floor, 0),
