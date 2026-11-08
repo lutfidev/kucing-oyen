@@ -70,6 +70,8 @@ Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API pen
 
 ## Aturan penting
 
+- Paket aset v2: `tool/art_v2/generate.py` menghasilkan 209 bagian SVG + `assets/art/v2/manifest.json`; `--check` memeriksa konsistensi. `lib/game/render/v2/art_pack.dart` memuat inventaris terbatas dan memvalidasi manifest, `cat_rig.dart` menggabungkan arah/ekspresi/pose serta jangkar aksesoris; `room_art.dart` hanya komposisi seni pratinjau, bukan model rumah. Galeri `/galeri/aset-v2` (`GalleryV2Screen`) menghormati lifecycle/TickerMode/kurangi gerak. Test dan ekspor lembar tinjauan di `test/game/render/v2_art_test.dart` (`--dart-define=ART_REVIEW=true`), widget galeri di `test/gallery/gallery_v2_test.dart`. Ukuran entry APK dapat diukur dengan `tool/art_v2/measure_apk.py`; laporan `docs/design-v2/assets/REVIEW.md`. Jangan membuat satu pack per kucing atau cache berdasarkan waktu.
+
 - Logika simulasi ditulis sebagai Dart murni di `lib/game/sim/`, tanpa import Flame atau Flutter, supaya bisa diuji dengan unit test.
 - Urutan aturan per langkah: sampai mangkuk → duduk di kardus → jatuhkan barang di meja sebelah → kejar ikan terdekat yang terlihat → cek petak depan (air: putar balik, tembok/meja: berputar searah jarum jam, kardus: masuk duduk 2 langkah, ikan: makan, lantai/mangkuk: maju).
 - Seri jarak ikan: depan → searah jarum jam → berlawanan jarum jam → belakang.

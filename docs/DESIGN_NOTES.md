@@ -28,7 +28,13 @@ Rincian empat area, perpindahan/antrean, prioritas ajakan, pembatalan, hadiah, h
 
 Target visual, aset/animasi dan seluruh keadaan layar dijabarkan dalam spesifikasi baru sebelum implementasi. Jangan menyalin ukuran dari HTML desain lama yang sudah dihapus.
 
-## Data teknis dan release yang dipertahankan
+## Paket aset langkah 2 — 8 November 2026
+
+Sumber vector orisinal diproduksi di `assets/art/v2/` melalui generator deterministik `tool/art_v2/`. 209 bagian mencakup sembilan identitas, seluruh 16 aksesoris/21 barang katalog dan empat latar berlapis. Renderer rig bersama memiliki empat arah, jangkar mengikuti kepala, varian aksesori belakang dan delapan fase jalan; tersedia di `/galeri/aset-v2`. Bos tuxedo/blaze, Kembang tortoiseshell dan Telon tiga warna dipertahankan termasuk corak belakang.
+
+Pilihan teknis vector mempertahankan proporsi/palet/outline A dengan permukaan rata tanpa grain raster. Sumber sekitar 258 KB, entry APK sekitar 79 KB terkompresi, tanpa atlas atau frame cache; laporan pengukuran host dan keterbatasan HP ada di [tinjauan aset](design-v2/assets/REVIEW.md). Penggunaan pada rumah/puzzle dan profil perangkat mengikuti langkah berikutnya; ikon/splash/materi toko belum diganti.
+
+## Baseline sebelum paket aset v2
 
 - [Baseline performa kamar lama](performance-room-2026-11-08.md): 9 kucing, 21 barang termasuk mangkuk; sebelum/sesudah optimasi SVG, bingkai di atas 16,67 ms turun dari 14,3% menjadi 2,61%. Ini bukan kelulusan tampilan baru.
 - Cache SVG animasi dibatasi 96 varian dan dijaga test kesamaan gambar. Pipeline aset baru perlu diukur lagi.

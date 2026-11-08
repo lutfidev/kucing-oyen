@@ -16,6 +16,8 @@ Kucing Oren adalah game puzzle mobile untuk semua umur: pemain tidak mengendalik
 | Bahasa | Inggris (utama), Indonesia, Portugis Brasil, Rusia; santai dan jenaka (lihat `docs/DESIGN_NOTES.md`) |
 | Versi pertama | Babak 1 Dapur + Babak 2 Ruang Tamu, 20 level |
 
+Paket seni desain v2 langkah 2 tersedia untuk tinjauan pada [galeri aset](design-v2/assets/REVIEW.md), dengan empat area berlapis dan satu rig karakter rumah/puzzle. Integrasi layar mengikuti roadmap; paket ini tidak mengubah urutan aturan atau hasil solver di bawah.
+
 ## Aturan Oyen
 
 Setiap langkah, Oyen mengecek aturan dari atas ke bawah dan menjalankan aturan pertama yang cocok. Satu langkah = satu aksi. Urutan ini final dan dipakai solver; "jatuhkan barang" sengaja ditaruh sebelum "lihat ikan" supaya Oyen tetap iseng meski sedang mengejar ikan.
