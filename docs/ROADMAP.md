@@ -44,6 +44,8 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 
 ## 1. Spesifikasi lengkap desain baru dan alur rumah
 
+**Sedang ditinjau:** [draf desain v2](design-v2/README.md) berisi spesifikasi, inventaris, token, mockup dan wireframe. Belum disetujui pemilik repo; langkah 1 tetap belum dicentang sampai tinjauan selesai. Aplikasi belum memakai tampilan baru.
+
 **Baca:** brief dan preview A; `lib/app/routes.dart`, `router.dart`, `lib/screens/`; model `home.dart`, `needs.dart`, `room_life.dart`; GDD bagian aturan dan level.
 
 **Kerjakan:**

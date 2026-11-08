@@ -20,6 +20,10 @@ Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lam
 
 ## Keputusan terbuka untuk langkah 1
 
+Draf konkret tersedia di [paket desain v2](design-v2/README.md), branch `feat/design-v2-spec`: spesifikasi, inventaris layar/keadaan, token, tiga papan mockup dan wireframe. **Belum disetujui pemilik repo.** Usulan: area gratis, kapasitas 3/2/2/2, antrean ajakan, elus+sikat tanpa mandi, hadiah gabungan dengan nominal v1. Status ini tidak mengubah keputusan terbuka di bawah atau perilaku aplikasi.
+
+Snapshot kode aplikasi lama telah dibuat dan di-push atas permintaan pemilik repo di branch [`archive/v1-desain-lama`](https://github.com/lutfidev/kucing-oyen/tree/archive/v1-desain-lama), commit `3c472b1`. Arsip tidak digunakan untuk pengembangan desain baru; dokumentasi snapshot sudah memuat arah redesign.
+
 Rincian empat area, kapasitas kucing, perpindahan/antrean, prioritas ajakan, pembatalan, hadiah, hias per area, dan pengenalan fitur. Mandi, kebutuhan kebersihan, hadiah gabungan serta batas 3–4 kucing per layar belum merupakan aturan final.
 
 Target visual, aset/animasi dan seluruh keadaan layar dijabarkan dalam spesifikasi baru sebelum implementasi. Jangan menyalin ukuran dari HTML desain lama yang sudah dihapus.

@@ -4,6 +4,8 @@ Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kar
 
 ## Sumber kebenaran
 
+- `docs/design-v2/`: draf langkah 1 desain baru (SPEC, SCREENS, VISUAL, mockup dan wireframe). Belum disetujui pemilik repo; jangan menganggap aturan usulan final atau mencentang roadmap sebelum persetujuan. Kode v1 diarsipkan di `archive/v1-desain-lama`.
+
 - `docs/GDD.md`: dokumen desain game (aturan Oyen, elemen peta, alur level, bintang, 20 level).
 - `docs/reference/oyen_simulator.py`: simulator + solver acuan. Logika simulasi Dart HARUS identik dengan file ini.
 - `assets/levels/chapter1-2.json`: data 20 level (peta, baki, bintang 3, solusi, jumlah langkah solusi).
