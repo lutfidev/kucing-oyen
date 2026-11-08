@@ -1,5 +1,7 @@
 # Pengerasan Iklan dan Rilis Implementation Plan
 
+> Baseline release sebelum reset visual 8 Nov 2026. Dipertahankan sebagai referensi teknis untuk langkah 16 roadmap baru, bukan urutan implementasi aktif. Ikuti `docs/ROADMAP.md`, konfigurasi aktual, dan panduan `docs/store/README.md`; gambar serta nomor langkah lama di dokumen ini sudah tidak berlaku sebagai acuan visual.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Langkah 18 roadmap: sepuluh temuan kecil review langkah 17 (PR #19) dibereskan tanpa mengubah perilaku yang sudah dites.

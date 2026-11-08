@@ -1,5 +1,9 @@
 # Rencana langkah 17: Polish dan rilis Android
 
+> Baseline release sebelum reset visual 8 Nov 2026. Dipertahankan sebagai referensi teknis untuk langkah 16 roadmap baru, bukan urutan implementasi aktif. Ikuti `docs/ROADMAP.md`, konfigurasi aktual, dan panduan `docs/store/README.md`; gambar serta nomor langkah lama di dokumen ini sudah tidak berlaku sebagai acuan visual.
+
+> Seluruh checkbox implementasi di bawah bersifat historis dan **jangan dieksekusi sebagai rencana aktif**. Gunakan untuk memahami konfigurasi rilis yang telah dibuat; pekerjaan baru mengikuti roadmap baru dan spesifikasi barunya.
+
 > **Untuk pelaksana:** jalankan dengan `superpowers:executing-plans` di sesi utama (aturan CLAUDE.md). Langkah memakai kotak centang (`- [ ]`).
 
 **Tujuan:** app bundle release `com.gingerlogic.app` dengan ikon dan splash Oyen, iklan berhadiah AdMob asli dengan persetujuan UMP, bagian Privasi di Pengaturan, dan dokumen toko di `docs/store/`.
@@ -65,7 +69,7 @@ git commit -m "docs: android release design and plan"
 - [ ] **Langkah 1: test gagal.** `ko_coin_chip_test.dart`: chip `outlined` dengan `onPressed`, `tester.startGesture` di tengahnya → `tester.getTopLeft` permukaan turun `KoShadow.coinChip.first.offset.dy`; chip yang bisa ditekan (ketiga gaya) punya `SemanticsFlag.isLiveRegion`.
 - [ ] **Langkah 2:** jalankan, harapan GAGAL.
 - [ ] **Langkah 3:** pasang `sink`/`liveRegion` di `KoPressable`, chip `outlined` memakai `sink`, semua chip yang bisa ditekan `liveRegion: true`.
-- [ ] **Langkah 4:** koin label harga kartu kostum: salin SVG koin harga dari `docs/design/source/12-lemari-kostum.html` (garis 2,4) utuh ke `design_svg.dart` sebagai `coinPriceSvg`, gambar lewat `coin_art.dart`. Kalau `docs/design/` tidak ada, berhenti dan beri tahu pemilik repo.
+- Catatan UI historis: koin harga kartu kostum pernah disalin dari desain lama. Referensi tersebut sudah dihapus; gambar baru mengikuti langkah 1–3 dan 14 roadmap baru. Jangan meminta ekspor HTML lama.
 - [ ] **Langkah 5:** tinggi pratinjau Lemari Kostum: jarak yang dipakai Column dan perhitungan `rest` diambil dari satu sumber (mis. record `_ClosetGaps` yang dipakai keduanya), dan tinggi judul diukur dengan `TextPainter` (gaya `heading`, `textScaler`) alih-alih `fontSize * 1.25`. Perilaku sama: `closet_screen_test` dan `overflow_test` tetap lulus.
 - [ ] **Langkah 6:** pindahkan sheet, ganti nama, rapikan komentar dokumentasi > 80 kolom di `progress_scope.dart`, `test_helpers.dart`, dan `ko_sheet.dart`. Cek: `grep -rnE '^\s*///.{77,}' lib/app/progress_scope.dart test/test_helpers.dart lib/widgets/ko_sheet.dart` kosong.
 - [ ] **Langkah 7:** `flutter analyze` bersih, `flutter test` lulus.

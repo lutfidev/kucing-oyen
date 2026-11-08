@@ -1,6 +1,6 @@
 # Pengukuran kamar penuh — 8 Nov 2026
 
-Status: pengukuran awal dan pengukuran ulang sesudah optimasi selesai. Beban berkurang, tetapi masih ada bingkai di atas anggaran 60 fps. Langkah 32 belum selesai karena masih ada pemeriksaan dan persiapan produksi lain.
+Status: baseline teknis sebelum reset desain/roadmap 8 November 2026. Pengukuran awal dan sesudah optimasi selesai; beban berkurang tetapi masih ada bingkai lambat. Penomoran lama tidak berlaku lagi. Pengukuran desain baru dilakukan pada langkah 13 dan 15 [roadmap baru](ROADMAP.md), sedangkan release ada di langkah 16.
 
 ## Kondisi
 
