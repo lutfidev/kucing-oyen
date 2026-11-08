@@ -490,5 +490,18 @@
   "kittyTapHintNew": "{name}, novo. Toque para ver o cartão",
   "kittyTapHintNewHungry": "{name}, novo, com fome. Toque para ver o cartão",
   "snackFullNote": "{name} já está cheio e feliz. Guarde para depois!",
-  "snackEmptyNote": "Acabou. Compre mais petiscos na Loja!"
+  "snackEmptyNote": "Acabou. Compre mais petiscos na Loja!",
+  "uiAreaLounge": "Descanso",
+  "uiAreaDining": "Comida",
+  "uiAreaPlay": "Brincadeiras",
+  "uiAreaCare": "Cuidados",
+  "uiPlayPuzzle": "Jogar quebra-cabeça",
+  "uiHome": "Casa",
+  "uiCollection": "Coleção",
+  "uiShop": "Loja",
+  "uiLowNeed": "Necessidade baixa",
+  "uiInviting": "Convidando…",
+  "uiInvite": "Convidar para a área",
+  "uiViewActivity": "Ver atividade",
+  "uiActivityNote": "Escolha uma atividade para Oyen. O convite vai esperar a atividade atual terminar."
 }

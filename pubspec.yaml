@@ -59,6 +59,14 @@ flutter:
           weight: 600
         - asset: assets/fonts/Fredoka-Bold.ttf
           weight: 700
+    - family: NunitoUi
+      fonts:
+        - asset: assets/fonts/Nunito-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/Nunito-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Nunito-Bold.ttf
+          weight: 700
     - family: Nunito
       fonts:
         - asset: assets/fonts/Nunito-SemiBold.ttf

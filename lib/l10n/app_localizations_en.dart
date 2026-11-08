@@ -2053,4 +2053,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get snackEmptyNote => 'All gone. Grab more snacks in the Shop!';
+
+  @override
+  String get uiAreaLounge => 'Lounge';
+
+  @override
+  String get uiAreaDining => 'Dining';
+
+  @override
+  String get uiAreaPlay => 'Play';
+
+  @override
+  String get uiAreaCare => 'Care';
+
+  @override
+  String get uiPlayPuzzle => 'Play Puzzle';
+
+  @override
+  String get uiHome => 'Home';
+
+  @override
+  String get uiCollection => 'Collection';
+
+  @override
+  String get uiShop => 'Shop';
+
+  @override
+  String get uiLowNeed => 'Low needs';
+
+  @override
+  String get uiInviting => 'Inviting…';
+
+  @override
+  String get uiInvite => 'Invite to area';
+
+  @override
+  String get uiViewActivity => 'View activity';
+
+  @override
+  String get uiActivityNote =>
+      'Choose an activity for Oyen. The invitation will wait for the current activity.';
 }

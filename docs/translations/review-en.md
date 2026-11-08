@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-491 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+504 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -518,6 +518,19 @@ files and anything written there is overwritten.
 | `kittyTapHintNewHungry` | {name}, new, hungry. Tap to see their card | {name}, baru, lapar. Ketuk untuk lihat kartunya | Screen reader label of a newly adopted cat in the room that is also hungry. Placeholders: `{name}`. | |
 | `snackFullNote` | {name} is already full and happy. Save it for later! | {name} sudah kenyang dan senang. Simpan buat nanti! | Short note on a cat card when a snack is tapped but the cat's Full and Happy bars are both at 100. {name} is the cat's name. Placeholders: `{name}`. | |
 | `snackEmptyNote` | All gone. Grab more snacks in the Shop! | Stoknya habis. Beli camilan lagi di Toko! | Short note on a cat card when a snack that is out of stock is tapped. | |
+| `uiAreaLounge` | Lounge | Santai | V2 UI foundation: uiAreaLounge | |
+| `uiAreaDining` | Dining | Makan | V2 UI foundation: uiAreaDining | |
+| `uiAreaPlay` | Play | Bermain | V2 UI foundation: uiAreaPlay | |
+| `uiAreaCare` | Care | Perawatan | V2 UI foundation: uiAreaCare | |
+| `uiPlayPuzzle` | Play Puzzle | Main Puzzle | V2 UI foundation: uiPlayPuzzle | |
+| `uiHome` | Home | Rumah | V2 UI foundation: uiHome | |
+| `uiCollection` | Collection | Koleksi | V2 UI foundation: uiCollection | |
+| `uiShop` | Shop | Toko | V2 UI foundation: uiShop | |
+| `uiLowNeed` | Low needs | Kebutuhan rendah | V2 UI foundation: uiLowNeed | |
+| `uiInviting` | Inviting… | Mengundang… | V2 UI foundation: uiInviting | |
+| `uiInvite` | Invite to area | Ajak ke area | V2 UI foundation: uiInvite | |
+| `uiViewActivity` | View activity | Lihat kegiatan | V2 UI foundation: uiViewActivity | |
+| `uiActivityNote` | Choose an activity for Oyen. The invitation will wait for the current activity. | Pilih kegiatan untuk Oyen. Ajakan akan menunggu kegiatan yang sedang berjalan. | V2 UI foundation: uiActivityNote | |
 
 ---
 

@@ -1,3 +1,5 @@
+import '../gallery/gallery_ui_v2_screen.dart';
+
 import 'dart:math';
 
 import 'package:go_router/go_router.dart';
@@ -37,6 +39,10 @@ GoRouter createRouter({
             path: 'galeri',
             builder: (context, state) => const GalleryScreen(),
             routes: [
+              GoRoute(
+                path: 'ui-v2',
+                builder: (context, state) => const GalleryUiV2Screen(),
+              ),
               GoRoute(
                 path: 'aset-v2',
                 builder: (context, state) => const GalleryV2Screen(),

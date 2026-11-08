@@ -1910,4 +1910,44 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get snackEmptyNote => 'Stoknya habis. Beli camilan lagi di Toko!';
+
+  @override
+  String get uiAreaLounge => 'Santai';
+
+  @override
+  String get uiAreaDining => 'Makan';
+
+  @override
+  String get uiAreaPlay => 'Bermain';
+
+  @override
+  String get uiAreaCare => 'Perawatan';
+
+  @override
+  String get uiPlayPuzzle => 'Main Puzzle';
+
+  @override
+  String get uiHome => 'Rumah';
+
+  @override
+  String get uiCollection => 'Koleksi';
+
+  @override
+  String get uiShop => 'Toko';
+
+  @override
+  String get uiLowNeed => 'Kebutuhan rendah';
+
+  @override
+  String get uiInviting => 'Mengundang…';
+
+  @override
+  String get uiInvite => 'Ajak ke area';
+
+  @override
+  String get uiViewActivity => 'Lihat kegiatan';
+
+  @override
+  String get uiActivityNote =>
+      'Pilih kegiatan untuk Oyen. Ajakan akan menunggu kegiatan yang sedang berjalan.';
 }

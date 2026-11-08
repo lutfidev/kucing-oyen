@@ -490,5 +490,18 @@
   "kittyTapHintNew": "{name}, baru. Ketuk untuk lihat kartunya",
   "kittyTapHintNewHungry": "{name}, baru, lapar. Ketuk untuk lihat kartunya",
   "snackFullNote": "{name} sudah kenyang dan senang. Simpan buat nanti!",
-  "snackEmptyNote": "Stoknya habis. Beli camilan lagi di Toko!"
+  "snackEmptyNote": "Stoknya habis. Beli camilan lagi di Toko!",
+  "uiAreaLounge": "Santai",
+  "uiAreaDining": "Makan",
+  "uiAreaPlay": "Bermain",
+  "uiAreaCare": "Perawatan",
+  "uiPlayPuzzle": "Main Puzzle",
+  "uiHome": "Rumah",
+  "uiCollection": "Koleksi",
+  "uiShop": "Toko",
+  "uiLowNeed": "Kebutuhan rendah",
+  "uiInviting": "Mengundang…",
+  "uiInvite": "Ajak ke area",
+  "uiViewActivity": "Lihat kegiatan",
+  "uiActivityNote": "Pilih kegiatan untuk Oyen. Ajakan akan menunggu kegiatan yang sedang berjalan."
 }

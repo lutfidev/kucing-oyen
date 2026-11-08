@@ -2101,4 +2101,44 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get snackEmptyNote => 'Закончилось. Купи ещё вкусняшек в Магазине!';
+
+  @override
+  String get uiAreaLounge => 'Отдых';
+
+  @override
+  String get uiAreaDining => 'Еда';
+
+  @override
+  String get uiAreaPlay => 'Игры';
+
+  @override
+  String get uiAreaCare => 'Уход';
+
+  @override
+  String get uiPlayPuzzle => 'Играть в головоломку';
+
+  @override
+  String get uiHome => 'Дом';
+
+  @override
+  String get uiCollection => 'Коллекция';
+
+  @override
+  String get uiShop => 'Магазин';
+
+  @override
+  String get uiLowNeed => 'Низкая потребность';
+
+  @override
+  String get uiInviting => 'Приглашаем…';
+
+  @override
+  String get uiInvite => 'Позвать в зону';
+
+  @override
+  String get uiViewActivity => 'Посмотреть занятие';
+
+  @override
+  String get uiActivityNote =>
+      'Выберите занятие для Ойена. Приглашение подождёт окончания текущего занятия.';
 }

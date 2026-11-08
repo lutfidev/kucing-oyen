@@ -27,7 +27,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 
 - [x] 1. Spesifikasi lengkap desain baru dan alur rumah
 - [x] 2. Aset kucing, furnitur, ruangan, dan animasi baru
-- [ ] 3. Fondasi UI dan komponen sesuai desain baru
+- [x] 3. Fondasi UI dan komponen sesuai desain baru
 - [ ] 4. Model banyak area, rutinitas, dan migrasi progres
 - [ ] 5. Beranda Santai dan perpindahan area
 - [ ] 6. Area Makan: otomatis dan ajakan pemain
@@ -73,6 +73,8 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 **Selesai jika:** galeri aset sesuai desain, animasi/aksesoris tidak bergeser, aset berada di repo, dan biaya memori/ukuran terukur.
 
 ## 3. Fondasi UI dan komponen sesuai desain baru
+
+**Selesai implementasi pada 8 November 2026:** [galeri dan render fondasi UI](design-v2/ui/REVIEW.md), rute `/galeri/ui-v2`. Token v2, tombol/tab/chip/kartu/kebutuhan/header/navigasi/sheet, empat bahasa dan fallback Cyrillic tersedia untuk migrasi layar berikutnya. Matriks 24 kombinasi ukuran/bahasa/skala lulus; 29 test komponen baru, total 2.841 test lulus (135 skip historis), analyze bersih. Pemeriksaan visual/kode sesi utama selesai; batas review independen dan HP dicatat dalam laporan. Tema dipasang per layar selama migrasi; berikutnya langkah 4 model banyak area dan migrasi progres.
 
 **Baca/ubah:** `lib/theme/`, `lib/widgets/`, galeri, test tema/widget.
 
