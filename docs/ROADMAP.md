@@ -26,7 +26,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 ## Status
 
 - [x] 1. Spesifikasi lengkap desain baru dan alur rumah
-- [ ] 2. Aset kucing, furnitur, ruangan, dan animasi baru
+- [x] 2. Aset kucing, furnitur, ruangan, dan animasi baru
 - [ ] 3. Fondasi UI dan komponen sesuai desain baru
 - [ ] 4. Model banyak area, rutinitas, dan migrasi progres
 - [ ] 5. Beranda Santai dan perpindahan area
@@ -44,7 +44,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 
 ## 1. Spesifikasi lengkap desain baru dan alur rumah
 
-**Selesai, disetujui pemilik repo pada 8 November 2026:** [desain v2](design-v2/README.md) berisi spesifikasi, inventaris, token, mockup dan wireframe. Masukan berikutnya dicatat sebagai revisi. Aplikasi belum memakai tampilan baru. Berikutnya langkah 2 setelah PR #40 di-merge.
+**Selesai, disetujui pemilik repo pada 8 November 2026:** [desain v2](design-v2/README.md) berisi spesifikasi, inventaris, token, mockup dan wireframe. Masukan berikutnya dicatat sebagai revisi. PR #40 sudah merged; paket aset langkah 2 tersedia, integrasi runtime mengikuti langkah 3–14.
 
 **Baca:** brief dan preview A; `lib/app/routes.dart`, `router.dart`, `lib/screens/`; model `home.dart`, `needs.dart`, `room_life.dart`; GDD bagian aturan dan level.
 
@@ -60,6 +60,8 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 **Selesai jika:** seluruh layar tercakup dan keputusan yang memengaruhi pemain sudah ditetapkan dalam desain yang disetujui. Langkah ini menghasilkan desain, belum perubahan runtime.
 
 ## 2. Aset kucing, furnitur, ruangan, dan animasi baru
+
+**Selesai implementasi pada 8 November 2026:** [paket dan tinjauan aset](design-v2/assets/REVIEW.md), galeri `/galeri/aset-v2`. 209 bagian vector orisinal untuk sembilan kucing, seluruh aksesoris/barang katalog dan empat latar berlapis; rig arah/pose bersama dan jangkar tervalidasi. Kontribusi entry APK sekitar 79 KB terkompresi, pengukuran RSS/recording host tercatat dengan batasnya. Review independen dan pemeriksaan visual render selesai; 2.812 test lulus, analyze bersih, APK debug berhasil. Paket siap ditinjau pemilik repo melalui PR; belum mengganti layar runtime pemain. Berikutnya langkah 3 setelah PR langkah ini di-merge.
 
 **Baca/ubah:** spesifikasi langkah 1; renderer `kitty.dart`, `kitty_painter.dart`, `room_item_art.dart`; katalog `kitties.dart`, `accessories.dart`, `home_items.dart`; `pubspec.yaml`.
 

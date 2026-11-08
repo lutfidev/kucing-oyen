@@ -1,0 +1,12 @@
+{
+  "sourceBytes": 257566,
+  "parts": 209,
+  "draws": 9792,
+  "recordingMicrosecondsPerCat": 41.77011846405229,
+  "meanPictureBytes": 2238.356209150327,
+  "rssBeforeLoad": 138723328,
+  "rssAfterLoad": 148185088,
+  "rssAfterStress": 159055872,
+  "decodedRasterBytes": 0,
+  "note": "Windows flutter_test process RSS includes engine/test overhead; recording is not device build/raster frame timing."
+}

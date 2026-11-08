@@ -34,6 +34,12 @@ flutter:
   # Teks per bahasa dari lib/l10n/*.arb (gen-l10n).
   generate: true
   assets:
+    - assets/art/v2/manifest.json
+    - assets/art/v2/LICENSE.txt
+    - assets/art/v2/cats/
+    - assets/art/v2/accessories/
+    - assets/art/v2/items/
+    - assets/art/v2/rooms/
     - assets/levels/
     # Lisensi font (ditampilkan di halaman lisensi aplikasi).
     - assets/fonts/OFL-Fredoka.txt

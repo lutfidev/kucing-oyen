@@ -10,7 +10,7 @@ Pada 8 November 2026, pemilik repo memilih perombakan seluruh visual mengikuti *
 
 ![Acuan baru Rumah Oyen — pilih konsep A di kiri](docs/design-brief/rumah-oyen-area/preview-perbandingan.png)
 
-- [Roadmap baru, mulai langkah 1](docs/ROADMAP.md)
+- [Roadmap baru, berikutnya langkah 3](docs/ROADMAP.md)
 - [Spesifikasi dan mockup desain v2 — disetujui](docs/design-v2/README.md)
 - [Brief arah desain](docs/design-brief/rumah-oyen-area/ARAH_DESAIN.md)
 - [Keputusan aktif](docs/DESIGN_NOTES.md)
@@ -39,6 +39,7 @@ flutter test
 ```
 
 Galeri komponen tersedia melalui `flutter run --route /galeri`.
+Galeri aset desain v2 (sembilan karakter, animasi, aksesoris, barang, empat area) tersedia melalui `flutter run --route /galeri/aset-v2`; [render dan hasil pemeriksaan](docs/design-v2/assets/REVIEW.md).
 
 Generator screenshot dan merek di `test/screenshots/` masih mengikuti runtime yang lama; perbarui sesuai desain baru sebelum membuat materi final. Screenshot baru dibuat pada langkah 14 roadmap, bukan mengambil kembali gambar lama.
 

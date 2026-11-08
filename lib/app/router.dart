@@ -7,6 +7,7 @@ import '../gallery/gallery_kitty_screen.dart';
 import '../gallery/gallery_oyen_screen.dart';
 import '../gallery/gallery_screen.dart';
 import '../gallery/gallery_sound_screen.dart';
+import '../gallery/gallery_v2_screen.dart';
 import '../screens/chapter/chapter_screen.dart';
 import '../screens/level/level_screen.dart';
 import '../screens/room/room_screen.dart';
@@ -36,6 +37,10 @@ GoRouter createRouter({
             path: 'galeri',
             builder: (context, state) => const GalleryScreen(),
             routes: [
+              GoRoute(
+                path: 'aset-v2',
+                builder: (context, state) => const GalleryV2Screen(),
+              ),
               GoRoute(
                 path: 'papan',
                 builder: (context, state) => const GalleryBoardScreen(),

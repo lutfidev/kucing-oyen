@@ -1,0 +1,10 @@
+Original Ginger Logic v2 artwork, 2026.
+
+Created for this repository as vector geometry in tool/art_v2/generate.py
+and procedural animation in lib/game/render/v2/cat_rig.dart.
+No downloaded artwork, raster tracing, or third-party clip art is included.
+Use and redistribution follow the license of the containing project;
+this notice does not grant a separate third-party asset license.
+
+Art direction: owner-approved concept A and docs/design-v2/VISUAL.md.
+Concept images are references, not embedded runtime textures.

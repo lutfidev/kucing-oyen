@@ -61,6 +61,7 @@ final galleryRoutes = <String>[
   AppRoutes.galleryKitty,
   AppRoutes.gallerySound,
   AppRoutes.galleryMotion,
+  AppRoutes.galleryV2,
 ];
 
 const sizes = <Size>[
