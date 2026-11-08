@@ -1,110 +1,61 @@
-<div align="center">
-
 # 🐱 Ginger Logic
 
 **Oyen won't listen. You do the thinking.**
 
-Game puzzle mobile tentang kucing oren yang cuma mau ke mangkuknya kalau jalannya kamu atur.
+Game puzzle mobile tentang kucing oren yang bergerak sendiri mengikuti aturan tetap. Pemain mengatur ikan, air dan kardus agar Oyen sampai ke mangkuk tanpa memecahkan vas Ibu.
 
-![Flutter](https://img.shields.io/badge/Flutter-3.47-02569B?logo=flutter&logoColor=white)
-![Flame](https://img.shields.io/badge/Flame-1.38-F05A28)
-![Dart](https://img.shields.io/badge/Dart-3.13-0175C2?logo=dart&logoColor=white)
-![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)
-![Status](https://img.shields.io/badge/status-menuju%20rilis-F39A33)
+## Arah baru
 
-<img src="docs/screenshots/01-kamar.png" width="200" alt="Kamar Oyen">
-<img src="docs/screenshots/03-fase-atur-level-13.png" width="200" alt="Fase atur level 13">
-<img src="docs/screenshots/04-fase-jalan-langkah-5-jeda-x2.png" width="200" alt="Oyen berjalan">
-<img src="docs/screenshots/06-berhasil-level-13.png" width="200" alt="Berhasil, tiga bintang">
+Pada 8 November 2026, pemilik repo memilih perombakan seluruh visual mengikuti **konsep A — satu area per layar**, termasuk bentuk kucing, furnitur, UI dan layar puzzle. Rumah akan mendukung aktivitas otomatis dan ajakan pemain. Desain dan fitur baru masih direncanakan; aplikasi yang berjalan sekarang masih memakai visual sebelumnya.
 
-</div>
+![Acuan baru Rumah Oyen — pilih konsep A di kiri](docs/design-brief/rumah-oyen-area/preview-perbandingan.png)
 
-## Tentang game
+- [Roadmap baru, mulai langkah 1](docs/ROADMAP.md)
+- [Brief arah desain](docs/design-brief/rumah-oyen-area/ARAH_DESAIN.md)
+- [Keputusan aktif](docs/DESIGN_NOTES.md)
 
-Kamu tidak mengendalikan Oyen. Selagi Oyen tidur, kamu menaruh **ikan asin**, **ember air**, dan **kardus** di papan 7×9. Begitu dibangunkan, Oyen bergerak sendiri mengikuti aturan tetap. Tantangannya: menebak tingkah Oyen supaya ia sampai ke mangkuk makan, jangan sampai menjatuhkan vas Ibu, dan pakai benda sesedikit mungkin.
+Screenshot, ekspor desain dan rencana visual lama sudah dibersihkan dari acuan aktif. Gambar dokumentasi serta materi Play Store akan dibuat ulang setelah tampilan baru selesai. Persiapan release tetap menjadi tahap akhir roadmap.
 
-- **20 level** dalam dua babak: Babak 1 Dapur dan Babak 2 Ruang Tamu, masing-masing ditutup level bos.
-- **3 bintang per level**: sampai mangkuk, vas Ibu aman, dan benda paling sedikit.
-- **Putar ulang** langkah demi langkah untuk melihat di mana tebakanmu meleset.
-- **Petunjuk** bertingkat yang dibuka dengan koin atau iklan, plus kartu aturan dan tutorial interaktif.
-- **Kamar Oyen** sebagai Beranda: hias dengan barang dari **Toko**, adopsi delapan kucing lain, beri camilan dan elusan, dan pasang **aksesoris** (pita, bandana, beanie, sampai mahkota) di kucing mana saja.
-- **Koin** dari bintang baru, bonus harian, kucing yang dirawat, dan iklan berhadiah.
-- **Empat bahasa**: Inggris, Indonesia, Portugis Brasil, dan Rusia, dengan nada santai yang sama. Bahasa awal mengikuti HP; bisa diganti di **Pengaturan** (juga lihat tutorial lagi dan reset progres).
+## Fondasi game yang sudah berjalan
 
-## Aturan Oyen
+- Dua babak, 20 level, tiga bintang per level, solver dan putar ulang langkah demi langkah.
+- Petunjuk, koin, bonus harian dan iklan berhadiah pilihan pemain.
+- Rumah, koleksi sembilan kucing, barang, aksesoris dan kebutuhan; menjadi fondasi migrasi ke desain beberapa area.
+- Progres tersimpan di perangkat; bahasa Inggris, Indonesia, Portugis Brasil dan Rusia.
+- Flutter + Flame, Android portrait. Package ID `com.gingerlogic.app`.
 
-Setiap langkah, Oyen mengecek aturan dari atas ke bawah dan menjalankan aturan pertama yang cocok:
+Aturan dan data puzzle tetap mengacu [GDD](docs/GDD.md), `assets/levels/chapter1-2.json` dan [simulator acuan](docs/reference/oyen_simulator.py). Pergantian nomor roadmap tidak mereset progres pemain.
 
-1. **Sudah di mangkuk** → menang.
-2. **Sedang di kardus** → duduk 2 langkah, lalu kardus penyok dan Oyen lanjut.
-3. **Ada barang di meja sebelahnya** → dijatuhkan. Gelas plastik aman, vas Ibu pecah.
-4. **Melihat ikan** dalam garis lurus → menghadap ke ikan terdekat (seri: depan, searah jarum jam, berlawanan jarum jam, belakang).
-5. **Petak di depan**: air → putar balik; tembok atau meja → berputar searah jarum jam; kardus → masuk dan duduk; ikan → maju dan makan; lantai atau mangkuk → maju.
+## Menjalankan dan memeriksa
 
-Level gagal kalau Oyen mondar-mandir di keadaan yang sama atau lewat 80 langkah. Vas pecah tidak menggagalkan level, tapi bintang 2 dan 3 hilang. Detail lengkap ada di [docs/GDD.md](docs/GDD.md).
-
-<div align="center">
-
-<img src="docs/screenshots/02-peta-babak-1.png" width="200" alt="Peta Babak 1">
-<img src="docs/screenshots/07-vas-pecah-level-13.png" width="200" alt="Vas Ibu pecah">
-<img src="docs/screenshots/09-putar-ulang-langkah-4.png" width="200" alt="Putar ulang">
-<img src="docs/screenshots/20-toko-aksesoris.png" width="200" alt="Toko aksesoris">
-
-</div>
-
-## Menjalankan
-
-Butuh Flutter 3.47 (Dart 3.13) dan perangkat atau emulator Android.
+Gunakan Flutter yang memenuhi `pubspec.yaml`.
 
 ```sh
 flutter pub get
 flutter run
-```
-
-Galeri komponen dan sprite tidak punya tombol di dalam game; buka langsung lewat rute:
-
-```sh
-flutter run --route /galeri
-```
-
-## Test
-
-```sh
 flutter analyze
 flutter test
 ```
 
-Test mencakup simulasi dan solver (solusi ke-20 level harus menang tanpa memecahkan vas, dengan jumlah langkah yang sama dengan data), sesi level, layar, overflow di ukuran layar 360×640 sampai 412×915, dan teks 130%.
+Galeri komponen tersedia melalui `flutter run --route /galeri`.
 
-Potret layar seperti di atas dibuat dari test:
-
-```sh
-flutter test test/screenshots --dart-define=SCREENSHOTS=true
-# hasil: build/screenshots/390x844/*.png
-```
+Generator screenshot dan merek di `test/screenshots/` masih mengikuti runtime yang lama; perbarui sesuai desain baru sebelum membuat materi final. Screenshot baru dibuat pada langkah 14 roadmap, bukan mengambil kembali gambar lama.
 
 ## Struktur
 
 | Folder | Isi |
 | --- | --- |
-| `lib/game/sim/` | Simulasi dan solver Oyen, Dart murni tanpa Flutter |
-| `lib/game/model/` | Sesi level, fase jalan, putar ulang, progres, petunjuk, hadiah, rumah Oyen (kamar, kucing, aksesoris, camilan, kebutuhan) |
-| `lib/game/render/` | Gambar petak, papan, Oyen, dan ilustrasi lewat `Canvas` |
-| `lib/game/` | `KucingGame` (Flame) dan komponen papan |
-| `lib/screens/` | Kamar Oyen (Beranda), Toko, peta babak, level, hasil, putar ulang, Tambah Koin, Pengaturan |
-| `lib/widgets/`, `lib/theme/` | Komponen dasar dan token desain |
-| `lib/app/` | Router, progres tersimpan, iklan berhadiah |
-| `assets/levels/` | Data 20 level: peta, baki, target bintang, solusi |
+| `lib/game/sim/` | Simulator dan solver Dart murni |
+| `lib/game/model/` | Sesi level, progres, rumah, kebutuhan dan rutinitas |
+| `lib/game/render/` | Renderer runtime; diganti bertahap mengikuti desain baru |
+| `lib/screens/` | Rumah, Toko, peta, level, hasil, replay dan Pengaturan |
+| `lib/widgets/`, `lib/theme/` | Komponen dan token UI |
+| `lib/app/` | Router, penyimpanan, suara dan iklan |
+| `docs/design-brief/rumah-oyen-area/` | Acuan visual baru dan brief |
+| `docs/store/` | Listing, privasi dan panduan release yang dipertahankan |
 
-Rincian API per folder ada di [CLAUDE.md](CLAUDE.md).
-
-## Dokumen
-
-- [docs/GDD.md](docs/GDD.md): desain game, aturan Oyen, elemen peta, dan tabel 20 level.
-- [docs/ROADMAP.md](docs/ROADMAP.md): langkah pengerjaan dan statusnya.
-- [docs/DESIGN_NOTES.md](docs/DESIGN_NOTES.md): keputusan saat desain, GDD, dan data level tidak cocok.
-- [docs/reference/oyen_simulator.py](docs/reference/oyen_simulator.py): simulator dan solver acuan; logika Dart harus identik dengannya.
+Rincian kode dan alur kerja ada di [CLAUDE.md](CLAUDE.md). [Baseline performa 8 November](docs/performance-room-2026-11-08.md) berlaku untuk visual sebelumnya, bukan kelulusan desain baru.
 
 ## Kredit
 
-Font [Fredoka](https://fonts.google.com/specimen/Fredoka) dan [Nunito](https://fonts.google.com/specimen/Nunito) memakai SIL Open Font License (lisensinya ada di `assets/fonts/`).
+Font Fredoka dan Nunito memakai SIL Open Font License (`assets/fonts/`). Kredit suara ada di `assets/audio/LICENSE-sfx.txt`. Sumber dan lisensi aset visual baru dicatat bersama paket asetnya.

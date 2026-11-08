@@ -1,5 +1,7 @@
 # Rilis Play Store: Ginger Logic
 
+> **Reset desain 8 Nov 2026:** panduan release ini dipertahankan untuk langkah 16 roadmap baru. Ikon toko, feature graphic dan screenshot lama sudah dihapus; tabel di bawah adalah daftar hasil yang harus dibuat kembali pada langkah 14, bukan inventaris file yang sudah tersedia. Generator merek masih mengikuti runtime lama dan harus diperbarui sebelum digunakan untuk materi final. Listing dan jawaban formulir di bawah adalah baseline lama, wajib ditinjau ulang terhadap fitur final dan ketentuan terbaru saat rilis. Kebijakan privasi tetap dipertahankan.
+
 Semua yang dibutuhkan untuk mengunggah Ginger Logic (`com.gingerlogic.app`, versi `1.0.0+1`) ke Play Console.
 
 ## ⚠️ Wajib sebelum rilis produksi
@@ -80,7 +82,7 @@ Semua fungsi tersedia tanpa akses khusus (tanpa login).
 
 ### Target audiens dan konten
 
-- Kelompok usia target: **13–15, 16–17, 18+** (keputusan "Sebelum langkah 15" di `docs/DESIGN_NOTES.md`; iklan tidak ditandai untuk anak).
+- Baseline kelompok usia target sebelum redesign: **13–15, 16–17, 18+**, dengan iklan tidak ditandai untuk anak. Tinjau kembali sesuai desain dan fitur final pada langkah 16 roadmap baru; ini bukan keputusan otomatis untuk tampilan baru.
 - "Apakah aplikasi bisa menarik minat anak secara tidak sengaja?": jawab jujur. Gambar imut bisa membuat Google meminta kepatuhan program Keluarga; kalau itu terjadi, ubah permintaan iklan ke mode anak (`ageRestrictedTreatment: AgeRestrictedTreatment.child` di `startAdMob`, `lib/app/admob_sdk.dart`) dan perbarui jawaban di sini.
 - Listing toko tidak memakai kata-kata yang menyasar anak.
 

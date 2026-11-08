@@ -11,6 +11,10 @@ final _template = SvgTemplate(
   keyframes: CssKeyframes.parse(kittyKeyframes),
 );
 final _cache = <KittyLook, SvgDrawing>{};
+// Batasi varian (pose, arah, corak, aksesoris), bukan waktu. Permainan
+// panjang atau berganti aksesoris tidak menimbun bingkai animasi.
+final _animated = <KittyLook, SvgAnimation>{};
+const _maxAnimatedVariants = 96;
 
 /// Aksesoris yang digambar di dalam grup kepala (grup `a` desain).
 const _headGroup = [
@@ -280,13 +284,22 @@ Map<String, Object> kittyVals(KittyLook look) {
 
 /// Gambar [look] di koordinat sprite desain (100×100). Sprite diam
 /// ([KittyLook.time] null) disimpan di cache; yang bergerak digambar ulang
-/// per waktu.
+/// pada waktu yang tepat memakai varian SVG yang sudah diikat.
 SvgDrawing kittyDrawing(KittyLook look) {
   final time = look.time;
   if (time == null) {
     return _cache.putIfAbsent(look, () => _template.render(kittyVals(look)));
   }
-  return _template.render(kittyVals(look), time: time);
+  final key = look.copyWith(time: 0);
+  var bound = _animated.remove(key);
+  if (bound == null) {
+    bound = _template.bind(kittyVals(key));
+    if (_animated.length >= _maxAnimatedVariants) {
+      _animated.remove(_animated.keys.first);
+    }
+  }
+  _animated[key] = bound;
+  return bound.render(time: time);
 }
 
 /// Menggambar kucing kamar seukuran [size] px di pojok kiri atas kanvas.

@@ -1,16 +1,18 @@
 # Ginger Logic (repo `kucing_oren`)
 
-Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kardus) di papan 7x9, lalu Oyen si kucing oren bergerak sendiri mengikuti aturan tetap. Nama game "Ginger Logic" (merek berbahasa Inggris, sama di semua bahasa; "Kucing Oren" judul kerja lama, nama paket dan kelas tetap). Teks di dalam game tersedia dalam bahasa Inggris (utama), Indonesia, Portugis Brasil, dan Rusia dengan nada santai dan jenaka yang sama (lihat `docs/DESIGN_NOTES.md`, "Sebelum langkah 15" dan "Langkah 15").
+Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kardus) di papan 7x9, lalu Oyen si kucing oren bergerak sendiri mengikuti aturan tetap. Nama game "Ginger Logic" (merek berbahasa Inggris, sama di semua bahasa; "Kucing Oren" judul kerja lama, nama paket dan kelas tetap). Teks tersedia dalam bahasa Inggris (utama), Indonesia, Portugis Brasil, dan Rusia dengan nada santai dan jenaka yang sama; keputusan aktif ada di `docs/DESIGN_NOTES.md`.
 
 ## Sumber kebenaran
 
 - `docs/GDD.md`: dokumen desain game (aturan Oyen, elemen peta, alur level, bintang, 20 level).
 - `docs/reference/oyen_simulator.py`: simulator + solver acuan. Logika simulasi Dart HARUS identik dengan file ini.
 - `assets/levels/chapter1-2.json`: data 20 level (peta, baki, bintang 3, solusi, jumlah langkah solusi).
-- `docs/design/`: ekspor desain UI dari Claude Design (warna, tipografi, layar). Baca `docs/design/source/` (hasil bongkar: 18 halaman, komponen `*.dc.html`, token warna di `13-design-token-komponen-ui.html`), bukan `Kucing Oren.html` yang berupa paket terkompresi 16 MB. Folder ini tidak ikut repo (`.gitignore`), hanya ada di komputer pemilik repo. Kalau tidak ada, beri tahu pemilik repo; jangan menebak isi desain. Desain rumah Oyen (langkah 21–26) ada di `docs/design/rumah-oyen/project/*.dc.html` (satu berkas per artboard, daftar di `canvas.json`), diambil dari link kanvas Claude Design di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md` lewat alat Artifact (aksi `read` dengan `paths` dan `out_dir`). Desain baru dari Claude Design diserahkan pemilik repo sebagai link kanvas, bukan unduhan HTML.
-- `docs/DESIGN_NOTES.md`: keputusan saat desain, GDD, dan data level tidak cocok (dibuat saat pertama dibutuhkan).
+- Acuan visual aktif: `docs/design-brief/rumah-oyen-area/ARAH_DESAIN.md` dan `preview-perbandingan.png`, konsep A di kiri. Pada 8 Nov 2026 pemilik repo meminta seluruh visual diubah termasuk kucing; roadmap dimulai ulang. Ekspor HTML, brief, screenshot dan rencana desain lama dihapus dari acuan aktif. Spesifikasi lengkap berikutnya dibuat pada `docs/design-v2/` di langkah 1. Jangan meminta atau mengikuti ekspor `docs/design/source/` lama. Kode/aset runtime lama tetap menjadi fondasi sampai penggantinya siap.
+- `docs/DESIGN_NOTES.md`: keputusan aktif setelah reset roadmap 8 Nov 2026; catatan lama ada di riwayat Git dan bukan kontrak visual baru.
 
 ## Struktur
+
+Bagian ini menjelaskan kode runtime yang masih berjalan selama perombakan. Nomor langkah lama dalam uraian teknis adalah sejarah implementasi, bukan status roadmap baru. Mulai pekerjaan berikutnya dari `docs/ROADMAP.md` yang baru. Test sinkronisasi ekspor desain lama bersifat historis dan akan skip saat sumber lama tidak ada; tambahkan kontrak visual baru sesuai spesifikasi baru, jangan mengembalikan ekspor lama.
 
 - `lib/game/sim/`: simulasi Dart murni. `simulate(board, placed)` → `SimResult` (`win`, `vaseBroken`, `steps`, `failReason`, `trace` berisi `SimStep` per langkah, `vaseBrokenAtStep`). `solve(board, inventory, {needSafe})` → `SolveResult` (`minItems`, `solutions`: semua susunan minimum tanpa duplikat) atau null. `Board.parse`, `Level`/`parseLevels`, `Cell`, `Direction` (simbol peta; arah layar di teks lewat `name`), `Item`/`Placement`, `Pos`. Impor lewat `sim/sim.dart`.
 - `lib/game/model/level_session.dart`: `LevelSession(level)`, Dart murni. Fase `SessionPhase` (`arrange` → `running` → `result`). Aksi fase atur `place`/`move`/`remove` mengembalikan `false` kalau ditolak; `canPlaceAt(pos)` untuk petak menyala. `itemAt(pos)` hanya benda pemain (benda bawaan lewat `board.cellAt`), `placed`, `remaining` (sisa baki), `itemsUsed`. Pindah fase: `wake()` → `SimResult`, `finish()` ke layar hasil, `arrangeAgain()` (Atur Lagi/Coba Lagi, susunan tetap), `reset()` (Ulangi, papan kosong); pindah fase yang tidak sah melempar `StateError`. `stars` 0–3, null di fase atur.
@@ -62,6 +64,8 @@ Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kar
 
 Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API penting.
 
+- Profil kamar (langkah 32): `tool/profile_room.dart` dijalankan dengan `flutter run --profile -t tool/profile_room.dart -d <device>`, memakai `MemoryProgressStore` (9 kucing beraksesoris, 20 barang toko + mangkuk), pemanasan 15 detik dan pengukuran `FrameTiming` 60 detik; progres pemain tidak dibaca/ditulis. HP harus terbuka dan kamar tetap di depan. Hasil dan batas pengujian di `docs/performance-room-2026-11-08.md`. `SvgTemplate.bind` menghasilkan `SvgAnimation`: varian template disiapkan sekali dan waktu animasi tetap tepat. `kittyDrawing` memakai cache LRU maksimal 96 varian animasi, tidak menyimpan setiap waktu; sprite diam tetap di cache lama. `test/game/render/svg_binding_test.dart` membandingkan piksel/bounds dengan renderer acuan, termasuk pergantian varian setelah eviksi dan validasi CSS saat binding.
+
 ## Aturan penting
 
 - Logika simulasi ditulis sebagai Dart murni di `lib/game/sim/`, tanpa import Flame atau Flutter, supaya bisa diuji dengan unit test.
@@ -82,7 +86,7 @@ Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API pen
 
 Pemilik repo biasanya `/clear` setelah tiap sesi, jadi aturan ini yang berlaku, bukan ingatan percakapan. Kerjakan sendiri tanpa bertanya dan tanpa menyuruh pemilik repo menjalankan perintah:
 
-- **Awal langkah:** `git fetch`, pastikan tidak ada PR terbuka (`gh pr list --state open` kosong) dan PR langkah sebelumnya sudah di-merge ke `origin/main`, lalu `git checkout main && git pull --ff-only`, buat `feat/<nama-langkah>`, hapus branch lokal yang sudah di-merge, `flutter pub get && flutter analyze && flutter test`. Kalau masih ada PR yang belum di-merge, jangan bercabang dari `main` lama; beri tahu pemilik repo. (Langkah 1 masuk langsung ke `main` tanpa PR.)
+- **Awal langkah:** `git fetch`, pastikan tidak ada PR terbuka (`gh pr list --state open` kosong) dan PR langkah sebelumnya sudah di-merge ke `origin/main`, lalu `git checkout main && git pull --ff-only`, buat `feat/<nama-langkah>`, hapus branch lokal yang sudah di-merge, `flutter pub get && flutter analyze && flutter test`. Kalau masih ada PR yang belum di-merge, jangan bercabang dari `main` lama; beri tahu pemilik repo. Semua langkah roadmap baru, termasuk langkah 1, memakai branch dan PR.
 - **Selama langkah:** commit kecil, pesan bahasa Inggris singkat (`feat(sim): ...`, `fix: ...`, `test: ...`, `docs: ...`).
 - **Akhir langkah** (analyze bersih, test hijau, temuan review sudah diperbaiki, langkah sudah dicentang di `docs/ROADMAP.md`): `git push -u origin <branch>` lalu `gh pr create --base main` langsung, tanpa menu pilihan. Kirim link PR-nya. Judul PR `feat: <nama langkah>`. Badan PR berbahasa Indonesia: kalimat pembuka "Langkah N roadmap: ...", daftar perubahan, asumsi baru (kalau ada, juga dicatat di `docs/DESIGN_NOTES.md`), lalu baris "Verifikasi:" berisi hasil `flutter analyze`, jumlah test `flutter test` yang lulus, dan cek lain yang dijalankan.
 - **Merge PR** dilakukan pemilik repo di GitHub; jangan merge sendiri kecuali diminta.
@@ -98,7 +102,7 @@ Pemilik repo nyaman dengan skill superpowers: selalu pakai skill yang cocok. Eff
 - **Cari bug:** `superpowers:systematic-debugging` di sesi utama (high). Kalau penyebabnya bisa di banyak tempat, sebar pencarian ke subagent `Explore` effort low; analisis akar masalah tetap di sesi utama.
 - **Cari kode yang lebar:** subagent `Explore` effort low, hanya kalau bagian "Struktur" di atas dan `grep` langsung tidak cukup.
 - **Review sebelum PR:** `superpowers:requesting-code-review` dengan satu subagent effort high, lalu `superpowers:receiving-code-review` untuk menimbang temuannya sebelum diperbaiki. Sesudah itu `superpowers:verification-before-completion` sebelum push.
-- **Desain, logo, ikon, dan gambar lain:** di sesi utama (high), bukan subagent, karena butuh konteks desain lengkap. Yang ada di `docs/design/source/` disalin persis; yang belum ada desainnya (mis. ikon launcher dan splash di langkah 15) mulai dengan `superpowers:brainstorming`, pakai palet dan gaya desain, cek hasilnya lewat potret layar `test/screenshots/`, lalu catat di `docs/DESIGN_NOTES.md`.
+- **Desain, logo, ikon, dan gambar lain:** di sesi utama, karena perlu konteks desain lengkap. Ikuti preview A dan spesifikasi baru yang disepakati pada langkah 1 roadmap. Seluruh kucing/UI/layar mendapat desain baru; runtime diganti bertahap. Verifikasi mockup dan screenshot baru, catat sumber/lisensi aset. Desain HTML lama bukan sumber kebenaran aktif.
 
 ## Lanjut ke mana
 

@@ -39,6 +39,15 @@ class SvgTemplate {
   /// `@keyframes` yang dipakai atribut `style` (lihat [CssKeyframes.parse]).
   final Map<String, CssKeyframes> keyframes;
 
+  /// Ikat satu varian sprite sekali: nilai, path SVG, paragraf,
+  /// dan gaya CSS tidak perlu diurai lagi pada setiap bingkai.
+  /// Nilai disalin menjadi perintah gambar; perubahan [vals] tidak ikut.
+  /// Gaya animasi divalidasi saat binding, juga jika [SvgAnimation.render]
+  /// nanti dipanggil tanpa waktu. Pakai [render] untuk SVG diam yang
+  /// sengaja mengabaikan gaya animasi yang tidak didukung.
+  SvgAnimation bind(Map<String, Object> vals) =>
+      SvgAnimation._(_bindNodes(_nodes, vals, const {}, keyframes), keyframes);
+
   /// [vals] berisi nilai `{{nama}}`, juga bersarang lewat titik
   /// (`{{c.fur}}` = `vals['c']['fur']`). Blok `sc-if` tampil kalau nilainya
   /// `true`; nama yang tidak ada dianggap `false`. Blok
@@ -54,6 +63,23 @@ class SvgTemplate {
       keyframes,
     ).emit(_nodes, vals, const {}, _Affine.identity, ops);
     return SvgDrawing._(List.unmodifiable(ops));
+  }
+}
+
+/// Varian SVG yang siap dievaluasi pada waktu animasi yang tepat, tanpa
+/// membulatkan waktu atau menyimpan semua bingkai sepanjang permainan.
+class SvgAnimation {
+  SvgAnimation._(this._nodes, this._keyframes);
+
+  final List<_BoundNode> _nodes;
+  final Map<String, CssKeyframes> _keyframes;
+
+  SvgDrawing render({double? time}) {
+    final ops = <_Op>[];
+    for (final node in _nodes) {
+      node.emit(time, _keyframes, _Affine.identity, ops);
+    }
+    return SvgDrawing._(ops);
   }
 }
 
@@ -308,6 +334,149 @@ class _Emitter {
   }
 }
 
+List<_BoundNode> _bindNodes(
+  List<_Element> nodes,
+  Map<String, Object> vals,
+  Map<String, String> inherited,
+  Map<String, CssKeyframes> keyframes,
+) {
+  final result = <_BoundNode>[];
+  for (final el in nodes) {
+    if (el.name == 'sc-if') {
+      if (_condition(el.attrs['value'] ?? '', vals)) {
+        result.addAll(_bindNodes(el.children, vals, inherited, keyframes));
+      }
+      continue;
+    }
+    if (el.name == 'sc-for') {
+      final name = el.attrs['as'];
+      if (name == null) throw FormatException('sc-for tanpa as', el.name);
+      for (final item in _list(el, vals)) {
+        if (item != null) {
+          result.addAll(
+            _bindNodes(
+              el.children,
+              {...vals, name: item},
+              inherited,
+              keyframes,
+            ),
+          );
+        }
+      }
+      continue;
+    }
+    final attrs = {
+      ...inherited,
+      for (final MapEntry(:key, :value) in el.attrs.entries)
+        key: _resolve(value, vals),
+    };
+    final style = attrs.remove('style');
+    final css = style == null || style.trim().isEmpty
+        ? null
+        : CssStyle.parse(style);
+    if (el.attrs.containsKey('opacity') &&
+        (keyframes[css?.animation]?.animatesOpacity ?? false)) {
+      throw FormatException(
+        'opacity dan animasi opasitas di satu elemen',
+        style,
+      );
+    }
+    final transform = attrs['transform'];
+    final matrix = transform == null
+        ? _Affine.identity
+        : _parseTransform(transform, attrs['transform-origin']);
+    final center = css?.centerOrigin ?? false
+        ? _Emitter(null, keyframes)._localBounds(el, vals, inherited).center
+        : Offset(css?.originX ?? 0, css?.originY ?? 0);
+    final children = el.name == 'g'
+        ? _bindNodes(el.children, vals, {
+            for (final MapEntry(:key, :value) in attrs.entries)
+              if (_inherited.contains(key)) key: value,
+          }, keyframes)
+        : const <_BoundNode>[];
+    final _Op? leaf = switch (el.name) {
+      'g' => null,
+      'text' => _TextOp.from(attrs, el.text, _Affine.identity),
+      'rect' ||
+      'circle' ||
+      'ellipse' ||
+      'path' => _ShapeOp.from(el.name, attrs, _Affine.identity),
+      _ => throw UnsupportedError('Elemen <${el.name}> belum didukung'),
+    };
+    result.add(
+      _BoundNode(
+        matrix,
+        transform != null,
+        css,
+        center,
+        _num(attrs, 'opacity', 1),
+        leaf,
+        children,
+        // Bentuk dasar dibuat lagi seperti render acuan. Memakai ulang
+        // Path oval/persegi pada transformasi animasi yang berbeda bisa
+        // memakai cache raster native dengan pembulatan tepi berbeda.
+        leaf is _ShapeOp &&
+                (el.name != 'path' ||
+                    (keyframes[css?.animation]?.animatesOpacity ?? false))
+            ? (alpha) => _ShapeOp.from(el.name, {
+                ...attrs,
+                'opacity': '$alpha',
+              }, _Affine.identity)
+            : null,
+      ),
+    );
+  }
+  return result;
+}
+
+class _BoundNode {
+  _BoundNode(
+    this.matrix,
+    this.hasTransform,
+    this.css,
+    this.origin,
+    this.opacity,
+    this.leaf,
+    this.children,
+    this.shapeAtOpacity,
+  );
+
+  final _Affine matrix;
+  final bool hasTransform;
+  final CssStyle? css;
+  final Offset origin;
+  final double opacity;
+  final _Op? leaf;
+  final List<_BoundNode> children;
+  final _Op Function(double)? shapeAtOpacity;
+
+  void emit(
+    double? time,
+    Map<String, CssKeyframes> keyframes,
+    _Affine parent,
+    List<_Op> ops,
+  ) {
+    var m = parent * matrix;
+    final frame = time == null ? null : css?.frameAt(time, keyframes);
+    if (hasTransform && frame?.transform != null) {
+      throw FormatException('transform dan animasi di satu elemen');
+    }
+    if (frame != null) m = m * _Affine.of(frame.matrix(origin.dx, origin.dy));
+    final alpha = frame?.opacity ?? opacity;
+    final local = leaf;
+    if (local != null) {
+      final op = shapeAtOpacity != null ? shapeAtOpacity!(alpha) : local;
+      ops.add(m.isIdentity ? op : _PlacedOp(op, m.storage));
+      return;
+    }
+    final output = alpha < 1 ? <_Op>[] : ops;
+    for (final child in children) {
+      child.emit(time, keyframes, m, output);
+    }
+    if (alpha < 1 && output.isNotEmpty) ops.add(_GroupOp(output, alpha));
+  }
+}
+
 double _num(Map<String, String> a, String key, [double fallback = 0]) {
   final v = a[key];
   return v == null ? fallback : double.parse(v);
@@ -414,6 +583,17 @@ abstract class _Op {
     final m = matrix;
     return m == null ? outline.getBounds() : outline.transform(m).getBounds();
   }
+}
+
+class _PlacedOp extends _Op {
+  _PlacedOp(this.child, super.matrix);
+  final _Op child;
+
+  @override
+  Path get outline => child.outline;
+
+  @override
+  void draw(Canvas canvas) => child.draw(canvas);
 }
 
 class _ShapeOp extends _Op {

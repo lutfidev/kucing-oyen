@@ -1,8 +1,10 @@
 # Desain langkah 17: Polish dan rilis Android
 
+> Baseline release sebelum reset visual 8 Nov 2026. Dipertahankan sebagai referensi teknis untuk langkah 16 roadmap baru, bukan urutan implementasi aktif. Ikuti `docs/ROADMAP.md`, konfigurasi aktual, dan panduan `docs/store/README.md`; gambar serta nomor langkah lama di dokumen ini sudah tidak berlaku sebagai acuan visual.
+
 ## Konteks
 
-Langkah 17 roadmap, langkah terakhir. Hasilnya app bundle release yang siap diunggah ke Play Console. Langkah 16 (PR #18) sudah di-merge dan tidak ada PR terbuka. Keputusan iklan dan audiens ada di `docs/DESIGN_NOTES.md` bagian "Sebelum langkah 15": iklan **tidak** ditandai untuk anak, target audiens Play Console 13+, dan formulir persetujuan (UMP) dipakai di wilayah yang mewajibkan.
+Konteks historis sebelum reset: hasil yang dituju adalah app bundle release siap diunggah. Baseline saat itu memakai target audiens 13+, iklan tidak ditandai untuk anak, dan UMP di wilayah yang mewajibkan. Untuk redesign, target audiens serta pengaturan persetujuan harus ditinjau ulang terhadap aplikasi final pada langkah 16 roadmap baru; lihat `docs/store/README.md`.
 
 Jawaban pemilik repo (19 Okt 2026):
 - **`applicationId`:** `com.gingerlogic.app`.
