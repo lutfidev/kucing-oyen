@@ -8,7 +8,7 @@ Perombakan visual seluruh game: kucing, ruangan, barang, aksesoris, UI, puzzle, 
 
 Acuan: [preview Rumah Oyen](design-brief/rumah-oyen-area/preview-perbandingan.png), **sisi kiri**, dan [brief baru](design-brief/rumah-oyen-area/ARAH_DESAIN.md). Sisi kanan bukan desain terpilih. Preview adalah konsep raster, belum aset runtime atau spesifikasi seluruh layar.
 
-Pilihan pemilik repo: kucing beraktivitas sendiri **dan** bisa diajak pemain. Santai, Makan, Bermain, dan Perawatan akan dirancang pada langkah 1. Kapasitas, perpindahan, aktivitas, kebutuhan, dan hadiah harus ditetapkan sebelum implementasi.
+Pilihan pemilik repo: kucing beraktivitas sendiri **dan** bisa diajak pemain. Santai, Makan, Bermain, dan Perawatan serta kapasitas, perpindahan, aktivitas, kebutuhan, dan hadiah telah disepakati pada langkah 1 di [spesifikasi v2](design-v2/SPEC.md).
 
 Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progres/koin/koleksi, empat bahasa (en/id/pt/ru), suara dan iklan yang sudah berjalan. Rumah baru memakai migrasi simpanan yang aman. Penomoran ulang roadmap bukan reset progres pemain.
 
@@ -25,7 +25,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 
 ## Status
 
-- [ ] 1. Spesifikasi lengkap desain baru dan alur rumah
+- [x] 1. Spesifikasi lengkap desain baru dan alur rumah
 - [ ] 2. Aset kucing, furnitur, ruangan, dan animasi baru
 - [ ] 3. Fondasi UI dan komponen sesuai desain baru
 - [ ] 4. Model banyak area, rutinitas, dan migrasi progres
@@ -44,6 +44,8 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 
 ## 1. Spesifikasi lengkap desain baru dan alur rumah
 
+**Selesai, disetujui pemilik repo pada 8 November 2026:** [desain v2](design-v2/README.md) berisi spesifikasi, inventaris, token, mockup dan wireframe. Masukan berikutnya dicatat sebagai revisi. Aplikasi belum memakai tampilan baru. Berikutnya langkah 2 setelah PR #40 di-merge.
+
 **Baca:** brief dan preview A; `lib/app/routes.dart`, `router.dart`, `lib/screens/`; model `home.dart`, `needs.dart`, `room_life.dart`; GDD bagian aturan dan level.
 
 **Kerjakan:**
@@ -51,7 +53,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - Buat `docs/design-v2/SPEC.md`, inventaris layar/keadaan, token visual, dan mockup resolusi ponsel. Liputi seluruh rute dan sheet.
 - Rancang empat area, perpindahan, kapasitas yang nyaman, posisi kucing antararea, serta cara menemukan kucing yang tidak sedang terlihat.
 - Tetapkan prioritas otomatis/ajakan, antrean, pembatalan, area tertutup, aktivitas selesai, dan perilaku saat pemain masuk puzzle atau menutup aplikasi.
-- Putuskan hubungan aktivitas dengan Lapar/Senang dan hadiah. Mandi, kebutuhan kebersihan, hadiah gabungan dan batas 3–4 kucing belum menjadi aturan final.
+- Putuskan hubungan aktivitas dengan Lapar/Senang dan hadiah. Hasil disepakati: tanpa mandi/kebersihan baru, hadiah gabungan bernominal v1, kapasitas 3/2/2/2; lihat SPEC.
 - Desain seluruh kucing baru, barang, aksesoris, header/navigasi, puzzle, peta, hasil, Toko, tutorial, dan Pengaturan. Sertakan kosong/penuh, kebutuhan rendah, teks panjang, dan layar kecil.
 - Tetapkan kemiripan dengan A: komposisi, proporsi kucing, palet, outline, tekstur, furnitur dan tombol. Tunjukkan hasil ke pemilik repo untuk disepakati.
 
