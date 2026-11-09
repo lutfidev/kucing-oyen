@@ -70,6 +70,7 @@ class _HomeViewState extends State<HomeView> {
         c.coins >= 10000 ||
         MediaQuery.textScalerOf(context).scale(KoUi.heading.fontSize!) > 22;
     return Scaffold(
+      backgroundColor: KoUi.homeBackground,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, box) {

@@ -116,7 +116,7 @@ class _UiButtonState extends State<UiButton> {
                               colors:
                                   widget.kind == UiButtonKind.primary && enabled
                                   ? [KoUi.homeGold, KoUi.orange]
-                                  : [KoUi.paper, KoUi.cream],
+                                  : [KoUi.homePaper, KoUi.homeCream],
                             )
                           : null,
                       border: Border.all(

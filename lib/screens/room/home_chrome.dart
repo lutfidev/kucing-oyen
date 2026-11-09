@@ -182,7 +182,7 @@ class HomeNavigation extends StatelessWidget {
       gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [KoUi.cream, KoUi.peach],
+        colors: [KoUi.homeBackground, KoUi.homePeach],
       ),
     ),
     padding: const EdgeInsets.fromLTRB(KoUi.s16, KoUi.s8, KoUi.s16, KoUi.s8),

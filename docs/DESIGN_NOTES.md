@@ -4,6 +4,12 @@ Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lam
 
 ## Integrasi beranda v2 — 9 November 2026
 
+Revisi warna berikutnya atas permintaan pemilik repo: krem madu dan ivory
+hangat untuk rumah/kartu, kayu karamel serta cahaya sore untuk Santai. Token
+khusus rumah menjaga identitas warna kucing dan palet dasar layar lain.
+[Perbandingan palet](design-v2/home/REVIEW.md) tersedia; penerimaan akhir tetap
+melalui tinjauan visual pemilik repo.
+
 Tinjauan berikutnya: pemilik repo meminta tampilan dirapikan terlebih dahulu,
 sebelum langkah 6. Perapian meliputi arsitektur Santai, karakter lebih bulat,
 komposisi berlapis, empat tab terlihat pada teks normal dan kontrol yang lebih

@@ -18,10 +18,14 @@ abstract final class KoUi {
   static const danger = Color(0xFFA63D32);
   static const shadow = Color(0x33573018);
   static const scrim = Color(0x99573018);
-  static const homeLine = Color(0xFFD4AB79);
-  static const homeShade = Color(0x22A7743D);
+  static const homeBackground = Color(0xFFF9DEB4);
+  static const homePaper = Color(0xFFFFF0D4);
+  static const homeCream = Color(0xFFFFE5B8);
+  static const homePeach = Color(0xFFF4C88F);
+  static const homeLine = Color(0xFFC18B52);
+  static const homeShade = Color(0x2BA2673E);
   static const homeGold = Color(0xFFFFBD58);
-  static const homeFloor = Color(0xFFF5CD91);
+  static const homeFloor = Color(0xFFE5B16E);
   static const homeLeaf = Color(0xFF869D60);
   static const s4 = 4.0, s8 = 8.0, s12 = 12.0, s16 = 16.0, s24 = 24.0;
   static const chipRadius = 16.0, buttonRadius = 18.0;
@@ -84,7 +88,7 @@ abstract final class KoUi {
     gradient: const LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [paper, cream],
+      colors: [homePaper, homeCream],
     ),
     borderRadius: BorderRadius.circular(radius),
     border: Border.all(color: homeLine, width: outline),

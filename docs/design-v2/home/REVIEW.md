@@ -27,8 +27,24 @@ Perbandingan runtime 390×844: [sebelum](santai-sebelum-polish-id.png) dan
 diperbarui. Ini tetap bahan tinjauan, bukan persetujuan visual otomatis.
 
 Sumber ilustrasi tambahan: `tool/art_v2/lounge.py`, dipanggil generator utama.
-Inventaris tetap 209 aset vektor, 298.538 byte sumber, 108.652 byte ZIP menurut
+Inventaris tetap 209 aset vektor, 298.538 byte sumber, 108.641 byte ZIP menurut
 generator; raster/atlas sumber tetap nol. Lisensi mengikuti paket seni v2.
+
+### Revisi palet hangat
+
+Pemilik repo meminta warna lebih hangat setelah perapian bentuk diterima
+sebagai arah. Latar rumah kini krem madu `#F9DEB4`, kartu ivory madu
+`#FFF0D4` → `#FFE5B8`, dan panel bawah peach `#F4C88F`. Dinding Santai,
+tirai, kayu karamel serta cahaya sore memakai palet yang sama. Warna bulu
+kucing tetap agar sembilan identitas mudah dikenali. Perbandingan:
+[sebelum perubahan warna](santai-sebelum-warna-hangat-id.png) dan
+[palet terbaru](santai-baru-id.png).
+
+Kontras teks cokelat `#573018` terhadap permukaan rumah baru 7,33–10,14:1;
+ujung oranye tombol utama tetap 4,59:1. Pemeriksaan dilakukan dari luminans
+warna, bukan klaim audit aksesibilitas perangkat. Perubahan palet diverifikasi
+dengan 64 test rumah/komponen UI, pengecekan aset dan build debug; hasil suite
+lengkap di bawah merupakan baseline perapian sebelumnya.
 
 ## Tampilan dan alur
 

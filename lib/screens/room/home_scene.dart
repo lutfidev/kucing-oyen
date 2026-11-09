@@ -295,7 +295,7 @@ class _RoomLayers extends CustomPainter {
           ..shader = const RadialGradient(
             center: Alignment(-.3, -.6),
             radius: 1.3,
-            colors: [Color(0x22FFF9DA), Color(0x00FFF9DA), Color(0x117C4F29)],
+            colors: [Color(0x33FFD075), Color(0x00FFD075), Color(0x248E512D)],
             stops: [0, .55, 1],
           ).createShader(room),
       );
@@ -329,18 +329,18 @@ class _RoomLayers extends CustomPainter {
           ..shader = const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [KoUi.paper, KoUi.cream],
+            colors: [KoUi.homePaper, KoUi.homeCream],
           ).createShader(rug),
       );
       canvas.drawOval(
         rug.deflate(9),
         Paint()
-          ..color = KoUi.peach
+          ..color = KoUi.homePeach
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1.2,
       );
       final wool = Paint()
-        ..color = KoUi.peach
+        ..color = KoUi.homePeach
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.3
         ..strokeCap = StrokeCap.round;
