@@ -4,6 +4,11 @@ Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lam
 
 ## Integrasi beranda v2 — 9 November 2026
 
+Visual akhir rumah berilustrasi diterima pemilik repo dengan “boleh lah” setelah
+tinjauan screenshot runtime. Langkah 5 selesai dan dicentang; PR #44 berubah
+dari draft menjadi siap review. Merge tetap dilakukan pemilik repo. Langkah 6
+(Makan) dimulai setelah merge, dengan arah ilustrasi ini sebagai acuan.
+
 Keputusan ilustrasi berikutnya: permintaan warna/kekayaan visual seperti mockup
 diterapkan dengan latar Santai baru dari imagegen bawaan, terpisah dari UI,
 kucing dan barang katalog. Aset WebP 180.076 byte, decode tetap 4 MiB; vektor

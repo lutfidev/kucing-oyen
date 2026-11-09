@@ -29,7 +29,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 2. Aset kucing, furnitur, ruangan, dan animasi baru
 - [x] 3. Fondasi UI dan komponen sesuai desain baru
 - [x] 4. Model banyak area, rutinitas, dan migrasi progres
-- [ ] 5. Beranda Santai dan perpindahan area
+- [x] 5. Beranda Santai dan perpindahan area
 - [ ] 6. Area Makan: otomatis dan ajakan pemain
 - [ ] 7. Area Bermain: otomatis dan ajakan pemain
 - [ ] 8. Area Perawatan dan interaksi kucing
@@ -99,7 +99,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 
 ## 5. Beranda Santai dan perpindahan area
 
-**Implementasi tersedia 9 November 2026; menunggu penerimaan screenshot pemilik repo.** [Tinjauan rumah v2](design-v2/home/REVIEW.md). Rute rumah memakai aset/komponen v2, navigasi area dan koleksi, ajakan/batal, hadiah gabungan serta clock lifecycle/iklan. Checkbox tetap kosong sampai syarat visual di bawah diterima. Hias/Gudang mengikuti langkah 9.
+**Selesai 9 November 2026; visual akhir diterima pemilik repo dengan “boleh lah”.** [Tinjauan rumah v2](design-v2/home/REVIEW.md). Rute rumah memakai latar ilustrasi, kucing/barang interaktif, navigasi area dan koleksi, ajakan/batal, hadiah gabungan serta clock lifecycle/iklan. Verifikasi: 2.907 test lulus, 135 skip historis, analyze bersih dan APK debug berhasil. Hias/Gudang mengikuti langkah 9. Langkah 6 dimulai setelah PR #44 di-merge.
 
 **Baca/ubah:** `lib/screens/room/`, router/rute, komponen/aset/model langkah 2–4; test kamar/navigasi.
 

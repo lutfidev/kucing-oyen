@@ -1,8 +1,10 @@
 # Beranda v2 — langkah 5
 
 Implementasi 9 November 2026, setelah PR model #43 masuk `main`.
-**Status: siap untuk tinjauan visual pemilik repo; langkah 5 belum dicentang.**
-Penerimaan screenshot merupakan syarat selesai pada ROADMAP.
+**Status: visual akhir DISETUJUI pemilik repo pada 9 November 2026; langkah 5 selesai.**
+Persetujuan eksplisit setelah tinjauan latar ilustrasi pada runtime: “boleh lah”.
+Syarat penerimaan screenshot pada ROADMAP terpenuhi. PR #44 difinalisasi untuk
+review/merge oleh pemilik repo; langkah 6 dimulai setelah merge.
 
 ## Perapian visual setelah tinjauan pemilik repo
 
