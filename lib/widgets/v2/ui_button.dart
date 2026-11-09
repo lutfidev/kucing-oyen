@@ -12,6 +12,7 @@ class UiButton extends StatefulWidget {
     super.key,
     required this.label,
     required this.onPressed,
+    this.semanticLabel,
     this.icon,
     this.kind = UiButtonKind.primary,
     this.loading = false,
@@ -20,6 +21,7 @@ class UiButton extends StatefulWidget {
     this.compact = false,
   });
   final String label;
+  final String? semanticLabel;
   final VoidCallback? onPressed;
   final IconData? icon;
   final UiButtonKind kind;
@@ -56,7 +58,7 @@ class _UiButtonState extends State<UiButton> {
       button: true,
       enabled: enabled,
       selected: widget.selected,
-      label: widget.label,
+      label: widget.semanticLabel ?? widget.label,
       liveRegion: widget.loading,
       onTap: action,
       excludeSemantics: true,

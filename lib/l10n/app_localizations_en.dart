@@ -2093,4 +2093,137 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get uiActivityNote =>
       'Choose an activity for Oyen. The invitation will wait for the current activity.';
+
+  @override
+  String get homeCats => 'Cats';
+
+  @override
+  String get homeEmpty => 'A quiet spot. Find a cat from your collection.';
+
+  @override
+  String get homeChoose => 'Choose a cat';
+
+  @override
+  String get homeResting => 'Relaxing';
+
+  @override
+  String get homeSleeping => 'Sleeping';
+
+  @override
+  String homeActivity(String activity) {
+    String _temp0 = intl.Intl.selectLogic(activity, {
+      'rest': 'Relax',
+      'eat': 'Eat',
+      'play': 'Play',
+      'brush': 'Brush',
+      'pet': 'Pet',
+      'other': 'Relax',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String homeDoing(String activity) {
+    return 'Now: $activity';
+  }
+
+  @override
+  String homeTravel(String area) {
+    return 'Heading to $area…';
+  }
+
+  @override
+  String homeWaiting(String area, int position) {
+    return 'Waiting for $area · $position in line';
+  }
+
+  @override
+  String homeAfterActivity(String area) {
+    return 'After this activity: $area';
+  }
+
+  @override
+  String get homeIneligible =>
+      'Already full, or today\'s activity allowance needs a rest.';
+
+  @override
+  String get homeCancelled => 'Invitation cancelled';
+
+  @override
+  String get homeFacilityRemoved => 'Activity stopped; the item is in storage.';
+
+  @override
+  String get homeInviteEat => 'Invite to eat';
+
+  @override
+  String get homeInvitePlay => 'Invite to play';
+
+  @override
+  String get homeInviteCare => 'Care';
+
+  @override
+  String get homeBrush => 'Brush';
+
+  @override
+  String get homeRest => 'Back to lounge';
+
+  @override
+  String homeInviteFor(String name, String activity) {
+    return 'Invite $name · $activity';
+  }
+
+  @override
+  String get homeFind => 'Find';
+
+  @override
+  String get homeViewArea => 'View area';
+
+  @override
+  String get homeCancelAfter => 'Cancel after this';
+
+  @override
+  String get homeCancelInvitation => 'Cancel invitation';
+
+  @override
+  String homeRewardAvailable(int coins) {
+    return 'Rewards available · $coins';
+  }
+
+  @override
+  String get homeRewardNone => 'Everyone is comfy. Rewards will be back.';
+
+  @override
+  String get homeRewards => 'House rewards';
+
+  @override
+  String homeClaimAll(int coins) {
+    return 'Collect all · $coins';
+  }
+
+  @override
+  String get homeSaveFailed => 'Couldn\'t save. Your last saved state is safe.';
+
+  @override
+  String get homeRetry => 'Try again';
+
+  @override
+  String get homeMigration =>
+      'A bigger home! Your other items are safe in storage.';
+
+  @override
+  String get homeWelcome => 'Welcome home';
+
+  @override
+  String get homeFood => 'Food';
+
+  @override
+  String homeAreaCount(String area, int count, int capacity) {
+    return '$area · $count/$capacity';
+  }
+
+  @override
+  String get homeLoadFailed => 'Couldn\'t load the room art.';
+
+  @override
+  String get homeLoading => 'Opening the home…';
 }

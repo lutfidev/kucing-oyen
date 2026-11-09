@@ -23,7 +23,7 @@ void main() {
     await pumpApp(tester);
     expect(find.byType(RoomScreen), findsOneWidget);
 
-    await tester.tap(find.text('Main'));
+    await tester.tap(find.text('Main Puzzle'));
     await settle(tester);
     expect(find.byType(ChapterView), findsOneWidget);
     expect(find.text('Dapur'), findsOneWidget);
@@ -141,7 +141,7 @@ void main() {
     tester,
   ) async {
     await pumpApp(tester, progress: testProgress(wonUpTo(10)));
-    await tester.tap(find.text('Main'));
+    await tester.tap(find.text('Main Puzzle'));
     await settle(tester);
     expect(find.text('Ruang Tamu'), findsOneWidget);
     expect(find.bySemanticsLabel('Level 11, main sekarang'), findsOneWidget);

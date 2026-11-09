@@ -49,6 +49,16 @@ enum _Part { hints, home, coins, needs, progress, rewards, tutorials, language }
 /// koin, petunjuk, rumah Oyen dan kebutuhan kucingnya, hadiah harian, dan
 /// bahasa. Dimuat sekali sebelum aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
 class ProgressController extends ChangeNotifier implements HintSource {
+  KittyId? _homeSelection;
+  bool _homeSelectionInitialized = false;
+  final ValueNotifier<int> _homePauseRevision = ValueNotifier(0);
+
+  @override
+  void dispose() {
+    _homePauseRevision.dispose();
+    super.dispose();
+  }
+
   ProgressController({
     required List<Level> levels,
     required this.store,
@@ -488,6 +498,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     if (_watchingAd) return AdReward.busy;
     if (adsLeft == 0) return AdReward.limitReached;
     _watchingAd = true;
+    pauseHousehold(HouseholdPause.ad);
     bool watched;
     try {
       watched = await coinAds.show();
@@ -496,6 +507,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
       watched = false;
     } finally {
       _watchingAd = false;
+      resumeHousehold(HouseholdPause.ad);
     }
     if (!watched) return AdReward.failed;
     _rewards = _rewards.watchedAd(_today);
@@ -533,6 +545,8 @@ class ProgressController extends ChangeNotifier implements HintSource {
   Future<void> resetProgress() async {
     if (store is SnapshotStore) await _saving;
     _pendingHome = null;
+    _homeSelection = null;
+    _homeSelectionInitialized = false;
     _pendingHomeRebuild = null;
     _progress = Progress.empty;
     _coins = 0;

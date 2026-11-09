@@ -2735,5 +2735,202 @@
   "uiActivityNote": "Choose an activity for Oyen. The invitation will wait for the current activity.",
   "@uiActivityNote": {
     "description": "V2 UI foundation: uiActivityNote"
+  },
+  "homeCats": "Cats",
+  "@homeCats": {
+    "description": "V2 player home: homeCats."
+  },
+  "homeEmpty": "A quiet spot. Find a cat from your collection.",
+  "@homeEmpty": {
+    "description": "V2 player home: homeEmpty."
+  },
+  "homeChoose": "Choose a cat",
+  "@homeChoose": {
+    "description": "V2 player home: homeChoose."
+  },
+  "homeResting": "Relaxing",
+  "@homeResting": {
+    "description": "V2 player home: homeResting."
+  },
+  "homeSleeping": "Sleeping",
+  "@homeSleeping": {
+    "description": "V2 player home: homeSleeping."
+  },
+  "homeActivity": "{activity, select, rest{Relax} eat{Eat} play{Play} brush{Brush} pet{Pet} other{Relax}}",
+  "@homeActivity": {
+    "description": "V2 player home: homeActivity.",
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "homeDoing": "Now: {activity}",
+  "@homeDoing": {
+    "description": "V2 player home: homeDoing.",
+    "placeholders": {
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "homeTravel": "Heading to {area}…",
+  "@homeTravel": {
+    "description": "V2 player home: homeTravel.",
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "homeWaiting": "Waiting for {area} · {position} in line",
+  "@homeWaiting": {
+    "description": "V2 player home: homeWaiting.",
+    "placeholders": {
+      "area": {
+        "type": "String"
+      },
+      "position": {
+        "type": "int"
+      }
+    }
+  },
+  "homeAfterActivity": "After this activity: {area}",
+  "@homeAfterActivity": {
+    "description": "V2 player home: homeAfterActivity.",
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "homeIneligible": "Already full, or today's activity allowance needs a rest.",
+  "@homeIneligible": {
+    "description": "V2 player home: homeIneligible."
+  },
+  "homeCancelled": "Invitation cancelled",
+  "@homeCancelled": {
+    "description": "V2 player home: homeCancelled."
+  },
+  "homeFacilityRemoved": "Activity stopped; the item is in storage.",
+  "@homeFacilityRemoved": {
+    "description": "V2 player home: homeFacilityRemoved."
+  },
+  "homeInviteEat": "Invite to eat",
+  "@homeInviteEat": {
+    "description": "V2 player home: homeInviteEat."
+  },
+  "homeInvitePlay": "Invite to play",
+  "@homeInvitePlay": {
+    "description": "V2 player home: homeInvitePlay."
+  },
+  "homeInviteCare": "Care",
+  "@homeInviteCare": {
+    "description": "V2 player home: homeInviteCare."
+  },
+  "homeBrush": "Brush",
+  "@homeBrush": {
+    "description": "V2 player home: homeBrush."
+  },
+  "homeRest": "Back to lounge",
+  "@homeRest": {
+    "description": "V2 player home: homeRest."
+  },
+  "homeInviteFor": "Invite {name} · {activity}",
+  "@homeInviteFor": {
+    "description": "V2 player home: homeInviteFor.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "activity": {
+        "type": "String"
+      }
+    }
+  },
+  "homeFind": "Find",
+  "@homeFind": {
+    "description": "V2 player home: homeFind."
+  },
+  "homeViewArea": "View area",
+  "@homeViewArea": {
+    "description": "V2 player home: homeViewArea."
+  },
+  "homeCancelAfter": "Cancel after this",
+  "@homeCancelAfter": {
+    "description": "V2 player home: homeCancelAfter."
+  },
+  "homeCancelInvitation": "Cancel invitation",
+  "@homeCancelInvitation": {
+    "description": "V2 player home: homeCancelInvitation."
+  },
+  "homeRewardAvailable": "Rewards available · {coins}",
+  "@homeRewardAvailable": {
+    "description": "V2 player home: homeRewardAvailable.",
+    "placeholders": {
+      "coins": {
+        "type": "int"
+      }
+    }
+  },
+  "homeRewardNone": "Everyone is comfy. Rewards will be back.",
+  "@homeRewardNone": {
+    "description": "V2 player home: homeRewardNone."
+  },
+  "homeRewards": "House rewards",
+  "@homeRewards": {
+    "description": "V2 player home: homeRewards."
+  },
+  "homeClaimAll": "Collect all · {coins}",
+  "@homeClaimAll": {
+    "description": "V2 player home: homeClaimAll.",
+    "placeholders": {
+      "coins": {
+        "type": "int"
+      }
+    }
+  },
+  "homeSaveFailed": "Couldn't save. Your last saved state is safe.",
+  "@homeSaveFailed": {
+    "description": "V2 player home: homeSaveFailed."
+  },
+  "homeRetry": "Try again",
+  "@homeRetry": {
+    "description": "V2 player home: homeRetry."
+  },
+  "homeMigration": "A bigger home! Your other items are safe in storage.",
+  "@homeMigration": {
+    "description": "V2 player home: homeMigration."
+  },
+  "homeWelcome": "Welcome home",
+  "@homeWelcome": {
+    "description": "V2 player home: homeWelcome."
+  },
+  "homeFood": "Food",
+  "@homeFood": {
+    "description": "V2 player home: homeFood."
+  },
+  "homeAreaCount": "{area} · {count}/{capacity}",
+  "@homeAreaCount": {
+    "description": "V2 player home: homeAreaCount.",
+    "placeholders": {
+      "area": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "homeLoadFailed": "Couldn't load the room art.",
+  "@homeLoadFailed": {
+    "description": "V2 player home: homeLoadFailed."
+  },
+  "homeLoading": "Opening the home…",
+  "@homeLoading": {
+    "description": "V2 player home: homeLoading."
   }
 }

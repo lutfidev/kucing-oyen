@@ -1950,4 +1950,139 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get uiActivityNote =>
       'Pilih kegiatan untuk Oyen. Ajakan akan menunggu kegiatan yang sedang berjalan.';
+
+  @override
+  String get homeCats => 'Kucing';
+
+  @override
+  String get homeEmpty =>
+      'Area ini lagi sepi. Temukan kucing lewat koleksi, yuk.';
+
+  @override
+  String get homeChoose => 'Pilih kucing';
+
+  @override
+  String get homeResting => 'Bersantai';
+
+  @override
+  String get homeSleeping => 'Tidur';
+
+  @override
+  String homeActivity(String activity) {
+    String _temp0 = intl.Intl.selectLogic(activity, {
+      'rest': 'Santai',
+      'eat': 'Makan',
+      'play': 'Main',
+      'brush': 'Sikat',
+      'pet': 'Elus',
+      'other': 'Santai',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String homeDoing(String activity) {
+    return 'Sedang: $activity';
+  }
+
+  @override
+  String homeTravel(String area) {
+    return 'Menuju $area…';
+  }
+
+  @override
+  String homeWaiting(String area, int position) {
+    return 'Menunggu $area · antrean $position';
+  }
+
+  @override
+  String homeAfterActivity(String area) {
+    return 'Sesudah kegiatan ini: $area';
+  }
+
+  @override
+  String get homeIneligible =>
+      'Sudah cukup, atau jatah kegiatan sedang istirahat.';
+
+  @override
+  String get homeCancelled => 'Ajakan dibatalkan';
+
+  @override
+  String get homeFacilityRemoved => 'Kegiatan berhenti; barangnya di Gudang.';
+
+  @override
+  String get homeInviteEat => 'Ajak makan';
+
+  @override
+  String get homeInvitePlay => 'Ajak main';
+
+  @override
+  String get homeInviteCare => 'Rawat';
+
+  @override
+  String get homeBrush => 'Sikat';
+
+  @override
+  String get homeRest => 'Kembali Santai';
+
+  @override
+  String homeInviteFor(String name, String activity) {
+    return 'Ajak $name · $activity';
+  }
+
+  @override
+  String get homeFind => 'Temukan';
+
+  @override
+  String get homeViewArea => 'Lihat area';
+
+  @override
+  String get homeCancelAfter => 'Batal setelah ini';
+
+  @override
+  String get homeCancelInvitation => 'Batalkan ajakan';
+
+  @override
+  String homeRewardAvailable(int coins) {
+    return 'Hadiah tersedia · $coins';
+  }
+
+  @override
+  String get homeRewardNone => 'Santai dulu. Hadiah akan tersedia lagi.';
+
+  @override
+  String get homeRewards => 'Hadiah rumah';
+
+  @override
+  String homeClaimAll(int coins) {
+    return 'Ambil semua · $coins';
+  }
+
+  @override
+  String get homeSaveFailed =>
+      'Belum berhasil disimpan. Keadaan terakhir tetap aman.';
+
+  @override
+  String get homeRetry => 'Coba lagi';
+
+  @override
+  String get homeMigration =>
+      'Rumah lebih luas! Barang lainnya aman di Gudang.';
+
+  @override
+  String get homeWelcome => 'Selamat datang di rumah';
+
+  @override
+  String get homeFood => 'Makanan';
+
+  @override
+  String homeAreaCount(String area, int count, int capacity) {
+    return '$area · $count/$capacity';
+  }
+
+  @override
+  String get homeLoadFailed => 'Gambar rumah belum berhasil dimuat.';
+
+  @override
+  String get homeLoading => 'Membuka rumah…';
 }
