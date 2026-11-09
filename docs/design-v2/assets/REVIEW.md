@@ -9,6 +9,10 @@ menunjukkan bentuk yang sekarang. Inventaris, ID, jangkar dan lisensi tetap.
 
 ## Bahan visual
 
+Tambahan latar runtime langkah 5: Santai memakai satu WebP berilustrasi dari
+imagegen bawaan. Test dan angka 209 SVG di dokumen ini merupakan baseline
+vektor. [Kontrak, sumber, prompt dan ukuran latar baru](../home/PAINTED_ASSET.md).
+
 - [Sembilan karakter: potret, duduk, belakang](characters.png).
 - [17 pose × empat arah, Oyen dengan pita](motions.png).
 - [16 aksesoris × sembilan karakter](accessories.png).

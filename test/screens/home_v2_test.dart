@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/game/render/v2/art_pack.dart';
+import 'package:kucing_oren/game/render/v2/painted_scenery.dart';
 import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/screens/room/home_view.dart';
 import 'package:kucing_oren/screens/room/home_scene.dart';
@@ -69,6 +71,13 @@ Future<void> pumpHome(
   );
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 300));
+  await tester.runAsync(
+    () => precacheImage(
+      PaintedScenery.lounge,
+      tester.element(find.byType(HomeView)),
+    ),
+  );
+  await tester.pump();
 }
 
 Future<void> tick(WidgetTester tester, int tenths) async {
@@ -112,6 +121,85 @@ void main() {
   setUpAll(() async {
     pack = await ArtPack.load();
   });
+
+  testWidgets(
+    'painted room is a decoded bounded asset and is reused across area changes',
+    (tester) async {
+      setScreenSize(tester, const Size(390, 844));
+      final c = await load();
+      await pumpHome(tester, c);
+      RawImage painted() => tester.widget<RawImage>(
+        find.descendant(
+          of: button('home-painted-backdrop'),
+          matching: find.byType(RawImage),
+        ),
+      );
+      expect(painted().image, isNotNull);
+      expect(painted().image!.width, PaintedScenery.decodeWidth);
+      expect(painted().image!.height, PaintedScenery.decodeWidth);
+      expect(
+        painted().image!.width * painted().image!.height * 4,
+        4 * 1024 * 1024,
+      );
+      expect(
+        File(PaintedScenery.loungeAsset).lengthSync(),
+        lessThan(250 * 1024),
+      );
+      final cached = PaintingBinding.instance.imageCache.currentSize;
+      await c.setHomeArea(HomeArea.makan);
+      await tester.pump();
+      expect(button('home-painted-backdrop'), findsNothing);
+      await c.setHomeArea(HomeArea.santai);
+      await tester.pump();
+      expect(painted().image, isNotNull);
+      expect(PaintingBinding.instance.imageCache.currentSize, cached);
+      expect(cat(KittyId.oyen), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'failed painted image falls back to the live vector room with tappable cats',
+    (tester) async {
+      setScreenSize(tester, const Size(390, 844));
+      final c = await load();
+      final broken = MemoryImage(Uint8List.fromList([0, 1, 2, 3]));
+      KittyId? selected;
+      await tester.pumpWidget(
+        testApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 390,
+              height: 420,
+              child: HomeScene(
+                pack: pack,
+                progress: c,
+                area: HomeArea.santai,
+                selected: KittyId.oyen,
+                animate: false,
+                sceneryProvider: broken,
+                onSelect: (kitty) => selected = kitty,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.runAsync(
+        () => precacheImage(
+          broken,
+          tester.element(find.byType(HomeScene)),
+          onError: (error, stack) {},
+        ),
+      );
+      await tester.pump();
+      expect(button('home-vector-backdrop'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.tap(cat(KittyId.oyen));
+      expect(selected, KittyId.oyen);
+      expect(c.household.routine.locations[KittyId.oyen], HomeArea.santai);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   testWidgets(
     'migration notice is acknowledged once and failed area change retains previous area',

@@ -11,6 +11,7 @@ import '../../game/model/kitties.dart';
 import '../../game/render/v2/art_pack.dart';
 import '../../game/render/v2/cat_rig.dart';
 import '../../game/render/v2/lounge_lighting.dart';
+import '../../game/render/v2/painted_scenery.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
 import '../../theme/ko_ui.dart';
@@ -27,6 +28,7 @@ class HomeScene extends StatefulWidget {
     required this.selected,
     required this.onSelect,
     required this.animate,
+    this.sceneryProvider = PaintedScenery.lounge,
   });
   final ArtPack pack;
   final ProgressController progress;
@@ -34,6 +36,7 @@ class HomeScene extends StatefulWidget {
   final KittyId? selected;
   final ValueChanged<KittyId> onSelect;
   final bool animate;
+  final ImageProvider sceneryProvider;
 
   @override
   State<HomeScene> createState() => _HomeSceneState();
@@ -96,10 +99,35 @@ class _HomeSceneState extends State<HomeScene>
           return Stack(
             key: const ValueKey('home-scene'),
             children: [
+              if (widget.area == HomeArea.santai)
+                Positioned.fill(
+                  child: RepaintBoundary(
+                    child: Image(
+                      key: const ValueKey('home-painted-backdrop'),
+                      image: widget.sceneryProvider,
+                      fit: BoxFit.fill,
+                      filterQuality: FilterQuality.medium,
+                      excludeFromSemantics: true,
+                      frameBuilder: (
+                        context,
+                        child,
+                        frame,
+                        synchronouslyLoaded,
+                      ) => frame == null ? _vectorBackdrop(c) : child,
+                      errorBuilder: (context, error, stack) =>
+                          _vectorBackdrop(c),
+                    ),
+                  ),
+                ),
               Positioned.fill(
                 child: RepaintBoundary(
                   child: CustomPaint(
-                    painter: _RoomLayers(widget.pack, c, widget.area),
+                    painter: _RoomLayers(
+                      widget.pack,
+                      c,
+                      widget.area,
+                      background: widget.area != HomeArea.santai,
+                    ),
                   ),
                 ),
               ),
@@ -118,6 +146,11 @@ class _HomeSceneState extends State<HomeScene>
       ),
     );
   }
+
+  Widget _vectorBackdrop(ProgressController c) => CustomPaint(
+    key: const ValueKey('home-vector-backdrop'),
+    painter: _RoomLayers(widget.pack, c, widget.area, items: false),
+  );
 
   Widget _cat(
     BuildContext context,
@@ -275,8 +308,14 @@ class HomeCatPainter extends CustomPainter {
 }
 
 class _RoomLayers extends CustomPainter {
-  _RoomLayers(this.pack, ProgressController c, this.area)
-    : placed = c.household.areas.placed;
+  _RoomLayers(
+    this.pack,
+    ProgressController c,
+    this.area, {
+    this.background = true,
+    this.items = true,
+  }) : placed = c.household.areas.placed;
+  final bool background, items;
   final ArtPack pack;
   final HomeArea area;
   final Map<RoomItemId, AreaSlot> placed;
@@ -285,111 +324,121 @@ class _RoomLayers extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.save();
     canvas.scale(size.width / 390, size.height / 390);
-    for (final layer in ['wall', 'floor']) {
-      pack.paint(canvas, 'rooms/${area.name}-$layer');
-    }
-    if (area == HomeArea.santai) {
-      paintLoungeLighting(canvas);
-    }
-    pack.paint(canvas, 'rooms/${area.name}-decor');
-    // The lounge rug is structural, not an unowned catalogue purchase.
-    if (area == HomeArea.santai || area == HomeArea.rawat) {
-      const rug = Rect.fromLTWH(28, 265, 336, 112);
-      canvas.drawOval(
-        rug.shift(const Offset(0, 5)),
-        Paint()
-          ..color = KoUi.homeShade
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5),
-      );
-      final edge = Path();
-      for (var i = 0; i <= 144; i++) {
-        final t = i / 144 * math.pi * 2;
-        final ripple = math.sin(t * 36) * 1.8;
-        final x = 196 + (168 + ripple) * math.cos(t);
-        final y = 321 + (56 + ripple) * math.sin(t);
-        if (i == 0) {
-          edge.moveTo(x, y);
-        } else {
-          edge.lineTo(x, y);
-        }
+    if (background) {
+      for (final layer in ['wall', 'floor']) {
+        pack.paint(canvas, 'rooms/${area.name}-$layer');
       }
-      edge.close();
-      canvas.drawPath(edge, Paint()..color = KoUi.homeFloor);
-      canvas.drawOval(
-        rug.deflate(5),
-        Paint()
-          ..shader = const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [KoUi.homePaper, KoUi.homeCream],
-          ).createShader(rug),
-      );
-      canvas.drawOval(
-        rug.deflate(9),
-        Paint()
+      if (area == HomeArea.santai) {
+        paintLoungeLighting(canvas);
+      }
+      pack.paint(canvas, 'rooms/${area.name}-decor');
+      // The lounge rug is structural, not an unowned catalogue purchase.
+      if (area == HomeArea.santai || area == HomeArea.rawat) {
+        const rug = Rect.fromLTWH(28, 265, 336, 112);
+        canvas.drawOval(
+          rug.shift(const Offset(0, 5)),
+          Paint()
+            ..color = KoUi.homeShade
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5),
+        );
+        final edge = Path();
+        for (var i = 0; i <= 144; i++) {
+          final t = i / 144 * math.pi * 2;
+          final ripple = math.sin(t * 36) * 1.8;
+          final x = 196 + (168 + ripple) * math.cos(t);
+          final y = 321 + (56 + ripple) * math.sin(t);
+          if (i == 0) {
+            edge.moveTo(x, y);
+          } else {
+            edge.lineTo(x, y);
+          }
+        }
+        edge.close();
+        canvas.drawPath(edge, Paint()..color = KoUi.homeFloor);
+        canvas.drawOval(
+          rug.deflate(5),
+          Paint()
+            ..shader = const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [KoUi.homePaper, KoUi.homeCream],
+            ).createShader(rug),
+        );
+        canvas.drawOval(
+          rug.deflate(9),
+          Paint()
+            ..color = KoUi.homePeach
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.2,
+        );
+        final wool = Paint()
           ..color = KoUi.homePeach
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.2,
-      );
-      final wool = Paint()
-        ..color = KoUi.homePeach
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.3
-        ..strokeCap = StrokeCap.round;
-      for (var i = 0; i < 38; i++) {
-        final t = i * 2.399;
-        final d = math.sqrt((i + 1) / 40);
-        final x = 196 + 145 * d * math.cos(t);
-        final y = 321 + 44 * d * math.sin(t);
-        canvas.drawPath(
-          Path()
-            ..moveTo(x - 3, y)
-            ..quadraticBezierTo(x, y - 4, x + 3, y),
-          wool,
-        );
+          ..strokeWidth = 1.3
+          ..strokeCap = StrokeCap.round;
+        for (var i = 0; i < 38; i++) {
+          final t = i * 2.399;
+          final d = math.sqrt((i + 1) / 40);
+          final x = 196 + 145 * d * math.cos(t);
+          final y = 321 + 44 * d * math.sin(t);
+          canvas.drawPath(
+            Path()
+              ..moveTo(x - 3, y)
+              ..quadraticBezierTo(x, y - 4, x + 3, y),
+            wool,
+          );
+        }
       }
     }
-    for (final entry in placed.entries.where((e) => e.value.area == area)) {
-      final id = entry.key;
-      final slot = entry.value;
-      final part = pack['items/${id.name}-back'];
-      final dimension = slot.zone == RoomZone.wall ? 62.0 : 90.0;
-      final scale = math.min(
-        dimension / part.size.width,
-        dimension / part.size.height,
-      );
-      final anchor = slot.anchor;
-      final centerX = anchor.x * 390;
-      final centerY = slot.zone == RoomZone.wall
-          ? [35.0, 20.0, 30.0][slot.index]
-          : slot.index < 2
-          ? 281.0
-          : 370.0;
-      canvas.drawOval(
-        Rect.fromCenter(
-          center: Offset(centerX, centerY),
-          width: dimension * .75,
-          height: slot.zone == RoomZone.floor ? 9 : 4,
-        ),
-        Paint()
-          ..color = KoUi.homeShade
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
-      );
-      canvas.save();
-      canvas.translate(
-        centerX - part.size.width * scale / 2,
-        centerY -
-            part.size.height * scale * (slot.zone == RoomZone.floor ? .9 : .4),
-      );
-      canvas.scale(scale);
-      pack.paint(canvas, 'items/${id.name}-back');
-      pack.paint(canvas, 'items/${id.name}-front');
-      canvas.restore();
+    if (items) {
+      for (final entry in placed.entries.where((e) => e.value.area == area)) {
+        final id = entry.key;
+        final slot = entry.value;
+        final part = pack['items/${id.name}-back'];
+        final dimension = slot.zone == RoomZone.wall ? 62.0 : 90.0;
+        final scale = math.min(
+          dimension / part.size.width,
+          dimension / part.size.height,
+        );
+        final anchor = slot.anchor;
+        final centerX = anchor.x * 390;
+        final centerY = slot.zone == RoomZone.wall
+            ? [35.0, 20.0, 30.0][slot.index]
+            : slot.index < 2
+            ? 281.0
+            : 370.0;
+        canvas.drawOval(
+          Rect.fromCenter(
+            center: Offset(centerX, centerY),
+            width: dimension * .75,
+            height: slot.zone == RoomZone.floor ? 9 : 4,
+          ),
+          Paint()
+            ..color = KoUi.homeShade
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
+        );
+        canvas.save();
+        canvas.translate(
+          centerX - part.size.width * scale / 2,
+          centerY -
+              part.size.height *
+                  scale *
+                  (slot.zone == RoomZone.floor ? .9 : .4),
+        );
+        canvas.scale(scale);
+        pack.paint(canvas, 'items/${id.name}-back');
+        pack.paint(canvas, 'items/${id.name}-front');
+        canvas.restore();
+      }
     }
     canvas.restore();
   }
 
   @override
   bool shouldRepaint(_RoomLayers old) =>
-      old.pack != pack || old.area != area || !identical(old.placed, placed);
+      old.pack != pack ||
+      old.area != area ||
+      old.background != background ||
+      old.items != items ||
+      !identical(old.placed, placed);
 }

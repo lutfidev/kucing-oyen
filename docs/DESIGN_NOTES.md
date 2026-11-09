@@ -4,6 +4,14 @@ Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lam
 
 ## Integrasi beranda v2 — 9 November 2026
 
+Keputusan ilustrasi berikutnya: permintaan warna/kekayaan visual seperti mockup
+diterapkan dengan latar Santai baru dari imagegen bawaan, terpisah dari UI,
+kucing dan barang katalog. Aset WebP 180.076 byte, decode tetap 4 MiB; vektor
+menjadi fallback jika belum siap/gagal. Inventaris vektor tetap 209. Sumber PNG,
+prompt, hak keluaran dan kontrak integrasi tercatat di
+[PAINTED_ASSET](design-v2/home/PAINTED_ASSET.md). Ini revisi pilihan teknis
+vektor murni untuk latar, tanpa mengubah aturan model. PR #44 tetap draft.
+
 Revisi ilustrasi berdasarkan perbandingan langsung konsep A: pulihkan biru
 jendela dan hijau daun, gunakan highlight/lipatan pada bahan, serta cahaya
 terarah dan bayangan kontak. Hapus tint kuning global. Tekstur dinding/lantai

@@ -1,6 +1,13 @@
 # Paket seni v2
 
-Sumber asli: [`tool/art_v2/generate.py`](../../../tool/art_v2/generate.py), Python standard library. Tidak ada aset unduhan, tracing raster, prompt ImageGen baru, atlas, atau dependensi runtime baru. Referensi arah seni: konsep A dan `docs/design-v2/VISUAL.md`; bentuk vector digambar baru, bukan port bentuk v1. Ketentuan penggunaan di `LICENSE.txt`.
+Tambahan langkah 5: Santai pemain memakai latar ilustrasi raster versi tetap,
+`scenes/santai-painted-v1.webp` (180.076 byte, decode 4 MiB), dibuat dengan
+imagegen bawaan. Kucing dan barang dinamis tetap vektor. Sumber, prompt,
+lisensi, batas cache serta fallback ada di
+[catatan latar](../../../docs/design-v2/home/PAINTED_ASSET.md).
+Uraian 209 SVG di bawah adalah inventaris vektor dan baseline langkah 2.
+
+Sumber asli: [`tool/art_v2/generate.py`](../../../tool/art_v2/generate.py), Python standard library. Inventaris vektor tidak memakai aset unduhan, tracing raster, atlas, atau dependensi runtime baru. Referensi arah seni: konsep A dan `docs/design-v2/VISUAL.md`; bentuk vector digambar baru, bukan port bentuk v1. Ketentuan penggunaan di `LICENSE.txt`.
 
 ```sh
 python tool/art_v2/generate.py
@@ -21,6 +28,6 @@ Ruangan 390×390: wall (wallpaper+jendela/cahaya), floor, decor (furnitur latar 
 
 Vector dipilih karena bagian bisa dibagi dan dianimasikan tanpa atlas/frame bitmap serta tetap tajam di petak puzzle. Hasil mempertahankan palet hangat, pipi bulat, kepala besar, kayu madu dan outline cokelat A; permukaan lebih rata dan tidak meniru grain cat air raster konsep. Review sheet adalah render kode sebenarnya, bukan konsep AI. Angka ukuran/memori dan batas pengujian tercatat di `docs/design-v2/assets/REVIEW.md`.
 
-Satu `ArtPack` memiliki tepat 209 gambar statis; tidak membuat varian kombinasi/pose/waktu. Owner membuang pack saat scene tak diperlukan. Tidak ada preload semua layar aplikasi: langkah ini hanya memuat paket di galeri developer. Simpan pack bersama di lingkup scene saat integrasi, bukan satu pack per kucing. Anggaran sumber/kompresi ≤20 MB dan tekstur rumah ≤64 MiB; raster sumber 0 byte, tetapi Canvas, path, VM dan framebuffer tetap memakai memori. Profil HP/60fps bukan klaim langkah ini.
+Satu `ArtPack` memiliki tepat 209 gambar statis; tidak membuat varian kombinasi/pose/waktu. Owner membuang pack saat scene tak diperlukan. Tidak ada preload semua layar aplikasi: langkah ini hanya memuat paket di galeri developer. Simpan pack bersama di lingkup scene saat integrasi, bukan satu pack per kucing. Anggaran sumber/kompresi ≤20 MB dan tekstur rumah ≤64 MiB; pada baseline vektor raster sumber 0 byte, tetapi Canvas, path, VM dan framebuffer tetap memakai memori. Profil HP/60fps bukan klaim langkah ini.
 
 Ikon/splash/merek, glyph UI, papan puzzle, ilustrasi hasil dan tutorial mengikuti langkah 3 serta 10–14; belum mengganti materi produksi dengan aset konsep ini.

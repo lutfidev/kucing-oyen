@@ -7,9 +7,9 @@ Penerimaan screenshot merupakan syarat selesai pada ROADMAP.
 ## Perapian visual setelah tinjauan pemilik repo
 
 Pemilik repo meminta visual dirapikan sebelum melanjutkan langkah 6.
-Rumah Santai kini memakai jendela berlapis, tirai berlipat, tanaman menjuntai,
-pintu melengkung dan lantai berperspektif. Pencahayaan, bayangan pijakan serta
-karpet berumbai/tekstur digambar dengan vektor dan Canvas. Bentuk pipi/badan
+Rumah Santai kini memakai latar ilustrasi dengan jendela berlapis, tirai
+berlipat, tanaman menjuntai, pintu melengkung dan lantai berperspektif. Vektor
+dan Canvas dipertahankan untuk barang dinamis serta fallback. Bentuk pipi/badan
 sembilan kucing dibulatkan, dengan blush halus; kucing pilihan yang sedang
 santai memakai ekspresi senang, sedangkan tidur/kebutuhan rendah tetap mengikuti
 model. Oyen tampil lebih besar saat sendiri; komposisi tiga kucing memiliki
@@ -28,9 +28,29 @@ diperbarui. Ini tetap bahan tinjauan, bukan persetujuan visual otomatis.
 
 Sumber ilustrasi tambahan: `tool/art_v2/lounge.py`, dipanggil generator utama.
 Inventaris tetap 209 aset vektor, 300.571 byte sumber, 108.833 byte ZIP menurut
-generator; raster/atlas sumber tetap nol. Lisensi mengikuti paket seni v2.
+generator. Tambahan latar raster dan ketentuan keluarannya dijelaskan berikut.
 
-### Cahaya, bahan, dan variasi warna
+### Latar ilustrasi sesuai mockup
+
+Setelah tinjauan langsung terhadap `mockups/01-empat-area.png`, pemilik repo
+meminta kekayaan warna/ilustrasi yang lebih terlihat. Santai sekarang memakai
+satu latar bertekstur dari imagegen bawaan. UI, kucing, barang katalog dan
+pergerakan tetap interaktif, bukan bagian dari gambar latar. Gambar tidak
+memuat kucing, makanan, mainan atau teks UI. Karpet dan tanaman struktural
+gratis menjadi bagian latar seperti aturan sebelumnya.
+
+[Preview terbaru](santai-baru-id.png), [sebelum latar ilustrasi](santai-sebelum-ilustrasi-id.png),
+serta [sumber, prompt final dan lisensi](PAINTED_ASSET.md) tersedia untuk tinjauan.
+WebP runtime 180.076 byte, decode 1024×1024 (4 MiB). PNG sumber hanya berada
+di dokumentasi. Cache digunakan kembali antararea; gagal memuat memakai latar
+vektor dan mempertahankan semua target sentuh. Tambahan ini tidak mengubah
+model, saldo, inventaris atau identitas karakter.
+
+APK debug memuat seluruh 209 SVG dan latar WebP. Seluruh entry seni memakai
+481.792 byte sumber / 269.557 byte terkompresi menurut pengukuran APK, bukan
+ukuran seluruh aplikasi atau prediksi rilis.
+
+### Percobaan cahaya dan variasi warna pada fallback vektor
 
 Acuan tetap konsep A, yang ditunjukkan kembali pemilik repo pada screenshot
 referensi. Langit biru dan tanaman hijau dipulihkan agar kayu jingga serta
@@ -79,8 +99,9 @@ gerak gambar, bukan kegiatan atau hadiahnya. Sheet biasa tidak menjeda rumah.
 
 ## Bahan tinjauan
 
-Screenshot berikut berasal dari widget runtime baru dengan aset asli, bukan
-gambar AI. Fixture dikunci jamnya; animasi dihentikan untuk render stabil.
+Screenshot berikut berasal dari widget runtime: latar ilustrasi raster,
+kucing/barang vektor dan kontrol hidup. Ini bukan mockup yang dipasang utuh.
+Fixture dikunci jamnya; animasi dihentikan untuk render stabil.
 
 - [Santai baru, Oyen](santai-baru-id.png), 390×844.
 - [Santai penuh dan barang lama](santai-penuh-id.png), 390×844.
@@ -100,10 +121,11 @@ Render ulang:
 
 ## Verifikasi
 
-Hasil akhir: `flutter analyze` tanpa issue; format 263 berkas bersih;
-`flutter test --concurrency=2 --timeout=2m` **2.905 lulus, 135 skip historis**.
-Ada 35 test rumah baru, termasuk render ulang screenshot, empat tab terlihat,
-target sentuh kucing tidak tumpang tindih dan tab aktif terlihat pada teks besar.
+Hasil akhir: `flutter analyze` tanpa issue; format 264 berkas bersih;
+`flutter test --concurrency=2 --timeout=2m` **2.907 lulus, 135 skip historis**.
+Ada 37 test rumah baru, termasuk render ulang screenshot, empat tab terlihat,
+target sentuh kucing tidak tumpang tindih, tab aktif terlihat pada teks besar,
+decode/cache gambar bounded dan fallback yang mempertahankan target sentuh.
 Pemeriksaan aset/galeri setelah perapian juga lulus 9 test (1 ekspor opt-in
 dilewati). Cek perpindahan sheet memastikan fokus tetap di modal aktif.
 Generator 209 aset dan review terjemahan sesuai. `flutter build apk --debug`
@@ -132,5 +154,5 @@ Peta, puzzle, Toko dan Pengaturan masih memakai visual tahap sebelumnya.
 
 Belum mengklaim pengujian Android fisik, TalkBack, durability perangkat atau
 target frame rate. Frekuensi snapshot dan rendering perlu diprofilkan di HP
-pada langkah performa. Sumber/lisensi aset tetap paket v2 langkah 2; tidak
-ada bitmap AI atau dependensi baru yang ditambahkan.
+pada langkah performa. Tambahan latar AI, sumber PNG, prompt dan ketentuan
+keluarannya ada di PAINTED_ASSET.md. Tidak ada dependensi runtime baru.
