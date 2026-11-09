@@ -2,6 +2,20 @@
 
 Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lama tersedia di riwayat Git dan bukan spesifikasi visual aktif.
 
+## Area Makan v2 — 9 November 2026
+
+Langkah 6 melengkapi fasilitas makan dengan satu mangkuk dan titik tunggu,
+panel jatah koleksi serta status individu, sheet pilih kucing dan batal antrean.
+Aturan makan tetap SPEC/v1: Makanan <70, +40 saat selesai 4 detik, tiap kucing
+sekali dalam siklus 4 jam sejak makan pertama, isi ulang otomatis tanpa biaya.
+Waktu UI memakai high-water mark yang sama dengan transaksi.
+
+Antrean UI memakai urutan scheduler (prioritas pemain/FIFO/fairness), bukan
+sekadar nomor pesanan. Latar raster Makan dibuat imagegen bawaan memakai
+Santai yang disetujui sebagai acuan; kucing dan mangkuk tetap dinamis.
+Sumber/prompt dan batas pengujian: [review Makan](design-v2/dining/REVIEW.md).
+Pergantian giliran memakai transisi posisi singkat; Kurangi gerak mematikannya.
+
 ## Integrasi beranda v2 — 9 November 2026
 
 Visual akhir rumah berilustrasi diterima pemilik repo dengan “boleh lah” setelah

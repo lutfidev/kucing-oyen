@@ -6,11 +6,11 @@ Game puzzle mobile tentang kucing oren yang bergerak sendiri mengikuti aturan te
 
 ## Arah baru
 
-Pada 8 November 2026, pemilik repo memilih perombakan seluruh visual mengikuti **konsep A — satu area per layar**, termasuk bentuk kucing, furnitur, UI dan layar puzzle. Rumah akan mendukung aktivitas otomatis dan ajakan pemain. Desain dan fitur baru masih direncanakan; aplikasi yang berjalan sekarang masih memakai visual sebelumnya.
+Pada 8 November 2026, pemilik repo memilih perombakan seluruh visual mengikuti **konsep A — satu area per layar**, termasuk bentuk kucing, furnitur, UI dan layar puzzle. Rumah v2 sudah berjalan dengan Beranda Santai dan Area Makan berilustrasi, aktivitas otomatis serta ajakan pemain. Area dan layar lainnya diselesaikan bertahap mengikuti roadmap.
 
 ![Acuan baru Rumah Oyen — pilih konsep A di kiri](docs/design-brief/rumah-oyen-area/preview-perbandingan.png)
 
-- [Roadmap baru, berikutnya langkah 4](docs/ROADMAP.md)
+- [Roadmap baru, berikutnya langkah 7](docs/ROADMAP.md)
 - [Spesifikasi dan mockup desain v2 — disetujui](docs/design-v2/README.md)
 - [Brief arah desain](docs/design-brief/rumah-oyen-area/ARAH_DESAIN.md)
 - [Keputusan aktif](docs/DESIGN_NOTES.md)
@@ -42,6 +42,9 @@ Galeri komponen tersedia melalui `flutter run --route /galeri`.
 Galeri aset desain v2 (sembilan karakter, animasi, aksesoris, barang, empat area) tersedia melalui `flutter run --route /galeri/aset-v2`; [render dan hasil pemeriksaan](docs/design-v2/assets/REVIEW.md).
 
 Galeri fondasi UI v2 tersedia melalui `flutter run --route /galeri/ui-v2`; [render empat bahasa dan pemeriksaan komponen](docs/design-v2/ui/REVIEW.md).
+
+Area Makan v2 tersedia dari tab Makan: mangkuk interaktif, ajakan/otomatis,
+antrean dan jatah per kucing. [Render dan verifikasi langkah 6](docs/design-v2/dining/REVIEW.md).
 
 Generator screenshot dan merek di `test/screenshots/` masih mengikuti runtime yang lama; perbarui sesuai desain baru sebelum membuat materi final. Screenshot baru dibuat pada langkah 14 roadmap, bukan mengambil kembali gambar lama.
 

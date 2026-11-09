@@ -20,6 +20,11 @@ Paket seni desain v2 langkah 2 tersedia untuk tinjauan pada [galeri aset](design
 
 Fondasi UI langkah 3 tersedia di [galeri komponen v2](design-v2/ui/REVIEW.md): header, tab empat area, kartu/kebutuhan, sheet dan CTA Main Puzzle. Komponen menerima data model; aturan aktivitas dan migrasi diterapkan pada langkah 4, integrasi layar rumah mulai langkah 5.
 
+Area Makan rumah v2 (langkah 6) menampilkan satu fasilitas makan dan satu titik
+tunggu, ajakan/otomatis serta jatah per kucing. Siklus mangkuk tetap 4 jam sejak
+makan pertama selesai, Makanan +40 bila <70, tanpa biaya isi ulang. Rincian dan
+render runtime: [tinjauan Makan](design-v2/dining/REVIEW.md).
+
 ## Aturan Oyen
 
 Setiap langkah, Oyen mengecek aturan dari atas ke bawah dan menjalankan aturan pertama yang cocok. Satu langkah = satu aksi. Urutan ini final dan dipakai solver; "jatuhkan barang" sengaja ditaruh sebelum "lihat ikan" supaya Oyen tetap iseng meski sedang mengejar ikan.
