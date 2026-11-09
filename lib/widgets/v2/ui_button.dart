@@ -12,18 +12,22 @@ class UiButton extends StatefulWidget {
     super.key,
     required this.label,
     required this.onPressed,
+    this.semanticLabel,
     this.icon,
     this.kind = UiButtonKind.primary,
     this.loading = false,
     this.selected,
     this.autofocus = false,
     this.compact = false,
+    this.homeStyle = false,
   });
   final String label;
+  final String? semanticLabel;
   final VoidCallback? onPressed;
   final IconData? icon;
   final UiButtonKind kind;
   final bool loading, autofocus, compact;
+  final bool homeStyle;
   final bool? selected;
   @override
   State<UiButton> createState() => _UiButtonState();
@@ -56,7 +60,7 @@ class _UiButtonState extends State<UiButton> {
       button: true,
       enabled: enabled,
       selected: widget.selected,
-      label: widget.label,
+      label: widget.semanticLabel ?? widget.label,
       liveRegion: widget.loading,
       onTap: action,
       excludeSemantics: true,
@@ -99,23 +103,47 @@ class _UiButtonState extends State<UiButton> {
               horizontal: widget.compact ? 0 : KoUi.s16,
               vertical: KoUi.s12,
             ),
-            decoration: KoUi.card(radius: KoUi.buttonRadius, color: fill)
-                .copyWith(
-                  border: Border.all(
-                    color: KoUi.ink,
-                    width: focused ? 3 : KoUi.outline,
-                  ),
-                  boxShadow: pressed || !enabled
-                      ? []
-                      : [
-                          BoxShadow(
-                            color: widget.kind == UiButtonKind.primary
-                                ? KoUi.orangePressed
-                                : KoUi.shadow,
-                            offset: Offset(0, KoUi.depth),
-                          ),
-                        ],
-                ),
+            decoration:
+                (widget.homeStyle
+                        ? KoUi.homeCard(radius: KoUi.buttonRadius)
+                        : KoUi.card(radius: KoUi.buttonRadius, color: fill))
+                    .copyWith(
+                      color: fill,
+                      gradient: widget.homeStyle
+                          ? LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors:
+                                  widget.kind == UiButtonKind.primary && enabled
+                                  ? [KoUi.homeGold, KoUi.orange]
+                                  : [KoUi.homePaper, KoUi.homeCream],
+                            )
+                          : null,
+                      border: Border.all(
+                        color: widget.homeStyle && !focused
+                            ? KoUi.homeLine
+                            : KoUi.ink,
+                        width: focused ? 3 : KoUi.outline,
+                      ),
+                      boxShadow: pressed || !enabled
+                          ? []
+                          : widget.homeStyle
+                          ? [
+                              const BoxShadow(
+                                color: KoUi.homeShade,
+                                blurRadius: 5,
+                                offset: Offset(0, 3),
+                              ),
+                            ]
+                          : [
+                              BoxShadow(
+                                color: widget.kind == UiButtonKind.primary
+                                    ? KoUi.orangePressed
+                                    : KoUi.shadow,
+                                offset: Offset(0, KoUi.depth),
+                              ),
+                            ],
+                    ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,

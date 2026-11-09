@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-504 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+539 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -531,6 +531,41 @@ files and anything written there is overwritten.
 | `uiInvite` | Invite to area | Convidar para a área | V2 UI foundation: uiInvite | |
 | `uiViewActivity` | View activity | Ver atividade | V2 UI foundation: uiViewActivity | |
 | `uiActivityNote` | Choose an activity for Oyen. The invitation will wait for the current activity. | Escolha uma atividade para Oyen. O convite vai esperar a atividade atual terminar. | V2 UI foundation: uiActivityNote | |
+| `homeCats` | Cats | Gatos | V2 player home: homeCats. | |
+| `homeEmpty` | A quiet spot. Find a cat from your collection. | Um cantinho tranquilo. Encontre um gato na coleção. | V2 player home: homeEmpty. | |
+| `homeChoose` | Choose a cat | Escolha um gato | V2 player home: homeChoose. | |
+| `homeResting` | Relaxing | Descansando | V2 player home: homeResting. | |
+| `homeSleeping` | Sleeping | Dormindo | V2 player home: homeSleeping. | |
+| `homeActivity` | {activity, select, rest{Relax} eat{Eat} play{Play} brush{Brush} pet{Pet} other{Relax}} | {activity, select, rest{Descansar} eat{Comer} play{Brincar} brush{Escovar} pet{Fazer carinho} other{Descansar}} | V2 player home: homeActivity. Placeholders: `{activity}`. | |
+| `homeDoing` | Now: {activity} | Agora: {activity} | V2 player home: homeDoing. Placeholders: `{activity}`. | |
+| `homeTravel` | Heading to {area}… | Indo para {area}… | V2 player home: homeTravel. Placeholders: `{area}`. | |
+| `homeWaiting` | Waiting for {area} · {position} in line | Esperando {area} · posição {position} | V2 player home: homeWaiting. Placeholders: `{area}`, `{position}`. | |
+| `homeAfterActivity` | After this activity: {area} | Depois desta atividade: {area} | V2 player home: homeAfterActivity. Placeholders: `{area}`. | |
+| `homeIneligible` | Already full, or today's activity allowance needs a rest. | Já está satisfeito, ou a cota de atividades precisa descansar. | V2 player home: homeIneligible. | |
+| `homeCancelled` | Invitation cancelled | Convite cancelado | V2 player home: homeCancelled. | |
+| `homeFacilityRemoved` | Activity stopped; the item is in storage. | Atividade interrompida; o item está guardado. | V2 player home: homeFacilityRemoved. | |
+| `homeInviteEat` | Invite to eat | Chamar para comer | V2 player home: homeInviteEat. | |
+| `homeInvitePlay` | Invite to play | Chamar para brincar | V2 player home: homeInvitePlay. | |
+| `homeInviteCare` | Care | Cuidar | V2 player home: homeInviteCare. | |
+| `homeBrush` | Brush | Escovar | V2 player home: homeBrush. | |
+| `homeRest` | Back to lounge | Voltar ao descanso | V2 player home: homeRest. | |
+| `homeInviteFor` | Invite {name} · {activity} | Chamar {name} · {activity} | V2 player home: homeInviteFor. Placeholders: `{name}`, `{activity}`. | |
+| `homeFind` | Find | Encontrar | V2 player home: homeFind. | |
+| `homeViewArea` | View area | Ver área | V2 player home: homeViewArea. | |
+| `homeCancelAfter` | Cancel after this | Cancelar depois desta | V2 player home: homeCancelAfter. | |
+| `homeCancelInvitation` | Cancel invitation | Cancelar convite | V2 player home: homeCancelInvitation. | |
+| `homeRewardAvailable` | Rewards available · {coins} | Recompensas disponíveis · {coins} | V2 player home: homeRewardAvailable. Placeholders: `{coins}`. | |
+| `homeRewardNone` | Everyone is comfy. Rewards will be back. | Tudo tranquilo. As recompensas voltam depois. | V2 player home: homeRewardNone. | |
+| `homeRewards` | House rewards | Recompensas da casa | V2 player home: homeRewards. | |
+| `homeClaimAll` | Collect all · {coins} | Coletar tudo · {coins} | V2 player home: homeClaimAll. Placeholders: `{coins}`. | |
+| `homeSaveFailed` | Couldn't save. Your last saved state is safe. | Não foi possível salvar. O último estado salvo está seguro. | V2 player home: homeSaveFailed. | |
+| `homeRetry` | Try again | Tentar de novo | V2 player home: homeRetry. | |
+| `homeMigration` | A bigger home! Your other items are safe in storage. | Uma casa maior! Seus outros itens estão guardados. | V2 player home: homeMigration. | |
+| `homeWelcome` | Welcome home | Boas-vindas à casa | V2 player home: homeWelcome. | |
+| `homeFood` | Food | Comida | V2 player home: homeFood. | |
+| `homeAreaCount` | {area} · {count}/{capacity} | {area} · {count}/{capacity} | V2 player home: homeAreaCount. Placeholders: `{area}`, `{count}`, `{capacity}`. | |
+| `homeLoadFailed` | Couldn't load the room art. | Não foi possível carregar a arte da casa. | V2 player home: homeLoadFailed. | |
+| `homeLoading` | Opening the home… | Abrindo a casa… | V2 player home: homeLoading. | |
 
 ---
 

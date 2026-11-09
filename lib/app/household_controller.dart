@@ -23,8 +23,34 @@ extension HouseholdController on ProgressController {
   bool get householdSaveFailed => _pendingHome != null;
   bool get householdBusy => _homeBusy;
 
-  void pauseHousehold(HouseholdPause reason) => _homePauses.add(reason);
-  void resumeHousehold(HouseholdPause reason) => _homePauses.remove(reason);
+  /// Selection is session-only, independent of route/widget lifetime.
+  KittyId? get selectedHomeKitty {
+    if (!_homeSelectionInitialized) {
+      _homeSelection = _household.initialSelection;
+      _homeSelectionInitialized = true;
+    }
+    return _homeSelection != null && _home.ownsKitty(_homeSelection!)
+        ? _homeSelection
+        : null;
+  }
+
+  void selectHomeKitty(KittyId? kitty) {
+    if (kitty != null && !_home.ownsKitty(kitty)) return;
+    _homeSelectionInitialized = true;
+    _homeSelection = kitty;
+    _notifyHousehold();
+  }
+
+  /// Clock owners observe pauses separately from persisted model changes.
+  /// This also lets a failed/closed ad resume without a gameplay mutation.
+  Listenable get householdPauseChanges => _homePauseRevision;
+  void pauseHousehold(HouseholdPause reason) {
+    if (_homePauses.add(reason)) _homePauseRevision.value++;
+  }
+
+  void resumeHousehold(HouseholdPause reason) {
+    if (_homePauses.remove(reason)) _homePauseRevision.value++;
+  }
 
   Future<bool> inviteKitty(KittyId kitty, HomeActivity activity) {
     if (_homePauses.contains(HouseholdPause.decorating) ||
@@ -203,6 +229,7 @@ extension _HouseholdTransactions on ProgressController {
     }
     _homeBusy = true;
     _homeSpend = change.coins < 0 ? -change.coins : 0;
+    _notifyHousehold();
     final task = _saving.then((_) async {
       final actual = rebuild == null ? change : rebuild();
       if (actual == null) return false;

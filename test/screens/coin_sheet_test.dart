@@ -34,7 +34,7 @@ Future<ProgressController> _openFromHome(
 }) async {
   setScreenSize(tester, const Size(390, 844));
   await pumpApp(tester, progress: progress, audio: audio);
-  await _tap(tester, find.byType(KoCoinChip));
+  await _tap(tester, find.byKey(const ValueKey('home-balance')));
   return progress;
 }
 
@@ -72,7 +72,7 @@ void main() {
       findsOneWidget,
     );
 
-    await _tap(tester, find.byType(KoCoinChip));
+    await _tap(tester, find.byKey(const ValueKey('home-balance')));
     expect(find.text('Tambah Koin'), findsOneWidget);
     expect(
       find.text(
@@ -200,7 +200,7 @@ void main() {
       await tester.binding.handlePopRoute();
       await settle(tester);
       expect(find.text('Tambah Koin'), findsNothing);
-      expect(find.text('Main'), findsOneWidget);
+      expect(find.text('Main Puzzle'), findsOneWidget);
     });
   });
 

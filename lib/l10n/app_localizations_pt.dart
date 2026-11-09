@@ -2111,4 +2111,139 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get uiActivityNote =>
       'Escolha uma atividade para Oyen. O convite vai esperar a atividade atual terminar.';
+
+  @override
+  String get homeCats => 'Gatos';
+
+  @override
+  String get homeEmpty => 'Um cantinho tranquilo. Encontre um gato na coleção.';
+
+  @override
+  String get homeChoose => 'Escolha um gato';
+
+  @override
+  String get homeResting => 'Descansando';
+
+  @override
+  String get homeSleeping => 'Dormindo';
+
+  @override
+  String homeActivity(String activity) {
+    String _temp0 = intl.Intl.selectLogic(activity, {
+      'rest': 'Descansar',
+      'eat': 'Comer',
+      'play': 'Brincar',
+      'brush': 'Escovar',
+      'pet': 'Fazer carinho',
+      'other': 'Descansar',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String homeDoing(String activity) {
+    return 'Agora: $activity';
+  }
+
+  @override
+  String homeTravel(String area) {
+    return 'Indo para $area…';
+  }
+
+  @override
+  String homeWaiting(String area, int position) {
+    return 'Esperando $area · posição $position';
+  }
+
+  @override
+  String homeAfterActivity(String area) {
+    return 'Depois desta atividade: $area';
+  }
+
+  @override
+  String get homeIneligible =>
+      'Já está satisfeito, ou a cota de atividades precisa descansar.';
+
+  @override
+  String get homeCancelled => 'Convite cancelado';
+
+  @override
+  String get homeFacilityRemoved =>
+      'Atividade interrompida; o item está guardado.';
+
+  @override
+  String get homeInviteEat => 'Chamar para comer';
+
+  @override
+  String get homeInvitePlay => 'Chamar para brincar';
+
+  @override
+  String get homeInviteCare => 'Cuidar';
+
+  @override
+  String get homeBrush => 'Escovar';
+
+  @override
+  String get homeRest => 'Voltar ao descanso';
+
+  @override
+  String homeInviteFor(String name, String activity) {
+    return 'Chamar $name · $activity';
+  }
+
+  @override
+  String get homeFind => 'Encontrar';
+
+  @override
+  String get homeViewArea => 'Ver área';
+
+  @override
+  String get homeCancelAfter => 'Cancelar depois desta';
+
+  @override
+  String get homeCancelInvitation => 'Cancelar convite';
+
+  @override
+  String homeRewardAvailable(int coins) {
+    return 'Recompensas disponíveis · $coins';
+  }
+
+  @override
+  String get homeRewardNone => 'Tudo tranquilo. As recompensas voltam depois.';
+
+  @override
+  String get homeRewards => 'Recompensas da casa';
+
+  @override
+  String homeClaimAll(int coins) {
+    return 'Coletar tudo · $coins';
+  }
+
+  @override
+  String get homeSaveFailed =>
+      'Não foi possível salvar. O último estado salvo está seguro.';
+
+  @override
+  String get homeRetry => 'Tentar de novo';
+
+  @override
+  String get homeMigration =>
+      'Uma casa maior! Seus outros itens estão guardados.';
+
+  @override
+  String get homeWelcome => 'Boas-vindas à casa';
+
+  @override
+  String get homeFood => 'Comida';
+
+  @override
+  String homeAreaCount(String area, int count, int capacity) {
+    return '$area · $count/$capacity';
+  }
+
+  @override
+  String get homeLoadFailed => 'Não foi possível carregar a arte da casa.';
+
+  @override
+  String get homeLoading => 'Abrindo a casa…';
 }

@@ -106,7 +106,7 @@ void main() {
       audio: audio,
       progress: testProgressWith(ads: audio.pauseDuringAds(ads)),
     );
-    await tester.tap(find.byType(KoCoinChip));
+    await tester.tap(find.byKey(const ValueKey('home-balance')));
     await settle(tester);
     await tester.tap(find.text('+20 koin'));
     await tester.pump();

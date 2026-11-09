@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 import '../../app/progress_scope.dart';
-import 'room_view.dart';
+import 'home_view.dart';
 
-/// Beranda (rute `/`): kamar Oyen (desain 19).
+/// Beranda v2 (rute `/`): satu area rumah yang dipilih pemain.
 class RoomScreen extends StatelessWidget {
   const RoomScreen({super.key, this.random, this.life = true});
 
@@ -17,5 +17,5 @@ class RoomScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      RoomView(progress: ProgressScope.of(context), random: random, life: life);
+      HomeView(progress: ProgressScope.of(context), life: life);
 }

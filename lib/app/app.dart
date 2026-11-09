@@ -9,6 +9,7 @@ import '../theme/theme.dart';
 import 'ad_consent.dart';
 import 'game_audio.dart';
 import 'language.dart';
+import 'household_driver.dart';
 import 'progress_scope.dart';
 import 'progress_store.dart';
 import 'router.dart';
@@ -24,6 +25,7 @@ class KucingOrenApp extends StatefulWidget {
     this.initialLocation = AppRoutes.home,
     this.roomRandom,
     this.roomLife = true,
+    this.homeBuilder,
   });
 
   /// Data level dan progres pemain, dibagikan ke semua layar. Tidak boleh
@@ -47,6 +49,11 @@ class KucingOrenApp extends StatefulWidget {
   /// kecuali yang menguji rutinitas.
   final bool roomLife;
 
+  /// Override for isolated screen fixtures; the player home always defaults
+  /// to RoomScreen. Legacy room regressions can keep testing their component.
+  @visibleForTesting
+  final WidgetBuilder? homeBuilder;
+
   @override
   State<KucingOrenApp> createState() => _KucingOrenAppState();
 }
@@ -57,6 +64,7 @@ class _KucingOrenAppState extends State<KucingOrenApp>
     initialLocation: widget.initialLocation,
     roomRandom: widget.roomRandom,
     roomLife: widget.roomLife,
+    homeBuilder: widget.homeBuilder,
   );
   final ThemeData _theme = KoTheme.light();
   late final GameAudio _audio =
@@ -130,6 +138,12 @@ class _KucingOrenAppState extends State<KucingOrenApp>
           supportedLocales: AppLocalizations.supportedLocales,
           theme: _theme,
           routerConfig: _router,
+          builder: (context, child) => HouseholdDriver(
+            progress: widget.progress,
+            router: _router,
+            enabled: widget.roomLife,
+            child: child!,
+          ),
         ),
       ),
     );

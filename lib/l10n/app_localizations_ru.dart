@@ -2141,4 +2141,137 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get uiActivityNote =>
       'Выберите занятие для Ойена. Приглашение подождёт окончания текущего занятия.';
+
+  @override
+  String get homeCats => 'Коты';
+
+  @override
+  String get homeEmpty => 'Здесь пока тихо. Найди кота в коллекции.';
+
+  @override
+  String get homeChoose => 'Выбери кота';
+
+  @override
+  String get homeResting => 'Отдыхает';
+
+  @override
+  String get homeSleeping => 'Спит';
+
+  @override
+  String homeActivity(String activity) {
+    String _temp0 = intl.Intl.selectLogic(activity, {
+      'rest': 'Отдых',
+      'eat': 'Еда',
+      'play': 'Игра',
+      'brush': 'Расчёсывание',
+      'pet': 'Ласка',
+      'other': 'Отдых',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String homeDoing(String activity) {
+    return 'Сейчас: $activity';
+  }
+
+  @override
+  String homeTravel(String area) {
+    return 'Идёт в: $area…';
+  }
+
+  @override
+  String homeWaiting(String area, int position) {
+    return 'Ждёт: $area · очередь $position';
+  }
+
+  @override
+  String homeAfterActivity(String area) {
+    return 'После этого занятия: $area';
+  }
+
+  @override
+  String get homeIneligible => 'Уже достаточно, или пора отдохнуть от занятий.';
+
+  @override
+  String get homeCancelled => 'Приглашение отменено';
+
+  @override
+  String get homeFacilityRemoved => 'Занятие остановлено: предмет на складе.';
+
+  @override
+  String get homeInviteEat => 'Позвать поесть';
+
+  @override
+  String get homeInvitePlay => 'Позвать играть';
+
+  @override
+  String get homeInviteCare => 'Уход';
+
+  @override
+  String get homeBrush => 'Расчесать';
+
+  @override
+  String get homeRest => 'Вернуться отдыхать';
+
+  @override
+  String homeInviteFor(String name, String activity) {
+    return 'Позвать: $name · $activity';
+  }
+
+  @override
+  String get homeFind => 'Найти';
+
+  @override
+  String get homeViewArea => 'Показать зону';
+
+  @override
+  String get homeCancelAfter => 'Отменить после этого';
+
+  @override
+  String get homeCancelInvitation => 'Отменить приглашение';
+
+  @override
+  String homeRewardAvailable(int coins) {
+    return 'Доступна награда · $coins';
+  }
+
+  @override
+  String get homeRewardNone => 'Можно отдохнуть. Награды появятся снова.';
+
+  @override
+  String get homeRewards => 'Награды дома';
+
+  @override
+  String homeClaimAll(int coins) {
+    return 'Забрать всё · $coins';
+  }
+
+  @override
+  String get homeSaveFailed =>
+      'Не удалось сохранить. Последнее сохранение в порядке.';
+
+  @override
+  String get homeRetry => 'Повторить';
+
+  @override
+  String get homeMigration =>
+      'Дом стал просторнее! Остальные предметы на складе.';
+
+  @override
+  String get homeWelcome => 'Добро пожаловать домой';
+
+  @override
+  String get homeFood => 'Сытость';
+
+  @override
+  String homeAreaCount(String area, int count, int capacity) {
+    return '$area · $count/$capacity';
+  }
+
+  @override
+  String get homeLoadFailed => 'Не удалось загрузить рисунки дома.';
+
+  @override
+  String get homeLoading => 'Открываем дом…';
 }

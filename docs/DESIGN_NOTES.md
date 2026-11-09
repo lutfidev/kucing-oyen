@@ -2,6 +2,50 @@
 
 Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lama tersedia di riwayat Git dan bukan spesifikasi visual aktif.
 
+## Integrasi beranda v2 — 9 November 2026
+
+Visual akhir rumah berilustrasi diterima pemilik repo dengan “boleh lah” setelah
+tinjauan screenshot runtime. Langkah 5 selesai dan dicentang; PR #44 berubah
+dari draft menjadi siap review. Merge tetap dilakukan pemilik repo. Langkah 6
+(Makan) dimulai setelah merge, dengan arah ilustrasi ini sebagai acuan.
+
+Keputusan ilustrasi berikutnya: permintaan warna/kekayaan visual seperti mockup
+diterapkan dengan latar Santai baru dari imagegen bawaan, terpisah dari UI,
+kucing dan barang katalog. Aset WebP 180.076 byte, decode tetap 4 MiB; vektor
+menjadi fallback jika belum siap/gagal. Inventaris vektor tetap 209. Sumber PNG,
+prompt, hak keluaran dan kontrak integrasi tercatat di
+[PAINTED_ASSET](design-v2/home/PAINTED_ASSET.md). Ini revisi pilihan teknis
+vektor murni untuk latar, tanpa mengubah aturan model. PR #44 tetap draft.
+
+Revisi ilustrasi berdasarkan perbandingan langsung konsep A: pulihkan biru
+jendela dan hijau daun, gunakan highlight/lipatan pada bahan, serta cahaya
+terarah dan bayangan kontak. Hapus tint kuning global. Tekstur dinding/lantai
+berada pada latar statis; warna karakter dan aturan model dipertahankan.
+[Pembanding ilustrasi](design-v2/home/REVIEW.md) diperbarui di PR #44.
+
+Revisi warna berikutnya atas permintaan pemilik repo: krem madu dan ivory
+hangat untuk rumah/kartu, kayu karamel serta cahaya sore untuk Santai. Token
+khusus rumah menjaga identitas warna kucing dan palet dasar layar lain.
+[Perbandingan palet](design-v2/home/REVIEW.md) tersedia; penerimaan akhir tetap
+melalui tinjauan visual pemilik repo.
+
+Tinjauan berikutnya: pemilik repo meminta tampilan dirapikan terlebih dahulu,
+sebelum langkah 6. Perapian meliputi arsitektur Santai, karakter lebih bulat,
+komposisi berlapis, empat tab terlihat pada teks normal dan kontrol yang lebih
+ringkas. Aturan model tetap; [perbandingan sebelum/sesudah](design-v2/home/REVIEW.md)
+masih menunggu penerimaan pemilik repo. PR #44 tetap draft.
+
+Langkah 5 memasang rumah v2 sebagai rute pemain, memakai lokasi model langkah
+4 dan aset/komponen langkah 2–3. Pilihan kucing bersifat sesi dan tidak ikut
+hilang ketika kucing meninggalkan area. Tab disimpan; sheet tetap menjalankan
+rutinitas; rute lain, lifecycle, iklan dan gagal simpan menjeda clock aktif.
+Preferensi/sistem Kurangi gerak hanya mengubah rendering. Lihat
+[screenshot dan batas tinjauan](design-v2/home/REVIEW.md). Penerimaan visual
+pemilik repo masih diperlukan sebelum langkah 5 dicentang. Penyelesaian area
+khusus tetap langkah 6–8; editor Hias/Gudang langkah 9, tanpa membuka editor
+koordinat v1 di rumah baru. Tidak mengubah ekonomi, solver atau aturan puzzle.
+
+
 ## Keputusan pemilik repo
 
 - Seluruh visual diubah, termasuk bentuk kucing, mengikuti konsep A pada [preview Rumah Oyen](design-brief/rumah-oyen-area/preview-perbandingan.png), sisi kiri.

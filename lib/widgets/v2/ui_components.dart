@@ -292,6 +292,7 @@ class UiNavigation extends StatelessWidget {
         children: List.generate(
           3,
           (i) => Expanded(
+            flex: labels[i].runes.length > 10 ? 3 : 2,
             child: Padding(
               padding: EdgeInsets.only(left: i == 0 ? 0 : KoUi.s4),
               child: UiButton(

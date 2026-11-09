@@ -2,6 +2,8 @@ import '../gallery/gallery_ui_v2_screen.dart';
 
 import 'dart:math';
 
+import 'package:flutter/widgets.dart';
+
 import 'package:go_router/go_router.dart';
 
 import '../gallery/gallery_board_screen.dart';
@@ -24,6 +26,7 @@ GoRouter createRouter({
   String initialLocation = AppRoutes.home,
   Random Function()? roomRandom,
   bool roomLife = true,
+  WidgetBuilder? homeBuilder,
 }) {
   return GoRouter(
     initialLocation: initialLocation,
@@ -33,6 +36,7 @@ GoRouter createRouter({
       GoRoute(
         path: AppRoutes.home,
         builder: (context, state) =>
+            homeBuilder?.call(context) ??
             RoomScreen(random: roomRandom?.call(), life: roomLife),
         routes: [
           GoRoute(

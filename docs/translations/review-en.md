@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-504 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+539 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -531,6 +531,41 @@ files and anything written there is overwritten.
 | `uiInvite` | Invite to area | Ajak ke area | V2 UI foundation: uiInvite | |
 | `uiViewActivity` | View activity | Lihat kegiatan | V2 UI foundation: uiViewActivity | |
 | `uiActivityNote` | Choose an activity for Oyen. The invitation will wait for the current activity. | Pilih kegiatan untuk Oyen. Ajakan akan menunggu kegiatan yang sedang berjalan. | V2 UI foundation: uiActivityNote | |
+| `homeCats` | Cats | Kucing | V2 player home: homeCats. | |
+| `homeEmpty` | A quiet spot. Find a cat from your collection. | Area ini lagi sepi. Temukan kucing lewat koleksi, yuk. | V2 player home: homeEmpty. | |
+| `homeChoose` | Choose a cat | Pilih kucing | V2 player home: homeChoose. | |
+| `homeResting` | Relaxing | Bersantai | V2 player home: homeResting. | |
+| `homeSleeping` | Sleeping | Tidur | V2 player home: homeSleeping. | |
+| `homeActivity` | {activity, select, rest{Relax} eat{Eat} play{Play} brush{Brush} pet{Pet} other{Relax}} | {activity, select, rest{Santai} eat{Makan} play{Main} brush{Sikat} pet{Elus} other{Santai}} | V2 player home: homeActivity. Placeholders: `{activity}`. | |
+| `homeDoing` | Now: {activity} | Sedang: {activity} | V2 player home: homeDoing. Placeholders: `{activity}`. | |
+| `homeTravel` | Heading to {area}… | Menuju {area}… | V2 player home: homeTravel. Placeholders: `{area}`. | |
+| `homeWaiting` | Waiting for {area} · {position} in line | Menunggu {area} · antrean {position} | V2 player home: homeWaiting. Placeholders: `{area}`, `{position}`. | |
+| `homeAfterActivity` | After this activity: {area} | Sesudah kegiatan ini: {area} | V2 player home: homeAfterActivity. Placeholders: `{area}`. | |
+| `homeIneligible` | Already full, or today's activity allowance needs a rest. | Sudah cukup, atau jatah kegiatan sedang istirahat. | V2 player home: homeIneligible. | |
+| `homeCancelled` | Invitation cancelled | Ajakan dibatalkan | V2 player home: homeCancelled. | |
+| `homeFacilityRemoved` | Activity stopped; the item is in storage. | Kegiatan berhenti; barangnya di Gudang. | V2 player home: homeFacilityRemoved. | |
+| `homeInviteEat` | Invite to eat | Ajak makan | V2 player home: homeInviteEat. | |
+| `homeInvitePlay` | Invite to play | Ajak main | V2 player home: homeInvitePlay. | |
+| `homeInviteCare` | Care | Rawat | V2 player home: homeInviteCare. | |
+| `homeBrush` | Brush | Sikat | V2 player home: homeBrush. | |
+| `homeRest` | Back to lounge | Kembali Santai | V2 player home: homeRest. | |
+| `homeInviteFor` | Invite {name} · {activity} | Ajak {name} · {activity} | V2 player home: homeInviteFor. Placeholders: `{name}`, `{activity}`. | |
+| `homeFind` | Find | Temukan | V2 player home: homeFind. | |
+| `homeViewArea` | View area | Lihat area | V2 player home: homeViewArea. | |
+| `homeCancelAfter` | Cancel after this | Batal setelah ini | V2 player home: homeCancelAfter. | |
+| `homeCancelInvitation` | Cancel invitation | Batalkan ajakan | V2 player home: homeCancelInvitation. | |
+| `homeRewardAvailable` | Rewards available · {coins} | Hadiah tersedia · {coins} | V2 player home: homeRewardAvailable. Placeholders: `{coins}`. | |
+| `homeRewardNone` | Everyone is comfy. Rewards will be back. | Santai dulu. Hadiah akan tersedia lagi. | V2 player home: homeRewardNone. | |
+| `homeRewards` | House rewards | Hadiah rumah | V2 player home: homeRewards. | |
+| `homeClaimAll` | Collect all · {coins} | Ambil semua · {coins} | V2 player home: homeClaimAll. Placeholders: `{coins}`. | |
+| `homeSaveFailed` | Couldn't save. Your last saved state is safe. | Belum berhasil disimpan. Keadaan terakhir tetap aman. | V2 player home: homeSaveFailed. | |
+| `homeRetry` | Try again | Coba lagi | V2 player home: homeRetry. | |
+| `homeMigration` | A bigger home! Your other items are safe in storage. | Rumah lebih luas! Barang lainnya aman di Gudang. | V2 player home: homeMigration. | |
+| `homeWelcome` | Welcome home | Selamat datang di rumah | V2 player home: homeWelcome. | |
+| `homeFood` | Food | Makanan | V2 player home: homeFood. | |
+| `homeAreaCount` | {area} · {count}/{capacity} | {area} · {count}/{capacity} | V2 player home: homeAreaCount. Placeholders: `{area}`, `{count}`, `{capacity}`. | |
+| `homeLoadFailed` | Couldn't load the room art. | Gambar rumah belum berhasil dimuat. | V2 player home: homeLoadFailed. | |
+| `homeLoading` | Opening the home… | Membuka rumah… | V2 player home: homeLoading. | |
 
 ---
 

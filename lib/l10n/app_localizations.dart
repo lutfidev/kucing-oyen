@@ -3125,6 +3125,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose an activity for Oyen. The invitation will wait for the current activity.'**
   String get uiActivityNote;
+
+  /// V2 player home: homeCats.
+  ///
+  /// In en, this message translates to:
+  /// **'Cats'**
+  String get homeCats;
+
+  /// V2 player home: homeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'A quiet spot. Find a cat from your collection.'**
+  String get homeEmpty;
+
+  /// V2 player home: homeChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a cat'**
+  String get homeChoose;
+
+  /// V2 player home: homeResting.
+  ///
+  /// In en, this message translates to:
+  /// **'Relaxing'**
+  String get homeResting;
+
+  /// V2 player home: homeSleeping.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleeping'**
+  String get homeSleeping;
+
+  /// V2 player home: homeActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'{activity, select, rest{Relax} eat{Eat} play{Play} brush{Brush} pet{Pet} other{Relax}}'**
+  String homeActivity(String activity);
+
+  /// V2 player home: homeDoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Now: {activity}'**
+  String homeDoing(String activity);
+
+  /// V2 player home: homeTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Heading to {area}…'**
+  String homeTravel(String area);
+
+  /// V2 player home: homeWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for {area} · {position} in line'**
+  String homeWaiting(String area, int position);
+
+  /// V2 player home: homeAfterActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'After this activity: {area}'**
+  String homeAfterActivity(String area);
+
+  /// V2 player home: homeIneligible.
+  ///
+  /// In en, this message translates to:
+  /// **'Already full, or today\'s activity allowance needs a rest.'**
+  String get homeIneligible;
+
+  /// V2 player home: homeCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation cancelled'**
+  String get homeCancelled;
+
+  /// V2 player home: homeFacilityRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity stopped; the item is in storage.'**
+  String get homeFacilityRemoved;
+
+  /// V2 player home: homeInviteEat.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite to eat'**
+  String get homeInviteEat;
+
+  /// V2 player home: homeInvitePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite to play'**
+  String get homeInvitePlay;
+
+  /// V2 player home: homeInviteCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Care'**
+  String get homeInviteCare;
+
+  /// V2 player home: homeBrush.
+  ///
+  /// In en, this message translates to:
+  /// **'Brush'**
+  String get homeBrush;
+
+  /// V2 player home: homeRest.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to lounge'**
+  String get homeRest;
+
+  /// V2 player home: homeInviteFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite {name} · {activity}'**
+  String homeInviteFor(String name, String activity);
+
+  /// V2 player home: homeFind.
+  ///
+  /// In en, this message translates to:
+  /// **'Find'**
+  String get homeFind;
+
+  /// V2 player home: homeViewArea.
+  ///
+  /// In en, this message translates to:
+  /// **'View area'**
+  String get homeViewArea;
+
+  /// V2 player home: homeCancelAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel after this'**
+  String get homeCancelAfter;
+
+  /// V2 player home: homeCancelInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel invitation'**
+  String get homeCancelInvitation;
+
+  /// V2 player home: homeRewardAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards available · {coins}'**
+  String homeRewardAvailable(int coins);
+
+  /// V2 player home: homeRewardNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone is comfy. Rewards will be back.'**
+  String get homeRewardNone;
+
+  /// V2 player home: homeRewards.
+  ///
+  /// In en, this message translates to:
+  /// **'House rewards'**
+  String get homeRewards;
+
+  /// V2 player home: homeClaimAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Collect all · {coins}'**
+  String homeClaimAll(int coins);
+
+  /// V2 player home: homeSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t save. Your last saved state is safe.'**
+  String get homeSaveFailed;
+
+  /// V2 player home: homeRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get homeRetry;
+
+  /// V2 player home: homeMigration.
+  ///
+  /// In en, this message translates to:
+  /// **'A bigger home! Your other items are safe in storage.'**
+  String get homeMigration;
+
+  /// V2 player home: homeWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome home'**
+  String get homeWelcome;
+
+  /// V2 player home: homeFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get homeFood;
+
+  /// V2 player home: homeAreaCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{area} · {count}/{capacity}'**
+  String homeAreaCount(String area, int count, int capacity);
+
+  /// V2 player home: homeLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load the room art.'**
+  String get homeLoadFailed;
+
+  /// V2 player home: homeLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening the home…'**
+  String get homeLoading;
 }
 
 class _AppLocalizationsDelegate

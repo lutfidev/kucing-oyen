@@ -40,6 +40,7 @@ flutter:
     - assets/art/v2/accessories/
     - assets/art/v2/items/
     - assets/art/v2/rooms/
+    - assets/art/v2/scenes/
     - assets/levels/
     # Lisensi font (ditampilkan di halaman lisensi aplikasi).
     - assets/fonts/OFL-Fredoka.txt

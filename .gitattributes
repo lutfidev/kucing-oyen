@@ -1,2 +1,3 @@
 # Generated artwork must remain byte-identical on Windows checkouts.
 /assets/art/v2/** text eol=lf
+/assets/art/v2/scenes/*.webp binary -eol

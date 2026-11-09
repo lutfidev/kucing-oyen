@@ -8,3 +8,13 @@ this notice does not grant a separate third-party asset license.
 
 Art direction: owner-approved concept A and docs/design-v2/VISUAL.md.
 Concept images are references, not embedded runtime textures.
+
+Painted scenery addition (9 November 2026):
+scenes/santai-painted-v1.webp is an AI-generated standalone background made
+with the built-in imagegen tool, using the project mockup as art direction.
+The mockup's cats and UI are not embedded in the runtime scene. The source
+image, complete prompt and production notes are in
+docs/design-v2/home/PAINTED_ASSET.md and docs/design-v2/home/source/.
+Rights in generated output follow the image generation tool's service terms;
+no third-party stock/clip-art license is asserted for this image. The vector
+inventory above remains original procedural artwork under the project license.

@@ -296,6 +296,7 @@ void main() {
       setScreenSize(tester, const Size(390, 844));
       await pumpApp(
         tester,
+        legacyRoom: true,
         location: '/toko',
         progress: testProgressWith(coins: 100),
       );
@@ -408,6 +409,7 @@ void main() {
       setScreenSize(tester, const Size(390, 844));
       await pumpApp(
         tester,
+        legacyRoom: true,
         location: '/toko?tab=kitties',
         progress: testProgressWith(coins: 300),
       );
