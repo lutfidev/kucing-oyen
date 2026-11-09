@@ -2,6 +2,19 @@
 
 Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lama tersedia di riwayat Git dan bukan spesifikasi visual aktif.
 
+## Integrasi beranda v2 — 9 November 2026
+
+Langkah 5 memasang rumah v2 sebagai rute pemain, memakai lokasi model langkah
+4 dan aset/komponen langkah 2–3. Pilihan kucing bersifat sesi dan tidak ikut
+hilang ketika kucing meninggalkan area. Tab disimpan; sheet tetap menjalankan
+rutinitas; rute lain, lifecycle, iklan dan gagal simpan menjeda clock aktif.
+Preferensi/sistem Kurangi gerak hanya mengubah rendering. Lihat
+[screenshot dan batas tinjauan](design-v2/home/REVIEW.md). Penerimaan visual
+pemilik repo masih diperlukan sebelum langkah 5 dicentang. Penyelesaian area
+khusus tetap langkah 6–8; editor Hias/Gudang langkah 9, tanpa membuka editor
+koordinat v1 di rumah baru. Tidak mengubah ekonomi, solver atau aturan puzzle.
+
+
 ## Keputusan pemilik repo
 
 - Seluruh visual diubah, termasuk bentuk kucing, mengikuti konsep A pada [preview Rumah Oyen](design-brief/rumah-oyen-area/preview-perbandingan.png), sisi kiri.

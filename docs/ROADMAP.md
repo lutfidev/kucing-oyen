@@ -99,6 +99,8 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 
 ## 5. Beranda Santai dan perpindahan area
 
+**Implementasi tersedia 9 November 2026; menunggu penerimaan screenshot pemilik repo.** [Tinjauan rumah v2](design-v2/home/REVIEW.md). Rute rumah memakai aset/komponen v2, navigasi area dan koleksi, ajakan/batal, hadiah gabungan serta clock lifecycle/iklan. Checkbox tetap kosong sampai syarat visual di bawah diterima. Hias/Gudang mengikuti langkah 9.
+
 **Baca/ubah:** `lib/screens/room/`, router/rute, komponen/aset/model langkah 2–4; test kamar/navigasi.
 
 - Bangun Santai berlapis, header, tab area, kucing, kartu pilihan, hadiah dan panel bawah sesuai A.
