@@ -2932,5 +2932,78 @@
   "homeLoading": "Opening the home…",
   "@homeLoading": {
     "description": "V2 player home: homeLoading."
+  },
+  "diningEmpty": "Bowl empty · fresh portions next cycle",
+  "@diningEmpty": {"description": "Dining area: no cat has a portion left in this cycle."},
+  "diningTitle": "Dinner time",
+  "@diningTitle": {
+    "description": "Dining area v2: diningTitle"
+  },
+  "diningStock": "Portions available · {left}/{total} cats",
+  "@diningStock": {
+    "description": "Dining area v2: diningStock",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "diningRefill": "Fresh portions in {time} · automatic and free",
+  "@diningRefill": {
+    "description": "Dining area v2: diningRefill",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "diningFresh": "The 4-hour cycle starts when the first cat finishes eating.",
+  "@diningFresh": {
+    "description": "Dining area v2: diningFresh"
+  },
+  "diningReady": "Ready to eat · Food +40",
+  "@diningReady": {
+    "description": "Dining area v2: diningReady"
+  },
+  "diningFull": "Still full · eats when Food is below 70",
+  "@diningFull": {
+    "description": "Dining area v2: diningFull"
+  },
+  "diningAlreadyAte": "Portion already eaten · wait for the next cycle",
+  "@diningAlreadyAte": {
+    "description": "Dining area v2: diningAlreadyAte"
+  },
+  "diningUsing": "{name} is eating",
+  "@diningUsing": {
+    "description": "Dining area v2: diningUsing",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "diningFree": "Bowl ready · one cat eats at a time",
+  "@diningFree": {
+    "description": "Dining area v2: diningFree"
+  },
+  "diningQueue": "Dining queue · {count}",
+  "@diningQueue": {
+    "description": "Dining area v2: diningQueue",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "diningChoose": "Choose a cat to eat",
+  "@diningChoose": {
+    "description": "Dining area v2: diningChoose"
+  },
+  "diningWaiting": "Waiting spot",
+  "@diningWaiting": {
+    "description": "Dining area v2: diningWaiting"
   }
 }

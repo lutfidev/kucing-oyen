@@ -538,5 +538,18 @@
   "homeFood": "Сытость",
   "homeAreaCount": "{area} · {count}/{capacity}",
   "homeLoadFailed": "Не удалось загрузить рисунки дома.",
-  "homeLoading": "Открываем дом…"
+  "homeLoading": "Открываем дом…",
+  "diningEmpty": "Миска пуста · новые порции в следующем цикле",
+  "diningTitle": "Пора кушать",
+  "diningStock": "Порции доступны · {left}/{total} котов",
+  "diningRefill": "Новые порции через {time} · автоматически и бесплатно",
+  "diningFresh": "Цикл на 4 часа начнётся, когда первый кот закончит есть.",
+  "diningReady": "Можно кушать · Еда +40",
+  "diningFull": "Пока сыт · поест, когда Еда ниже 70",
+  "diningAlreadyAte": "Порция съедена · ждём следующего цикла",
+  "diningUsing": "{name} кушает",
+  "diningFree": "Миска готова · коты едят по очереди",
+  "diningQueue": "Очередь к миске · {count}",
+  "diningChoose": "Выбрать кота для кормления",
+  "diningWaiting": "Место ожидания"
 }

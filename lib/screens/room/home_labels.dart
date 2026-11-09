@@ -28,13 +28,8 @@ String homeKittyStatus(
   }
   if (action != null) return l.homeDoing(l.homeActivity(action.kind.name));
   if (invite != null) {
-    final queue =
-        r.invitations.entries.where((e) => e.value.kind.area == target).toList()
-          ..sort((a, b) => a.value.order.compareTo(b.value.order));
-    return l.homeWaiting(
-      homeAreaLabel(l, target!),
-      queue.indexWhere((e) => e.key == kitty) + 1,
-    );
+    final queue = r.queueFor(target!);
+    return l.homeWaiting(homeAreaLabel(l, target), queue.indexOf(kitty) + 1);
   }
   return switch (r.notices[kitty]) {
     RoutineNotice.ineligible => l.homeIneligible,

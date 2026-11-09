@@ -23,6 +23,13 @@ extension HouseholdController on ProgressController {
   bool get householdSaveFailed => _pendingHome != null;
   bool get householdBusy => _homeBusy;
 
+  DiningState get dining => DiningState(
+    needs: _needs,
+    routine: _household.routine,
+    owned: _home.kitties,
+    now: _effectiveNow,
+  );
+
   /// Selection is session-only, independent of route/widget lifetime.
   KittyId? get selectedHomeKitty {
     if (!_homeSelectionInitialized) {
