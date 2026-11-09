@@ -271,7 +271,7 @@ class _HomeSceneState extends State<HomeScene>
     final name = kittyName(context.l10n, kitty);
     final status = homeKittyStatus(context.l10n, c, kitty);
     return _CatPosition(
-      key: ValueKey('home-cat-position-${kitty.name}'),
+      key: ValueKey('home-position-${kitty.name}'),
       roomHeight: height,
       scale: scale,
       atBowl: atBowl,

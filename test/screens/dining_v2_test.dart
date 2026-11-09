@@ -130,7 +130,7 @@ void main() {
     (tester) async {
       setScreenSize(tester, const Size(390, 844));
       final c = await setupDining(tester, life: true);
-      final slot = find.byKey(const ValueKey('home-cat-position-salju'));
+      final slot = find.byKey(const ValueKey('home-position-salju'));
       final start = tester.getTopLeft(slot).dx;
       await c.advanceHousehold(4);
       await tester.pump();
