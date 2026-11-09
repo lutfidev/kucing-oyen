@@ -27,20 +27,28 @@ Perbandingan runtime 390×844: [sebelum](santai-sebelum-polish-id.png) dan
 diperbarui. Ini tetap bahan tinjauan, bukan persetujuan visual otomatis.
 
 Sumber ilustrasi tambahan: `tool/art_v2/lounge.py`, dipanggil generator utama.
-Inventaris tetap 209 aset vektor, 298.538 byte sumber, 108.641 byte ZIP menurut
+Inventaris tetap 209 aset vektor, 300.571 byte sumber, 108.833 byte ZIP menurut
 generator; raster/atlas sumber tetap nol. Lisensi mengikuti paket seni v2.
 
-### Revisi palet hangat
+### Cahaya, bahan, dan variasi warna
 
-Pemilik repo meminta warna lebih hangat setelah perapian bentuk diterima
-sebagai arah. Latar rumah kini krem madu `#F9DEB4`, kartu ivory madu
-`#FFF0D4` → `#FFE5B8`, dan panel bawah peach `#F4C88F`. Dinding Santai,
-tirai, kayu karamel serta cahaya sore memakai palet yang sama. Warna bulu
-kucing tetap agar sembilan identitas mudah dikenali. Perbandingan:
-[sebelum perubahan warna](santai-sebelum-warna-hangat-id.png) dan
-[palet terbaru](santai-baru-id.png).
+Acuan tetap konsep A, yang ditunjukkan kembali pemilik repo pada screenshot
+referensi. Langit biru dan tanaman hijau dipulihkan agar kayu jingga serta
+krem mempunyai pembanding warna. Tirai memakai lipatan gelap dan highlight
+ivory; kabinet dan bingkai mempunyai sisi terang serta sisi bayangan.
 
-Kontras teks cokelat `#573018` terhadap permukaan rumah baru 7,33–10,14:1;
+Lapisan kuning seluruh ruangan dihapus. `lounge_lighting.dart` menggambar
+cahaya jendela terarah, bayangan kisi, bayangan kontak dan grain dinding/kayu.
+Pencahayaan digambar sebelum dekor dan aktor; kaca biru, daun, dan bulu tidak
+terkena tint global. Tekstur berada di lapisan latar statis yang sudah memakai
+RepaintBoundary. Warna bulu tetap agar sembilan identitas mudah dikenali.
+
+Latar UI kini `#FCE8C6`, kartu ivory `#FFF7E8` → `#FFE8C7`, dan panel peach
+`#F6D6AB`. Perbandingan: [versi kuning sebelumnya](santai-sebelum-cahaya-id.png)
+dan [ilustrasi terbaru](santai-baru-id.png). Percobaan palet lebih awal tetap
+tersedia pada [pembanding awal](santai-sebelum-warna-hangat-id.png).
+
+Kontras teks cokelat `#573018` terhadap permukaan krem/peach baru 8,21–10,71:1;
 ujung oranye tombol utama tetap 4,59:1. Pemeriksaan dilakukan dari luminans
 warna, bukan klaim audit aksesibilitas perangkat. Perubahan palet diverifikasi
 dengan 64 test rumah/komponen UI, pengecekan aset dan build debug; hasil suite
@@ -92,7 +100,7 @@ Render ulang:
 
 ## Verifikasi
 
-Hasil akhir: `flutter analyze` tanpa issue; format 262 berkas bersih;
+Hasil akhir: `flutter analyze` tanpa issue; format 263 berkas bersih;
 `flutter test --concurrency=2 --timeout=2m` **2.905 lulus, 135 skip historis**.
 Ada 35 test rumah baru, termasuk render ulang screenshot, empat tab terlihat,
 target sentuh kucing tidak tumpang tindih dan tab aktif terlihat pada teks besar.

@@ -10,6 +10,7 @@ import '../../game/model/home_routine.dart';
 import '../../game/model/kitties.dart';
 import '../../game/render/v2/art_pack.dart';
 import '../../game/render/v2/cat_rig.dart';
+import '../../game/render/v2/lounge_lighting.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
 import '../../theme/ko_ui.dart';
@@ -284,22 +285,13 @@ class _RoomLayers extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.save();
     canvas.scale(size.width / 390, size.height / 390);
-    for (final layer in ['wall', 'floor', 'decor']) {
+    for (final layer in ['wall', 'floor']) {
       pack.paint(canvas, 'rooms/${area.name}-$layer');
     }
     if (area == HomeArea.santai) {
-      const room = Rect.fromLTWH(0, 0, 390, 390);
-      canvas.drawRect(
-        room,
-        Paint()
-          ..shader = const RadialGradient(
-            center: Alignment(-.3, -.6),
-            radius: 1.3,
-            colors: [Color(0x33FFD075), Color(0x00FFD075), Color(0x248E512D)],
-            stops: [0, .55, 1],
-          ).createShader(room),
-      );
+      paintLoungeLighting(canvas);
     }
+    pack.paint(canvas, 'rooms/${area.name}-decor');
     // The lounge rug is structural, not an unowned catalogue purchase.
     if (area == HomeArea.santai || area == HomeArea.rawat) {
       const rug = Rect.fromLTWH(28, 265, 336, 112);

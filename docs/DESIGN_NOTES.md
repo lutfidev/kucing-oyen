@@ -4,6 +4,12 @@ Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lam
 
 ## Integrasi beranda v2 — 9 November 2026
 
+Revisi ilustrasi berdasarkan perbandingan langsung konsep A: pulihkan biru
+jendela dan hijau daun, gunakan highlight/lipatan pada bahan, serta cahaya
+terarah dan bayangan kontak. Hapus tint kuning global. Tekstur dinding/lantai
+berada pada latar statis; warna karakter dan aturan model dipertahankan.
+[Pembanding ilustrasi](design-v2/home/REVIEW.md) diperbarui di PR #44.
+
 Revisi warna berikutnya atas permintaan pemilik repo: krem madu dan ivory
 hangat untuk rumah/kartu, kayu karamel serta cahaya sore untuk Santai. Token
 khusus rumah menjaga identitas warna kucing dan palet dasar layar lain.
