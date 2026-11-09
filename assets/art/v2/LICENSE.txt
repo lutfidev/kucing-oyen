@@ -18,3 +18,9 @@ docs/design-v2/home/PAINTED_ASSET.md and docs/design-v2/home/source/.
 Rights in generated output follow the image generation tool's service terms;
 no third-party stock/clip-art license is asserted for this image. The vector
 inventory above remains original procedural artwork under the project license.
+
+Dining scenery addition (9 November 2026):
+scenes/makan-painted-v1.webp was generated with the built-in imagegen tool
+using the approved lounge background as a style reference. No cats, bowls,
+food or UI are embedded. Source and prompt: docs/design-v2/dining/PAINTED_ASSET.md.
+Generated output follows the same service terms described above.
