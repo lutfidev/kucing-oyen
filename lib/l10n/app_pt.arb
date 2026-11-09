@@ -538,5 +538,18 @@
   "homeFood": "Comida",
   "homeAreaCount": "{area} · {count}/{capacity}",
   "homeLoadFailed": "Não foi possível carregar a arte da casa.",
-  "homeLoading": "Abrindo a casa…"
+  "homeLoading": "Abrindo a casa…",
+  "diningEmpty": "Tigela vazia · novas porções no próximo ciclo",
+  "diningTitle": "Hora de comer",
+  "diningStock": "Porções disponíveis · {left}/{total} gatos",
+  "diningRefill": "Novas porções em {time} · automático e grátis",
+  "diningFresh": "O ciclo de 4 horas começa quando o primeiro gato termina de comer.",
+  "diningReady": "Pode comer · Comida +40",
+  "diningFull": "Ainda está de barriga cheia · come com Comida abaixo de 70",
+  "diningAlreadyAte": "Já comeu a porção · espere o próximo ciclo",
+  "diningUsing": "{name} está comendo",
+  "diningFree": "Tigela pronta · um gato come por vez",
+  "diningQueue": "Fila para comer · {count}",
+  "diningChoose": "Escolha um gato para comer",
+  "diningWaiting": "Lugar de espera"
 }

@@ -12,6 +12,8 @@ with zipfile.ZipFile(apk) as archive:
     required = {'assets/flutter_assets/assets/art/v2/' + v['file'] for v in manifest['assets'].values()}
     painted = 'assets/flutter_assets/assets/art/v2/scenes/santai-painted-v1.webp'
     required.add(painted)
+    dining = 'assets/flutter_assets/assets/art/v2/scenes/makan-painted-v1.webp'
+    required.add(dining)
     names = {i.filename for i in entries}
     if not required.issubset(names):
         raise SystemExit('APK is missing art files')
@@ -22,5 +24,7 @@ with zipfile.ZipFile(apk) as archive:
                   packagedArtCompressedBytes=sum(i.compress_size for i in entries),
                   paintedSceneBytes=archive.getinfo(painted).file_size,
                   paintedSceneDecodeBudgetBytes=1024 * 1024 * 4,
+                  diningSceneBytes=archive.getinfo(dining).file_size,
+                  combinedPaintedSceneDecodeBudgetBytes=2 * 1024 * 1024 * 4,
                   note='Debug APK. Art entries only; not an APK size delta against v1 or a release size forecast.')
 print(json.dumps(report, indent=2))

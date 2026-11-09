@@ -29,6 +29,7 @@ class HomeScene extends StatefulWidget {
     required this.onSelect,
     required this.animate,
     this.sceneryProvider = PaintedScenery.lounge,
+    this.onBowl,
   });
   final ArtPack pack;
   final ProgressController progress;
@@ -37,6 +38,7 @@ class HomeScene extends StatefulWidget {
   final ValueChanged<KittyId> onSelect;
   final bool animate;
   final ImageProvider sceneryProvider;
+  final VoidCallback? onBowl;
 
   @override
   State<HomeScene> createState() => _HomeSceneState();
@@ -99,12 +101,19 @@ class _HomeSceneState extends State<HomeScene>
           return Stack(
             key: const ValueKey('home-scene'),
             children: [
-              if (widget.area == HomeArea.santai)
+              if (widget.area == HomeArea.santai ||
+                  widget.area == HomeArea.makan)
                 Positioned.fill(
                   child: RepaintBoundary(
                     child: Image(
-                      key: const ValueKey('home-painted-backdrop'),
-                      image: widget.sceneryProvider,
+                      key: ValueKey(
+                        widget.area == HomeArea.santai
+                            ? 'home-painted-backdrop'
+                            : 'dining-painted-backdrop',
+                      ),
+                      image: widget.area == HomeArea.makan
+                          ? PaintedScenery.dining
+                          : widget.sceneryProvider,
                       fit: BoxFit.fill,
                       filterQuality: FilterQuality.medium,
                       excludeFromSemantics: true,
@@ -126,7 +135,9 @@ class _HomeSceneState extends State<HomeScene>
                       widget.pack,
                       c,
                       widget.area,
-                      background: widget.area != HomeArea.santai,
+                      background:
+                          widget.area != HomeArea.santai &&
+                          widget.area != HomeArea.makan,
                     ),
                   ),
                 ),
@@ -139,6 +150,31 @@ class _HomeSceneState extends State<HomeScene>
                   cats.length,
                   scale,
                   constraints.maxHeight,
+                ),
+              if (widget.area == HomeArea.makan)
+                Positioned(
+                  left: 67 * scale,
+                  top: constraints.maxHeight * .88 - 70 * scale,
+                  width: 112 * scale,
+                  height: 112 * scale,
+                  child: Semantics(
+                    button: true,
+                    label: context.l10n.roomItemMangkuk,
+                    child: Tooltip(
+                      message: context.l10n.diningChoose,
+                      child: GestureDetector(
+                        key: const ValueKey('dining-bowl'),
+                        behavior: HitTestBehavior.opaque,
+                        onTap: widget.onBowl,
+                        child: CustomPaint(
+                          painter: DiningBowlPainter(
+                            widget.pack,
+                            empty: c.dining.portionsLeft == 0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
             ],
           );
@@ -163,7 +199,13 @@ class _HomeSceneState extends State<HomeScene>
     final c = widget.progress;
     final r = c.household.routine;
     final moving = r.moving(kitty);
-    final catSize = count == 1
+    final dining = widget.area == HomeArea.makan;
+    final eater = c.dining.eating;
+    final first = eater ?? _diningLead(r, widget.area);
+    final atBowl = dining && kitty == first;
+    final catSize = dining
+        ? (atBowl ? 168.0 : 140.0)
+        : count == 1
         ? 205.0
         : count == 2
         ? 168.0
@@ -173,7 +215,9 @@ class _HomeSceneState extends State<HomeScene>
         ? 130.0
         : 124.0;
     // Three safe, separate foreground slots, with room left for the doorway.
-    final x = count == 1
+    final x = dining
+        ? (atBowl ? 39.0 : 228.0)
+        : count == 1
         ? 94.0
         : count == 2
         ? 22.0 + index * 172
@@ -182,15 +226,30 @@ class _HomeSceneState extends State<HomeScene>
         : index == 1
         ? -3.0
         : 263.0;
-    var y = count == 3 && index == 2 ? 228.0 : 271.0;
+    var y = dining
+        ? ((height * (atBowl ? .88 : .82) - (catSize + 16) * scale) /
+              height *
+              390)
+        : count == 3 && index == 2
+        ? 228.0
+        : 271.0;
     var dx = x;
+    var direction = CatDirection.front;
     for (final trip in r.journeys.where((j) => j.cats.contains(kitty))) {
       if (!widget.animate) continue;
+      if (dining && trip.from == trip.to) {
+        // Already in Makan: approach the bowl from the waiting spot, rather
+        // than walking out to the doorway and back.
+        dx = 228 + (x - 228) * trip.elapsed;
+        direction = CatDirection.left;
+        continue;
+      }
       // The same cat is only painted by its current slot owner, including
       // paired swaps. At the threshold it appears at the destination door.
       final t = trip.committed ? (trip.elapsed - .5) * 2 : trip.elapsed * 2;
       final door = 390 - catSize - KoUi.s8;
       dx = trip.committed ? door + (x - door) * t : x + (door - x) * t;
+      direction = trip.committed ? CatDirection.left : CatDirection.right;
       y = trip.committed ? 216 + (y - 216) * t : y + (216 - y) * t;
     }
     final motion = moving
@@ -211,7 +270,14 @@ class _HomeSceneState extends State<HomeScene>
           };
     final name = kittyName(context.l10n, kitty);
     final status = homeKittyStatus(context.l10n, c, kitty);
-    return Positioned(
+    return _CatPosition(
+      key: ValueKey('home-position-${kitty.name}'),
+      roomHeight: height,
+      scale: scale,
+      atBowl: atBowl,
+      duration: dining && widget.animate && !moving
+          ? const Duration(milliseconds: 350)
+          : Duration.zero,
       left: dx * scale,
       top: math.min(
         y * height / 390,
@@ -219,52 +285,129 @@ class _HomeSceneState extends State<HomeScene>
       ),
       width: catSize * scale,
       height: (catSize + 16) * scale,
-      child: Semantics(
-        button: true,
-        selected: widget.selected == kitty,
-        label: '$name, $status',
-        child: Tooltip(
-          message: name,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: RepaintBoundary(
-                    child: CustomPaint(
-                      size: Size.infinite,
-                      painter: HomeCatPainter(
-                        widget.pack,
-                        CatRig(
-                          cat: kitty,
-                          motion: motion,
-                          direction: moving
-                              ? CatDirection.right
-                              : CatDirection.front,
-                          accessory: c.home.closet.wearingOf(kitty),
+      child: LayoutBuilder(
+        builder: (context, box) => Semantics(
+          button: true,
+          selected: widget.selected == kitty,
+          label: '$name, $status',
+          child: Tooltip(
+            message: name,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: RepaintBoundary(
+                      child: CustomPaint(
+                        size: Size.infinite,
+                        painter: HomeCatPainter(
+                          widget.pack,
+                          CatRig(
+                            cat: kitty,
+                            motion: motion,
+                            direction: direction,
+                            accessory: c.home.closet.wearingOf(kitty),
+                          ),
+                          time: widget.animate ? _time : null,
+                          selected: widget.selected == kitty,
                         ),
-                        time: widget.animate ? _time : null,
-                        selected: widget.selected == kitty,
                       ),
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                left: catSize * scale * .18,
-                right: catSize * scale * .06,
-                top: catSize * scale * .2,
-                bottom: catSize * scale * .03,
-                child: GestureDetector(
-                  key: ValueKey('home-cat-${kitty.name}'),
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => widget.onSelect(kitty),
+                Positioned(
+                  left: box.maxWidth * .18,
+                  right: box.maxWidth * .06,
+                  top: box.maxWidth * .2,
+                  bottom: box.maxWidth * .03,
+                  child: GestureDetector(
+                    key: ValueKey('home-cat-${kitty.name}'),
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => widget.onSelect(kitty),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+}
+
+/// Both cats use different depth lanes during a facility handoff. At the
+/// crossing, the incoming cat walks behind the outgoing one; smaller walking
+/// silhouettes preserve separate touch targets even in the 240dp room.
+class _CatPosition extends ImplicitlyAnimatedWidget {
+  const _CatPosition({
+    super.key,
+    required super.duration,
+    required this.left,
+    required this.top,
+    required this.width,
+    required this.height,
+    required this.roomHeight,
+    required this.scale,
+    required this.atBowl,
+    required this.child,
+  }) : super(curve: Curves.easeInOut);
+  final double left, top, width, height, roomHeight, scale;
+  final bool atBowl;
+  final Widget child;
+  @override
+  AnimatedWidgetBaseState<_CatPosition> createState() => _CatPositionState();
+}
+
+class _CatPositionState extends AnimatedWidgetBaseState<_CatPosition> {
+  RectTween? _rect;
+  bool _crossing = false;
+  @override
+  void didUpdateWidget(_CatPosition oldWidget) {
+    if (oldWidget.left != widget.left) {
+      _crossing =
+          (oldWidget.left - widget.left).abs() > 100 * widget.scale &&
+          widget.duration != Duration.zero;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void forEachTween(TweenVisitor<dynamic> visitor) {
+    final target = Rect.fromLTWH(
+      widget.left,
+      widget.top,
+      widget.width,
+      widget.height,
+    );
+    _rect = visitor(
+      _rect,
+      target,
+      (value) => RectTween(begin: value as Rect),
+    ) as RectTween?;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var rect = widget.duration == Duration.zero
+        ? Rect.fromLTWH(widget.left, widget.top, widget.width, widget.height)
+        : _rect!.evaluate(animation)!;
+    if (_crossing && widget.duration != Duration.zero) {
+      final arc = math.min(1.0, math.sin(animation.value * math.pi) * 1.25);
+      final shrink = math.min(
+        rect.width - 76 * widget.scale,
+        arc * (widget.atBowl ? 78 : 70) * widget.scale,
+      );
+      final laneFeet = widget.atBowl
+          ? widget.roomHeight * .65
+          : widget.roomHeight - KoUi.s8;
+      final feet = rect.bottom + (laneFeet - rect.bottom) * arc;
+      rect = Rect.fromLTWH(
+        rect.left,
+        feet - rect.height + shrink,
+        rect.width - shrink,
+        rect.height - shrink,
+      );
+    }
+    return Positioned.fromRect(rect: rect, child: widget.child);
   }
 }
 
@@ -299,7 +442,11 @@ class HomeCatPainter extends CustomPainter {
       direction: rig.direction,
       accessory: rig.accessory,
       time: time?.value,
-    ).paint(canvas, pack, props: rig.motion != CatMotion.happy);
+    ).paint(
+      canvas,
+      pack,
+      props: rig.motion != CatMotion.happy && rig.motion != CatMotion.eat,
+    );
     canvas.restore();
   }
 
@@ -393,6 +540,7 @@ class _RoomLayers extends CustomPainter {
     if (items) {
       for (final entry in placed.entries.where((e) => e.value.area == area)) {
         final id = entry.key;
+        if (area == HomeArea.makan && id == RoomItemId.mangkuk) continue;
         final slot = entry.value;
         final part = pack['items/${id.name}-back'];
         final dimension = slot.zone == RoomZone.wall ? 62.0 : 90.0;
@@ -441,4 +589,45 @@ class _RoomLayers extends CustomPainter {
       old.background != background ||
       old.items != items ||
       !identical(old.placed, placed);
+}
+
+KittyId? _diningLead(HomeRoutine routine, HomeArea area) {
+  final present = routine.present(area);
+  return routine.queueFor(area).where(present.contains).firstOrNull ??
+      present.firstOrNull;
+}
+
+/// One model-owned bowl, drawn in front of the eating cat. No rig prop copy.
+class DiningBowlPainter extends CustomPainter {
+  DiningBowlPainter(this.pack, {required this.empty});
+  final ArtPack pack;
+  final bool empty;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.save();
+    canvas.scale(size.width / 128, size.height / 128);
+    canvas.drawOval(
+      const Rect.fromLTWH(20, 104, 90, 16),
+      Paint()..color = KoUi.homeShade,
+    );
+    if (empty) {
+      canvas.drawOval(
+        const Rect.fromLTWH(21, 68, 86, 30),
+        Paint()..color = const Color(0xFFEEB871),
+      );
+      canvas.drawOval(
+        const Rect.fromLTWH(32, 72, 64, 18),
+        Paint()..color = const Color(0xFF90603B),
+      );
+    } else {
+      pack.paint(canvas, 'items/mangkuk-back');
+    }
+    pack.paint(canvas, 'items/mangkuk-front');
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(DiningBowlPainter old) =>
+      old.pack != pack || old.empty != empty;
 }

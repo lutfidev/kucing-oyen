@@ -2274,4 +2274,52 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get homeLoading => 'Открываем дом…';
+
+  @override
+  String get diningEmpty => 'Миска пуста · новые порции в следующем цикле';
+
+  @override
+  String get diningTitle => 'Пора кушать';
+
+  @override
+  String diningStock(int left, int total) {
+    return 'Порции доступны · $left/$total котов';
+  }
+
+  @override
+  String diningRefill(String time) {
+    return 'Новые порции через $time · автоматически и бесплатно';
+  }
+
+  @override
+  String get diningFresh =>
+      'Цикл на 4 часа начнётся, когда первый кот закончит есть.';
+
+  @override
+  String get diningReady => 'Можно кушать · Еда +40';
+
+  @override
+  String get diningFull => 'Пока сыт · поест, когда Еда ниже 70';
+
+  @override
+  String get diningAlreadyAte => 'Порция съедена · ждём следующего цикла';
+
+  @override
+  String diningUsing(String name) {
+    return '$name кушает';
+  }
+
+  @override
+  String get diningFree => 'Миска готова · коты едят по очереди';
+
+  @override
+  String diningQueue(int count) {
+    return 'Очередь к миске · $count';
+  }
+
+  @override
+  String get diningChoose => 'Выбрать кота для кормления';
+
+  @override
+  String get diningWaiting => 'Место ожидания';
 }

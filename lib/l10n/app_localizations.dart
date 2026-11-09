@@ -3335,6 +3335,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Opening the home…'**
   String get homeLoading;
+
+  /// Dining area: no cat has a portion left in this cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bowl empty · fresh portions next cycle'**
+  String get diningEmpty;
+
+  /// Dining area v2: diningTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner time'**
+  String get diningTitle;
+
+  /// Dining area v2: diningStock
+  ///
+  /// In en, this message translates to:
+  /// **'Portions available · {left}/{total} cats'**
+  String diningStock(int left, int total);
+
+  /// Dining area v2: diningRefill
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh portions in {time} · automatic and free'**
+  String diningRefill(String time);
+
+  /// Dining area v2: diningFresh
+  ///
+  /// In en, this message translates to:
+  /// **'The 4-hour cycle starts when the first cat finishes eating.'**
+  String get diningFresh;
+
+  /// Dining area v2: diningReady
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to eat · Food +40'**
+  String get diningReady;
+
+  /// Dining area v2: diningFull
+  ///
+  /// In en, this message translates to:
+  /// **'Still full · eats when Food is below 70'**
+  String get diningFull;
+
+  /// Dining area v2: diningAlreadyAte
+  ///
+  /// In en, this message translates to:
+  /// **'Portion already eaten · wait for the next cycle'**
+  String get diningAlreadyAte;
+
+  /// Dining area v2: diningUsing
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is eating'**
+  String diningUsing(String name);
+
+  /// Dining area v2: diningFree
+  ///
+  /// In en, this message translates to:
+  /// **'Bowl ready · one cat eats at a time'**
+  String get diningFree;
+
+  /// Dining area v2: diningQueue
+  ///
+  /// In en, this message translates to:
+  /// **'Dining queue · {count}'**
+  String diningQueue(int count);
+
+  /// Dining area v2: diningChoose
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a cat to eat'**
+  String get diningChoose;
+
+  /// Dining area v2: diningWaiting
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting spot'**
+  String get diningWaiting;
 }
 
 class _AppLocalizationsDelegate

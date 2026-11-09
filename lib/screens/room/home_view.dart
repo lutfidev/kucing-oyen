@@ -19,6 +19,7 @@ import '../coins/coin_sheet.dart';
 import 'home_labels.dart';
 import 'home_scene.dart';
 import 'home_sheets.dart';
+import 'dining_panel.dart';
 
 /// The v2 player home. Model changes publish only after their snapshot saves.
 class HomeView extends StatefulWidget {
@@ -205,6 +206,7 @@ class _HomeViewState extends State<HomeView> {
                             area: area,
                             selected: selected,
                             animate: widget.life && !still,
+                            onBowl: sheets.dining,
                             onSelect: (kitty) {
                               c.selectHomeKitty(kitty);
                               c.seeKitty(kitty);
@@ -237,6 +239,10 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         ),
                       const SizedBox(height: KoUi.s8),
+                      if (area == HomeArea.makan) ...[
+                        DiningPanel(progress: c, onChoose: sheets.dining),
+                        const SizedBox(height: KoUi.s8),
+                      ],
                       if (present.isEmpty)
                         Padding(
                           padding: const EdgeInsets.all(KoUi.s8),
@@ -372,7 +378,10 @@ class _HomeViewState extends State<HomeView> {
         HomeActivity.pet => l.petAction,
         HomeActivity.rest => l.homeRest,
       },
-      onPressed: busy ? null : () => c.inviteKitty(kitty, actions[i]),
+      onPressed:
+          busy || (actions[i] == HomeActivity.eat && !c.canEatFromBowl(kitty))
+          ? null
+          : () => c.inviteKitty(kitty, actions[i]),
     );
     final local = here && !r.moving(kitty);
     return Container(

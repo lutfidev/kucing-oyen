@@ -2085,4 +2085,53 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get homeLoading => 'Membuka rumah…';
+
+  @override
+  String get diningEmpty => 'Mangkuk kosong · jatah baru di siklus berikutnya';
+
+  @override
+  String get diningTitle => 'Waktunya makan';
+
+  @override
+  String diningStock(int left, int total) {
+    return 'Jatah tersedia · $left/$total kucing';
+  }
+
+  @override
+  String diningRefill(String time) {
+    return 'Jatah baru dalam $time · otomatis dan gratis';
+  }
+
+  @override
+  String get diningFresh =>
+      'Siklus 4 jam dimulai saat kucing pertama selesai makan.';
+
+  @override
+  String get diningReady => 'Bisa makan · Makanan +40';
+
+  @override
+  String get diningFull => 'Masih kenyang · makan saat Makanan di bawah 70';
+
+  @override
+  String get diningAlreadyAte =>
+      'Jatahnya sudah dimakan · tunggu siklus berikutnya';
+
+  @override
+  String diningUsing(String name) {
+    return '$name sedang makan';
+  }
+
+  @override
+  String get diningFree => 'Mangkuk siap · satu kucing makan bergantian';
+
+  @override
+  String diningQueue(int count) {
+    return 'Antrean makan · $count';
+  }
+
+  @override
+  String get diningChoose => 'Pilih kucing untuk makan';
+
+  @override
+  String get diningWaiting => 'Tempat menunggu';
 }

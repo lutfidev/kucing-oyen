@@ -2226,4 +2226,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeLoading => 'Opening the home…';
+
+  @override
+  String get diningEmpty => 'Bowl empty · fresh portions next cycle';
+
+  @override
+  String get diningTitle => 'Dinner time';
+
+  @override
+  String diningStock(int left, int total) {
+    return 'Portions available · $left/$total cats';
+  }
+
+  @override
+  String diningRefill(String time) {
+    return 'Fresh portions in $time · automatic and free';
+  }
+
+  @override
+  String get diningFresh =>
+      'The 4-hour cycle starts when the first cat finishes eating.';
+
+  @override
+  String get diningReady => 'Ready to eat · Food +40';
+
+  @override
+  String get diningFull => 'Still full · eats when Food is below 70';
+
+  @override
+  String get diningAlreadyAte =>
+      'Portion already eaten · wait for the next cycle';
+
+  @override
+  String diningUsing(String name) {
+    return '$name is eating';
+  }
+
+  @override
+  String get diningFree => 'Bowl ready · one cat eats at a time';
+
+  @override
+  String diningQueue(int count) {
+    return 'Dining queue · $count';
+  }
+
+  @override
+  String get diningChoose => 'Choose a cat to eat';
+
+  @override
+  String get diningWaiting => 'Waiting spot';
 }

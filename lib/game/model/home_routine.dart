@@ -170,6 +170,24 @@ class HomeRoutine {
       )
       .length;
   bool moving(KittyId kitty) => journeys.any((j) => j.cats.contains(kitty));
+
+  /// The same service order is used by the scheduler and visible queue.
+  List<KittyId> queueFor(HomeArea area) {
+    final orders = invitations.entries
+        .where((e) => e.value.kind.area == area)
+        .toList();
+    final preferAuto =
+        (streaks[area] ?? 0) >= 2 && orders.any((e) => !e.value.player);
+    orders.sort((a, b) {
+      final ap = a.value.player == !preferAuto ? 0 : 1;
+      final bp = b.value.player == !preferAuto ? 0 : 1;
+      return ap != bp
+          ? ap.compareTo(bp)
+          : a.value.order.compareTo(b.value.order);
+    });
+    return orders.map((e) => e.key).toList();
+  }
+
   HomeArea? findArea(KittyId kitty) {
     for (final j in journeys) {
       if (j.kitty == kitty) return j.to;
@@ -401,21 +419,10 @@ class HomeRoutine {
   HomeRoutine _schedule(HomeNeeds needs, DateTime now, {RoomItemId? toy}) {
     var state = this;
     for (final area in HomeArea.values) {
-      final orders = state.invitations.entries
-          .where((e) => e.value.kind.area == area)
-          .toList();
-      final preferAuto =
-          (state.streaks[area] ?? 0) >= 2 && orders.any((e) => !e.value.player);
-      orders.sort((a, b) {
-        final ap = a.value.player == !preferAuto ? 0 : 1;
-        final bp = b.value.player == !preferAuto ? 0 : 1;
-        return ap != bp
-            ? ap.compareTo(bp)
-            : a.value.order.compareTo(b.value.order);
-      });
+      final orders = state.queueFor(area);
       var facilityTurn = true;
-      for (final e in orders) {
-        final k = e.key, request = e.value;
+      for (final k in orders) {
+        final request = state.invitations[k]!;
         if (state.activities.containsKey(k)) continue;
         if (!eligible(request.kind, k, needs, now)) {
           state = state._copy(

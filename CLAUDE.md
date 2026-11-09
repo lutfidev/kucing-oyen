@@ -72,6 +72,16 @@ Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API pen
 
 ## Aturan penting
 
+- Area Makan v2 langkah 6: `lib/game/model/dining.dart` adalah proyeksi read-only
+  jatah/status mangkuk; `ProgressController.dining` memakai waktu efektif transaksi.
+  `HomeRoutine.queueFor` dibagi scheduler dan UI agar prioritas/fairness sama.
+  `lib/screens/room/dining_panel.dart` dan `HomeSheets.dining` menampilkan stok
+  koleksi, kelayakan individu, ajakan dan batal. `HomeScene` menggambar satu
+  mangkuk terpisah dari prop rig, makan/tunggu terpisah dan transisi giliran.
+  Latar `PaintedScenery.dining`, sumber/prompt di `docs/design-v2/dining/`;
+  test `dining_flow_test.dart` dan `dining_v2_test.dart`, render melalui
+  `--dart-define=DINING_REVIEW=true`. Kuota dan skema snapshot tidak berubah.
+
 - Model rumah v2 langkah 4: `home_areas.dart` (`HomeArea`, `AreaSlot`, `HomeAreas`), `home_routine.dart` (`HomeRoutine`, perjalanan berpasangan, ajakan/FIFO/fairness, ID kegiatan), `household.dart` (area terakhir, kurangi gerak, waktu efektif, migrasi). Model terpisah dari renderer dan belum mengganti mesin layar kamar v1. `ProgressController` mengekspos extension `HouseholdController` melalui `progress_scope.dart`: ajakan/batal, dt aktif, pause bertumpuk, hadiah gabungan dan draf tata letak. Layar langkah 5–9 wajib menggerakkan API lifecycle/rute/iklan/Hias; tidak memutar animasi memakai waktu offline. `HomeAreas` adalah sumber penempatan v2; `Home.room.placed` hanya kompatibilitas kamar v1. Kontrak dan batas ada di `docs/design-v2/model/REVIEW.md`.
 - Penyimpanan gameplay produksi memakai `SnapshotStore` (`progress_snapshot.dart`), JSON satu kunci `progress.snapshot.v2` versi 2; backup raw `progress.backup.v1` sebelum commit pertama, kunci v1/audio tetap. Aksi rumah atomik menerbitkan keadaan setelah sukses; kegagalan ditahan di `householdSaveFailed` dan dicoba lagi lewat `retrySaves`, dengan pengecekan ulang kuota/kelayakan. Adapter test per-bagian lama tetap memakai kontrak v1; test API rumah v2 harus menyediakan `SnapshotStore`. Test model/fixture/transaksi ada di `home_areas_test`, `home_routine_v2_test`, serta `test/app/household_*`.
 

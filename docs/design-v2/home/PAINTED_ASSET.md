@@ -39,6 +39,9 @@ Sambil memuat atau saat gambar gagal, latar vektor tetap tampil. Barang dan
 kucing tidak digandakan ketika fallback digantikan gambar. Area Makan/Main/
 Rawat masih menggunakan lapisan vektor sampai penyelesaian area masing-masing.
 
+Pembaruan langkah 6: Makan kini memakai [latar ilustrasi tersendiri](../dining/PAINTED_ASSET.md).
+Main/Rawat tetap vektor sampai tahap masing-masing.
+
 Test memeriksa gambar benar-benar terdecode, dimensi/memori terikat, cache
 digunakan kembali setelah pindah area, dan kucing tetap dapat diketuk ketika
 gambar gagal. Pemeriksaan APK memastikan WebP benar-benar dibundel. Profil

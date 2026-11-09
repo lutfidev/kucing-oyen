@@ -31,3 +31,7 @@ Vector dipilih karena bagian bisa dibagi dan dianimasikan tanpa atlas/frame bitm
 Satu `ArtPack` memiliki tepat 209 gambar statis; tidak membuat varian kombinasi/pose/waktu. Owner membuang pack saat scene tak diperlukan. Tidak ada preload semua layar aplikasi: langkah ini hanya memuat paket di galeri developer. Simpan pack bersama di lingkup scene saat integrasi, bukan satu pack per kucing. Anggaran sumber/kompresi ≤20 MB dan tekstur rumah ≤64 MiB; pada baseline vektor raster sumber 0 byte, tetapi Canvas, path, VM dan framebuffer tetap memakai memori. Profil HP/60fps bukan klaim langkah ini.
 
 Ikon/splash/merek, glyph UI, papan puzzle, ilustrasi hasil dan tutorial mengikuti langkah 3 serta 10–14; belum mengganti materi produksi dengan aset konsep ini.
+
+Runtime Makan langkah 6 juga menggunakan latar raster `scenes/makan-painted-v1.webp`,
+1024×1024/110.624 byte, di luar inventaris 209 SVG. Sumber, prompt dan hak keluaran:
+`docs/design-v2/dining/PAINTED_ASSET.md`. Mangkuk/kucing/UI tetap digambar live.

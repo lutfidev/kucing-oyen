@@ -17,6 +17,7 @@ import '../../widgets/v2/ui_sheet.dart';
 import '../shop/shop_tab.dart';
 import 'home_labels.dart';
 import 'home_scene.dart';
+import 'dining_panel.dart';
 
 enum _CatPanel { snacks, accessories }
 
@@ -134,6 +135,56 @@ class HomeSheets {
     footer: const SizedBox.shrink(),
   );
 
+  Future<void> dining() => showUiSheet<void>(
+    context,
+    title: l.diningChoose,
+    closeLabel: l.close,
+    body: _live(
+      (_) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _error(),
+          for (final kitty in KittyId.values.where(c.home.ownsKitty))
+            Padding(
+              padding: const EdgeInsets.only(bottom: KoUi.s12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(kittyName(l, kitty), style: KoUi.heading),
+                  Text(homeKittyStatus(l, c, kitty), style: KoUi.caption),
+                  Text(
+                    diningAvailabilityLabel(l, c.dining.availability(kitty)),
+                    style: KoUi.small,
+                  ),
+                  ..._needs(kitty),
+                  UiButton(
+                    key: ValueKey('dining-invite-${kitty.name}'),
+                    label: l.homeInviteFor(
+                      kittyName(l, kitty),
+                      l.homeActivity('eat'),
+                    ),
+                    onPressed: busy || !c.canEatFromBowl(kitty)
+                        ? null
+                        : () {
+                            c.selectHomeKitty(kitty);
+                            c.inviteKitty(kitty, HomeActivity.eat);
+                          },
+                  ),
+                  if (c.household.routine.invitations.containsKey(kitty))
+                    UiButton(
+                      label: l.homeCancelInvitation,
+                      kind: UiButtonKind.secondary,
+                      onPressed: busy ? null : () => c.cancelInvitation(kitty),
+                    ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    ),
+    footer: const SizedBox.shrink(),
+  );
+
   List<Widget> _needs(KittyId kitty) {
     final needs = c.catNeeds(kitty);
     return [
@@ -169,6 +220,10 @@ class HomeSheets {
             Center(child: _portrait(kitty)),
             Text(homeKittyStatus(l, c, kitty), style: KoUi.body),
             ..._needs(kitty),
+            Text(
+              diningAvailabilityLabel(l, c.dining.availability(kitty)),
+              style: KoUi.small,
+            ),
             for (final activity in HomeActivity.values)
               Padding(
                 padding: const EdgeInsets.only(bottom: KoUi.s8),
@@ -179,7 +234,12 @@ class HomeSheets {
                     l.homeActivity(activity.name),
                   ),
                   kind: UiButtonKind.secondary,
-                  onPressed: busy ? null : () => c.inviteKitty(kitty, activity),
+                  onPressed:
+                      busy ||
+                          (activity == HomeActivity.eat &&
+                              !c.canEatFromBowl(kitty))
+                      ? null
+                      : () => c.inviteKitty(kitty, activity),
                 ),
               ),
             if (c.household.routine.invitations.containsKey(kitty) ||

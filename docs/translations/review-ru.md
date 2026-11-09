@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-539 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+552 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -566,6 +566,19 @@ files and anything written there is overwritten.
 | `homeAreaCount` | {area} · {count}/{capacity} | {area} · {count}/{capacity} | V2 player home: homeAreaCount. Placeholders: `{area}`, `{count}`, `{capacity}`. | |
 | `homeLoadFailed` | Couldn't load the room art. | Не удалось загрузить рисунки дома. | V2 player home: homeLoadFailed. | |
 | `homeLoading` | Opening the home… | Открываем дом… | V2 player home: homeLoading. | |
+| `diningEmpty` | Bowl empty · fresh portions next cycle | Миска пуста · новые порции в следующем цикле | Dining area: no cat has a portion left in this cycle. | |
+| `diningTitle` | Dinner time | Пора кушать | Dining area v2: diningTitle | |
+| `diningStock` | Portions available · {left}/{total} cats | Порции доступны · {left}/{total} котов | Dining area v2: diningStock Placeholders: `{left}`, `{total}`. | |
+| `diningRefill` | Fresh portions in {time} · automatic and free | Новые порции через {time} · автоматически и бесплатно | Dining area v2: diningRefill Placeholders: `{time}`. | |
+| `diningFresh` | The 4-hour cycle starts when the first cat finishes eating. | Цикл на 4 часа начнётся, когда первый кот закончит есть. | Dining area v2: diningFresh | |
+| `diningReady` | Ready to eat · Food +40 | Можно кушать · Еда +40 | Dining area v2: diningReady | |
+| `diningFull` | Still full · eats when Food is below 70 | Пока сыт · поест, когда Еда ниже 70 | Dining area v2: diningFull | |
+| `diningAlreadyAte` | Portion already eaten · wait for the next cycle | Порция съедена · ждём следующего цикла | Dining area v2: diningAlreadyAte | |
+| `diningUsing` | {name} is eating | {name} кушает | Dining area v2: diningUsing Placeholders: `{name}`. | |
+| `diningFree` | Bowl ready · one cat eats at a time | Миска готова · коты едят по очереди | Dining area v2: diningFree | |
+| `diningQueue` | Dining queue · {count} | Очередь к миске · {count} | Dining area v2: diningQueue Placeholders: `{count}`. | |
+| `diningChoose` | Choose a cat to eat | Выбрать кота для кормления | Dining area v2: diningChoose | |
+| `diningWaiting` | Waiting spot | Место ожидания | Dining area v2: diningWaiting | |
 
 ---
 

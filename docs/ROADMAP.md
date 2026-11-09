@@ -30,7 +30,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 3. Fondasi UI dan komponen sesuai desain baru
 - [x] 4. Model banyak area, rutinitas, dan migrasi progres
 - [x] 5. Beranda Santai dan perpindahan area
-- [ ] 6. Area Makan: otomatis dan ajakan pemain
+- [x] 6. Area Makan: otomatis dan ajakan pemain
 - [ ] 7. Area Bermain: otomatis dan ajakan pemain
 - [ ] 8. Area Perawatan dan interaksi kucing
 - [ ] 9. Toko, koleksi, aksesoris, dan hias per area
@@ -110,6 +110,16 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 **Selesai jika:** screenshot terhadap mockup diterima dan alur utama berfungsi, bukan hanya gambar statis.
 
 ## 6. Area Makan: otomatis dan ajakan pemain
+
+**Selesai implementasi 9 November 2026:** [tinjauan Makan v2](design-v2/dining/REVIEW.md).
+Latar ilustrasi, satu mangkuk hidup, posisi makan/tunggu, ajakan/otomatis,
+antrean/batal serta status jatah koleksi/individu dan isi ulang otomatis tersedia.
+Kuota v1, transaksi snapshot dan hadiah gabungan dipertahankan. Render empat
+bahasa dan regresi perjalanan, kenyang, stok, pause/retry/reload/jam mundur
+tersedia; review independen beserta perbaikannya dicatat dalam laporan.
+Verifikasi final: 2.926 test lulus, 135 skip historis, analyze/format bersih,
+cek terjemahan/generator sesuai dan APK debug berhasil.
+Langkah berikutnya 7 (Bermain) setelah PR langkah 6 di-merge.
 
 - Terapkan desain Makan, titik makan, perjalanan/antrean, animasi, stok/isi ulang sesuai spesifikasi dan model kebutuhan langkah 4.
 - Kucing dapat datang sendiri dan diajak; kebutuhan/hadiah berubah tepat sekali termasuk saat pindah layar atau aplikasi dijeda.

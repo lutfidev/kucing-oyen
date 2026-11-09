@@ -2246,4 +2246,53 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get homeLoading => 'Abrindo a casa…';
+
+  @override
+  String get diningEmpty => 'Tigela vazia · novas porções no próximo ciclo';
+
+  @override
+  String get diningTitle => 'Hora de comer';
+
+  @override
+  String diningStock(int left, int total) {
+    return 'Porções disponíveis · $left/$total gatos';
+  }
+
+  @override
+  String diningRefill(String time) {
+    return 'Novas porções em $time · automático e grátis';
+  }
+
+  @override
+  String get diningFresh =>
+      'O ciclo de 4 horas começa quando o primeiro gato termina de comer.';
+
+  @override
+  String get diningReady => 'Pode comer · Comida +40';
+
+  @override
+  String get diningFull =>
+      'Ainda está de barriga cheia · come com Comida abaixo de 70';
+
+  @override
+  String get diningAlreadyAte => 'Já comeu a porção · espere o próximo ciclo';
+
+  @override
+  String diningUsing(String name) {
+    return '$name está comendo';
+  }
+
+  @override
+  String get diningFree => 'Tigela pronta · um gato come por vez';
+
+  @override
+  String diningQueue(int count) {
+    return 'Fila para comer · $count';
+  }
+
+  @override
+  String get diningChoose => 'Escolha um gato para comer';
+
+  @override
+  String get diningWaiting => 'Lugar de espera';
 }

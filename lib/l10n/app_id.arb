@@ -538,5 +538,18 @@
   "homeFood": "Makanan",
   "homeAreaCount": "{area} · {count}/{capacity}",
   "homeLoadFailed": "Gambar rumah belum berhasil dimuat.",
-  "homeLoading": "Membuka rumah…"
+  "homeLoading": "Membuka rumah…",
+  "diningEmpty": "Mangkuk kosong · jatah baru di siklus berikutnya",
+  "diningTitle": "Waktunya makan",
+  "diningStock": "Jatah tersedia · {left}/{total} kucing",
+  "diningRefill": "Jatah baru dalam {time} · otomatis dan gratis",
+  "diningFresh": "Siklus 4 jam dimulai saat kucing pertama selesai makan.",
+  "diningReady": "Bisa makan · Makanan +40",
+  "diningFull": "Masih kenyang · makan saat Makanan di bawah 70",
+  "diningAlreadyAte": "Jatahnya sudah dimakan · tunggu siklus berikutnya",
+  "diningUsing": "{name} sedang makan",
+  "diningFree": "Mangkuk siap · satu kucing makan bergantian",
+  "diningQueue": "Antrean makan · {count}",
+  "diningChoose": "Pilih kucing untuk makan",
+  "diningWaiting": "Tempat menunggu"
 }
