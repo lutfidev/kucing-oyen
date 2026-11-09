@@ -17,6 +17,9 @@ mendekati papan mockup, bukan pergeseran palet krem saja.
 
 Gambar sumber dipindahkan ke workspace dari keluaran imagegen. Runtime hanya
 membundel WebP; PNG sumber di dokumentasi tidak dimasukkan ke APK.
+WebP diperlakukan sebagai binary di `.gitattributes` agar normalisasi LF
+untuk SVG tidak merusak bitstream pada checkout Windows. SHA-256 runtime:
+`e55847d1d17421ba75d02e7e2bd272b3c0634bce86f4ab1445a8f678dabcb109`.
 
 ## Kontrak integrasi
 
