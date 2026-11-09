@@ -4,6 +4,32 @@ Implementasi 9 November 2026, setelah PR model #43 masuk `main`.
 **Status: siap untuk tinjauan visual pemilik repo; langkah 5 belum dicentang.**
 Penerimaan screenshot merupakan syarat selesai pada ROADMAP.
 
+## Perapian visual setelah tinjauan pemilik repo
+
+Pemilik repo meminta visual dirapikan sebelum melanjutkan langkah 6.
+Rumah Santai kini memakai jendela berlapis, tirai berlipat, tanaman menjuntai,
+pintu melengkung dan lantai berperspektif. Pencahayaan, bayangan pijakan serta
+karpet berumbai/tekstur digambar dengan vektor dan Canvas. Bentuk pipi/badan
+sembilan kucing dibulatkan, dengan blush halus; kucing pilihan yang sedang
+santai memakai ekspresi senang, sedangkan tidur/kebutuhan rendah tetap mengikuti
+model. Oyen tampil lebih besar saat sendiri; komposisi tiga kucing memiliki
+kedalaman dan target sentuh terpisah, tanpa label nama mengambang.
+
+Empat tab terlihat bersama pada skala teks normal. Teks besar dapat menggulir
+tab dan pilihan aktif otomatis ditampilkan. Kartu pilihan ringkas, navigasi
+berikon, serta garis/bayangan yang lembut menggantikan permukaan bergaris gelap.
+Hit area tetap minimal 48 dp. Posisi gambar barang memakai pemetaan slot yang
+lebih aman agar barang dinding tidak menutup jendela; ID slot dan simpanan
+tidak berubah. Fungsi ajakan, hadiah, navigasi dan suara ketukan dipertahankan.
+
+Perbandingan runtime 390×844: [sebelum](santai-sebelum-polish-id.png) dan
+[sesudah](santai-baru-id.png). Seluruh screenshot lainnya di bawah sudah
+diperbarui. Ini tetap bahan tinjauan, bukan persetujuan visual otomatis.
+
+Sumber ilustrasi tambahan: `tool/art_v2/lounge.py`, dipanggil generator utama.
+Inventaris tetap 209 aset vektor, 298.538 byte sumber, 108.652 byte ZIP menurut
+generator; raster/atlas sumber tetap nol. Lisensi mengikuti paket seni v2.
+
 ## Tampilan dan alur
 
 Rute `/` kini memakai `HomeView`: header saldo/bonus harian dan bintang menuju
@@ -50,11 +76,12 @@ Render ulang:
 
 ## Verifikasi
 
-Hasil akhir: `flutter analyze` tanpa issue; format 261 berkas bersih;
+Hasil akhir: `flutter analyze` tanpa issue; format 262 berkas bersih;
 `flutter test --concurrency=2 --timeout=2m` **2.905 lulus, 135 skip historis**.
-Ada 35 test rumah baru. Pemeriksaan terakhir rumah dan komponen UI berjumlah
-64 test lulus, termasuk render ulang screenshot dan penyesuaian label panjang;
-cek terpisah perpindahan sheet juga memastikan fokus tetap di modal aktif.
+Ada 35 test rumah baru, termasuk render ulang screenshot, empat tab terlihat,
+target sentuh kucing tidak tumpang tindih dan tab aktif terlihat pada teks besar.
+Pemeriksaan aset/galeri setelah perapian juga lulus 9 test (1 ekspor opt-in
+dilewati). Cek perpindahan sheet memastikan fokus tetap di modal aktif.
 Generator 209 aset dan review terjemahan sesuai. `flutter build apk --debug`
 berhasil. HP tidak terhubung (`flutter devices`: Chrome/Edge saja).
 

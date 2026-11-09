@@ -4,6 +4,7 @@ import io
 import json
 from pathlib import Path
 import zipfile
+from lounge import lounge_layers
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'assets/art/v2'
@@ -57,8 +58,8 @@ anchors = dict(headTop=[64, 34], headSideLeft=[38, 46],
 for name, (fur, muzzle, stripe, eye, ear) in cats.items():
     dark = name in ('arang', 'bos', 'kembang')
     eye_line = '#FFF1D8' if dark else INK
-    body = path('M42 77 Q36 85 37 104 Q37 115 51 116 L80 116 Q94 114 90 98 Q88 79 78 76 Z', fur)
-    body += oval(64, 99, 17, 16, muzzle, 'none')
+    body = path('M42 77 Q33 88 35 104 Q36 116 51 116 L80 116 Q96 115 93 100 Q90 82 78 76 Z', fur)
+    body += oval(64, 99, 19, 16, muzzle, 'none')
     if name in ('oyen', 'mendung'):
         body += path('M40 89 L49 93 M39 98 L47 101 M87 88 L80 93', stroke=stripe, sw=4)
     if name in ('telon', 'kembang'):
@@ -77,7 +78,8 @@ for name, (fur, muzzle, stripe, eye, ear) in cats.items():
     paw += path('M51 111 L51 114 M55 111 L55 114', stroke=INK, sw=1)
     asset(f'cats/{name}-paw', paw)
     # Ears belong to the head; each expression shares the same attachment space.
-    base = path('M31 53 Q24 38 31 29 Q42 30 49 40 Q64 35 79 40 Q89 26 98 31 Q101 41 97 55 Q108 74 92 84 Q65 98 37 84 Q21 75 31 53 Z', fur)
+    base = path('M29 53 Q23 35 29 28 Q40 27 49 40 Q64 35 79 40 Q89 27 99 30 Q105 41 98 55 C113 77 100 94 64 94 C30 94 16 78 29 53 Z', fur)
+    base += '<g opacity="0.2">' + path('M32 53 Q43 39 64 41 Q43 44 33 62 Z', '#FFF9E3', 'none') + '</g>'
     base += path('M32 36 L36 50 L44 43 Z', stripe if name == 'mochi' else ear, 'none')
     base += path('M94 36 L83 44 L94 50 Z', stripe if name == 'mochi' else ear, 'none')
     markings = ''
@@ -103,6 +105,7 @@ for name, (fur, muzzle, stripe, eye, ear) in cats.items():
                 face = oval(44, 51, 13, 11, stripe, 'none') + oval(83, 65, 10, 9, '#4B3B33' if name == 'telon' else '#A56F46', 'none')
         else:
             face += oval(42 if side else 64, 77, 14 if side else 16, 9 if side else 10, muzzle, 'none')
+            face += '<g opacity="0.35">' + oval(35 if side else 40, 75, 5, 2.5, '#F29D8B', 'none') + oval(74 if side else 88, 75, 5, 2.5, '#F29D8B', 'none') + '</g>'
             ex1, ex2 = (44, 65) if side else (48, 80)
             if mood in ('closed', 'happy', 'tired'):
                 cy = 60 if mood == 'happy' else 70
@@ -213,6 +216,9 @@ for area, wall in [('santai', '#FFE5BE'), ('makan', '#F9E5C5'), ('main', '#F9DFC
         # Brush is passive decor; the interaction layer is supplied by the app.
         decor += rect(321, 157, 9, 30, WOOD) + rect(312, 144, 27, 18, '#E5BF8D') + path('M315 142 L315 149 M321 142 L321 149 M327 142 L327 149 M333 142 L333 149', sw=1.4)
     asset(f'rooms/{area}-decor', decor, 390, 390, (0, 0), layer='decor')
+
+for layer, art in zip(['wall', 'floor', 'decor'], lounge_layers()):
+    asset(f'rooms/santai-{layer}', art, 390, 390, (0, 0), layer=layer)
 
 manifest = dict(version=2, source='tool/art_v2/generate.py', license='Original project artwork; see LICENSE.txt',
                 canvas=[128, 128], headAnchors=anchors, assets=entries,

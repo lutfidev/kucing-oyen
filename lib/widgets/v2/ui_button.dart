@@ -19,6 +19,7 @@ class UiButton extends StatefulWidget {
     this.selected,
     this.autofocus = false,
     this.compact = false,
+    this.homeStyle = false,
   });
   final String label;
   final String? semanticLabel;
@@ -26,6 +27,7 @@ class UiButton extends StatefulWidget {
   final IconData? icon;
   final UiButtonKind kind;
   final bool loading, autofocus, compact;
+  final bool homeStyle;
   final bool? selected;
   @override
   State<UiButton> createState() => _UiButtonState();
@@ -101,23 +103,47 @@ class _UiButtonState extends State<UiButton> {
               horizontal: widget.compact ? 0 : KoUi.s16,
               vertical: KoUi.s12,
             ),
-            decoration: KoUi.card(radius: KoUi.buttonRadius, color: fill)
-                .copyWith(
-                  border: Border.all(
-                    color: KoUi.ink,
-                    width: focused ? 3 : KoUi.outline,
-                  ),
-                  boxShadow: pressed || !enabled
-                      ? []
-                      : [
-                          BoxShadow(
-                            color: widget.kind == UiButtonKind.primary
-                                ? KoUi.orangePressed
-                                : KoUi.shadow,
-                            offset: Offset(0, KoUi.depth),
-                          ),
-                        ],
-                ),
+            decoration:
+                (widget.homeStyle
+                        ? KoUi.homeCard(radius: KoUi.buttonRadius)
+                        : KoUi.card(radius: KoUi.buttonRadius, color: fill))
+                    .copyWith(
+                      color: fill,
+                      gradient: widget.homeStyle
+                          ? LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors:
+                                  widget.kind == UiButtonKind.primary && enabled
+                                  ? [KoUi.homeGold, KoUi.orange]
+                                  : [KoUi.paper, KoUi.cream],
+                            )
+                          : null,
+                      border: Border.all(
+                        color: widget.homeStyle && !focused
+                            ? KoUi.homeLine
+                            : KoUi.ink,
+                        width: focused ? 3 : KoUi.outline,
+                      ),
+                      boxShadow: pressed || !enabled
+                          ? []
+                          : widget.homeStyle
+                          ? [
+                              const BoxShadow(
+                                color: KoUi.homeShade,
+                                blurRadius: 5,
+                                offset: Offset(0, 3),
+                              ),
+                            ]
+                          : [
+                              BoxShadow(
+                                color: widget.kind == UiButtonKind.primary
+                                    ? KoUi.orangePressed
+                                    : KoUi.shadow,
+                                offset: Offset(0, KoUi.depth),
+                              ),
+                            ],
+                    ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,

@@ -130,17 +130,25 @@ class _HomeSceneState extends State<HomeScene>
     final r = c.household.routine;
     final moving = r.moving(kitty);
     final catSize = count == 1
-        ? 144.0
+        ? 205.0
         : count == 2
-        ? 132.0
+        ? 168.0
+        : index == 0
+        ? 176.0
+        : index == 1
+        ? 130.0
         : 124.0;
     // Three safe, separate foreground slots, with room left for the doorway.
     final x = count == 1
-        ? 123.0
+        ? 94.0
         : count == 2
-        ? 43.0 + index * 165
-        : 2.0 + index * 130;
-    var y = index.isOdd ? 248.0 : 264.0;
+        ? 22.0 + index * 172
+        : index == 0
+        ? 108.0
+        : index == 1
+        ? -3.0
+        : 263.0;
+    var y = count == 3 && index == 2 ? 228.0 : 271.0;
     var dx = x;
     for (final trip in r.journeys.where((j) => j.cats.contains(kitty))) {
       if (!widget.animate) continue;
@@ -163,6 +171,8 @@ class _HomeSceneState extends State<HomeScene>
                   ? CatMotion.sleep
                   : c.catNeeds(kitty).isSad
                   ? CatMotion.tired
+                  : widget.selected == kitty
+                  ? CatMotion.happy
                   : CatMotion.idle,
           };
     final name = kittyName(context.l10n, kitty);
@@ -181,13 +191,10 @@ class _HomeSceneState extends State<HomeScene>
         label: '$name, $status',
         child: Tooltip(
           message: name,
-          child: GestureDetector(
-            key: ValueKey('home-cat-${kitty.name}'),
-            behavior: HitTestBehavior.opaque,
-            onTap: () => widget.onSelect(kitty),
-            child: Column(
-              children: [
-                Expanded(
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: IgnorePointer(
                   child: RepaintBoundary(
                     child: CustomPaint(
                       size: Size.infinite,
@@ -207,9 +214,19 @@ class _HomeSceneState extends State<HomeScene>
                     ),
                   ),
                 ),
-                ExcludeSemantics(child: Text(name, style: KoUi.caption)),
-              ],
-            ),
+              ),
+              Positioned(
+                left: catSize * scale * .18,
+                right: catSize * scale * .06,
+                top: catSize * scale * .2,
+                bottom: catSize * scale * .03,
+                child: GestureDetector(
+                  key: ValueKey('home-cat-${kitty.name}'),
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => widget.onSelect(kitty),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -237,14 +254,9 @@ class HomeCatPainter extends CustomPainter {
     if (selected) {
       canvas.drawOval(
         const Rect.fromLTWH(15, 106, 98, 18),
-        Paint()..color = KoUi.peach,
-      );
-      canvas.drawOval(
-        const Rect.fromLTWH(15, 106, 98, 18),
         Paint()
-          ..color = KoUi.orange
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2,
+          ..color = KoUi.homeShade
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
       );
     }
     CatRig(
@@ -253,7 +265,7 @@ class HomeCatPainter extends CustomPainter {
       direction: rig.direction,
       accessory: rig.accessory,
       time: time?.value,
-    ).paint(canvas, pack);
+    ).paint(canvas, pack, props: rig.motion != CatMotion.happy);
     canvas.restore();
   }
 
@@ -275,30 +287,107 @@ class _RoomLayers extends CustomPainter {
     for (final layer in ['wall', 'floor', 'decor']) {
       pack.paint(canvas, 'rooms/${area.name}-$layer');
     }
+    if (area == HomeArea.santai) {
+      const room = Rect.fromLTWH(0, 0, 390, 390);
+      canvas.drawRect(
+        room,
+        Paint()
+          ..shader = const RadialGradient(
+            center: Alignment(-.3, -.6),
+            radius: 1.3,
+            colors: [Color(0x22FFF9DA), Color(0x00FFF9DA), Color(0x117C4F29)],
+            stops: [0, .55, 1],
+          ).createShader(room),
+      );
+    }
     // The lounge rug is structural, not an unowned catalogue purchase.
     if (area == HomeArea.santai || area == HomeArea.rawat) {
+      const rug = Rect.fromLTWH(28, 265, 336, 112);
       canvas.drawOval(
-        const Rect.fromLTWH(34, 246, 322, 120),
-        Paint()..color = KoUi.paper,
-      );
-      canvas.drawOval(
-        const Rect.fromLTWH(34, 246, 322, 120),
+        rug.shift(const Offset(0, 5)),
         Paint()
-          ..color = KoUi.honey
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2,
+          ..color = KoUi.homeShade
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5),
       );
+      final edge = Path();
+      for (var i = 0; i <= 144; i++) {
+        final t = i / 144 * math.pi * 2;
+        final ripple = math.sin(t * 36) * 1.8;
+        final x = 196 + (168 + ripple) * math.cos(t);
+        final y = 321 + (56 + ripple) * math.sin(t);
+        if (i == 0) {
+          edge.moveTo(x, y);
+        } else {
+          edge.lineTo(x, y);
+        }
+      }
+      edge.close();
+      canvas.drawPath(edge, Paint()..color = KoUi.homeFloor);
+      canvas.drawOval(
+        rug.deflate(5),
+        Paint()
+          ..shader = const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [KoUi.paper, KoUi.cream],
+          ).createShader(rug),
+      );
+      canvas.drawOval(
+        rug.deflate(9),
+        Paint()
+          ..color = KoUi.peach
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.2,
+      );
+      final wool = Paint()
+        ..color = KoUi.peach
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.3
+        ..strokeCap = StrokeCap.round;
+      for (var i = 0; i < 38; i++) {
+        final t = i * 2.399;
+        final d = math.sqrt((i + 1) / 40);
+        final x = 196 + 145 * d * math.cos(t);
+        final y = 321 + 44 * d * math.sin(t);
+        canvas.drawPath(
+          Path()
+            ..moveTo(x - 3, y)
+            ..quadraticBezierTo(x, y - 4, x + 3, y),
+          wool,
+        );
+      }
     }
     for (final entry in placed.entries.where((e) => e.value.area == area)) {
       final id = entry.key;
       final slot = entry.value;
       final part = pack['items/${id.name}-back'];
-      final scale = math.min(90 / part.size.width, 90 / part.size.height);
+      final dimension = slot.zone == RoomZone.wall ? 62.0 : 90.0;
+      final scale = math.min(
+        dimension / part.size.width,
+        dimension / part.size.height,
+      );
       final anchor = slot.anchor;
+      final centerX = anchor.x * 390;
+      final centerY = slot.zone == RoomZone.wall
+          ? [35.0, 20.0, 30.0][slot.index]
+          : slot.index < 2
+          ? 281.0
+          : 370.0;
+      canvas.drawOval(
+        Rect.fromCenter(
+          center: Offset(centerX, centerY),
+          width: dimension * .75,
+          height: slot.zone == RoomZone.floor ? 9 : 4,
+        ),
+        Paint()
+          ..color = KoUi.homeShade
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
+      );
       canvas.save();
       canvas.translate(
-        anchor.x * 390 - part.size.width * scale / 2,
-        anchor.y * 390 - part.size.height * scale / 2,
+        centerX - part.size.width * scale / 2,
+        centerY -
+            part.size.height * scale * (slot.zone == RoomZone.floor ? .9 : .4),
       );
       canvas.scale(scale);
       pack.paint(canvas, 'items/${id.name}-back');

@@ -285,6 +285,27 @@ void main() {
         ),
         findsNWidgets(3),
       );
+      for (final label in [
+        'Santai · 3/3',
+        'Makan · 2/2',
+        'Main · 2/2',
+        'Rawat · 2/2',
+      ]) {
+        expect(find.text(label).hitTestable(), findsOneWidget);
+      }
+      final scene = tester.getRect(button('home-scene'));
+      final targets = [
+        for (final kitty in c.household.routine.present(HomeArea.santai))
+          tester.getRect(cat(kitty)),
+      ];
+      for (var i = 0; i < targets.length; i++) {
+        expect(scene.contains(targets[i].topLeft), isTrue);
+        expect(scene.contains(targets[i].bottomRight), isTrue);
+        expect(targets[i].width, greaterThanOrEqualTo(48));
+        for (var j = i + 1; j < targets.length; j++) {
+          expect(targets[i].overlaps(targets[j]), isFalse);
+        }
+      }
       await export(tester, 'santai-penuh-id');
       final before = c.household.routine.toJson();
       await tap(tester, find.text('Makan · 2/2'));
@@ -515,7 +536,12 @@ void main() {
             }
             await tap(tester, find.text(l.homeCats));
             await tap(tester, button('home-find-kembang'));
+            await tester.pump(const Duration(milliseconds: 250));
             expect(cat(KittyId.kembang), findsOneWidget);
+            expect(
+              find.text(l.homeAreaCount(l.homeInviteCare, 2, 2)).hitTestable(),
+              findsOneWidget,
+            );
             expect(tester.takeException(), isNull);
             await tester.pumpWidget(const SizedBox());
           },

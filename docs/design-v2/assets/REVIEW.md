@@ -2,6 +2,11 @@
 
 Paket implementasi tersedia untuk tinjauan pemilik repo melalui PR dan `/galeri/aset-v2`. Ini render vector runtime asli, bukan mockup AI atau screenshot rumah v2 yang sudah terintegrasi. Runtime pemain masih v1; integrasi bertahap mengikuti langkah 3–14.
 
+Catatan 9 November 2026: proporsi pipi/badan karakter dan tiga lapisan Santai
+dirapikan pada langkah 5 atas permintaan pemilik repo. Render di dokumen ini
+adalah baseline langkah 2; [screenshot rumah terbaru](../home/REVIEW.md)
+menunjukkan bentuk yang sekarang. Inventaris, ID, jangkar dan lisensi tetap.
+
 ## Bahan visual
 
 - [Sembilan karakter: potret, duduk, belakang](characters.png).

@@ -4,6 +4,12 @@ Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lam
 
 ## Integrasi beranda v2 — 9 November 2026
 
+Tinjauan berikutnya: pemilik repo meminta tampilan dirapikan terlebih dahulu,
+sebelum langkah 6. Perapian meliputi arsitektur Santai, karakter lebih bulat,
+komposisi berlapis, empat tab terlihat pada teks normal dan kontrol yang lebih
+ringkas. Aturan model tetap; [perbandingan sebelum/sesudah](design-v2/home/REVIEW.md)
+masih menunggu penerimaan pemilik repo. PR #44 tetap draft.
+
 Langkah 5 memasang rumah v2 sebagai rute pemain, memakai lokasi model langkah
 4 dan aset/komponen langkah 2–3. Pilihan kucing bersifat sesi dan tidak ikut
 hilang ketika kucing meninggalkan area. Tab disimpan; sheet tetap menjalankan

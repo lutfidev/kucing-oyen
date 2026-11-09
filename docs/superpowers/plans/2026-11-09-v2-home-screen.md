@@ -21,3 +21,12 @@ Acuan: ROADMAP langkah 5, SPEC, SCREENS H01/H05/H06/H10/H11 dan VISUAL.
 
 Penerimaan visual akhir tetap memerlukan tinjauan screenshot pemilik repo;
 jangan mencentang langkah 5 hanya berdasarkan test otomatis.
+
+## Revisi setelah tinjauan visual
+
+Permintaan pemilik repo: rapikan tampilan dahulu, jangan maju ke langkah 6.
+Ilustrasi Santai berlapis, kucing lebih bulat/besar, empat tab terlihat bersama,
+kartu ringkas, navigasi berikon dan kontrol lembut dipasang pada PR yang sama.
+Render ulang matriks bahasa/skala, periksa seluruh sembilan karakter dengan
+aksesoris ekstrem, dan pertahankan test model/transaksi. Screenshot sebelumnya
+disimpan untuk perbandingan. Penerimaan visual tetap milik pemilik repo.

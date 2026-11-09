@@ -18,6 +18,11 @@ abstract final class KoUi {
   static const danger = Color(0xFFA63D32);
   static const shadow = Color(0x33573018);
   static const scrim = Color(0x99573018);
+  static const homeLine = Color(0xFFD4AB79);
+  static const homeShade = Color(0x22A7743D);
+  static const homeGold = Color(0xFFFFBD58);
+  static const homeFloor = Color(0xFFF5CD91);
+  static const homeLeaf = Color(0xFF869D60);
   static const s4 = 4.0, s8 = 8.0, s12 = 12.0, s16 = 16.0, s24 = 24.0;
   static const chipRadius = 16.0, buttonRadius = 18.0;
   static const cardRadius = 22.0, sheetRadius = 28.0;
@@ -73,5 +78,18 @@ abstract final class KoUi {
     borderRadius: BorderRadius.circular(radius),
     border: Border.all(color: ink, width: outline),
     boxShadow: const [BoxShadow(color: shadow, offset: Offset(0, depth))],
+  );
+
+  static BoxDecoration homeCard({double radius = cardRadius}) => BoxDecoration(
+    gradient: const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [paper, cream],
+    ),
+    borderRadius: BorderRadius.circular(radius),
+    border: Border.all(color: homeLine, width: outline),
+    boxShadow: const [
+      BoxShadow(color: homeShade, blurRadius: 8, offset: Offset(0, 3)),
+    ],
   );
 }
