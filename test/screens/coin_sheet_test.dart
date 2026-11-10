@@ -7,7 +7,7 @@ import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
-import 'package:kucing_oren/widgets/widgets.dart';
+import 'package:kucing_oren/widgets/v2/ui_button.dart';
 
 import '../test_helpers.dart';
 
@@ -51,11 +51,8 @@ Finder _inCard(String name, String text) =>
 /// Tombol berlabel [label] bisa ditekan.
 bool _enabled(WidgetTester tester, String label) =>
     tester
-        .widget<KoPressable>(
-          find.ancestor(
-            of: find.text(label),
-            matching: find.byType(KoPressable),
-          ),
+        .widget<UiButton>(
+          find.ancestor(of: find.text(label), matching: find.byType(UiButton)),
         )
         .onPressed !=
     null;

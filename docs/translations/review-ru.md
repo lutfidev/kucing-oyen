@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-597 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+605 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -624,6 +624,14 @@ files and anything written there is overwritten.
 | `decorateBowlFixed` | The built-in bowl stays in the Dining Area. | Встроенная миска остаётся в зоне еды. | V2 shop or area decoration: decorateBowlFixed | |
 | `replayEnd` | End | Конец | Replay control: jump to the final step. | |
 | `replayProgress` | Step {step} of {total} | Шаг {step} из {total} | Current replay step and total; includes step zero. Placeholders: `{step}`, `{total}`. | |
+| `guidanceSaveFailed` | Not saved on this device yet. Try saving again. | Пока не сохранено на устройстве. Попробуй ещё раз. | Guidance and settings v2: guidanceSaveFailed | |
+| `guidanceLoading` | Loading ad… | Загрузка рекламы… | Guidance and settings v2: guidanceLoading | |
+| `guidanceHomeTitle` | Meet Oyen’s home | Знакомься с домом Ойена | Guidance and settings v2: guidanceHomeTitle | |
+| `guidanceHomeBody` | Four free areas: Lounge, Dining, Play, and Care. Cats can do things on their own. Tap a cat to invite them; busy cats wait their turn. Find any cat through Collection. You can always jump straight into a puzzle. | Четыре бесплатные зоны: отдых, еда, игры и уход. Коты могут заниматься своими делами. Нажми на кота, чтобы позвать его; если он занят, он дождётся очереди. Найти кота можно в коллекции. Головоломки доступны в любой момент. | Guidance and settings v2: guidanceHomeBody | |
+| `guidanceMotion` | Reduce motion | Уменьшить движение | Guidance and settings v2: guidanceMotion | |
+| `guidanceMotionInfo` | Gentler animations. Your phone’s reduced motion preference is also respected. | Более спокойная анимация. Настройка уменьшения движения на телефоне тоже учитывается. | Guidance and settings v2: guidanceMotionInfo | |
+| `guidanceResetAreas` | All areas, layouts, queues and home activities are reset too. Language, sound, reduced motion and today’s reward limits stay. | Все зоны, расстановка, очереди и домашние занятия тоже сбросятся. Язык, звук, уменьшение движения и сегодняшние лимиты наград сохранятся. | Guidance and settings v2: guidanceResetAreas | |
+| `guidanceSaving` | Saving… | Сохранение… | Paid hint storage is in progress, without loading an ad. | |
 
 ---
 

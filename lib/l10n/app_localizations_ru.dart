@@ -2489,4 +2489,32 @@ class AppLocalizationsRu extends AppLocalizations {
   String replayProgress(int step, int total) {
     return 'Шаг $step из $total';
   }
+
+  @override
+  String get guidanceSaveFailed =>
+      'Пока не сохранено на устройстве. Попробуй ещё раз.';
+
+  @override
+  String get guidanceLoading => 'Загрузка рекламы…';
+
+  @override
+  String get guidanceHomeTitle => 'Знакомься с домом Ойена';
+
+  @override
+  String get guidanceHomeBody =>
+      'Четыре бесплатные зоны: отдых, еда, игры и уход. Коты могут заниматься своими делами. Нажми на кота, чтобы позвать его; если он занят, он дождётся очереди. Найти кота можно в коллекции. Головоломки доступны в любой момент.';
+
+  @override
+  String get guidanceMotion => 'Уменьшить движение';
+
+  @override
+  String get guidanceMotionInfo =>
+      'Более спокойная анимация. Настройка уменьшения движения на телефоне тоже учитывается.';
+
+  @override
+  String get guidanceResetAreas =>
+      'Все зоны, расстановка, очереди и домашние занятия тоже сбросятся. Язык, звук, уменьшение движения и сегодняшние лимиты наград сохранятся.';
+
+  @override
+  String get guidanceSaving => 'Сохранение…';
 }

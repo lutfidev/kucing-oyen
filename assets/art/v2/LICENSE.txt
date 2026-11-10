@@ -57,3 +57,9 @@ lib/game/render/v2/puzzle_art.dart contains original procedural Canvas
 artwork under the project license. The embedded Oyen subset is generated
 from this pack by tool/art_v2/embed_puzzle.py and uses the same source and
 license as the house cat. No external stock artwork or new raster is used.
+
+Guidance addition (10 November 2026):
+lib/game/render/v2/guidance_art.dart composes the same original PuzzleArt
+objects and embedded house CatRig into tutorial/rule illustrations, with
+procedural lock/arrow/table shapes under the project license. No new external
+stock artwork, generated bitmap, font or runtime asset pack is introduced.

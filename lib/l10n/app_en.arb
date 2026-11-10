@@ -3263,5 +3263,37 @@
         "type": "int"
       }
     }
+  },
+  "guidanceSaveFailed": "Not saved on this device yet. Try saving again.",
+  "@guidanceSaveFailed": {
+    "description": "Guidance and settings v2: guidanceSaveFailed"
+  },
+  "guidanceLoading": "Loading ad…",
+  "@guidanceLoading": {
+    "description": "Guidance and settings v2: guidanceLoading"
+  },
+  "guidanceHomeTitle": "Meet Oyen’s home",
+  "@guidanceHomeTitle": {
+    "description": "Guidance and settings v2: guidanceHomeTitle"
+  },
+  "guidanceHomeBody": "Four free areas: Lounge, Dining, Play, and Care. Cats can do things on their own. Tap a cat to invite them; busy cats wait their turn. Find any cat through Collection. You can always jump straight into a puzzle.",
+  "@guidanceHomeBody": {
+    "description": "Guidance and settings v2: guidanceHomeBody"
+  },
+  "guidanceMotion": "Reduce motion",
+  "@guidanceMotion": {
+    "description": "Guidance and settings v2: guidanceMotion"
+  },
+  "guidanceMotionInfo": "Gentler animations. Your phone’s reduced motion preference is also respected.",
+  "@guidanceMotionInfo": {
+    "description": "Guidance and settings v2: guidanceMotionInfo"
+  },
+  "guidanceResetAreas": "All areas, layouts, queues and home activities are reset too. Language, sound, reduced motion and today’s reward limits stay.",
+  "@guidanceResetAreas": {
+    "description": "Guidance and settings v2: guidanceResetAreas"
+  },
+  "guidanceSaving": "Saving…",
+  "@guidanceSaving": {
+    "description": "Paid hint storage is in progress, without loading an ad."
   }
 }

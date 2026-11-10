@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../../app/hint_source.dart';
+import '../../app/progress_scope.dart';
+import '../coins/coin_sheet.dart';
+import '../../widgets/v2/ui_button.dart';
 import '../../game/model/hints.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/hint_texts.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
+import '../../theme/ko_ui.dart';
 import '../../widgets/widgets.dart';
+import '../../widgets/v2/ui_panel.dart';
 
 /// Membuka sheet Petunjuk (desain 10) untuk [level]. Ditutup dengan tombol
 /// tutup, ketuk latar gelap, tombol kembali sistem, atau tarik ke bawah.
@@ -44,6 +49,7 @@ class HintSheet extends StatefulWidget {
 class _HintSheetState extends State<HintSheet> {
   /// Tingkat yang sedang menunggu iklan.
   int? _waiting;
+  HintPay? _payment;
 
   /// Tingkat yang iklannya terakhir gagal.
   int? _failed;
@@ -52,12 +58,14 @@ class _HintSheetState extends State<HintSheet> {
     if (_waiting != null) return;
     setState(() {
       _failed = null;
-      if (pay == HintPay.ad) _waiting = tier;
+      _waiting = tier;
+      _payment = pay;
     });
     final result = await widget.hints.unlockHint(widget.level.id, tier, pay);
     if (!mounted) return;
     setState(() {
       _waiting = null;
+      _payment = null;
       if (result == HintUnlock.adFailed) _failed = tier;
     });
   }
@@ -65,66 +73,22 @@ class _HintSheetState extends State<HintSheet> {
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
-    final t = context.koType;
     final space = context.koSpace;
-    final s = context.koSize;
     return ListenableBuilder(
       listenable: widget.hints,
       builder: (context, _) {
         final coins = widget.hints.coins;
         final opened = widget.hints.hintTier(widget.level.id);
-        final header = Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: s.iconButton,
-                  height: s.iconButton,
-                  decoration: BoxDecoration(
-                    color: c.hint,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: c.hintLine, width: s.border),
-                  ),
-                  alignment: Alignment.center,
-                  child: KoIcon(KoIcons.hint, size: s.icon, color: c.ink),
-                ),
-                SizedBox(width: space.s10),
-                Expanded(
-                  child: Semantics(
-                    header: true,
-                    child: Text(
-                      context.l10n.hintsTitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: t.title,
-                    ),
-                  ),
-                ),
-                SizedBox(width: space.s10),
-                KoCoinChip(coins: coins, style: KoCoinChipStyle.compact),
-                SizedBox(width: space.s10),
-                KoIconButton(
-                  icon: KoIcons.close,
-                  semanticLabel: context.l10n.close,
-                  tone: KoIconButtonTone.flat,
-                  iconSize: s.iconSmall,
-                  onPressed: widget.onClose,
-                ),
-              ],
-            ),
-            // Desain: jarak 12 dikurangi margin -4.
-            SizedBox(height: space.s8),
-            Text(
-              context.l10n.hintsIntro,
-              style: t.bodySmall.copyWith(color: c.inkSoft),
-            ),
-          ],
+        final header = UiSheetHeader(
+          title: context.l10n.hintsTitle,
+          subtitle: context.l10n.hintsIntro,
+          trailing: KoCoinChip(coins: coins, style: KoCoinChipStyle.compact),
+          onClose: widget.onClose,
         );
         final List<Widget> cards;
         if (widget.level.solution.isEmpty) {
           cards = [
-            KoCard(
+            UiPanel(
               borderColor: c.success,
               child: _Reveal(context.l10n.noItemsHint),
             ),
@@ -141,6 +105,10 @@ class _HintSheetState extends State<HintSheet> {
                 text: hintTextFor(context.l10n, hintText(widget.level, tier)),
                 coins: coins,
                 waiting: _waiting == tier,
+                saving: _waiting == tier && _payment == HintPay.coins,
+                blocked:
+                    widget.hints is ProgressController &&
+                    (widget.hints as ProgressController).saveFailed,
                 adFailed: _failed == tier,
                 onWatch: () => _unlock(tier, HintPay.ad),
                 onPay: () => _unlock(tier, HintPay.coins),
@@ -152,7 +120,27 @@ class _HintSheetState extends State<HintSheet> {
           label: context.l10n.hintsTitle,
           onClose: widget.onClose,
           header: header,
-          children: cards,
+          children: [
+            if (widget.hints case final ProgressController progress
+                when progress.saveFailed)
+              UiSaveNotice(
+                onRetry: () async {
+                  await progress.retrySaves();
+                  if (mounted) setState(() {});
+                },
+              ),
+            ...cards,
+            if (widget.hints case final ProgressController progress) ...[
+              SizedBox(height: space.s16),
+              UiButton(
+                label: context.l10n.coinsTitle,
+                kind: UiButtonKind.secondary,
+                onPressed: _waiting != null
+                    ? null
+                    : () => showCoinSheet(context, progress),
+              ),
+            ],
+          ],
         );
       },
     );
@@ -173,6 +161,8 @@ class HintTierCard extends StatelessWidget {
     required this.onWatch,
     required this.onPay,
     this.waiting = false,
+    this.saving = false,
+    this.blocked = false,
     this.adFailed = false,
   });
 
@@ -193,6 +183,8 @@ class HintTierCard extends StatelessWidget {
 
   /// Iklan tingkat ini sedang diputar: kedua tombol nonaktif.
   final bool waiting;
+  final bool saving;
+  final bool blocked;
 
   /// Iklan tingkat ini terakhir gagal.
   final bool adFailed;
@@ -205,7 +197,7 @@ class HintTierCard extends StatelessWidget {
     final s = context.koSize;
     final locked = !open && !ready;
     final cost = hintCost(tier);
-    final enabled = ready && !waiting;
+    final enabled = ready && !waiting && !blocked;
     final l = context.l10n;
     final title = switch (tier) {
       1 => l.hintTier1Title,
@@ -255,36 +247,26 @@ class HintTierCard extends StatelessWidget {
         : Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: SheetButton(
-                      label: l.watchAd,
-                      icon: KoIcon(
-                        KoIcons.ad,
-                        size: s.iconCompact,
-                        color: enabled ? c.ink : c.onLockedSoft,
-                      ),
-                      color: c.surface,
-                      line: c.line,
-                      edge: c.lineDeep,
-                      onPressed: enabled ? onWatch : null,
-                    ),
-                  ),
-                  SizedBox(width: space.s8),
-                  Expanded(
-                    child: SheetButton(
-                      label: coins >= cost
-                          ? l.coinsAmount(cost)
-                          : l.notEnoughCoins(cost),
-                      icon: CoinView(size: s.iconCompact, kind: CoinKind.plain),
-                      color: c.orange,
-                      line: c.orange,
-                      edge: c.orangeDeep,
-                      onPressed: enabled ? onPay : null,
-                    ),
-                  ),
-                ],
+              SheetButton(
+                label: waiting
+                    ? (saving ? l.guidanceSaving : l.guidanceLoading)
+                    : l.watchAd,
+                icon: KoIcon(KoIcons.ad, size: s.iconCompact, color: c.ink),
+                color: c.surface,
+                line: c.line,
+                edge: c.lineDeep,
+                onPressed: enabled ? onWatch : null,
+              ),
+              SizedBox(height: space.s8),
+              SheetButton(
+                label: coins >= cost
+                    ? l.coinsAmount(cost)
+                    : l.notEnoughCoins(cost),
+                icon: CoinView(size: s.iconCompact, kind: CoinKind.plain),
+                color: c.orange,
+                line: c.orange,
+                edge: c.orangeDeep,
+                onPressed: enabled && coins >= cost ? onPay : null,
               ),
               if (adFailed) ...[
                 SizedBox(height: space.s8),
@@ -307,7 +289,7 @@ class HintTierCard extends StatelessWidget {
         body,
       ],
     );
-    final card = KoCard(
+    final card = UiPanel(
       locked: locked,
       borderColor: open ? c.success : null,
       child: content,
@@ -324,18 +306,14 @@ class _Reveal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.koColors;
     final space = context.koSpace;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: space.s12, vertical: space.s10),
       decoration: BoxDecoration(
-        color: c.successSoft,
+        color: KoUi.cream,
         borderRadius: BorderRadius.circular(context.koRadius.icon),
       ),
-      child: Text(
-        text,
-        style: context.koType.hintReveal.copyWith(color: c.onSuccess),
-      ),
+      child: Text(text, style: KoUi.label.copyWith(color: KoUi.ink)),
     );
   }
 }

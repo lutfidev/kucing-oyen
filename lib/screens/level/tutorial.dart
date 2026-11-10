@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../game/render/render.dart';
+import '../../game/render/v2/guidance_art.dart';
+import '../../theme/ko_ui.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
@@ -186,7 +188,7 @@ class _TutorialOverlayState extends State<TutorialOverlay>
           );
           final handTop = tip.dy - RuleArt.handTip.dy;
           final side = space.gutter + space.s8;
-          final cardTop = padding.top + space.s8;
+          final cardTop = padding.top + KoUi.target + space.s16;
           children.addAll([
             Positioned(
               left: tip.dx - RuleArt.handTip.dx,
@@ -210,8 +212,7 @@ class _TutorialOverlayState extends State<TutorialOverlay>
               ),
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
+                child: SingleChildScrollView(
                   child: SizedBox(
                     width: math.max(0, constraints.maxWidth - 2 * side),
                     child: _TutorialCard(widget.tutorial),
@@ -245,7 +246,6 @@ class _TutorialCard extends StatelessWidget {
     final c = context.koColors;
     final t = context.koType;
     final space = context.koSpace;
-    final s = context.koSize;
     return Semantics(
       container: true,
       label: context.l10n.tutorialLabel,
@@ -255,19 +255,20 @@ class _TutorialCard extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(
-              top: s.oyenTutorial - s.oyenTutorialOverlap,
+              top: KoUi.tutorialCat - KoUi.tutorialOverlap,
             ),
             child: Container(
               width: double.infinity,
               padding: EdgeInsets.fromLTRB(
-                space.s24,
-                space.s32,
-                space.s24,
-                space.s24,
+                KoUi.s16,
+                KoUi.s24,
+                KoUi.s16,
+                KoUi.s16,
               ),
               decoration: BoxDecoration(
-                color: c.surface,
-                borderRadius: BorderRadius.circular(context.koRadius.dialog),
+                color: KoUi.paper,
+                border: Border.all(color: KoUi.ink, width: KoUi.outline),
+                borderRadius: BorderRadius.circular(KoUi.cardRadius),
                 boxShadow: context.koShadow.dialog,
               ),
               child: Column(
@@ -293,7 +294,7 @@ class _TutorialCard extends StatelessWidget {
             ),
           ),
           ExcludeSemantics(
-            child: OyenView(tutorial.look, size: s.oyenTutorial),
+            child: GuidanceCat(look: tutorial.look, size: KoUi.tutorialCat),
           ),
         ],
       ),
@@ -320,7 +321,7 @@ class _SkipButton extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: tapSound(context, onPressed),
         child: Container(
-          height: s.chip,
+          constraints: const BoxConstraints(minHeight: KoUi.target),
           padding: EdgeInsets.symmetric(horizontal: space.s16),
           alignment: Alignment.center,
           decoration: BoxDecoration(

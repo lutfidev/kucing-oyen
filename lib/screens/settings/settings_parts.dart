@@ -7,6 +7,9 @@ import '../../game/model/sounds.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../../widgets/v2/ui_panel.dart';
+import '../../widgets/v2/ui_button.dart';
+import '../../theme/ko_ui.dart';
 
 /// Bar atas Pengaturan: tombol kembali dan judul, seperti bar Toko tanpa
 /// chip koin.
@@ -28,15 +31,10 @@ class SettingsBar extends StatelessWidget {
         Expanded(
           child: Semantics(
             header: true,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: AlignmentDirectional.centerStart,
-              child: Text(
-                context.l10n.settings,
-                maxLines: 1,
-                style: context.koType.headingLarge.copyWith(
-                  color: context.koColors.ink,
-                ),
+            child: Text(
+              context.l10n.settings,
+              style: context.koType.headingLarge.copyWith(
+                color: context.koColors.ink,
               ),
             ),
           ),
@@ -97,18 +95,18 @@ class SoundCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final space = context.koSpace;
     final l = context.l10n;
-    return KoCard(
+    return UiPanel(
       padding: EdgeInsets.symmetric(horizontal: space.s12, vertical: space.s4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _SwitchRow(
+          SettingsSwitchRow(
             key: const ValueKey('sound-music'),
             label: l.music,
             on: music,
             onChanged: onMusic,
           ),
-          _SwitchRow(
+          SettingsSwitchRow(
             key: const ValueKey('sound-effects'),
             label: l.soundEffects,
             on: effects,
@@ -123,8 +121,8 @@ class SoundCard extends StatelessWidget {
 /// Baris berlabel dengan sakelar pil di kanan: hijau dengan bulatan di
 /// kanan saat menyala, abu-abu dengan bulatan di kiri saat mati. Seluruh
 /// baris bisa diketuk.
-class _SwitchRow extends StatelessWidget {
-  const _SwitchRow({
+class SettingsSwitchRow extends StatelessWidget {
+  const SettingsSwitchRow({
     super.key,
     required this.label,
     required this.on,
@@ -133,7 +131,7 @@ class _SwitchRow extends StatelessWidget {
 
   final String label;
   final bool on;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -143,18 +141,18 @@ class _SwitchRow extends StatelessWidget {
     // Bunyi sesudah sakelar berubah: sakelar Efek suara senyap saat
     // dimatikan dan berbunyi saat dinyalakan.
     void tap() {
-      onChanged(!on);
+      onChanged?.call(!on);
       AudioScope.maybeRead(context)?.play(GameSound.tap);
     }
 
     return Semantics(
       toggled: on,
       label: label,
-      onTap: tap,
+      onTap: onChanged == null ? null : tap,
       excludeSemantics: true,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: tap,
+        onTap: onChanged == null ? null : tap,
         child: ConstrainedBox(
           constraints: BoxConstraints(minHeight: s.iconButton),
           child: Padding(
@@ -213,7 +211,7 @@ class LanguageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final space = context.koSpace;
-    return KoCard(
+    return UiPanel(
       padding: EdgeInsets.symmetric(horizontal: space.s12, vertical: space.s4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -337,7 +335,7 @@ class ActionCard extends StatelessWidget {
     final t = context.koType;
     final space = context.koSpace;
     final message = this.message;
-    return KoCard(
+    return UiPanel(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -369,11 +367,13 @@ class PrivacyCard extends StatelessWidget {
     required this.onPolicy,
     this.onConsent,
     this.message,
+    this.waiting = false,
   });
 
   final VoidCallback onPolicy;
   final VoidCallback? onConsent;
   final String? message;
+  final bool waiting;
 
   @override
   Widget build(BuildContext context) {
@@ -391,13 +391,14 @@ class PrivacyCard extends StatelessWidget {
     ) => SheetButton(
       key: ValueKey('privacy-$name'),
       label: label,
+      loading: name == 'consent' && waiting,
       icon: KoIcon(icon, size: context.koSize.iconCompact, color: c.ink),
       color: c.surface,
       line: c.line,
       edge: c.lineDeep,
       onPressed: on,
     );
-    return KoCard(
+    return UiPanel(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -440,7 +441,7 @@ class AboutCard extends StatelessWidget {
     final space = context.koSpace;
     final l = context.l10n;
     final version = this.version;
-    return KoCard(
+    return UiPanel(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -475,74 +476,81 @@ class AboutCard extends StatelessWidget {
 
 /// Sheet konfirmasi reset progres (gaya sheet Petunjuk): judul, tombol
 /// tutup, penjelasan apa yang dihapus, lalu Batal dan Hapus.
-class ResetSheet extends StatelessWidget {
-  const ResetSheet({super.key, required this.onClose, required this.onConfirm});
-
+class ResetSheet extends StatefulWidget {
+  const ResetSheet({
+    super.key,
+    required this.onClose,
+    this.onConfirm,
+    this.onReset,
+  });
   final VoidCallback onClose;
-  final VoidCallback onConfirm;
+  final VoidCallback? onConfirm;
+  final Future<bool> Function()? onReset;
+  @override
+  State<ResetSheet> createState() => _ResetSheetState();
+}
+
+class _ResetSheetState extends State<ResetSheet> {
+  bool busy = false, failed = false;
+  Future<void> confirm() async {
+    if (busy) return;
+    if (widget.onReset == null) {
+      widget.onConfirm?.call();
+      return;
+    }
+    setState(() {
+      busy = true;
+      failed = false;
+    });
+    final ok = await widget.onReset!();
+    if (!mounted) return;
+    if (ok) {
+      widget.onClose();
+      return;
+    }
+    setState(() {
+      busy = false;
+      failed = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final c = context.koColors;
-    final t = context.koType;
-    final space = context.koSpace;
-    final s = context.koSize;
     final l = context.l10n;
-    return KoSheet(
-      label: l.resetConfirmTitle,
-      onClose: onClose,
-      header: Row(
-        children: [
-          Expanded(
-            child: Semantics(
-              header: true,
-              child: Text(l.resetConfirmTitle, style: t.title),
-            ),
-          ),
-          SizedBox(width: space.s10),
-          KoIconButton(
-            icon: KoIcons.close,
-            semanticLabel: l.close,
-            tone: KoIconButtonTone.flat,
-            iconSize: s.iconSmall,
-            onPressed: onClose,
-          ),
-        ],
-      ),
-      children: [
-        Text(l.resetConfirmBody, style: t.bodySmall.copyWith(color: c.inkSoft)),
-        SizedBox(height: space.s16),
-        Row(
+    return PopScope(
+      canPop: !busy,
+      child: KoSheet(
+        label: l.resetConfirmTitle,
+        onClose: busy ? () {} : widget.onClose,
+        header: UiSheetHeader(
+          title: l.resetConfirmTitle,
+          onClose: busy ? null : widget.onClose,
+        ),
+        footer: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: SheetButton(
-                label: l.cancel,
-                icon: KoIcon(KoIcons.close, size: s.iconCompact, color: c.ink),
-                color: c.surface,
-                line: c.line,
-                edge: c.lineDeep,
-                onPressed: onClose,
-              ),
+            if (failed) UiSaveNotice(onRetry: confirm),
+            UiButton(
+              label: l.cancel,
+              kind: UiButtonKind.secondary,
+              onPressed: busy ? null : widget.onClose,
             ),
-            SizedBox(width: space.s8),
-            Expanded(
-              child: SheetButton(
-                label: l.resetConfirm,
-                icon: KoIcon(
-                  KoIcons.reset,
-                  size: s.iconCompact,
-                  color: c.onBrick,
-                ),
-                color: c.brick,
-                line: c.brick,
-                edge: c.brickEdge,
-                labelColor: c.onBrick,
-                onPressed: onConfirm,
-              ),
+            const SizedBox(height: KoUi.s8),
+            UiButton(
+              label: l.resetConfirm,
+              kind: UiButtonKind.danger,
+              loading: busy,
+              onPressed: busy ? null : confirm,
             ),
           ],
         ),
-      ],
+        children: [
+          Text(l.resetConfirmBody, style: KoUi.body),
+          const SizedBox(height: KoUi.s12),
+          Text(l.guidanceResetAreas, style: KoUi.small),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../../app/game_audio.dart';
@@ -9,6 +7,7 @@ import '../../game/model/sounds.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../../widgets/v2/ui_panel.dart';
 
 /// Membuka sheet Tambah Koin: bonus harian dan iklan berhadiah koin. Gaya
 /// mengikuti sheet Petunjuk (desain 10); sheet ini tidak ada di desain.
@@ -55,12 +54,14 @@ class _CoinSheetState extends State<CoinSheet> {
     if (result == AdReward.rewarded) _playCoin();
   }
 
-  /// Saldo bertambah langsung (sebelum disimpan), jadi suaranya juga.
-  void _claimBonus() {
+  /// Play the reward sound after the operation completes.
+  Future<void> _claimBonus() async {
     final progress = widget.progress;
     if (!progress.canClaimBonus) return;
-    unawaited(progress.claimDailyBonus());
-    _playCoin();
+    final claimed = await progress.claimDailyBonus();
+    if (!mounted) return;
+    if (claimed) _playCoin();
+    setState(() {});
   }
 
   void _playCoin() => AudioScope.maybeRead(context)?.play(GameSound.coin);
@@ -68,7 +69,6 @@ class _CoinSheetState extends State<CoinSheet> {
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
-    final t = context.koType;
     final space = context.koSpace;
     final s = context.koSize;
     final l = context.l10n;
@@ -78,50 +78,30 @@ class _CoinSheetState extends State<CoinSheet> {
         final progress = widget.progress;
         final bonus = progress.canClaimBonus;
         final adsLeft = progress.adsLeft;
-        final canWatch = adsLeft > 0 && !_waiting;
-        final header = Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                CoinView(size: s.iconButton),
-                SizedBox(width: space.s10),
-                Expanded(
-                  // Mengecil di layar sempit, tidak terpotong.
-                  child: Semantics(
-                    header: true,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: AlignmentDirectional.centerStart,
-                      child: Text(l.coinsTitle, maxLines: 1, style: t.title),
-                    ),
-                  ),
-                ),
-                SizedBox(width: space.s10),
-                KoCoinChip(
-                  coins: progress.coins,
-                  style: KoCoinChipStyle.compact,
-                ),
-                SizedBox(width: space.s10),
-                KoIconButton(
-                  icon: KoIcons.close,
-                  semanticLabel: l.close,
-                  tone: KoIconButtonTone.flat,
-                  iconSize: s.iconSmall,
-                  onPressed: widget.onClose,
-                ),
-              ],
-            ),
-            // Seperti sheet Petunjuk: jarak 12 dikurangi margin -4.
-            SizedBox(height: space.s8),
-            Text(l.coinsIntro, style: t.bodySmall.copyWith(color: c.inkSoft)),
-          ],
+        final canAct =
+            !_waiting && !progress.saveFailed && !progress.householdBusy;
+        final canWatch = adsLeft > 0 && !_waiting && canAct;
+        final header = UiSheetHeader(
+          title: l.coinsTitle,
+          subtitle: l.coinsIntro,
+          trailing: KoCoinChip(
+            coins: progress.coins,
+            style: KoCoinChipStyle.compact,
+          ),
+          onClose: widget.onClose,
         );
         return KoSheet(
           label: l.coinsTitle,
           onClose: widget.onClose,
           header: header,
           children: [
+            if (progress.saveFailed)
+              UiSaveNotice(
+                onRetry: () async {
+                  await progress.retrySaves();
+                  if (mounted) setState(() {});
+                },
+              ),
             RewardCard(
               key: const ValueKey('coin-bonus'),
               icon: KoIcons.gift,
@@ -136,7 +116,7 @@ class _CoinSheetState extends State<CoinSheet> {
                 edge: c.orangeDeep,
                 // Bunyi koin menggantikan tap.
                 silent: true,
-                onPressed: bonus ? _claimBonus : null,
+                onPressed: bonus && canAct ? _claimBonus : null,
               ),
             ),
             SizedBox(height: space.s10),
@@ -144,7 +124,11 @@ class _CoinSheetState extends State<CoinSheet> {
               key: const ValueKey('coin-ad'),
               icon: KoIcons.ad,
               title: l.watchAd,
-              status: adsLeft > 0 ? l.adsLeftToday(adsLeft) : l.adsUsedUp,
+              status: _waiting
+                  ? l.guidanceLoading
+                  : adsLeft > 0
+                  ? l.adsLeftToday(adsLeft)
+                  : l.adsUsedUp,
               done: adsLeft == 0,
               button: SheetButton(
                 label: adsLeft > 0
@@ -199,7 +183,7 @@ class RewardCard extends StatelessWidget {
     final space = context.koSpace;
     final s = context.koSize;
     final message = this.message;
-    return KoCard(
+    return UiPanel(
       borderColor: done ? c.success : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -2302,4 +2302,32 @@ class AppLocalizationsId extends AppLocalizations {
   String replayProgress(int step, int total) {
     return 'Langkah $step dari $total';
   }
+
+  @override
+  String get guidanceSaveFailed =>
+      'Belum tersimpan di perangkat. Coba simpan lagi.';
+
+  @override
+  String get guidanceLoading => 'Memuat iklan…';
+
+  @override
+  String get guidanceHomeTitle => 'Kenalan dengan rumah Oyen';
+
+  @override
+  String get guidanceHomeBody =>
+      'Empat area gratis: Santai, Makan, Main, dan Rawat. Kucing bisa beraktivitas sendiri. Ketuk kucing untuk mengajaknya; kalau sibuk, ia menunggu giliran. Temukan kucing lewat Koleksi. Main Puzzle selalu bisa langsung dimainkan.';
+
+  @override
+  String get guidanceMotion => 'Kurangi gerak';
+
+  @override
+  String get guidanceMotionInfo =>
+      'Animasi lebih tenang. Preferensi kurangi gerak HP juga tetap diikuti.';
+
+  @override
+  String get guidanceResetAreas =>
+      'Semua area, tata letak, antrean dan kegiatan rumah ikut direset. Bahasa, suara, kurangi gerak dan jatah hadiah hari ini tetap.';
+
+  @override
+  String get guidanceSaving => 'Menyimpan…';
 }

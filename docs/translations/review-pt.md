@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-597 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+605 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -624,6 +624,14 @@ files and anything written there is overwritten.
 | `decorateBowlFixed` | The built-in bowl stays in the Dining Area. | A tigela da casa fica na Área de Refeições. | V2 shop or area decoration: decorateBowlFixed | |
 | `replayEnd` | End | Fim | Replay control: jump to the final step. | |
 | `replayProgress` | Step {step} of {total} | Passo {step} de {total} | Current replay step and total; includes step zero. Placeholders: `{step}`, `{total}`. | |
+| `guidanceSaveFailed` | Not saved on this device yet. Try saving again. | Ainda não foi salvo neste aparelho. Tente salvar de novo. | Guidance and settings v2: guidanceSaveFailed | |
+| `guidanceLoading` | Loading ad… | Carregando anúncio… | Guidance and settings v2: guidanceLoading | |
+| `guidanceHomeTitle` | Meet Oyen’s home | Conheça a casa do Oyen | Guidance and settings v2: guidanceHomeTitle | |
+| `guidanceHomeBody` | Four free areas: Lounge, Dining, Play, and Care. Cats can do things on their own. Tap a cat to invite them; busy cats wait their turn. Find any cat through Collection. You can always jump straight into a puzzle. | Quatro áreas grátis: Descanso, Comida, Brincar e Cuidados. Os gatos fazem atividades sozinhos. Toque num gato para convidar; se estiver ocupado, ele espera a vez. Encontre os gatos na Coleção. Os puzzles estão sempre disponíveis. | Guidance and settings v2: guidanceHomeBody | |
+| `guidanceMotion` | Reduce motion | Reduzir movimento | Guidance and settings v2: guidanceMotion | |
+| `guidanceMotionInfo` | Gentler animations. Your phone’s reduced motion preference is also respected. | Animações mais suaves. A preferência do aparelho também é respeitada. | Guidance and settings v2: guidanceMotionInfo | |
+| `guidanceResetAreas` | All areas, layouts, queues and home activities are reset too. Language, sound, reduced motion and today’s reward limits stay. | Todas as áreas, decorações, filas e atividades da casa também serão reiniciadas. Idioma, som, movimento reduzido e limites de recompensas de hoje permanecem. | Guidance and settings v2: guidanceResetAreas | |
+| `guidanceSaving` | Saving… | Salvando… | Paid hint storage is in progress, without loading an ad. | |
 
 ---
 

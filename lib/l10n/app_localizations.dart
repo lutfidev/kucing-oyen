@@ -3683,6 +3683,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Step {step} of {total}'**
   String replayProgress(int step, int total);
+
+  /// Guidance and settings v2: guidanceSaveFailed
+  ///
+  /// In en, this message translates to:
+  /// **'Not saved on this device yet. Try saving again.'**
+  String get guidanceSaveFailed;
+
+  /// Guidance and settings v2: guidanceLoading
+  ///
+  /// In en, this message translates to:
+  /// **'Loading ad…'**
+  String get guidanceLoading;
+
+  /// Guidance and settings v2: guidanceHomeTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Meet Oyen’s home'**
+  String get guidanceHomeTitle;
+
+  /// Guidance and settings v2: guidanceHomeBody
+  ///
+  /// In en, this message translates to:
+  /// **'Four free areas: Lounge, Dining, Play, and Care. Cats can do things on their own. Tap a cat to invite them; busy cats wait their turn. Find any cat through Collection. You can always jump straight into a puzzle.'**
+  String get guidanceHomeBody;
+
+  /// Guidance and settings v2: guidanceMotion
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce motion'**
+  String get guidanceMotion;
+
+  /// Guidance and settings v2: guidanceMotionInfo
+  ///
+  /// In en, this message translates to:
+  /// **'Gentler animations. Your phone’s reduced motion preference is also respected.'**
+  String get guidanceMotionInfo;
+
+  /// Guidance and settings v2: guidanceResetAreas
+  ///
+  /// In en, this message translates to:
+  /// **'All areas, layouts, queues and home activities are reset too. Language, sound, reduced motion and today’s reward limits stay.'**
+  String get guidanceResetAreas;
+
+  /// Paid hint storage is in progress, without loading an ad.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get guidanceSaving;
 }
 
 class _AppLocalizationsDelegate

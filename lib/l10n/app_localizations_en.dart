@@ -2443,4 +2443,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String replayProgress(int step, int total) {
     return 'Step $step of $total';
   }
+
+  @override
+  String get guidanceSaveFailed =>
+      'Not saved on this device yet. Try saving again.';
+
+  @override
+  String get guidanceLoading => 'Loading ad…';
+
+  @override
+  String get guidanceHomeTitle => 'Meet Oyen’s home';
+
+  @override
+  String get guidanceHomeBody =>
+      'Four free areas: Lounge, Dining, Play, and Care. Cats can do things on their own. Tap a cat to invite them; busy cats wait their turn. Find any cat through Collection. You can always jump straight into a puzzle.';
+
+  @override
+  String get guidanceMotion => 'Reduce motion';
+
+  @override
+  String get guidanceMotionInfo =>
+      'Gentler animations. Your phone’s reduced motion preference is also respected.';
+
+  @override
+  String get guidanceResetAreas =>
+      'All areas, layouts, queues and home activities are reset too. Language, sound, reduced motion and today’s reward limits stay.';
+
+  @override
+  String get guidanceSaving => 'Saving…';
 }

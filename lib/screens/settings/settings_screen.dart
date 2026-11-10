@@ -11,8 +11,13 @@ import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
+import '../../theme/puzzle_theme.dart';
+import '../../theme/ko_ui.dart';
+import '../../widgets/v2/ui_button.dart';
+import '../../widgets/v2/ui_panel.dart';
 import '../../widgets/widgets.dart';
 import 'settings_parts.dart';
+import '../room/home_help.dart';
 
 /// Pengaturan (rute `/pengaturan`, tidak ada di desain; gaya kartu Toko
 /// dan sheet Petunjuk): sakelar musik dan efek suara, bahasa, lihat
@@ -53,32 +58,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _showConsent(AdConsent consent) async {
     if (_consentOpen) return;
-    _consentOpen = true;
+    setState(() => _consentOpen = true);
     try {
       await consent.showPrivacyOptions();
+    } on Object {
+      if (mounted) setState(() => _notice = _Notice.privacyFailed);
     } finally {
-      _consentOpen = false;
+      if (mounted) setState(() => _consentOpen = false);
     }
   }
 
-  void _replayTutorials(ProgressController progress) {
-    unawaited(progress.replayTutorials());
-    setState(() => _notice = _Notice.tutorials);
+  Future<void> _replayTutorials(ProgressController progress) async {
+    await progress.replayTutorials();
+    if (mounted) {
+      setState(() => _notice = progress.saveFailed ? null : _Notice.tutorials);
+    }
   }
 
-  Future<void> _confirmReset(ProgressController progress) => showKoSheet(
-    context,
-    barrierLabel: context.l10n.closeReset,
-    barrierColor: context.koColors.scrimLight,
-    builder: (context, onClose) => ResetSheet(
-      onClose: onClose,
-      onConfirm: () {
-        onClose();
-        unawaited(progress.resetProgress());
-        setState(() => _notice = _Notice.reset);
-      },
-    ),
-  );
+  Future<void> _confirmReset(ProgressController progress) async {
+    progress.pauseHousehold(HouseholdPause.reset);
+    try {
+      await showKoSheet(
+        context,
+        barrierLabel: context.l10n.closeReset,
+        builder: (context, onClose) => ResetSheet(
+          onClose: onClose,
+          onReset: () async {
+            final ok = await progress.resetProgress();
+            if (ok && mounted) setState(() => _notice = _Notice.reset);
+            return ok;
+          },
+        ),
+      );
+      if (mounted && _notice == _Notice.reset) context.go(AppRoutes.home);
+    } finally {
+      progress.resumeHousehold(HouseholdPause.reset);
+    }
+  }
 
   Future<void> _openPolicy() async {
     final opened = await openPrivacyPolicy();
@@ -91,11 +107,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final progress = ProgressScope.of(context);
     final consent = AdConsentScope.maybeOf(context);
     final audio = AudioScope.of(context);
+    final version = _version;
+
+    return Theme(
+      data: puzzleTheme(),
+      child: Builder(
+        builder: (context) =>
+            _content(context, progress, consent, audio, version),
+      ),
+    );
+  }
+
+  Widget _content(
+    BuildContext context,
+    ProgressController progress,
+    AdConsent? consent,
+    GameAudio audio,
+    String? version,
+  ) {
     final c = context.koColors;
     final space = context.koSpace;
     final l = context.l10n;
-    final version = _version;
-
     return Scaffold(
       backgroundColor: c.cream,
       body: SafeArea(
@@ -113,6 +145,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      if (progress.saveFailed || audio.saveFailed)
+                        UiSaveNotice(
+                          onRetry: () async {
+                            await progress.retrySaves();
+                            await audio.retrySettings();
+                            if (mounted) setState(() {});
+                          },
+                        ),
                       SettingsSection(
                         title: l.soundSection,
                         child: SoundCard(
@@ -129,6 +169,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           selected: progress.language,
                           onSelect: (language) =>
                               unawaited(progress.setLanguage(language)),
+                        ),
+                      ),
+                      SizedBox(height: space.s16),
+                      SettingsSection(
+                        title: l.guidanceMotion,
+                        child: UiPanel(
+                          child: Column(
+                            children: [
+                              SettingsSwitchRow(
+                                key: const ValueKey('reduced-motion'),
+                                label: l.guidanceMotion,
+                                on: progress.household.reducedMotion,
+                                onChanged: progress.householdBusy
+                                    ? null
+                                    : (value) async {
+                                        await progress.setReducedMotion(value);
+                                        if (mounted) setState(() {});
+                                      },
+                              ),
+                              Text(l.guidanceMotionInfo, style: KoUi.small),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: space.s16),
+                      SettingsSection(
+                        title: l.guidanceHomeTitle,
+                        child: UiButton(
+                          label: l.guidanceHomeTitle,
+                          kind: UiButtonKind.secondary,
+                          onPressed: () => showHomeHelp(context),
                         ),
                       ),
                       SizedBox(height: space.s16),
@@ -180,6 +251,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       SettingsSection(
                         title: l.privacySection,
                         child: PrivacyCard(
+                          waiting: _consentOpen,
                           onPolicy: () => unawaited(_openPolicy()),
                           onConsent:
                               consent != null && consent.privacyOptionsRequired

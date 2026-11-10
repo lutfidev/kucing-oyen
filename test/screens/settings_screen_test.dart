@@ -299,7 +299,8 @@ void main() {
         (progress.store as MemoryProgressStore).rewards,
         const DailyRewards(bonusDay: 5),
       );
-      expect(find.text('Progres dihapus. Mulai lagi, yuk!'), findsOneWidget);
+      expect(find.byType(RoomScreen), findsOneWidget);
+      expect(find.text('Main Puzzle'), findsOneWidget);
     });
 
     testWidgets('sheet konfirmasi bisa ditutup dengan tombol kembali', (

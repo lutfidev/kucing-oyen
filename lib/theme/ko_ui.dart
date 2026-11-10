@@ -30,6 +30,7 @@ abstract final class KoUi {
   static const s4 = 4.0, s8 = 8.0, s12 = 12.0, s16 = 16.0, s24 = 24.0;
   static const chipRadius = 16.0, buttonRadius = 18.0;
   static const cardRadius = 22.0, sheetRadius = 28.0;
+  static const tutorialCat = 64.0, tutorialOverlap = 36.0;
   static const outline = 1.5, target = 48.0, depth = 3.0;
   static const pressTime = Duration(milliseconds: 100);
   static const tabTime = Duration(milliseconds: 200);
