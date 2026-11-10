@@ -1,0 +1,15 @@
+{
+  "apk": "app-debug.apk",
+  "apkBytes": 219975258,
+  "sha256": "28147f6beb918fe8a91c29acad8ff436ad8f922bec995b46cd3e5f839a323efe",
+  "packagedArtEntries": 215,
+  "packagedArtBytes": 849864,
+  "packagedArtCompressedBytes": 635869,
+  "paintedSceneBytes": 180076,
+  "paintedSceneDecodeBudgetBytes": 4194304,
+  "diningSceneBytes": 110624,
+  "playSceneBytes": 127572,
+  "careSceneBytes": 127354,
+  "combinedPaintedSceneDecodeBudgetBytes": 16777216,
+  "note": "Debug APK. Art entries only; not an APK size delta against v1 or a release size forecast."
+}

@@ -37,7 +37,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 10. Visual puzzle: papan, benda, dan Oyen
 - [x] 11. Peta babak, hasil level, dan putar ulang
 - [x] 12. Tutorial, petunjuk, koin, dan Pengaturan
-- [ ] 13. Animasi, suara, aksesibilitas, dan performa
+- [x] 13. Animasi, suara, aksesibilitas, dan performa
 - [ ] 14. Screenshot, ikon, splash, dan materi Play Store baru
 - [ ] 15. Pengujian menyeluruh di HP dan kandidat rilis
 - [ ] 16. Persiapan produksi dan release Play Store
@@ -243,6 +243,19 @@ PR langkah ini di-merge.
 
 ## 13. Animasi, suara, aksesibilitas, dan performa
 
+**Implementasi dan audit lokal selesai 10 November 2026:** [laporan langkah 13](design-v2/polish/REVIEW.md).
+Jeda audio sejak inactive, penghentian efek/pembatalan load dan pool voice
+terbatas, jam puzzle/replay saat tertutup, fase rig rumah dan viewport nol
+ditangani. Cache SVG dibatasi 512; fixture/profiler v2 mencakup 9 kucing,
+19 barang ditempatkan legal dan 2 di Gudang. Delapan render serta pedoman
+label/target sentuh dan kontras token lulus. Dua temuan review audio ditutup.
+Verifikasi: 3.105 test lulus / 136 skip (satu diagnostik host opt-in), analyze,
+format, terjemahan/generator serta APK debug dan helper profile berhasil.
+**Profil 60 fps/memori HP, TalkBack dan audio native belum diuji** karena
+tidak ada Android tersambung; diagnostik host tidak menjadi kelulusan HP.
+Butir perangkat diteruskan secara eksplisit ke langkah 15; helper profil
+siap diulang. Berikutnya langkah 14 setelah PR ini di-merge.
+
 - Selaraskan pose/reaksi/efek suara; hentikan animasi layar tertutup dan jeda suara selama iklan/latar belakang.
 - Ukur profil 9 kucing dan seluruh barang sesuai aturan area, transisi area, puzzle dan memori; gunakan cache/preload yang terbatas dan terukur.
 - Targetkan kelancaran 60 fps pada HP uji; laporkan build/raster, bingkai lambat, memori dan keterbatasan perangkat. Hasil desain lama bukan kelulusan baru.
@@ -262,6 +275,12 @@ PR langkah ini di-merge.
 **Selesai jika:** gambar sesuai aplikasi nyata, tidak tercampur screenshot lama, ikon/splash benar dan listing tidak menjanjikan fitur yang belum ada.
 
 ## 15. Pengujian menyeluruh di HP dan kandidat rilis
+
+- Tindak lanjuti [batas langkah 13](design-v2/polish/REVIEW.md): jalankan
+  `tool/profile_room.dart` pada HP terbuka, rekam build/raster/RSS/cache dan
+  bingkai lambat empat area/transisi; tambahkan profil puzzle fase jalan.
+  Uji layar terkunci, TalkBack nyata dan audio native/iklan SDK. Target 60 fps
+  desain v2 belum lulus hanya dari hasil host atau build APK.
 
 - Jalankan format, `flutter analyze`, pemeriksaan terjemahan, seluruh `flutter test`, solver 20 level dan pengujian visual/overflow baru.
 - Coba update dari progres lama, buka ulang, antararea, otomatis/ajakan, transaksi/dekorasi, puzzle/replay, pengaturan, offline dan kembali setelah iklan.

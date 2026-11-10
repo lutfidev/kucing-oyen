@@ -157,6 +157,24 @@ Pemilik repo nyaman dengan skill superpowers: selalu pakai skill yang cocok. Eff
 
 Lihat `docs/ROADMAP.md`: status tiap langkah dan prompt siap tempel. Langkah berikutnya = langkah pertama yang belum dicentang.
 
+## Audit animasi/suara/performa v2 — langkah 13
+
+`effect_pool.dart` mengganti AudioPool dengan maksimal tiga EffectVoice per
+jenis, state selesai native untuk reuse, dan revisi pembatalan ekspansi.
+`SoundPlayer.stopEffects` menghentikan bunyi aktif dan generasi load tertunda;
+GameAudio memanggilnya saat hold/efek dimatikan. Musik/efek ditahan sejak
+inactive sampai resumed. LevelView mengamati lifecycle dan TickerMode tanpa
+mengubah jeda pemain; ReplayView tertutup menunggu Putar lagi. HomeScene
+menjaga fase waktu aktif, menangani viewport nol dan memicu bunyi dari ID
+aktivitas tersimpan yang terlihat. Cache path SvgTemplate dibatasi 512 LRU.
+`tool/profile_fixture.dart` memakai SnapshotStore dalam memori; helper
+`tool/profile_room.dart` mengukur v2 per area/transisi/puzzle atur/kurangi gerak,
+tidak menulis progres pemain. Test polish_v2 dan polish_v2_visual mencakup
+regresi, render serta diagnostik opt-in POLISH_REVIEW/POLISH_PROFILE.
+Laporan `docs/design-v2/polish/REVIEW.md`; FPS HP/TalkBack/audio native belum
+diuji dan wajib ditindaklanjuti langkah 15. Berikutnya langkah 14 setelah PR
+langkah 13 di-merge; jangan merge sendiri.
+
 ## Visual puzzle v2 ? langkah 10
 
 Papan runtime memakai `lib/game/render/v2/puzzle_art.dart`; jangan mengubah
