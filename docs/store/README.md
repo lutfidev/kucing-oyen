@@ -1,6 +1,6 @@
 # Rilis Play Store: Ginger Logic
 
-> **Reset desain 8 Nov 2026:** panduan release ini dipertahankan untuk langkah 16 roadmap baru. Ikon toko, feature graphic dan screenshot lama sudah dihapus; tabel di bawah adalah daftar hasil yang harus dibuat kembali pada langkah 14, bukan inventaris file yang sudah tersedia. Generator merek masih mengikuti runtime lama dan harus diperbarui sebelum digunakan untuk materi final. Listing dan jawaban formulir di bawah adalah baseline lama, wajib ditinjau ulang terhadap fitur final dan ketentuan terbaru saat rilis. Kebijakan privasi tetap dipertahankan.
+> **Materi v2 — 10 November 2026:** ikon, grafis fitur dan screenshot dibuat ulang dari aset/runtime v2. [Tinjauan dan batas](../design-v2/store/REVIEW.md), [manifest ukuran/hash](assets-v2.json). Materi belum diunggah ke Play Console. Formulir/produksi di bawah tetap baseline yang wajib diperiksa kembali pada langkah 16.
 
 Semua yang dibutuhkan untuk mengunggah Ginger Logic (`com.gingerlogic.app`, versi `1.0.0+1`) ke Play Console.
 
@@ -23,17 +23,26 @@ Gradle mencetak peringatan "Ginger Logic: ..." saat build release kalau ID aplik
 | `listing-en.md` | Listing toko utama (Inggris, AS): nama aplikasi, deskripsi singkat, deskripsi lengkap |
 | `listing-id.md`, `listing-pt.md`, `listing-ru.md` | Listing toko → Kelola terjemahan → Indonesia, Portugis (Brasil), Rusia |
 | `icon-512.png` | Ikon aplikasi (512×512) |
-| `feature-graphic.png` | Grafis fitur (1024×500) |
-| `screenshots/<bahasa>/*.png` | Screenshot ponsel per bahasa (1080×1920, 6 gambar, unggah urut nama: kamar, Toko aksesoris, peta, fase atur, fase jalan, berhasil) |
+| `feature-graphic.png`, `feature-graphic-id/pt/ru.png` | Grafis fitur Inggris dan terjemahan (1024×500) |
+| `screenshots/<bahasa>/*.png` | Screenshot ponsel per bahasa (1080×1920, 8 gambar, unggah urut nama: Santai, Makan, Main, Rawat, Toko aksesoris, peta, fase atur, berhasil) |
 | `privacy/index.html` | Kebijakan privasi (diunggah ke situs, lalu URL-nya ditempel) |
 
 Gambar dibuat ulang dengan:
 
 ```
 flutter test test/screenshots/brand_test.dart --dart-define=BRAND=true
+flutter test test/screenshots/screenshot_test.dart --dart-define=SCREENSHOTS=true --dart-define=SCREENSHOT_DIR=docs/screenshots
+python tool/store_assets.py
+python tool/store_assets.py --check
 ```
 
-Perintah itu juga menulis ikon launcher, splash, dan `values/colors.xml` di `android/app/src/main/res/`.
+Generator BRAND juga menulis ikon launcher lima densitas, splash/logo empat bahasa, dan `values/colors.xml` dari KoUi v2 di `android/app/src/main/res/`. Splash Indonesia memakai qualifier `in`. Kepala merek berasal dari SVG rig rumah yang sama; grafis fitur memakai CatRig runtime. Sumber/lisensi mengikuti [paket aset v2](../../assets/art/v2/README.md).
+
+Potret diambil dari widget aplikasi lengkap dengan data contoh di memori, jam tetap dan animasi rumah dibekukan. Tidak memakai data pemain atau galeri desain v1. Pemeriksa menolak inventaris kurang/berlebih, PNG transparan, ukuran salah, listing melewati batas dan manifest hash basi. PNG screenshot/feature diserialisasi ke RGB 24 bit; ikon toko tetap RGBA.
+
+Ketentuan gambar diperiksa terhadap [panduan preview assets resmi Google Play](https://support.google.com/googleplay/android-developer/answer/9866151?hl=en) pada 10 November 2026: maksimal delapan screenshot per jenis perangkat, ikon 512×512, grafis fitur 1024×500, screenshot dan grafis fitur tanpa alpha. Pemeriksaan ini terbatas materi; kelayakan produksi/formulir diperiksa lagi pada langkah 16.
+
+Grafis fitur Inggris memakai `feature-graphic.png`; pilih berkas `-id`, `-pt`, `-ru` pada listing bahasa terkait. [Teks alternatif empat bahasa](alt-text.md) tersedia untuk aset toko.
 
 ## Signing
 

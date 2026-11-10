@@ -38,7 +38,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 11. Peta babak, hasil level, dan putar ulang
 - [x] 12. Tutorial, petunjuk, koin, dan Pengaturan
 - [x] 13. Animasi, suara, aksesibilitas, dan performa
-- [ ] 14. Screenshot, ikon, splash, dan materi Play Store baru
+- [x] 14. Screenshot, ikon, splash, dan materi Play Store baru
 - [ ] 15. Pengujian menyeluruh di HP dan kandidat rilis
 - [ ] 16. Persiapan produksi dan release Play Store
 
@@ -264,6 +264,17 @@ siap diulang. Berikutnya langkah 14 setelah PR ini di-merge.
 **Selesai jika:** masalah bermakna ditangani/dicatat dengan alasan, tidak ada pertumbuhan cache tanpa batas, memori/ukuran sesuai anggaran.
 
 ## 14. Screenshot, ikon, splash, dan materi Play Store baru
+
+**Selesai implementasi dan pemeriksaan host 10 November 2026:** [laporan materi toko v2](design-v2/store/REVIEW.md).
+Kepala merek memakai sumber rig rumah v2; launcher/adaptif/monokrom lima
+densitas, splash empat bahasa, ikon toko, grafis fitur empat bahasa, 32 potret
+toko dan 29 potret dokumentasi tersedia. Fixture snapshot menjaga empat area
+berbeda; pratinjau aksesoris dibuka dan kembali ke bagian atas sebelum dipotret.
+Listing empat bahasa serta review terjemahan diperbarui, galeri README terisi.
+Pemeriksa memvalidasi inventaris, ukuran, RGB/alpha, batas aman ikon, panjang
+listing dan hash. Seluruh gambar ditinjau; native launcher/splash pada HP dan
+penerimaan visual pemilik repo diteruskan ke langkah 15. Berikutnya langkah 15
+setelah PR langkah ini di-merge.
 
 **Baca/ubah:** `test/screenshots/`, generator merek, ikon/splash Android, `docs/store/`, README.
 

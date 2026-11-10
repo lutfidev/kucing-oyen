@@ -222,3 +222,21 @@ menampilkan dan mencoba ulang simpan suara dengan antrean tulis berurutan.
 Test `guidance_progress_test`/`guidance_v2_test`, ekspor `GUIDANCE_REVIEW=true`,
 laporan di `docs/design-v2/guidance/REVIEW.md`. Langkah 13 setelah PR langkah 12
 di-merge; jangan merge sendiri.
+
+
+## Merek dan materi toko v2 — langkah 14
+
+`brand_art.dart` menggunakan kepala SVG Oyen dari subset rig rumah v2, dengan
+crop 20/25/108/97 dan monokrom berlubang. Jangan mengembalikan kepala v1.
+`test/screenshots/brand_test.dart --dart-define=BRAND=true` membuat resource
+Android, grafis fitur empat bahasa, 8 screenshot toko/bahasa dan 9 potret
+Indonesia untuk dokumentasi. Fixture menggunakan SnapshotStore dalam memori,
+sembilan kucing, jam tetap; pastikan setHomeArea berhasil sebelum memotret.
+Potret toko 432×768 dp ×2,5. `screenshot_test.dart` kini khusus rute pemain v2:
+peta 1, Toko barang/kucing/makanan dan Pengaturan empat bahasa, bukan galeri v1.
+Ekspor dengan SCREENSHOTS=true dan SCREENSHOT_DIR=docs/screenshots.
+Setelah generator jalankan `python tool/store_assets.py` untuk RGB PNG toko
+lossless dan manifest, lalu `--check`; `--sheets` membuat contact sheet QA di
+build/store-review. Listing berubah: buat ulang review terjemahan.
+Laporan di docs/design-v2/store/REVIEW.md; belum ada upload/publikasi atau uji
+launcher/splash native HP. Berikutnya langkah 15 setelah PR ini di-merge.

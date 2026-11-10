@@ -6,11 +6,11 @@ Game puzzle mobile tentang kucing oren yang bergerak sendiri mengikuti aturan te
 
 ## Arah baru
 
-Pada 8 November 2026, pemilik repo memilih perombakan seluruh visual mengikuti **konsep A — satu area per layar**, termasuk bentuk kucing, furnitur, UI dan layar puzzle. Rumah v2 sudah berjalan dengan Beranda Santai, Area Makan, Bermain dan Perawatan berilustrasi, aktivitas otomatis serta ajakan pemain. Area dan layar lainnya diselesaikan bertahap mengikuti roadmap.
+Pada 8 November 2026, pemilik repo memilih perombakan seluruh visual mengikuti **konsep A — satu area per layar**, termasuk bentuk kucing, furnitur, UI dan layar puzzle. Rumah v2 sudah berjalan dengan Beranda Santai, Area Makan, Bermain dan Perawatan berilustrasi, aktivitas otomatis serta ajakan pemain. Seluruh layar pemain memakai v2; pengujian perangkat dan persiapan rilis berlanjut mengikuti roadmap.
 
 ![Acuan baru Rumah Oyen — pilih konsep A di kiri](docs/design-brief/rumah-oyen-area/preview-perbandingan.png)
 
-- [Roadmap baru, berikutnya langkah 14](docs/ROADMAP.md)
+- [Roadmap baru, berikutnya langkah 15](docs/ROADMAP.md)
 - [Audit animasi, suara, aksesibilitas dan performa v2](docs/design-v2/polish/REVIEW.md)
 - [Tutorial, petunjuk, koin dan Pengaturan v2](docs/design-v2/guidance/REVIEW.md)
 - [Peta, hasil, dan replay v2](docs/design-v2/journey/REVIEW.md)
@@ -20,7 +20,15 @@ Pada 8 November 2026, pemilik repo memilih perombakan seluruh visual mengikuti *
 - [Brief arah desain](docs/design-brief/rumah-oyen-area/ARAH_DESAIN.md)
 - [Keputusan aktif](docs/DESIGN_NOTES.md)
 
-Screenshot, ekspor desain dan rencana visual lama sudah dibersihkan dari acuan aktif. Gambar dokumentasi serta materi Play Store akan dibuat ulang setelah tampilan baru selesai. Persiapan release tetap menjadi tahap akhir roadmap.
+Screenshot berikut berasal dari runtime v2. Materi empat bahasa, ikon dan grafis fitur tersedia di [paket toko](docs/store/README.md); [hasil pemeriksaan langkah 14](docs/design-v2/store/REVIEW.md).
+
+| Santai | Makan | Bermain | Perawatan |
+| --- | --- | --- | --- |
+| ![Santai](docs/screenshots/01-santai.png) | ![Makan](docs/screenshots/02-makan.png) | ![Bermain](docs/screenshots/03-main.png) | ![Perawatan](docs/screenshots/04-rawat.png) |
+
+| Toko | Peta | Puzzle | Berhasil |
+| --- | --- | --- | --- |
+| ![Toko](docs/screenshots/05-toko-aksesoris.png) | ![Peta](docs/screenshots/06-peta-babak-2.png) | ![Puzzle](docs/screenshots/07-fase-atur-level-13.png) | ![Berhasil](docs/screenshots/08-berhasil-level-13.png) |
 
 ## Fondasi game yang sudah berjalan
 
@@ -57,7 +65,16 @@ Area Bermain v2: satu mainan bergantian, ajakan/otomatis, antrean dan cooldown.
 Area Perawatan v2: elus/sikat, antrean, batas Senang gabungan dan reaksi kucing.
 [Render dan verifikasi langkah 8](docs/design-v2/care/REVIEW.md).
 
-Generator screenshot dan merek di `test/screenshots/` masih mengikuti runtime yang lama; perbarui sesuai desain baru sebelum membuat materi final. Screenshot baru dibuat pada langkah 14 roadmap, bukan mengambil kembali gambar lama.
+Generator v2 dan pemeriksa inventaris:
+
+```sh
+flutter test test/screenshots/brand_test.dart --dart-define=BRAND=true
+flutter test test/screenshots/screenshot_test.dart --dart-define=SCREENSHOTS=true --dart-define=SCREENSHOT_DIR=docs/screenshots
+python tool/store_assets.py
+python tool/store_assets.py --check
+```
+
+Perintah Python mengekspor PNG toko RGB tanpa mengubah piksel tampilan dan mencatat hash aset. `--sheets` membuat lembar tinjauan di `build/store-review/`.
 
 ## Struktur
 

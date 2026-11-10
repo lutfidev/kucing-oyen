@@ -25,3 +25,5 @@ Versi aplikasi lama tersimpan di branch [`archive/v1-desain-lama`](https://githu
 
 - [Tutorial, petunjuk, koin dan Pengaturan langkah 12](guidance/REVIEW.md): seluruh bantuan v2, pengenalan rumah opsional, preferensi gerak global, reset area dan audit inventaris pemain.
 - [Animasi, suara, aksesibilitas dan performa langkah 13](polish/REVIEW.md): jeda lifecycle/rute, voice pool, cache SVG terbatas, render rumah penuh dan diagnostik host; profil 60 fps HP/TalkBack/audio native belum diuji dan diteruskan ke langkah 15.
+
+- [Merek dan materi toko langkah 14](store/REVIEW.md): launcher/splash v2, potret runtime empat bahasa, listing, galeri dan manifest aset.
