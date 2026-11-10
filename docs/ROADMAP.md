@@ -36,7 +36,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 9. Toko, koleksi, aksesoris, dan hias per area
 - [x] 10. Visual puzzle: papan, benda, dan Oyen
 - [x] 11. Peta babak, hasil level, dan putar ulang
-- [ ] 12. Tutorial, petunjuk, koin, dan Pengaturan
+- [x] 12. Tutorial, petunjuk, koin, dan Pengaturan
 - [ ] 13. Animasi, suara, aksesibilitas, dan performa
 - [ ] 14. Screenshot, ikon, splash, dan materi Play Store baru
 - [ ] 15. Pengujian menyeluruh di HP dan kandidat rilis
@@ -222,6 +222,16 @@ review independen dicatat. Berikutnya langkah 12 setelah PR ini di-merge.
 **Selesai jika:** semua hasil/transisi jelas dan pergantian tampilan tidak merusak progres.
 
 ## 12. Tutorial, petunjuk, koin, dan Pengaturan
+
+**Selesai implementasi 10 November 2026:** [tinjauan bantuan/Pengaturan v2](design-v2/guidance/REVIEW.md).
+Tutorial/aturan memakai rig rumah, sheet Petunjuk/Koin dan seluruh Pengaturan
+memakai panel/tombol v2. Bantuan rumah opsional, gerak global, reset area/antrean,
+retry simpan serta audit inventaris pemain tersedia. Transaksi bantuan produksi
+commit sebelum publish; kasus callback iklan/retry/reset ditutup dengan regresi.
+Verifikasi: 3.091 test lulus /135 skip, 24 kombinasi ukuran/bahasa/teks,
+28 render ditinjau, analyze/format/terjemahan/generator dan APK debug lulus.
+Batas uji HP/TalkBack/SDK/performa ada di laporan. Berikutnya langkah 13 setelah
+PR langkah ini di-merge.
 
 **Baca/ubah:** tutorial/aturan, sheet petunjuk/koin, layar Pengaturan, `lib/l10n/`, routing dan test terkait.
 

@@ -1,6 +1,6 @@
 # Desain v2 — bahan tinjauan langkah 1
 
-Status: **DISETUJUI pemilik repo pada 8 November 2026** setelah tinjauan mockup dan usulan aturan. Langkah 1 selesai; paket aset langkah 2 tersedia untuk tinjauan. Rumah pemain memakai desain v2 sejak implementasi langkah 5; layar lainnya masih memakai visual sebelumnya; integrasi dan penyelesaian mengikuti langkah 3–16. Masukan selanjutnya dicatat sebagai revisi spesifikasi.
+Status: **DISETUJUI pemilik repo pada 8 November 2026** setelah tinjauan mockup dan usulan aturan. Langkah 1 selesai; paket aset langkah 2 tersedia untuk tinjauan. Rumah pemain memakai desain v2 sejak implementasi langkah 5; seluruh rute pemain telah memakai v2 setelah langkah 12. Animasi/performa, merek dan materi toko serta pengujian perangkat dilanjutkan pada langkah 13–16. Masukan selanjutnya dicatat sebagai revisi spesifikasi.
 
 - [Spesifikasi](SPEC.md): aturan usulan dan batas implementasi.
 - [Inventaris layar dan keadaan](SCREENS.md): cakupan rute, sheet, dan keadaan gagal.
@@ -22,3 +22,5 @@ Versi aplikasi lama tersimpan di branch [`archive/v1-desain-lama`](https://githu
 
 - [Visual puzzle langkah 10](puzzle/REVIEW.md): papan/benda v2, rig Oyen rumah, baki dan kontrol; aturan 20 level dipertahankan.
 - [Peta, hasil, dan replay langkah 11](journey/REVIEW.md): dua peta, node/bos, transisi babak, ilustrasi hasil, awal/akhir dan kecepatan replay.
+
+- [Tutorial, petunjuk, koin dan Pengaturan langkah 12](guidance/REVIEW.md): seluruh bantuan v2, pengenalan rumah opsional, preferensi gerak global, reset area dan audit inventaris pemain.

@@ -181,3 +181,26 @@ tidak mengubah SimResult/hadiah. Cache paragraf nomor dibatasi 256 entri.
 Test `journey_v2_test.dart`, ekspor `JOURNEY_REVIEW=true`, laporan dan
 47 gambar di `docs/design-v2/journey/`. Berikutnya langkah 12 sesudah
 PR langkah 11 di-merge; tidak merge sendiri.
+
+## Tutorial, petunjuk, koin, Pengaturan v2 — langkah 12
+
+`guidance_art.dart` menggabungkan CatRig/PuzzleArt untuk kartu aturan/tutorial.
+`UiPanel`/`UiSheetHeader` memakai token v2; shell `KoSheet` mempertahankan
+back/drag/double-close, fokus dan 90% tinggi aman. `SheetButton` menjembatani
+ke `UiButton` dengan leading/silent/loading; teks tombol membungkus.
+`home_help.dart` adalah pengenalan opsional dari rumah/Pengaturan, bukan
+modal otomatis yang menghalangi puzzle. Preferensi gerak global di `app.dart`
+OR dengan sistem; jangan menimpa pilihan sistem dengan false aplikasi.
+
+`guidance_transactions.dart` menyimpan transaksi koin/petunjuk produksi
+sebelum publish. Kegagalan disimpan sebagai callback rebuild; `retrySaves`
+tidak memutar iklan/membayar ulang. Reservasi iklan mencegah bonus/petunjuk
+lain bersaing; callback menunggu reset yang aktif dan membandingkan revisi
+reset sukses. Transaksi yang sudah masuk antrean sebelum reset tetap berjalan
+dahulu. Reset gagal tidak membuang pending rumah/bantuan; sukses baru membuang
+semuanya, mereset area dan menjaga bahasa/audio/gerak/jatah hadiah. Adapter
+per-bagian test lama tetap optimistis. `GameAudio.saveFailed/retrySettings`
+menampilkan dan mencoba ulang simpan suara dengan antrean tulis berurutan.
+Test `guidance_progress_test`/`guidance_v2_test`, ekspor `GUIDANCE_REVIEW=true`,
+laporan di `docs/design-v2/guidance/REVIEW.md`. Langkah 13 setelah PR langkah 12
+di-merge; jangan merge sendiri.

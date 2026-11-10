@@ -174,3 +174,21 @@ ditambah awal/akhir, ×1/×2 dan jeda saat aplikasi masuk latar. Tidak mengubah
 ekonomi atau menambah hadiah untuk replay. Ini pilihan implementasi visual,
 bukan penerimaan visual pemilik repo atau kelulusan uji HP.
 [Bukti dan batas](design-v2/journey/REVIEW.md).
+
+## Tutorial, petunjuk, koin dan Pengaturan v2 — 10 November 2026
+
+Langkah 12 menerapkan panel paper, outline cokelat, tombol v2 yang membungkus,
+serta seni tutorial/aturan dari CatRig dan benda puzzle yang sama. Pengenalan
+rumah menjadi bantuan opsional melalui ikon ? di rumah dan Pengaturan;
+bisa dibuka ulang tanpa tanda simpanan baru atau modal awal yang menghalangi
+Main Puzzle. Pemberitahuan migrasi sekali saja tetap memakai kontrak langkah 4.
+Ini pilihan penyajian dari SPEC, tanpa perubahan ekonomi atau kebutuhan.
+
+Snapshot produksi kini menerbitkan bonus, hadiah iklan, pembayaran petunjuk dan
+reset setelah simpan sukses. Transaksi bantuan yang gagal dapat dicoba ulang
+tanpa membayar atau menonton ulang; reset gagal mempertahankan data sebelumnya.
+Reset sukses membuang area, tata letak, antrean dan kegiatan; bahasa, suara,
+kurangi gerak serta jatah hadiah tetap. Callback iklan lama dibuang hanya setelah
+reset sukses; reset gagal tidak menghilangkan hak hadiah yang telah didapat.
+Preferensi kurangi gerak tersimpan berlaku untuk semua rute dan digabung OR
+dengan preferensi sistem. Batas uji HP/performa tetap langkah 13–15.

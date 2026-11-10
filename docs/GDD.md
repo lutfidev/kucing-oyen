@@ -31,6 +31,14 @@ katalog, tanpa kuota tambahan. Otomatis bila Senang <70 atau diajak saat belum
 penuh: +10 Senang setelah 8 detik, sekali per 30 menit. Hadiah tetap gabungan
 10 koin/kucing/hari bila Makanan dan Senang ≥70. [Tinjauan Bermain](design-v2/play/REVIEW.md).
 
+Bantuan/Pengaturan v2 (langkah 12) memakai tutorial 1/3/6 yang dapat dilewati,
+lima kartu aturan dan tiga tingkat petunjuk berurutan. Bantuan rumah opsional
+mengenalkan area/ajakan/koleksi tanpa menghalangi puzzle. Bonus 20/hari, iklan
+20 maksimal 10/hari dan biaya petunjuk 20/40/80 tetap. Transaksi snapshot
+produksi diterbitkan setelah simpan sukses; retry tidak meminta iklan/bayaran
+ulang. Reset mencakup area/antrean/kegiatan dan tetap mempertahankan bahasa,
+suara, kurangi gerak dan jatah hadiah. [Bukti implementasi](design-v2/guidance/REVIEW.md).
+
 ## Aturan Oyen
 
 Setiap langkah, Oyen mengecek aturan dari atas ke bawah dan menjalankan aturan pertama yang cocok. Satu langkah = satu aksi. Urutan ini final dan dipakai solver; "jatuhkan barang" sengaja ditaruh sebelum "lihat ikan" supaya Oyen tetap iseng meski sedang mengejar ikan.
