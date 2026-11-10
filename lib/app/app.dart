@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../l10n/l10n.dart';
 import '../theme/theme.dart';
+import '../game/render/v2/art_pack.dart';
 import 'ad_consent.dart';
 import 'game_audio.dart';
 import 'language.dart';
@@ -26,6 +27,7 @@ class KucingOrenApp extends StatefulWidget {
     this.roomRandom,
     this.roomLife = true,
     this.homeBuilder,
+    this.loadShopArt,
   });
 
   /// Data level dan progres pemain, dibagikan ke semua layar. Tidak boleh
@@ -53,6 +55,8 @@ class KucingOrenApp extends StatefulWidget {
   /// to RoomScreen. Legacy room regressions can keep testing their component.
   @visibleForTesting
   final WidgetBuilder? homeBuilder;
+  @visibleForTesting
+  final Future<ArtPack> Function()? loadShopArt;
 
   @override
   State<KucingOrenApp> createState() => _KucingOrenAppState();
@@ -65,6 +69,7 @@ class _KucingOrenAppState extends State<KucingOrenApp>
     roomRandom: widget.roomRandom,
     roomLife: widget.roomLife,
     homeBuilder: widget.homeBuilder,
+    loadShopArt: widget.loadShopArt,
   );
   final ThemeData _theme = KoTheme.light();
   late final GameAudio _audio =

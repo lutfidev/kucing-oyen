@@ -72,6 +72,19 @@ Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API pen
 
 ## Aturan penting
 
+- Toko/Hias v2 langkah 9: runtime `ShopScreen` dan `buy_sheet.dart` memakai
+  `KoUi`, `CatalogArt`/`SnackArt`, tujuan dari `itemPurchaseSlot` dan
+  `kittyAdoptionArea`. `shop_parts.dart` tetap untuk galeri/regresi v1.
+  `area_decorate.dart` menyimpan draf `HomeAreas`, filter Gudang, slot aman,
+  seret/pilih-ketuk dan dialog Simpan/Buang/Lanjut. Pause dekorasi dijaga
+  sampai `route.completed`; editor ganda ditolak. `discardAreaLayoutSave`
+  membuang hanya transaksi layout gagal yang cocok, bukan pembelian lain.
+  Fasilitas berubah slot memutus kegiatan. `area_layout_preview.dart`
+  menggambar draf; jangan memakai `home.room.placed` sebagai Gudang v2.
+  Test `shop_v2_flow_test`/`shop_v2_test`; ekspor `SHOP_REVIEW=true`, laporan
+  `docs/design-v2/shop/REVIEW.md`. Harness `loadShopArt` memberi ArtPack
+  yang sudah dimuat untuk test/screenshot, tanpa cache runtime global.
+
 - Area Perawatan v2 langkah 8: `lib/game/model/care.dart` (`CareState`)
   memproyeksikan jatah gabungan elus/sikat dengan waktu efektif;
   `ProgressController.caring`/`canInviteCare`, `CarePanel` dan

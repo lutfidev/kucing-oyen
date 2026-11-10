@@ -12,6 +12,7 @@ import 'package:kucing_oren/screens/shop/shop_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
+import 'package:kucing_oren/widgets/v2/ui_button.dart';
 
 import '../test_helpers.dart';
 import 'result_fixtures.dart' show pumpFor;
@@ -64,14 +65,14 @@ void main() {
     await pumpApp(tester, location: AppRoutes.shop(tab: ShopTab.accessories));
     await settle(tester);
     expect(find.byType(ShopScreen), findsOneWidget);
-    // Tab terpilih memakai keadaan toggled KoPressable.
+    // Tab v2 memakai keadaan selected yang dibaca TalkBack sebagai pilihan.
     expect(
       tester.getSemantics(find.text('Aksesoris')),
-      isSemantics(isToggled: true, hasToggledState: true),
+      isSemantics(isSelected: true, hasSelectedState: true),
     );
     expect(
       tester.getSemantics(find.text('Barang')),
-      isSemantics(isToggled: false, hasToggledState: true),
+      isSemantics(isSelected: false, hasSelectedState: true),
     );
     semantics.dispose();
   });
@@ -339,5 +340,7 @@ void main() {
 }
 
 Finder _back(String label) => find.byWidgetPredicate(
-  (w) => w is KoIconButton && w.semanticLabel == label,
+  (w) =>
+      (w is KoIconButton && w.semanticLabel == label) ||
+      (w is UiButton && w.semanticLabel == label),
 );

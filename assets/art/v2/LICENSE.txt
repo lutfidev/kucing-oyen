@@ -37,3 +37,9 @@ using the playroom background as a style reference. No cats, grooming tools,
 mats or UI are embedded. Source and complete prompt:
 docs/design-v2/care/PAINTED_ASSET.md. Generated output follows the same
 service terms described above.
+
+Shop illustrations addition (10 November 2026):
+The five snack previews in lib/widgets/v2/snack_art.dart are original
+procedural Canvas artwork under the project license. Shop and accessory
+previews otherwise reuse the existing v2 vector inventory; no new external
+stock artwork or raster image is added by roadmap step 9.

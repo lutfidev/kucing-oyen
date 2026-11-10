@@ -14,14 +14,14 @@ Audit sumber: `lib/app/routes.dart`, `router.dart`, seluruh `lib/screens/`, dan 
 | H06 | kartu kucing | potret, kebutuhan bernilai, ajakan, Camilan, Aksesoris, Temukan | penuh/rendah; antrean urutan; ditolak karena jatah; nonaktif saat simpan | 03 + WF Kartu |
 | H07 | Camilan dalam kartu | stok, efek, Beri, link Toko | stok 0; kenyang; simpan gagal; berhasil; ketuk ganda | WF Camilan |
 | H08 | Aksesoris dalam kartu | pratinjau, daftar dimiliki, Pakai/Lepas, Toko | kosong; satu aktif; dipakai banyak kucing; panjang nama | WF Aksesoris |
-| H09 | Hias/Gudang | judul area, room slot, daftar barang, Simpan/Batal | awal; invalid/overlap; pindah area; Gudang; penuh; simpan gagal; dialog buang perubahan | WF Hias |
+| H09 | Hias/Gudang | judul area, room slot, daftar barang, Simpan/Batal | awal; invalid/overlap; pindah area; Gudang; penuh; simpan gagal; dialog buang perubahan | [runtime langkah 9](shop/REVIEW.md) |
 | H10 | hadiah rumah baru | rincian kucing sah, total, Ambil semua | 0/1/9; syarat berubah; sudah klaim; simpan gagal; berhasil | 03 + WF Hadiah |
 | H11 | pengenalan rumah/migrasi | satu kartu penjelasan, Lihat rumah, Tutup | pemain baru; progres v1 dengan barang Gudang; tidak tampil dua kali | WF Pengenalan |
-| S01 | `/toko?tab=items` | header kembali/saldo, empat tab, grid barang dan tujuan area | belum/dimiliki; koin kurang/pas; tujuan penuh; gulir ke kartu terakhir | 03 |
-| S02 | `/toko?tab=kitties` | kartu sembilan kucing dan harga, adopsi | dimiliki; Baru; kurang/pas; slot awal tujuan ditampilkan | WF Adopsi |
-| S03 | `/toko?tab=accessories` | pratinjau dan rarity, beli atau Pakai | biasa/langka/spesial; dimiliki; belum ada kucing dipilih | WF Beli |
-| S04 | `/toko?tab=snacks` | stok/harga/efek, beli | 0/banyak stok; koin kurang; simpan gagal | WF Beli |
-| S05 | konfirmasi pembelian | ilustrasi, nama, harga, saldo sesudah, tujuan, Beli/Batal | sudah dimiliki; kurang; ke Gudang; memproses; gagal; berhasil | WF Beli |
+| S01 | `/toko?tab=items` | header kembali/saldo, empat tab, grid barang dan tujuan area | belum/dimiliki; koin kurang/pas; tujuan penuh; gulir ke kartu terakhir | [runtime langkah 9](shop/REVIEW.md) |
+| S02 | `/toko?tab=kitties` | kartu sembilan kucing dan harga, adopsi | dimiliki; Baru; kurang/pas; slot awal tujuan ditampilkan | [runtime langkah 9](shop/REVIEW.md) |
+| S03 | `/toko?tab=accessories` | pratinjau dan rarity, beli atau Pakai | biasa/langka/spesial; dimiliki; belum ada kucing dipilih | [runtime langkah 9](shop/REVIEW.md) |
+| S04 | `/toko?tab=snacks` | stok/harga/efek, beli | 0/banyak stok; koin kurang; simpan gagal | [runtime langkah 9](shop/REVIEW.md) |
+| S05 | konfirmasi pembelian | ilustrasi, nama, harga, saldo sesudah, tujuan, Beli/Batal | sudah dimiliki; kurang; ke Gudang; memproses; gagal; berhasil | [runtime langkah 9](shop/REVIEW.md) |
 | C01 | `/babak/1` | Dapur, 10 node, bintang, navigasi babak | terkunci/terbuka/1–3 bintang/bos; baru buka; jalan dari hasil | 02 peta |
 | C02 | `/babak/2` | Ruang Tamu, 10 node level 11–20 | babak terkunci; terbuka; semua selesai; ulang level | 02 templat + WF Babak2 |
 | C03 | kartu babak baru `?baru=1` | ilustrasi babak, pesan singkat, Lanjut | animasi/kurangi gerak; kembali; ketuk dua kali | WF Babak baru |

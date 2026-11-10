@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-573 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+595 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -600,6 +600,28 @@ files and anything written there is overwritten.
 | `careActive` | Getting some care | Принимает ласку | Home grooming area: careActive | |
 | `careQueue` | Care queue: {count} | В очереди: {count} | Home grooming area: careQueue Placeholders: `{count}`. | |
 | `careChoose` | Choose a cat to care for | Выбрать котика для ухода | Home grooming area: careChoose | |
+| `shopDestination` | Destination: {area} | Куда: {area} | V2 shop or area decoration: shopDestination Placeholders: `{area}`. | |
+| `shopStored` | Storage · starting area is full | Склад · начальная зона заполнена | V2 shop or area decoration: shopStored | |
+| `shopBalanceAfter` | Balance after: {n} coins | После покупки: {n} монет | V2 shop or area decoration: shopBalanceAfter Placeholders: `{n}`. | |
+| `shopOwnedCollection` | Your collection | Твоя коллекция | V2 shop or area decoration: shopOwnedCollection | |
+| `shopAdoptIntro` | New friends for Oyen’s home. Check where they will settle in! | Новые друзья для дома Ойена. Посмотри, где они поселятся! | V2 shop or area decoration: shopAdoptIntro | |
+| `shopInArea` | Placed: {area} | Стоит: {area} | V2 shop or area decoration: shopInArea Placeholders: `{area}`. | |
+| `shopInStorage` | Safe in storage | Хранится на складе | V2 shop or area decoration: shopInStorage | |
+| `shopAlreadyOwned` | Already yours | Уже твоё | V2 shop or area decoration: shopAlreadyOwned | |
+| `decorateArea` | Decorate · {area} | Украсить · {area} | V2 shop or area decoration: decorateArea Placeholders: `{area}`. | |
+| `decoratePaused` | Decorating · all home activities are paused | Украшаем · все занятия в доме на паузе | V2 shop or area decoration: decoratePaused | |
+| `decorateInstructions` | Choose an item, then tap a slot or drag. Switch areas to place it there. | Выбери предмет и нажми на место или перетащи. Смени зону, чтобы поставить его там. | V2 shop or area decoration: decorateInstructions | |
+| `decorateSaveLayout` | Save layout | Сохранить расстановку | V2 shop or area decoration: decorateSaveLayout | |
+| `decorateDiscard` | Discard changes | Отменить изменения | V2 shop or area decoration: decorateDiscard | |
+| `decorateContinue` | Keep decorating | Продолжить украшать | V2 shop or area decoration: decorateContinue | |
+| `decorateUnsaved` | Save your home changes? | Сохранить изменения в доме? | V2 shop or area decoration: decorateUnsaved | |
+| `decorateStoreItem` | Move to storage | Убрать на склад | V2 shop or area decoration: decorateStoreItem | |
+| `decorateInvalid` | This slot does not fit. Choose a free slot in an allowed area. | Это место не подходит. Выбери свободное место в разрешённой зоне. | V2 shop or area decoration: decorateInvalid | |
+| `decorateSlot` | {zone} · slot {n} | {zone} · место {n} | V2 shop or area decoration: decorateSlot Placeholders: `{zone}`, `{n}`. | |
+| `decorateWall` | Wall | Стена | V2 shop or area decoration: decorateWall | |
+| `decorateFloor` | Floor | Пол | V2 shop or area decoration: decorateFloor | |
+| `decorateAllowed` | Allowed areas: {areas} | Разрешённые зоны: {areas} | V2 shop or area decoration: decorateAllowed Placeholders: `{areas}`. | |
+| `decorateBowlFixed` | The built-in bowl stays in the Dining Area. | Встроенная миска остаётся в зоне еды. | V2 shop or area decoration: decorateBowlFixed | |
 
 ---
 

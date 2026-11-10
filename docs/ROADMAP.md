@@ -33,7 +33,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 6. Area Makan: otomatis dan ajakan pemain
 - [x] 7. Area Bermain: otomatis dan ajakan pemain
 - [x] 8. Area Perawatan dan interaksi kucing
-- [ ] 9. Toko, koleksi, aksesoris, dan hias per area
+- [x] 9. Toko, koleksi, aksesoris, dan hias per area
 - [ ] 10. Visual puzzle: papan, benda, dan Oyen
 - [ ] 11. Peta babak, hasil level, dan putar ulang
 - [ ] 12. Tutorial, petunjuk, koin, dan Pengaturan
@@ -164,6 +164,15 @@ Langkah berikutnya 9 (Toko/koleksi/hias) setelah PR langkah 8 di-merge.
 **Selesai jika:** interaksi utuh dan sesuai spesifikasi; hukuman karena pemain lama tidak membuka aplikasi tidak ditambahkan tanpa keputusan desain.
 
 ## 9. Toko, koleksi, aksesoris, dan hias per area
+
+**Selesai implementasi pada 10 November 2026:** [tinjauan Toko/Hias](design-v2/shop/REVIEW.md).
+Katalog/pratinjau v2, koleksi/Temukan, tujuan area/Gudang dan saldo sesudah,
+adopsi dengan reservasi, aksesoris/camilan serta editor draf per area tersedia.
+Back/batal, Gudang, seret/pilih-ketuk, gagal/retry/discard dan pause sampai
+editor tertutup diuji. Review independen serta perbaikannya selesai.
+Verifikasi: 2.992 test lulus / 135 skip; 133 test terarah, analyze/format,
+terjemahan dan APK debug lulus. 24 screenshot ditinjau; batas HP/TalkBack
+dan profil perangkat dicatat. Berikutnya langkah 10 setelah PR ini di-merge.
 
 **Baca/ubah:** `lib/screens/shop/`, `room/decorate.dart`, `kitty_card.dart`, model katalog/rumah/progres; test toko/kartu/dekorasi.
 

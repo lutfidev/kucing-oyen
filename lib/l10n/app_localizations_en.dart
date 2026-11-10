@@ -2354,4 +2354,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get careChoose => 'Choose a cat to care for';
+
+  @override
+  String shopDestination(String area) {
+    return 'Destination: $area';
+  }
+
+  @override
+  String get shopStored => 'Storage · starting area is full';
+
+  @override
+  String shopBalanceAfter(int n) {
+    return 'Balance after: $n coins';
+  }
+
+  @override
+  String get shopOwnedCollection => 'Your collection';
+
+  @override
+  String get shopAdoptIntro =>
+      'New friends for Oyen’s home. Check where they will settle in!';
+
+  @override
+  String shopInArea(String area) {
+    return 'Placed: $area';
+  }
+
+  @override
+  String get shopInStorage => 'Safe in storage';
+
+  @override
+  String get shopAlreadyOwned => 'Already yours';
+
+  @override
+  String decorateArea(String area) {
+    return 'Decorate · $area';
+  }
+
+  @override
+  String get decoratePaused => 'Decorating · all home activities are paused';
+
+  @override
+  String get decorateInstructions =>
+      'Choose an item, then tap a slot or drag. Switch areas to place it there.';
+
+  @override
+  String get decorateSaveLayout => 'Save layout';
+
+  @override
+  String get decorateDiscard => 'Discard changes';
+
+  @override
+  String get decorateContinue => 'Keep decorating';
+
+  @override
+  String get decorateUnsaved => 'Save your home changes?';
+
+  @override
+  String get decorateStoreItem => 'Move to storage';
+
+  @override
+  String get decorateInvalid =>
+      'This slot does not fit. Choose a free slot in an allowed area.';
+
+  @override
+  String decorateSlot(String zone, int n) {
+    return '$zone · slot $n';
+  }
+
+  @override
+  String get decorateWall => 'Wall';
+
+  @override
+  String get decorateFloor => 'Floor';
+
+  @override
+  String decorateAllowed(String areas) {
+    return 'Allowed areas: $areas';
+  }
+
+  @override
+  String get decorateBowlFixed => 'The built-in bowl stays in the Dining Area.';
 }

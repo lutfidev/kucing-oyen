@@ -3126,5 +3126,126 @@
   "careChoose": "Choose a cat to care for",
   "@careChoose": {
     "description": "Home grooming area: careChoose"
+  },
+  "shopDestination": "Destination: {area}",
+  "@shopDestination": {
+    "description": "V2 shop or area decoration: shopDestination",
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "shopStored": "Storage · starting area is full",
+  "@shopStored": {
+    "description": "V2 shop or area decoration: shopStored"
+  },
+  "shopBalanceAfter": "Balance after: {n} coins",
+  "@shopBalanceAfter": {
+    "description": "V2 shop or area decoration: shopBalanceAfter",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "shopOwnedCollection": "Your collection",
+  "@shopOwnedCollection": {
+    "description": "V2 shop or area decoration: shopOwnedCollection"
+  },
+  "shopAdoptIntro": "New friends for Oyen’s home. Check where they will settle in!",
+  "@shopAdoptIntro": {
+    "description": "V2 shop or area decoration: shopAdoptIntro"
+  },
+  "shopInArea": "Placed: {area}",
+  "@shopInArea": {
+    "description": "V2 shop or area decoration: shopInArea",
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "shopInStorage": "Safe in storage",
+  "@shopInStorage": {
+    "description": "V2 shop or area decoration: shopInStorage"
+  },
+  "shopAlreadyOwned": "Already yours",
+  "@shopAlreadyOwned": {
+    "description": "V2 shop or area decoration: shopAlreadyOwned"
+  },
+  "decorateArea": "Decorate · {area}",
+  "@decorateArea": {
+    "description": "V2 shop or area decoration: decorateArea",
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "decoratePaused": "Decorating · all home activities are paused",
+  "@decoratePaused": {
+    "description": "V2 shop or area decoration: decoratePaused"
+  },
+  "decorateInstructions": "Choose an item, then tap a slot or drag. Switch areas to place it there.",
+  "@decorateInstructions": {
+    "description": "V2 shop or area decoration: decorateInstructions"
+  },
+  "decorateSaveLayout": "Save layout",
+  "@decorateSaveLayout": {
+    "description": "V2 shop or area decoration: decorateSaveLayout"
+  },
+  "decorateDiscard": "Discard changes",
+  "@decorateDiscard": {
+    "description": "V2 shop or area decoration: decorateDiscard"
+  },
+  "decorateContinue": "Keep decorating",
+  "@decorateContinue": {
+    "description": "V2 shop or area decoration: decorateContinue"
+  },
+  "decorateUnsaved": "Save your home changes?",
+  "@decorateUnsaved": {
+    "description": "V2 shop or area decoration: decorateUnsaved"
+  },
+  "decorateStoreItem": "Move to storage",
+  "@decorateStoreItem": {
+    "description": "V2 shop or area decoration: decorateStoreItem"
+  },
+  "decorateInvalid": "This slot does not fit. Choose a free slot in an allowed area.",
+  "@decorateInvalid": {
+    "description": "V2 shop or area decoration: decorateInvalid"
+  },
+  "decorateSlot": "{zone} · slot {n}",
+  "@decorateSlot": {
+    "description": "V2 shop or area decoration: decorateSlot",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "decorateWall": "Wall",
+  "@decorateWall": {
+    "description": "V2 shop or area decoration: decorateWall"
+  },
+  "decorateFloor": "Floor",
+  "@decorateFloor": {
+    "description": "V2 shop or area decoration: decorateFloor"
+  },
+  "decorateAllowed": "Allowed areas: {areas}",
+  "@decorateAllowed": {
+    "description": "V2 shop or area decoration: decorateAllowed",
+    "placeholders": {
+      "areas": {
+        "type": "String"
+      }
+    }
+  },
+  "decorateBowlFixed": "The built-in bowl stays in the Dining Area.",
+  "@decorateBowlFixed": {
+    "description": "V2 shop or area decoration: decorateBowlFixed"
   }
 }

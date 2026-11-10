@@ -605,6 +605,14 @@ Versi pertama berisi 20 level di dokumen ini, gratis, dengan iklan berhadiah seb
 
 ## Rumah Oyen dan desain baru
 
+Langkah 9 menghubungkan Toko v2, koleksi, aksesoris dan Hias per area.
+Pembelian menunjukkan tujuan area/Gudang serta saldo sesudah, dan adopsi
+memakai kapasitas termasuk reservasi perjalanan. Hias menggunakan draf
+slot aman, simpan/buang/lanjut dan Gudang tanpa mengubah kepemilikan;
+mangkuk tetap di Makan. Bonus hias hanya setelah layout berubah dan
+tetap maksimal +5 Senang/60 menit. Rutinitas dijeda selama editor.
+[Tinjauan langkah 9](design-v2/shop/REVIEW.md).
+
 Langkah 8 menyediakan Area Perawatan v2: alas/sikat gratis, satu kegiatan
 serentak dan satu posisi tunggu. Ajakan Elus (2 detik) dan Sikat (6 detik)
 memberi +10 Senang saat selesai, maksimal +30 gabungan per jam/kucing.

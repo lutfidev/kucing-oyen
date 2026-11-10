@@ -17,6 +17,7 @@ import '../screens/level/level_screen.dart';
 import '../screens/room/room_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/shop/shop_screen.dart';
+import '../game/render/v2/art_pack.dart';
 import 'routes.dart';
 
 /// [roomRandom] membuat pengacak posisi kucing tiap kamar dibuka; null =
@@ -27,6 +28,7 @@ GoRouter createRouter({
   Random Function()? roomRandom,
   bool roomLife = true,
   WidgetBuilder? homeBuilder,
+  Future<ArtPack> Function()? loadShopArt,
 }) {
   return GoRouter(
     initialLocation: initialLocation,
@@ -76,6 +78,7 @@ GoRouter createRouter({
           GoRoute(
             path: 'toko',
             builder: (context, state) => ShopScreen(
+              loadArt: loadShopArt,
               initialTab: ShopTab.parse(state.uri.queryParameters['tab']),
             ),
           ),

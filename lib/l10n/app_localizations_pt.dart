@@ -2374,4 +2374,86 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get careChoose => 'Escolha um gato para cuidar';
+
+  @override
+  String shopDestination(String area) {
+    return 'Destino: $area';
+  }
+
+  @override
+  String get shopStored => 'Depósito · área inicial cheia';
+
+  @override
+  String shopBalanceAfter(int n) {
+    return 'Saldo depois: $n moedas';
+  }
+
+  @override
+  String get shopOwnedCollection => 'Sua coleção';
+
+  @override
+  String get shopAdoptIntro =>
+      'Novos amigos para a casa do Oyen. Veja onde vão ficar!';
+
+  @override
+  String shopInArea(String area) {
+    return 'Na área: $area';
+  }
+
+  @override
+  String get shopInStorage => 'Guardado no depósito';
+
+  @override
+  String get shopAlreadyOwned => 'Já é seu';
+
+  @override
+  String decorateArea(String area) {
+    return 'Decorar · $area';
+  }
+
+  @override
+  String get decoratePaused =>
+      'Decorando · todas as atividades da casa estão pausadas';
+
+  @override
+  String get decorateInstructions =>
+      'Escolha um item e toque num espaço ou arraste. Mude de área para colocá-lo lá.';
+
+  @override
+  String get decorateSaveLayout => 'Salvar disposição';
+
+  @override
+  String get decorateDiscard => 'Descartar alterações';
+
+  @override
+  String get decorateContinue => 'Continuar decorando';
+
+  @override
+  String get decorateUnsaved => 'Salvar as mudanças da casa?';
+
+  @override
+  String get decorateStoreItem => 'Guardar no depósito';
+
+  @override
+  String get decorateInvalid =>
+      'Este espaço não serve. Escolha um espaço livre numa área permitida.';
+
+  @override
+  String decorateSlot(String zone, int n) {
+    return '$zone · espaço $n';
+  }
+
+  @override
+  String get decorateWall => 'Parede';
+
+  @override
+  String get decorateFloor => 'Chão';
+
+  @override
+  String decorateAllowed(String areas) {
+    return 'Áreas permitidas: $areas';
+  }
+
+  @override
+  String get decorateBowlFixed => 'A tigela da casa fica na Área de Refeições.';
 }
