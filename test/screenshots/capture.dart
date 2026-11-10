@@ -41,6 +41,7 @@ Future<void> captureFile(
     final file = File(path);
     await file.parent.create(recursive: true);
     await file.writeAsBytes(bytes!.buffer.asUint8List());
+    image.dispose();
   });
 }
 

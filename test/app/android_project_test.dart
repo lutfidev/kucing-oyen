@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kucing_oren/theme/theme.dart';
+import 'package:kucing_oren/theme/ko_ui.dart';
 
 const _app = 'android/app';
 const _main = '$_app/src/main';
@@ -153,8 +153,8 @@ void main() {
       expect(ids, isEmpty);
     });
 
-    test('warna krem sama dengan KoColors', () {
-      final cream = KoTheme.light().extension<KoColors>()!.cream;
+    test('warna krem sama dengan KoUi v2', () {
+      final cream = KoUi.cream;
       final hex = (cream.toARGB32() & 0xFFFFFF)
           .toRadixString(16)
           .padLeft(6, '0')

@@ -1,26 +1,21 @@
 import 'dart:ui';
 
-import 'design_svg.dart';
-import 'oyen.dart';
-import 'oyen_painter.dart';
 import 'svg_template.dart';
+import 'v2/puzzle_cat_sources.dart';
 
 /// Ukuran gambar merek (ikon launcher, splash, gambar toko): kepala Oyen
-/// depan bermata ngantuk dari sprite desain, tanpa badan dan bayangan.
+/// depan dari sumber rig rumah v2, tanpa badan dan bayangan.
 abstract final class BrandArt {
-  /// Kotak kepala (telinga sampai pipi) di viewBox Oyen 100×100.
-  static const headBox = Rect.fromLTRB(16, 8, 84, 68);
+  /// Kotak kepala (telinga sampai pipi) di viewBox rig Oyen 128×128.
+  static const headBox = Rect.fromLTRB(20, 25, 108, 97);
 
   /// Ambang terang (luminans 0–1) ikon monokrom: lebih terang = siluet,
   /// lebih gelap (mata, hidung, mulut, belang) = lubang.
   static const monoThreshold = 0.6;
 }
 
-final _head = SvgTemplate(oyenSvg).render({
-  ...oyenVals(const OyenLook()),
-  'isNormal': false,
-  'showTailSide': false,
-});
+final _head = SvgTemplate(puzzleCatSources['cats/oyen-head-open']!)
+    .render(const {});
 
 /// Menggambar kepala Oyen selebar [width] dengan pojok kiri atas
 /// [BrandArt.headBox] di titik asal kanvas.
