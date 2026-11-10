@@ -605,6 +605,14 @@ Versi pertama berisi 20 level di dokumen ini, gratis, dengan iklan berhadiah seb
 
 ## Rumah Oyen dan desain baru
 
+Langkah 8 menyediakan Area Perawatan v2: alas/sikat gratis, satu kegiatan
+serentak dan satu posisi tunggu. Ajakan Elus (2 detik) dan Sikat (6 detik)
+memberi +10 Senang saat selesai, maksimal +30 gabungan per jam/kucing.
+Sikat otomatis mengikuti scheduler dan batas sekali/30 menit; Elus hanya
+atas tindakan pemain. Panel/sheet menjelaskan Senang penuh atau sisa waktu
+jatah, antrean, serta batal setelah kegiatan. Tidak menambah kebersihan,
+mandi atau penalti offline. [Tinjauan langkah 8](design-v2/care/REVIEW.md).
+
 Langkah 4 menyediakan model empat area dan rutinitas tersimpan terpisah dari gambar: kapasitas 3/2/2/2, antrean pemain/otomatis, perjalanan berpasangan pada rumah penuh, pembatalan aman dan efek kegiatan sesuai kuota v1. Snapshot gameplay versi 2 dan backup v1 menjaga progres selama migrasi; aksi rumah baru diterbitkan setelah simpan sukses. [Kontrak integrasi dan verifikasi](design-v2/model/REVIEW.md). Layar rumah baru beserta penggerak lifecycle mengikuti langkah 5–9; runtime kamar v1 masih dipertahankan.
 
 Spesifikasi langkah 1 di [docs/design-v2](design-v2/README.md) disetujui pemilik repo pada 8 November 2026, mencakup alur empat area, kebutuhan/hadiah, migrasi dan seluruh keluarga layar. Implementasi mengikuti roadmap berikutnya; perilaku runtime lama tidak berubah dalam langkah dokumentasi ini.

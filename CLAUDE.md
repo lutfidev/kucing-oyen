@@ -72,6 +72,16 @@ Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API pen
 
 ## Aturan penting
 
+- Area Perawatan v2 langkah 8: `lib/game/model/care.dart` (`CareState`)
+  memproyeksikan jatah gabungan elus/sikat dengan waktu efektif;
+  `ProgressController.caring`/`canInviteCare`, `CarePanel` dan
+  `HomeSheets.caring` menyajikan siap/penuh/batas, ajakan dan batal.
+  Scene memakai `PaintedScenery.care`, alas gratis dan target sikat 48 dp,
+  slot rawat/tunggu serta pose rig yang sama. Kuota +30 Senang/jam,
+  durasi 2/6 detik dan skema snapshot tidak berubah. Test `care_flow_test`
+  dan `care_v2_test`; ekspor `--dart-define=CARE_REVIEW=true`, laporan
+  `docs/design-v2/care/REVIEW.md`.
+
 - Area Bermain v2 langkah 7: proyeksi `lib/game/model/play.dart` (`PlayState`)
   memakai jam efektif, `HomeAreas.playToy` menyatukan pilihan fasilitas scheduler
   dan scene. `PlayPanel`, `HomeSheets.playing`, `PlayToyPainter` menangani status,

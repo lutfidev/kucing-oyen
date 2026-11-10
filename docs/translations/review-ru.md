@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-563 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+573 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -590,6 +590,16 @@ files and anything written there is overwritten.
 | `playToy` | Toy: {toy} | Игрушка: {toy} | Play area: playToy Placeholders: `{toy}`. | |
 | `playQueue` | Waiting for a turn · {count} | Ждут очереди · {count} | Play area: playQueue Placeholders: `{count}`. | |
 | `playActive` | Playing now | Сейчас играет | Play area: playActive | |
+| `careTitle` | Time for some care | Время заботы | Home grooming area: careTitle | |
+| `careRules` | Pet for 2 seconds or brush for 6: +10 Joy, up to +30 combined per hour. | Погладить — 2 секунды, причесать — 6: +10 радости, вместе до +30 в час. | Home grooming area: careRules | |
+| `careReady` | Ready for care | Можно приласкать | Home grooming area: careReady | |
+| `careFull` | Joy is full | Радость на максимуме | Home grooming area: careFull | |
+| `careCooldown` | Care available in {minutes} min | Можно снова через {minutes} мин | Home grooming area: careCooldown Placeholders: `{minutes}`. | |
+| `careFree` | Grooming mat is free | Коврик свободен | Home grooming area: careFree | |
+| `careUsing` | {name} is getting care | Заботимся о {name} | Home grooming area: careUsing Placeholders: `{name}`. | |
+| `careActive` | Getting some care | Принимает ласку | Home grooming area: careActive | |
+| `careQueue` | Care queue: {count} | В очереди: {count} | Home grooming area: careQueue Placeholders: `{count}`. | |
+| `careChoose` | Choose a cat to care for | Выбрать котика для ухода | Home grooming area: careChoose | |
 
 ---
 

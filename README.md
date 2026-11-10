@@ -6,11 +6,11 @@ Game puzzle mobile tentang kucing oren yang bergerak sendiri mengikuti aturan te
 
 ## Arah baru
 
-Pada 8 November 2026, pemilik repo memilih perombakan seluruh visual mengikuti **konsep A — satu area per layar**, termasuk bentuk kucing, furnitur, UI dan layar puzzle. Rumah v2 sudah berjalan dengan Beranda Santai, Area Makan dan Bermain berilustrasi, aktivitas otomatis serta ajakan pemain. Area dan layar lainnya diselesaikan bertahap mengikuti roadmap.
+Pada 8 November 2026, pemilik repo memilih perombakan seluruh visual mengikuti **konsep A — satu area per layar**, termasuk bentuk kucing, furnitur, UI dan layar puzzle. Rumah v2 sudah berjalan dengan Beranda Santai, Area Makan, Bermain dan Perawatan berilustrasi, aktivitas otomatis serta ajakan pemain. Area dan layar lainnya diselesaikan bertahap mengikuti roadmap.
 
 ![Acuan baru Rumah Oyen — pilih konsep A di kiri](docs/design-brief/rumah-oyen-area/preview-perbandingan.png)
 
-- [Roadmap baru, berikutnya langkah 8](docs/ROADMAP.md)
+- [Roadmap baru, berikutnya langkah 9](docs/ROADMAP.md)
 - [Spesifikasi dan mockup desain v2 — disetujui](docs/design-v2/README.md)
 - [Brief arah desain](docs/design-brief/rumah-oyen-area/ARAH_DESAIN.md)
 - [Keputusan aktif](docs/DESIGN_NOTES.md)
@@ -48,6 +48,9 @@ antrean dan jatah per kucing. [Render dan verifikasi langkah 6](docs/design-v2/d
 
 Area Bermain v2: satu mainan bergantian, ajakan/otomatis, antrean dan cooldown.
 [Render dan verifikasi langkah 7](docs/design-v2/play/REVIEW.md).
+
+Area Perawatan v2: elus/sikat, antrean, batas Senang gabungan dan reaksi kucing.
+[Render dan verifikasi langkah 8](docs/design-v2/care/REVIEW.md).
 
 Generator screenshot dan merek di `test/screenshots/` masih mengikuti runtime yang lama; perbarui sesuai desain baru sebelum membuat materi final. Screenshot baru dibuat pada langkah 14 roadmap, bukan mengambil kembali gambar lama.
 
