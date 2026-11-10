@@ -2934,7 +2934,9 @@
     "description": "V2 player home: homeLoading."
   },
   "diningEmpty": "Bowl empty · fresh portions next cycle",
-  "@diningEmpty": {"description": "Dining area: no cat has a portion left in this cycle."},
+  "@diningEmpty": {
+    "description": "Dining area: no cat has a portion left in this cycle."
+  },
   "diningTitle": "Dinner time",
   "@diningTitle": {
     "description": "Dining area v2: diningTitle"
@@ -3005,5 +3007,69 @@
   "diningWaiting": "Waiting spot",
   "@diningWaiting": {
     "description": "Dining area v2: diningWaiting"
+  },
+  "playTitle": "Playtime",
+  "@playTitle": {
+    "description": "Play area: playTitle"
+  },
+  "playRules": "Play for 8 seconds: +10 Joy, once every 30 minutes. Cats can also play on their own.",
+  "@playRules": {
+    "description": "Play area: playRules"
+  },
+  "playReady": "Ready to play",
+  "@playReady": {
+    "description": "Play area: playReady"
+  },
+  "playFull": "Joy is full",
+  "@playFull": {
+    "description": "Play area: playFull"
+  },
+  "playCooldown": "Ready again in {minutes} min",
+  "@playCooldown": {
+    "description": "Play area: playCooldown",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "playFree": "Toy ready · one cat at a time",
+  "@playFree": {
+    "description": "Play area: playFree"
+  },
+  "playUsing": "{cat} is playing",
+  "@playUsing": {
+    "description": "Play area: playUsing",
+    "placeholders": {
+      "cat": {
+        "type": "String"
+      }
+    }
+  },
+  "playChoose": "Choose a playmate",
+  "@playChoose": {
+    "description": "Play area: playChoose"
+  },
+  "playToy": "Toy: {toy}",
+  "@playToy": {
+    "description": "Play area: playToy",
+    "placeholders": {
+      "toy": {
+        "type": "String"
+      }
+    }
+  },
+  "playQueue": "Waiting for a turn · {count}",
+  "@playQueue": {
+    "description": "Play area: playQueue",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playActive": "Playing now",
+  "@playActive": {
+    "description": "Play area: playActive"
   }
 }

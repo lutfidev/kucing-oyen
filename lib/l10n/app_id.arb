@@ -551,5 +551,16 @@
   "diningFree": "Mangkuk siap · satu kucing makan bergantian",
   "diningQueue": "Antrean makan · {count}",
   "diningChoose": "Pilih kucing untuk makan",
-  "diningWaiting": "Tempat menunggu"
+  "diningWaiting": "Tempat menunggu",
+  "playTitle": "Waktunya main",
+  "playRules": "Main 8 detik: +10 Senang, sekali tiap 30 menit. Oyen juga bisa main sendiri.",
+  "playReady": "Siap main",
+  "playFull": "Senang sudah penuh",
+  "playCooldown": "Bisa main lagi dalam {minutes} menit",
+  "playFree": "Mainan siap · satu kucing bergantian",
+  "playUsing": "{cat} sedang main",
+  "playChoose": "Pilih teman main",
+  "playToy": "Mainan: {toy}",
+  "playQueue": "Menunggu giliran · {count}",
+  "playActive": "Lagi asyik main"
 }

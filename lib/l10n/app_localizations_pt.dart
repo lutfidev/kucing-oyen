@@ -2295,4 +2295,46 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get diningWaiting => 'Lugar de espera';
+
+  @override
+  String get playTitle => 'Hora de brincar';
+
+  @override
+  String get playRules =>
+      'Brincar por 8 segundos: +10 de Alegria, uma vez a cada 30 minutos. Os gatos também brincam sozinhos.';
+
+  @override
+  String get playReady => 'Pronto para brincar';
+
+  @override
+  String get playFull => 'Alegria cheia';
+
+  @override
+  String playCooldown(int minutes) {
+    return 'Pode brincar de novo em $minutes min';
+  }
+
+  @override
+  String get playFree => 'Brinquedo livre · um gato por vez';
+
+  @override
+  String playUsing(String cat) {
+    return '$cat está brincando';
+  }
+
+  @override
+  String get playChoose => 'Escolher quem vai brincar';
+
+  @override
+  String playToy(String toy) {
+    return 'Brinquedo: $toy';
+  }
+
+  @override
+  String playQueue(int count) {
+    return 'Na fila para brincar · $count';
+  }
+
+  @override
+  String get playActive => 'Brincando agora';
 }

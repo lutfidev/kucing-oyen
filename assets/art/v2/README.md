@@ -35,3 +35,6 @@ Ikon/splash/merek, glyph UI, papan puzzle, ilustrasi hasil dan tutorial mengikut
 Runtime Makan langkah 6 juga menggunakan latar raster `scenes/makan-painted-v1.webp`,
 1024×1024/110.624 byte, di luar inventaris 209 SVG. Sumber, prompt dan hak keluaran:
 `docs/design-v2/dining/PAINTED_ASSET.md`. Mangkuk/kucing/UI tetap digambar live.
+
+Latar Bermain: `scenes/main-painted-v1.webp`; sumber, prompt dan biaya decode
+pada `docs/design-v2/play/PAINTED_ASSET.md`. Mainan tetap fasilitas live.

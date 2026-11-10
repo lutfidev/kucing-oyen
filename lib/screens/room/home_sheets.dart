@@ -18,6 +18,7 @@ import '../shop/shop_tab.dart';
 import 'home_labels.dart';
 import 'home_scene.dart';
 import 'dining_panel.dart';
+import 'play_panel.dart';
 
 enum _CatPanel { snacks, accessories }
 
@@ -185,6 +186,59 @@ class HomeSheets {
     footer: const SizedBox.shrink(),
   );
 
+  Future<void> playing() => showUiSheet<void>(
+    context,
+    title: l.playChoose,
+    closeLabel: l.close,
+    body: _live(
+      (_) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _error(),
+          Text(l.playRules, style: KoUi.small),
+          for (final kitty in KittyId.values.where(c.home.ownsKitty))
+            Padding(
+              padding: const EdgeInsets.only(bottom: KoUi.s12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(kittyName(l, kitty), style: KoUi.heading),
+                  Text(homeKittyStatus(l, c, kitty), style: KoUi.caption),
+                  Text(
+                    c.playing.playing == kitty
+                        ? l.playActive
+                        : playAvailabilityLabel(l, c.playing, kitty),
+                    style: KoUi.small,
+                  ),
+                  ..._needs(kitty),
+                  UiButton(
+                    key: ValueKey('play-invite-${kitty.name}'),
+                    label: l.homeInviteFor(
+                      kittyName(l, kitty),
+                      l.homeActivity('play'),
+                    ),
+                    onPressed: busy || !c.canInvitePlay(kitty)
+                        ? null
+                        : () {
+                            c.selectHomeKitty(kitty);
+                            c.inviteKitty(kitty, HomeActivity.play);
+                          },
+                  ),
+                  if (c.household.routine.invitations.containsKey(kitty))
+                    UiButton(
+                      label: l.homeCancelInvitation,
+                      kind: UiButtonKind.secondary,
+                      onPressed: busy ? null : () => c.cancelInvitation(kitty),
+                    ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    ),
+    footer: const SizedBox.shrink(),
+  );
+
   List<Widget> _needs(KittyId kitty) {
     final needs = c.catNeeds(kitty);
     return [
@@ -237,7 +291,9 @@ class HomeSheets {
                   onPressed:
                       busy ||
                           (activity == HomeActivity.eat &&
-                              !c.canEatFromBowl(kitty))
+                              !c.canEatFromBowl(kitty)) ||
+                          (activity == HomeActivity.play &&
+                              !c.canInvitePlay(kitty))
                       ? null
                       : () => c.inviteKitty(kitty, activity),
                 ),

@@ -30,6 +30,7 @@ class HomeScene extends StatefulWidget {
     required this.animate,
     this.sceneryProvider = PaintedScenery.lounge,
     this.onBowl,
+    this.onToy,
   });
   final ArtPack pack;
   final ProgressController progress;
@@ -39,6 +40,7 @@ class HomeScene extends StatefulWidget {
   final bool animate;
   final ImageProvider sceneryProvider;
   final VoidCallback? onBowl;
+  final VoidCallback? onToy;
 
   @override
   State<HomeScene> createState() => _HomeSceneState();
@@ -102,16 +104,21 @@ class _HomeSceneState extends State<HomeScene>
             key: const ValueKey('home-scene'),
             children: [
               if (widget.area == HomeArea.santai ||
-                  widget.area == HomeArea.makan)
+                  widget.area == HomeArea.makan ||
+                  widget.area == HomeArea.main)
                 Positioned.fill(
                   child: RepaintBoundary(
                     child: Image(
                       key: ValueKey(
                         widget.area == HomeArea.santai
                             ? 'home-painted-backdrop'
+                            : widget.area == HomeArea.main
+                            ? 'play-painted-backdrop'
                             : 'dining-painted-backdrop',
                       ),
-                      image: widget.area == HomeArea.makan
+                      image: widget.area == HomeArea.main
+                          ? PaintedScenery.play
+                          : widget.area == HomeArea.makan
                           ? PaintedScenery.dining
                           : widget.sceneryProvider,
                       fit: BoxFit.fill,
@@ -137,11 +144,42 @@ class _HomeSceneState extends State<HomeScene>
                       widget.area,
                       background:
                           widget.area != HomeArea.santai &&
-                          widget.area != HomeArea.makan,
+                          widget.area != HomeArea.makan &&
+                          widget.area != HomeArea.main,
                     ),
                   ),
                 ),
               ),
+              if (widget.area == HomeArea.main)
+                Positioned(
+                  left: 195 * scale,
+                  top: constraints.maxHeight * .88 - 56 * scale,
+                  width: math.max(48, 56 * scale),
+                  height: math.max(48, 56 * scale),
+                  child: Semantics(
+                    button: true,
+                    label: roomItemName(context.l10n, c.playing.toy),
+                    child: Tooltip(
+                      message: context.l10n.playChoose,
+                      child: GestureDetector(
+                        key: const ValueKey('play-toy'),
+                        behavior: HitTestBehavior.opaque,
+                        onTap: widget.onToy,
+                        child: RepaintBoundary(
+                          child: CustomPaint(
+                            painter: PlayToyPainter(
+                              widget.pack,
+                              c.playing.toy,
+                              time: widget.animate && c.playing.playing != null
+                                  ? _time
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               for (var i = 0; i < cats.length; i++)
                 _cat(
                   context,
@@ -199,12 +237,15 @@ class _HomeSceneState extends State<HomeScene>
     final c = widget.progress;
     final r = c.household.routine;
     final moving = r.moving(kitty);
-    final dining = widget.area == HomeArea.makan;
-    final eater = c.dining.eating;
-    final first = eater ?? _diningLead(r, widget.area);
-    final atBowl = dining && kitty == first;
-    final catSize = dining
-        ? (atBowl ? 168.0 : 140.0)
+    final facilityArea =
+        widget.area == HomeArea.makan || widget.area == HomeArea.main;
+    final eater = widget.area == HomeArea.main
+        ? c.playing.playing
+        : c.dining.eating;
+    final first = eater ?? _facilityLead(r, widget.area);
+    final atFacility = facilityArea && kitty == first;
+    final catSize = facilityArea
+        ? (atFacility ? 168.0 : 140.0)
         : count == 1
         ? 205.0
         : count == 2
@@ -215,8 +256,8 @@ class _HomeSceneState extends State<HomeScene>
         ? 130.0
         : 124.0;
     // Three safe, separate foreground slots, with room left for the doorway.
-    final x = dining
-        ? (atBowl ? 39.0 : 228.0)
+    final x = facilityArea
+        ? (atFacility ? (widget.area == HomeArea.main ? 35.0 : 39.0) : 228.0)
         : count == 1
         ? 94.0
         : count == 2
@@ -226,8 +267,8 @@ class _HomeSceneState extends State<HomeScene>
         : index == 1
         ? -3.0
         : 263.0;
-    var y = dining
-        ? ((height * (atBowl ? .88 : .82) - (catSize + 16) * scale) /
+    var y = facilityArea
+        ? ((height * (atFacility ? .88 : .82) - (catSize + 16) * scale) /
               height *
               390)
         : count == 3 && index == 2
@@ -237,8 +278,8 @@ class _HomeSceneState extends State<HomeScene>
     var direction = CatDirection.front;
     for (final trip in r.journeys.where((j) => j.cats.contains(kitty))) {
       if (!widget.animate) continue;
-      if (dining && trip.from == trip.to) {
-        // Already in Makan: approach the bowl from the waiting spot, rather
+      if (facilityArea && trip.from == trip.to) {
+        // Already in this area: approach the facility from the waiting spot, rather
         // than walking out to the doorway and back.
         dx = 228 + (x - 228) * trip.elapsed;
         direction = CatDirection.left;
@@ -274,8 +315,8 @@ class _HomeSceneState extends State<HomeScene>
       key: ValueKey('home-position-${kitty.name}'),
       roomHeight: height,
       scale: scale,
-      atBowl: atBowl,
-      duration: dining && widget.animate && !moving
+      atFacility: atFacility,
+      duration: facilityArea && widget.animate && !moving
           ? const Duration(milliseconds: 350)
           : Duration.zero,
       left: dx * scale,
@@ -347,11 +388,11 @@ class _CatPosition extends ImplicitlyAnimatedWidget {
     required this.height,
     required this.roomHeight,
     required this.scale,
-    required this.atBowl,
+    required this.atFacility,
     required this.child,
   }) : super(curve: Curves.easeInOut);
   final double left, top, width, height, roomHeight, scale;
-  final bool atBowl;
+  final bool atFacility;
   final Widget child;
   @override
   AnimatedWidgetBaseState<_CatPosition> createState() => _CatPositionState();
@@ -394,9 +435,9 @@ class _CatPositionState extends AnimatedWidgetBaseState<_CatPosition> {
       final arc = math.min(1.0, math.sin(animation.value * math.pi) * 1.25);
       final shrink = math.min(
         rect.width - 76 * widget.scale,
-        arc * (widget.atBowl ? 78 : 70) * widget.scale,
+        arc * (widget.atFacility ? 78 : 70) * widget.scale,
       );
-      final laneFeet = widget.atBowl
+      final laneFeet = widget.atFacility
           ? widget.roomHeight * .65
           : widget.roomHeight - KoUi.s8;
       final feet = rect.bottom + (laneFeet - rect.bottom) * arc;
@@ -445,7 +486,10 @@ class HomeCatPainter extends CustomPainter {
     ).paint(
       canvas,
       pack,
-      props: rig.motion != CatMotion.happy && rig.motion != CatMotion.eat,
+      props:
+          rig.motion != CatMotion.happy &&
+          rig.motion != CatMotion.eat &&
+          rig.motion != CatMotion.play,
     );
     canvas.restore();
   }
@@ -461,11 +505,13 @@ class _RoomLayers extends CustomPainter {
     this.area, {
     this.background = true,
     this.items = true,
-  }) : placed = c.household.areas.placed;
+  }) : placed = c.household.areas.placed,
+       playToy = c.playing.toy;
   final bool background, items;
   final ArtPack pack;
   final HomeArea area;
   final Map<RoomItemId, AreaSlot> placed;
+  final RoomItemId playToy;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -541,6 +587,7 @@ class _RoomLayers extends CustomPainter {
       for (final entry in placed.entries.where((e) => e.value.area == area)) {
         final id = entry.key;
         if (area == HomeArea.makan && id == RoomItemId.mangkuk) continue;
+        if (area == HomeArea.main && id == playToy) continue;
         final slot = entry.value;
         final part = pack['items/${id.name}-back'];
         final dimension = slot.zone == RoomZone.wall ? 62.0 : 90.0;
@@ -588,10 +635,11 @@ class _RoomLayers extends CustomPainter {
       old.area != area ||
       old.background != background ||
       old.items != items ||
+      old.playToy != playToy ||
       !identical(old.placed, placed);
 }
 
-KittyId? _diningLead(HomeRoutine routine, HomeArea area) {
+KittyId? _facilityLead(HomeRoutine routine, HomeArea area) {
   final present = routine.present(area);
   return routine.queueFor(area).where(present.contains).firstOrNull ??
       present.firstOrNull;
@@ -630,4 +678,50 @@ class DiningBowlPainter extends CustomPainter {
   @override
   bool shouldRepaint(DiningBowlPainter old) =>
       old.pack != pack || old.empty != empty;
+}
+
+/// One shared model-selected toy; the cat rig supplies movement, no extra ball.
+class PlayToyPainter extends CustomPainter {
+  PlayToyPainter(this.pack, this.toy, {this.time}) : super(repaint: time);
+  final ArtPack pack;
+  final RoomItemId toy;
+  final ValueNotifier<double>? time;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final part = pack['items/${toy.name}-back'];
+    final phase = time?.value ?? 0;
+    final loose =
+        toy == RoomItemId.bola ||
+        toy == RoomItemId.tikus ||
+        toy == RoomItemId.catnip;
+    final wave = time == null ? 0.0 : math.sin(phase * math.pi * 2 / .8);
+    final dimension = size.shortestSide * (loose ? 1.25 : .94);
+    final scale = math.min(
+      dimension / part.size.width,
+      dimension / part.size.height,
+    );
+    canvas.save();
+    canvas.translate(
+      (size.width - part.size.width * scale) / 2 + (loose ? wave * 4 : 0),
+      size.height - part.size.height * scale - 5,
+    );
+    canvas.drawOval(
+      Rect.fromLTWH(
+        0,
+        part.size.height * scale - 3,
+        part.size.width * scale,
+        6,
+      ),
+      Paint()..color = KoUi.homeShade,
+    );
+    canvas.scale(scale);
+    pack.paint(canvas, 'items/${toy.name}-back');
+    pack.paint(canvas, 'items/${toy.name}-front');
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(PlayToyPainter old) =>
+      old.pack != pack || old.toy != toy || old.time != time;
 }

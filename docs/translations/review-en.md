@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-552 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+563 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -579,6 +579,17 @@ files and anything written there is overwritten.
 | `diningQueue` | Dining queue · {count} | Antrean makan · {count} | Dining area v2: diningQueue Placeholders: `{count}`. | |
 | `diningChoose` | Choose a cat to eat | Pilih kucing untuk makan | Dining area v2: diningChoose | |
 | `diningWaiting` | Waiting spot | Tempat menunggu | Dining area v2: diningWaiting | |
+| `playTitle` | Playtime | Waktunya main | Play area: playTitle | |
+| `playRules` | Play for 8 seconds: +10 Joy, once every 30 minutes. Cats can also play on their own. | Main 8 detik: +10 Senang, sekali tiap 30 menit. Oyen juga bisa main sendiri. | Play area: playRules | |
+| `playReady` | Ready to play | Siap main | Play area: playReady | |
+| `playFull` | Joy is full | Senang sudah penuh | Play area: playFull | |
+| `playCooldown` | Ready again in {minutes} min | Bisa main lagi dalam {minutes} menit | Play area: playCooldown Placeholders: `{minutes}`. | |
+| `playFree` | Toy ready · one cat at a time | Mainan siap · satu kucing bergantian | Play area: playFree | |
+| `playUsing` | {cat} is playing | {cat} sedang main | Play area: playUsing Placeholders: `{cat}`. | |
+| `playChoose` | Choose a playmate | Pilih teman main | Play area: playChoose | |
+| `playToy` | Toy: {toy} | Mainan: {toy} | Play area: playToy Placeholders: `{toy}`. | |
+| `playQueue` | Waiting for a turn · {count} | Menunggu giliran · {count} | Play area: playQueue Placeholders: `{count}`. | |
+| `playActive` | Playing now | Lagi asyik main | Play area: playActive | |
 
 ---
 
