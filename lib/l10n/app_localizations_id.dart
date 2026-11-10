@@ -2176,4 +2176,41 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get playActive => 'Lagi asyik main';
+
+  @override
+  String get careTitle => 'Waktunya dimanja';
+
+  @override
+  String get careRules =>
+      'Elus 2 detik atau sikat 6 detik: +10 Senang, gabungan maksimal +30 per jam.';
+
+  @override
+  String get careReady => 'Siap dimanja';
+
+  @override
+  String get careFull => 'Senang sudah penuh';
+
+  @override
+  String careCooldown(int minutes) {
+    return 'Jatah kembali dalam $minutes menit';
+  }
+
+  @override
+  String get careFree => 'Alas rawat tersedia';
+
+  @override
+  String careUsing(String name) {
+    return '$name sedang dirawat';
+  }
+
+  @override
+  String get careActive => 'Sedang dimanja';
+
+  @override
+  String careQueue(int count) {
+    return 'Antrean rawat: $count';
+  }
+
+  @override
+  String get careChoose => 'Pilih kucing untuk dirawat';
 }

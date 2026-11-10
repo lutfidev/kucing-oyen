@@ -3071,5 +3071,60 @@
   "playActive": "Playing now",
   "@playActive": {
     "description": "Play area: playActive"
+  },
+  "careTitle": "Time for some care",
+  "@careTitle": {
+    "description": "Home grooming area: careTitle"
+  },
+  "careRules": "Pet for 2 seconds or brush for 6: +10 Joy, up to +30 combined per hour.",
+  "@careRules": {
+    "description": "Home grooming area: careRules"
+  },
+  "careReady": "Ready for care",
+  "@careReady": {
+    "description": "Home grooming area: careReady"
+  },
+  "careFull": "Joy is full",
+  "@careFull": {
+    "description": "Home grooming area: careFull"
+  },
+  "careCooldown": "Care available in {minutes} min",
+  "@careCooldown": {
+    "description": "Home grooming area: careCooldown",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "careFree": "Grooming mat is free",
+  "@careFree": {
+    "description": "Home grooming area: careFree"
+  },
+  "careUsing": "{name} is getting care",
+  "@careUsing": {
+    "description": "Home grooming area: careUsing",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "careActive": "Getting some care",
+  "@careActive": {
+    "description": "Home grooming area: careActive"
+  },
+  "careQueue": "Care queue: {count}",
+  "@careQueue": {
+    "description": "Home grooming area: careQueue",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "careChoose": "Choose a cat to care for",
+  "@careChoose": {
+    "description": "Home grooming area: careChoose"
   }
 }

@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-563 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+573 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -590,6 +590,16 @@ files and anything written there is overwritten.
 | `playToy` | Toy: {toy} | Mainan: {toy} | Play area: playToy Placeholders: `{toy}`. | |
 | `playQueue` | Waiting for a turn · {count} | Menunggu giliran · {count} | Play area: playQueue Placeholders: `{count}`. | |
 | `playActive` | Playing now | Lagi asyik main | Play area: playActive | |
+| `careTitle` | Time for some care | Waktunya dimanja | Home grooming area: careTitle | |
+| `careRules` | Pet for 2 seconds or brush for 6: +10 Joy, up to +30 combined per hour. | Elus 2 detik atau sikat 6 detik: +10 Senang, gabungan maksimal +30 per jam. | Home grooming area: careRules | |
+| `careReady` | Ready for care | Siap dimanja | Home grooming area: careReady | |
+| `careFull` | Joy is full | Senang sudah penuh | Home grooming area: careFull | |
+| `careCooldown` | Care available in {minutes} min | Jatah kembali dalam {minutes} menit | Home grooming area: careCooldown Placeholders: `{minutes}`. | |
+| `careFree` | Grooming mat is free | Alas rawat tersedia | Home grooming area: careFree | |
+| `careUsing` | {name} is getting care | {name} sedang dirawat | Home grooming area: careUsing Placeholders: `{name}`. | |
+| `careActive` | Getting some care | Sedang dimanja | Home grooming area: careActive | |
+| `careQueue` | Care queue: {count} | Antrean rawat: {count} | Home grooming area: careQueue Placeholders: `{count}`. | |
+| `careChoose` | Choose a cat to care for | Pilih kucing untuk dirawat | Home grooming area: careChoose | |
 
 ---
 

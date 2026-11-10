@@ -32,7 +32,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 5. Beranda Santai dan perpindahan area
 - [x] 6. Area Makan: otomatis dan ajakan pemain
 - [x] 7. Area Bermain: otomatis dan ajakan pemain
-- [ ] 8. Area Perawatan dan interaksi kucing
+- [x] 8. Area Perawatan dan interaksi kucing
 - [ ] 9. Toko, koleksi, aksesoris, dan hias per area
 - [ ] 10. Visual puzzle: papan, benda, dan Oyen
 - [ ] 11. Peta babak, hasil level, dan putar ulang
@@ -145,6 +145,17 @@ Langkah berikutnya 8 (Perawatan) setelah PR langkah 7 di-merge.
 **Selesai jika:** tindakan mudah dipahami dan perilaku/hadiah mengikuti keputusan langkah 1, tanpa kewajiban perawatan tambahan yang belum disepakati.
 
 ## 8. Area Perawatan dan interaksi kucing
+
+**Selesai implementasi 10 November 2026:** [tinjauan Perawatan v2](design-v2/care/REVIEW.md).
+Latar ilustrasi, alas/sikat gratis, posisi rawat/tunggu, elus/sikat,
+otomatis/ajakan, antrean/batal serta status penuh/batas gabungan tersedia.
+Kuota v1, snapshot dan hadiah tetap; tidak ada kebutuhan baru.
+Render empat bahasa, semantik, kurangi gerak dan regresi pause/reload/retry
+tersedia. Temuan sentuh dan Unicode diperbaiki dalam tinjauan sesi utama;
+batas review independen serta uji HP dicatat di laporan.
+Verifikasi: 2.968 test lulus / 135 skip, 86 test terarah, analyze/format
+bersih, terjemahan/generator sesuai, APK debug berhasil dan aset terkemas.
+Langkah berikutnya 9 (Toko/koleksi/hias) setelah PR langkah 8 di-merge.
 
 - Terapkan ruang/perlengkapan/kontrol/animasi perawatan yang disetujui: elus/sikat dan mandi bila dipilih. Jangan otomatis menambah kebutuhan baru.
 - Hubungkan otomatis/ajakan sesuai aktivitas, pembatalan aman dan reaksi yang singkat; tombol tidak terasa mengabaikan pemain.

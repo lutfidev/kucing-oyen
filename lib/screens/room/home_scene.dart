@@ -31,6 +31,7 @@ class HomeScene extends StatefulWidget {
     this.sceneryProvider = PaintedScenery.lounge,
     this.onBowl,
     this.onToy,
+    this.onCare,
   });
   final ArtPack pack;
   final ProgressController progress;
@@ -41,6 +42,7 @@ class HomeScene extends StatefulWidget {
   final ImageProvider sceneryProvider;
   final VoidCallback? onBowl;
   final VoidCallback? onToy;
+  final VoidCallback? onCare;
 
   @override
   State<HomeScene> createState() => _HomeSceneState();
@@ -105,18 +107,23 @@ class _HomeSceneState extends State<HomeScene>
             children: [
               if (widget.area == HomeArea.santai ||
                   widget.area == HomeArea.makan ||
-                  widget.area == HomeArea.main)
+                  widget.area == HomeArea.main ||
+                  widget.area == HomeArea.rawat)
                 Positioned.fill(
                   child: RepaintBoundary(
                     child: Image(
                       key: ValueKey(
-                        widget.area == HomeArea.santai
+                        widget.area == HomeArea.rawat
+                            ? 'care-painted-backdrop'
+                            : widget.area == HomeArea.santai
                             ? 'home-painted-backdrop'
                             : widget.area == HomeArea.main
                             ? 'play-painted-backdrop'
                             : 'dining-painted-backdrop',
                       ),
-                      image: widget.area == HomeArea.main
+                      image: widget.area == HomeArea.rawat
+                          ? PaintedScenery.care
+                          : widget.area == HomeArea.main
                           ? PaintedScenery.play
                           : widget.area == HomeArea.makan
                           ? PaintedScenery.dining
@@ -145,7 +152,8 @@ class _HomeSceneState extends State<HomeScene>
                       background:
                           widget.area != HomeArea.santai &&
                           widget.area != HomeArea.makan &&
-                          widget.area != HomeArea.main,
+                          widget.area != HomeArea.main &&
+                          widget.area != HomeArea.rawat,
                     ),
                   ),
                 ),
@@ -180,6 +188,40 @@ class _HomeSceneState extends State<HomeScene>
                     ),
                   ),
                 ),
+              if (widget.area == HomeArea.rawat) ...[
+                Positioned(
+                  left: 26 * scale,
+                  top: constraints.maxHeight * .88 - 24 * scale,
+                  width: 184 * scale,
+                  height: 38 * scale,
+                  child: const IgnorePointer(
+                    child: CustomPaint(painter: CareMatPainter()),
+                  ),
+                ),
+                Positioned(
+                  left: 195 * scale,
+                  top: constraints.maxHeight * .88 - 56 * scale,
+                  width: 48,
+                  height: 48,
+                  child: Tooltip(
+                    message: context.l10n.careChoose,
+                    child: Semantics(
+                      label: context.l10n.careChoose,
+                      button: true,
+                      child: InkWell(
+                        key: const ValueKey('care-brush'),
+                        onTap: widget.onCare,
+                        borderRadius: BorderRadius.circular(KoUi.buttonRadius),
+                        child: const Icon(
+                          Icons.brush_rounded,
+                          color: KoUi.ink,
+                          size: 34,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
               for (var i = 0; i < cats.length; i++)
                 _cat(
                   context,
@@ -238,8 +280,12 @@ class _HomeSceneState extends State<HomeScene>
     final r = c.household.routine;
     final moving = r.moving(kitty);
     final facilityArea =
-        widget.area == HomeArea.makan || widget.area == HomeArea.main;
-    final eater = widget.area == HomeArea.main
+        widget.area == HomeArea.makan ||
+        widget.area == HomeArea.main ||
+        widget.area == HomeArea.rawat;
+    final eater = widget.area == HomeArea.rawat
+        ? c.caring.using
+        : widget.area == HomeArea.main
         ? c.playing.playing
         : c.dining.eating;
     final first = eater ?? _facilityLead(r, widget.area);
@@ -257,7 +303,7 @@ class _HomeSceneState extends State<HomeScene>
         : 124.0;
     // Three safe, separate foreground slots, with room left for the doorway.
     final x = facilityArea
-        ? (atFacility ? (widget.area == HomeArea.main ? 35.0 : 39.0) : 228.0)
+        ? (atFacility ? (widget.area == HomeArea.makan ? 39.0 : 35.0) : 228.0)
         : count == 1
         ? 94.0
         : count == 2
@@ -724,4 +770,23 @@ class PlayToyPainter extends CustomPainter {
   @override
   bool shouldRepaint(PlayToyPainter old) =>
       old.pack != pack || old.toy != toy || old.time != time;
+}
+
+/// Structural free grooming mat; it never grants a second activity slot.
+class CareMatPainter extends CustomPainter {
+  const CareMatPainter();
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    canvas.drawOval(
+      rect.shift(const Offset(0, 3)),
+      Paint()..color = KoUi.homeShade,
+    );
+    canvas.drawOval(rect, Paint()..color = KoUi.homePeach);
+    canvas.drawOval(rect.deflate(4), Paint()..color = KoUi.homeCream);
+    canvas.drawOval(rect.deflate(7), Paint()..color = KoUi.homePaper);
+  }
+
+  @override
+  bool shouldRepaint(CareMatPainter old) => false;
 }

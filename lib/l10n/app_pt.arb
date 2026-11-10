@@ -562,5 +562,15 @@
   "playChoose": "Escolher quem vai brincar",
   "playToy": "Brinquedo: {toy}",
   "playQueue": "Na fila para brincar · {count}",
-  "playActive": "Brincando agora"
+  "playActive": "Brincando agora",
+  "careTitle": "Hora do carinho",
+  "careRules": "Carinho por 2 segundos ou escova por 6: +10 de Alegria, até +30 por hora entre os dois.",
+  "careReady": "Pode receber carinho",
+  "careFull": "Alegria cheia",
+  "careCooldown": "Carinho disponível em {minutes} min",
+  "careFree": "Tapetinho livre",
+  "careUsing": "{name} está recebendo cuidados",
+  "careActive": "Recebendo carinho",
+  "careQueue": "Fila de cuidados: {count}",
+  "careChoose": "Escolha um gato para cuidar"
 }

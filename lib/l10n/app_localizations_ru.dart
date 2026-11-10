@@ -2364,4 +2364,41 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get playActive => 'Сейчас играет';
+
+  @override
+  String get careTitle => 'Время заботы';
+
+  @override
+  String get careRules =>
+      'Погладить — 2 секунды, причесать — 6: +10 радости, вместе до +30 в час.';
+
+  @override
+  String get careReady => 'Можно приласкать';
+
+  @override
+  String get careFull => 'Радость на максимуме';
+
+  @override
+  String careCooldown(int minutes) {
+    return 'Можно снова через $minutes мин';
+  }
+
+  @override
+  String get careFree => 'Коврик свободен';
+
+  @override
+  String careUsing(String name) {
+    return 'Заботимся о $name';
+  }
+
+  @override
+  String get careActive => 'Принимает ласку';
+
+  @override
+  String careQueue(int count) {
+    return 'В очереди: $count';
+  }
+
+  @override
+  String get careChoose => 'Выбрать котика для ухода';
 }

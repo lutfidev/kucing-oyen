@@ -30,3 +30,10 @@ scenes/main-painted-v1.webp was generated with the built-in imagegen tool
 using the dining background as a style reference. No cats, toys or UI are
 embedded. Source and complete prompt: docs/design-v2/play/PAINTED_ASSET.md.
 Generated output follows the same service terms described above.
+
+Care scenery addition (10 November 2026):
+scenes/rawat-painted-v1.webp was generated with the built-in imagegen tool
+using the playroom background as a style reference. No cats, grooming tools,
+mats or UI are embedded. Source and complete prompt:
+docs/design-v2/care/PAINTED_ASSET.md. Generated output follows the same
+service terms described above.

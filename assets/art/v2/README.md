@@ -38,3 +38,7 @@ Runtime Makan langkah 6 juga menggunakan latar raster `scenes/makan-painted-v1.w
 
 Latar Bermain: `scenes/main-painted-v1.webp`; sumber, prompt dan biaya decode
 pada `docs/design-v2/play/PAINTED_ASSET.md`. Mainan tetap fasilitas live.
+
+Latar Perawatan: `scenes/rawat-painted-v1.webp`; sumber, prompt dan biaya
+decode pada `docs/design-v2/care/PAINTED_ASSET.md`. Alas, sikat dan kucing
+tetap fasilitas live. Empat latar rumah memakai anggaran decode 16 MiB RGBA.

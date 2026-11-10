@@ -121,6 +121,16 @@ Progres gameplay produksi memakai satu snapshot JSON versi 2, dengan backup ment
 
 Layar rumah v1 belum menjalankan scheduler v2. Integrasi layar, alasan pause/lifecycle/iklan, ringkasan migrasi dan preferensi sistem Kurangi gerak mengikuti langkah 5–9/12–13. Tidak ada angka ekonomi atau aturan simulator yang berubah.
 
+## Area Perawatan — langkah 8 (10 November 2026)
+
+Implementasi mengikuti SPEC: alas/sikat gratis, satu rawat + satu tunggu,
+elus 2 detik dan sikat 6 detik dengan jatah gabungan +30 Senang/jam.
+Sikat otomatis tetap sesekali dan maksimal sekali/30 menit; elus atas ajakan
+pemain. Status penuh/jatah, antrean dan batal tersedia di panel/sheet/kartu.
+Tidak ada kebutuhan atau ekonomi baru. Latar bergambar selaras area lain;
+karakter dan perlengkapan interaktif tetap live. Rincian hasil serta batas
+pengujian ada pada [review Perawatan](design-v2/care/REVIEW.md).
+
 ## Baseline sebelum paket aset v2
 
 - [Baseline performa kamar lama](performance-room-2026-11-08.md): 9 kucing, 21 barang termasuk mangkuk; sebelum/sesudah optimasi SVG, bingkai di atas 16,67 ms turun dari 14,3% menjadi 2,61%. Ini bukan kelulusan tampilan baru.

@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-563 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+573 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -590,6 +590,16 @@ files and anything written there is overwritten.
 | `playToy` | Toy: {toy} | Brinquedo: {toy} | Play area: playToy Placeholders: `{toy}`. | |
 | `playQueue` | Waiting for a turn · {count} | Na fila para brincar · {count} | Play area: playQueue Placeholders: `{count}`. | |
 | `playActive` | Playing now | Brincando agora | Play area: playActive | |
+| `careTitle` | Time for some care | Hora do carinho | Home grooming area: careTitle | |
+| `careRules` | Pet for 2 seconds or brush for 6: +10 Joy, up to +30 combined per hour. | Carinho por 2 segundos ou escova por 6: +10 de Alegria, até +30 por hora entre os dois. | Home grooming area: careRules | |
+| `careReady` | Ready for care | Pode receber carinho | Home grooming area: careReady | |
+| `careFull` | Joy is full | Alegria cheia | Home grooming area: careFull | |
+| `careCooldown` | Care available in {minutes} min | Carinho disponível em {minutes} min | Home grooming area: careCooldown Placeholders: `{minutes}`. | |
+| `careFree` | Grooming mat is free | Tapetinho livre | Home grooming area: careFree | |
+| `careUsing` | {name} is getting care | {name} está recebendo cuidados | Home grooming area: careUsing Placeholders: `{name}`. | |
+| `careActive` | Getting some care | Recebendo carinho | Home grooming area: careActive | |
+| `careQueue` | Care queue: {count} | Fila de cuidados: {count} | Home grooming area: careQueue Placeholders: `{count}`. | |
+| `careChoose` | Choose a cat to care for | Escolha um gato para cuidar | Home grooming area: careChoose | |
 
 ---
 
