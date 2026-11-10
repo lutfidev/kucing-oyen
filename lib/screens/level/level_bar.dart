@@ -26,8 +26,8 @@ class LevelTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final space = context.koSpace;
-    return SizedBox(
-      height: context.koSize.iconButton,
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: context.koSize.iconButton),
       child: Row(
         children: [
           KoIconButton(
@@ -39,11 +39,7 @@ class LevelTopBar extends StatelessWidget {
           Expanded(
             child: Semantics(
               header: true,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: AlignmentDirectional.centerStart,
-                child: Text(title, maxLines: 1, style: context.koType.heading),
-              ),
+              child: Text(title, style: context.koType.heading),
             ),
           ),
           SizedBox(width: space.s10),
@@ -66,7 +62,7 @@ class RulesButton extends StatelessWidget {
     return KoIconButton(
       icon: KoIcons.rules,
       semanticLabel: context.l10n.rules,
-      label: context.l10n.rules,
+      label: MediaQuery.sizeOf(context).width < 390 ? null : context.l10n.rules,
       onPressed: onPressed,
     );
   }

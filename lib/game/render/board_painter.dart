@@ -10,10 +10,9 @@ import '../sim/direction.dart';
 import '../sim/pos.dart';
 import 'board_scene.dart';
 import 'design_svg.dart';
-import 'oyen_painter.dart';
 import 'svg_template.dart';
 import 'tile.dart';
-import 'tile_painter.dart';
+import 'v2/puzzle_art.dart';
 
 /// Ukuran gambar papan dari `Board.dc.html`, di koordinat desain.
 abstract final class BoardArt {
@@ -189,7 +188,7 @@ void paintBoardTiles(
         (i % BoardScene.columns) * Tile.size,
         (i ~/ BoardScene.columns) * Tile.size,
       );
-    paintTile(canvas, scene.tiles[i], glowOpacity: glowOpacity);
+    paintPuzzleTile(canvas, scene.tiles[i], glowOpacity: glowOpacity);
     canvas.restore();
   }
 }
@@ -207,7 +206,7 @@ void paintBoardOyen(Canvas canvas, BoardScene scene, {Offset? at}) {
       tile.dx + BoardArt.oyenOffset.dx,
       tile.dy + BoardArt.oyenOffset.dy,
     );
-  paintOyen(canvas, oyen.look, size: BoardArt.oyenSize);
+  paintPuzzleOyen(canvas, oyen.look, size: BoardArt.oyenSize);
   canvas.restore();
   if (scene.showFacing) _paintFacing(canvas, tile, oyen.look.dir);
 }

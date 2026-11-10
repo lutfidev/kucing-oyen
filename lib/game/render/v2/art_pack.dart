@@ -13,6 +13,22 @@ import '../svg_template.dart';
 class ArtPack {
   ArtPack._(this.parts, this.sourceBytes);
 
+  /// Generated, finite subset for synchronous Flame/CustomPainter rendering.
+  /// Uses the same SVG sources as the house rig; no asset IO during paint.
+  factory ArtPack.oyen(Map<String, String> sources) => ArtPack._(
+    Map.unmodifiable({
+      for (final entry in sources.entries)
+        entry.key: ArtPart(
+          SvgTemplate(entry.value).render(const {}),
+          const Size(128, 128),
+          Offset.zero,
+          null,
+          null,
+        ),
+    }),
+    sources.values.fold(0, (bytes, svg) => bytes + utf8.encode(svg).length),
+  );
+
   final Map<String, ArtPart> parts;
   final int sourceBytes;
   static const base = 'assets/art/v2/';

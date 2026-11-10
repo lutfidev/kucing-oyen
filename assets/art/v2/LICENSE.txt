@@ -43,3 +43,9 @@ The five snack previews in lib/widgets/v2/snack_art.dart are original
 procedural Canvas artwork under the project license. Shop and accessory
 previews otherwise reuse the existing v2 vector inventory; no new external
 stock artwork or raster image is added by roadmap step 9.
+
+Puzzle addition (10 November 2026):
+lib/game/render/v2/puzzle_art.dart contains original procedural Canvas
+artwork under the project license. The embedded Oyen subset is generated
+from this pack by tool/art_v2/embed_puzzle.py and uses the same source and
+license as the house cat. No external stock artwork or new raster is used.

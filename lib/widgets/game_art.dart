@@ -5,6 +5,7 @@ import '../game/model/home_items.dart';
 import '../game/model/rules.dart';
 import '../game/model/snacks.dart';
 import '../game/render/render.dart';
+import '../game/render/v2/puzzle_art.dart';
 import '../game/sim/item.dart';
 import '../l10n/l10n.dart';
 import '../l10n/names.dart';
@@ -76,7 +77,7 @@ class _ItemArtPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.scale(size.width / ItemArt.viewBox);
-    paintItemArt(canvas, item, ghost: ghost);
+    paintPuzzleItem(canvas, item, ghost: ghost);
   }
 
   @override
@@ -145,7 +146,7 @@ class _LiftedItemPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) =>
-      paintLiftedItem(canvas, item, shadow: shadow);
+      paintPuzzleLiftedItem(canvas, item, shadow: shadow);
 
   @override
   bool shouldRepaint(_LiftedItemPainter old) =>
