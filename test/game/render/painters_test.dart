@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/render/render.dart';
-import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/game/render/v2/puzzle_art.dart';
+import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/theme/ko_ui.dart';
 
 /// Runtime board pixels with a 10px margin for its frame.
@@ -208,7 +208,7 @@ void main() {
       path: const [Pos(4, 3), Pos(5, 3), Pos(5, 4)],
     );
     final at = await _sampler(await _renderBoard(scene));
-    const line = Color(0xFFE07A10);
+    const line = KoUi.orangePressed;
     // Garis dari (225, 175): titik di 225–227, celah 9, titik 236–238.
     expect(at(226, 175), _near(line));
     expect(at(232, 175), _near(const Color(0xFFEDC791)));
@@ -228,13 +228,13 @@ void main() {
     );
     final at = await _sampler(await _renderBoard(scene));
     // Tidak menyala: isi krem dengan cincin 1,5 px oranye tua.
-    expect(at(52, 263), _near(const Color(0xFFE07A10)));
-    expect(at(55, 263), _near(const Color(0xFFFFFBF3)));
+    expect(at(52, 263), _near(KoUi.orangePressed));
+    expect(at(55, 263), _near(KoUi.paper));
     // Menyala: isi gelap dengan cincin 2 px oranye.
-    expect(at(102, 263), _near(const Color(0xFFF59A33)));
-    expect(at(105, 263), _near(const Color(0xFF3B2716)));
+    expect(at(102, 263), _near(KoUi.orange));
+    expect(at(105, 263), _near(KoUi.ink));
     // Tinggi 20: dari y 253 sampai 273, lalu lantai lagi.
-    expect(at(113, 254), _near(const Color(0xFF3B2716)));
+    expect(at(113, 254), _near(KoUi.ink));
     expect(at(113, 278), isNot(_near(const Color(0xFF3B2716))));
   });
 

@@ -210,7 +210,7 @@
   "brokenAtStep": "Pecah di langkah {n}",
   "tryAgain": "Coba Lagi",
   "nextAnyway": "Lanjut Saja",
-  "vaseArtLabel": "Vas pecah di belakang Oyen, Ibu muncul dari pintu dengan wajah kesal",
+  "vaseArtLabel": "Oyen sampai ke mangkuk, dengan pecahan vas di sampingnya",
   "loopTitle": "Oyen bosan mondar-mandir.",
   "loopBadge": "Muter terus",
   "loopMessage": "Jalannya muter-muter terus, nggak ketemu mangkuk. Ya sudah, tidur lagi.",
@@ -594,5 +594,7 @@
   "decorateWall": "Dinding",
   "decorateFloor": "Lantai",
   "decorateAllowed": "Bisa ditaruh: {areas}",
-  "decorateBowlFixed": "Mangkuk bawaan tetap di Area Makan."
+  "decorateBowlFixed": "Mangkuk bawaan tetap di Area Makan.",
+  "replayEnd": "Akhir",
+  "replayProgress": "Langkah {step} dari {total}"
 }

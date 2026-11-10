@@ -930,8 +930,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get nextAnyway => 'Всё равно дальше';
 
   @override
-  String get vaseArtLabel =>
-      'За Ойеном разбитая ваза, в дверях появляется недовольная мама';
+  String get vaseArtLabel => 'Ойен добрался до миски, рядом лежат осколки вазы';
 
   @override
   String get loopTitle => 'Ойену надоело ходить по кругу.';
@@ -2482,4 +2481,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get decorateBowlFixed => 'Встроенная миска остаётся в зоне еды.';
+
+  @override
+  String get replayEnd => 'Конец';
+
+  @override
+  String replayProgress(int step, int total) {
+    return 'Шаг $step из $total';
+  }
 }

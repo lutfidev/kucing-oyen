@@ -1176,7 +1176,7 @@
   "@nextAnyway": {
     "description": "Vase screen button: next level anyway."
   },
-  "vaseArtLabel": "The vase lies broken behind Oyen, and Mom pops in at the door, annoyed",
+  "vaseArtLabel": "Oyen reaches the bowl, with broken vase pieces beside him",
   "@vaseArtLabel": {
     "description": "Screen reader label of the vase screen picture."
   },
@@ -3247,5 +3247,21 @@
   "decorateBowlFixed": "The built-in bowl stays in the Dining Area.",
   "@decorateBowlFixed": {
     "description": "V2 shop or area decoration: decorateBowlFixed"
+  },
+  "replayEnd": "End",
+  "replayProgress": "Step {step} of {total}",
+  "@replayEnd": {
+    "description": "Replay control: jump to the final step."
+  },
+  "@replayProgress": {
+    "description": "Current replay step and total; includes step zero.",
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   }
 }

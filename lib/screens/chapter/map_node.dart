@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../game/model/chapter.dart';
 import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
+import '../../game/render/v2/journey_art.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
@@ -253,7 +254,7 @@ class _NodeIcon extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) =>
-      paintNodeIcon(canvas, object, size: size.width);
+      JourneyArt.node(canvas, object, size.width);
 
   @override
   bool shouldRepaint(_NodeIcon old) => old.object != object;

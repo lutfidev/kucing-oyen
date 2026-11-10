@@ -1365,7 +1365,7 @@ abstract class AppLocalizations {
   /// Screen reader label of the vase screen picture.
   ///
   /// In en, this message translates to:
-  /// **'The vase lies broken behind Oyen, and Mom pops in at the door, annoyed'**
+  /// **'Oyen reaches the bowl, with broken vase pieces beside him'**
   String get vaseArtLabel;
 
   /// Fail screen title: going in circles.
@@ -3671,6 +3671,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The built-in bowl stays in the Dining Area.'**
   String get decorateBowlFixed;
+
+  /// Replay control: jump to the final step.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get replayEnd;
+
+  /// Current replay step and total; includes step zero.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String replayProgress(int step, int total);
 }
 
 class _AppLocalizationsDelegate

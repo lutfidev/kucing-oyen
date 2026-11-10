@@ -920,7 +920,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vaseArtLabel =>
-      'The vase lies broken behind Oyen, and Mom pops in at the door, annoyed';
+      'Oyen reaches the bowl, with broken vase pieces beside him';
 
   @override
   String get loopTitle => 'Oyen got bored going in circles.';
@@ -2435,4 +2435,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get decorateBowlFixed => 'The built-in bowl stays in the Dining Area.';
+
+  @override
+  String get replayEnd => 'End';
+
+  @override
+  String replayProgress(int step, int total) {
+    return 'Step $step of $total';
+  }
 }

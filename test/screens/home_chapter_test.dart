@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kucing_oren/app/routes.dart';
+import 'package:kucing_oren/game/model/chapter.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/screens/chapter/chapter_header.dart';
-import 'package:kucing_oren/game/model/chapter.dart';
 import 'package:kucing_oren/screens/chapter/chapter_map.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
 import 'package:kucing_oren/screens/chapter/map_token.dart';
+import 'package:kucing_oren/theme/ko_ui.dart';
 import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
@@ -305,15 +306,15 @@ void main() {
       });
     }
 
-    testWidgets('latar Babak 1: ubin dapur', (tester) async {
+    testWidgets('latar Babak 1: krem v2', (tester) async {
       await pumpApp(tester, location: AppRoutes.chapter(1));
       expect(
         tester.widget<Scaffold>(find.byType(Scaffold).last).backgroundColor,
-        KoColors.standard.mapKitchen,
+        KoUi.cream,
       );
     });
 
-    testWidgets('latar Babak 2: lantai papan', (tester) async {
+    testWidgets('latar Babak 2: krem v2', (tester) async {
       await pumpApp(
         tester,
         location: AppRoutes.chapter(2),
@@ -321,7 +322,7 @@ void main() {
       );
       expect(
         tester.widget<Scaffold>(find.byType(Scaffold).last).backgroundColor,
-        KoColors.standard.mapFloor,
+        KoUi.cream,
       );
     });
   });
@@ -414,7 +415,7 @@ void main() {
       final mid = _tokenFoot(tester);
       expect((mid - from).distance, greaterThan(10));
       expect((mid - to).distance, greaterThan(10));
-      final pose = tester.widget<KittyView>(find.byType(KittyView)).look.pose;
+      final pose = tester.widget<MapToken>(find.byType(MapToken)).pose;
       expect(pose, anyOf(KittyPose.walk1, KittyPose.walk2));
       await pumpTime(tester, 0.5);
       expect((_tokenFoot(tester) - to).distance, lessThan(0.5));
@@ -530,7 +531,7 @@ void main() {
       final boss = nodeCenter(tester, 'Level 20, bos Hari Lebaran, 3 bintang');
       expect((_tokenFoot(tester) - boss).distance, lessThan(0.5));
       expect(
-        tester.widget<KittyView>(find.byType(KittyView)).look.pose,
+        tester.widget<MapToken>(find.byType(MapToken)).pose,
         KittyPose.happy,
       );
     });
@@ -553,7 +554,7 @@ void main() {
       // Level 3 → 4 di Babak 1 hampir lurus ke bawah (dx −6, dy 96).
       await pumpWalk(tester, won: 3, from: 3, chapter: 1);
       await pumpTime(tester, 0.8);
-      final look = tester.widget<KittyView>(find.byType(KittyView)).look;
+      final look = tester.widget<MapToken>(find.byType(MapToken));
       expect(look.pose, anyOf(KittyPose.walk1, KittyPose.walk2));
       expect(look.facing, KittyFacing.down);
     });

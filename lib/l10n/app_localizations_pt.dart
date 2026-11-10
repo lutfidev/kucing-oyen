@@ -933,7 +933,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get vaseArtLabel =>
-      'O vaso quebrado atrás do Oyen, e a Mamãe aparece na porta, brava';
+      'Oyen chega à tigela, com os cacos do vaso ao lado';
 
   @override
   String get loopTitle => 'Oyen cansou de andar em círculos.';
@@ -2456,4 +2456,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get decorateBowlFixed => 'A tigela da casa fica na Área de Refeições.';
+
+  @override
+  String get replayEnd => 'Fim';
+
+  @override
+  String replayProgress(int step, int total) {
+    return 'Passo $step de $total';
+  }
 }
