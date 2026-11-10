@@ -2401,4 +2401,85 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get careChoose => 'Выбрать котика для ухода';
+
+  @override
+  String shopDestination(String area) {
+    return 'Куда: $area';
+  }
+
+  @override
+  String get shopStored => 'Склад · начальная зона заполнена';
+
+  @override
+  String shopBalanceAfter(int n) {
+    return 'После покупки: $n монет';
+  }
+
+  @override
+  String get shopOwnedCollection => 'Твоя коллекция';
+
+  @override
+  String get shopAdoptIntro =>
+      'Новые друзья для дома Ойена. Посмотри, где они поселятся!';
+
+  @override
+  String shopInArea(String area) {
+    return 'Стоит: $area';
+  }
+
+  @override
+  String get shopInStorage => 'Хранится на складе';
+
+  @override
+  String get shopAlreadyOwned => 'Уже твоё';
+
+  @override
+  String decorateArea(String area) {
+    return 'Украсить · $area';
+  }
+
+  @override
+  String get decoratePaused => 'Украшаем · все занятия в доме на паузе';
+
+  @override
+  String get decorateInstructions =>
+      'Выбери предмет и нажми на место или перетащи. Смени зону, чтобы поставить его там.';
+
+  @override
+  String get decorateSaveLayout => 'Сохранить расстановку';
+
+  @override
+  String get decorateDiscard => 'Отменить изменения';
+
+  @override
+  String get decorateContinue => 'Продолжить украшать';
+
+  @override
+  String get decorateUnsaved => 'Сохранить изменения в доме?';
+
+  @override
+  String get decorateStoreItem => 'Убрать на склад';
+
+  @override
+  String get decorateInvalid =>
+      'Это место не подходит. Выбери свободное место в разрешённой зоне.';
+
+  @override
+  String decorateSlot(String zone, int n) {
+    return '$zone · место $n';
+  }
+
+  @override
+  String get decorateWall => 'Стена';
+
+  @override
+  String get decorateFloor => 'Пол';
+
+  @override
+  String decorateAllowed(String areas) {
+    return 'Разрешённые зоны: $areas';
+  }
+
+  @override
+  String get decorateBowlFixed => 'Встроенная миска остаётся в зоне еды.';
 }

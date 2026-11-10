@@ -30,6 +30,8 @@ extension HouseholdController on ProgressController {
 
   Household get household => _household;
   bool get householdPaused => _homePauses.isNotEmpty;
+  bool get householdDecorating =>
+      _homePauses.contains(HouseholdPause.decorating);
   bool get householdSaveFailed => _pendingHome != null;
   bool get householdBusy => _homeBusy;
 
@@ -200,7 +202,7 @@ extension HouseholdController on ProgressController {
     for (final entry in routine.activities.entries) {
       final facility = entry.value.facility;
       if (facility != null &&
-          normal.placed[facility]?.area != entry.value.kind.area) {
+          normal.placed[facility] != _household.areas.placed[facility]) {
         routine = routine.interrupt(entry.key);
       }
     }

@@ -2213,4 +2213,85 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get careChoose => 'Pilih kucing untuk dirawat';
+
+  @override
+  String shopDestination(String area) {
+    return 'Tujuan: $area';
+  }
+
+  @override
+  String get shopStored => 'Gudang · area awal penuh';
+
+  @override
+  String shopBalanceAfter(int n) {
+    return 'Saldo sesudah: $n koin';
+  }
+
+  @override
+  String get shopOwnedCollection => 'Koleksimu';
+
+  @override
+  String get shopAdoptIntro =>
+      'Teman baru untuk rumah Oyen. Lihat dulu area sambutannya!';
+
+  @override
+  String shopInArea(String area) {
+    return 'Dipajang: $area';
+  }
+
+  @override
+  String get shopInStorage => 'Aman di Gudang';
+
+  @override
+  String get shopAlreadyOwned => 'Sudah jadi milikmu';
+
+  @override
+  String decorateArea(String area) {
+    return 'Hias · $area';
+  }
+
+  @override
+  String get decoratePaused => 'Sedang dihias · semua kegiatan rumah dijeda';
+
+  @override
+  String get decorateInstructions =>
+      'Pilih barang, lalu ketuk slot atau seret. Pindah area untuk menaruhnya di sana.';
+
+  @override
+  String get decorateSaveLayout => 'Simpan tata letak';
+
+  @override
+  String get decorateDiscard => 'Buang perubahan';
+
+  @override
+  String get decorateContinue => 'Lanjut menghias';
+
+  @override
+  String get decorateUnsaved => 'Simpan perubahan rumah?';
+
+  @override
+  String get decorateStoreItem => 'Simpan ke Gudang';
+
+  @override
+  String get decorateInvalid =>
+      'Slot ini belum cocok. Pilih slot kosong di area yang diizinkan.';
+
+  @override
+  String decorateSlot(String zone, int n) {
+    return '$zone · slot $n';
+  }
+
+  @override
+  String get decorateWall => 'Dinding';
+
+  @override
+  String get decorateFloor => 'Lantai';
+
+  @override
+  String decorateAllowed(String areas) {
+    return 'Bisa ditaruh: $areas';
+  }
+
+  @override
+  String get decorateBowlFixed => 'Mangkuk bawaan tetap di Area Makan.';
 }

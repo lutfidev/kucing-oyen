@@ -14,6 +14,7 @@ import '../../theme/ko_ui.dart';
 import '../../widgets/v2/ui_button.dart';
 import '../../widgets/v2/ui_components.dart';
 import '../../widgets/v2/ui_sheet.dart';
+import '../../widgets/v2/catalog_art.dart';
 import '../shop/shop_tab.dart';
 import 'home_labels.dart';
 import 'home_scene.dart';
@@ -518,11 +519,25 @@ class HomeSheets {
           for (final id in c.home.closet.owned)
             Padding(
               padding: const EdgeInsets.only(top: KoUi.s8),
-              child: UiButton(
-                label: accessoryName(l, id),
-                kind: UiButtonKind.secondary,
-                selected: c.home.closet.wearingOf(kitty) == id,
-                onPressed: busy ? null : () => c.wearAccessory(kitty, id),
+              child: Row(
+                children: [
+                  if (pack != null)
+                    CatalogArt(
+                      pack: pack!,
+                      kitty: kitty,
+                      accessory: id,
+                      size: 72,
+                    ),
+                  const SizedBox(width: KoUi.s8),
+                  Expanded(
+                    child: UiButton(
+                      label: accessoryName(l, id),
+                      kind: UiButtonKind.secondary,
+                      selected: c.home.closet.wearingOf(kitty) == id,
+                      onPressed: busy ? null : () => c.wearAccessory(kitty, id),
+                    ),
+                  ),
+                ],
               ),
             ),
         ],

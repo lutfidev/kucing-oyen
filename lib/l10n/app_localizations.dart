@@ -3539,6 +3539,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose a cat to care for'**
   String get careChoose;
+
+  /// V2 shop or area decoration: shopDestination
+  ///
+  /// In en, this message translates to:
+  /// **'Destination: {area}'**
+  String shopDestination(String area);
+
+  /// V2 shop or area decoration: shopStored
+  ///
+  /// In en, this message translates to:
+  /// **'Storage · starting area is full'**
+  String get shopStored;
+
+  /// V2 shop or area decoration: shopBalanceAfter
+  ///
+  /// In en, this message translates to:
+  /// **'Balance after: {n} coins'**
+  String shopBalanceAfter(int n);
+
+  /// V2 shop or area decoration: shopOwnedCollection
+  ///
+  /// In en, this message translates to:
+  /// **'Your collection'**
+  String get shopOwnedCollection;
+
+  /// V2 shop or area decoration: shopAdoptIntro
+  ///
+  /// In en, this message translates to:
+  /// **'New friends for Oyen’s home. Check where they will settle in!'**
+  String get shopAdoptIntro;
+
+  /// V2 shop or area decoration: shopInArea
+  ///
+  /// In en, this message translates to:
+  /// **'Placed: {area}'**
+  String shopInArea(String area);
+
+  /// V2 shop or area decoration: shopInStorage
+  ///
+  /// In en, this message translates to:
+  /// **'Safe in storage'**
+  String get shopInStorage;
+
+  /// V2 shop or area decoration: shopAlreadyOwned
+  ///
+  /// In en, this message translates to:
+  /// **'Already yours'**
+  String get shopAlreadyOwned;
+
+  /// V2 shop or area decoration: decorateArea
+  ///
+  /// In en, this message translates to:
+  /// **'Decorate · {area}'**
+  String decorateArea(String area);
+
+  /// V2 shop or area decoration: decoratePaused
+  ///
+  /// In en, this message translates to:
+  /// **'Decorating · all home activities are paused'**
+  String get decoratePaused;
+
+  /// V2 shop or area decoration: decorateInstructions
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an item, then tap a slot or drag. Switch areas to place it there.'**
+  String get decorateInstructions;
+
+  /// V2 shop or area decoration: decorateSaveLayout
+  ///
+  /// In en, this message translates to:
+  /// **'Save layout'**
+  String get decorateSaveLayout;
+
+  /// V2 shop or area decoration: decorateDiscard
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes'**
+  String get decorateDiscard;
+
+  /// V2 shop or area decoration: decorateContinue
+  ///
+  /// In en, this message translates to:
+  /// **'Keep decorating'**
+  String get decorateContinue;
+
+  /// V2 shop or area decoration: decorateUnsaved
+  ///
+  /// In en, this message translates to:
+  /// **'Save your home changes?'**
+  String get decorateUnsaved;
+
+  /// V2 shop or area decoration: decorateStoreItem
+  ///
+  /// In en, this message translates to:
+  /// **'Move to storage'**
+  String get decorateStoreItem;
+
+  /// V2 shop or area decoration: decorateInvalid
+  ///
+  /// In en, this message translates to:
+  /// **'This slot does not fit. Choose a free slot in an allowed area.'**
+  String get decorateInvalid;
+
+  /// V2 shop or area decoration: decorateSlot
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · slot {n}'**
+  String decorateSlot(String zone, int n);
+
+  /// V2 shop or area decoration: decorateWall
+  ///
+  /// In en, this message translates to:
+  /// **'Wall'**
+  String get decorateWall;
+
+  /// V2 shop or area decoration: decorateFloor
+  ///
+  /// In en, this message translates to:
+  /// **'Floor'**
+  String get decorateFloor;
+
+  /// V2 shop or area decoration: decorateAllowed
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed areas: {areas}'**
+  String decorateAllowed(String areas);
+
+  /// V2 shop or area decoration: decorateBowlFixed
+  ///
+  /// In en, this message translates to:
+  /// **'The built-in bowl stays in the Dining Area.'**
+  String get decorateBowlFixed;
 }
 
 class _AppLocalizationsDelegate

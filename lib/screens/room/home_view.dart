@@ -22,6 +22,7 @@ import 'home_sheets.dart';
 import 'dining_panel.dart';
 import 'play_panel.dart';
 import 'care_panel.dart';
+import 'area_decorate.dart';
 
 /// The v2 player home. Model changes publish only after their snapshot saves.
 class HomeView extends StatefulWidget {
@@ -196,6 +197,30 @@ class _HomeViewState extends State<HomeView> {
                           () => c.retrySaves(),
                           l.homeRetry,
                         ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              homeAreaLabel(l, area),
+                              style: KoUi.heading,
+                            ),
+                          ),
+                          UiButton(
+                            key: const ValueKey('home-decorate'),
+                            homeStyle: true,
+                            label: l.decorate,
+                            icon: Icons.edit_outlined,
+                            kind: UiButtonKind.secondary,
+                            onPressed:
+                                pack == null ||
+                                    c.householdBusy ||
+                                    c.householdSaveFailed
+                                ? null
+                                : () => showAreaDecorate(context, c, pack),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: KoUi.s8),
                       if (pack != null)
                         SizedBox(
                           height: (box.maxHeight - 430).clamp(

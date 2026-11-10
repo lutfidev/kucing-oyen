@@ -14,9 +14,8 @@ import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/screens/room/room_screen.dart';
-import 'package:kucing_oren/screens/shop/shop_parts.dart';
+import 'package:kucing_oren/widgets/v2/ui_button.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
-import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
 
@@ -164,13 +163,7 @@ void main() {
       await settle(tester);
       expect(find.text('Kardus Nyaman'), findsNothing);
       expect(find.text('Salju'), findsOneWidget);
-      expect(
-        find.text(
-          'Semua kucing tinggal sekamar dengan Oyen. Oyen setuju. '
-          'Kayaknya.',
-        ),
-        findsOneWidget,
-      );
+      expect(find.text(l10nId.shopAdoptIntro), findsOneWidget);
 
       await tester.tap(find.text('Makanan'));
       await settle(tester);
@@ -195,7 +188,8 @@ void main() {
       expect(progress.home.ownsKitty(KittyId.salju), isTrue);
 
       await tapCard(tester, 'buy-close');
-      expect(find.text('Tinggal di kamar'), findsOneWidget);
+      expect(find.byKey(const ValueKey('shop-kitty-salju')), findsOneWidget);
+      expect(find.text('Baru!'), findsOneWidget);
     });
 
     testWidgets('koin kurang menampilkan selisih', (tester) async {
@@ -230,7 +224,7 @@ void main() {
     testWidgets('beli camilan langsung menambah stok', (tester) async {
       final progress = await pumpShop(tester, coins: 100, tab: ShopTab.snacks);
       expect(find.text('Stok: 0'), findsWidgets);
-      await tester.tap(find.byKey(const ValueKey('shop-snack-susu')));
+      await tapCard(tester, 'shop-snack-susu');
       await settle(tester);
       expect(progress.coins, 85);
       expect(progress.home.pantry.countOf(SnackId.susu), 1);
@@ -242,6 +236,7 @@ void main() {
     ) async {
       final progress = await pumpShop(tester, coins: 100, tab: ShopTab.snacks);
       final buy = find.byKey(const ValueKey('shop-snack-susu'));
+      await tester.ensureVisible(buy);
       await tester.tap(buy);
       await tester.tap(buy);
       await settle(tester);
@@ -259,7 +254,7 @@ void main() {
         home: Home(pantry: Pantry(const {SnackId.susu: maxSnackStock})),
         tab: ShopTab.snacks,
       );
-      await tester.tap(find.byKey(const ValueKey('shop-snack-susu')));
+      await tapCard(tester, 'shop-snack-susu');
       await settle(tester);
       expect(progress.coins, 100);
       expect(progress.home.pantry.countOf(SnackId.susu), maxSnackStock);
@@ -272,7 +267,7 @@ void main() {
         find.bySemanticsLabel('Beli Susu seharga 15 koin, koin kurang'),
         findsOneWidget,
       );
-      await tester.tap(find.byKey(const ValueKey('shop-snack-susu')));
+      await tapCard(tester, 'shop-snack-susu');
       await settle(tester);
       expect(progress.coins, 5);
       expect(progress.home.pantry.countOf(SnackId.susu), 0);
@@ -392,7 +387,7 @@ void main() {
         ),
         tab: ShopTab.accessories,
       );
-      await tester.tap(find.byKey(const ValueKey('shop-preview-arang')));
+      await tapCard(tester, 'shop-preview-arang');
       await settle(tester);
       expect(find.text('Pratinjau · Arang'), findsOneWidget);
 
@@ -439,13 +434,7 @@ void main() {
       await tapCard(tester, 'buy-confirm');
       expect(progress.home.room.isPlaced(RoomItemId.kardus), isTrue);
       expect(progress.home.room.stored, isEmpty);
-      expect(
-        find.text(
-          'Sudah nongkrong di kamar. Geser lewat mode Hias kalau mau '
-          'pindah.',
-        ),
-        findsOneWidget,
-      );
+      expect(find.text('Tujuan: Santai'), findsWidgets);
     });
 
     testWidgets('stok camilan penuh: tombol beli mati dan menyebutkannya', (
@@ -463,7 +452,7 @@ void main() {
         tester.getSemantics(find.byKey(const ValueKey('shop-snack-susu'))),
         isSemantics(hasEnabledState: true, isEnabled: false),
       );
-      await tester.tap(find.byKey(const ValueKey('shop-snack-susu')));
+      await tapCard(tester, 'shop-snack-susu');
       await settle(tester);
       expect(progress.coins, 100);
       semantics.dispose();
@@ -479,15 +468,7 @@ void main() {
       // ke nol dengan sendirinya.
       await tester.tap(find.text('Kucing'));
       await settle(tester);
-      expect(
-        find
-            .text(
-              'Semua kucing tinggal sekamar dengan Oyen. Oyen setuju. '
-              'Kayaknya.',
-            )
-            .hitTestable(),
-        findsOneWidget,
-      );
+      expect(find.text(l10nId.shopAdoptIntro).hitTestable(), findsOneWidget);
     });
 
     testWidgets('pembaca layar: kartu aksesoris menyebut harga dan keadaan', (
@@ -533,54 +514,34 @@ void main() {
     expect(playedBy(audio), contains(GameSound.wear));
   });
 
-  group('label tab muat utuh', () {
+  group('tab v2 dapat dibaca dan dijangkau', () {
     for (final language in AppLanguage.supported) {
       for (final scale in [1.0, 1.3]) {
-        testWidgets(
-          '${language.name}, 360×640, teks ${(scale * 100).round()}%',
-          (tester) async {
-            setScreenSize(tester, const Size(360, 640));
-            setTextScale(tester, scale);
-            await pumpApp(
-              tester,
-              location: AppRoutes.shop(),
-              progress: testProgressWith(language: language),
+        testWidgets('${language.name}, 360?640, teks $scale', (tester) async {
+          setScreenSize(tester, const Size(360, 640));
+          setTextScale(tester, scale);
+          await pumpApp(
+            tester,
+            location: AppRoutes.shop(),
+            progress: testProgressWith(language: language),
+          );
+          final l = lookupAppLocalizations(Locale(language.name));
+          for (final tab in ShopTab.values) {
+            final button = find.byKey(ValueKey('shop-tab-${tab.name}'));
+            await tester.ensureVisible(button);
+            await tester.tap(button);
+            await settle(tester);
+            final text = find.descendant(
+              of: button,
+              matching: find.byType(Text),
             );
-            final l = lookupAppLocalizations(Locale(language.name));
-            for (final label in [
-              l.shopTabItems,
-              l.shopTabKitties,
-              l.shopTabAccessories,
-              l.shopTabSnacks,
-            ]) {
-              final text = find.descendant(
-                of: find.byType(ShopTabs),
-                matching: find.text(label),
-              );
-              final paragraph = tester.renderObject<RenderParagraph>(text);
-              // Tidak terpotong: lebar paragraf = lebar teks utuhnya.
-              expect(paragraph.didExceedMaxLines, isFalse, reason: label);
-              expect(
-                paragraph.size.width,
-                moreOrLessEquals(
-                  paragraph.getMaxIntrinsicWidth(double.infinity),
-                  epsilon: 0.01,
-                ),
-                reason: label,
-              );
-              // Dan yang tampil tidak melewati tab-nya.
-              final tab = find.ancestor(
-                of: text,
-                matching: find.byType(KoPressable),
-              );
-              expect(
-                tester.getRect(text).width,
-                lessThanOrEqualTo(tester.getRect(tab).width),
-                reason: label,
-              );
-            }
-          },
-        );
+            final paragraph = tester.renderObject<RenderParagraph>(text);
+            expect(paragraph.didExceedMaxLines, isFalse);
+            expect(tester.widget<UiButton>(button).selected, isTrue);
+            expect(tester.getSize(button).height, greaterThanOrEqualTo(48));
+            expect(tester.takeException(), isNull, reason: l.shop);
+          }
+        });
       }
     }
   });

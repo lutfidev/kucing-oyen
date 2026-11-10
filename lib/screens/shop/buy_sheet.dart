@@ -5,73 +5,73 @@ import '../../app/game_audio.dart';
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/accessories.dart';
+import '../../game/model/home_areas.dart';
 import '../../game/model/home_items.dart';
 import '../../game/model/kitties.dart';
 import '../../game/model/sounds.dart';
-import '../../game/render/render.dart';
+import '../../game/render/v2/art_pack.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
-import '../../theme/theme.dart';
-import '../../widgets/widgets.dart';
+import '../../theme/ko_ui.dart';
+import '../../widgets/v2/catalog_art.dart';
+import '../../widgets/v2/ui_button.dart';
+import '../../widgets/v2/ui_sheet.dart';
+import '../room/home_labels.dart';
 
-/// Yang sedang dibeli di sheet konfirmasi (`SheetBeli.dc.html`).
 sealed class BuyTarget {
   const BuyTarget();
-
   int get price;
 }
 
 class BuyItem extends BuyTarget {
   const BuyItem(this.id);
-
   final RoomItemId id;
-
   @override
   int get price => roomItemOf(id).price;
 }
 
 class BuyKitty extends BuyTarget {
   const BuyKitty(this.id);
-
   final KittyId id;
-
   @override
   int get price => kittyOf(id).price;
 }
 
 class BuyAccessory extends BuyTarget {
   const BuyAccessory(this.id);
-
   final AccessoryId id;
-
   @override
   int get price => accessoryOf(id).price;
 }
 
-/// Sheet konfirmasi beli: gambar besar, nama, deskripsi, lalu tombol beli,
-/// "Koin kurang · N", atau — sesudah berhasil — "Lihat di kamar" atau
-/// "Pakai di `<kucing>`". [previewKitty] = kucing yang memakai aksesorisnya.
-/// [onWear] dipanggil kalau pemain memakai aksesoris yang baru dibeli.
 Future<void> showBuySheet(
   BuildContext context, {
   required BuyTarget target,
   required ProgressController progress,
   KittyId previewKitty = KittyId.oyen,
   void Function(AccessoryId id)? onWear,
-}) {
-  final l = context.l10n;
-  return showKoSheet(
-    context,
-    barrierLabel: l.close,
-    builder: (context, onClose) => _BuySheet(
-      target: target,
-      progress: progress,
-      previewKitty: previewKitty,
-      onWear: onWear,
-      onClose: onClose,
-    ),
-  );
-}
+  ArtPack? pack,
+}) => showModalBottomSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  useSafeArea: true,
+  backgroundColor: KoUi.paper,
+  barrierColor: KoUi.scrim,
+  barrierLabel: context.l10n.close,
+  sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
+      ? AnimationStyle.noAnimation
+      : const AnimationStyle(duration: KoUi.tabTime),
+  shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(top: Radius.circular(KoUi.sheetRadius)),
+  ),
+  builder: (_) => _BuySheet(
+    target: target,
+    progress: progress,
+    previewKitty: previewKitty,
+    onWear: onWear,
+    pack: pack,
+  ),
+);
 
 class _BuySheet extends StatefulWidget {
   const _BuySheet({
@@ -79,246 +79,211 @@ class _BuySheet extends StatefulWidget {
     required this.progress,
     required this.previewKitty,
     required this.onWear,
-    required this.onClose,
+    this.pack,
   });
-
   final BuyTarget target;
   final ProgressController progress;
   final KittyId previewKitty;
   final void Function(AccessoryId id)? onWear;
-  final VoidCallback onClose;
-
+  final ArtPack? pack;
   @override
   State<_BuySheet> createState() => _BuySheetState();
 }
 
 class _BuySheetState extends State<_BuySheet> {
-  bool _bought = false;
-  bool _paying = false;
-
-  Future<void> _buy() async {
-    if (_paying || _bought) return;
-    setState(() => _paying = true);
-    final progress = widget.progress;
-    final ok = await switch (widget.target) {
-      BuyItem(:final id) => progress.buyItem(id),
-      BuyKitty(:final id) => progress.buyKitty(id),
-      BuyAccessory(:final id) => progress.buyAccessory(id),
+  bool attempted = false, paying = false;
+  late final Future<ArtPack> art = widget.pack == null
+      ? ArtPack.load()
+      : Future.value(widget.pack);
+  ProgressController get c => widget.progress;
+  BuyTarget get target => widget.target;
+  bool get owned => switch (target) {
+    BuyItem(:final id) => c.home.room.owns(id),
+    BuyKitty(:final id) => c.home.ownsKitty(id),
+    BuyAccessory(:final id) => c.home.closet.owns(id),
+  };
+  HomeArea? get destination => switch (target) {
+    BuyItem(:final id) =>
+      (owned ? c.household.areas.placed[id] : c.itemPurchaseSlot(id))?.area,
+    BuyKitty(:final id) =>
+      owned ? c.household.routine.findArea(id) : c.kittyAdoptionArea(id),
+    _ => null,
+  };
+  Future<void> buy() async {
+    if (paying || owned || c.householdBusy || c.householdSaveFailed) return;
+    setState(() {
+      paying = true;
+      attempted = true;
+    });
+    final ok = await switch (target) {
+      BuyItem(:final id) => c.buyItem(id),
+      BuyKitty(:final id) => c.buyKitty(id),
+      BuyAccessory(:final id) => c.buyAccessory(id),
     };
     if (!mounted) return;
     if (ok) AudioScope.maybeRead(context)?.play(GameSound.buy);
-    setState(() {
-      _paying = false;
-      _bought = ok;
-    });
+    setState(() => paying = false);
+  }
+
+  Future<void> seeHome() async {
+    final area = destination;
+    if (target case BuyKitty(:final id)) {
+      c.selectHomeKitty(id);
+    }
+    if (area != null &&
+        area != c.household.lastArea &&
+        !await c.setHomeArea(area)) {
+      return;
+    }
+    if (!mounted) return;
+    final router = GoRouter.of(context);
+    Navigator.of(context).pop();
+    router.go(AppRoutes.home);
   }
 
   @override
-  Widget build(BuildContext context) {
-    final l = context.l10n;
-    final c = context.koColors;
-    final space = context.koSpace;
-    final target = widget.target;
-    final previewName = kittyName(l, widget.previewKitty);
-    final name = switch (target) {
-      BuyItem(:final id) => roomItemName(l, id),
-      BuyKitty(:final id) => kittyName(l, id),
-      BuyAccessory(:final id) => accessoryName(l, id),
-    };
-    final description = switch (target) {
-      BuyItem(:final id) => roomItemDesc(l, id),
-      BuyKitty(:final id) => kittyDesc(l, id),
-      BuyAccessory(:final id) => accessoryDesc(l, id),
-    };
-    final (title, body) = _bought
-        ? switch (target) {
-            BuyItem() => (l.buySuccessItem(name), l.buySuccessItemBody),
-            BuyKitty() => (l.buySuccessKitty(name), l.buySuccessKittyBody),
-            BuyAccessory() => (
-              l.buySuccessAccessory(name),
-              l.buySuccessAccessoryBody(previewName),
-            ),
-          }
-        : (name, description);
-    final short = widget.progress.coins < target.price;
-
-    return KoSheet(
-      label: _bought ? title : l.buySheetLabel(name),
-      onClose: widget.onClose,
-      header: const SizedBox.shrink(),
-      children: [
-        _Art(
-          target: target,
-          previewKitty: widget.previewKitty,
-          bought: _bought,
-        ),
-        SizedBox(height: space.s16),
-        if (_bought) ...[
-          Text(
-            l.buySuccessOverline,
-            textAlign: TextAlign.center,
-            style: context.koType.overlineLarge.copyWith(color: c.successText),
+  Widget build(BuildContext context) => Theme(
+    data: KoUi.theme(),
+    child: AnimatedBuilder(
+      animation: c,
+      builder: (context, _) {
+        final l = context.l10n;
+        final name = switch (target) {
+          BuyItem(:final id) => roomItemName(l, id),
+          BuyKitty(:final id) => kittyName(l, id),
+          BuyAccessory(:final id) => accessoryName(l, id),
+        };
+        final description = switch (target) {
+          BuyItem(:final id) => roomItemDesc(l, id),
+          BuyKitty(:final id) => kittyDesc(l, id),
+          BuyAccessory(:final id) => accessoryDesc(l, id),
+        };
+        final success = attempted && owned;
+        final blocked = paying || c.householdBusy || c.householdSaveFailed;
+        final short = c.coins < target.price;
+        final area = destination;
+        return UiSheet(
+          title: success ? l.buySuccessOverline : name,
+          closeLabel: l.close,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              FutureBuilder<ArtPack>(
+                future: art,
+                builder: (context, snapshot) {
+                  if (snapshot.data case final pack?) {
+                    return Center(
+                      child: CatalogArt(
+                        pack: pack,
+                        size: 160,
+                        item: target is BuyItem ? (target as BuyItem).id : null,
+                        kitty: target is BuyKitty
+                            ? (target as BuyKitty).id
+                            : widget.previewKitty,
+                        accessory: target is BuyAccessory
+                            ? (target as BuyAccessory).id
+                            : null,
+                      ),
+                    );
+                  }
+                  return Text(
+                    snapshot.hasError ? l.homeLoadFailed : l.homeLoading,
+                    style: KoUi.small,
+                  );
+                },
+              ),
+              Text(
+                success
+                    ? switch (target) {
+                        BuyItem() => l.buySuccessItem(name),
+                        BuyKitty() => l.buySuccessKitty(name),
+                        BuyAccessory() => l.buySuccessAccessory(name),
+                      }
+                    : name,
+                style: KoUi.title,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: KoUi.s8),
+              Text(description, style: KoUi.body),
+              const SizedBox(height: KoUi.s12),
+              if (target is! BuyAccessory)
+                Text(
+                  area == null
+                      ? l.shopStored
+                      : l.shopDestination(homeAreaLabel(l, area)),
+                  style: KoUi.label,
+                ),
+              if (!owned && !short)
+                Text(
+                  l.shopBalanceAfter(
+                    (c.coins - target.price).clamp(0, c.coins),
+                  ),
+                  style: KoUi.small,
+                ),
+              if (!owned && short) Text(l.buyNotEnoughHelp, style: KoUi.small),
+              if (owned && !attempted)
+                Text(l.shopAlreadyOwned, style: KoUi.label),
+              if (target is BuyAccessory)
+                Text(l.buyAccessoryInfo, style: KoUi.small),
+              if (c.householdSaveFailed) ...[
+                const SizedBox(height: KoUi.s12),
+                Semantics(
+                  liveRegion: true,
+                  child: Text(l.homeSaveFailed, style: KoUi.body),
+                ),
+                UiButton(
+                  key: const ValueKey('buy-retry'),
+                  label: l.homeRetry,
+                  loading: c.householdBusy,
+                  onPressed: () => c.retrySaves(),
+                ),
+              ],
+            ],
           ),
-          SizedBox(height: space.s8),
-        ],
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: context.koType.title.copyWith(
-            color: c.ink,
-            height: _titleHeight,
+          footer: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (owned)
+                target is BuyAccessory
+                    ? UiButton(
+                        key: const ValueKey('buy-wear'),
+                        homeStyle: true,
+                        label: l.buyWearOn(kittyName(l, widget.previewKitty)),
+                        onPressed: blocked || widget.onWear == null
+                            ? null
+                            : () {
+                                Navigator.of(context).pop();
+                                widget.onWear!((target as BuyAccessory).id);
+                              },
+                      )
+                    : UiButton(
+                        key: const ValueKey('buy-room'),
+                        homeStyle: true,
+                        label: l.buySeeRoom,
+                        onPressed: blocked ? null : seeHome,
+                      )
+              else
+                UiButton(
+                  key: const ValueKey('buy-confirm'),
+                  homeStyle: true,
+                  label: short
+                      ? l.notEnoughCoins(target.price - c.coins)
+                      : l.buyPay(target.price),
+                  loading: paying || c.householdBusy,
+                  onPressed: blocked || short ? null : buy,
+                ),
+              const SizedBox(height: KoUi.s8),
+              UiButton(
+                key: const ValueKey('buy-close'),
+                homeStyle: true,
+                label: success ? l.buyAgain : l.buyLater,
+                kind: UiButtonKind.secondary,
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
           ),
-        ),
-        SizedBox(height: space.s8),
-        Text(
-          body,
-          textAlign: TextAlign.center,
-          style: context.koType.paragraph.copyWith(
-            color: c.inkSoft,
-            height: _bodyHeight,
-          ),
-        ),
-        SizedBox(height: space.s16),
-        if (target is BuyAccessory && !_bought) ...[
-          _Info(l.buyAccessoryInfo),
-          SizedBox(height: space.s16),
-        ],
-        if (_bought)
-          switch (target) {
-            BuyAccessory(:final id) => KoButton(
-              key: const ValueKey('buy-wear'),
-              label: l.buyWearOn(previewName),
-              kind: KoButtonKind.success,
-              icon: KoIcons.check,
-              onPressed: () {
-                widget.onClose();
-                widget.onWear?.call(id);
-              },
-            ),
-            _ => KoButton(
-              key: const ValueKey('buy-room'),
-              label: l.buySeeRoom,
-              kind: KoButtonKind.success,
-              icon: KoIcons.house,
-              onPressed: () {
-                widget.onClose();
-                context.go(AppRoutes.home);
-              },
-            ),
-          }
-        else if (short) ...[
-          KoButton(
-            label: l.notEnoughCoins(target.price - widget.progress.coins),
-            icon: KoIcons.lock,
-            onPressed: null,
-          ),
-          SizedBox(height: space.s8),
-          Text(
-            l.buyNotEnoughHelp,
-            textAlign: TextAlign.center,
-            style: context.koType.controlLabel.copyWith(color: c.inkSoft),
-          ),
-        ] else
-          KoButton(
-            key: const ValueKey('buy-confirm'),
-            label: l.buyPay(target.price),
-            icon: KoIcons.plus,
-            onPressed: _paying ? null : _buy,
-          ),
-        SizedBox(height: space.s12),
-        SheetButton(
-          key: const ValueKey('buy-close'),
-          label: _bought ? l.buyAgain : l.buyLater,
-          icon: const SizedBox.shrink(),
-          color: c.surface,
-          line: c.line,
-          edge: c.lineDeep,
-          onPressed: widget.onClose,
-        ),
-      ],
-    );
-  }
-}
-
-/// Catatan hijau "milikmu selamanya" di sheet aksesoris.
-class _Info extends StatelessWidget {
-  const _Info(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.koColors;
-    final space = context.koSpace;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: space.s12, vertical: space.s6),
-      decoration: BoxDecoration(
-        color: c.ownedChip,
-        borderRadius: BorderRadius.circular(context.koRadius.statCompact),
-      ),
-      child: Row(
-        children: [
-          KoIcon(
-            KoIcons.shield,
-            size: context.koSize.iconMicro,
-            color: c.onSuccess,
-          ),
-          SizedBox(width: space.s6),
-          Expanded(
-            child: Text(
-              text,
-              style: context.koType.cardTextSmall.copyWith(color: c.onSuccess),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Kotak ilustrasi sheet: barang, kucing, atau kucing beraksesoris; latar
-/// hijau sesudah pembelian berhasil.
-class _Art extends StatelessWidget {
-  const _Art({
-    required this.target,
-    required this.previewKitty,
-    required this.bought,
-  });
-
-  final BuyTarget target;
-  final KittyId previewKitty;
-  final bool bought;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.koColors;
-    final s = context.koSize;
-    final pose = bought ? KittyPose.happy : KittyPose.idle;
-    return Container(
-      height: s.buyWell,
-      decoration: BoxDecoration(
-        color: bought ? c.ownedChip : c.floor,
-        borderRadius: BorderRadius.circular(context.koRadius.art),
-      ),
-      alignment: Alignment.center,
-      child: switch (target) {
-        BuyItem(:final id) => RoomItemView(
-          id: id,
-          box: Size(s.buyItemArtWidth, s.buyItemArtHeight),
-        ),
-        BuyKitty(:final id) => KittyView(
-          look: KittyLook(kitty: id, pose: pose),
-          size: s.buyKittyArt,
-        ),
-        BuyAccessory(:final id) => KittyView(
-          look: KittyLook(kitty: previewKitty, pose: pose, accessory: id),
-          size: s.buyAccessoryArt,
-        ),
+        );
       },
-    );
-  }
+    ),
+  );
 }
-
-/// Tinggi baris judul dan isi sheet beli (`SheetBeli.dc.html`: 1.1 dan 1.4).
-const double _titleHeight = 1.1;
-const double _bodyHeight = 1.4;

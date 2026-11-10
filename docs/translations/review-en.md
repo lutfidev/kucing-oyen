@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-573 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+595 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -600,6 +600,28 @@ files and anything written there is overwritten.
 | `careActive` | Getting some care | Sedang dimanja | Home grooming area: careActive | |
 | `careQueue` | Care queue: {count} | Antrean rawat: {count} | Home grooming area: careQueue Placeholders: `{count}`. | |
 | `careChoose` | Choose a cat to care for | Pilih kucing untuk dirawat | Home grooming area: careChoose | |
+| `shopDestination` | Destination: {area} | Tujuan: {area} | V2 shop or area decoration: shopDestination Placeholders: `{area}`. | |
+| `shopStored` | Storage · starting area is full | Gudang · area awal penuh | V2 shop or area decoration: shopStored | |
+| `shopBalanceAfter` | Balance after: {n} coins | Saldo sesudah: {n} koin | V2 shop or area decoration: shopBalanceAfter Placeholders: `{n}`. | |
+| `shopOwnedCollection` | Your collection | Koleksimu | V2 shop or area decoration: shopOwnedCollection | |
+| `shopAdoptIntro` | New friends for Oyen’s home. Check where they will settle in! | Teman baru untuk rumah Oyen. Lihat dulu area sambutannya! | V2 shop or area decoration: shopAdoptIntro | |
+| `shopInArea` | Placed: {area} | Dipajang: {area} | V2 shop or area decoration: shopInArea Placeholders: `{area}`. | |
+| `shopInStorage` | Safe in storage | Aman di Gudang | V2 shop or area decoration: shopInStorage | |
+| `shopAlreadyOwned` | Already yours | Sudah jadi milikmu | V2 shop or area decoration: shopAlreadyOwned | |
+| `decorateArea` | Decorate · {area} | Hias · {area} | V2 shop or area decoration: decorateArea Placeholders: `{area}`. | |
+| `decoratePaused` | Decorating · all home activities are paused | Sedang dihias · semua kegiatan rumah dijeda | V2 shop or area decoration: decoratePaused | |
+| `decorateInstructions` | Choose an item, then tap a slot or drag. Switch areas to place it there. | Pilih barang, lalu ketuk slot atau seret. Pindah area untuk menaruhnya di sana. | V2 shop or area decoration: decorateInstructions | |
+| `decorateSaveLayout` | Save layout | Simpan tata letak | V2 shop or area decoration: decorateSaveLayout | |
+| `decorateDiscard` | Discard changes | Buang perubahan | V2 shop or area decoration: decorateDiscard | |
+| `decorateContinue` | Keep decorating | Lanjut menghias | V2 shop or area decoration: decorateContinue | |
+| `decorateUnsaved` | Save your home changes? | Simpan perubahan rumah? | V2 shop or area decoration: decorateUnsaved | |
+| `decorateStoreItem` | Move to storage | Simpan ke Gudang | V2 shop or area decoration: decorateStoreItem | |
+| `decorateInvalid` | This slot does not fit. Choose a free slot in an allowed area. | Slot ini belum cocok. Pilih slot kosong di area yang diizinkan. | V2 shop or area decoration: decorateInvalid | |
+| `decorateSlot` | {zone} · slot {n} | {zone} · slot {n} | V2 shop or area decoration: decorateSlot Placeholders: `{zone}`, `{n}`. | |
+| `decorateWall` | Wall | Dinding | V2 shop or area decoration: decorateWall | |
+| `decorateFloor` | Floor | Lantai | V2 shop or area decoration: decorateFloor | |
+| `decorateAllowed` | Allowed areas: {areas} | Bisa ditaruh: {areas} | V2 shop or area decoration: decorateAllowed Placeholders: `{areas}`. | |
+| `decorateBowlFixed` | The built-in bowl stays in the Dining Area. | Mangkuk bawaan tetap di Area Makan. | V2 shop or area decoration: decorateBowlFixed | |
 
 ---
 

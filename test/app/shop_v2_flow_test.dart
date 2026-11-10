@@ -6,12 +6,83 @@ import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_areas.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/home_routine.dart';
+import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/room.dart';
 
 import '../test_helpers.dart';
 import 'household_progress_test.dart' show AtomicTestStore;
 
 void main() {
+  test(
+    'adoption preview reclaims a reservation when the last vacancy is reserved',
+    () async {
+      final now = DateTime(2026, 11, 10, 12);
+      final owned = KittyId.values.take(8).toList();
+      final newKitty = KittyId.values.last;
+      final store = AtomicTestStore()
+        ..coins = 10000
+        ..home = Home(kitties: owned)
+        ..needs = HomeNeeds(
+          cats: {
+            for (final k in owned) k: CatNeeds(hunger: 90, joy: 65, at: now),
+          },
+        );
+      final c = await ProgressController.load(
+        levels: testLevels,
+        store: store,
+        clock: () => now,
+      );
+      await c.inviteKitty(KittyId.oyen, HomeActivity.brush);
+      await c.advanceHousehold(0);
+      expect(c.household.routine.journeys, isNotEmpty);
+      final expected = c.kittyAdoptionArea(newKitty);
+      expect(expected, HomeArea.rawat);
+      expect(await c.buyKitty(newKitty), isTrue);
+      expect(c.household.routine.findArea(newKitty), expected);
+      for (final area in HomeArea.values) {
+        expect(
+          c.household.routine.present(area).length,
+          lessThanOrEqualTo(area.capacity),
+        );
+      }
+    },
+  );
+  test('moving an active toy within its area interrupts safely without play reward', () async {
+    final now = DateTime(2026, 11, 10, 12);
+    final store = AtomicTestStore()
+      ..home = Home(
+        room: Room(
+          owned: [RoomItemId.tikus],
+          placed: {RoomItemId.tikus: roomItemOf(RoomItemId.tikus).defaultSpot},
+        ),
+      )
+      ..needs = HomeNeeds(
+        decoratedAt: now,
+        cats: {KittyId.oyen: CatNeeds(hunger: 90, joy: 65, at: now)},
+      );
+    final c = await ProgressController.load(
+      levels: testLevels,
+      store: store,
+      clock: () => now,
+    );
+    await c.inviteKitty(KittyId.oyen, HomeActivity.play);
+    await c.advanceHousehold(0);
+    await c.advanceHousehold(1);
+    expect(
+      c.household.routine.activities[KittyId.oyen]!.facility,
+      RoomItemId.tikus,
+    );
+    final draft = c.household.areas.place(
+      c.home,
+      RoomItemId.tikus,
+      const AreaSlot(HomeArea.main, RoomZone.floor, 1),
+    );
+    expect(await c.saveAreaLayout(draft), isTrue);
+    expect(c.household.routine.activities[KittyId.oyen], isNull);
+    expect(c.catNeeds(KittyId.oyen).joy, 65);
+    expect(c.needs.of(KittyId.oyen, now).playedAt, isNull);
+  });
   final now = DateTime(2026, 11, 10, 12);
   Future<ProgressController> load(AtomicTestStore store) =>
       ProgressController.load(
