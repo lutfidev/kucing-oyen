@@ -226,6 +226,7 @@ void main() {
         ),
       );
       await t.pumpAndSettle();
+      expect(t.widget<UiButton>(find.byType(UiButton)).label, '×1');
       await t.tap(
         find.byWidgetPredicate(
           (w) => w is UiButton && w.semanticLabel == 'Percepat dua kali',
@@ -233,6 +234,7 @@ void main() {
       );
       await t.pumpAndSettle();
       expect(t.widget<UiButton>(find.byType(UiButton)).selected, isTrue);
+      expect(t.widget<UiButton>(find.byType(UiButton)).label, '×2');
       await _capture(t, 'replay-speed-id-390');
       await t.tap(find.bySemanticsLabel('Putar otomatis'));
       await t.pump();

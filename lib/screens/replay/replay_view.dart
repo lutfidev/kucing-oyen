@@ -181,7 +181,7 @@ class _ReplayViewState extends State<ReplayView>
             if (!_reduceMotion) ...[
               SizedBox(width: space.s8),
               UiButton(
-                label: _fast ? '?2' : '?1',
+                label: _fast ? '×2' : '×1',
                 semanticLabel: l.doubleSpeed,
                 kind: UiButtonKind.secondary,
                 compact: true,
