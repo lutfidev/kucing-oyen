@@ -81,8 +81,8 @@ terdorong panel; pesan dipindahkan mendahului panel, kontrak test dipertahankan.
 - `python tool/translations/make_review.py --check`: sesuai ARB/listing.
 - `python tool/art_v2/generate.py --check`: 209 aset vektor sesuai sumber.
 - `flutter build apk --debug`: berhasil (assembleDebug 68,9 detik).
-  [APK lokal](../../../build/app/outputs/flutter-apk/app-debug.apk) untuk uji host;
-  berkas build tidak masuk Git. SHA-256:
+  APK lokal: `build/app/outputs/flutter-apk/app-debug.apk`; berkas build
+  tidak masuk Git. SHA-256:
   `78fc75779524e1549d6c41bd4110f4cac60be2a763c510641b0c7a85e6ea5fee`.
 - `measure_apk.py`: 214 entry paket art, 720.695 byte mentah / 507.916 byte
   terkompresi; latar Bermain 127.572 byte. Sumber PNG tidak dibundel.
