@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../../app/progress_scope.dart';
+import '../../app/game_audio.dart';
 import '../../game/model/home_areas.dart';
 import '../../game/model/home_items.dart';
 import '../../game/model/home_routine.dart';
 import '../../game/model/kitties.dart';
+import '../../game/model/sounds.dart';
 import '../../game/render/v2/art_pack.dart';
 import '../../game/render/v2/cat_rig.dart';
 import '../../game/render/v2/lounge_lighting.dart';
@@ -51,9 +53,15 @@ class HomeScene extends StatefulWidget {
 class _HomeSceneState extends State<HomeScene>
     with SingleTickerProviderStateMixin {
   final _time = ValueNotifier<double>(0);
+  Duration? _lastTick;
+  Map<KittyId, int> _heard = {};
   late final Ticker _ticker = createTicker((elapsed) {
+    final last = _lastTick;
+    _lastTick = elapsed;
     if (!widget.progress.householdPaused) {
-      _time.value = elapsed.inMicroseconds / 1e6;
+      if (last != null) {
+        _time.value += (elapsed - last).inMicroseconds / 1e6;
+      }
     }
   });
 
@@ -61,6 +69,36 @@ class _HomeSceneState extends State<HomeScene>
   void initState() {
     super.initState();
     widget.progress.householdPauseChanges.addListener(_sync);
+    _rememberActivities();
+  }
+
+  void _rememberActivities() => _heard = {
+    for (final e in widget.progress.household.routine.activities.entries)
+      e.key: e.value.id,
+  };
+
+  void _hearActivity(HomeScene old) {
+    final c = widget.progress;
+    if (old.area == widget.area &&
+        !c.householdPaused &&
+        !c.householdSaveFailed &&
+        TickerMode.valuesOf(context).enabled) {
+      for (final entry in c.household.routine.activities.entries) {
+        final action = entry.value;
+        if (_heard[entry.key] == action.id || action.kind.area != widget.area) {
+          continue;
+        }
+        final sound = switch (action.kind) {
+          HomeActivity.eat => GameSound.munch,
+          HomeActivity.pet || HomeActivity.brush => GameSound.purr,
+          HomeActivity.play => GameSound.meow,
+          HomeActivity.rest => null,
+        };
+        if (sound != null) AudioScope.maybeRead(context)?.play(sound);
+        break; // At most one foreground activity cue per published snapshot.
+      }
+    }
+    _rememberActivities();
   }
 
   void _sync() {
@@ -69,8 +107,14 @@ class _HomeSceneState extends State<HomeScene>
         !widget.progress.householdPaused &&
         !widget.progress.householdSaveFailed &&
         TickerMode.valuesOf(context).enabled;
-    if (run && !_ticker.isActive) _ticker.start();
-    if (!run && _ticker.isActive) _ticker.stop();
+    if (run && !_ticker.isActive) {
+      _lastTick = null;
+      _ticker.start();
+    }
+    if (!run && _ticker.isActive) {
+      _ticker.stop();
+      _lastTick = null;
+    }
   }
 
   @override
@@ -82,6 +126,7 @@ class _HomeSceneState extends State<HomeScene>
   @override
   void didUpdateWidget(HomeScene oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _hearActivity(oldWidget);
     _sync();
   }
 
@@ -101,6 +146,12 @@ class _HomeSceneState extends State<HomeScene>
       borderRadius: BorderRadius.circular(KoUi.cardRadius),
       child: LayoutBuilder(
         builder: (context, constraints) {
+          if (!constraints.hasBoundedWidth ||
+              !constraints.hasBoundedHeight ||
+              constraints.maxWidth <= 0 ||
+              constraints.maxHeight <= 0) {
+            return const SizedBox.shrink();
+          }
           final scale = constraints.maxWidth / 390;
           return Stack(
             key: const ValueKey('home-scene'),

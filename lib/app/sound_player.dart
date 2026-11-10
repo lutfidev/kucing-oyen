@@ -4,12 +4,16 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 
 import '../game/model/sounds.dart';
+import 'effect_pool.dart';
 
 /// Pemutar suara perangkat. [GameAudio] memutuskan kapan suara boleh
 /// berbunyi; pemutar hanya menjalankannya. Test memakai [FakeSoundPlayer].
 abstract interface class SoundPlayer {
   /// Memutar satu efek suara, boleh bertumpuk dengan yang lain.
   Future<void> play(GameSound sound);
+
+  /// Stop effects already playing and cancel starts still loading.
+  Future<void> stopEffects();
 
   /// Menyiapkan semua efek suara lebih dulu, supaya bunyi pertama tiap efek
   /// tidak telat.
@@ -38,6 +42,10 @@ class FakeSoundPlayer implements SoundPlayer {
 
   /// [preload] sudah dipanggil.
   bool preloaded = false;
+  int effectsStops = 0;
+
+  @override
+  Future<void> stopEffects() async => effectsStops++;
 
   @override
   Future<void> play(GameSound sound) async => played.add(sound);
@@ -66,7 +74,7 @@ class FakeSoundPlayer implements SoundPlayer {
 }
 
 /// Pemutar asli lewat paket `audioplayers`. Efek suara memakai satu
-/// [AudioPool] per suara (dibuat [preload] saat aplikasi dibuka, atau saat
+/// [EffectPool] per suara (dibuat [preload] saat aplikasi dibuka, atau saat
 /// pertama dibutuhkan); musik berulang
 /// di satu [AudioPlayer] dan berganti lagu dengan crossfade. Semua suara
 /// bercampur dengan musik (tidak saling merebut fokus audio). Error
@@ -76,16 +84,16 @@ class AudioplayersSoundPlayer implements SoundPlayer {
   /// crossfade dan pool efek bisa diuji tanpa platform audio.
   AudioplayersSoundPlayer({
     MusicDeck Function()? newDeck,
-    Future<AudioPool> Function(GameSound sound)? newPool,
+    Future<EffectPool> Function(GameSound sound)? newPool,
     this._setUpContext = true,
   }) : _newDeck = newDeck ?? _AudioplayersDeck.new,
        _newPool = newPool ?? _createPool;
 
   final MusicDeck Function() _newDeck;
-  final Future<AudioPool> Function(GameSound sound) _newPool;
+  final Future<EffectPool> Function(GameSound sound) _newPool;
 
-  static Future<AudioPool> _createPool(GameSound sound) =>
-      AudioPool.createFromAsset(path: sound.asset, maxPlayers: _maxOverlap);
+  static Future<EffectPool> _createPool(GameSound sound) =>
+      EffectPool.load(sound);
   final bool _setUpContext;
 
   /// Volume musik di bawah efek suara.
@@ -93,17 +101,17 @@ class AudioplayersSoundPlayer implements SoundPlayer {
   static const fadeTime = Duration(milliseconds: 400);
   static const _fadeSteps = 10;
 
-  /// Efek suara yang sama boleh bertumpuk paling banyak sekian.
-  static const _maxOverlap = 3;
-
-  final _pools = <GameSound, Future<AudioPool>>{};
+  final _pools = <GameSound, Future<EffectPool>>{};
+  final _effectQueues = <GameSound, Future<void>>{};
+  final _readyEffects = <GameSound, EffectPool>{};
+  int _effectsRevision = 0;
 
   /// Berapa kali pool tiap suara gagal dibuat.
   final _poolFailures = <GameSound, int>{};
 
   /// Pool yang gagal sebanyak ini tidak dicoba lagi sepanjang sesi: tiap
-  /// percobaan yang gagal meninggalkan satu pemutar native (`AudioPool`
-  /// membuat `AudioPlayer` sebelum sumbernya dimuat).
+  /// percobaan yang gagal dibatasi supaya aset rusak tidak dimuat berulang.
+  /// Pemutar yang gagal dimuat dibuang oleh EffectPool.
   static const maxPoolTries = 3;
   MusicDeck? _music;
   MusicTrack? _track;
@@ -131,25 +139,48 @@ class AudioplayersSoundPlayer implements SoundPlayer {
 
   /// Pool yang gagal dibuat dibuang dari cache, jadi dicoba lagi saat suara
   /// itu diputar berikutnya, paling banyak [maxPoolTries] kali.
-  Future<AudioPool> _pool(GameSound sound) {
+  Future<EffectPool> _pool(GameSound sound) {
     final cached = _pools[sound];
     if (cached != null) return cached;
-    late final Future<AudioPool> pool;
-    pool = _newPool(sound).catchError((Object error, StackTrace stack) {
-      final failures = _poolFailures[sound] = (_poolFailures[sound] ?? 0) + 1;
-      if (failures < maxPoolTries && identical(_pools[sound], pool)) {
-        _pools.remove(sound);
-      }
-      Error.throwWithStackTrace(error, stack);
-    });
+    late final Future<EffectPool> pool;
+    pool = _newPool(sound)
+        .then((value) {
+          _readyEffects[sound] = value;
+          return value;
+        })
+        .catchError((Object error, StackTrace stack) {
+          final failures = _poolFailures[sound] =
+              (_poolFailures[sound] ?? 0) + 1;
+          if (failures < maxPoolTries && identical(_pools[sound], pool)) {
+            _pools.remove(sound);
+          }
+          Error.throwWithStackTrace(error, stack);
+        });
     return _pools[sound] = pool;
   }
 
   @override
-  Future<void> play(GameSound sound) => _safe(() async {
-    await _ensureContext();
-    await (await _pool(sound)).start();
-  });
+  Future<void> play(GameSound sound) {
+    final revision = _effectsRevision;
+    return _effectQueues[sound] = (_effectQueues[sound] ?? Future.value()).then(
+      (_) => _safe(() async {
+        await _ensureContext();
+        if (revision != _effectsRevision) return;
+        final pool = await _pool(sound);
+        if (revision != _effectsRevision) return;
+        await pool.start();
+        if (revision != _effectsRevision) {
+          await pool.stop();
+        }
+      }),
+    );
+  }
+
+  @override
+  Future<void> stopEffects() async {
+    _effectsRevision++;
+    await Future.wait(_readyEffects.values.map((pool) => _safe(pool.stop)));
+  }
 
   @override
   Future<void> preload() async {
