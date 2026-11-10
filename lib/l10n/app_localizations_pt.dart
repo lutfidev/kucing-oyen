@@ -2492,4 +2492,8 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get guidanceSaving => 'Salvando…';
+
+  @override
+  String get guidanceConsentFailed =>
+      'Não foi possível abrir as opções de privacidade dos anúncios. Tente de novo mais tarde.';
 }

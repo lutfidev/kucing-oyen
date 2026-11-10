@@ -604,5 +604,6 @@
   "guidanceMotion": "Kurangi gerak",
   "guidanceMotionInfo": "Animasi lebih tenang. Preferensi kurangi gerak HP juga tetap diikuti.",
   "guidanceResetAreas": "Semua area, tata letak, antrean dan kegiatan rumah ikut direset. Bahasa, suara, kurangi gerak dan jatah hadiah hari ini tetap.",
-  "guidanceSaving": "Menyimpan…"
+  "guidanceSaving": "Menyimpan…",
+  "guidanceConsentFailed": "Pilihan privasi iklan belum bisa dibuka. Coba lagi nanti, ya."
 }

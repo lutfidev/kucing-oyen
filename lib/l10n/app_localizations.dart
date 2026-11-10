@@ -3731,6 +3731,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saving…'**
   String get guidanceSaving;
+
+  /// The ad privacy consent form failed to open.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t open the ad privacy choices. Try again later.'**
+  String get guidanceConsentFailed;
 }
 
 class _AppLocalizationsDelegate

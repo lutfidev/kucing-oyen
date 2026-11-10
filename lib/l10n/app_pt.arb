@@ -604,5 +604,6 @@
   "guidanceMotion": "Reduzir movimento",
   "guidanceMotionInfo": "Animações mais suaves. A preferência do aparelho também é respeitada.",
   "guidanceResetAreas": "Todas as áreas, decorações, filas e atividades da casa também serão reiniciadas. Idioma, som, movimento reduzido e limites de recompensas de hoje permanecem.",
-  "guidanceSaving": "Salvando…"
+  "guidanceSaving": "Salvando…",
+  "guidanceConsentFailed": "Não foi possível abrir as opções de privacidade dos anúncios. Tente de novo mais tarde."
 }

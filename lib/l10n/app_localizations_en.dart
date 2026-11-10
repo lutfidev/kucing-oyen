@@ -2471,4 +2471,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get guidanceSaving => 'Saving…';
+
+  @override
+  String get guidanceConsentFailed =>
+      'Couldn’t open the ad privacy choices. Try again later.';
 }

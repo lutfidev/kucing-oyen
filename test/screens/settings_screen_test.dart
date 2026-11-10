@@ -420,6 +420,20 @@ void main() {
       expect(consent.optionsShown, 2);
     });
 
+    testWidgets(
+      'formulir persetujuan gagal memberi pesan yang sesuai dan bisa dicoba lagi',
+      (tester) async {
+        final consent = _ThrowingConsent();
+        await pumpApp(tester, location: AppRoutes.settings, consent: consent);
+        await _tapText(tester, l10nId.adConsent);
+        expect(find.text(l10nId.guidanceConsentFailed), findsOneWidget);
+        expect(find.text(l10nId.privacyLinkFailed), findsNothing);
+        await _tapText(tester, l10nId.adConsent);
+        expect(consent.optionsShown, 2);
+        expect(tester.takeException(), isNull);
+      },
+    );
+
     testWidgets('persetujuan diwajibkan belakangan: tombol muncul', (
       tester,
     ) async {
@@ -465,5 +479,14 @@ class _SlowConsent extends FakeAdConsent {
   Future<void> showPrivacyOptions() {
     optionsShown++;
     return (_open = Completer<void>()).future;
+  }
+}
+
+class _ThrowingConsent extends FakeAdConsent {
+  _ThrowingConsent() : super(privacyOptionsRequired: true);
+  @override
+  Future<void> showPrivacyOptions() async {
+    optionsShown++;
+    throw StateError('consent unavailable');
   }
 }

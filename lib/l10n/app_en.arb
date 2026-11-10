@@ -3295,5 +3295,9 @@
   "guidanceSaving": "Saving…",
   "@guidanceSaving": {
     "description": "Paid hint storage is in progress, without loading an ad."
+  },
+  "guidanceConsentFailed": "Couldn’t open the ad privacy choices. Try again later.",
+  "@guidanceConsentFailed": {
+    "description": "The ad privacy consent form failed to open."
   }
 }

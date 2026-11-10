@@ -31,7 +31,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 /// Pesan yang tampil di bawah tombol sesudah ditekan.
-enum _Notice { tutorials, reset, privacyFailed }
+enum _Notice { tutorials, reset, privacyFailed, consentFailed }
 
 class _SettingsScreenState extends State<SettingsScreen> {
   /// Versi aplikasi; null selama dimuat atau kalau tidak bisa dibaca.
@@ -62,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     try {
       await consent.showPrivacyOptions();
     } on Object {
-      if (mounted) setState(() => _notice = _Notice.privacyFailed);
+      if (mounted) setState(() => _notice = _Notice.consentFailed);
     } finally {
       if (mounted) setState(() => _consentOpen = false);
     }
@@ -259,6 +259,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               : null,
                           message: _notice == _Notice.privacyFailed
                               ? l.privacyLinkFailed
+                              : _notice == _Notice.consentFailed
+                              ? l.guidanceConsentFailed
                               : null,
                         ),
                       ),

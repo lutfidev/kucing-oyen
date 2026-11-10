@@ -2517,4 +2517,8 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get guidanceSaving => 'Сохранение…';
+
+  @override
+  String get guidanceConsentFailed =>
+      'Не удалось открыть настройки конфиденциальности рекламы. Попробуй позже.';
 }

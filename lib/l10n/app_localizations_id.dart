@@ -2330,4 +2330,8 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get guidanceSaving => 'Menyimpan…';
+
+  @override
+  String get guidanceConsentFailed =>
+      'Pilihan privasi iklan belum bisa dibuka. Coba lagi nanti, ya.';
 }

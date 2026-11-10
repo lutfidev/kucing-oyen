@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-605 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+606 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -632,6 +632,7 @@ files and anything written there is overwritten.
 | `guidanceMotionInfo` | Gentler animations. Your phone’s reduced motion preference is also respected. | Animações mais suaves. A preferência do aparelho também é respeitada. | Guidance and settings v2: guidanceMotionInfo | |
 | `guidanceResetAreas` | All areas, layouts, queues and home activities are reset too. Language, sound, reduced motion and today’s reward limits stay. | Todas as áreas, decorações, filas e atividades da casa também serão reiniciadas. Idioma, som, movimento reduzido e limites de recompensas de hoje permanecem. | Guidance and settings v2: guidanceResetAreas | |
 | `guidanceSaving` | Saving… | Salvando… | Paid hint storage is in progress, without loading an ad. | |
+| `guidanceConsentFailed` | Couldn’t open the ad privacy choices. Try again later. | Não foi possível abrir as opções de privacidade dos anúncios. Tente de novo mais tarde. | The ad privacy consent form failed to open. | |
 
 ---
 
