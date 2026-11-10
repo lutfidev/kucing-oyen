@@ -18,6 +18,16 @@ class _HomeChange {
 }
 
 extension HouseholdController on ProgressController {
+  /// Use the transaction's exact placement algorithm for purchase previews.
+  AreaSlot? itemPurchaseSlot(RoomItemId id) {
+    if (_home.room.owns(id)) return _household.areas.placed[id];
+    final after = _home.copyWith(room: _home.room.buy(id));
+    return _household.areas.sync(_home, after).placed[id];
+  }
+
+  HomeArea? kittyAdoptionArea(KittyId id) =>
+      _household.routine.sync({..._home.kitties, id}).findArea(id);
+
   Household get household => _household;
   bool get householdPaused => _homePauses.isNotEmpty;
   bool get householdSaveFailed => _pendingHome != null;
@@ -201,6 +211,24 @@ extension HouseholdController on ProgressController {
         household: _household.copyWith(areas: normal, routine: routine),
       ),
     );
+  }
+
+  /// A discarded editor draft must not be applied by a later global retry.
+  /// Only that exact failed layout transaction can be cancelled here.
+  bool discardAreaLayoutSave(HomeAreas draft) {
+    final pending = _pendingHome;
+    if (_homeBusy ||
+        pending == null ||
+        pending.coins != 0 ||
+        pending.home != _home ||
+        pending.household.areas != draft ||
+        pending.household.areas == _household.areas) {
+      return false;
+    }
+    _pendingHome = null;
+    _pendingHomeRebuild = null;
+    _notifyHousehold();
+    return true;
   }
 }
 
