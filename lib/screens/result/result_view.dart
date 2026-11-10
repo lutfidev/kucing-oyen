@@ -10,6 +10,8 @@ import '../../l10n/names.dart';
 import '../../theme/puzzle_theme.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../../widgets/v2/ui_panel.dart';
+import '../../game/render/v2/guidance_art.dart';
 import 'result_art.dart';
 import 'result_parts.dart';
 
@@ -487,7 +489,7 @@ class BoredResult extends StatelessWidget {
           ),
         ),
         SizedBox(height: space.s16 + ring),
-        KoCard(
+        UiPanel(
           padding: EdgeInsets.symmetric(
             horizontal: space.s16,
             vertical: space.s14,
@@ -503,8 +505,8 @@ class BoredResult extends StatelessWidget {
                 ),
                 alignment: Alignment.center,
                 child: ExcludeSemantics(
-                  child: OyenView(
-                    const OyenLook(pose: OyenPose.sleep),
+                  child: GuidanceCat(
+                    look: const OyenLook(pose: OyenPose.sleep),
                     size: ResultArt.restOyen,
                   ),
                 ),

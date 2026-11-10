@@ -596,5 +596,14 @@
   "decorateAllowed": "Áreas permitidas: {areas}",
   "decorateBowlFixed": "A tigela da casa fica na Área de Refeições.",
   "replayEnd": "Fim",
-  "replayProgress": "Passo {step} de {total}"
+  "replayProgress": "Passo {step} de {total}",
+  "guidanceSaveFailed": "Ainda não foi salvo neste aparelho. Tente salvar de novo.",
+  "guidanceLoading": "Carregando anúncio…",
+  "guidanceHomeTitle": "Conheça a casa do Oyen",
+  "guidanceHomeBody": "Quatro áreas grátis: Descanso, Comida, Brincar e Cuidados. Os gatos fazem atividades sozinhos. Toque num gato para convidar; se estiver ocupado, ele espera a vez. Encontre os gatos na Coleção. Os puzzles estão sempre disponíveis.",
+  "guidanceMotion": "Reduzir movimento",
+  "guidanceMotionInfo": "Animações mais suaves. A preferência do aparelho também é respeitada.",
+  "guidanceResetAreas": "Todas as áreas, decorações, filas e atividades da casa também serão reiniciadas. Idioma, som, movimento reduzido e limites de recompensas de hoje permanecem.",
+  "guidanceSaving": "Salvando…",
+  "guidanceConsentFailed": "Não foi possível abrir as opções de privacidade dos anúncios. Tente de novo mais tarde."
 }

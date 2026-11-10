@@ -14,6 +14,8 @@ class UiButton extends StatefulWidget {
     required this.onPressed,
     this.semanticLabel,
     this.icon,
+    this.leading,
+    this.silent = false,
     this.kind = UiButtonKind.primary,
     this.loading = false,
     this.selected,
@@ -25,6 +27,8 @@ class UiButton extends StatefulWidget {
   final String? semanticLabel;
   final VoidCallback? onPressed;
   final IconData? icon;
+  final Widget? leading;
+  final bool silent;
   final UiButtonKind kind;
   final bool loading, autofocus, compact;
   final bool homeStyle;
@@ -55,7 +59,11 @@ class _UiButtonState extends State<UiButton> {
     final foreground = enabled && widget.kind == UiButtonKind.danger
         ? KoUi.paper
         : KoUi.ink;
-    final action = enabled ? tapSound(context, widget.onPressed) : null;
+    final action = enabled
+        ? (widget.silent
+              ? widget.onPressed
+              : tapSound(context, widget.onPressed))
+        : null;
     return Semantics(
       button: true,
       enabled: enabled,
@@ -163,6 +171,9 @@ class _UiButtonState extends State<UiButton> {
                             color: foreground,
                           ),
                   ),
+                  const SizedBox(width: KoUi.s8),
+                ] else if (widget.leading != null) ...[
+                  ExcludeSemantics(child: widget.leading!),
                   const SizedBox(width: KoUi.s8),
                 ] else if (widget.icon != null) ...[
                   Icon(widget.icon, color: foreground),

@@ -16,7 +16,7 @@ Audit sumber: `lib/app/routes.dart`, `router.dart`, seluruh `lib/screens/`, dan 
 | H08 | Aksesoris dalam kartu | pratinjau, daftar dimiliki, Pakai/Lepas, Toko | kosong; satu aktif; dipakai banyak kucing; panjang nama | WF Aksesoris |
 | H09 | Hias/Gudang | judul area, room slot, daftar barang, Simpan/Batal | awal; invalid/overlap; pindah area; Gudang; penuh; simpan gagal; dialog buang perubahan | [runtime langkah 9](shop/REVIEW.md) |
 | H10 | hadiah rumah baru | rincian kucing sah, total, Ambil semua | 0/1/9; syarat berubah; sudah klaim; simpan gagal; berhasil | 03 + WF Hadiah |
-| H11 | pengenalan rumah/migrasi | satu kartu penjelasan, Lihat rumah, Tutup | pemain baru; progres v1 dengan barang Gudang; tidak tampil dua kali | WF Pengenalan |
+| H11 | pengenalan rumah/migrasi | satu kartu penjelasan, Lihat rumah, Tutup | bantuan rumah opsional berulang; progres v1 dengan barang Gudang; notifikasi migrasi sekali setelah tersimpan | WF Pengenalan |
 | S01 | `/toko?tab=items` | header kembali/saldo, empat tab, grid barang dan tujuan area | belum/dimiliki; koin kurang/pas; tujuan penuh; gulir ke kartu terakhir | [runtime langkah 9](shop/REVIEW.md) |
 | S02 | `/toko?tab=kitties` | kartu sembilan kucing dan harga, adopsi | dimiliki; Baru; kurang/pas; slot awal tujuan ditampilkan | [runtime langkah 9](shop/REVIEW.md) |
 | S03 | `/toko?tab=accessories` | pratinjau dan rarity, beli atau Pakai | biasa/langka/spesial; dimiliki; belum ada kucing dipilih | [runtime langkah 9](shop/REVIEW.md) |
@@ -65,3 +65,25 @@ rumah/aksesoris, header babak yang membungkus dan hasil yang dapat digulir
 pada portrait pendek/teks besar. Replay tersedia juga untuk vas pecah;
 Awal/Akhir, ×1/×2 dan jeda lifecycle melengkapi kontrol rekaman.
 [Bukti 47 render, test dan batas perangkat](journey/REVIEW.md).
+
+## Audit implementasi langkah 12
+
+| Inventaris | Implementasi pemain dan keadaan |
+| --- | --- |
+| H01–H10 | Rumah/area/ajakan/koleksi/camilan/aksesoris/Hias/hadiah memakai runtime v2 langkah 5–9; panel retry transaksi bantuan tidak mengubah model rutinitas. |
+| H11 | Ikon bantuan rumah dan entri Pengaturan membuka pengenalan opsional, dapat ditutup/dibuka ulang. Pemberitahuan migrasi tetap sekali saja setelah diakui dan tersimpan; Main Puzzle selalu tersedia. |
+| S01–S05 | Toko/pembelian memakai runtime v2 langkah 9; sheet Koin dari saldo kini memakai v2 juga. |
+| C01–C03, R01–R03, P01 | Runtime langkah 11; audit menutup sisa avatar Oyen v1 pada kartu hasil bosan menggunakan rig puzzle. |
+| L01–L02 | Papan/benda/runtime v2 langkah 10. |
+| L03 | Tutorial 1/3/6 memakai rig v2, sorotan input yang sama, Lewati 48 dp, kartu ringkas dan scroll pada batas tinggi. |
+| L04 | Lima kartu aturan memakai seni v2; urutan, aturan terkunci, clockwise dan tie-break tetap. |
+| L05 | Tiga tingkat petunjuk berurutan: saldo, koin kurang/nonaktif, iklan loading/gagal/ditutup, terbuka, tanpa benda, retry simpan; akses Tambah Koin tersedia. |
+| K01 | Bonus siap/sudah, iklan siap/loading/gagal/ditutup/habis, retry snapshot; tidak ada hadiah sebelum commit pada penyimpanan produksi. |
+| G01–G03 | Panel suara/bahasa/kurangi gerak/tutorial/privasi/tentang v2; privasi tetap tautan eksternal dan formulir UMP kondisional; halaman lisensi menerima tema layar. |
+| G04 | Konfirmasi scroll menyebut semua area; batal/back tidak menghapus, gagal tetap di sheet, proses tidak dapat ditutup, sukses kembali ke rumah awal. |
+| Global | ID babak/level invalid memakai tema v2 dan tombol kembali; rute tak dikenal kembali rumah. Loading/gagal aset rumah/Toko memakai kerangka v2 yang sudah tersedia; startup memuat progres sebelum runApp. |
+
+Sumber v1 yang tersisa di `room_view`, `kitty_card`, `shop_parts` dan renderer
+lama melayani galeri/regresi/arsip, bukan rute pemain. Galeri pengembangan tidak
+menjadi menu pemain. Merek/launcher/splash Android dan materi toko memang
+cakupan langkah 14. [Bukti, render dan batas verifikasi](guidance/REVIEW.md).

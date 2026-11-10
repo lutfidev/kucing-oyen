@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-597 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+606 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -624,6 +624,15 @@ files and anything written there is overwritten.
 | `decorateBowlFixed` | The built-in bowl stays in the Dining Area. | Mangkuk bawaan tetap di Area Makan. | V2 shop or area decoration: decorateBowlFixed | |
 | `replayEnd` | End | Akhir | Replay control: jump to the final step. | |
 | `replayProgress` | Step {step} of {total} | Langkah {step} dari {total} | Current replay step and total; includes step zero. Placeholders: `{step}`, `{total}`. | |
+| `guidanceSaveFailed` | Not saved on this device yet. Try saving again. | Belum tersimpan di perangkat. Coba simpan lagi. | Guidance and settings v2: guidanceSaveFailed | |
+| `guidanceLoading` | Loading ad… | Memuat iklan… | Guidance and settings v2: guidanceLoading | |
+| `guidanceHomeTitle` | Meet Oyen’s home | Kenalan dengan rumah Oyen | Guidance and settings v2: guidanceHomeTitle | |
+| `guidanceHomeBody` | Four free areas: Lounge, Dining, Play, and Care. Cats can do things on their own. Tap a cat to invite them; busy cats wait their turn. Find any cat through Collection. You can always jump straight into a puzzle. | Empat area gratis: Santai, Makan, Main, dan Rawat. Kucing bisa beraktivitas sendiri. Ketuk kucing untuk mengajaknya; kalau sibuk, ia menunggu giliran. Temukan kucing lewat Koleksi. Main Puzzle selalu bisa langsung dimainkan. | Guidance and settings v2: guidanceHomeBody | |
+| `guidanceMotion` | Reduce motion | Kurangi gerak | Guidance and settings v2: guidanceMotion | |
+| `guidanceMotionInfo` | Gentler animations. Your phone’s reduced motion preference is also respected. | Animasi lebih tenang. Preferensi kurangi gerak HP juga tetap diikuti. | Guidance and settings v2: guidanceMotionInfo | |
+| `guidanceResetAreas` | All areas, layouts, queues and home activities are reset too. Language, sound, reduced motion and today’s reward limits stay. | Semua area, tata letak, antrean dan kegiatan rumah ikut direset. Bahasa, suara, kurangi gerak dan jatah hadiah hari ini tetap. | Guidance and settings v2: guidanceResetAreas | |
+| `guidanceSaving` | Saving… | Menyimpan… | Paid hint storage is in progress, without loading an ad. | |
+| `guidanceConsentFailed` | Couldn’t open the ad privacy choices. Try again later. | Pilihan privasi iklan belum bisa dibuka. Coba lagi nanti, ya. | The ad privacy consent form failed to open. | |
 
 ---
 

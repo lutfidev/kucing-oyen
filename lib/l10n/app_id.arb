@@ -596,5 +596,14 @@
   "decorateAllowed": "Bisa ditaruh: {areas}",
   "decorateBowlFixed": "Mangkuk bawaan tetap di Area Makan.",
   "replayEnd": "Akhir",
-  "replayProgress": "Langkah {step} dari {total}"
+  "replayProgress": "Langkah {step} dari {total}",
+  "guidanceSaveFailed": "Belum tersimpan di perangkat. Coba simpan lagi.",
+  "guidanceLoading": "Memuat iklan…",
+  "guidanceHomeTitle": "Kenalan dengan rumah Oyen",
+  "guidanceHomeBody": "Empat area gratis: Santai, Makan, Main, dan Rawat. Kucing bisa beraktivitas sendiri. Ketuk kucing untuk mengajaknya; kalau sibuk, ia menunggu giliran. Temukan kucing lewat Koleksi. Main Puzzle selalu bisa langsung dimainkan.",
+  "guidanceMotion": "Kurangi gerak",
+  "guidanceMotionInfo": "Animasi lebih tenang. Preferensi kurangi gerak HP juga tetap diikuti.",
+  "guidanceResetAreas": "Semua area, tata letak, antrean dan kegiatan rumah ikut direset. Bahasa, suara, kurangi gerak dan jatah hadiah hari ini tetap.",
+  "guidanceSaving": "Menyimpan…",
+  "guidanceConsentFailed": "Pilihan privasi iklan belum bisa dibuka. Coba lagi nanti, ya."
 }

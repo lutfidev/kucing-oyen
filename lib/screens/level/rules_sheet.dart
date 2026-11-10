@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../game/model/rules.dart';
 import '../../game/render/render.dart';
+import '../../game/render/v2/guidance_art.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
+import '../../widgets/v2/ui_panel.dart';
 
 /// Membuka sheet "Aturan Oyen" (desain 05) di atas layar level. Ditutup
 /// dengan tombol tutup, ketuk latar gelap, tombol kembali sistem, atau
@@ -56,41 +58,14 @@ class _RulesSheetState extends State<RulesSheet>
 
   @override
   Widget build(BuildContext context) {
-    final c = context.koColors;
-    final t = context.koType;
     final space = context.koSpace;
-    final s = context.koSize;
     return KoSheet(
       label: context.l10n.rulesTitle,
       onClose: widget.onClose,
-      header: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Semantics(
-                  header: true,
-                  child: Text(context.l10n.rulesTitle, style: t.title),
-                ),
-                SizedBox(height: space.s2),
-                Text(
-                  context.l10n.rulesIntro,
-                  style: t.bodySmall.copyWith(color: c.inkSoft),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: space.s12),
-          KoIconButton(
-            icon: KoIcons.close,
-            semanticLabel: context.l10n.close,
-            tone: KoIconButtonTone.flat,
-            iconSize: s.iconSmall,
-            onPressed: widget.onClose,
-          ),
-        ],
+      header: UiSheetHeader(
+        title: context.l10n.rulesTitle,
+        subtitle: context.l10n.rulesIntro,
+        onClose: widget.onClose,
       ),
       children: [
         for (final rule in OyenRule.values) ...[
@@ -98,7 +73,7 @@ class _RulesSheetState extends State<RulesSheet>
           RuleCard(
             rule: rule,
             learned: widget.learned.contains(rule),
-            turn: _turn,
+            turn: rule == OyenRule.wall ? _turn : null,
           ),
         ],
       ],
@@ -135,7 +110,7 @@ class RuleCard extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          RuleArtView(rule, learned: learned, turn: turn),
+          GuidanceRuleArt(rule: rule, learned: learned, turn: turn),
           PositionedDirectional(
             start: -space.s6,
             top: -space.s6,
@@ -225,7 +200,7 @@ class RuleCard extends StatelessWidget {
       ];
     }
 
-    final card = KoCard(
+    final card = UiPanel(
       locked: !learned,
       padding: EdgeInsets.all(space.s10),
       child: Row(

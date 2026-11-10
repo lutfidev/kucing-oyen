@@ -15,6 +15,7 @@ import '../../l10n/names.dart';
 import '../../theme/ko_ui.dart';
 import '../../widgets/v2/ui_button.dart';
 import 'home_chrome.dart';
+import 'home_help.dart';
 import '../coins/coin_sheet.dart';
 import 'home_labels.dart';
 import 'home_scene.dart';
@@ -203,6 +204,18 @@ class _HomeViewState extends State<HomeView> {
                             child: Text(
                               homeAreaLabel(l, area),
                               style: KoUi.heading,
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: l.guidanceHomeTitle,
+                            onPressed: () => showHomeHelp(context),
+                            icon: const Icon(
+                              Icons.help_outline,
+                              color: KoUi.ink,
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: KoUi.target,
+                              minHeight: KoUi.target,
                             ),
                           ),
                           UiButton(

@@ -2464,4 +2464,36 @@ class AppLocalizationsPt extends AppLocalizations {
   String replayProgress(int step, int total) {
     return 'Passo $step de $total';
   }
+
+  @override
+  String get guidanceSaveFailed =>
+      'Ainda não foi salvo neste aparelho. Tente salvar de novo.';
+
+  @override
+  String get guidanceLoading => 'Carregando anúncio…';
+
+  @override
+  String get guidanceHomeTitle => 'Conheça a casa do Oyen';
+
+  @override
+  String get guidanceHomeBody =>
+      'Quatro áreas grátis: Descanso, Comida, Brincar e Cuidados. Os gatos fazem atividades sozinhos. Toque num gato para convidar; se estiver ocupado, ele espera a vez. Encontre os gatos na Coleção. Os puzzles estão sempre disponíveis.';
+
+  @override
+  String get guidanceMotion => 'Reduzir movimento';
+
+  @override
+  String get guidanceMotionInfo =>
+      'Animações mais suaves. A preferência do aparelho também é respeitada.';
+
+  @override
+  String get guidanceResetAreas =>
+      'Todas as áreas, decorações, filas e atividades da casa também serão reiniciadas. Idioma, som, movimento reduzido e limites de recompensas de hoje permanecem.';
+
+  @override
+  String get guidanceSaving => 'Salvando…';
+
+  @override
+  String get guidanceConsentFailed =>
+      'Não foi possível abrir as opções de privacidade dos anúncios. Tente de novo mais tarde.';
 }

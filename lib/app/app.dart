@@ -90,6 +90,7 @@ class _KucingOrenAppState extends State<KucingOrenApp>
   /// Bahasa yang sedang dipakai; aplikasi dibangun ulang hanya saat
   /// pilihan bahasa berubah, bukan tiap progres berubah.
   late AppLanguage _language = widget.progress.language;
+  late bool _reducedMotion = widget.progress.household.reducedMotion;
 
   @override
   void initState() {
@@ -108,7 +109,13 @@ class _KucingOrenAppState extends State<KucingOrenApp>
 
   void _onProgress() {
     final language = widget.progress.language;
-    if (language != _language) setState(() => _language = language);
+    final reduced = widget.progress.household.reducedMotion;
+    if (language != _language || reduced != _reducedMotion) {
+      setState(() {
+        _language = language;
+        _reducedMotion = reduced;
+      });
+    }
   }
 
   /// Bahasa HP berganti saat aplikasi terbuka.
@@ -143,11 +150,17 @@ class _KucingOrenAppState extends State<KucingOrenApp>
           supportedLocales: AppLocalizations.supportedLocales,
           theme: _theme,
           routerConfig: _router,
-          builder: (context, child) => HouseholdDriver(
-            progress: widget.progress,
-            router: _router,
-            enabled: widget.roomLife,
-            child: child!,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              disableAnimations:
+                  MediaQuery.disableAnimationsOf(context) || _reducedMotion,
+            ),
+            child: HouseholdDriver(
+              progress: widget.progress,
+              router: _router,
+              enabled: widget.roomLife,
+              child: child!,
+            ),
           ),
         ),
       ),
