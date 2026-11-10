@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
+import 'package:kucing_oren/app/effect_pool.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/sound_player.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
@@ -44,20 +44,113 @@ class _Deck implements MusicDeck {
 }
 
 /// Pool efek palsu: menghitung bunyi yang dimulai.
-class _Pool implements AudioPool {
+class _Pool implements EffectPool {
   int started = 0;
-
+  int active = 0;
   @override
-  Future<StopFunction> start({double volume = 1.0}) async {
+  Future<void> start() async {
     started++;
-    return () async {};
+    active++;
   }
 
   @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  Future<void> stop() async => active = 0;
+}
+
+class _Voice implements EffectVoice {
+  bool active = false;
+  int starts = 0;
+  @override
+  bool get playing => active;
+  @override
+  Future<void> resume() async {
+    active = true;
+    starts++;
+  }
+
+  @override
+  Future<void> stop() async => active = false;
+  void complete() => active = false;
 }
 
 void main() {
+  test(
+    'hold during voice expansion never starts the newly loaded voice',
+    () async {
+      final first = _Voice();
+      final second = _Voice();
+      final gate = Completer<EffectVoice>();
+      var loads = 0;
+      final pool = EffectPool(
+        loadVoice: () async => ++loads == 1 ? first : await gate.future,
+      );
+      final player = AudioplayersSoundPlayer(
+        setUpContext: false,
+        newPool: (_) async => pool,
+      );
+      await player.play(GameSound.tap);
+      final expanding = player.play(GameSound.tap);
+      await Future<void>.delayed(Duration.zero);
+      expect(loads, 2);
+      await player.stopEffects();
+      gate.complete(second);
+      await expanding;
+      expect(first.playing, isFalse);
+      expect(second.starts, 0);
+      await player.play(GameSound.tap);
+      expect(first.playing || second.playing, isTrue);
+      await player.stopEffects();
+    },
+  );
+  test(
+    'effects reuse completed voices without stopping newer playback',
+    () async {
+      final voices = <_Voice>[];
+      final pool = EffectPool(
+        loadVoice: () async {
+          final voice = _Voice();
+          voices.add(voice);
+          return voice;
+        },
+      );
+      for (var i = 0; i < 3; i++) {
+        await pool.start();
+        voices.single.complete();
+      }
+      expect(voices, hasLength(1));
+      await pool.start();
+      await pool.start();
+      expect(voices, hasLength(2));
+      expect(voices.every((v) => v.playing), isTrue);
+      for (var i = 0; i < 20; i++) {
+        await pool.start();
+      }
+      expect(voices, hasLength(EffectPool.maxVoices));
+      expect(voices.every((v) => v.playing), isTrue);
+      await pool.stop();
+      expect(voices.every((v) => !v.playing), isTrue);
+    },
+  );
+
+  test('stopping cancels queued effects and pending loads', () async {
+    final pool = _Pool();
+    final gate = Completer<EffectPool>();
+    final player = AudioplayersSoundPlayer(
+      setUpContext: false,
+      newPool: (_) => gate.future,
+    );
+    final pending = player.play(GameSound.meow);
+    final queued = player.play(GameSound.meow);
+    await Future<void>.delayed(Duration.zero);
+    await player.stopEffects();
+    gate.complete(pool);
+    await Future.wait([pending, queued]);
+    expect(pool.started, 0);
+    await player.play(GameSound.meow);
+    expect(pool.active, 1);
+    await player.stopEffects();
+    expect(pool.active, 0);
+  });
   group('efek suara', () {
     test(
       'pool yang gagal dibuat dicoba lagi saat diputar berikutnya',

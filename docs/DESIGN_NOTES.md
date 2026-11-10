@@ -2,6 +2,18 @@
 
 Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lama tersedia di riwayat Git dan bukan spesifikasi visual aktif.
 
+## Audit gerak dan suara v2 — 10 November 2026
+
+Langkah 13 mempertahankan aturan/ekonomi dan seni. Saat inactive, audio dan
+jam puzzle dijeda; kembali aktif tidak memasukkan waktu tertutup dan tidak
+membatalkan jeda pemain. Replay tertutup menunggu Putar lagi. Bunyi aktivitas
+rumah hanya sekali saat aktivitas terlihat berhasil tersimpan; Kurangi gerak
+tidak mematikan suara. Efek memakai voice pool maksimal tiga per jenis dan
+pembatalan load saat hold. Cache path SVG LRU maksimal 512 entri. Uji host,
+render dan batas perangkat ada di [laporan](design-v2/polish/REVIEW.md).
+Target 60 fps Android, TalkBack, layar terkunci dan audio native tetap belum
+diuji; pengujian perangkat dilanjutkan pada langkah 15, bukan memakai hasil v1.
+
 ## Area Bermain v2 — 10 November 2026
 
 Langkah 7 memakai satu fasilitas mainan dengan satu titik tunggu, panel status

@@ -83,8 +83,9 @@ class _KucingOrenAppState extends State<KucingOrenApp>
   late final AppLifecycleListener _lifecycle = AppLifecycleListener(
     onResume: () => widget.progress.refreshDay(),
     onPause: () => unawaited(widget.progress.retrySaves()),
-    onHide: () => _audio.hold(AudioHold.background),
-    onShow: () => _audio.release(AudioHold.background),
+    onStateChange: (state) => state == AppLifecycleState.resumed
+        ? _audio.release(AudioHold.background)
+        : _audio.hold(AudioHold.background),
   );
 
   /// Bahasa yang sedang dipakai; aplikasi dibangun ulang hanya saat
@@ -96,6 +97,10 @@ class _KucingOrenAppState extends State<KucingOrenApp>
   void initState() {
     super.initState();
     _lifecycle;
+    if (WidgetsBinding.instance.lifecycleState case final state?
+        when state != AppLifecycleState.resumed) {
+      _audio.hold(AudioHold.background);
+    }
     WidgetsBinding.instance.addObserver(this);
     widget.progress.addListener(_onProgress);
     _router.routerDelegate.addListener(_onRoute);

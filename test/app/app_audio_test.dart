@@ -97,6 +97,27 @@ void main() {
     expect(player.music, MusicTrack.home);
   });
 
+  testWidgets('inactive mutes audio until resumed, including overlapping ad', (
+    tester,
+  ) async {
+    final audio = testAudio();
+    final player = audio.player as FakeSoundPlayer;
+    await pumpApp(tester, audio: audio);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    await tester.pump();
+    expect(player.musicPaused, isTrue);
+    expect(player.effectsStops, greaterThan(0));
+    player.played.clear();
+    audio.play(GameSound.meow);
+    expect(player.played, isEmpty);
+    audio.hold(AudioHold.ad);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(player.musicPaused, isTrue);
+    audio.release(AudioHold.ad);
+    expect(player.musicPaused, isFalse);
+  });
+
   testWidgets('musik dijeda selama iklan koin dari Beranda', (tester) async {
     final player = FakeSoundPlayer();
     final audio = GameAudio(player: player, store: MemoryProgressStore());

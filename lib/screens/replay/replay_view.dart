@@ -83,7 +83,7 @@ class _ReplayViewState extends State<ReplayView>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    if (_reduceMotion) _ticker.stop();
+    if (_reduceMotion || !TickerMode.valuesOf(context).enabled) _ticker.stop();
   }
 
   @override

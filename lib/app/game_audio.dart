@@ -97,13 +97,17 @@ class GameAudio extends ChangeNotifier {
   Future<void> _setSettings(SoundSettings settings) async {
     if (settings == _settings) return;
     _settings = settings;
+    if (!effectsOn) unawaited(player.stopEffects());
     _sync();
     notifyListeners();
     await _queueSettingsSave();
   }
 
   void hold(AudioHold reason) {
-    if (_holds.add(reason)) _sync();
+    if (_holds.add(reason)) {
+      unawaited(player.stopEffects());
+      _sync();
+    }
   }
 
   void release(AudioHold reason) {
