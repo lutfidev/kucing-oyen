@@ -180,6 +180,10 @@ void main() {
                   _ => 'Конец',
                 });
                 await t.ensureVisible(end);
+                expect(
+                  t.getSize(end).shortestSide,
+                  greaterThanOrEqualTo(KoUi.target),
+                );
                 await t.tap(end);
                 await t.pumpAndSettle();
                 final slider = t.widget<ReplaySlider>(

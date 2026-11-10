@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'ko_colors.dart';
 import 'ko_radius.dart';
+import 'ko_size.dart';
 import 'ko_type.dart';
 import 'ko_ui.dart';
 
@@ -9,7 +10,7 @@ import 'ko_ui.dart';
 ThemeData puzzleTheme() => KoUi.theme().copyWith(
   extensions: [
     ...KoUi.theme().extensions.values.where(
-      (e) => e is! KoColors && e is! KoType && e is! KoRadius,
+      (e) => e is! KoColors && e is! KoType && e is! KoRadius && e is! KoSize,
     ),
     KoColors.standard.copyWith(
       cream: KoUi.cream,
@@ -62,5 +63,6 @@ ThemeData puzzleTheme() => KoUi.theme().copyWith(
       primary: KoUi.buttonRadius,
       slot: KoUi.chipRadius,
     ),
+    KoSize.standard.copyWith(iconButton: KoUi.target),
   ],
 );
