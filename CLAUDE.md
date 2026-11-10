@@ -167,3 +167,17 @@ dengan subset sinkron `puzzle_cat_sources.dart`, dibuat ulang melalui
 renderer benda yang sama. `puzzle_theme.dart` menjembatani token kontrol.
 Test baru `test/screens/puzzle_v2_test.dart`, ekspor `PUZZLE_REVIEW=true`,
 bukti dan batas `docs/design-v2/puzzle/REVIEW.md`.
+
+## Peta, hasil, dan replay v2 — langkah 11
+
+`lib/game/render/v2/journey_art.dart` menggambar peta, pictogram node,
+transisi dan ilustrasi hasil. Geometri/kurva tetap `PictureMapArt`;
+token memakai CatRig rumah dan aksesoris dari subset sinkron beserta
+metadata jangkar yang dihasilkan `embed_puzzle.py`. Inventaris navigasi
+35 bagian terbatas; puzzle tetap 15 bagian. Hasil portrait pendek/teks
+besar dapat digulir; statistik tidak mengecilkan label ke satu baris.
+Vas pecah memiliki replay. Replay Awal/Akhir, ×1/×2 dan jeda lifecycle
+tidak mengubah SimResult/hadiah. Cache paragraf nomor dibatasi 256 entri.
+Test `journey_v2_test.dart`, ekspor `JOURNEY_REVIEW=true`, laporan dan
+47 gambar di `docs/design-v2/journey/`. Berikutnya langkah 12 sesudah
+PR langkah 11 di-merge; tidak merge sendiri.

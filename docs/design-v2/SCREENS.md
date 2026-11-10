@@ -57,3 +57,11 @@ panjang membungkus; Aturan menjadi ikon pada lebar <390 dp dengan label
 semantik tetap. Papan bersama juga tampil pada hasil/replay; komposisi
 R01?R03/P01 dan sheet L03?L05 diselesaikan pada langkah 11?12.
 [Bukti render dan verifikasi](puzzle/REVIEW.md).
+
+## Implementasi langkah 11
+
+C01–C03/R01–R03/P01 memakai seni peta/hasil v2, token Oyen dengan rig
+rumah/aksesoris, header babak yang membungkus dan hasil yang dapat digulir
+pada portrait pendek/teks besar. Replay tersedia juga untuk vas pecah;
+Awal/Akhir, ×1/×2 dan jeda lifecycle melengkapi kontrol rekaman.
+[Bukti 47 render, test dan batas perangkat](journey/REVIEW.md).

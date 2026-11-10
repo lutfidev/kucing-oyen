@@ -35,7 +35,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 8. Area Perawatan dan interaksi kucing
 - [x] 9. Toko, koleksi, aksesoris, dan hias per area
 - [x] 10. Visual puzzle: papan, benda, dan Oyen
-- [ ] 11. Peta babak, hasil level, dan putar ulang
+- [x] 11. Peta babak, hasil level, dan putar ulang
 - [ ] 12. Tutorial, petunjuk, koin, dan Pengaturan
 - [ ] 13. Animasi, suara, aksesibilitas, dan performa
 - [ ] 14. Screenshot, ikon, splash, dan materi Play Store baru
@@ -202,6 +202,16 @@ ada di laporan. Berikutnya langkah 11 setelah PR langkah ini di-merge.
 **Selesai jika:** puzzle sejalan dengan rumah baru dan tetap dapat dimainkan dengan aturan teruji.
 
 ## 11. Peta babak, hasil level, dan putar ulang
+
+**Selesai implementasi pada 10 November 2026:** [tinjauan peta/hasil/replay](design-v2/journey/REVIEW.md).
+Dua peta, 20 pictogram node, bos, token Oyen/aksesoris, pintu babak dan
+ilustrasi hasil memakai visual v2. Hasil vas pecah memiliki akses replay;
+awal/akhir, ×1/×2, jejak/nomor dan jeda lifecycle tersedia. Layout portrait
+pendek/teks besar dapat digulir tanpa menyembunyikan ilustrasi. Progres,
+hadiah dan aturan tidak berubah. Verifikasi: 3.045 test lulus /135 skip,
+24 kombinasi ukuran/bahasa/teks, 47 render ditinjau, analyze/format,
+terjemahan/generator dan APK debug lulus. Batas HP/TalkBack/performa dan
+review independen dicatat. Berikutnya langkah 12 setelah PR ini di-merge.
 
 **Baca/ubah:** layar peta babak, hasil, replay, renderer/rute terkait; test navigasi/hasil/replay.
 

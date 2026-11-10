@@ -21,3 +21,4 @@ Konsep A pada [referensi terpilih](../design-brief/rumah-oyen-area/preview-perba
 Versi aplikasi lama tersimpan di branch [`archive/v1-desain-lama`](https://github.com/lutfidev/kucing-oyen/tree/archive/v1-desain-lama). Branch ini adalah snapshot kode v1; dokumentasinya sudah memuat arah redesign. Jalankan `git checkout archive/v1-desain-lama` untuk membuka kode lama (pastikan perubahan lokal disimpan dahulu).
 
 - [Visual puzzle langkah 10](puzzle/REVIEW.md): papan/benda v2, rig Oyen rumah, baki dan kontrol; aturan 20 level dipertahankan.
+- [Peta, hasil, dan replay langkah 11](journey/REVIEW.md): dua peta, node/bos, transisi babak, ilustrasi hasil, awal/akhir dan kecepatan replay.
