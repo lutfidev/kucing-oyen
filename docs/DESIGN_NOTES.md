@@ -131,6 +131,19 @@ Tidak ada kebutuhan atau ekonomi baru. Latar bergambar selaras area lain;
 karakter dan perlengkapan interaktif tetap live. Rincian hasil serta batas
 pengujian ada pada [review Perawatan](design-v2/care/REVIEW.md).
 
+## Toko dan Hias — langkah 9 (10 November 2026)
+
+Toko dan editor area menggunakan UI/aset v2, tujuan pembelian dan adopsi
+diproyeksikan dari algoritma transaksi yang sama. Barang penuh masuk Gudang;
+koin, ID, kuota dan skema tidak berubah. Editor memakai slot aman langkah 4,
+pratinjau draf, pemilih area dan filter Gudang; semua perubahan menunggu
+simpan sukses. Sumber seret di dekat tiap zona dan pilih-lalu-ketuk memberi
+akses ke slot di layar kecil. Keluar dengan perubahan menawarkan
+Simpan/Buang/Lanjut. Buang setelah gagal membatalkan transaksi draf tersebut;
+retry global tidak menyimpan layout yang dibuang. Rutinitas dijeda hingga
+editor benar-benar tertutup. Fasilitas yang berpindah slot mengakhiri
+kegiatan terkait tanpa efek parsial. [Bukti dan batas](design-v2/shop/REVIEW.md).
+
 ## Baseline sebelum paket aset v2
 
 - [Baseline performa kamar lama](performance-room-2026-11-08.md): 9 kucing, 21 barang termasuk mangkuk; sebelum/sesudah optimasi SVG, bingkai di atas 16,67 ms turun dari 14,3% menjadi 2,61%. Ini bukan kelulusan tampilan baru.
