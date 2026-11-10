@@ -3479,6 +3479,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Playing now'**
   String get playActive;
+
+  /// Home grooming area: careTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Time for some care'**
+  String get careTitle;
+
+  /// Home grooming area: careRules
+  ///
+  /// In en, this message translates to:
+  /// **'Pet for 2 seconds or brush for 6: +10 Joy, up to +30 combined per hour.'**
+  String get careRules;
+
+  /// Home grooming area: careReady
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for care'**
+  String get careReady;
+
+  /// Home grooming area: careFull
+  ///
+  /// In en, this message translates to:
+  /// **'Joy is full'**
+  String get careFull;
+
+  /// Home grooming area: careCooldown
+  ///
+  /// In en, this message translates to:
+  /// **'Care available in {minutes} min'**
+  String careCooldown(int minutes);
+
+  /// Home grooming area: careFree
+  ///
+  /// In en, this message translates to:
+  /// **'Grooming mat is free'**
+  String get careFree;
+
+  /// Home grooming area: careUsing
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is getting care'**
+  String careUsing(String name);
+
+  /// Home grooming area: careActive
+  ///
+  /// In en, this message translates to:
+  /// **'Getting some care'**
+  String get careActive;
+
+  /// Home grooming area: careQueue
+  ///
+  /// In en, this message translates to:
+  /// **'Care queue: {count}'**
+  String careQueue(int count);
+
+  /// Home grooming area: careChoose
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a cat to care for'**
+  String get careChoose;
 }
 
 class _AppLocalizationsDelegate

@@ -2337,4 +2337,41 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get playActive => 'Brincando agora';
+
+  @override
+  String get careTitle => 'Hora do carinho';
+
+  @override
+  String get careRules =>
+      'Carinho por 2 segundos ou escova por 6: +10 de Alegria, até +30 por hora entre os dois.';
+
+  @override
+  String get careReady => 'Pode receber carinho';
+
+  @override
+  String get careFull => 'Alegria cheia';
+
+  @override
+  String careCooldown(int minutes) {
+    return 'Carinho disponível em $minutes min';
+  }
+
+  @override
+  String get careFree => 'Tapetinho livre';
+
+  @override
+  String careUsing(String name) {
+    return '$name está recebendo cuidados';
+  }
+
+  @override
+  String get careActive => 'Recebendo carinho';
+
+  @override
+  String careQueue(int count) {
+    return 'Fila de cuidados: $count';
+  }
+
+  @override
+  String get careChoose => 'Escolha um gato para cuidar';
 }

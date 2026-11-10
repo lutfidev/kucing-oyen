@@ -2317,4 +2317,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get playActive => 'Playing now';
+
+  @override
+  String get careTitle => 'Time for some care';
+
+  @override
+  String get careRules =>
+      'Pet for 2 seconds or brush for 6: +10 Joy, up to +30 combined per hour.';
+
+  @override
+  String get careReady => 'Ready for care';
+
+  @override
+  String get careFull => 'Joy is full';
+
+  @override
+  String careCooldown(int minutes) {
+    return 'Care available in $minutes min';
+  }
+
+  @override
+  String get careFree => 'Grooming mat is free';
+
+  @override
+  String careUsing(String name) {
+    return '$name is getting care';
+  }
+
+  @override
+  String get careActive => 'Getting some care';
+
+  @override
+  String careQueue(int count) {
+    return 'Care queue: $count';
+  }
+
+  @override
+  String get careChoose => 'Choose a cat to care for';
 }

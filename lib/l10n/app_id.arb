@@ -562,5 +562,15 @@
   "playChoose": "Pilih teman main",
   "playToy": "Mainan: {toy}",
   "playQueue": "Menunggu giliran · {count}",
-  "playActive": "Lagi asyik main"
+  "playActive": "Lagi asyik main",
+  "careTitle": "Waktunya dimanja",
+  "careRules": "Elus 2 detik atau sikat 6 detik: +10 Senang, gabungan maksimal +30 per jam.",
+  "careReady": "Siap dimanja",
+  "careFull": "Senang sudah penuh",
+  "careCooldown": "Jatah kembali dalam {minutes} menit",
+  "careFree": "Alas rawat tersedia",
+  "careUsing": "{name} sedang dirawat",
+  "careActive": "Sedang dimanja",
+  "careQueue": "Antrean rawat: {count}",
+  "careChoose": "Pilih kucing untuk dirawat"
 }

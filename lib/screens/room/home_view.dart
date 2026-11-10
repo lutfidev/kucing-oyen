@@ -21,6 +21,7 @@ import 'home_scene.dart';
 import 'home_sheets.dart';
 import 'dining_panel.dart';
 import 'play_panel.dart';
+import 'care_panel.dart';
 
 /// The v2 player home. Model changes publish only after their snapshot saves.
 class HomeView extends StatefulWidget {
@@ -209,6 +210,7 @@ class _HomeViewState extends State<HomeView> {
                             animate: widget.life && !still,
                             onBowl: sheets.dining,
                             onToy: sheets.playing,
+                            onCare: sheets.caring,
                             onSelect: (kitty) {
                               c.selectHomeKitty(kitty);
                               c.seeKitty(kitty);
@@ -252,6 +254,10 @@ class _HomeViewState extends State<HomeView> {
                       ],
                       if (area == HomeArea.main) ...[
                         PlayPanel(progress: c, onChoose: sheets.playing),
+                        const SizedBox(height: KoUi.s8),
+                      ],
+                      if (area == HomeArea.rawat) ...[
+                        CarePanel(progress: c, onChoose: sheets.caring),
                         const SizedBox(height: KoUi.s8),
                       ],
                       if (selected != null)
@@ -379,7 +385,7 @@ class _HomeViewState extends State<HomeView> {
       kind: i == 0 ? UiButtonKind.primary : UiButtonKind.secondary,
       label: switch (actions[i]) {
         HomeActivity.play => l.homeInvitePlay,
-        HomeActivity.brush => l.homeInviteCare,
+        HomeActivity.brush => l.homeActivity('brush'),
         HomeActivity.eat => l.homeInviteEat,
         HomeActivity.pet => l.petAction,
         HomeActivity.rest => l.homeRest,
@@ -387,7 +393,10 @@ class _HomeViewState extends State<HomeView> {
       onPressed:
           busy ||
               (actions[i] == HomeActivity.eat && !c.canEatFromBowl(kitty)) ||
-              (actions[i] == HomeActivity.play && !c.canInvitePlay(kitty))
+              (actions[i] == HomeActivity.play && !c.canInvitePlay(kitty)) ||
+              ((actions[i] == HomeActivity.brush ||
+                      actions[i] == HomeActivity.pet) &&
+                  !c.canInviteCare(kitty, actions[i]))
           ? null
           : () => c.inviteKitty(kitty, actions[i]),
     );

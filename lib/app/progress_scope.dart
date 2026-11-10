@@ -6,6 +6,7 @@ import '../game/model/hints.dart';
 import '../game/model/home.dart';
 import '../game/model/dining.dart';
 import '../game/model/play.dart';
+import '../game/model/care.dart';
 import '../game/model/home_areas.dart';
 import '../game/model/home_routine.dart';
 import '../game/model/household.dart';

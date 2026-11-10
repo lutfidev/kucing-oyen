@@ -562,5 +562,15 @@
   "playChoose": "Выбрать кошку для игры",
   "playToy": "Игрушка: {toy}",
   "playQueue": "Ждут очереди · {count}",
-  "playActive": "Сейчас играет"
+  "playActive": "Сейчас играет",
+  "careTitle": "Время заботы",
+  "careRules": "Погладить — 2 секунды, причесать — 6: +10 радости, вместе до +30 в час.",
+  "careReady": "Можно приласкать",
+  "careFull": "Радость на максимуме",
+  "careCooldown": "Можно снова через {minutes} мин",
+  "careFree": "Коврик свободен",
+  "careUsing": "Заботимся о {name}",
+  "careActive": "Принимает ласку",
+  "careQueue": "В очереди: {count}",
+  "careChoose": "Выбрать котика для ухода"
 }
