@@ -59,7 +59,15 @@ Future<ProgressController> load({
   return c;
 }
 
-Future<void> pump(WidgetTester t, ProgressController c, {ShopTab? tab}) async {
+Future<void> pump(
+  WidgetTester t,
+  ProgressController c, {
+  ShopTab? tab,
+  Future<ArtPack> Function()? loader,
+}) async {
+  if (t.view.physicalSize / t.view.devicePixelRatio == const Size(800, 600)) {
+    setScreenSize(t, const Size(390, 844));
+  }
   await t.pumpWidget(
     RepaintBoundary(
       key: captureKey,
@@ -67,7 +75,7 @@ Future<void> pump(WidgetTester t, ProgressController c, {ShopTab? tab}) async {
         key: UniqueKey(),
         progress: c,
         roomLife: false,
-        loadShopArt: () async => pack,
+        loadShopArt: loader ?? () async => pack,
         initialLocation: tab == null ? '/' : '/toko?tab=${tab.name}',
         homeBuilder: (_) =>
             HomeView(progress: c, life: false, loadArt: () async => pack),
@@ -104,6 +112,60 @@ Future<void> capture(WidgetTester t, String name) async {
 }
 
 void main() {
+  testWidgets('catalog asset failure retries without changing the wallet', (
+    t,
+  ) async {
+    var tries = 0;
+    final c = await load();
+    await pump(
+      t,
+      c,
+      tab: ShopTab.items,
+      loader: () async {
+        if (++tries == 1) throw StateError('temporary asset failure');
+        return pack;
+      },
+    );
+    expect(find.text(l10nId.homeLoadFailed), findsOneWidget);
+    await t.tap(find.text(l10nId.homeRetry));
+    await settle(t);
+    expect(key('shop-item-tikus'), findsOneWidget);
+    expect(c.coins, 1000);
+    expect(t.takeException(), isNull);
+  });
+  testWidgets(
+    'store keeps ownership and Gudang can place the item again in another area',
+    (t) async {
+      final c = await load();
+      await c.saveAreaLayout(
+        c.household.areas.place(
+          c.home,
+          RoomItemId.kardus,
+          const AreaSlot(HomeArea.santai, RoomZone.floor, 0),
+        ),
+      );
+      await pump(t, c);
+      await tap(t, 'home-decorate');
+      await tap(t, 'decorate-item-kardus');
+      await tap(t, 'decorate-store');
+      await tap(t, 'decorate-storage');
+      expect(key('decorate-item-kardus'), findsOneWidget);
+      expect(key('decorate-item-mangkuk'), findsNothing);
+      await capture(t, 'gudang-id');
+      await tap(t, 'decorate-save');
+      expect(c.household.areas.placed[RoomItemId.kardus], isNull);
+      expect(c.home.room.owns(RoomItemId.kardus), isTrue);
+      await tap(t, 'home-decorate');
+      await tap(t, 'decorate-item-kardus');
+      await tap(t, 'decorate-area-rawat');
+      await tap(t, 'decorate-slot-floor-2');
+      await tap(t, 'decorate-save');
+      expect(
+        c.household.areas.placed[RoomItemId.kardus],
+        const AreaSlot(HomeArea.rawat, RoomZone.floor, 2),
+      );
+    },
+  );
   testWidgets('close purchase during write then retry from shop charges once', (
     t,
   ) async {
@@ -322,6 +384,9 @@ void main() {
         await capture(t, 'toko-${lang.name}-360-${(scale * 100).round()}');
         for (final tab in ShopTab.values) {
           await tap(t, 'shop-tab-${tab.name}');
+          if (lang == AppLanguage.id && scale == 1.0) {
+            await capture(t, 'toko-${tab.name}-id');
+          }
           expect(t.takeException(), isNull);
         }
         GoRouter.of(t.element(find.byType(ShopScreen))).go('/');

@@ -34,7 +34,8 @@ class ShopScreen extends StatefulWidget {
 
 class _ShopScreenState extends State<ShopScreen> {
   late ShopTab tab = widget.initialTab;
-  late Future<ArtPack> art = (widget.loadArt ?? ArtPack.load)();
+  late Future<ArtPack> art = loadArt();
+  Future<ArtPack> loadArt() => (widget.loadArt ?? ArtPack.load)();
 
   KittyId preview = KittyId.oyen;
   AccessoryId selected = accessories.first.id;
@@ -200,8 +201,9 @@ class _ShopScreenState extends State<ShopScreen> {
                             if (snapshot.hasError)
                               UiButton(
                                 label: l.homeRetry,
-                                onPressed: () =>
-                                    setState(() => art = ArtPack.load()),
+                                onPressed: () => setState(() {
+                                  art = loadArt();
+                                }),
                               ),
                           ],
                         ),
