@@ -87,6 +87,11 @@ class AreaSlot {
 }
 
 class HomeAreas {
+  /// The scheduler and scene choose the same optional facility.
+  RoomItemId? get playToy => RoomItemId.values
+      .where((id) => placed[id]?.area == HomeArea.main && roomItemOf(id).toy)
+      .firstOrNull;
+
   HomeAreas._(Map<RoomItemId, AreaSlot> placed)
     : placed = Map.unmodifiable(placed);
   final Map<RoomItemId, AreaSlot> placed;

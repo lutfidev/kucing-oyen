@@ -73,12 +73,7 @@ class Household {
       at,
       random: random,
       paused: paused,
-      toy: RoomItemId.values
-          .where(
-            (id) =>
-                areas.placed[id]?.area == HomeArea.main && roomItemOf(id).toy,
-          )
-          .firstOrNull,
+      toy: areas.playToy,
     );
     return (
       household: copyWith(routine: result.routine, effectiveAt: at),
