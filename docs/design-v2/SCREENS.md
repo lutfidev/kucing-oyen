@@ -8,7 +8,7 @@ Audit sumber: `lib/app/routes.dart`, `router.dart`, seluruh `lib/screens/`, dan 
 | --- | --- | --- | --- | --- |
 | H01 | `/`, Santai | header, tab, Hias, ruangan, kartu kucing, hadiah, Main Puzzle, nav | Oyen saja; 3 kucing; tanpa pilihan; kebutuhan rendah; perjalanan masuk/keluar | 01 empat area |
 | H02 | `/`, Makan | kerangka rumah, satu mangkuk, satu titik tunggu; panel jatah dan sheet pilih kucing | siap; makan; jatah kucing habis; semua sudah makan; siklus selesai; antrean/batal; simpan gagal/retry | [runtime langkah 6](dining/REVIEW.md) |
-| H03 | `/`, Main | satu posisi bermain, satu menunggu, kartu kegiatan | mainan dasar; mainan dibeli; cooldown; ajakan tertunda; tanpa kucing | 01 |
+| H03 | `/`, Main | satu mainan interaktif, satu posisi bermain, satu menunggu, panel dan sheet ajakan | bola dasar; mainan katalog; cooldown; penuh; antrean/batal; tanpa kucing | [runtime langkah 7](play/REVIEW.md) |
 | H04 | `/`, Rawat | alas/sikat, elus/sikat, kartu kegiatan | idle; rawat; batas elus habis; batal setelah ini; tanpa kucing | 01 |
 | H05 | Kucing (sheet baru di `/`) | daftar vertikal potret, lokasi/kegiatan, Temukan | 1/9 kucing; kucing berjalan; panjang nama; indikator Baru | 03 + WF Koleksi |
 | H06 | kartu kucing | potret, kebutuhan bernilai, ajakan, Camilan, Aksesoris, Temukan | penuh/rendah; antrean urutan; ditolak karena jatah; nonaktif saat simpan | 03 + WF Kartu |

@@ -72,6 +72,13 @@ Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API pen
 
 ## Aturan penting
 
+- Area Bermain v2 langkah 7: proyeksi `lib/game/model/play.dart` (`PlayState`)
+  memakai jam efektif, `HomeAreas.playToy` menyatukan pilihan fasilitas scheduler
+  dan scene. `PlayPanel`, `HomeSheets.playing`, `PlayToyPainter` menangani status,
+  ajakan/antrean dan satu mainan live. Kuota per kucing tidak berubah. Latar
+  `PaintedScenery.play`, review `docs/design-v2/play/REVIEW.md`; test
+  `play_flow_test.dart`/`play_v2_test.dart`, render `--dart-define=PLAY_REVIEW=true`.
+
 - Area Makan v2 langkah 6: `lib/game/model/dining.dart` adalah proyeksi read-only
   jatah/status mangkuk; `ProgressController.dining` memakai waktu efektif transaksi.
   `HomeRoutine.queueFor` dibagi scheduler dan UI agar prioritas/fairness sama.
