@@ -19,3 +19,5 @@ Status: **DISETUJUI pemilik repo pada 8 November 2026** setelah tinjauan mockup 
 Konsep A pada [referensi terpilih](../design-brief/rumah-oyen-area/preview-perbandingan.png) menjadi acuan gaya. Gambar AI menunjukkan arah seni; angka, aturan, dan cakupan mengikuti dokumen tertulis. Gambar bukan screenshot aplikasi atau aset runtime.
 
 Versi aplikasi lama tersimpan di branch [`archive/v1-desain-lama`](https://github.com/lutfidev/kucing-oyen/tree/archive/v1-desain-lama). Branch ini adalah snapshot kode v1; dokumentasinya sudah memuat arah redesign. Jalankan `git checkout archive/v1-desain-lama` untuk membuka kode lama (pastikan perubahan lokal disimpan dahulu).
+
+- [Visual puzzle langkah 10](puzzle/REVIEW.md): papan/benda v2, rig Oyen rumah, baki dan kontrol; aturan 20 level dipertahankan.

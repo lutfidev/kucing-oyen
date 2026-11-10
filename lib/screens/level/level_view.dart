@@ -23,6 +23,7 @@ import '../../l10n/captions.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
 import '../../theme/theme.dart';
+import '../../theme/puzzle_theme.dart';
 import '../../widgets/widgets.dart';
 import '../replay/replay_view.dart';
 import '../result/result_view.dart';
@@ -641,7 +642,12 @@ class _LevelViewState extends State<LevelView>
   void _closeReplay() => setState(() => _replaying = false);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Theme(
+    data: puzzleTheme(),
+    child: Builder(builder: _build),
+  );
+
+  Widget _build(BuildContext context) {
     final space = context.koSpace;
     final drag = _drag;
     final run = _run;

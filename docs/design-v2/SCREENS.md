@@ -49,3 +49,11 @@ Rute tak dikenal kembali ke rumah melalui onException router. ID babak/level yan
 ## Pemeriksaan lintas layar saat implementasi
 
 Semua baris diuji di 360×640, 390×844, 412×915; skala teks 100%/130%; empat bahasa; saldo besar 99999; seluruh kucing/barang dimiliki. Rumah baru, area kosong/penuh, antrean dan migrasi harus mendapat fixture terpisah. Setiap sheet diuji gulir sampai tombol/kartu terakhir dan Kembali Android. Animasi terus berjalan memakai helper settle yang sesuai, bukan menunggu semua animasi diam. Pengujian runtime v1 tidak membuktikan mockup v2 telah lulus overflow, semantik, atau TalkBack.
+
+## Implementasi langkah 10
+
+L01/L02 memakai papan, benda, Oyen, baki dan token kontrol v2. Judul
+panjang membungkus; Aturan menjadi ikon pada lebar <390 dp dengan label
+semantik tetap. Papan bersama juga tampil pada hasil/replay; komposisi
+R01?R03/P01 dan sheet L03?L05 diselesaikan pada langkah 11?12.
+[Bukti render dan verifikasi](puzzle/REVIEW.md).

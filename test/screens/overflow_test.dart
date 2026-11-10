@@ -264,7 +264,11 @@ void _cases(AppLanguage language) {
             location: AppRoutes.level(id, chapter: 2),
             progress: p(best: wonUpTo(id - 1)),
           );
-          await tester.tap(find.text(l.rules));
+          await tester.tap(
+            find.byWidgetPredicate(
+              (w) => w is KoIconButton && w.semanticLabel == l.rules,
+            ),
+          );
           await pumpFor(tester, KoSheet.openTime * 2);
           expect(tester.takeException(), isNull);
           final last = find.byType(RuleCard).last;

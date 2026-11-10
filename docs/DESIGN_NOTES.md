@@ -151,3 +151,13 @@ kegiatan terkait tanpa efek parsial. [Bukti dan batas](design-v2/shop/REVIEW.md)
 - HP uji Xiaomi 24117RN76O, Android 16/API 36. Manual debug/release sebelumnya dilaporkan baik; TalkBack dilewati atas permintaan pemilik repo. Desain baru perlu diuji ulang seluruhnya.
 - Masih perlu disiapkan/dicek saat rilis: AdMob asli, keystore, kebijakan privasi, UMP, iklan petunjuk, ikon tema, perangkat/Android lain, terjemahan, formulir dan listing Play Console.
 - Dokumen rilis dan kebijakan privasi dipertahankan. Jawaban kebijakan diverifikasi terhadap fitur serta ketentuan terbaru pada saat rilis.
+
+## Visual puzzle ? langkah 10 (10 November 2026)
+
+Papan memakai lantai kayu dengan grid tenang, perabot membulat dan
+bingkai paper/oranye pada benda pemain. Oyen memakai CatRig rumah,
+tanpa prop rumah ganda; subset SVG disematkan sinkron dan diperiksa
+terhadap sumber aslinya. Tidak ada perubahan aturan/ekonomi. Judul panjang
+membungkus; pada layar sempit Aturan menjadi ikon berlabel semantik.
+Tidak menambah teks pemain, dependency atau raster baru.
+[Bukti dan batas](design-v2/puzzle/REVIEW.md).

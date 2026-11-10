@@ -34,7 +34,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 7. Area Bermain: otomatis dan ajakan pemain
 - [x] 8. Area Perawatan dan interaksi kucing
 - [x] 9. Toko, koleksi, aksesoris, dan hias per area
-- [ ] 10. Visual puzzle: papan, benda, dan Oyen
+- [x] 10. Visual puzzle: papan, benda, dan Oyen
 - [ ] 11. Peta babak, hasil level, dan putar ulang
 - [ ] 12. Tutorial, petunjuk, koin, dan Pengaturan
 - [ ] 13. Animasi, suara, aksesibilitas, dan performa
@@ -183,6 +183,15 @@ dan profil perangkat dicatat. Berikutnya langkah 10 setelah PR ini di-merge.
 **Selesai jika:** koleksi mudah dicari tanpa memenuhi Beranda, pembelian dan tata letak per area tersimpan.
 
 ## 10. Visual puzzle: papan, benda, dan Oyen
+
+**Selesai implementasi pada 10 November 2026:** [tinjauan puzzle v2](design-v2/puzzle/REVIEW.md).
+Papan kayu, perabot, benda tetap/pemain, mangkuk, sorotan, baki/seretan
+serta kontrol memakai visual v2; Oyen memakai rig dan sumber SVG rumah.
+Grid, aturan, solusi dan ekonomi tetap. Verifikasi: 3.019 test lulus /
+135 skip, solver dan solusi 20 level sesuai, 24 kombinasi ukuran/bahasa/
+teks, analyze/format/generator/terjemahan bersih dan APK debug berhasil.
+19 render ditinjau. Batas HP/TalkBack/performa dan review independen
+ada di laporan. Berikutnya langkah 11 setelah PR langkah ini di-merge.
 
 **Baca/ubah:** `lib/screens/level/`, `lib/game/components/`, renderer papan/Oyen/benda, baki dan test terkait.
 
