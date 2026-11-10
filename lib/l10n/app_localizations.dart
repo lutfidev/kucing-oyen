@@ -3413,6 +3413,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Waiting spot'**
   String get diningWaiting;
+
+  /// Play area: playTitle
+  ///
+  /// In en, this message translates to:
+  /// **'Playtime'**
+  String get playTitle;
+
+  /// Play area: playRules
+  ///
+  /// In en, this message translates to:
+  /// **'Play for 8 seconds: +10 Joy, once every 30 minutes. Cats can also play on their own.'**
+  String get playRules;
+
+  /// Play area: playReady
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to play'**
+  String get playReady;
+
+  /// Play area: playFull
+  ///
+  /// In en, this message translates to:
+  /// **'Joy is full'**
+  String get playFull;
+
+  /// Play area: playCooldown
+  ///
+  /// In en, this message translates to:
+  /// **'Ready again in {minutes} min'**
+  String playCooldown(int minutes);
+
+  /// Play area: playFree
+  ///
+  /// In en, this message translates to:
+  /// **'Toy ready · one cat at a time'**
+  String get playFree;
+
+  /// Play area: playUsing
+  ///
+  /// In en, this message translates to:
+  /// **'{cat} is playing'**
+  String playUsing(String cat);
+
+  /// Play area: playChoose
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a playmate'**
+  String get playChoose;
+
+  /// Play area: playToy
+  ///
+  /// In en, this message translates to:
+  /// **'Toy: {toy}'**
+  String playToy(String toy);
+
+  /// Play area: playQueue
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for a turn · {count}'**
+  String playQueue(int count);
+
+  /// Play area: playActive
+  ///
+  /// In en, this message translates to:
+  /// **'Playing now'**
+  String get playActive;
 }
 
 class _AppLocalizationsDelegate

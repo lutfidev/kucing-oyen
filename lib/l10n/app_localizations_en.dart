@@ -2275,4 +2275,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diningWaiting => 'Waiting spot';
+
+  @override
+  String get playTitle => 'Playtime';
+
+  @override
+  String get playRules =>
+      'Play for 8 seconds: +10 Joy, once every 30 minutes. Cats can also play on their own.';
+
+  @override
+  String get playReady => 'Ready to play';
+
+  @override
+  String get playFull => 'Joy is full';
+
+  @override
+  String playCooldown(int minutes) {
+    return 'Ready again in $minutes min';
+  }
+
+  @override
+  String get playFree => 'Toy ready · one cat at a time';
+
+  @override
+  String playUsing(String cat) {
+    return '$cat is playing';
+  }
+
+  @override
+  String get playChoose => 'Choose a playmate';
+
+  @override
+  String playToy(String toy) {
+    return 'Toy: $toy';
+  }
+
+  @override
+  String playQueue(int count) {
+    return 'Waiting for a turn · $count';
+  }
+
+  @override
+  String get playActive => 'Playing now';
 }

@@ -2322,4 +2322,46 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get diningWaiting => 'Место ожидания';
+
+  @override
+  String get playTitle => 'Время играть';
+
+  @override
+  String get playRules =>
+      'Игра длится 8 секунд: +10 к радости раз в 30 минут. Кошки могут играть сами.';
+
+  @override
+  String get playReady => 'Можно играть';
+
+  @override
+  String get playFull => 'Радость на максимуме';
+
+  @override
+  String playCooldown(int minutes) {
+    return 'Можно играть через $minutes мин';
+  }
+
+  @override
+  String get playFree => 'Игрушка свободна · по одной кошке';
+
+  @override
+  String playUsing(String cat) {
+    return '$cat играет';
+  }
+
+  @override
+  String get playChoose => 'Выбрать кошку для игры';
+
+  @override
+  String playToy(String toy) {
+    return 'Игрушка: $toy';
+  }
+
+  @override
+  String playQueue(int count) {
+    return 'Ждут очереди · $count';
+  }
+
+  @override
+  String get playActive => 'Сейчас играет';
 }

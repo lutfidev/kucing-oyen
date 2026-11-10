@@ -2134,4 +2134,46 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get diningWaiting => 'Tempat menunggu';
+
+  @override
+  String get playTitle => 'Waktunya main';
+
+  @override
+  String get playRules =>
+      'Main 8 detik: +10 Senang, sekali tiap 30 menit. Oyen juga bisa main sendiri.';
+
+  @override
+  String get playReady => 'Siap main';
+
+  @override
+  String get playFull => 'Senang sudah penuh';
+
+  @override
+  String playCooldown(int minutes) {
+    return 'Bisa main lagi dalam $minutes menit';
+  }
+
+  @override
+  String get playFree => 'Mainan siap · satu kucing bergantian';
+
+  @override
+  String playUsing(String cat) {
+    return '$cat sedang main';
+  }
+
+  @override
+  String get playChoose => 'Pilih teman main';
+
+  @override
+  String playToy(String toy) {
+    return 'Mainan: $toy';
+  }
+
+  @override
+  String playQueue(int count) {
+    return 'Menunggu giliran · $count';
+  }
+
+  @override
+  String get playActive => 'Lagi asyik main';
 }

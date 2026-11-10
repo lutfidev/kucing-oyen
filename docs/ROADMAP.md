@@ -31,7 +31,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 4. Model banyak area, rutinitas, dan migrasi progres
 - [x] 5. Beranda Santai dan perpindahan area
 - [x] 6. Area Makan: otomatis dan ajakan pemain
-- [ ] 7. Area Bermain: otomatis dan ajakan pemain
+- [x] 7. Area Bermain: otomatis dan ajakan pemain
 - [ ] 8. Area Perawatan dan interaksi kucing
 - [ ] 9. Toko, koleksi, aksesoris, dan hias per area
 - [ ] 10. Visual puzzle: papan, benda, dan Oyen
@@ -128,6 +128,16 @@ Langkah berikutnya 7 (Bermain) setelah PR langkah 6 di-merge.
 **Selesai jika:** alur otomatis/ajakan dari Santai ke Makan lalu kembali ke rutinitas berfungsi dan semua keadaan terlihat jelas.
 
 ## 7. Area Bermain: otomatis dan ajakan pemain
+
+**Selesai implementasi 10 November 2026:** [tinjauan Bermain v2](design-v2/play/REVIEW.md).
+Latar ilustrasi, satu mainan live, posisi main/tunggu, ajakan/otomatis,
+antrean/batal serta kesiapan/cooldown per kucing tersedia. Bola dasar gratis;
+mainan katalog tidak membuka kuota baru. Hadiah dan transaksi tetap SPEC/v1.
+Render empat bahasa, regresi kembali dari puzzle, gangguan mainan,
+pause/reload/retry dan jam mundur tersedia. Temuan review independen selesai.
+Verifikasi final: 2.948 test lulus, 135 skip, analyze/format bersih,
+terjemahan/generator sesuai, APK debug berhasil; batas HP pada laporan review.
+Langkah berikutnya 8 (Perawatan) setelah PR langkah 7 di-merge.
 
 - Terapkan latar/mainan yang disepakati, pilihan otomatis dan ajakan, animasi mulai/main/selesai serta kapasitas/lintasan agar kucing tidak bertumpuk.
 - Hubungkan Senang dan hadiah sesuai spesifikasi; test batas hadiah, mainan dipakai, gangguan aktivitas dan kembali dari puzzle.

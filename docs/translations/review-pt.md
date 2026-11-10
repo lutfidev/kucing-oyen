@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-552 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+563 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -579,6 +579,17 @@ files and anything written there is overwritten.
 | `diningQueue` | Dining queue · {count} | Fila para comer · {count} | Dining area v2: diningQueue Placeholders: `{count}`. | |
 | `diningChoose` | Choose a cat to eat | Escolha um gato para comer | Dining area v2: diningChoose | |
 | `diningWaiting` | Waiting spot | Lugar de espera | Dining area v2: diningWaiting | |
+| `playTitle` | Playtime | Hora de brincar | Play area: playTitle | |
+| `playRules` | Play for 8 seconds: +10 Joy, once every 30 minutes. Cats can also play on their own. | Brincar por 8 segundos: +10 de Alegria, uma vez a cada 30 minutos. Os gatos também brincam sozinhos. | Play area: playRules | |
+| `playReady` | Ready to play | Pronto para brincar | Play area: playReady | |
+| `playFull` | Joy is full | Alegria cheia | Play area: playFull | |
+| `playCooldown` | Ready again in {minutes} min | Pode brincar de novo em {minutes} min | Play area: playCooldown Placeholders: `{minutes}`. | |
+| `playFree` | Toy ready · one cat at a time | Brinquedo livre · um gato por vez | Play area: playFree | |
+| `playUsing` | {cat} is playing | {cat} está brincando | Play area: playUsing Placeholders: `{cat}`. | |
+| `playChoose` | Choose a playmate | Escolher quem vai brincar | Play area: playChoose | |
+| `playToy` | Toy: {toy} | Brinquedo: {toy} | Play area: playToy Placeholders: `{toy}`. | |
+| `playQueue` | Waiting for a turn · {count} | Na fila para brincar · {count} | Play area: playQueue Placeholders: `{count}`. | |
+| `playActive` | Playing now | Brincando agora | Play area: playActive | |
 
 ---
 

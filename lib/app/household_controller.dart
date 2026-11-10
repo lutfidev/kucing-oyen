@@ -23,6 +23,19 @@ extension HouseholdController on ProgressController {
   bool get householdSaveFailed => _pendingHome != null;
   bool get householdBusy => _homeBusy;
 
+  PlayState get playing => PlayState(
+    needs: _needs,
+    routine: _household.routine,
+    areas: _household.areas,
+    now: _effectiveNow,
+  );
+
+  bool canInvitePlay(KittyId kitty) =>
+      _home.ownsKitty(kitty) &&
+      playing.availability(kitty) == PlayAvailability.ready &&
+      _household.routine.activities[kitty]?.kind != HomeActivity.play &&
+      _household.routine.invitations[kitty]?.kind != HomeActivity.play;
+
   DiningState get dining => DiningState(
     needs: _needs,
     routine: _household.routine,

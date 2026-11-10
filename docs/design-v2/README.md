@@ -11,6 +11,7 @@ Status: **DISETUJUI pemilik repo pada 8 November 2026** setelah tinjauan mockup 
 - [Model rumah langkah 4](model/REVIEW.md): area, rutinitas, ajakan, migrasi snapshot dan kontrak integrasi layar berikutnya.
 - [Beranda langkah 5](home/REVIEW.md): runtime rumah v2, koleksi/ajakan/hadiah; visual akhir diterima pemilik repo pada 9 November 2026 dan langkah 5 selesai. PR #44 sudah di-merge.
 - [Area Makan langkah 6](dining/REVIEW.md): fasilitas makan, ajakan/otomatis, antrean, status jatah dan render empat bahasa.
+- [Area Bermain langkah 7](play/REVIEW.md): fasilitas mainan, ajakan/otomatis, antrean dan cooldown per kucing.
 - [Rencana penyelesaian langkah 1](PLAN.md): hasil yang tersedia dan syarat persetujuan.
 
 Konsep A pada [referensi terpilih](../design-brief/rumah-oyen-area/preview-perbandingan.png) menjadi acuan gaya. Gambar AI menunjukkan arah seni; angka, aturan, dan cakupan mengikuti dokumen tertulis. Gambar bukan screenshot aplikasi atau aset runtime.

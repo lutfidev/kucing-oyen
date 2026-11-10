@@ -551,5 +551,16 @@
   "diningFree": "Tigela pronta · um gato come por vez",
   "diningQueue": "Fila para comer · {count}",
   "diningChoose": "Escolha um gato para comer",
-  "diningWaiting": "Lugar de espera"
+  "diningWaiting": "Lugar de espera",
+  "playTitle": "Hora de brincar",
+  "playRules": "Brincar por 8 segundos: +10 de Alegria, uma vez a cada 30 minutos. Os gatos também brincam sozinhos.",
+  "playReady": "Pronto para brincar",
+  "playFull": "Alegria cheia",
+  "playCooldown": "Pode brincar de novo em {minutes} min",
+  "playFree": "Brinquedo livre · um gato por vez",
+  "playUsing": "{cat} está brincando",
+  "playChoose": "Escolher quem vai brincar",
+  "playToy": "Brinquedo: {toy}",
+  "playQueue": "Na fila para brincar · {count}",
+  "playActive": "Brincando agora"
 }

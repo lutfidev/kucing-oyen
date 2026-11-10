@@ -5,6 +5,11 @@ import 'package:flutter/painting.dart';
 abstract final class PaintedScenery {
   static const loungeAsset = 'assets/art/v2/scenes/santai-painted-v1.webp';
   static const diningAsset = 'assets/art/v2/scenes/makan-painted-v1.webp';
+  static const playAsset = 'assets/art/v2/scenes/main-painted-v1.webp';
+  static const ImageProvider play = ResizeImage(
+    AssetImage(playAsset),
+    width: decodeWidth,
+  );
   static const decodeWidth = 1024;
   static const ImageProvider lounge = ResizeImage(
     AssetImage(loungeAsset),

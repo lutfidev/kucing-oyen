@@ -25,6 +25,12 @@ tunggu, ajakan/otomatis serta jatah per kucing. Siklus mangkuk tetap 4 jam sejak
 makan pertama selesai, Makanan +40 bila <70, tanpa biaya isi ulang. Rincian dan
 render runtime: [tinjauan Makan](design-v2/dining/REVIEW.md).
 
+Area Bermain rumah v2 (langkah 7) menampilkan satu fasilitas mainan dan satu
+posisi tunggu. Bola dasar gratis; mainan katalog terpasang dipilih sesuai urutan
+katalog, tanpa kuota tambahan. Otomatis bila Senang <70 atau diajak saat belum
+penuh: +10 Senang setelah 8 detik, sekali per 30 menit. Hadiah tetap gabungan
+10 koin/kucing/hari bila Makanan dan Senang ≥70. [Tinjauan Bermain](design-v2/play/REVIEW.md).
+
 ## Aturan Oyen
 
 Setiap langkah, Oyen mengecek aturan dari atas ke bawah dan menjalankan aturan pertama yang cocok. Satu langkah = satu aksi. Urutan ini final dan dipakai solver; "jatuhkan barang" sengaja ditaruh sebelum "lihat ikan" supaya Oyen tetap iseng meski sedang mengejar ikan.

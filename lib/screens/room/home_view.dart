@@ -20,6 +20,7 @@ import 'home_labels.dart';
 import 'home_scene.dart';
 import 'home_sheets.dart';
 import 'dining_panel.dart';
+import 'play_panel.dart';
 
 /// The v2 player home. Model changes publish only after their snapshot saves.
 class HomeView extends StatefulWidget {
@@ -207,6 +208,7 @@ class _HomeViewState extends State<HomeView> {
                             selected: selected,
                             animate: widget.life && !still,
                             onBowl: sheets.dining,
+                            onToy: sheets.playing,
                             onSelect: (kitty) {
                               c.selectHomeKitty(kitty);
                               c.seeKitty(kitty);
@@ -239,15 +241,19 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         ),
                       const SizedBox(height: KoUi.s8),
-                      if (area == HomeArea.makan) ...[
-                        DiningPanel(progress: c, onChoose: sheets.dining),
-                        const SizedBox(height: KoUi.s8),
-                      ],
                       if (present.isEmpty)
                         Padding(
                           padding: const EdgeInsets.all(KoUi.s8),
                           child: Text(l.homeEmpty, style: KoUi.small),
                         ),
+                      if (area == HomeArea.makan) ...[
+                        DiningPanel(progress: c, onChoose: sheets.dining),
+                        const SizedBox(height: KoUi.s8),
+                      ],
+                      if (area == HomeArea.main) ...[
+                        PlayPanel(progress: c, onChoose: sheets.playing),
+                        const SizedBox(height: KoUi.s8),
+                      ],
                       if (selected != null)
                         _selection(context, selected, sheets, pack)
                       else
@@ -379,7 +385,9 @@ class _HomeViewState extends State<HomeView> {
         HomeActivity.rest => l.homeRest,
       },
       onPressed:
-          busy || (actions[i] == HomeActivity.eat && !c.canEatFromBowl(kitty))
+          busy ||
+              (actions[i] == HomeActivity.eat && !c.canEatFromBowl(kitty)) ||
+              (actions[i] == HomeActivity.play && !c.canInvitePlay(kitty))
           ? null
           : () => c.inviteKitty(kitty, actions[i]),
     );

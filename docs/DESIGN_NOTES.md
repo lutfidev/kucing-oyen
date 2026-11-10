@@ -2,6 +2,23 @@
 
 Dimulai ulang pada **8 November 2026** bersama roadmap baru. Catatan langkah lama tersedia di riwayat Git dan bukan spesifikasi visual aktif.
 
+## Area Bermain v2 — 10 November 2026
+
+Langkah 7 memakai satu fasilitas mainan dengan satu titik tunggu, panel status
+Senang/cooldown, sheet pilih kucing dan antrean/batal. Bola dasar gratis tetap
+tersedia tanpa kepemilikan katalog. Mainan opsional pertama menurut urutan
+katalog menjadi fasilitas; kegiatan aktif mempertahankan fasilitasnya sampai
+selesai atau diinterupsi karena barang disimpan. Kuota bermain tetap per kucing,
+bukan per mainan. Model dan renderer memakai pilihan fasilitas yang sama.
+
+Latar raster mengikuti ilustrasi Makan/Santai melalui imagegen bawaan; sumber,
+prompt, lisensi dan ukuran ada di [PAINTED_ASSET](design-v2/play/PAINTED_ASSET.md).
+Mainan dirender terpisah tanpa bola duplikat dari rig. Dua posisi dan lintasan
+serah giliran mengikuti Makan; target mainan terpisah dari target kucing,
+minimal 48 dp. Kurangi gerak mempertahankan pose diam dan tidak mengubah kuota.
+Tidak mengubah ekonomi, skema snapshot, atau aturan puzzle. Editor tetap langkah 9.
+Hasil render dan batas pengujian: [review Bermain](design-v2/play/REVIEW.md).
+
 ## Area Makan v2 — 9 November 2026
 
 Langkah 6 melengkapi fasilitas makan dengan satu mangkuk dan titik tunggu,

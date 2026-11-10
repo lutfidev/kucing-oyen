@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-552 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+563 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -579,6 +579,17 @@ files and anything written there is overwritten.
 | `diningQueue` | Dining queue · {count} | Очередь к миске · {count} | Dining area v2: diningQueue Placeholders: `{count}`. | |
 | `diningChoose` | Choose a cat to eat | Выбрать кота для кормления | Dining area v2: diningChoose | |
 | `diningWaiting` | Waiting spot | Место ожидания | Dining area v2: diningWaiting | |
+| `playTitle` | Playtime | Время играть | Play area: playTitle | |
+| `playRules` | Play for 8 seconds: +10 Joy, once every 30 minutes. Cats can also play on their own. | Игра длится 8 секунд: +10 к радости раз в 30 минут. Кошки могут играть сами. | Play area: playRules | |
+| `playReady` | Ready to play | Можно играть | Play area: playReady | |
+| `playFull` | Joy is full | Радость на максимуме | Play area: playFull | |
+| `playCooldown` | Ready again in {minutes} min | Можно играть через {minutes} мин | Play area: playCooldown Placeholders: `{minutes}`. | |
+| `playFree` | Toy ready · one cat at a time | Игрушка свободна · по одной кошке | Play area: playFree | |
+| `playUsing` | {cat} is playing | {cat} играет | Play area: playUsing Placeholders: `{cat}`. | |
+| `playChoose` | Choose a playmate | Выбрать кошку для игры | Play area: playChoose | |
+| `playToy` | Toy: {toy} | Игрушка: {toy} | Play area: playToy Placeholders: `{toy}`. | |
+| `playQueue` | Waiting for a turn · {count} | Ждут очереди · {count} | Play area: playQueue Placeholders: `{count}`. | |
+| `playActive` | Playing now | Сейчас играет | Play area: playActive | |
 
 ---
 
