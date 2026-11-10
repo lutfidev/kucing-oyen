@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../../game/model/chapter.dart';
 import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
+import '../../game/render/v2/journey_art.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
+import '../../theme/ko_ui.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -128,7 +130,6 @@ class ChapterCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
-    final t = context.koType;
     final space = context.koSpace;
     final s = context.koSize;
     final unlocked = chapter.isUnlocked(progress);
@@ -152,8 +153,11 @@ class ChapterCard extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Container(
-          height: s.chapterCard,
-          padding: EdgeInsetsDirectional.only(start: space.s8, end: space.s12),
+          constraints: BoxConstraints(minHeight: s.chapterCard),
+          padding: EdgeInsets.symmetric(
+            horizontal: space.s8,
+            vertical: space.s8,
+          ),
           decoration: BoxDecoration(
             color: c.surface,
             borderRadius: BorderRadius.circular(context.koRadius.slot),
@@ -167,25 +171,31 @@ class ChapterCard extends StatelessWidget {
               ),
               SizedBox(width: space.s10),
               Expanded(
-                child: _FitStart(
-                  Text(
-                    title,
-                    maxLines: 1,
-                    style: t.chipLabel.copyWith(color: c.ink),
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: KoUi.small.copyWith(fontWeight: FontWeight.w700),
+                    ),
+                    if (done || !unlocked)
+                      Text(
+                        done ? l.chapterDone : l.chapterLocked,
+                        style: KoUi.caption,
+                      ),
+                  ],
                 ),
               ),
-              if (done || !unlocked) ...[
-                SizedBox(width: space.s10),
-                _StatusBadge(done: done),
-              ],
               SizedBox(width: space.s10),
               KoStar(size: s.iconChip, strokeWidth: MapArt.starStroke),
               SizedBox(width: space.s2),
               Text(
                 '$stars/${chapter.maxStars}',
                 maxLines: 1,
-                style: t.numberChipSmall.copyWith(color: c.ink),
+                style: KoUi.small.copyWith(
+                  color: c.ink,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -195,48 +205,7 @@ class ChapterCard extends StatelessWidget {
   }
 }
 
-/// "✓ Selesai" (desain 02) atau "🔒 Terkunci" (tidak ada di desain).
-class _StatusBadge extends StatelessWidget {
-  const _StatusBadge({required this.done});
-
-  final bool done;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.koColors;
-    final s = context.koSize;
-    final space = context.koSpace;
-    final (bg, fg) = done
-        ? (c.success, c.onSuccess)
-        : (c.nodeLocked, c.nodeLockedInk);
-    return Container(
-      height: s.badge,
-      padding: EdgeInsets.symmetric(horizontal: space.s8),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(context.koRadius.pill),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          KoIcon(
-            done ? KoIcons.checkBold : KoIcons.lockBold,
-            size: s.iconMicro,
-            color: fg,
-          ),
-          SizedBox(width: space.s4),
-          Text(
-            done ? context.l10n.chapterDone : context.l10n.chapterLocked,
-            maxLines: 1,
-            style: context.koType.tag.copyWith(color: fg),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// "★ 5/30" di kanan judul.
+/// Chapter star summary, also exposed as a localized semantic value.
 class _StarChip extends StatelessWidget {
   const _StarChip({required this.stars, required this.maxStars});
 
@@ -306,7 +275,11 @@ class _ChapterIcon extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.scale(size.width / MapArt.chapterIconViewBox);
-    paintChapterIcon(canvas, chapter);
+    JourneyArt.node(
+      canvas,
+      chapter == 1 ? 'kulkas' : 'sofa',
+      MapArt.chapterIconViewBox,
+    );
   }
 
   @override

@@ -918,6 +918,7 @@ void main() {
       expect(tester.getSize(_board), size);
       await tester.tap(find.text('Lihat hasil'));
       await showResult(tester);
+      await tester.ensureVisible(find.text('Ulangi'));
       await tester.tap(find.text('Ulangi'));
       await tester.pumpAndSettle();
       expect(tester.getSize(_board), size);

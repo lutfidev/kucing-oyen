@@ -1,5 +1,13 @@
 Original Ginger Logic v2 artwork, 2026.
 
+Journey illustrations addition (10 November 2026):
+lib/game/render/v2/journey_art.dart contains original procedural Canvas
+artwork for both chapter maps, twenty node pictograms, the chapter doorway,
+outcome scenes, bowl, vase fragments, rays and confetti. The Oyen rig and
+accessories reuse the existing project SVG sources; embed_puzzle.py embeds
+the finite subset and accessory anchor metadata. No external images or new
+third-party artwork are included. These additions follow the project license.
+
 Created for this repository as vector geometry in tool/art_v2/generate.py
 and procedural animation in lib/game/render/v2/cat_rig.dart.
 No downloaded artwork, raster tracing, or third-party clip art is included.

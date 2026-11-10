@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-595 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+597 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -237,7 +237,7 @@ files and anything written there is overwritten.
 | `brokenAtStep` | Broke on step {n} | Разбита на шаге {n} | Vase screen: the step the vase broke. Placeholders: `{n}`. | |
 | `tryAgain` | Try Again | Ещё раз | Vase screen button: arrange again. | |
 | `nextAnyway` | Next Anyway | Всё равно дальше | Vase screen button: next level anyway. | |
-| `vaseArtLabel` | The vase lies broken behind Oyen, and Mom pops in at the door, annoyed | За Ойеном разбитая ваза, в дверях появляется недовольная мама | Screen reader label of the vase screen picture. | |
+| `vaseArtLabel` | Oyen reaches the bowl, with broken vase pieces beside him | Ойен добрался до миски, рядом лежат осколки вазы | Screen reader label of the vase screen picture. | |
 | `loopTitle` | Oyen got bored going in circles. | Ойену надоело ходить по кругу. | Fail screen title: going in circles. | |
 | `loopBadge` | Going in circles | По кругу | Fail screen chip: going in circles. | |
 | `loopMessage` | Round and round, no bowl in sight. Oh well, back to sleep. | Кругами да кругами, а миски нет. Ну и ладно, спать. | Fail screen message: going in circles. | |
@@ -622,6 +622,8 @@ files and anything written there is overwritten.
 | `decorateFloor` | Floor | Пол | V2 shop or area decoration: decorateFloor | |
 | `decorateAllowed` | Allowed areas: {areas} | Разрешённые зоны: {areas} | V2 shop or area decoration: decorateAllowed Placeholders: `{areas}`. | |
 | `decorateBowlFixed` | The built-in bowl stays in the Dining Area. | Встроенная миска остаётся в зоне еды. | V2 shop or area decoration: decorateBowlFixed | |
+| `replayEnd` | End | Конец | Replay control: jump to the final step. | |
+| `replayProgress` | Step {step} of {total} | Шаг {step} из {total} | Current replay step and total; includes step zero. Placeholders: `{step}`, `{total}`. | |
 
 ---
 

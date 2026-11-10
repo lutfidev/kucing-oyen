@@ -14,8 +14,11 @@ import '../../game/model/kitties.dart';
 import '../../game/model/map_walk.dart';
 import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
+import '../../game/render/v2/journey_art.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/l10n.dart';
+import '../../theme/ko_ui.dart';
+import '../../theme/puzzle_theme.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'chapter_header.dart';
@@ -271,6 +274,9 @@ class _ChapterViewState extends State<ChapterView>
             ? KittyLook.walkPose(_last.inMicroseconds / 1e6)
             : KittyPose.idle,
         facing: walking ? _facing(walk.t) : KittyFacing.down,
+        time: walking && !MediaQuery.disableAnimationsOf(context)
+            ? _last.inMicroseconds / 1e6
+            : null,
       );
     }
     final index = ChapterView.tokenIndexOf(
@@ -329,8 +335,6 @@ class _ChapterViewState extends State<ChapterView>
 
   @override
   Widget build(BuildContext context) {
-    final c = context.koColors;
-    final kitchen = widget.chapter.number == 1;
     return PopScope(
       canPop: !_introOpen,
       onPopInvokedWithResult: (didPop, _) {
@@ -339,49 +343,52 @@ class _ChapterViewState extends State<ChapterView>
         }
         _cancel();
       },
-      child: Scaffold(
-        backgroundColor: kitchen ? c.mapKitchen : c.mapFloor,
-        body: Stack(
-          children: [
-            CustomMultiChildLayout(
-              delegate: _HeaderOverMap(),
+      child: Theme(
+        data: puzzleTheme(),
+        child: Builder(
+          builder: (context) => Scaffold(
+            backgroundColor: KoUi.cream,
+            body: Stack(
               children: [
-                LayoutId(id: _Slot.map, child: _map(context)),
-                LayoutId(
-                  id: _Slot.header,
-                  child: ChapterHeader(
-                    chapter: widget.chapter,
-                    other: widget.other,
-                    progress: widget.progress,
-                    onBack: widget.onBack,
-                    onOpen: widget.onOpen,
-                  ),
+                CustomMultiChildLayout(
+                  delegate: _HeaderOverMap(),
+                  children: [
+                    LayoutId(id: _Slot.map, child: _map(context)),
+                    LayoutId(
+                      id: _Slot.header,
+                      child: ChapterHeader(
+                        chapter: widget.chapter,
+                        other: widget.other,
+                        progress: widget.progress,
+                        onBack: widget.onBack,
+                        onOpen: widget.onOpen,
+                      ),
+                    ),
+                  ],
                 ),
+                if (_capturing)
+                  Positioned.fill(
+                    child: Listener(
+                      behavior: HitTestBehavior.opaque,
+                      onPointerDown: (_) => _cancel(),
+                    ),
+                  ),
+                if (_introOpen)
+                  Positioned.fill(
+                    child: ChapterIntroCard(
+                      chapter: widget.chapter,
+                      onClose: () => setState(() => _introOpen = false),
+                    ),
+                  ),
               ],
             ),
-            if (_capturing)
-              Positioned.fill(
-                child: Listener(
-                  behavior: HitTestBehavior.opaque,
-                  onPointerDown: (_) => _cancel(),
-                ),
-              ),
-            if (_introOpen)
-              Positioned.fill(
-                child: ChapterIntroCard(
-                  chapter: widget.chapter,
-                  onClose: () => setState(() => _introOpen = false),
-                ),
-              ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget _map(BuildContext context) {
-    final c = context.koColors;
-    final kitchen = widget.chapter.number == 1;
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
@@ -392,9 +399,7 @@ class _ChapterViewState extends State<ChapterView>
         return SingleChildScrollView(
           controller: _scroll,
           child: CustomPaint(
-            painter: kitchen
-                ? _Tiles(c.mapKitchenTile, _scale)
-                : _Floor(c.plank, c.plankJoint, _scale),
+            painter: _JourneyFloor(_scale),
             child: SizedBox(
               width: width,
               height: math.max(height, _viewport),
@@ -450,84 +455,18 @@ class _HeaderOverMap extends MultiChildLayoutDelegate {
   bool shouldRelayout(_HeaderOverMap old) => false;
 }
 
-/// Lantai kayu: garis antarpapan tiap 48 px dan sambungan papan tiap
-/// 142 px (`repeating-linear-gradient` desain 23), di koordinat layar
-/// desain dikali [scale]. Peta mulai di y [_origin] layar desain.
-class _Floor extends CustomPainter {
-  _Floor(this.plank, this.joint, this.scale);
-
-  final Color plank;
-  final Color joint;
+class _JourneyFloor extends CustomPainter {
+  const _JourneyFloor(this.scale);
   final double scale;
-
-  static const double _row = 48;
-  static const double _column = 142;
-  static const double _line = 2;
-
   @override
   void paint(Canvas canvas, Size size) {
-    final rows = Paint()..color = plank;
-    final first = ((_origin - _row) / _row).floor();
-    for (var k = first; ; k++) {
-      final top = (k * _row + _row - _line - _origin) * scale;
-      if (top > size.height) break;
-      canvas.drawRect(Rect.fromLTWH(0, top, size.width, _line * scale), rows);
-    }
-    final columns = Paint()..color = joint;
-    for (var k = 0; ; k++) {
-      final left = (k * _column + _column - _line) * scale;
-      if (left > size.width) break;
-      canvas.drawRect(
-        Rect.fromLTWH(left, 0, _line * scale, size.height),
-        columns,
-      );
-    }
+    if (scale <= 0 || !scale.isFinite || size.isEmpty) return;
+    canvas.scale(scale);
+    JourneyArt.floor(canvas, size / scale);
   }
 
   @override
-  bool shouldRepaint(_Floor old) =>
-      old.plank != plank || old.joint != joint || old.scale != scale;
-}
-
-/// y layar desain di atas peta yang digulir.
-const _origin = PictureMapArt.mapTop - PictureMapArt.topPad;
-
-/// Ubin dapur: kotak 28 px biru di kanan atas dan kiri bawah tiap petak
-/// 56 px (`conic-gradient` desain 23d), di koordinat layar desain dikali
-/// [scale].
-class _Tiles extends CustomPainter {
-  _Tiles(this.tile, this.scale);
-
-  final Color tile;
-  final double scale;
-
-  static const double _cell = 56;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = tile;
-    const half = _cell / 2;
-    final first = (_origin / _cell).floor();
-    for (var row = first; ; row++) {
-      final top = (row * _cell - _origin) * scale;
-      if (top > size.height) break;
-      for (var col = 0; col * _cell * scale < size.width; col++) {
-        final left = col * _cell * scale;
-        canvas
-          ..drawRect(
-            Rect.fromLTWH(left + half * scale, top, half * scale, half * scale),
-            paint,
-          )
-          ..drawRect(
-            Rect.fromLTWH(left, top + half * scale, half * scale, half * scale),
-            paint,
-          );
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(_Tiles old) => old.tile != tile || old.scale != scale;
+  bool shouldRepaint(_JourneyFloor old) => old.scale != scale;
 }
 
 class _NotFound extends StatelessWidget {

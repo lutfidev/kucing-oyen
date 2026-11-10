@@ -7,6 +7,7 @@ import '../../game/render/render.dart';
 import '../../game/sim/sim.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
+import '../../theme/puzzle_theme.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'result_art.dart';
@@ -69,6 +70,7 @@ class ResultView extends StatelessWidget {
         steps: result.steps,
         itemsUsed: session.itemsUsed,
         brokenAt: brokenAt,
+        onReplay: onReplay,
         onRetry: onArrange,
         onNext: onNext,
         coins: coins,
@@ -128,7 +130,12 @@ class SuccessResult extends StatelessWidget {
   final VoidCallback? onReplay;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Theme(
+    data: puzzleTheme(),
+    child: Builder(builder: _build),
+  );
+
+  Widget _build(BuildContext context) {
     final c = context.koColors;
     final t = context.koType;
     final space = context.koSpace;
@@ -263,16 +270,19 @@ class _ReplayLink extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         excludeFromSemantics: true,
         onTap: onTap,
-        child: Center(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              label,
-              maxLines: 1,
-              style: context.koType.chipLabel.copyWith(
-                color: color,
-                decoration: TextDecoration.underline,
-                decorationColor: color,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                maxLines: 1,
+                style: context.koType.chipLabel.copyWith(
+                  color: color,
+                  decoration: TextDecoration.underline,
+                  decorationColor: color,
+                ),
               ),
             ),
           ),
@@ -293,6 +303,7 @@ class VaseResult extends StatelessWidget {
     required this.onRetry,
     required this.onNext,
     this.coins = 0,
+    this.onReplay,
   });
 
   /// "Level 13 · Vas Ibu".
@@ -300,6 +311,7 @@ class VaseResult extends StatelessWidget {
 
   /// Koin yang baru didapat; 0 = tanpa kotak koin.
   final int coins;
+  final VoidCallback? onReplay;
   final int steps;
   final int itemsUsed;
 
@@ -309,7 +321,12 @@ class VaseResult extends StatelessWidget {
   final VoidCallback onNext;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Theme(
+    data: puzzleTheme(),
+    child: Builder(builder: _build),
+  );
+
+  Widget _build(BuildContext context) {
     final c = context.koColors;
     final t = context.koType;
     final space = context.koSpace;
@@ -394,6 +411,8 @@ class VaseResult extends StatelessWidget {
             onPressed: onNext,
           ),
         ),
+        SizedBox(height: space.s12),
+        _ReplayLink(onPressed: onReplay),
       ],
     );
   }
@@ -435,7 +454,12 @@ class BoredResult extends StatelessWidget {
   };
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Theme(
+    data: puzzleTheme(),
+    child: Builder(builder: _build),
+  );
+
+  Widget _build(BuildContext context) {
     final c = context.koColors;
     final t = context.koType;
     final space = context.koSpace;

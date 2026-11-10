@@ -210,7 +210,7 @@
   "brokenAtStep": "Разбита на шаге {n}",
   "tryAgain": "Ещё раз",
   "nextAnyway": "Всё равно дальше",
-  "vaseArtLabel": "За Ойеном разбитая ваза, в дверях появляется недовольная мама",
+  "vaseArtLabel": "Ойен добрался до миски, рядом лежат осколки вазы",
   "loopTitle": "Ойену надоело ходить по кругу.",
   "loopBadge": "По кругу",
   "loopMessage": "Кругами да кругами, а миски нет. Ну и ладно, спать.",
@@ -594,5 +594,7 @@
   "decorateWall": "Стена",
   "decorateFloor": "Пол",
   "decorateAllowed": "Разрешённые зоны: {areas}",
-  "decorateBowlFixed": "Встроенная миска остаётся в зоне еды."
+  "decorateBowlFixed": "Встроенная миска остаётся в зоне еды.",
+  "replayEnd": "Конец",
+  "replayProgress": "Шаг {step} из {total}"
 }

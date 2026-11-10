@@ -6,6 +6,7 @@ import 'package:path_drawing/path_drawing.dart';
 import '../../theme/ko_colors.dart';
 import '../../theme/ko_shadow.dart';
 import '../../theme/ko_type.dart';
+import '../../theme/ko_ui.dart';
 import '../sim/direction.dart';
 import '../sim/pos.dart';
 import 'board_scene.dart';
@@ -90,7 +91,6 @@ void paintBoard(
 /// Nomor jejak putar ulang ([BoardScene.trail]): pill bernomor di pojok
 /// kiri atas petak, gelap kalau aktif (`trail` di `Board.dc.html`).
 void paintBoardTrail(Canvas canvas, BoardScene scene) {
-  const c = KoColors.standard;
   for (final mark in scene.trail) {
     final text = _markText(mark.label, mark.active);
     final width = math.max(
@@ -108,9 +108,9 @@ void paintBoardTrail(Canvas canvas, BoardScene scene) {
     canvas
       ..drawRRect(
         pill.inflate(ring),
-        Paint()..color = mark.active ? c.orange : c.orangeLine,
+        Paint()..color = mark.active ? KoUi.orange : KoUi.orangePressed,
       )
-      ..drawRRect(pill, Paint()..color = mark.active ? c.ink : c.surface)
+      ..drawRRect(pill, Paint()..color = mark.active ? KoUi.ink : KoUi.paper)
       ..drawParagraph(
         text,
         pill.center - Offset(text.width / 2, text.height / 2),
@@ -124,7 +124,7 @@ final _markTexts = <(String, bool), Paragraph>{};
 
 Paragraph _markText(String label, bool active) =>
     _markTexts[(label, active)] ??= () {
-      const c = KoColors.standard;
+      if (_markTexts.length >= 256) _markTexts.clear();
       final builder =
           ParagraphBuilder(
               ParagraphStyle(
@@ -137,7 +137,7 @@ Paragraph _markText(String label, bool active) =>
             )
             ..pushStyle(
               TextStyle(
-                color: active ? c.cream : c.ink,
+                color: active ? KoUi.paper : KoUi.ink,
                 fontFamily: KoFonts.fredoka,
                 fontSize: BoardArt.markFont,
                 fontWeight: FontWeight.w700,
@@ -166,7 +166,7 @@ void paintBoardPath(Canvas canvas, BoardScene scene) {
   canvas.drawPath(
     dashPath(line, dashArray: CircularIntervalList(BoardArt.pathDash)),
     Paint()
-      ..color = KoColors.standard.orangeLine
+      ..color = KoUi.orangePressed
       ..style = PaintingStyle.stroke
       ..strokeWidth = BoardArt.pathWidth
       ..strokeCap = StrokeCap.round

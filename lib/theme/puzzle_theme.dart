@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'ko_colors.dart';
 import 'ko_radius.dart';
+import 'ko_size.dart';
 import 'ko_type.dart';
 import 'ko_ui.dart';
 
@@ -9,10 +10,20 @@ import 'ko_ui.dart';
 ThemeData puzzleTheme() => KoUi.theme().copyWith(
   extensions: [
     ...KoUi.theme().extensions.values.where(
-      (e) => e is! KoColors && e is! KoType && e is! KoRadius,
+      (e) => e is! KoColors && e is! KoType && e is! KoRadius && e is! KoSize,
     ),
     KoColors.standard.copyWith(
       cream: KoUi.cream,
+      creamDim: KoUi.cream,
+      mapKitchen: KoUi.cream,
+      mapFloor: KoUi.honey,
+      nodeLocked: KoUi.peach,
+      nodeLockedInk: KoUi.mutedInk,
+      nodeLockedEdge: KoUi.homeLine,
+      brickDeep: KoUi.danger,
+      brickEdge: KoUi.danger,
+      successText: KoUi.success,
+      introScrim: KoUi.scrim,
       surface: KoUi.paper,
       ink: KoUi.ink,
       inkSoft: KoUi.mutedInk,
@@ -30,6 +41,13 @@ ThemeData puzzleTheme() => KoUi.theme().copyWith(
       water: KoUi.water,
     ),
     KoType.standard.copyWith(
+      display: KoUi.display,
+      title: KoUi.title,
+      headline: KoUi.display,
+      headlineSmall: KoUi.title,
+      headingLarge: KoUi.title,
+      overlineLarge: KoUi.caption,
+      overline: KoUi.caption,
       body: KoUi.body,
       bodySmall: KoUi.small,
       label: KoUi.label,
@@ -45,5 +63,6 @@ ThemeData puzzleTheme() => KoUi.theme().copyWith(
       primary: KoUi.buttonRadius,
       slot: KoUi.chipRadius,
     ),
+    KoSize.standard.copyWith(iconButton: KoUi.target),
   ],
 );

@@ -4,7 +4,7 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
 import '../../game/render/render.dart';
-import '../../game/sim/sim.dart';
+import '../../game/render/v2/journey_art.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -60,7 +60,7 @@ class _RaysPainter extends CustomPainter {
   const _RaysPainter();
 
   @override
-  void paint(Canvas canvas, Size size) => paintRays(canvas);
+  void paint(Canvas canvas, Size size) => JourneyArt.rays(canvas);
 
   @override
   bool shouldRepaint(_RaysPainter old) => false;
@@ -159,73 +159,24 @@ class _FloorPainter extends CustomPainter {
       old.radius != radius;
 }
 
-/// Mangkuk berisi pakan, viewBox [ResultArt.bowlViewBox] diperkecil ke
-/// kotaknya (`preserveAspectRatio` bawaan: `xMidYMid meet`). Hiasan saja.
-class _Bowl extends StatelessWidget {
-  const _Bowl({required this.vase});
-
-  final bool vase;
-
-  @override
-  Widget build(BuildContext context) {
-    return ExcludeSemantics(
-      child: FittedBox(
-        child: CustomPaint(
-          size: ResultArt.bowlViewBox,
-          painter: _BowlPainter(vase: vase),
-        ),
-      ),
-    );
-  }
-}
-
-class _BowlPainter extends CustomPainter {
-  _BowlPainter({required this.vase});
-
-  final bool vase;
-
-  @override
-  void paint(Canvas canvas, Size size) =>
-      vase ? paintVaseBowl(canvas) : paintSuccessBowl(canvas);
-
-  @override
-  bool shouldRepaint(_BowlPainter old) => old.vase != vase;
-}
-
-/// Ilustrasi layar Berhasil: Oyen makan dengan bahagia di mangkuknya.
+/// Oyen v2 celebrates beside the same bowl used in the puzzle.
 class SuccessArt extends StatelessWidget {
   const SuccessArt({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ResultArtCard(
+    return const CustomPaint(
       size: ResultArt.successCard,
-      pattern: ResultArt.successPattern,
-      children: [
-        Positioned.fromRect(
-          rect: ResultArt.successOyen,
-          child: OyenView(
-            OyenLook(pose: OyenPose.eat, dir: Direction.down),
-            size: ResultArt.successOyen.width,
-          ),
-        ),
-        Positioned.fromRect(
-          rect: ResultArt.successBowl,
-          child: const _Bowl(vase: false),
-        ),
-      ],
+      painter: _JourneyResult(),
     );
   }
 }
 
-/// Ilustrasi layar vas pecah: vas pecah di belakang Oyen, Ibu muncul dari
-/// pintu (`koPeek`), dan "PRANG!" bergoyang (`koShake`). Diam di keadaan
-/// akhir kalau animasi dimatikan.
-class VaseArt extends StatefulWidget {
+/// Static v2 outcome illustration. No repeating decorative ticker.
+class VaseArt extends StatelessWidget {
   const VaseArt({super.key});
 
-  /// Sudut "PRANG!" di waktu [t] (0..1) satu goyangan: -4° → 4° → -4°,
-  /// tiap potongan `ease-in-out`.
+  /// Historical v1 keyframe helper, retained for gallery regression tests.
   static double swingAt(double t) {
     const swing = ResultArt.prangSwing;
     if (t < 0.5) {
@@ -239,41 +190,6 @@ class VaseArt extends StatefulWidget {
   }
 
   @override
-  State<VaseArt> createState() => _VaseArtState();
-}
-
-class _VaseArtState extends State<VaseArt> with TickerProviderStateMixin {
-  late final AnimationController _peek = AnimationController(
-    vsync: this,
-    duration: ResultArt.momPeekTime,
-  );
-  late final AnimationController _shake = AnimationController(
-    vsync: this,
-    duration: ResultArt.prangSwingTime,
-  );
-  bool _still = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _still = MediaQuery.disableAnimationsOf(context);
-    if (_still) {
-      _peek.value = 1;
-      _shake.stop();
-    } else {
-      if (_peek.value == 0) _peek.forward();
-      if (!_shake.isAnimating) _shake.repeat();
-    }
-  }
-
-  @override
-  void dispose() {
-    _peek.dispose();
-    _shake.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Semantics(
       container: true,
@@ -281,61 +197,29 @@ class _VaseArtState extends State<VaseArt> with TickerProviderStateMixin {
       // Sama dengan `aria-label` di desain.
       label: context.l10n.vaseArtLabel,
       excludeSemantics: true,
-      child: ResultArtCard(
+      child: const CustomPaint(
         size: ResultArt.vaseCard,
-        pattern: ResultArt.vasePattern,
-        children: [
-          Positioned.fill(
-            child: CustomPaint(
-              painter: _VaseScenePainter(
-                peek: _peek,
-                shake: _shake,
-                still: _still,
-              ),
-            ),
-          ),
-          Positioned.fromRect(
-            rect: ResultArt.vaseOyen,
-            child: OyenView(
-              OyenLook(pose: OyenPose.eat, dir: Direction.down),
-              size: ResultArt.vaseOyen.width,
-            ),
-          ),
-          Positioned.fromRect(
-            rect: ResultArt.vaseBowl,
-            child: const _Bowl(vase: true),
-          ),
-        ],
+        painter: _JourneyResult(broken: true),
       ),
     );
   }
 }
 
-class _VaseScenePainter extends CustomPainter {
-  _VaseScenePainter({
-    required this.peek,
-    required this.shake,
-    required this.still,
-  }) : super(repaint: Listenable.merge([peek, shake]));
-
-  final Animation<double> peek;
-  final Animation<double> shake;
-
-  /// Tanpa animasi: "PRANG!" tegak.
-  final bool still;
-
+class _JourneyResult extends CustomPainter {
+  const _JourneyResult({this.broken = false});
+  final bool broken;
   @override
   void paint(Canvas canvas, Size size) {
-    paintVaseScene(
-      canvas,
-      momShift: ResultArt.momPeek * (1 - Curves.easeOut.transform(peek.value)),
-      prangAngle: still ? 0 : VaseArt.swingAt(shake.value),
+    canvas.save();
+    canvas.clipRRect(
+      RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(22)),
     );
+    JourneyArt.result(canvas, size, broken: broken);
+    canvas.restore();
   }
 
   @override
-  bool shouldRepaint(_VaseScenePainter old) =>
-      old.peek != peek || old.shake != shake || old.still != still;
+  bool shouldRepaint(_JourneyResult old) => old.broken != broken;
 }
 
 /// Papan layar gagal (desain 08): papan [scene] yang sedikit pudar

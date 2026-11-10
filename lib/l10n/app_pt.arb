@@ -210,7 +210,7 @@
   "brokenAtStep": "Quebrou no passo {n}",
   "tryAgain": "Tentar de Novo",
   "nextAnyway": "Seguir Assim",
-  "vaseArtLabel": "O vaso quebrado atrás do Oyen, e a Mamãe aparece na porta, brava",
+  "vaseArtLabel": "Oyen chega à tigela, com os cacos do vaso ao lado",
   "loopTitle": "Oyen cansou de andar em círculos.",
   "loopBadge": "Em círculos",
   "loopMessage": "Dá voltas e voltas e nada da tigela. Ah, bora dormir de novo.",
@@ -594,5 +594,7 @@
   "decorateWall": "Parede",
   "decorateFloor": "Chão",
   "decorateAllowed": "Áreas permitidas: {areas}",
-  "decorateBowlFixed": "A tigela da casa fica na Área de Refeições."
+  "decorateBowlFixed": "A tigela da casa fica na Área de Refeições.",
+  "replayEnd": "Fim",
+  "replayProgress": "Passo {step} de {total}"
 }

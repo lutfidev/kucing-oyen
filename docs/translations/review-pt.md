@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-595 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+597 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -237,7 +237,7 @@ files and anything written there is overwritten.
 | `brokenAtStep` | Broke on step {n} | Quebrou no passo {n} | Vase screen: the step the vase broke. Placeholders: `{n}`. | |
 | `tryAgain` | Try Again | Tentar de Novo | Vase screen button: arrange again. | |
 | `nextAnyway` | Next Anyway | Seguir Assim | Vase screen button: next level anyway. | |
-| `vaseArtLabel` | The vase lies broken behind Oyen, and Mom pops in at the door, annoyed | O vaso quebrado atrás do Oyen, e a Mamãe aparece na porta, brava | Screen reader label of the vase screen picture. | |
+| `vaseArtLabel` | Oyen reaches the bowl, with broken vase pieces beside him | Oyen chega à tigela, com os cacos do vaso ao lado | Screen reader label of the vase screen picture. | |
 | `loopTitle` | Oyen got bored going in circles. | Oyen cansou de andar em círculos. | Fail screen title: going in circles. | |
 | `loopBadge` | Going in circles | Em círculos | Fail screen chip: going in circles. | |
 | `loopMessage` | Round and round, no bowl in sight. Oh well, back to sleep. | Dá voltas e voltas e nada da tigela. Ah, bora dormir de novo. | Fail screen message: going in circles. | |
@@ -622,6 +622,8 @@ files and anything written there is overwritten.
 | `decorateFloor` | Floor | Chão | V2 shop or area decoration: decorateFloor | |
 | `decorateAllowed` | Allowed areas: {areas} | Áreas permitidas: {areas} | V2 shop or area decoration: decorateAllowed Placeholders: `{areas}`. | |
 | `decorateBowlFixed` | The built-in bowl stays in the Dining Area. | A tigela da casa fica na Área de Refeições. | V2 shop or area decoration: decorateBowlFixed | |
+| `replayEnd` | End | Fim | Replay control: jump to the final step. | |
+| `replayProgress` | Step {step} of {total} | Passo {step} de {total} | Current replay step and total; includes step zero. Placeholders: `{step}`, `{total}`. | |
 
 ---
 

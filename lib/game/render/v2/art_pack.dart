@@ -15,14 +15,24 @@ class ArtPack {
 
   /// Generated, finite subset for synchronous Flame/CustomPainter rendering.
   /// Uses the same SVG sources as the house rig; no asset IO during paint.
-  factory ArtPack.oyen(Map<String, String> sources) => ArtPack._(
+  factory ArtPack.oyen(
+    Map<String, String> sources, {
+    Map<String, dynamic> metadata = const {},
+  }) => ArtPack._(
     Map.unmodifiable({
       for (final entry in sources.entries)
         entry.key: ArtPart(
           SvgTemplate(entry.value).render(const {}),
-          const Size(128, 128),
-          Offset.zero,
-          null,
+          metadata[entry.key] == null
+              ? const Size(128, 128)
+              : Size(
+                  (metadata[entry.key]['width'] as num).toDouble(),
+                  (metadata[entry.key]['height'] as num).toDouble(),
+                ),
+          metadata[entry.key] == null
+              ? Offset.zero
+              : _point(metadata[entry.key]['pivot']),
+          metadata[entry.key]?['anchor'] as String?,
           null,
         ),
     }),

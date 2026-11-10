@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../game/model/chapter.dart';
-import '../../game/model/kitties.dart';
 import '../../game/render/render.dart';
+import '../../game/render/v2/journey_art.dart';
+import '../../game/render/v2/cat_rig.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
 import '../../theme/theme.dart';
@@ -261,13 +262,9 @@ class _Picture extends StatelessWidget {
                 Positioned(
                   left: ChapterIntroCard.oyenAt.dx,
                   bottom: ChapterIntroCard.oyenAt.dy,
-                  child: const KittyView(
-                    look: KittyLook(
-                      kitty: KittyId.oyen,
-                      pose: KittyPose.walk1,
-                      facing: KittyFacing.right,
-                    ),
-                    size: ChapterIntroCard.oyen,
+                  child: const CustomPaint(
+                    size: Size.square(ChapterIntroCard.oyen),
+                    painter: _IntroCat(),
                   ),
                 ),
               ],
@@ -288,9 +285,18 @@ class _Svg extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) => switch (art) {
-    _Art.door => paintChapterIntroDoor(canvas),
-    _Art.paws => paintChapterIntroPaws(canvas),
+    _Art.door => JourneyArt.door(canvas),
+    _Art.paws => _paws(canvas),
   };
+
+  void _paws(Canvas canvas) {
+    for (var i = 0; i < 4; i++) {
+      canvas.save();
+      canvas.translate(10 + i * 20.0, i.isEven ? 8 : 22);
+      JourneyArt.paw(canvas);
+      canvas.restore();
+    }
+  }
 
   @override
   bool shouldRepaint(_Svg old) => old.art != art;
@@ -300,7 +306,7 @@ class _Confetti extends CustomPainter {
   const _Confetti();
 
   @override
-  void paint(Canvas canvas, Size size) => paintChapterIntroConfetti(canvas);
+  void paint(Canvas canvas, Size size) => JourneyArt.confetti(canvas);
 
   @override
   bool shouldRepaint(_Confetti old) => false;
@@ -326,4 +332,17 @@ class _Planks extends CustomPainter {
 
   @override
   bool shouldRepaint(_Planks old) => old.floor != floor || old.line != line;
+}
+
+class _IntroCat extends CustomPainter {
+  const _IntroCat();
+  @override
+  void paint(Canvas canvas, Size size) => JourneyArt.cat(
+    canvas,
+    Offset.zero & size,
+    motion: CatMotion.walk,
+    direction: CatDirection.right,
+  );
+  @override
+  bool shouldRepaint(_IntroCat old) => false;
 }

@@ -161,3 +161,16 @@ terhadap sumber aslinya. Tidak ada perubahan aturan/ekonomi. Judul panjang
 membungkus; pada layar sempit Aturan menjadi ikon berlabel semantik.
 Tidak menambah teks pemain, dependency atau raster baru.
 [Bukti dan batas](design-v2/puzzle/REVIEW.md).
+
+## Peta, hasil, dan replay v2 — 10 November 2026
+
+Langkah 11 memakai seni Canvas orisinal untuk dua peta, pictogram node,
+bos, pintu babak dan ilustrasi hasil. Rig Oyen dan aksesoris mengikuti
+sumber SVG rumah; geometri/rute dan kontrak progres lama dipertahankan.
+Ilustrasi vas kini statis tanpa Ibu di pintu; label empat bahasa mengikuti
+gambar aktual. Hasil portrait pendek/teks besar dapat digulir agar ilustrasi
+tetap terlihat; kontrol bawah tetap dapat dicapai. Replay vas tersedia,
+ditambah awal/akhir, ×1/×2 dan jeda saat aplikasi masuk latar. Tidak mengubah
+ekonomi atau menambah hadiah untuk replay. Ini pilihan implementasi visual,
+bukan penerimaan visual pemilik repo atau kelulusan uji HP.
+[Bukti dan batas](design-v2/journey/REVIEW.md).

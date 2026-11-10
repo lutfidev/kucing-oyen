@@ -868,7 +868,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get vaseArtLabel =>
-      'Vas pecah di belakang Oyen, Ibu muncul dari pintu dengan wajah kesal';
+      'Oyen sampai ke mangkuk, dengan pecahan vas di sampingnya';
 
   @override
   String get loopTitle => 'Oyen bosan mondar-mandir.';
@@ -2294,4 +2294,12 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get decorateBowlFixed => 'Mangkuk bawaan tetap di Area Makan.';
+
+  @override
+  String get replayEnd => 'Akhir';
+
+  @override
+  String replayProgress(int step, int total) {
+    return 'Langkah $step dari $total';
+  }
 }
