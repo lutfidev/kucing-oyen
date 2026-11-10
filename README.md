@@ -10,7 +10,8 @@ Pada 8 November 2026, pemilik repo memilih perombakan seluruh visual mengikuti *
 
 ![Acuan baru Rumah Oyen — pilih konsep A di kiri](docs/design-brief/rumah-oyen-area/preview-perbandingan.png)
 
-- [Roadmap baru, berikutnya langkah 10](docs/ROADMAP.md)
+- [Roadmap baru, berikutnya langkah 11](docs/ROADMAP.md)
+- [Visual puzzle v2](docs/design-v2/puzzle/REVIEW.md)
 - [Toko, koleksi, dan Hias per area v2](docs/design-v2/shop/REVIEW.md)
 - [Spesifikasi dan mockup desain v2 — disetujui](docs/design-v2/README.md)
 - [Brief arah desain](docs/design-brief/rumah-oyen-area/ARAH_DESAIN.md)

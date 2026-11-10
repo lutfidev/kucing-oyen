@@ -628,3 +628,12 @@ Spesifikasi langkah 1 di [docs/design-v2](design-v2/README.md) disetujui pemilik
 Rumah, koleksi kucing, aksesoris dan kebutuhan sudah tersedia pada runtime. Pada 8 November 2026 pemilik repo memilih perombakan seluruh visual mengikuti konsep A (satu area per layar), termasuk bentuk kucing. Rumah baru mendukung aktivitas otomatis dan ajakan pemain; rincian area, aturan kebutuhan dan hadiah ditetapkan pada langkah 1 roadmap baru.
 
 Acuan aktif: [brief baru](design-brief/rumah-oyen-area/ARAH_DESAIN.md), [preview konsep A di kiri](design-brief/rumah-oyen-area/preview-perbandingan.png), dan [roadmap](ROADMAP.md). Prompt desain lama dihapus. Bagian aturan, simulator dan data level di atas tetap menjadi fondasi puzzle sampai ada keputusan perubahan gameplay yang eksplisit.
+
+## Visual puzzle v2 ? langkah 10
+
+Papan dan benda puzzle memakai seni kayu/paper v2 dan rig Oyen yang sama
+dengan rumah. Bingkai oranye menandai benda pemain, genangan/ember
+membedakan air bawaan dan air pemain. Tujuan sah disorot, petunjuk samar
+tetap di bawah benda; pilih-lalu-ketuk dan seretan tetap tersedia.
+Grid 7?9, aturan, solusi, bintang dan data 20 level tidak berubah.
+[Bukti dan batas verifikasi](design-v2/puzzle/REVIEW.md).

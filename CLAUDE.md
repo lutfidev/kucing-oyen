@@ -156,3 +156,14 @@ Pemilik repo nyaman dengan skill superpowers: selalu pakai skill yang cocok. Eff
 ## Lanjut ke mana
 
 Lihat `docs/ROADMAP.md`: status tiap langkah dan prompt siap tempel. Langkah berikutnya = langkah pertama yang belum dicentang.
+
+## Visual puzzle v2 ? langkah 10
+
+Papan runtime memakai `lib/game/render/v2/puzzle_art.dart`; jangan mengubah
+renderer SVG v1 untuk memperbaiki papan baru. Oyen memakai CatRig rumah
+dengan subset sinkron `puzzle_cat_sources.dart`, dibuat ulang melalui
+`python tool/art_v2/embed_puzzle.py` setelah generator aset berubah.
+`--check` dan test kesamaan sumber mencegah drift. Baki/seretan memakai
+renderer benda yang sama. `puzzle_theme.dart` menjembatani token kontrol.
+Test baru `test/screens/puzzle_v2_test.dart`, ekspor `PUZZLE_REVIEW=true`,
+bukti dan batas `docs/design-v2/puzzle/REVIEW.md`.
