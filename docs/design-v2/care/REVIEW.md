@@ -60,7 +60,15 @@ disebut panduan repo tidak tersedia di sesi ini; tidak ada review subagent.
 
 - Baseline: `flutter pub get`, analyze bersih, 2.948 test lulus / 135 skip.
 - Terarah: 86 test lulus untuk alur perawatan dan layar rumah/Makan/Bermain.
-- Final: lihat hasil yang dicatat setelah seluruh suite dan APK selesai.
+- Final: analyze bersih (`No issues found!`); format 276 file tanpa perubahan;
+  seluruh suite 2.968 test lulus / 135 skip historis, termasuk solusi 20 level;
+  berkas review terjemahan sesuai.
+- APK debug berhasil (`assembleDebug` 31,9 detik), 219.975.258 byte;
+  SHA-256 `63217a41ef3800fa6b9048479d4156b169f316383665238aba048fa4269291ee`.
+  Lokasi lokal `build/app/outputs/flutter-apk/app-debug.apk`.
+  Pengukur APK memvalidasi 215 entry art v2, termasuk latar Rawat 127.354 byte;
+  total art 848.407 byte / 635.334 byte terkompresi. Ini bukan delta APK
+  terhadap v1 atau estimasi release.
 - Generator vektor: 209 aset sesuai; aset raster ditambahkan terpisah.
 - Ekspor: `flutter test test/screens/care_v2_test.dart --dart-define=CARE_REVIEW=true`.
 
