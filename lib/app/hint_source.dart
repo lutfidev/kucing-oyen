@@ -7,6 +7,9 @@ enum HintPay { ad, coins }
 enum HintUnlock {
   opened,
 
+  /// Reward/payment could not be persisted; retry without paying again.
+  saveFailed,
+
   /// Saldo kurang dari harga tingkat itu.
   notEnoughCoins,
 

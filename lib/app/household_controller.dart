@@ -2,7 +2,14 @@ part of 'progress_scope.dart';
 
 /// Pause reasons compose, so closing a sheet cannot resume an ad/background
 /// pause. UI integrations in steps 5–9 drive these and monotonic active dt.
-enum HouseholdPause { hidden, background, ad, decorating, reset }
+enum HouseholdPause {
+  hidden,
+  background,
+  ad,
+  decorating,
+  reset,
+  resetTransaction,
+}
 
 class _HomeChange {
   const _HomeChange({
@@ -32,8 +39,11 @@ extension HouseholdController on ProgressController {
   bool get householdPaused => _homePauses.isNotEmpty;
   bool get householdDecorating =>
       _homePauses.contains(HouseholdPause.decorating);
-  bool get householdSaveFailed => _pendingHome != null;
-  bool get householdBusy => _homeBusy;
+  // A failed guidance transaction also blocks home writes until its retry.
+  // Keep the existing house/shop retry surface visible after leaving a sheet.
+  bool get householdSaveFailed =>
+      _pendingHome != null || _pendingGuidance != null;
+  bool get householdBusy => _homeBusy || _guidanceBusy || _resetting;
 
   CareState get caring =>
       CareState(needs: _needs, routine: _household.routine, now: _effectiveNow);
@@ -284,7 +294,12 @@ extension _HouseholdTransactions on ProgressController {
     _HomeChange change, {
     _HomeChange? Function()? rebuild,
   }) {
-    if (_homeBusy || _pendingHome != null || store is! SnapshotStore) {
+    if (_resetting ||
+        _guidanceBusy ||
+        _pendingGuidance != null ||
+        _homeBusy ||
+        _pendingHome != null ||
+        store is! SnapshotStore) {
       return Future.value(false);
     }
     _homeBusy = true;

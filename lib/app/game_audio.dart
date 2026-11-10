@@ -44,6 +44,23 @@ class GameAudio extends ChangeNotifier {
   final ProgressStore store;
 
   SoundSettings _settings;
+  bool saveFailed = false;
+  Future<void> _savingSettings = Future.value();
+
+  Future<void> retrySettings() => _queueSettingsSave();
+
+  Future<void> _queueSettingsSave() =>
+      _savingSettings = _savingSettings.then((_) async {
+        final wasFailed = saveFailed;
+        try {
+          await store.saveSound(_settings);
+          saveFailed = false;
+        } on Object catch (error) {
+          saveFailed = true;
+          debugPrint('Sakelar suara gagal disimpan: $error');
+        }
+        if (wasFailed != saveFailed) notifyListeners();
+      });
   bool get musicOn => _settings.music;
   bool get effectsOn => _settings.effects;
 
@@ -82,12 +99,7 @@ class GameAudio extends ChangeNotifier {
     _settings = settings;
     _sync();
     notifyListeners();
-    try {
-      await store.saveSound(settings);
-    } on Object catch (error) {
-      // Sakelar tetap berlaku sampai aplikasi ditutup.
-      debugPrint('Sakelar suara gagal disimpan: $error');
-    }
+    await _queueSettingsSave();
   }
 
   void hold(AudioHold reason) {
