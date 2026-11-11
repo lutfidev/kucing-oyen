@@ -677,8 +677,8 @@ WHAT'S INSIDE
 • Rule cards and short tutorials that teach as you go
 • Stuck? Hints reveal one tile at a time, paid with coins or a short optional video ad
 • Coins from new stars, a daily bonus, happy cats, and optional ads
-• A room for Oyen to decorate your way: cushion bed, scratching post, aquarium, rug, and more from the Shop
-• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Treat them to snacks and pets, and they pay you back in coins
+• Four free areas to relax, eat, play, and care for cats. Decorate each area: cushion bed, scratching post, aquarium, rug, and more from the Shop
+• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Offer snacks and pets, or invite them to eat, play, or get brushed. Claim daily cat rewards together
 • Accessories for every cat: ribbons, bandanas, beanies, chef hats, all the way up to a King's Crown
 • Calm music and cute sound effects (each can be switched off)
 • English, Indonesian, Brazilian Portuguese, and Russian

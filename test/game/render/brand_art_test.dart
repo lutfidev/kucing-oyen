@@ -43,27 +43,26 @@ Matcher _near(int argb) => predicate<Color>((c) {
 final _transparent = predicate<Color>((c) => c.a < 0.02, 'transparan');
 
 void main() {
-  // Kotak kepala 68×60 di viewBox Oyen; lebar 68 = skala 1, jadi titik
-  // gambar = titik desain dikurangi (16, 8).
+  // Sumber kepala rumah v2, dengan margin aman di sekitar outline SVG.
   final box = BrandArt.headBox;
 
   test('kotak kepala', () {
-    expect(box, const Rect.fromLTRB(16, 8, 84, 68));
+    expect(box, const Rect.fromLTRB(20, 25, 108, 97));
   });
 
-  test('kepala Oyen: bulu, moncong, mata ngantuk, tanpa badan', () async {
+  test('kepala Oyen v2: bulu, moncong, mata, tanpa badan', () async {
     final at = await _render(
       (canvas) => paintOyenHead(canvas, width: box.width),
       width: box.width,
       height: box.height,
     );
-    expect(at(34, 34), _near(0xFFF5A447));
-    expect(at(34, 48), _near(0xFFFDE6C4));
-    expect(at(20, 37), _near(0xFF3A2618));
+    expect(at(44, 30), _near(0xFFFFB24D));
+    expect(at(44, 47), _near(0xFFFFF0CC));
+    expect(at(28, 42), _near(0xFF573018));
     // Belang dahi.
-    expect(at(34, 12), _near(0xFFC4651A));
+    expect(at(44, 20), _near(0xFFCE6D24));
     // Di bawah pipi kiri: kosong (badan dan bayangan tidak digambar).
-    expect(at(2, 58), _transparent);
+    expect(at(2, 70), _transparent);
   });
 
   test('kepala diskalakan ke lebar yang diminta', () async {
@@ -72,8 +71,8 @@ void main() {
       width: box.width * 2,
       height: box.height * 2,
     );
-    expect(at(68, 68), _near(0xFFF5A447));
-    expect(at(40, 74), _near(0xFF3A2618));
+    expect(at(88, 60), _near(0xFFFFB24D));
+    expect(at(56, 84), _near(0xFF573018));
   });
 
   test('ikon monokrom: siluet dengan mata dan belang berlubang', () async {
@@ -86,10 +85,10 @@ void main() {
       width: box.width,
       height: box.height,
     );
-    expect(at(34, 34), _near(0xFFFFFFFF));
-    expect(at(34, 48), _near(0xFFFFFFFF));
-    expect(at(20, 37), _transparent);
-    expect(at(34, 12), _transparent);
-    expect(at(2, 58), _transparent);
+    expect(at(44, 30), _near(0xFFFFFFFF));
+    expect(at(44, 47), _near(0xFFFFFFFF));
+    expect(at(28, 42), _transparent);
+    expect(at(44, 20), _transparent);
+    expect(at(2, 70), _transparent);
   });
 }

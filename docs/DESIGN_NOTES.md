@@ -204,3 +204,16 @@ kurangi gerak serta jatah hadiah tetap. Callback iklan lama dibuang hanya setela
 reset sukses; reset gagal tidak menghilangkan hak hadiah yang telah didapat.
 Preferensi kurangi gerak tersimpan berlaku untuk semua rute dan digabung OR
 dengan preferensi sistem. Batas uji HP/performa tetap langkah 13–15.
+
+
+## 10 November 2026 — materi toko v2 (langkah 14)
+
+Merek memakai kepala Oyen dari sumber rig rumah yang sama; nama Ginger Logic
+tetap. Paket toko memilih delapan potret per bahasa: empat area, pratinjau
+aksesoris, peta babak 2, atur level 13 dan hasil tiga bintang. Fase jalan
+tersedia di dokumentasi. Ini pemilihan materi, tanpa fitur/ekonomi baru.
+Grafis fitur dilokalkan empat bahasa; launcher/splash memakai palet v2 dan
+splash branding empat bahasa. Potret adalah render runtime host 432×768 dp,
+×2,5 untuk toko, dengan snapshot contoh terisolasi. Bukan mockup atau bukti
+pengujian OS/HP. Persetujuan visual pemilik repo dan pemeriksaan native
+dilanjutkan pada langkah 15; upload/produksi tetap langkah 16.

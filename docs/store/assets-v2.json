@@ -1,0 +1,877 @@
+{
+  "version": 2,
+  "generator": "Flutter runtime v2; host widget captures",
+  "store_screenshots_per_language": 8,
+  "listings": {
+    "en": {
+      "title": 29,
+      "short": 77,
+      "full": 1946
+    },
+    "id": {
+      "title": 30,
+      "short": 78,
+      "full": 2019
+    },
+    "pt": {
+      "title": 26,
+      "short": 78,
+      "full": 1976
+    },
+    "ru": {
+      "title": 29,
+      "short": 79,
+      "full": 1926
+    }
+  },
+  "assets": [
+    {
+      "path": "docs/store/screenshots/en/01-santai.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 1026894,
+      "sha256": "c8ceb0fef1144af0db35617493c4470b0a9f38ed724d4de2addf490e3f44c4c0"
+    },
+    {
+      "path": "docs/store/screenshots/en/02-makan.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 924747,
+      "sha256": "14a9544a30715366c84c7e10420fdfadfef71887940487fbc6e1b6237e80b16b"
+    },
+    {
+      "path": "docs/store/screenshots/en/03-main.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 904973,
+      "sha256": "65ff4be1c34fd142a38ebcd91e7241cd5394b13529976ef4e82ac9b0cbb5234b"
+    },
+    {
+      "path": "docs/store/screenshots/en/04-rawat.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 873572,
+      "sha256": "4d68c3505fba0e39c8f9e61da95e728f741372d96541b4a99a16051519905a45"
+    },
+    {
+      "path": "docs/store/screenshots/en/05-toko-aksesoris.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 211927,
+      "sha256": "980cd65c19cb86ae113030cc7e3bd8398b5058f97adc727dcad39e551d46a815"
+    },
+    {
+      "path": "docs/store/screenshots/en/06-peta-babak-2.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 295557,
+      "sha256": "f078be5d8ec0a74369bd63a80448907c49ca0983807299d0ee6eb8d080f0646b"
+    },
+    {
+      "path": "docs/store/screenshots/en/07-fase-atur-level-13.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 174075,
+      "sha256": "5a97d4b7c3b7db26b9ad6734d2a30a652611a4efd01ba2fab991db15f042b273"
+    },
+    {
+      "path": "docs/store/screenshots/en/08-berhasil-level-13.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 166233,
+      "sha256": "bb38c582abc04ac7e2ffbccf2c9774ba3da3fa6b6ca4d6311346ea04789aa05a"
+    },
+    {
+      "path": "docs/store/screenshots/id/01-santai.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 1023064,
+      "sha256": "c2e3d757dd505e5ac792d1d8d043b3dd24aa61663af7a5ce2b0bd58425e7b0dd"
+    },
+    {
+      "path": "docs/store/screenshots/id/02-makan.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 926159,
+      "sha256": "a173e6299d6e0da3eafb57377b723cf9750f34989428ab3675a0a212da510e85"
+    },
+    {
+      "path": "docs/store/screenshots/id/03-main.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 905797,
+      "sha256": "a3da4db8120e3eaef32fb460ac1b9a607afed793fabc1aeef900fe181ab78dcd"
+    },
+    {
+      "path": "docs/store/screenshots/id/04-rawat.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 875426,
+      "sha256": "8faddf8d6183e78ad8e4434822363913c8eb9f953236abc4bab404c335d209db"
+    },
+    {
+      "path": "docs/store/screenshots/id/05-toko-aksesoris.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 210635,
+      "sha256": "75b20a7d9a887879a180d3bbb80e3f7dae6fabade647e3dde06ad38fb347c8c0"
+    },
+    {
+      "path": "docs/store/screenshots/id/06-peta-babak-2.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 295083,
+      "sha256": "3cbf5204997c18f1e2dd3a8275bcd5e428f5fba5f45d739730c31b80ebf8eb49"
+    },
+    {
+      "path": "docs/store/screenshots/id/07-fase-atur-level-13.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 177126,
+      "sha256": "1c7e15109c4a346f6061553920ecf2ef8d7f27c77ec0e741dbaa049480a4401e"
+    },
+    {
+      "path": "docs/store/screenshots/id/08-berhasil-level-13.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 165691,
+      "sha256": "6f6b1f7b57c6b6ebd5a850fbb635c52f1cba5f56d7012bbd9bf345843f07d7b4"
+    },
+    {
+      "path": "docs/store/screenshots/pt/01-santai.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 1036674,
+      "sha256": "5739a60f5e5e6c5eb27b853b1eef738c097b55714869dae215035bb12816bda6"
+    },
+    {
+      "path": "docs/store/screenshots/pt/02-makan.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 935131,
+      "sha256": "03a41ed971a1c34641b30f858f29559128392c5c363a16fa3bc4eb646e0b60e9"
+    },
+    {
+      "path": "docs/store/screenshots/pt/03-main.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 919401,
+      "sha256": "2c90fb3a003ee4f282879d20c2cfe3bcb4b947c163612c26f06e9613b017e067"
+    },
+    {
+      "path": "docs/store/screenshots/pt/04-rawat.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 881537,
+      "sha256": "3add5c88336424e7759f35a0edb212a0c9eb95f56d8396da6a8a67a065d1a520"
+    },
+    {
+      "path": "docs/store/screenshots/pt/05-toko-aksesoris.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 216554,
+      "sha256": "31c6018ae9617027787f741a95ed37d247c9e5366b23460fc00d2acf3cc01cbc"
+    },
+    {
+      "path": "docs/store/screenshots/pt/06-peta-babak-2.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 298331,
+      "sha256": "8e413d979bb21c94d5aa8fd14203edd287b3e8fff65cd3571de83939c230234e"
+    },
+    {
+      "path": "docs/store/screenshots/pt/07-fase-atur-level-13.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 159890,
+      "sha256": "b128fbb458d66ee85f26ca754728acfb831c2b8cddafe712e92089ad08b90c04"
+    },
+    {
+      "path": "docs/store/screenshots/pt/08-berhasil-level-13.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 172565,
+      "sha256": "69111a3e9d6f0dd52c256584622dbd35ce0f3bcacb8a7def650e01a4a201992d"
+    },
+    {
+      "path": "docs/store/screenshots/ru/01-santai.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 1030422,
+      "sha256": "c78e64a50a111444fa8335e6036449537099550ba9b04a9d174423171e4911c9"
+    },
+    {
+      "path": "docs/store/screenshots/ru/02-makan.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 926525,
+      "sha256": "334dfd7421776500ddf17be9bc6603c388fb78c50e6fd4e4c1ee6ce17a2894a2"
+    },
+    {
+      "path": "docs/store/screenshots/ru/03-main.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 907084,
+      "sha256": "45ceb3d2ce3b1f254f4339067cc24ff3d18a3646ed9319c295cebf5811814e7f"
+    },
+    {
+      "path": "docs/store/screenshots/ru/04-rawat.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 874495,
+      "sha256": "65bd73738126c61b6515ffa71a24a6a075f8dcf5cafb5bd0344922f7d26c641d"
+    },
+    {
+      "path": "docs/store/screenshots/ru/05-toko-aksesoris.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 209856,
+      "sha256": "1485841791fdb53a96d1e7206d074dd3e6964d8be3df007f4752f47bbdfb3bd0"
+    },
+    {
+      "path": "docs/store/screenshots/ru/06-peta-babak-2.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 294196,
+      "sha256": "27426033d1e6ebfce9549f47c4c58ab9a885b3dfe7c90ea2849fa86606c07bec"
+    },
+    {
+      "path": "docs/store/screenshots/ru/07-fase-atur-level-13.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 178368,
+      "sha256": "357efdd5b673f7c9f2444247b97e0f16c51b38fc9ac41fc27f9189346ce189cf"
+    },
+    {
+      "path": "docs/store/screenshots/ru/08-berhasil-level-13.png",
+      "width": 1080,
+      "height": 1920,
+      "mode": "RGB",
+      "bytes": 168241,
+      "sha256": "8c7f59d1b28bead8954a54edd1aef914aafb7356c7637dde184418666a6f7706"
+    },
+    {
+      "path": "docs/store/feature-graphic-id.png",
+      "width": 1024,
+      "height": 500,
+      "mode": "RGB",
+      "bytes": 54281,
+      "sha256": "7a194e01462ba4df5bbce0552a64a8e144344fed0da8ad7f68804a09c4771b07"
+    },
+    {
+      "path": "docs/store/feature-graphic-pt.png",
+      "width": 1024,
+      "height": 500,
+      "mode": "RGB",
+      "bytes": 54462,
+      "sha256": "751fb6ae67a83b2f1e7a6ec32d9a84252e1c75eb6ccb32e14c3027e450aa6cb1"
+    },
+    {
+      "path": "docs/store/feature-graphic-ru.png",
+      "width": 1024,
+      "height": 500,
+      "mode": "RGB",
+      "bytes": 52083,
+      "sha256": "40cc2de0ef62e3480819d3b6ed0517259d170c3eff33e811c154ca30ff5dec6b"
+    },
+    {
+      "path": "docs/store/feature-graphic.png",
+      "width": 1024,
+      "height": 500,
+      "mode": "RGB",
+      "bytes": 53850,
+      "sha256": "d7b19acc3a582080598d83e1e5da59dd073c5f4cf82f8be7f19acfc01af6223a"
+    },
+    {
+      "path": "docs/store/icon-512.png",
+      "width": 512,
+      "height": 512,
+      "mode": "RGBA",
+      "bytes": 24869,
+      "sha256": "27a4ccd0c1a0230c2a9ade50435681940c352f713cd1e7f46fd98bad50e29655"
+    },
+    {
+      "path": "docs/screenshots/01-santai.png",
+      "width": 864,
+      "height": 1536,
+      "mode": "RGBA",
+      "bytes": 837063,
+      "sha256": "4d890c6df6c7d53489bd5a7629e948fa9d86a0b59dedec3591d72a1b22d37fcd"
+    },
+    {
+      "path": "docs/screenshots/02-makan.png",
+      "width": 864,
+      "height": 1536,
+      "mode": "RGBA",
+      "bytes": 768113,
+      "sha256": "28b6338d8388577f7c76d35929bd6045da38266159cf7bbb04b109be854b9a73"
+    },
+    {
+      "path": "docs/screenshots/03-main.png",
+      "width": 864,
+      "height": 1536,
+      "mode": "RGBA",
+      "bytes": 750154,
+      "sha256": "a6d68e9015909d4c813454ba32d45d61d2af2ea84b48c66a7ae7208d79873c5e"
+    },
+    {
+      "path": "docs/screenshots/04-rawat.png",
+      "width": 864,
+      "height": 1536,
+      "mode": "RGBA",
+      "bytes": 727747,
+      "sha256": "e8d76afc6539894fba5bb43bada39163cc665bf7c39efc3e74569a879d076ecb"
+    },
+    {
+      "path": "docs/screenshots/05-toko-aksesoris.png",
+      "width": 864,
+      "height": 1536,
+      "mode": "RGBA",
+      "bytes": 182866,
+      "sha256": "c53219979cfd130f0d55e72bfef8250899f081e960dbfdcc002617f8f4797ba5"
+    },
+    {
+      "path": "docs/screenshots/06-peta-babak-2.png",
+      "width": 864,
+      "height": 1536,
+      "mode": "RGBA",
+      "bytes": 264259,
+      "sha256": "8994d46a20b2609e6598dba14177979bcedeb437e8276d1db9afbc97e58527f2"
+    },
+    {
+      "path": "docs/screenshots/07-fase-atur-level-13.png",
+      "width": 864,
+      "height": 1536,
+      "mode": "RGBA",
+      "bytes": 159735,
+      "sha256": "e66bb7192c4e30e961e87294bf22db66723e38ecd3609b2348a133efa9d56fce"
+    },
+    {
+      "path": "docs/screenshots/08-berhasil-level-13.png",
+      "width": 864,
+      "height": 1536,
+      "mode": "RGBA",
+      "bytes": 147743,
+      "sha256": "6f0234e77da17b1a765053a9d006a247752a76384bd333fabee5c739dfa9b5ec"
+    },
+    {
+      "path": "docs/screenshots/09-fase-jalan-level-13.png",
+      "width": 864,
+      "height": 1536,
+      "mode": "RGBA",
+      "bytes": 151336,
+      "sha256": "19e8911737590eca182ef854fa55a2c755dc08cbaa9cbd9407dcb7e75d04a38a"
+    },
+    {
+      "path": "docs/screenshots/en/10-peta-babak-1.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 292604,
+      "sha256": "cc6c012a57fd20b67f05d52a8f3a87a416a6b2d5c2bba3f8d56346b2037c86b3"
+    },
+    {
+      "path": "docs/screenshots/en/11-toko-barang.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 226708,
+      "sha256": "e1ec57142d760256eff994c191134e2ff679616c0eb1de82538f69474853d514"
+    },
+    {
+      "path": "docs/screenshots/en/12-koleksi-kucing.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 170504,
+      "sha256": "863d379dc74707d6ed55c8e74964f636b5c0d82d6e1361caf9e5efbf8626f864"
+    },
+    {
+      "path": "docs/screenshots/en/13-toko-camilan.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 175423,
+      "sha256": "e9c7ce460d9da5ac1a40af2289621665edba401ace2fa1a3ec7282ddec2ebd2e"
+    },
+    {
+      "path": "docs/screenshots/en/14-pengaturan.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 116721,
+      "sha256": "dfb985569a7cda8679cc0bbd08549f828fd1d12fb736cd8caf56aba7126fc120"
+    },
+    {
+      "path": "docs/screenshots/id/10-peta-babak-1.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 291211,
+      "sha256": "433054a0bb50e9cf671d02f4b7054f71c626e9c71dabed230edcecfeddd44276"
+    },
+    {
+      "path": "docs/screenshots/id/11-toko-barang.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 218976,
+      "sha256": "7bc413c95c076a455315e568e28caf49db0e299546e268c8e6f6b02f6ad95afb"
+    },
+    {
+      "path": "docs/screenshots/id/12-koleksi-kucing.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 166703,
+      "sha256": "6320de3f7fc828058b28dd29fee5309b8fca8319d6a47780886d6d8fe55b54a0"
+    },
+    {
+      "path": "docs/screenshots/id/13-toko-camilan.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 168749,
+      "sha256": "4ecd0f4e988af423ed4fb4345f8792263cc032125244f38c784d76f3014a7354"
+    },
+    {
+      "path": "docs/screenshots/id/14-pengaturan.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 114876,
+      "sha256": "9d3070e969afe614acfa1b3a688cdc28018bf38cb0923c6af5806d3f176454f7"
+    },
+    {
+      "path": "docs/screenshots/pt/10-peta-babak-1.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 294129,
+      "sha256": "58f2b0f5971b102ce775b3620cec0fc4248b0d45a5af0fc4815db286daf504a4"
+    },
+    {
+      "path": "docs/screenshots/pt/11-toko-barang.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 232892,
+      "sha256": "ae9ba2bd6da482aff1b124bba11604ba4781a6555f7a2b3534a0e121c6f60e06"
+    },
+    {
+      "path": "docs/screenshots/pt/12-koleksi-kucing.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 172396,
+      "sha256": "ffbf1876cdf9ef6a6f3934e0d3f7cc6284b3016aedf60a6400bf05c3099384de"
+    },
+    {
+      "path": "docs/screenshots/pt/13-toko-camilan.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 182695,
+      "sha256": "00a6c16aa88498a88d49fdb401d2ad4826ade17111b611e209b35a14494857cd"
+    },
+    {
+      "path": "docs/screenshots/pt/14-pengaturan.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 122347,
+      "sha256": "b2449a99bed1d238486985340418533f3b51586c08c7153f95845b874b194f18"
+    },
+    {
+      "path": "docs/screenshots/ru/10-peta-babak-1.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 290600,
+      "sha256": "b52b9925aecea20ad6f4e2af7eb0814d0d90196de3e0a12a8d524f1295215eec"
+    },
+    {
+      "path": "docs/screenshots/ru/11-toko-barang.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 224164,
+      "sha256": "437c14fd289de1fa09212f884409b9432c0611f7e553b9437d5a8b5829fac326"
+    },
+    {
+      "path": "docs/screenshots/ru/12-koleksi-kucing.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 169064,
+      "sha256": "27a2f5ad5a0de9f4fdb6d52ca2b6535e639cce6fb364eed331f621505c910b9b"
+    },
+    {
+      "path": "docs/screenshots/ru/13-toko-camilan.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 176743,
+      "sha256": "15da64c93e4a89b0e6021f72f21d921dc15b8f870bcc597a2842b9d9235c81ff"
+    },
+    {
+      "path": "docs/screenshots/ru/14-pengaturan.png",
+      "width": 780,
+      "height": 1688,
+      "mode": "RGBA",
+      "bytes": 117719,
+      "sha256": "fc2f9bc1b555d8c48b80ebe073a8b6a320829b7183d62342d6bd27abd6480cc5"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-hdpi/splash_branding.png",
+      "width": 300,
+      "height": 120,
+      "mode": "RGBA",
+      "bytes": 7795,
+      "sha256": "01dc6bd0b7757c9cb1e962b2427548dab883a2dfd326a7bfeb3fc97cd0f3317d"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-hdpi/splash_icon.png",
+      "width": 432,
+      "height": 432,
+      "mode": "RGBA",
+      "bytes": 18108,
+      "sha256": "2fc0c8cfd6dc096fea1b6bb6aab592adb90ad2be496ff3c82d01305730cf0ec1"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-in-hdpi/splash_branding.png",
+      "width": 300,
+      "height": 120,
+      "mode": "RGBA",
+      "bytes": 7668,
+      "sha256": "743f0f035b7abac846f1c9e2d38d369ad404426d292511969f4f3492048f12fa"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-in-mdpi/splash_branding.png",
+      "width": 200,
+      "height": 80,
+      "mode": "RGBA",
+      "bytes": 4814,
+      "sha256": "d589ce7acad7ab196bcc8e031d0bf9d46a11e4e61f6d96f18306f2cc97d8951d"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-in-xhdpi/splash_branding.png",
+      "width": 400,
+      "height": 160,
+      "mode": "RGBA",
+      "bytes": 9935,
+      "sha256": "beed36ac5363a8e5bd4960dbe9fd4ec397ca3d8fdd5403c6ed2ab9537625a619"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-in-xxhdpi/splash_branding.png",
+      "width": 600,
+      "height": 240,
+      "mode": "RGBA",
+      "bytes": 15355,
+      "sha256": "1da8b1911321e184611e5b189babce4ef0826d1253ac115b8e526f3e46cf983f"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-in-xxxhdpi/splash_branding.png",
+      "width": 800,
+      "height": 320,
+      "mode": "RGBA",
+      "bytes": 21002,
+      "sha256": "3bb4ba8d105ad005ddd5544b0dec22958dc8d93655ed4f43182c17b2c5700bd3"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/splash_branding.png",
+      "width": 200,
+      "height": 80,
+      "mode": "RGBA",
+      "bytes": 4886,
+      "sha256": "b9ca7c85dee9f46495bba6e728df42189fbe07c8d36ce8f3defbaa24172ffd39"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-mdpi/splash_icon.png",
+      "width": 288,
+      "height": 288,
+      "mode": "RGBA",
+      "bytes": 11797,
+      "sha256": "d7864d643ffd660f7a236ba39cd70826df99a50bb12b414f888367acd590ef0a"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-pt-hdpi/splash_branding.png",
+      "width": 300,
+      "height": 120,
+      "mode": "RGBA",
+      "bytes": 7873,
+      "sha256": "9c5da27ab09714a5ea22500d24875ea087f7dd3aa4e31e6586b6a37ea20035b9"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-pt-mdpi/splash_branding.png",
+      "width": 200,
+      "height": 80,
+      "mode": "RGBA",
+      "bytes": 4988,
+      "sha256": "f36809630a1991aee072f22539013629b4bd989c82e201b268ce8c599f5a4e26"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-pt-xhdpi/splash_branding.png",
+      "width": 400,
+      "height": 160,
+      "mode": "RGBA",
+      "bytes": 10140,
+      "sha256": "68c838e2f707d1f66ba108f059b4fee6832fc553c017707a0b87fc41b29554f8"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-pt-xxhdpi/splash_branding.png",
+      "width": 600,
+      "height": 240,
+      "mode": "RGBA",
+      "bytes": 15628,
+      "sha256": "58418240a69fd5b928ffec7022e67e416b600595c2e533dcec5314be02e0f990"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-pt-xxxhdpi/splash_branding.png",
+      "width": 800,
+      "height": 320,
+      "mode": "RGBA",
+      "bytes": 21933,
+      "sha256": "7917f40b2dd8ad60c00cb99ac4f4c6fb628f8df14e89c029ce5360fb8fff3633"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-ru-hdpi/splash_branding.png",
+      "width": 300,
+      "height": 120,
+      "mode": "RGBA",
+      "bytes": 7432,
+      "sha256": "b6f3089ecbbf897b91c318f87c91c98b72511da023777f2080af73ea3b3303b2"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-ru-mdpi/splash_branding.png",
+      "width": 200,
+      "height": 80,
+      "mode": "RGBA",
+      "bytes": 4691,
+      "sha256": "b1fb8ea9c331d5d9bbcedc920f7b651b046c2bdc44d8e7df7fa2b25437873954"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-ru-xhdpi/splash_branding.png",
+      "width": 400,
+      "height": 160,
+      "mode": "RGBA",
+      "bytes": 9706,
+      "sha256": "d897702a48c6000f88271ed602527292f53163cfb089541be137660731a41f0a"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-ru-xxhdpi/splash_branding.png",
+      "width": 600,
+      "height": 240,
+      "mode": "RGBA",
+      "bytes": 14890,
+      "sha256": "9ca443e216333be3a07a253076dbe13bf9d21d3532f018cf1a4b1302d40a0b10"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-ru-xxxhdpi/splash_branding.png",
+      "width": 800,
+      "height": 320,
+      "mode": "RGBA",
+      "bytes": 20284,
+      "sha256": "b7d5ba6b9387428ad3024db9d40aaef8b48d07a316b13027acc54cadaa44be68"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xhdpi/splash_branding.png",
+      "width": 400,
+      "height": 160,
+      "mode": "RGBA",
+      "bytes": 10224,
+      "sha256": "30804a032c148e2d2ad0b869fbcfde6e8a40957fa474e4729085d2d48e9f9c39"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xhdpi/splash_icon.png",
+      "width": 576,
+      "height": 576,
+      "mode": "RGBA",
+      "bytes": 24954,
+      "sha256": "a49ca8216d37f78672c655f708a7e1e97553a919b411ad29e37d8157eabbb060"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxhdpi/splash_branding.png",
+      "width": 600,
+      "height": 240,
+      "mode": "RGBA",
+      "bytes": 15666,
+      "sha256": "23e399f55ac99fd44e13a869994d55f2f2efa846f5e72bf57429e1b8a50b5ec5"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxhdpi/splash_icon.png",
+      "width": 864,
+      "height": 864,
+      "mode": "RGBA",
+      "bytes": 38997,
+      "sha256": "18cb694b70b6c9711b86b3d05ed4859d24bdc65abdbae9affe434526ffadc21c"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxxhdpi/splash_branding.png",
+      "width": 800,
+      "height": 320,
+      "mode": "RGBA",
+      "bytes": 21319,
+      "sha256": "4a2ab1dba72d392d2a067b3d459285276d388141db7eb653304c504eb1043737"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-xxxhdpi/splash_icon.png",
+      "width": 1152,
+      "height": 1152,
+      "mode": "RGBA",
+      "bytes": 52462,
+      "sha256": "5d8cebc2cde0bc36df31692464214b68c9493b5a1d2ce5b5e4b256ed2812bb0f"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "width": 72,
+      "height": 72,
+      "mode": "RGBA",
+      "bytes": 4367,
+      "sha256": "ee8794e9deca6a8d919e7c1ea32dce069b9fd723b9cc1247ae52a710ba466e83"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+      "width": 162,
+      "height": 162,
+      "mode": "RGBA",
+      "bytes": 5944,
+      "sha256": "0c77850ce3501e9698bd0ae816f2c93c9c45b9fd91bfe14b9768b6d99da67d5c"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_monochrome.png",
+      "width": 162,
+      "height": 162,
+      "mode": "RGBA",
+      "bytes": 1008,
+      "sha256": "2b7898a847b1acafc7458ead2c992c3436526f1c3b7fd41285c1935073f50f36"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "width": 48,
+      "height": 48,
+      "mode": "RGBA",
+      "bytes": 2627,
+      "sha256": "8835c49af5fc621fd730e347b487654dd38950289544d0f20f73bd3ee3190d9d"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+      "width": 108,
+      "height": 108,
+      "mode": "RGBA",
+      "bytes": 3765,
+      "sha256": "6c8b21687fd34fdfdec8c9f7430e2dee7822f98ddb6a191a95bef111b3979872"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_monochrome.png",
+      "width": 108,
+      "height": 108,
+      "mode": "RGBA",
+      "bytes": 654,
+      "sha256": "29f60a16c317ec60b417b87659d3824a925742ae2c1084f5186681d098c2abd5"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "width": 96,
+      "height": 96,
+      "mode": "RGBA",
+      "bytes": 6146,
+      "sha256": "eed774c7e9405fe028886213f88b5da8e48995fb6657cbba4626e8c23abf837c"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+      "width": 216,
+      "height": 216,
+      "mode": "RGBA",
+      "bytes": 8102,
+      "sha256": "14d46444990e6f189dc4c590719334f6e88aaa88d295e65e0b6342bca05ed6ae"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_monochrome.png",
+      "width": 216,
+      "height": 216,
+      "mode": "RGBA",
+      "bytes": 1357,
+      "sha256": "62a14268c02fe2b7b1f744f903f87fbf3aa2884f5dc79cbce0dc73dd6b769640"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "width": 144,
+      "height": 144,
+      "mode": "RGBA",
+      "bytes": 9583,
+      "sha256": "eaa638720e96f5d1ea3df32e0d960263ac8290dd51bbb2bdb1ccb857654c81be"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "width": 324,
+      "height": 324,
+      "mode": "RGBA",
+      "bytes": 12373,
+      "sha256": "3b32f1b7893493b88d5c68adc4af07db2541d5281713b83bce0c13c0a4627159"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_monochrome.png",
+      "width": 324,
+      "height": 324,
+      "mode": "RGBA",
+      "bytes": 2245,
+      "sha256": "007af3d772d6b0253978a554e26f6edfb34b63a0e37463b688941ffa4b91c41b"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "width": 192,
+      "height": 192,
+      "mode": "RGBA",
+      "bytes": 12924,
+      "sha256": "eed64236dd7724bd4847387ac916ffd6193a4fe0a6535c8086dca671b814e578"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "width": 432,
+      "height": 432,
+      "mode": "RGBA",
+      "bytes": 17370,
+      "sha256": "e00094994cbcaab5f4d69a5a42835b838417863aafd82810ba9c04dc39f8444a"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_monochrome.png",
+      "width": 432,
+      "height": 432,
+      "mode": "RGBA",
+      "bytes": 3104,
+      "sha256": "9142dec00ed088c568b471b8b5cc2020c404bd29fc36e794c054a2d63dffbaaa"
+    }
+  ]
+}
