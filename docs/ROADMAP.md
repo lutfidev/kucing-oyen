@@ -39,7 +39,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 12. Tutorial, petunjuk, koin, dan Pengaturan
 - [x] 13. Animasi, suara, aksesibilitas, dan performa
 - [x] 14. Screenshot, ikon, splash, dan materi Play Store baru
-- [ ] 14a. Perbaikan visual cepat: panel rumah, ikon koin, tab Toko, latar peta
+- [x] 14a. Perbaikan visual cepat: panel rumah, ikon koin, tab Toko, latar peta
 - [ ] 14b. Rapikan Toko, layar hasil, dan puzzle
 - [ ] 14c. Header dan panel rumah ringkas seperti konsep A
 - [ ] 14d. Kamar hidup: pose aktivitas, skala dan gaya prop
@@ -300,6 +300,11 @@ Setiap langkah satu branch dan PR, diakhiri screenshot ulang (`SCREENSHOTS=true`
 `BRAND=true` + `tool/store_assets.py`.
 
 ### 14a. Perbaikan visual cepat
+
+**Selesai 21 November 2026:** koin emas di header rumah, Toko dan harga barang;
+bintang emas; tab Toko aktif oranye dan chip koin rata kanan; `UiEdgeFade` di
+panel rumah dan tab Toko; ikon peta tanpa kotak lantai. Dijaga
+`test/widgets/visual_fixes_test.dart`; screenshot dokumentasi dan toko dibuat ulang.
 
 - Panel di bawah kamar tidak boleh tampak terpotong oleh tombol "Main Puzzle":
   isi muat tanpa terpotong atau jelas bisa digulir (tepi memudar).

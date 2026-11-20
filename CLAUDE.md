@@ -68,7 +68,7 @@ Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API pen
 
 - Profil kamar (langkah 32): `tool/profile_room.dart` dijalankan dengan `flutter run --profile -t tool/profile_room.dart -d <device>`, memakai `MemoryProgressStore` (9 kucing beraksesoris, 20 barang toko + mangkuk), pemanasan 15 detik dan pengukuran `FrameTiming` 60 detik; progres pemain tidak dibaca/ditulis. HP harus terbuka dan kamar tetap di depan. Hasil dan batas pengujian di `docs/performance-room-2026-11-08.md`. `SvgTemplate.bind` menghasilkan `SvgAnimation`: varian template disiapkan sekali dan waktu animasi tetap tepat. `kittyDrawing` memakai cache LRU maksimal 96 varian animasi, tidak menyimpan setiap waktu; sprite diam tetap di cache lama. `test/game/render/svg_binding_test.dart` membandingkan piksel/bounds dengan renderer acuan, termasuk pergantian varian setelah eviksi dan validasi CSS saat binding.
 
-- Fondasi UI v2 (langkah 3): `lib/theme/ko_ui.dart` (`KoUi.theme()` per layar), `lib/widgets/v2/` (`UiButton`, `UiChip`, `UiAreaTabs`, `UiNeed`, `UiCatCard`, `UiHeader`, `UiNavigation`, `UiSheet`/`showUiSheet`). Galeri `/galeri/ui-v2`, test `test/widgets/ui_v2_test.dart`, ekspor `--dart-define=UI_REVIEW=true`, laporan `docs/design-v2/ui/REVIEW.md`. NunitoUi regular dibundel; fallback judul Cyrillic ke NunitoUi. Gunakan komponen v2 untuk layar migrasi langkah 5–12; token/komponen lama masih dipakai layar v1. Jangan memasukkan logika rutinitas atau transaksi ke widget.
+- Fondasi UI v2 (langkah 3): `lib/theme/ko_ui.dart` (`KoUi.theme()` per layar), `lib/widgets/v2/` (`UiEdgeFade` = tepi memudar untuk daftar yang bisa digulir, langkah 14a; `UiButton` (`homeStyle` + `selected` = gradasi oranye), `UiChip`, `UiAreaTabs`, `UiNeed`, `UiCatCard`, `UiHeader`, `UiNavigation`, `UiSheet`/`showUiSheet`). Galeri `/galeri/ui-v2`, test `test/widgets/ui_v2_test.dart`, ekspor `--dart-define=UI_REVIEW=true`, laporan `docs/design-v2/ui/REVIEW.md`. NunitoUi regular dibundel; fallback judul Cyrillic ke NunitoUi. Gunakan komponen v2 untuk layar migrasi langkah 5–12; token/komponen lama masih dipakai layar v1. Jangan memasukkan logika rutinitas atau transaksi ke widget.
 
 ## Aturan penting
 
@@ -239,4 +239,4 @@ Setelah generator jalankan `python tool/store_assets.py` untuk RGB PNG toko
 lossless dan manifest, lalu `--check`; `--sheets` membuat contact sheet QA di
 build/store-review. Listing berubah: buat ulang review terjemahan.
 Laporan di docs/design-v2/store/REVIEW.md; belum ada upload/publikasi atau uji
-launcher/splash native HP. Berikutnya langkah 15 setelah PR ini di-merge.
+launcher/splash native HP. Berikutnya langkah 14a–14e (perbaikan desain) lalu langkah 15.
