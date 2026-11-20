@@ -213,7 +213,7 @@ abstract final class JourneyArt {
     c.save();
     c.translate(rect.left, rect.top);
     c.scale(rect.width / 50, rect.height / 50);
-    paintPuzzleTile(c, Tile(kind: kind));
+    paintPuzzleTile(c, Tile(kind: kind), floor: false);
     c.restore();
   }
 

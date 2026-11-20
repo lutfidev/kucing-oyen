@@ -178,7 +178,18 @@ void paintPuzzleItem(
   }
 }
 
-void paintPuzzleTile(Canvas c, Tile tile, {double glowOpacity = 1}) {
+/// [floor] false draws only the object, for pictograms outside the board.
+void paintPuzzleTile(
+  Canvas c,
+  Tile tile, {
+  double glowOpacity = 1,
+  bool floor = true,
+}) {
+  if (floor) _paintPuzzleFloor(c, tile);
+  _paintPuzzleObject(c, tile, glowOpacity);
+}
+
+void _paintPuzzleFloor(Canvas c, Tile tile) {
   c.drawRect(
     const Rect.fromLTWH(0, 0, 50, 50),
     Paint()..color = tile.alt ? PuzzleArt.floorAlt : PuzzleArt.floor,
@@ -205,6 +216,9 @@ void paintPuzzleTile(Canvas c, Tile tile, {double glowOpacity = 1}) {
     color: PuzzleArt.wood.withValues(alpha: .3),
     width: 1,
   );
+}
+
+void _paintPuzzleObject(Canvas c, Tile tile, double glowOpacity) {
   final kind = tile.kind;
   if (kind.isWallish) {
     PuzzleArt.box(c, const Rect.fromLTWH(1, 1, 48, 48), KoUi.peach, radius: 3);

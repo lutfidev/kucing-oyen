@@ -122,7 +122,9 @@ class _UiButtonState extends State<UiButton> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors:
-                                  widget.kind == UiButtonKind.primary && enabled
+                                  (widget.kind == UiButtonKind.primary ||
+                                          widget.selected == true) &&
+                                      enabled
                                   ? [KoUi.homeGold, KoUi.orange]
                                   : [KoUi.homePaper, KoUi.homeCream],
                             )
