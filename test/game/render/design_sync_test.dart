@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/render/design_svg.dart';
 import 'package:kucing_oren/game/render/design_svg_home.dart';
+import 'package:kucing_oren/game/render/design_svg_house.dart';
 import 'package:kucing_oren/game/render/picture_map_art.dart';
 import 'package:kucing_oren/game/render/result_art.dart';
 import 'package:kucing_oren/game/render/room_art.dart';
@@ -14,6 +15,17 @@ const _source = 'docs/design/source';
 
 /// Desain rumah Oyen (langkah 21-26) ada di folder sendiri.
 const _home = 'docs/design/rumah-oyen/project';
+
+/// Desain rumah dua ruangan (langkah 33–35).
+const _house = 'docs/design/rumah-dua-ruangan/project';
+
+/// Isi setiap `<svg>` di komponen desain rumah dua ruangan, berurutan.
+List<String> _houseSvgs(String name) => [
+  for (final m in RegExp(r'<svg\b[^>]*>(.*?)</svg>', dotAll: true).allMatches(
+    File('$_house/$name').readAsStringSync().replaceAll('\r\n', '\n'),
+  ))
+    m[1]!,
+];
 
 /// Akhir baris disamakan (checkout Windows bisa CRLF), tepi dibuang.
 String _lf(String s) => s.replaceAll('\r\n', '\n').trim();
@@ -351,4 +363,41 @@ void main() {
       });
     });
   }, skip: homeMissing);
+
+  final houseMissing = !Directory(_house).existsSync()
+      ? '$_house tidak ada (desain tidak ikut repo)'
+      : null;
+
+  group('isi SVG sama dengan desain rumah dua ruangan', () {
+    final layers = {
+      'LatarTengah.dc.html': [houseLivingBackSvg],
+      'CahayaTengah.dc.html': [
+        houseLivingFloorLightSvg,
+        houseLivingAirLightSvg,
+      ],
+      'KusenTengah.dc.html': [houseLivingFrameSvg],
+      'LatarTeras.dc.html': [houseTerraceBackSvg],
+      'CahayaTeras.dc.html': [
+        houseTerraceFloorLightSvg,
+        houseTerraceAirLightSvg,
+      ],
+      'KusenTeras.dc.html': [houseTerraceFrameSvg],
+    };
+    for (final MapEntry(key: file, value: svgs) in layers.entries) {
+      test(file, () => expect(_houseSvgs(file), svgs));
+    }
+
+    test('@keyframes dan kelas animasi lapisan', () {
+      final source = File('$_house/LatarTengah.dc.html').readAsStringSync();
+      for (final line in houseKeyframesCss.split('\n')) {
+        expect(source, contains(line));
+      }
+      for (final MapEntry(key: name, value: css) in houseClassStyles.entries) {
+        final rule = RegExp('\\.$name\\{([^}]*)\\}').firstMatch(source)![1]!;
+        String norm(String s) =>
+            s.replaceAllMapped(RegExp(r'\s*([:;])\s*'), (m) => m[1]!);
+        expect(norm(css), norm(rule), reason: name);
+      }
+    });
+  }, skip: houseMissing);
 }
