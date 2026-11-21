@@ -107,16 +107,21 @@ class _LayerPainter extends CustomPainter {
   final List<HouseLayer> layers;
   final double? time;
 
+  /// Lapisan diam (kusen) tidak ikut waktu, jadi tidak digambar ulang
+  /// tiap bingkai.
+  late final double? _time =
+      layers.any((layer) => houseLayerAnimated(geo.which, layer)) ? time : null;
+
   @override
   void paint(Canvas canvas, Size size) {
     for (final layer in layers) {
-      paintHouseLayer(canvas, geo.which, layer, size: size, time: time);
+      paintHouseLayer(canvas, geo.which, layer, size: size, time: _time);
     }
   }
 
   @override
   bool shouldRepaint(_LayerPainter old) =>
-      old.time != time ||
+      old._time != _time ||
       old.geo.room != geo.room ||
       old.geo.which != geo.which;
 }

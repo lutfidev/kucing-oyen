@@ -693,17 +693,11 @@ final _pathCache = <String, Path>{};
 Path _geometry(String name, Map<String, String> a) {
   switch (name) {
     case 'polygon' || 'polyline':
-      final n = _numbers(a['points'] ?? '');
-      final path = Path();
-      for (var i = 0; i + 1 < n.length; i += 2) {
-        if (i == 0) {
-          path.moveTo(n[i], n[i + 1]);
-        } else {
-          path.lineTo(n[i], n[i + 1]);
-        }
-      }
-      if (name == 'polygon') path.close();
-      return path;
+      final points = a['points'] ?? '';
+      return _pathCache.putIfAbsent(
+        '$name $points',
+        () => _polyline(points, close: name == 'polygon'),
+      );
     case 'line':
       return Path()
         ..moveTo(_num(a, 'x1'), _num(a, 'y1'))
@@ -739,6 +733,21 @@ Path _geometry(String name, Map<String, String> a) {
         ry == null ? 0 : double.parse(ry),
       );
   }
+}
+
+/// Garis `points` (`polygon` ditutup).
+Path _polyline(String points, {required bool close}) {
+  final n = _numbers(points);
+  final path = Path();
+  for (var i = 0; i + 1 < n.length; i += 2) {
+    if (i == 0) {
+      path.moveTo(n[i], n[i + 1]);
+    } else {
+      path.lineTo(n[i], n[i + 1]);
+    }
+  }
+  if (close) path.close();
+  return path;
 }
 
 /// Persegi dengan urutan titik seperti spesifikasi SVG (mulai dari ujung

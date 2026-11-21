@@ -395,6 +395,69 @@ void main() {
       expect(withClass.animated, isTrue);
       expect(withClass.bind({}).render(time: 4).bounds.left, closeTo(5, 1e-6));
     });
+
+    test('gradien ikut transform bentuknya', () async {
+      final px = await _pixels(
+        SvgTemplate(
+          '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0">'
+          '<stop offset="0" stop-color="#FF0000"></stop>'
+          '<stop offset="1" stop-color="#0000FF"></stop>'
+          '</linearGradient></defs>'
+          '<g transform="translate(20 0)"><rect x="0" y="0" width="20" '
+          'height="10" fill="url(#g)"></rect></g>',
+        ).render({}),
+        const Size(40, 10),
+      );
+      expect(px(5, 5), 0x00000000);
+      final left = px(21, 5);
+      final right = px(38, 5);
+      expect(left >> 16 & 0xFF, greaterThan(left & 0xFF));
+      expect(right & 0xFF, greaterThan(right >> 16 & 0xFF));
+    });
+
+    test('bind: poligon bergradien dengan opasitas berdenyut', () async {
+      final keyframes = CssKeyframes.parse(
+        '@keyframes denyut{0%{opacity:0.2}100%{opacity:1}}',
+      );
+      final template = SvgTemplate(
+        '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">'
+        '<stop offset="0" stop-color="#FF0000"></stop>'
+        '<stop offset="1" stop-color="#FF0000"></stop>'
+        '</linearGradient></defs>'
+        '<polygon class="denyut" points="0,0 20,0 20,20 0,20" '
+        'fill="url(#g)"></polygon>',
+        keyframes: keyframes,
+        classes: const {'denyut': 'animation: denyut 2s linear infinite'},
+      );
+      final bound = template.bind(const {});
+      for (final t in [0.0, 1.0]) {
+        final expected = await _pixels(
+          template.render(const {}, time: t),
+          const Size(20, 20),
+        );
+        final actual = await _pixels(bound.render(time: t), const Size(20, 20));
+        expect(actual(10, 10), expected(10, 10), reason: 'waktu $t');
+        expect(actual(10, 10) >> 16 & 0xFF, 0xFF, reason: 'waktu $t');
+      }
+      final start = await _pixels(bound.render(time: 0), const Size(20, 20));
+      final mid = await _pixels(bound.render(time: 1), const Size(20, 20));
+      expect(start(10, 10) >> 24 & 0xFF, closeTo(51, 3));
+      expect(mid(10, 10) >> 24 & 0xFF, closeTo(153, 3));
+    });
+
+    test('<g clip-path opacity>: dipotong lalu transparan', () async {
+      final px = await _pixels(
+        SvgTemplate(
+          '<defs><clipPath id="c"><polygon points="0,0 10,0 10,20 0,20">'
+          '</polygon></clipPath></defs>'
+          '<g clip-path="url(#c)" opacity="0.5"><rect x="0" y="0" '
+          'width="20" height="20" fill="#000000"></rect></g>',
+        ).render({}),
+        const Size(20, 20),
+      );
+      expect(px(5, 5) >> 24 & 0xFF, closeTo(128, 2));
+      expect(px(15, 5), 0x00000000);
+    });
   });
 }
 

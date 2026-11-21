@@ -105,4 +105,12 @@ void main() {
       }
     }
   });
+
+  test('hanya lapisan beranimasi yang perlu digambar ulang tiap bingkai', () {
+    for (final room in HouseRoom.values) {
+      expect(houseLayerAnimated(room, HouseLayer.frame), isFalse);
+      expect(houseLayerAnimated(room, HouseLayer.back), isTrue);
+      expect(houseLayerAnimated(room, HouseLayer.floorLight), isTrue);
+    }
+  });
 }

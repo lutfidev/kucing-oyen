@@ -40,6 +40,11 @@ SvgTemplate _template(HouseRoom room, HouseLayer layer) =>
       ),
     );
 
+/// Lapisan [layer] ruangan [room] punya animasi (awan, daun, cahaya
+/// berdenyut); kalau tidak, waktunya tidak perlu digambar ulang.
+bool houseLayerAnimated(HouseRoom room, HouseLayer layer) =>
+    _template(room, layer).animated;
+
 /// Lapisan [layer] ruangan [room] seukuran [size] (viewBox 390×652
 /// diskalakan tidak seragam, catatan `n360`). [time] = detik animasi
 /// (awan, daun, cahaya berdenyut); null = diam (kurangi gerak).

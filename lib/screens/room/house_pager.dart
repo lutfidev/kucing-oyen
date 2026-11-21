@@ -6,8 +6,10 @@ import '../../game/model/house.dart';
 const housePageDuration = Duration(milliseconds: 420);
 
 /// Area rumah yang bisa pindah ruangan seperti kamera berjalan lewat pintu:
-/// ruang tengah di kiri, teras di kanan. Geser dari area kosong (ruang
-/// tengah ke kiri, teras ke kanan) mengikuti jari; dilepas lewat sepertiga
+/// ruang tengah di kiri, teras di kanan. Geser horizontal (ruang tengah ke
+/// kiri, teras ke kanan) mengikuti jari, juga yang dimulai di atas kucing
+/// atau barang (ketukan tetap milik kucing/barang; tahan-seret kucing di
+/// langkah 34 harus menang atas geser ini); dilepas lewat sepertiga
 /// lebar atau dilempar cepat = pindah, selain itu kembali. Mengganti
 /// [room] dari luar (ketuk pintu atau chip) menggeser dengan animasi.
 /// Kurangi gerak: langsung pindah. Kedua ruangan hanya dibangun selama
@@ -84,6 +86,13 @@ class _HousePagerState extends State<HousePager>
   @override
   void didUpdateWidget(HousePager old) {
     super.didUpdateWidget(old);
+    // Dimatikan di tengah geser (mis. Hias): pengenal seretnya dibuang
+    // tanpa akhir, jadi seretan dianggap batal dan ruangan kembali.
+    if (!widget.enabled && _dragging) {
+      _dragging = false;
+      _goTo(widget.room);
+      return;
+    }
     if (widget.room != old.room && !_dragging) _goTo(widget.room);
   }
 
@@ -116,7 +125,10 @@ class _HousePagerState extends State<HousePager>
     final velocity = details.primaryVelocity ?? 0;
     final moved = (_position.value - _valueOf(from)).abs();
     final toward = from == HouseRoom.living ? -velocity : velocity;
-    final go = moved > 1 / 3 || toward > HousePager.flingVelocity;
+    // Dilempar balik dengan cepat = batal, walau sudah lewat sepertiga.
+    final go =
+        toward >= -HousePager.flingVelocity &&
+        (moved > 1 / 3 || toward > HousePager.flingVelocity);
     final target = go && moved > 0 ? from.other : from;
     _goTo(target);
     if (target != from) widget.onRoom(target);

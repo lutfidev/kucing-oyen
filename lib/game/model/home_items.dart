@@ -335,10 +335,16 @@ final shopItems = [
 
 RoomItem roomItemOf(RoomItemId id) => roomItems[id.index];
 
-/// Letak barang sebagai pecahan 0–1 dari rentang pojok kiri-atas yang muat
-/// di areanya ([spotAt]). Nilai di luar 0–1 dijepit, jadi setiap [Spot]
-/// sah untuk ukuran barang apa pun. Di lantai, [y] = tepi bawah barang,
-/// sekaligus urutan gambarnya.
+/// Letak barang atau kucing sebagai pecahan 0–1; nilai di luar 0–1
+/// dijepit, jadi setiap [Spot] sah untuk ukuran apa pun.
+///
+/// Rumah dua ruangan (langkah 33): di lantai, [Spot] = titik kaki (tengah
+/// bawah) di zona Hias `HouseFloor` ([x] kiri–kanan pada kedalamannya, [y]
+/// belakang–depan, sekaligus urutan gambar). Barang dinding = pecahan
+/// rentang pojok kiri-atas di dinding belakang ruang tengah. Spot simpanan
+/// v1 (pojok kiri-atas di kamar datar, [spotAt]) dibaca langsung sebagai
+/// pecahan baru itu; [spotAt]/[positionOf] tinggal dipakai untuk posisi
+/// bawaan katalog ([RoomItem.defaultSpot]).
 class Spot {
   Spot(double x, double y) : x = _unit(x), y = _unit(y);
 

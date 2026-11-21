@@ -335,7 +335,7 @@ class CssStyle {
 
             percent = true;
             boxX = frac(parts[0]);
-            boxY = parts.length > 1 ? frac(parts[1]) : boxX;
+            boxY = parts.length > 1 ? frac(parts[1]) : 0.5;
           } else {
             final parts = value.split(RegExp(r'\s+'));
             originX = _length(parts[0]);

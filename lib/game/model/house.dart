@@ -17,6 +17,9 @@ enum HouseRoom {
 const houseDepthBack = 392.0;
 const houseDepthFront = 652.0;
 
+/// Garis kaki paling belakang di zona Hias (`HouseFloor`, Spot y = 0).
+const houseFloorBack = 398.0;
+
 /// Ukuran sprite menurut kedalaman: 0,75 di garis belakang, 1,15 di depan.
 double depthScale(double feetY) {
   final t = ((feetY - houseDepthBack) / (houseDepthFront - houseDepthBack))
@@ -54,7 +57,7 @@ typedef HousePoint = ({double x, double y});
 class HouseFloor {
   const HouseFloor();
 
-  static const _top = 398.0;
+  static const _top = houseFloorBack;
   static const _bottom = 646.0;
   static const _bend = 508.0;
   static const _backLeft = 84.0;

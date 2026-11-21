@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/room.dart';
+import 'package:kucing_oren/screens/room/house_pager.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -116,5 +118,128 @@ void main() {
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
     expect(_chip(), findsOneWidget);
+  });
+
+  testWidgets('teras: tombol Hias belum ada (Hias per ruangan di langkah 35)', (
+    tester,
+  ) async {
+    await pumpRoom(
+      tester,
+      progress: testProgressWith(
+        home: Home(room: Room().buy(RoomItemId.kardus)),
+      ),
+    );
+    expect(find.text('Hias'), findsOneWidget);
+    await tester.tap(_toTerrace());
+    await tester.pumpAndSettle();
+    expect(find.text('Hias'), findsNothing);
+    await tester.tap(_chip());
+    await tester.pumpAndSettle();
+    expect(find.text('Hias'), findsOneWidget);
+  });
+
+  testWidgets('kucing di depan pintu tetap bisa diketuk', (tester) async {
+    await pumpRoom(
+      tester,
+      progress: testProgressWith(home: Home(kitties: allKitties)),
+    );
+    final (room, geo) = roomOf(tester);
+    final door = geo.doorTap.shift(room.topLeft);
+    Rect? overlap;
+    for (final kitty in allKitties) {
+      final box = tester.getRect(kittyView(kitty));
+      if (box.overlaps(door)) overlap = box.intersect(door);
+    }
+    expect(overlap, isNotNull, reason: 'tidak ada kucing di depan pintu');
+    await tester.tapAt(overlap!.center);
+    await tester.pumpAndSettle();
+    expect(find.text('Elus'), findsOneWidget);
+    expect(_chip(), findsNothing);
+  });
+
+  group('HousePager langsung', () {
+    Future<ValueNotifier<(HouseRoom, bool)>> pumpPager(
+      WidgetTester tester,
+      List<HouseRoom> moved,
+    ) async {
+      final state = ValueNotifier((HouseRoom.living, true));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ValueListenableBuilder(
+            valueListenable: state,
+            builder: (context, value, _) => HousePager(
+              room: value.$1,
+              enabled: value.$2,
+              onRoom: (room) {
+                moved.add(room);
+                state.value = (room, state.value.$2);
+              },
+              builder: (context, room) => ColoredBox(
+                color: const Color(0xFF000000),
+                child: Text(room.name),
+              ),
+            ),
+          ),
+        ),
+      );
+      return state;
+    }
+
+    testWidgets('geser jauh lalu lempar balik: tetap di ruangan', (
+      tester,
+    ) async {
+      final moved = <HouseRoom>[];
+      await pumpPager(tester, moved);
+      final gesture = await tester.startGesture(const Offset(780, 300));
+      // 40% lebar layar test (800 px): lewat sepertiga.
+      // Cap waktu eksplisit: tanpa itu kecepatan lepas selalu 0 di test.
+      var ms = 0;
+      for (var i = 0; i < 18; i++) {
+        ms += 16;
+        await gesture.moveBy(
+          const Offset(-20, 0),
+          timeStamp: Duration(milliseconds: ms),
+        );
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      // Berhenti sebentar, lalu lempar cepat ke arah sebaliknya; posisinya
+      // masih lewat sepertiga (360 − 48 px dari 800).
+      ms += 50;
+      for (var i = 0; i < 6; i++) {
+        ms += 4;
+        await gesture.moveBy(
+          const Offset(8, 0),
+          timeStamp: Duration(milliseconds: ms),
+        );
+        await tester.pump(const Duration(milliseconds: 4));
+      }
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(moved, isEmpty);
+      expect(tester.getRect(_house('living')).left, 0);
+    });
+
+    testWidgets('dimatikan di tengah geser: kembali, tidak macet', (
+      tester,
+    ) async {
+      final moved = <HouseRoom>[];
+      final state = await pumpPager(tester, moved);
+      final gesture = await tester.startGesture(const Offset(300, 300));
+      await gesture.moveBy(const Offset(-40, 0));
+      await tester.pump();
+      await gesture.moveBy(const Offset(-40, 0));
+      await tester.pump();
+      expect(tester.getRect(_house('living')).left, lessThan(0));
+      state.value = (HouseRoom.living, false);
+      await tester.pumpAndSettle();
+      expect(tester.getRect(_house('living')).left, 0);
+      await gesture.up();
+      await tester.pumpAndSettle();
+      // Sesudah dinyalakan lagi, ganti ruangan dari luar tetap bergeser.
+      state.value = (HouseRoom.terrace, true);
+      await tester.pumpAndSettle();
+      expect(_house('living'), findsNothing);
+      expect(moved, isEmpty);
+    });
   });
 }

@@ -129,6 +129,12 @@ void main() {
       'animation: kcTwinkle 1.2s ease-in-out infinite',
     );
     expect((center.boxX, center.boxY), (0.5, 0.5));
+    // Satu nilai: y bawaan CSS 50%.
+    final one = CssStyle.parse(
+      'transform-box: fill-box; transform-origin: 30%; '
+      'animation: kcTwinkle 1.2s ease-in-out infinite',
+    );
+    expect((one.boxX, one.boxY), (0.3, 0.5));
   });
 
   test('gaya tidak dikenal gagal, gaya kosong tanpa animasi', () {

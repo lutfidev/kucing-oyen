@@ -18,9 +18,6 @@ const kittyRoomSize = 96.0;
 /// Kaki kucing di 92% tinggi kotak sprite: dipakai untuk urutan gambar.
 const catFeetFactor = 0.92;
 
-/// Garis kaki paling belakang di lantai (zona Hias, `HouseFloor`).
-const designFloorBack = 398.0;
-
 /// Lompatan kucing ke barang dinding, dalam px desain (dikali `artScale`):
 /// paling tinggi [catHopUp] untuk lompatan ke barang dinding (naik ke
 /// pijakan tidak dibatasi: kucing memanjat perabot), dan pijakan paling jauh
@@ -265,7 +262,7 @@ class RoomGeometry {
     if (item.zone == RoomZone.floor) {
       return path([onFloor(user.center.dx, userFeet), user], 0);
     }
-    final base = designFloorBack * sy;
+    final base = houseFloorBack * sy;
     final up = catHopUp * artScale;
     if (base - userFeet <= up) {
       return path([onFloor(user.center.dx, base), user], 1);

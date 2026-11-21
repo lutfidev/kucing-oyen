@@ -610,7 +610,10 @@ class _RoomViewState extends State<RoomView>
                   )
                 else
                   const Spacer(),
-                if (!empty || _decorating) ...[
+                // Hias per ruangan menyusul (langkah 35): sampai itu hanya
+                // di ruang tengah, supaya barang dari Gudang tidak pindah
+                // ke ruangan yang tidak tampil.
+                if ((!empty || _decorating) && _house == HouseRoom.living) ...[
                   SizedBox(width: space.s8),
                   DecorateButton(
                     done: _decorating,
@@ -696,6 +699,14 @@ class _RoomViewState extends State<RoomView>
       time: _animating ? _time : null,
       shadows: shadows,
       floor: [
+        // Pintu di bawah kucing dan barang: kucing di ambang tetap bisa
+        // diketuk.
+        if (!_decorating)
+          DoorButton(
+            geo: geo,
+            label: context.l10n.doorTo(geo.which.other.name),
+            onTap: () => _goTo(geo.which.other),
+          ),
         if (_decorating) Positioned.fill(child: ZoneGuides(geo: geo)),
         for (final sprite in sprites.whereType<KittySprite>())
           if (sprite.kitty == _selected)
@@ -743,12 +754,6 @@ class _RoomViewState extends State<RoomView>
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(child: scene),
-        if (!_decorating)
-          DoorButton(
-            geo: geo,
-            label: context.l10n.doorTo(geo.which.other.name),
-            onTap: () => _goTo(geo.which.other),
-          ),
         // Petunjuk rumah kosong di bawah gelembung dan tanda di atas kucing,
         // supaya gelembung hadiah Oyen tetap bisa diketuk.
         if (empty && !_decorating)
