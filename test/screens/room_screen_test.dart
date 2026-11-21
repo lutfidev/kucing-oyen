@@ -127,7 +127,7 @@ void main() {
       expect(room.width, 390);
       // Panel bawah desain 192 (652–844), tanpa status bar bawah di test.
       expect(room.height, closeTo(652, 24));
-      expect(geo.wall.height / room.height, closeTo(412 / 652, 1e-9));
+      expect(geo.sy, closeTo(room.height / 652, 1e-9));
     });
 
     testWidgets('barang yang ditaruh digambar di posisinya', (tester) async {
@@ -195,8 +195,10 @@ void main() {
           final box = tester.getRect(kittyView(kitty)).shift(-room.topLeft);
           expect(box.left, greaterThanOrEqualTo(0), reason: '$kitty');
           expect(box.right, lessThanOrEqualTo(room.width), reason: '$kitty');
-          expect(geo.feetOf(box), greaterThan(geo.floor.top), reason: '$kitty');
-          expect(box.bottom, lessThanOrEqualTo(geo.floor.bottom + 0.01));
+          // Kaki di zona lantai (y 398–646 desain).
+          final feet = geo.feetOf(box) / geo.sy;
+          expect(feet, greaterThanOrEqualTo(398 - 0.01), reason: '$kitty');
+          expect(feet, lessThanOrEqualTo(646 + 0.01), reason: '$kitty');
           corners.add(box.topLeft);
         }
         expect(corners, hasLength(allKitties.length));

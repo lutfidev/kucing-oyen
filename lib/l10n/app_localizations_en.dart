@@ -2053,4 +2053,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get snackEmptyNote => 'All gone. Grab more snacks in the Shop!';
+
+  @override
+  String roomName(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Living room',
+      'terrace': 'Terrace',
+      'other': 'Living room',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String doorTo(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Go to the living room',
+      'terrace': 'Go to the terrace',
+      'other': 'Go to the living room',
+    });
+    return '$_temp0';
+  }
 }

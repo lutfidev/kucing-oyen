@@ -12,6 +12,7 @@ import '../../app/routes.dart';
 import '../../game/model/accessories.dart';
 import '../../game/model/home.dart';
 import '../../game/model/home_items.dart';
+import '../../game/model/house.dart';
 import '../../game/model/kitties.dart';
 import '../../game/model/needs.dart';
 import '../../game/model/room_life.dart';
@@ -25,9 +26,12 @@ import '../coins/coin_sheet.dart';
 import '../shop/shop_tab.dart';
 import 'room_geometry.dart';
 import 'decorate.dart';
+import 'door_parts.dart';
+import 'house_pager.dart';
 import 'kitty_card.dart';
 import 'room_parts.dart';
 import 'room_reaction.dart';
+import 'room_scene.dart';
 
 // Tempat kucing di lantai: 4 kolom × 3 baris, diacak tiap kamar dibuka.
 const _slotColumns = [0.08, 0.36, 0.64, 0.92];
@@ -47,10 +51,9 @@ Map<KittyId, Spot> kittySpots(Iterable<KittyId> kitties, Random random) {
   return {for (final kitty in kitties) kitty: slots[kitty.index]};
 }
 
-/// Oyen di kamar baru (hanya mangkuk): di tengah lantai seperti desain
-/// (`Kamar.dc.html` keadaan `baru`, kiri 128 atas 470), jauh dari gelembung
-/// ajakan di kiri bawah.
-final starterOyenSpot = Spot(0.47, 0.71);
+/// Oyen di rumah baru (hanya mangkuk): kaki di (205, 556) seperti desain
+/// (`AdeganTengah.dc.html` isi `baru`), jauh dari gelembung ajakan.
+final starterOyenSpot = const HouseFloor().spotAtFeet(205, 556);
 
 /// Titik merah Toko: ada barang atau kucing yang belum dimiliki dan
 /// terjangkau [coins]. Camilan tidak dihitung.
@@ -87,9 +90,11 @@ class RoomView extends StatefulWidget {
   State<RoomView> createState() => _RoomViewState();
 }
 
-/// Rentang tempat kucing di lantai kamar desain, untuk kecepatan jalan.
-final _designFloor = RoomGeometry(const Size(designRoomWidth, designRoomHeight))
-    .rangeOf(RoomZone.floor, const Size.square(kittyRoomSize));
+/// Px desain per satu satuan [Spot] lantai, untuk kecepatan jalan: lebar
+/// zona kaki di tengah kedalamannya dan tingginya (`HouseFloor`). Diganti
+/// jarak lantai sungguhan di langkah 34.
+const _floorSpanX = 340.0;
+const _floorSpanY = 248.0;
 
 /// Selang penyegaran bar kebutuhan, gelembung hadiah, dan label mangkuk.
 const roomRefreshInterval = Duration(seconds: 30);
@@ -100,8 +105,8 @@ class _RoomViewState extends State<RoomView>
   late final List<Spot> _slots = shuffledKittySlots(_random);
   late final RoomLife _life = RoomLife(
     random: _random,
-    spanX: _designFloor.width,
-    spanY: _designFloor.height,
+    spanX: _floorSpanX,
+    spanY: _floorSpanY,
   );
 
   /// Jam kamar: memajukan rutinitas dan waktu animasi. Hanya jalan kalau
@@ -143,6 +148,13 @@ class _RoomViewState extends State<RoomView>
 
   bool _decorating = false;
   bool _finishing = false;
+
+  /// Ruangan yang sedang dibuka (awal ruang tengah, tidak disimpan).
+  HouseRoom _house = HouseRoom.living;
+
+  /// Ruangan yang sudah tampil penuh: chip "Ruang tengah" muncul di akhir
+  /// transisi (`TransisiRuang.dc.html`).
+  HouseRoom _arrived = HouseRoom.living;
 
   /// Pujian sesudah menghias: dapat bonus Senang atau tidak, dan nomor
   /// urutnya.
@@ -440,7 +452,7 @@ class _RoomViewState extends State<RoomView>
               children: [
                 Expanded(
                   child: LayoutBuilder(
-                    builder: (context, box) => _room(RoomGeometry(box.biggest)),
+                    builder: (context, box) => _houseArea(box.biggest),
                   ),
                 ),
                 RoomPanel(
@@ -531,9 +543,96 @@ class _RoomViewState extends State<RoomView>
     );
   }
 
+  /// Pindah ruangan lewat pintu atau chip (pager menggeser).
+  void _goTo(HouseRoom room) => setState(() => _house = room);
+
+  /// Area rumah: ruangan yang bisa digeser, lalu header dan tombol Hias
+  /// yang diam di atasnya.
+  Widget _houseArea(Size size) {
+    final s = context.koSize;
+    final space = context.koSpace;
+    final empty = _empty;
+    final top = MediaQuery.paddingOf(context).top + space.s6;
+    // Kurangi gerak: tidak ada transisi, chip langsung tampil.
+    final arrived = _still ? _house : _arrived;
+    final terrace =
+        _house == HouseRoom.terrace &&
+        arrived == HouseRoom.terrace &&
+        !_decorating;
+    return Stack(
+      key: const ValueKey('room-area'),
+      clipBehavior: Clip.none,
+      children: [
+        Positioned.fill(
+          child: HousePager(
+            room: _house,
+            enabled: !_decorating,
+            onRoom: (room) => setState(() => _house = room),
+            onArrive: (room) {
+              if (room != _arrived) setState(() => _arrived = room);
+            },
+            builder: (context, room) => _room(RoomGeometry(size, room)),
+          ),
+        ),
+        Positioned(
+          left: space.s16,
+          right: space.s16,
+          top: top,
+          child: RoomHeader(
+            coins: _progress.coins,
+            bonus: _progress.canClaimBonus,
+            stars: _progress.progress.totalStars,
+            maxStars: _progress.maxStars,
+            onCoins: () => showCoinSheet(context, _progress),
+          ),
+        ),
+        if (!empty || _decorating || terrace)
+          Positioned(
+            left: space.s16,
+            right: space.s16,
+            top: top + s.roomDecorateGap,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (_decorating)
+                  const Flexible(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: DecorateHint(),
+                    ),
+                  )
+                else if (terrace)
+                  Flexible(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: RoomChip(onPressed: () => _goTo(HouseRoom.living)),
+                    ),
+                  )
+                else
+                  const Spacer(),
+                // Hias per ruangan menyusul (langkah 35): sampai itu hanya
+                // di ruang tengah, supaya barang dari Gudang tidak pindah
+                // ke ruangan yang tidak tampil.
+                if ((!empty || _decorating) && _house == HouseRoom.living) ...[
+                  SizedBox(width: space.s8),
+                  DecorateButton(
+                    done: _decorating,
+                    onPressed: _decorating ? _finish : _startDecorating,
+                  ),
+                ],
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// Isi satu ruangan [geo]: latar, barang, kucing, dan tanda di atasnya.
+  /// Kucing tinggal di ruang tengah sampai rutinitas dua ruangan ada.
   Widget _room(RoomGeometry geo) {
-    _geo = geo;
-    if (widget.life) _syncKitties(geo);
+    final living = geo.which == HouseRoom.living;
+    if (geo.which == _house) _geo = geo;
+    if (widget.life && living) _syncKitties(geo);
     final c = context.koColors;
     final s = context.koSize;
     final space = context.koSpace;
@@ -544,13 +643,15 @@ class _RoomViewState extends State<RoomView>
     final dragSpot = _dragSpot;
     final sprites = roomSprites(
       items: {
-        ...home.room.placed,
-        if (dragging != null && dragSpot != null) dragging: dragSpot,
+        ...home.room.placedIn(geo.which),
+        if (dragging != null && dragSpot != null && geo.which == _house)
+          dragging: dragSpot,
       },
       cats: {
-        for (final kitty in home.kitties)
-          if (!widget.life || _life.of(kitty).activity.onFloor)
-            kitty: _catSpot(kitty),
+        if (living)
+          for (final kitty in home.kitties)
+            if (!widget.life || _life.of(kitty).activity.onFloor)
+              kitty: _catSpot(kitty),
       },
       geo: geo,
     );
@@ -562,21 +663,50 @@ class _RoomViewState extends State<RoomView>
         if (sprite is ItemSprite && sprite.id == dragging) sprite,
     ];
     final hopping = {
-      for (final kitty in home.kitties) kitty: ?_hopBox(kitty, geo),
+      if (living)
+        for (final kitty in home.kitties) kitty: ?_hopBox(kitty, geo),
     };
     final catBoxes = {..._catBoxes(sprites, geo), ...hopping};
-    _shownBoxes = catBoxes;
-    final empty = _empty;
+    if (geo.which == _house) _shownBoxes = catBoxes;
+    final empty = _empty && living;
     final top = MediaQuery.paddingOf(context).top + space.s6;
     // Tag dan gelembung tidak naik ke bawah header dan tombol Hias, yang
     // digambar di atasnya dan menelan ketukan.
     final overlayTop =
         top + s.roomDecorateGap + s.roomDecorateButton + space.s8;
-    return Stack(
-      key: const ValueKey('room-area'),
-      clipBehavior: Clip.none,
-      children: [
-        Positioned.fill(child: RoomBackground(geo: geo)),
+    final unit = geo.artScale;
+    final shadows = [
+      for (final sprite in ordered)
+        switch (sprite) {
+          ItemSprite(:final id, :final flat)
+              when !flat && roomItemOf(id).zone == RoomZone.floor =>
+            id == dragging
+                ? SceneShadow(
+                    SceneShadow.ofItem(sprite.box, unit: unit).oval,
+                    SceneShadow.lifted,
+                  )
+                : SceneShadow.ofItem(sprite.box, unit: unit),
+          KittySprite(:final box) => SceneShadow.ofCat(
+            box,
+            geo.feetOf(box),
+            unit: unit,
+          ),
+          _ => null,
+        },
+    ].nonNulls.toList();
+    final scene = RoomScene(
+      geo: geo,
+      time: _animating ? _time : null,
+      shadows: shadows,
+      floor: [
+        // Pintu di bawah kucing dan barang: kucing di ambang tetap bisa
+        // diketuk.
+        if (!_decorating)
+          DoorButton(
+            geo: geo,
+            label: context.l10n.doorTo(geo.which.other.name),
+            onTap: () => _goTo(geo.which.other),
+          ),
         if (_decorating) Positioned.fill(child: ZoneGuides(geo: geo)),
         for (final sprite in sprites.whereType<KittySprite>())
           if (sprite.kitty == _selected)
@@ -594,22 +724,12 @@ class _RoomViewState extends State<RoomView>
                 ),
               ),
             ),
+      ],
+      sprites: [
         for (final sprite in ordered)
-          if (sprite case ItemSprite(:final id) when id == dragging) ...[
-            Positioned(
-              left: sprite.box.left + sprite.box.width * 0.1,
-              top: sprite.box.bottom - s.roomLiftShadow * geo.artScale / 2,
-              width: sprite.box.width * 0.8,
-              height: s.roomLiftShadow * geo.artScale,
-              child: DecoratedBox(
-                decoration: ShapeDecoration(
-                  color: c.roomDragShadow,
-                  shape: const OvalBorder(),
-                ),
-              ),
-            ),
-            _itemSprite(sprite, geo, bowlFull, lifted: true),
-          ] else
+          if (sprite case ItemSprite(:final id) when id == dragging)
+            _itemSprite(sprite, geo, bowlFull, lifted: true)
+          else
             switch (sprite) {
               ItemSprite() => _itemSprite(sprite, geo, bowlFull),
               KittySprite(:final kitty) => Positioned.fromRect(
@@ -627,6 +747,18 @@ class _RoomViewState extends State<RoomView>
             key: ValueKey(kitty),
             rect: box,
             child: _kitty(kitty, box, hopFacing: _hopFacing(kitty, geo)),
+          ),
+      ],
+    );
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Positioned.fill(child: scene),
+        // Petunjuk rumah kosong di bawah gelembung dan tanda di atas kucing,
+        // supaya gelembung hadiah Oyen tetap bisa diketuk.
+        if (empty && !_decorating)
+          Positioned.fill(
+            child: EmptyRoomHints(geo: geo, onShop: _openShop),
           ),
         if (!_decorating)
           for (final MapEntry(key: kitty, value: box) in catBoxes.entries)
@@ -681,10 +813,11 @@ class _RoomViewState extends State<RoomView>
                 ),
               ),
         if (!_decorating && widget.life)
-          if ((_bowlRefill(now), home.room.placed[RoomItemId.mangkuk]) case (
-            final left?,
-            final spot?,
-          ))
+          if ((
+                _bowlRefill(now),
+                home.room.placedIn(geo.which)[RoomItemId.mangkuk],
+              )
+              case (final left?, final spot?))
             if (geo.boxOf(roomItemOf(RoomItemId.mangkuk), spot) case final bowl)
               Positioned.fill(
                 child: CustomSingleChildLayout(
@@ -700,47 +833,6 @@ class _RoomViewState extends State<RoomView>
                   child: BowlRefillLabel(left: left),
                 ),
               ),
-        if (empty && !_decorating)
-          Positioned.fill(
-            child: EmptyRoomHints(geo: geo, onShop: _openShop),
-          ),
-        Positioned(
-          left: space.s16,
-          right: space.s16,
-          top: top,
-          child: RoomHeader(
-            coins: _progress.coins,
-            bonus: _progress.canClaimBonus,
-            stars: _progress.progress.totalStars,
-            maxStars: _progress.maxStars,
-            onCoins: () => showCoinSheet(context, _progress),
-          ),
-        ),
-        if (!empty || _decorating)
-          Positioned(
-            left: space.s16,
-            right: space.s16,
-            top: top + s.roomDecorateGap,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (_decorating)
-                  const Flexible(
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: DecorateHint(),
-                    ),
-                  )
-                else
-                  const Spacer(),
-                SizedBox(width: space.s8),
-                DecorateButton(
-                  done: _decorating,
-                  onPressed: _decorating ? _finish : _startDecorating,
-                ),
-              ],
-            ),
-          ),
       ],
     );
   }

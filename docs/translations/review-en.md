@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-491 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+493 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -518,6 +518,8 @@ files and anything written there is overwritten.
 | `kittyTapHintNewHungry` | {name}, new, hungry. Tap to see their card | {name}, baru, lapar. Ketuk untuk lihat kartunya | Screen reader label of a newly adopted cat in the room that is also hungry. Placeholders: `{name}`. | |
 | `snackFullNote` | {name} is already full and happy. Save it for later! | {name} sudah kenyang dan senang. Simpan buat nanti! | Short note on a cat card when a snack is tapped but the cat's Full and Happy bars are both at 100. {name} is the cat's name. Placeholders: `{name}`. | |
 | `snackEmptyNote` | All gone. Grab more snacks in the Shop! | Stoknya habis. Beli camilan lagi di Toko! | Short note on a cat card when a snack that is out of stock is tapped. | |
+| `roomName` | {room, select, living{Living room} terrace{Terrace} other{Living room}} | {room, select, living{Ruang tengah} terrace{Teras} other{Ruang tengah}} | Name of a room of Oyen's house: the living room or the terrace. Shown on the small chip that leads back to the living room. Placeholders: `{room}`. | |
+| `doorTo` | {room, select, living{Go to the living room} terrace{Go to the terrace} other{Go to the living room}} | {room, select, living{Pergi ke ruang tengah} terrace{Pergi ke teras} other{Pergi ke ruang tengah}} | Screen-reader label of the open door between the two rooms of Oyen's house; tapping it walks to the other room. Placeholders: `{room}`. | |
 
 ---
 

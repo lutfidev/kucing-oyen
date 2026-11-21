@@ -9,6 +9,7 @@ export 'board_scene.dart';
 export 'brand_art.dart';
 export 'coin_art.dart';
 export 'item_art.dart';
+export 'house_art.dart';
 export 'kitty.dart';
 export 'kitty_painter.dart';
 export 'map_art.dart';

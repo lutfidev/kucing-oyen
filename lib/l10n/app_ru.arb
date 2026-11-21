@@ -490,5 +490,7 @@
   "kittyTapHintNew": "{name}, новенький. Нажми, чтобы открыть карточку",
   "kittyTapHintNewHungry": "{name}, новенький, хочет есть. Нажми, чтобы открыть карточку",
   "snackFullNote": "{name} уже сыт и доволен. Прибереги на потом!",
-  "snackEmptyNote": "Закончилось. Купи ещё вкусняшек в Магазине!"
+  "snackEmptyNote": "Закончилось. Купи ещё вкусняшек в Магазине!",
+  "roomName": "{room, select, living{Гостиная} terrace{Терраса} other{Гостиная}}",
+  "doorTo": "{room, select, living{Пойти в гостиную} terrace{Выйти на террасу} other{Пойти в гостиную}}"
 }

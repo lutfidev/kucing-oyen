@@ -3047,6 +3047,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All gone. Grab more snacks in the Shop!'**
   String get snackEmptyNote;
+
+  /// Name of a room of Oyen's house: the living room or the terrace. Shown on the small chip that leads back to the living room.
+  ///
+  /// In en, this message translates to:
+  /// **'{room, select, living{Living room} terrace{Terrace} other{Living room}}'**
+  String roomName(String room);
+
+  /// Screen-reader label of the open door between the two rooms of Oyen's house; tapping it walks to the other room.
+  ///
+  /// In en, this message translates to:
+  /// **'{room, select, living{Go to the living room} terrace{Go to the terrace} other{Go to the living room}}'**
+  String doorTo(String room);
 }
 
 class _AppLocalizationsDelegate

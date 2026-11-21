@@ -105,15 +105,36 @@ void main() {
     },
   );
 
-  test('fill-box hanya dengan origin center', () {
+  test('fill-box hanya dengan origin center atau persen', () {
     for (final style in [
       'transform-box: fill-box; transform-origin: 4px 6px; '
           'animation: kcTwinkle 1.2s ease-in-out infinite',
       'transform-box: fill-box; animation: kcTwinkle 1.2s ease-in-out infinite',
       'transform-origin: center; animation: kcTwinkle 1.2s ease-in-out infinite',
+      'transform-origin: 50% 100%; animation: kcTwinkle 1.2s infinite',
     ]) {
       expect(() => CssStyle.parse(style), throwsFormatException, reason: style);
     }
+  });
+
+  test('fill-box dengan origin persen = pecahan kotak isi', () {
+    final style = CssStyle.parse(
+      'transform-box: fill-box; transform-origin: 50% 100%; '
+      'animation: kcTwinkle 1.2s ease-in-out infinite',
+    );
+    expect(style.fillBox, isTrue);
+    expect((style.boxX, style.boxY), (0.5, 1.0));
+    final center = CssStyle.parse(
+      'transform-box: fill-box; transform-origin: center; '
+      'animation: kcTwinkle 1.2s ease-in-out infinite',
+    );
+    expect((center.boxX, center.boxY), (0.5, 0.5));
+    // Satu nilai: y bawaan CSS 50%.
+    final one = CssStyle.parse(
+      'transform-box: fill-box; transform-origin: 30%; '
+      'animation: kcTwinkle 1.2s ease-in-out infinite',
+    );
+    expect((one.boxX, one.boxY), (0.3, 0.5));
   });
 
   test('gaya tidak dikenal gagal, gaya kosong tanpa animasi', () {
@@ -146,6 +167,21 @@ void main() {
     test('fill-box center: kilau mengecil di sekitar pusatnya', () {
       final small = template.render({'tw': twinkle}, time: 0.6);
       expect(small.bounds.bottom, closeTo(35 + 5 * 0.6, 1e-6));
+    });
+
+    test('fill-box 50% 100%: berputar di tengah-bawah kotak isi', () {
+      final sway = SvgTemplate(
+        '<rect style="transform-box: fill-box; transform-origin: 50% 100%; '
+        'animation: kcTail 2.6s ease-in-out infinite" '
+        'x="0" y="0" width="10" height="20" fill="#000000"></rect>',
+        keyframes: _kitty,
+      );
+      final moved = sway.render({}, time: 1.3);
+      // Titik putar di (5, 20): tepi bawah tetap di sekitar y 20,
+      // sedangkan puncaknya bergeser ke samping.
+      expect(moved.bounds.bottom, closeTo(20, 1.5));
+      expect(moved.bounds.top, closeTo(0, 1.5));
+      expect(moved.bounds.width, greaterThan(10.5));
     });
 
     test('transform dan animasi di satu elemen gagal', () {

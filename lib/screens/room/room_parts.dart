@@ -2,72 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../game/render/render.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import 'room_geometry.dart';
-
-/// Dinding bergaris, trim kayu, lantai papan, bidang cahaya, dan jendela
-/// (`Kamar.dc.html`), mengikuti [geo].
-class RoomBackground extends StatelessWidget {
-  const RoomBackground({super.key, required this.geo});
-
-  final RoomGeometry geo;
-
-  @override
-  Widget build(BuildContext context) => ExcludeSemantics(
-    child: CustomPaint(painter: _RoomPainter(geo, context.koColors)),
-  );
-}
-
-class _RoomPainter extends CustomPainter {
-  _RoomPainter(this.geo, this.c);
-
-  final RoomGeometry geo;
-  final KoColors c;
-
-  // Pola desain: garis dinding 18 px tiap 36 px (`repeating-linear-gradient`
-  // 90deg), sambungan papan 2 px tiap 35 px (180deg), tepi terang trim 3 px.
-  static const _stripe = 18.0;
-  static const _stripeEvery = 36.0;
-  static const _board = 35.0;
-  static const _boardLine = 2.0;
-  static const _trimLight = 3.0;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final s = geo.scale;
-    final wall = Rect.fromLTRB(0, 0, geo.room.width, geo.trim.bottom);
-    canvas.drawRect(wall, Paint()..color = c.roomWall);
-    final stripe = Paint()..color = c.roomWallStripe;
-    for (var x = 0.0; x < wall.width; x += _stripeEvery * s) {
-      canvas.drawRect(Rect.fromLTWH(x, 0, _stripe * s, wall.height), stripe);
-    }
-    final trim = geo.trim;
-    canvas.drawRect(trim, Paint()..color = c.wood);
-    canvas.drawRect(
-      Rect.fromLTWH(trim.left, trim.top, trim.width, _trimLight * s),
-      Paint()..color = c.roomTrimLight,
-    );
-    final floor = geo.floor;
-    canvas.drawRect(floor, Paint()..color = c.roomFloorBoards);
-    final line = Paint()..color = c.roomFloorLine;
-    for (
-      var y = floor.top + (_board - _boardLine) * s;
-      y < floor.bottom;
-      y += _board * s
-    ) {
-      canvas.drawRect(Rect.fromLTWH(0, y, floor.width, _boardLine * s), line);
-    }
-    paintRoomFloorDecor(canvas, floor: floor);
-    paintRoomWindow(canvas, box: geo.fromDesign(RoomArt.windowBox));
-  }
-
-  @override
-  bool shouldRepaint(_RoomPainter old) =>
-      old.geo.room != geo.room || old.c != c;
-}
 
 /// Header kamar: chip koin, logo satu baris, dan total bintang.
 class RoomHeader extends StatelessWidget {
@@ -358,10 +296,11 @@ class EmptyRoomHints extends StatelessWidget {
   final RoomGeometry geo;
   final VoidCallback onShop;
 
-  // Letak desain 390×844.
-  static const wallSpot = Rect.fromLTWH(214, 150, 110, 84);
-  static const floorSpot = Rect.fromLTWH(252, 470, 118, 64);
-  static const bubbleAt = Offset(20, 590);
+  // Letak desain area rumah 390×652 (`AdeganTengah.dc.html` isi `baru`,
+  // `RuangTengah.dc.html`).
+  static const wallSpot = Rect.fromLTWH(212, 176, 88, 70);
+  static const floorSpot = Rect.fromLTWH(82, 398, 126, 56);
+  static const bubbleAt = Offset(20, 570);
 
   @override
   Widget build(BuildContext context) {

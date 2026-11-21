@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/game/render/css_animation.dart';
 import 'package:kucing_oren/game/render/svg_template.dart';
 
 /// Panggilan gambar [drawing] di kanvas perekam.
@@ -183,8 +184,16 @@ void main() {
 
   test('elemen atau sintaks yang belum didukung ditolak', () {
     expect(
-      () => SvgTemplate('<polygon points="0,0 1,1"></polygon>').render({}),
+      () =>
+          SvgTemplate('<pattern id="p" width="1" height="1"></pattern>')
+              .render({}),
       throwsUnsupportedError,
+    );
+    expect(
+      () => SvgTemplate(
+        '<rect x="0" y="0" width="1" height="1" fill="url(#tidak-ada)"></rect>',
+      ).render({}),
+      throwsFormatException,
     );
     expect(() => SvgTemplate('<rect x="0">'), throwsFormatException);
     expect(() => SvgTemplate('<rect></circle>'), throwsFormatException);
@@ -280,4 +289,195 @@ void main() {
       throwsArgumentError,
     );
   });
+
+  group('lapisan rumah: poligon, gradien, clip, kelas', () {
+    test('polygon terisi, polyline dan line jadi garis', () async {
+      final px = await _pixels(
+        SvgTemplate(
+          '<polygon points="0,0 20,0 20,20" fill="#FF0000"></polygon>'
+          '<polyline points="0,30 20,30" fill="none" stroke="#00FF00" '
+          'stroke-width="4"></polyline>'
+          '<line x1="0" y1="38" x2="20" y2="38" stroke="#0000FF" '
+          'stroke-width="4"></line>',
+        ).render({}),
+        const Size(20, 40),
+      );
+      expect(px(15, 5), 0xFFFF0000);
+      expect(px(5, 15), 0x00000000);
+      expect(px(10, 30), 0xFF00FF00);
+      expect(px(10, 38), 0xFF0000FF);
+    });
+
+    test('rgba() jadi alfa warna isian dan garis', () {
+      final paints = _paints(
+        _record(
+          SvgTemplate(
+            '<rect x="0" y="0" width="5" height="5" '
+            'fill="rgba(176,122,79,0.26)" stroke="rgba(0,0,0,0.5)"></rect>',
+          ).render({}),
+        ),
+      ).toList();
+      expect(paints[0].color.a, closeTo(0.26, 0.002));
+      expect((paints[0].color.r * 255).round(), 176);
+      expect(paints[1].color.a, closeTo(0.5, 0.002));
+    });
+
+    test('linearGradient di kotak isi bentuk', () async {
+      final px = await _pixels(
+        SvgTemplate(
+          '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">'
+          '<stop offset="0" stop-color="#FF0000"></stop>'
+          '<stop offset="1" stop-color="#0000FF" stop-opacity="0.5"></stop>'
+          '</linearGradient></defs>'
+          '<rect x="0" y="10" width="20" height="20" fill="url(#g)"></rect>',
+        ).render({}),
+        const Size(20, 40),
+      );
+      expect(px(10, 5), 0x00000000);
+      expect(px(10, 10) >> 16 & 0xFF, greaterThan(230));
+      final bottom = px(10, 29);
+      expect(bottom & 0xFF, greaterThan(bottom >> 16 & 0xFF));
+      expect(bottom >> 24 & 0xFF, closeTo(130, 12));
+    });
+
+    test('radialGradient: tengah warna stop pertama', () async {
+      final px = await _pixels(
+        SvgTemplate(
+          '<defs><radialGradient id="r" cx="0.5" cy="0.5" r="0.5">'
+          '<stop offset="0" stop-color="#FFFFFF"></stop>'
+          '<stop offset="1" stop-color="#000000" stop-opacity="0"></stop>'
+          '</radialGradient></defs>'
+          '<rect x="0" y="0" width="40" height="40" fill="url(#r)"></rect>',
+        ).render({}),
+        const Size(40, 40),
+      );
+      expect(px(20, 20) >> 24 & 0xFF, greaterThan(240));
+      expect(px(1, 1) >> 24 & 0xFF, lessThan(10));
+    });
+
+    test('clip-path di <g> memotong isinya', () async {
+      final px = await _pixels(
+        SvgTemplate(
+          '<defs><clipPath id="c"><polygon points="0,0 20,0 0,20">'
+          '</polygon></clipPath></defs>'
+          '<g clip-path="url(#c)"><rect x="0" y="0" width="20" height="20" '
+          'fill="#FF0000"></rect></g>',
+        ).render({}),
+        const Size(20, 20),
+      );
+      expect(px(3, 3), 0xFFFF0000);
+      expect(px(17, 17), 0x00000000);
+    });
+
+    test('class memakai gaya dari classes seperti style', () {
+      final keyframes = CssKeyframes.parse(
+        '@keyframes geser{0%{transform:translateX(0px)}'
+        '100%{transform:translateX(10px)}}',
+      );
+      final withClass = SvgTemplate(
+        '<g class="awan rm-anim"><rect x="0" y="0" width="2" height="2" '
+        'fill="#000000"></rect></g>',
+        keyframes: keyframes,
+        classes: const {'awan': 'animation: geser 8s linear infinite'},
+      );
+      final withStyle = SvgTemplate(
+        '<g style="animation: geser 8s linear infinite"><rect x="0" y="0" '
+        'width="2" height="2" fill="#000000"></rect></g>',
+        keyframes: keyframes,
+      );
+      for (final t in [4.0, 6.0]) {
+        expect(
+          withClass.render({}, time: t).bounds,
+          withStyle.render({}, time: t).bounds,
+        );
+      }
+      expect(withClass.render({}, time: 4).bounds.left, closeTo(5, 1e-6));
+      expect(withClass.animated, isTrue);
+      expect(withClass.bind({}).render(time: 4).bounds.left, closeTo(5, 1e-6));
+    });
+
+    test('gradien ikut transform bentuknya', () async {
+      final px = await _pixels(
+        SvgTemplate(
+          '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0">'
+          '<stop offset="0" stop-color="#FF0000"></stop>'
+          '<stop offset="1" stop-color="#0000FF"></stop>'
+          '</linearGradient></defs>'
+          '<g transform="translate(20 0)"><rect x="0" y="0" width="20" '
+          'height="10" fill="url(#g)"></rect></g>',
+        ).render({}),
+        const Size(40, 10),
+      );
+      expect(px(5, 5), 0x00000000);
+      final left = px(21, 5);
+      final right = px(38, 5);
+      expect(left >> 16 & 0xFF, greaterThan(left & 0xFF));
+      expect(right & 0xFF, greaterThan(right >> 16 & 0xFF));
+    });
+
+    test('bind: poligon bergradien dengan opasitas berdenyut', () async {
+      final keyframes = CssKeyframes.parse(
+        '@keyframes denyut{0%{opacity:0.2}100%{opacity:1}}',
+      );
+      final template = SvgTemplate(
+        '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">'
+        '<stop offset="0" stop-color="#FF0000"></stop>'
+        '<stop offset="1" stop-color="#FF0000"></stop>'
+        '</linearGradient></defs>'
+        '<polygon class="denyut" points="0,0 20,0 20,20 0,20" '
+        'fill="url(#g)"></polygon>',
+        keyframes: keyframes,
+        classes: const {'denyut': 'animation: denyut 2s linear infinite'},
+      );
+      final bound = template.bind(const {});
+      for (final t in [0.0, 1.0]) {
+        final expected = await _pixels(
+          template.render(const {}, time: t),
+          const Size(20, 20),
+        );
+        final actual = await _pixels(bound.render(time: t), const Size(20, 20));
+        expect(actual(10, 10), expected(10, 10), reason: 'waktu $t');
+        expect(actual(10, 10) >> 16 & 0xFF, 0xFF, reason: 'waktu $t');
+      }
+      final start = await _pixels(bound.render(time: 0), const Size(20, 20));
+      final mid = await _pixels(bound.render(time: 1), const Size(20, 20));
+      expect(start(10, 10) >> 24 & 0xFF, closeTo(51, 3));
+      expect(mid(10, 10) >> 24 & 0xFF, closeTo(153, 3));
+    });
+
+    test('<g clip-path opacity>: dipotong lalu transparan', () async {
+      final px = await _pixels(
+        SvgTemplate(
+          '<defs><clipPath id="c"><polygon points="0,0 10,0 10,20 0,20">'
+          '</polygon></clipPath></defs>'
+          '<g clip-path="url(#c)" opacity="0.5"><rect x="0" y="0" '
+          'width="20" height="20" fill="#000000"></rect></g>',
+        ).render({}),
+        const Size(20, 20),
+      );
+      expect(px(5, 5) >> 24 & 0xFF, closeTo(128, 2));
+      expect(px(15, 5), 0x00000000);
+    });
+  });
+}
+
+/// Warna ARGB piksel (x, y) dari [drawing] yang digambar seukuran [size].
+Future<int Function(int, int)> _pixels(SvgDrawing drawing, Size size) async {
+  final recorder = PictureRecorder();
+  drawing.paint(Canvas(recorder));
+  final image = await recorder.endRecording().toImage(
+    size.width.toInt(),
+    size.height.toInt(),
+  );
+  final data = (await image.toByteData(
+    format: ImageByteFormat.rawStraightRgba,
+  ))!;
+  final w = size.width.toInt();
+  return (x, y) {
+    final i = (y * w + x) * 4;
+    return data.getUint8(i + 3) << 24 |
+        data.getUint8(i) << 16 |
+        data.getUint8(i + 1) << 8 |
+        data.getUint8(i + 2);
+  };
 }

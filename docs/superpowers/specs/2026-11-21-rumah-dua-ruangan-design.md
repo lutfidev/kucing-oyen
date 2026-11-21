@@ -106,7 +106,7 @@ Kebutuhan kucing, mangkuk, hadiah koin, camilan, elus, aksesoris, Toko, header (
 
 ## Gambar yang dibutuhkan (lewat Claude Design)
 
-Gambar dinding, lantai, pintu, cahaya, dan teras dibuat di Claude Design dengan gaya v1, lalu disalin persis, sama seperti kamar v1. Isi brief ada di `docs/design-brief/rumah-dua-ruangan.md`. Kode belum dimulai sebelum link kanvas desainnya diserahkan pemilik repo.
+Gambar dinding, lantai, pintu, cahaya, dan teras dibuat di Claude Design dengan gaya v1, lalu disalin persis, sama seperti kamar v1. Isi brief ada di `docs/design-brief/rumah-dua-ruangan.md`. Kanvas desain diserahkan pemilik repo 21 Nov 2026: https://claude.ai/code/artifact/d110cbe8-34a2-4f87-85c5-2ec0b41829ba (salinan lokal `docs/design/rumah-dua-ruangan/project/`, diambil lewat Artifact `read` dengan `paths` dan `out_dir`). Rencana implementasi: `docs/superpowers/plans/2026-11-21-rumah-dua-ruangan.md`.
 
 ## Diserahkan ke pembuat rencana
 

@@ -572,3 +572,52 @@ Saran 17 tabel "Sesudah langkah 26" di roadmap (PR #25).
 - Perbaikan v2 yang tidak terkait gambar (mis. pool efek suara, transaksi koin/petunjuk, perbaikan dari HP) belum dibawa. Pilih satu per satu bersama pemilik repo.
 - **Perbaikan v2 yang dibawa (diputuskan 21 Nov 2026):** hanya pesan gagal persetujuan iklan (masuk langkah 32). Batas suara efek serentak hanya diterapkan kalau di HP suara kucing kamar terdengar menumpuk. Sisanya untuk kode khusus v2 dan tetap di arsip.
 - **Arah rumah baru (pemilik repo, 21 Nov 2026):** satu rumah yang terasa nyambung. Ruang tengah v1, lalu di kanan ada pintu terbuka ke teras; menggeser layar ke samping memperlihatkan teras lewat pintu, dan pemain bisa menggeser sambil mengikuti Oyen yang keluar mencari tempat rebahan. Yang terpenting kegiatan kucing: tidur di karpet, duduk di ambang pintu, berjemur di teras; sesekali berkumpul boleh, tapi tempat yang sudah ditempati membuat kucing lain lebih tertarik ke tempat nyaman lain yang kosong, jadi mereka menyebar alami. Dimulai dengan prototipe ruang tengah + teras memakai aset yang ada; di HP dicek: (1) pemain langsung sadar ada teras, (2) geser layar tidak mengganggu ketuk kucing dan seret barang, (3) kalau didiamkan kucing punya kegiatan yang menarik ditonton. Ruangan berikutnya baru dipikirkan kalau dua area ini terasa seru.
+
+## Langkah 33: rumah dua ruangan, gambar dan pindah ruangan
+
+Desain: kanvas Claude Design rumah dua ruangan (link di `docs/superpowers/specs/2026-11-21-rumah-dua-ruangan-design.md`), salinan lokal `docs/design/rumah-dua-ruangan/project/`. Rencana: `docs/superpowers/plans/2026-11-21-rumah-dua-ruangan.md`, Task 1–5.
+
+- **Lapisan gambar disalin utuh.** Latar, cahaya lantai, cahaya udara, dan kusen pintu kedua ruangan disalin dari `<svg>` desain ke `design_svg_house.dart` lewat `tool/design/make_house_svg.py`, dijaga `design_sync_test`. `SvgTemplate` diperluas (poligon, garis, gradien `objectBoundingBox`, `clipPath`, `rgba()`, kelas CSS, origin persen `fill-box`) supaya tidak ada yang digambar tangan. Cahaya lantai dan cahaya udara jadi dua konstanta terpisah karena satu berkas desain berisi dua `<svg>`.
+- **Ukuran barang mengikuti desain, bukan skala kamar v1.** `AdeganTengah.dc.html` memakai ukuran `Barang.dc.html` × skala kedalaman (mis. kasur 150 × s), jadi skala per barang v1 (kasur 0,85, karpet 1,25) tidak dipakai lagi di rumah. Barang dinding tetap 0,75 di dinding belakang ruang tengah (x 88–302, y 150–332).
+- **Spot lama dibaca ulang.** `Spot` lantai sekarang titik kaki di zona Hias (pecahan kiri–kanan pada kedalamannya, belakang–depan). Simpanan v1 dibaca langsung sebagai pecahan itu, jadi tata letak lama berpindah tapi tetap di lantai; barang yang jatuh di jalur pintu digeser ke spot terdekat yang boleh (`HouseFloor.allowedSpot`). Simpanan tanpa field `terrace` = semua barang di ruang tengah.
+- **Layar kecil.** Lapisan latar dan posisi diskalakan `sx`/`sy` (lebar dan tinggi area rumah), sprite memakai `artScale` (rata-rata keduanya) × skala kedalaman. Catatan `n360` desain menggambar ulang ruangan dengan dinding belakang sedikit lebih rendah (y 120–330); skala lurus ini sedikit berbeda (y 105–293) tapi kusen, lantai, dan pintu tetap pas (dicek di potret `19-kamar-360x640`).
+- **Kucing dan barang dijepit di layar.** Zona kaki sampai x 4–386, jadi kucing atau barang di tepi digeser supaya badannya tetap di layar. Oyen di ambang pintu ruang tengah bergeser 4 px (desain menaruh Arang yang lebih kecil di sana).
+- **Pindah ruangan.** Ketuk pintu (kotak 64×172 di bukaan, di bawah kucing supaya kucing di ambang tetap bisa diketuk) atau geser horizontal di mana saja di ruangan (juga yang dimulai di atas kucing; tahan-seret kucing di langkah 34 harus menang atas geser); geseran mengikuti jari, lepas lewat sepertiga lebar atau lempar lebih dari 700 px/detik = pindah. Animasi 420 ms `easeInOut`, hanya area rumah yang bergeser; header, tombol Hias, dan panel bawah diam. Chip "‹ Ruang tengah" muncul sesudah transisi selesai. Kurangi gerak = langsung pindah. Saat menghias, pintu dan geser ruangan mati (desain Hias teras juga tanpa pintu). Tombol kembali sistem tetap seperti v1 (tidak pindah ruangan).
+- **Petunjuk rumah kosong** sekarang di bawah tanda dan gelembung di atas kucing: bidang kosong lantai yang baru menimpa gelembung hadiah Oyen pemain baru.
+- **Kucing tetap di ruang tengah** sampai rutinitas dua ruangan (langkah 34). Kecepatan jalan sementara memakai rentang lantai 340×248 px desain.
+- **Gambar kamar v1 dihapus:** latar bergaris, jendela, dan dekor lantai `Kamar.dc.html` (sudah ada di latar baru). Token warna dinding v1 dibiarkan.
+- **Belum dicek di HP:** HP tidak tersambung saat langkah ini selesai; cek teras, geser, dan ketuk kucing menyusul.
+
+## Bahan langkah 33 lama (8 Nov 2026, dibatalkan 21 Nov 2026)
+
+Isi lama langkah 33 di `docs/ROADMAP.md`, disimpan sebagai riwayat. Langkah 33–35 sekarang rumah dua ruangan (spec `docs/superpowers/specs/2026-11-21-rumah-dua-ruangan-design.md`); masalah tata letak kamar awal di bawah dikerjakan di langkah 35.
+
+**Waktu:** setelah langkah 32 selesai. Disepakati pemilik repo pada 8 Nov 2026; belum dikerjakan.
+
+**Bahan brainstorming 8 Nov 2026 (belum keputusan desain):**
+
+> **21 Nov 2026:** arah "satu area per layar" di bawah ini sudah dicoba di v2 dan dibatalkan (terasa hanya ganti tombol). Arah baru: satu rumah yang nyambung, mulai dari ruang tengah lalu teras di kanan yang bisa dijelajahi dengan menggeser layar; sedang diuji lewat prototipe (lihat `docs/DESIGN_NOTES.md`, "21 Nov 2026").
+
+**Pilihan visual pemilik repo:** konsep **A — satu area per layar** pada [preview perbandingan](design-brief/rumah-oyen-area/preview-perbandingan.png), sisi kiri. Pemilik repo menyukai gambar tersebut dan meminta hasil yang sangat mendekatinya. Acuan ini dipilih untuk pengembangan sesudah langkah 32; rincian fitur dan interaksi masih dibahas. Konsep B tidak menjadi pilihan utama. Preview dibuat dengan alat imagegen bawaan; merupakan konsep raster, belum aset UI atau sprite siap pakai.
+
+- **Ide pemilik repo:** tempat khusus untuk kucing lain beraktivitas, misalnya mandi, makan, dan aktivitas lain; dibahas sesudah melihat kamar penuh terlalu ramai.
+- **Preferensi pemilik repo:** gabungan aktivitas otomatis dan ajakan pemain. Kucing dapat beraktivitas sendiri, tetapi pemain juga dapat mengajak mereka; rincian kontrol, prioritas, dan hadiah belum diputuskan.
+- **Usul asisten untuk dibahas:** beranda sebagai ruang santai, dengan area makan, istirahat/bermain, dan perawatan yang dapat dikunjungi terpisah. Kucing yang sedang beraktivitas berada di area terkait, sehingga seluruh koleksi tidak harus berkumpul di beranda.
+- **Arah tampilan terpilih:** satu area per layar, seperti konsep A; perpindahan melalui pilihan area. Jumlah area, batas 3–4 kucing yang terlihat, satu tombol hadiah gabungan, serta konsep B sebagai peta rumah baru usul asisten, belum disetujui pemilik repo secara terpisah.
+- **Hal yang perlu diputuskan:** cara ajakan pemain berinteraksi dengan rutinitas otomatis; hubungan area dengan kebutuhan Lapar/Senang yang sudah ada; apakah mandi hanya interaksi lucu atau mekanik baru. Usul asisten: mulai dengan aktivitas opsional dan hindari menambah kewajiban perawatan yang mengalihkan perhatian dari puzzle.
+- Perubahan beberapa ruangan/aktivitas merupakan perluasan fitur: sepakati konsep dan lingkupnya dahulu, lalu tentukan langkah tersendiri bila terlalu besar untuk perapian UI langkah 33. Belum mengubah GDD, aturan kebutuhan, atau kode game.
+
+**Masalah:** pada potret HP dengan kamar awal (Oyen dan mangkuk), bagian tengah terasa kosong sementara area bawah padat. Gelembung ajakan ke Toko terlalu lebar dan label waktu isi ulang mangkuk terlalu dekat dengan Oyen. Ekspresi sedih belum cukup menjelaskan kebutuhan kucing atau tindakan yang bisa dilakukan pemain.
+
+> **Baca dulu:**
+> - desain kamar di `docs/design/rumah-oyen/project/`
+> - `lib/screens/room/`, komponen gelembung dan label mangkuk, serta model kebutuhan kucing
+> - `docs/DESIGN_NOTES.md` bagian "Langkah 23", "Langkah 24", dan "Langkah 31"
+>
+> **Lalu:**
+> - Sepakati revisi desain sebelum implementasi: ukuran, posisi, dan kapan gelembung ajakan ke Toko muncul; posisi label isi ulang mangkuk; keseimbangan ruang kamar awal dan kamar penuh.
+> - Buat kebutuhan Oyen dan tindakan yang dapat dilakukan lebih jelas ketika ia tampak sedih, tanpa menambah kepadatan informasi.
+> - Pertahankan kejelasan tombol Main dan navigasi bawah yang dinilai sudah baik oleh pemilik repo.
+> - Verifikasi kamar awal dan penuh, keempat bahasa, layar kecil, dan teks 130%; periksa potret layar dan sesuaikan aset toko bila tampilannya berubah.
+>
+> Catat keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 33".
