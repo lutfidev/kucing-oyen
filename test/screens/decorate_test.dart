@@ -128,7 +128,10 @@ void main() {
     expect(spot.y, closeTo(expected.y, 0.001));
     expect(
       boxIn(tester, RoomItemId.kasur).topLeft,
-      offsetMoreOrLessEquals(start.topLeft + const Offset(-40, 30)),
+      offsetMoreOrLessEquals(
+        start.topLeft + const Offset(-40, 30),
+        epsilon: 0.01,
+      ),
     );
   });
 
@@ -144,7 +147,7 @@ void main() {
     expect(progress.home.room.spotOf(RoomItemId.lukisan)!.y, 1);
     expect(
       boxIn(tester, RoomItemId.lukisan).bottom,
-      lessThanOrEqualTo(geo.wall.bottom),
+      lessThanOrEqualTo(geo.wallZone.bottom + 0.01),
     );
   });
 

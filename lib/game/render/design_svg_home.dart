@@ -1003,27 +1003,7 @@ const roomItemViewBoxes = <String, (double, double, double, double)>{
   'puding': (0, 0, 40, 34),
 };
 
-/// Jendela dinding kamar, viewBox -8 0 140 134 (`Kamar.dc.html`).
-const roomWindowSvg = r'''
-      <rect x="0" y="0" width="124" height="124" rx="10" fill="#FFFBF3"></rect>
-      <rect x="8" y="8" width="108" height="108" rx="6" fill="#BFE7F7"></rect>
-      <circle cx="90" cy="34" r="12" fill="#FFE6A8"></circle>
-      <ellipse cx="38" cy="36" rx="16" ry="7" fill="#FFFFFF"></ellipse>
-      <ellipse cx="50" cy="32" rx="11" ry="7" fill="#FFFFFF"></ellipse>
-      <path d="M8 98 Q40 78 70 94 Q96 82 116 94 V116 H8 Z" fill="#9ED39A"></path>
-      <rect x="59" y="8" width="6" height="108" fill="#FFFBF3"></rect>
-      <rect x="8" y="59" width="108" height="6" fill="#FFFBF3"></rect>
-      <rect x="-6" y="118" width="136" height="10" rx="4" fill="#B07A4F"></rect>
-      <path d="M-8 0 Q8 50 -2 118 L-8 118 Z" fill="#F4B48C"></path>
-      <path d="M132 0 Q116 50 126 118 L132 118 Z" fill="#F4B48C"></path>
-''';
 
-/// Bidang cahaya dan goresan lantai kamar, viewBox 0 0 390 844
-/// (`Kamar.dc.html`).
-const roomFloorDecorSvg = r'''
-    <path d="M44 426 L156 426 L214 566 L74 566 Z" fill="#FFFFFF" opacity="0.18"></path>
-    <path d="M190 436 L196 470 M290 452 L296 486 M120 476 L124 500" stroke="#D4A971" stroke-width="2" opacity="0.5"></path>
-''';
 
 /// Tanda lesu di atas kucing, viewBox 0 0 48 52 (`TandaLesu.dc.html`).
 const sadMarkSvg = r'''

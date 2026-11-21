@@ -109,11 +109,12 @@ class ZoneGuides extends StatelessWidget {
 
   final RoomGeometry geo;
 
-  // Letak desain 390×844.
-  static const wall = Rect.fromLTWH(10, 104, 370, 302);
-  static const floor = Rect.fromLTWH(10, 432, 370, 214);
-  static const wallLabel = Offset(20, 376);
-  static const floorLabel = Offset(20, 440);
+  // Letak desain area rumah 390×652 (`AdeganTengah.dc.html` mode `hias`;
+  // bentuk lantai dan jalur pintu menyusul di langkah 35).
+  static const wall = Rect.fromLTWH(88, 150, 214, 182);
+  static const floor = Rect.fromLTWH(4, 398, 382, 248);
+  static const wallLabel = Offset(96, 302);
+  static const floorLabel = Offset(14, 616);
 
   @override
   Widget build(BuildContext context) {

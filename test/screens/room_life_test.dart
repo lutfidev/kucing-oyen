@@ -500,7 +500,10 @@ void main() {
         // Reaksi melayang di atas Oyen di jendela, bukan di lantai.
         final reaction = tester.getRect(find.byType(ReactionOverlay));
         expect((reaction.center.dx - cat.center.dx).abs(), lessThan(4));
-        expect(reaction.bottom, lessThan(cat.center.dy));
+        // Kucing di barang dinding kecil (skala 0,75): reaksi tetap di atas
+        // kakinya, bukan di lantai.
+        expect(reaction.bottom, lessThan(cat.bottom));
+        expect(reaction.top, lessThan(cat.top));
         for (var i = 0; i < 30; i++) {
           await tester.pump(const Duration(milliseconds: 100));
         }

@@ -112,6 +112,7 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.roomZoneFill,
     required this.roomItemDecorFill,
     required this.roomDragShadow,
+    required this.roomShadow,
     required this.onWaterDeep,
   });
 
@@ -220,6 +221,7 @@ class KoColors extends ThemeExtension<KoColors> {
     roomZoneFill: Color(0x0D2F86B8), // rgba(47,134,184,.05),
     roomItemDecorFill: Color(0x122F86B8), // rgba(47,134,184,.07),
     roomDragShadow: Color(0x383B2716), // rgba(59,39,22,.22),
+    roomShadow: Color(0xFF3B2716), // Bayangan elips di kaki kucing dan barang (#3B2716; opasitas di RoomScene)
     onWaterDeep: Color(0xFFFFFFFF),
   );
 
@@ -507,6 +509,9 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Bayangan elips di bawah barang yang diangkat.
   final Color roomDragShadow;
 
+  /// Bayangan elips di kaki kucing dan barang (#3B2716; opasitas di RoomScene)
+  final Color roomShadow;
+
   /// Teks dan ikon di atas `waterDeep` (label area, gagang).
   final Color onWaterDeep;
 
@@ -616,6 +621,7 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? roomZoneFill,
     Color? roomItemDecorFill,
     Color? roomDragShadow,
+    Color? roomShadow,
     Color? onWaterDeep,
   }) {
     return KoColors(
@@ -723,6 +729,7 @@ class KoColors extends ThemeExtension<KoColors> {
       roomZoneFill: roomZoneFill ?? this.roomZoneFill,
       roomItemDecorFill: roomItemDecorFill ?? this.roomItemDecorFill,
       roomDragShadow: roomDragShadow ?? this.roomDragShadow,
+      roomShadow: roomShadow ?? this.roomShadow,
       onWaterDeep: onWaterDeep ?? this.onWaterDeep,
     );
   }
@@ -836,6 +843,7 @@ class KoColors extends ThemeExtension<KoColors> {
       roomZoneFill: c(roomZoneFill, other.roomZoneFill),
       roomItemDecorFill: c(roomItemDecorFill, other.roomItemDecorFill),
       roomDragShadow: c(roomDragShadow, other.roomDragShadow),
+      roomShadow: c(roomShadow, other.roomShadow),
       onWaterDeep: c(onWaterDeep, other.onWaterDeep),
     );
   }

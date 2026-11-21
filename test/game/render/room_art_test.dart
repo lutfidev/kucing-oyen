@@ -37,40 +37,6 @@ Matcher _near(Color expected, {int tolerance = 2}) => predicate<Color>((c) {
 }, 'mendekati $expected');
 
 void main() {
-  test('jendela: langit biru di tengah, rumput hijau di bawah', () async {
-    final at = await _sampler(
-      (c) => paintRoomWindow(c, box: RoomArt.windowBox),
-      const Size(390, 300),
-    );
-    // Titik viewBox (30, 50) dan (30, 110); viewBox mulai di x -8.
-    expect(at(26 + 38, 124 + 50), _near(_hex('#BFE7F7')));
-    expect(at(26 + 38, 124 + 110), _near(_hex('#9ED39A')));
-    expect(at(10, 10).a, 0);
-  });
-
-  test('dekor lantai: bidang cahaya lebih terang dari lantai kosong', () async {
-    const floor = Rect.fromLTRB(0, 426, 390, 652);
-    final at = await _sampler((c) {
-      c.drawRect(floor, Paint()..color = _hex('#EBC896'));
-      paintRoomFloorDecor(c, floor: floor);
-    }, const Size(390, 652));
-    expect(at(300, 620), _near(_hex('#EBC896')));
-    expect(
-      at(130, 500).computeLuminance(),
-      greaterThan(_hex('#EBC896').computeLuminance()),
-    );
-  });
-
-  test('dekor lantai ikut skala lantai', () async {
-    const floor = Rect.fromLTRB(0, 213, 195, 326);
-    final at = await _sampler(
-      (c) => paintRoomFloorDecor(c, floor: floor),
-      const Size(195, 326),
-    );
-    expect(at(65, 250).a, greaterThan(0));
-    expect(at(150, 300).a, 0);
-  });
-
   test('tanda lesu lapar dan sedih berbeda', () async {
     final hungry = await _sampler(
       (c) => paintSadMark(c, hungry: true),
