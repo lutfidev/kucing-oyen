@@ -211,12 +211,12 @@ void paintBoardOyen(Canvas canvas, BoardScene scene, {Offset? at}) {
   if (scene.showFacing) _paintFacing(canvas, tile, oyen.look.dir);
 }
 
-/// Pusat lencana arah relatif ke pojok kiri atas petak Oyen: di sisi
-/// hadap tetapi di atas kepala (kiri/kanan) atau di bawah dagu (bawah),
-/// supaya tidak menutupi wajah Oyen yang tidur.
+/// Pusat lencana arah relatif ke pojok kiri atas petak Oyen: di sisi hadap
+/// setinggi kaki (kiri/kanan), di bawah dagu (bawah), atau di atas kepala
+/// (atas), supaya tidak menutupi wajah Oyen yang tidur maupun gelembung Zzz.
 Offset facingCenter(Direction dir) => switch (dir) {
-  Direction.right => const Offset(50, 2),
-  Direction.left => const Offset(0, 2),
+  Direction.right => const Offset(56, 38),
+  Direction.left => const Offset(-6, 38),
   Direction.up => const Offset(25, 0),
   Direction.down => const Offset(25, 53),
 };

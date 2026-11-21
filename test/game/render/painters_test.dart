@@ -175,9 +175,9 @@ void main() {
     );
     // Badan Oyen tidur, titik (80, 70) sprite: 194 + 80·0,62, 138 + 70·0,62.
     expect(at(225, 175), isNot(_near(PuzzleArt.floorAlt)));
-    // Lencana arah kiri di atas kepala (facingCenter), bukan di wajah.
-    expect(at(206, 152), _near(const Color(0xFFF59A33)));
-    expect(at(200, 161), _near(const Color(0xFFFFFBF3)));
+    // Lencana arah kiri setinggi kaki (facingCenter), bukan di wajah.
+    expect(at(200, 188), _near(const Color(0xFFF59A33)));
+    expect(at(194, 197), _near(const Color(0xFFFFFBF3)));
     // Cincin bingkai di luar papan dan di sudut yang terpotong.
     expect(at(-2, 225), _near(const Color(0xFF5E3B22)));
     expect(at(3, 3), _near(const Color(0xFF5E3B22)));

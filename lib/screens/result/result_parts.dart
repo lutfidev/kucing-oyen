@@ -31,40 +31,39 @@ class ResultPage extends StatelessWidget {
       data: puzzleTheme(),
       child: ColoredBox(
         color: background,
-        child: SafeArea(
-          // Padding lives inside the scroll view so its clip spans the full
-          // screen width and the rays never show a straight edge.
-          child: LayoutBuilder(
-            builder: (context, box) {
-              final padding = EdgeInsets.fromLTRB(
-                space.gutter,
-                space.s8,
-                space.gutter,
-                space.s16,
-              );
-              final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
-              final inner = box.deflate(padding);
-              // Preserve the outcome illustration on short portrait screens;
-              // controls remain reachable by scrolling instead of hiding art.
-              final baseHeight = inner.maxWidth < inner.maxHeight
-                  ? 760.0
-                  : 590.0;
-              final height = math.max(
-                inner.maxHeight,
-                baseHeight + (textScale - 1) * 650,
-              );
-              return SingleChildScrollView(
-                padding: padding,
-                child: SizedBox(
-                  height: height,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: children,
-                  ),
+        // System insets go into the scroll padding (not a SafeArea) so the
+        // scroll clip spans the whole screen and rays never show a straight
+        // edge under the status or navigation bar.
+        child: LayoutBuilder(
+          builder: (context, box) {
+            final padding =
+                EdgeInsets.fromLTRB(
+                  space.gutter,
+                  space.s8,
+                  space.gutter,
+                  space.s16,
+                ) +
+                MediaQuery.paddingOf(context);
+            final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
+            final inner = box.deflate(padding);
+            // Preserve the outcome illustration on short portrait screens;
+            // controls remain reachable by scrolling instead of hiding art.
+            final baseHeight = inner.maxWidth < inner.maxHeight ? 760.0 : 590.0;
+            final height = math.max(
+              inner.maxHeight,
+              baseHeight + (textScale - 1) * 650,
+            );
+            return SingleChildScrollView(
+              padding: padding,
+              child: SizedBox(
+                height: height,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: children,
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

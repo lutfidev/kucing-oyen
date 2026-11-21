@@ -491,6 +491,13 @@ void main() {
       await tap(t, 'shop-tab-accessories');
       await tap(t, 'shop-accessory-${accessories.last.id.name}');
       expect(coinIn('shop-preview-buy'), findsOneWidget);
+      // Ikon koin tidak dibacakan; satuannya tetap ada di label semantik.
+      final semantics = t.ensureSemantics();
+      expect(
+        t.getSemantics(key('shop-preview-buy')).label,
+        contains(l10nId.buyPay(accessories.last.price)),
+      );
+      semantics.dispose();
       expect(
         coinIn('shop-accessory-${accessories.last.id.name}'),
         findsOneWidget,
@@ -498,6 +505,22 @@ void main() {
       await tap(t, 'shop-tab-snacks');
       expect(coinIn('shop-snack-${snacks.first.id.name}'), findsOneWidget);
       c.dispose();
+    });
+
+    testWidgets('saldo besar tetap satu baris di 360 dp, teks 130%, ru', (
+      t,
+    ) async {
+      setScreenSize(t, const Size(360, 640));
+      setTextScale(t, 1.3);
+      Future<double> chip(int coins) async {
+        final c = await load(lang: AppLanguage.ru, coins: coins);
+        await pump(t, c, tab: ShopTab.items);
+        final h = t.getSize(key('shop-balance')).height;
+        c.dispose();
+        return h;
+      }
+
+      expect(await chip(99999), await chip(480));
     });
 
     testWidgets('pratinjau ringkas, kelangkaan chip, Coba di satu baris', (

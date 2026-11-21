@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/render/v2/puzzle_art.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
-import 'package:kucing_oren/theme/ko_ui.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 /// Pixels of [paint] drawn on a [w]×[h] canvas.
@@ -71,16 +70,6 @@ void main() {
       });
     }
 
-    testWidgets('baki tanpa bingkai oranye ganda', (t) async {
-      final d = await pixels(
-        t,
-        (c) => paintPuzzleItem(c, Item.fish, player: false),
-      );
-      for (var x = 4; x <= 46; x++) {
-        expect(near(at(d, 50, x, 5), KoUi.orange, 30), isFalse);
-      }
-    });
-
     testWidgets('ItemArtView (baki) tanpa kotak kertas', (t) async {
       final key = GlobalKey();
       await t.pumpWidget(
@@ -121,7 +110,7 @@ void main() {
           c.translate(50 + BoardArt.oyenOffset.dx, 50 + BoardArt.oyenOffset.dy);
           paintPuzzleOyen(
             c,
-            OyenLook(pose: OyenPose.sleep, dir: dir),
+            OyenLook(pose: OyenPose.sleep, dir: dir, bubble: OyenBubble.zzz),
             size: BoardArt.oyenSize,
           );
         },

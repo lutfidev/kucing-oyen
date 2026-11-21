@@ -28,6 +28,9 @@ abstract final class KoUi {
   static const homeStar = Color(0xFFFFC21A);
   static const coinIcon = 22.0;
 
+  /// Minimum width of each header side so a centred title stays centred.
+  static const headerSide = 104.0;
+
   /// Accessory preview art in the shop, beside its details.
   static const previewArt = 120.0;
   static const homeFloor = Color(0xFFE5B16E);

@@ -88,13 +88,18 @@ class _ShopScreenState extends State<ShopScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(KoUi.s16),
-                  // Equal-width sides keep the title centred on the
-                  // screen, not between the back button and coin chip.
+                  // Sides share a minimum width so the title sits on the
+                  // screen centre; a very large balance widens its side
+                  // (title shifts) instead of wrapping the chip.
                   child: Row(
                     children: [
-                      Expanded(
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: KoUi.headerSide,
+                        ),
                         child: Align(
                           alignment: Alignment.centerLeft,
+                          widthFactor: 1,
                           child: UiButton(
                             homeStyle: true,
                             label: '',
@@ -107,17 +112,23 @@ class _ShopScreenState extends State<ShopScreen> {
                         ),
                       ),
                       const SizedBox(width: KoUi.s8),
-                      Text(
-                        l.shop,
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: KoUi.title,
+                      Expanded(
+                        child: Text(
+                          l.shop,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: KoUi.title,
+                        ),
                       ),
                       const SizedBox(width: KoUi.s8),
-                      Expanded(
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: KoUi.headerSide,
+                        ),
                         child: Align(
                           alignment: Alignment.centerRight,
+                          widthFactor: 1,
                           child: UiButton(
                             key: const ValueKey('shop-balance'),
                             homeStyle: true,
@@ -537,6 +548,11 @@ class _ShopScreenState extends State<ShopScreen> {
                                 accessoryOf(selected).price - c.coins,
                               )
                             : l.shopBuyShort(accessoryOf(selected).price),
+                        // The coin icon is not read aloud; keep the unit.
+                        semanticLabel:
+                            !owned && c.coins >= accessoryOf(selected).price
+                            ? l.buyPay(accessoryOf(selected).price)
+                            : null,
                         leading:
                             !owned && c.coins >= accessoryOf(selected).price
                             ? const CoinView(size: KoUi.coinIcon)

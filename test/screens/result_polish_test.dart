@@ -90,4 +90,26 @@ void main() {
     expect(scroll.left, 0);
     expect(scroll.width, 390);
   });
+
+  testWidgets('area gulir hasil sampai tepi atas meski ada status bar', (
+    t,
+  ) async {
+    setScreenSize(t, const Size(390, 844));
+    await t.pumpWidget(
+      testApp(
+        home: const MediaQuery(
+          data: MediaQueryData(
+            size: Size(390, 844),
+            padding: EdgeInsets.only(top: 24, bottom: 16),
+          ),
+          child: ResultPage(
+            background: KoUi.cream,
+            children: [SizedBox(height: 10, key: ValueKey('first'))],
+          ),
+        ),
+      ),
+    );
+    expect(t.getRect(find.byType(SingleChildScrollView)).top, 0);
+    expect(t.getRect(find.byKey(const ValueKey('first'))).top, greaterThan(24));
+  });
 }

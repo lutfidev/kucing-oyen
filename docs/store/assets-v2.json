@@ -78,8 +78,8 @@
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 171857,
-      "sha256": "ff3b86b7c1b6f8f571aece12bcee7b23e2b5de6a4b6c28b975696704021451cb"
+      "bytes": 172150,
+      "sha256": "36d9cbb1df5b8377242227a31c79484f42a767f308ad2352d7f15173ae862cfa"
     },
     {
       "path": "docs/store/screenshots/en/08-berhasil-level-13.png",
@@ -142,8 +142,8 @@
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 174657,
-      "sha256": "2fa9d0d99986b4da951f40010c279b50a46e39ccf0ced05caddc5f9d6fb01686"
+      "bytes": 174944,
+      "sha256": "06292f4c990b14029cf89b749c5fb608c40cbd2893a5cc099dc8cc015286a999"
     },
     {
       "path": "docs/store/screenshots/id/08-berhasil-level-13.png",
@@ -206,8 +206,8 @@
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 157840,
-      "sha256": "59ce2bf9c6ebb5fe0d060986108b204a043f08cf59788e16ab2012e64de202d3"
+      "bytes": 157960,
+      "sha256": "cb2271aef837b1086e743d2b38254ecf3a1eb998927ffcf38abc11d7dc29830c"
     },
     {
       "path": "docs/store/screenshots/pt/08-berhasil-level-13.png",
@@ -270,8 +270,8 @@
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 175692,
-      "sha256": "410f5b325be3b1d060bd8aeffaeead4f81951836c63f5a8df0689f7bc6b9b0e6"
+      "bytes": 175951,
+      "sha256": "99bad420373b8001ff3e54adfa3b7325f1bc32935b3457636d88a05769f36bdc"
     },
     {
       "path": "docs/store/screenshots/ru/08-berhasil-level-13.png",
@@ -374,8 +374,8 @@
       "width": 864,
       "height": 1536,
       "mode": "RGBA",
-      "bytes": 157719,
-      "sha256": "7ae149c9531d287b95f0282a4b16df9ddaccc4cbe8529f9a72a548cd53caf747"
+      "bytes": 157964,
+      "sha256": "fb547466e0430123faa6dd948678dca9bc28ebb54205af67b35d9100d7d92bf1"
     },
     {
       "path": "docs/screenshots/08-berhasil-level-13.png",
