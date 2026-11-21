@@ -206,16 +206,11 @@ class RoomGeometry {
   static const _passLiving = ((345.0, 456.0), (400.0, 470.0));
   static const _passTerrace = ((46.0, 456.0), (-10.0, 470.0));
 
-  /// Kotak kucing [kitty] yang sedang lewat pintu ruangan [room] pada
+  /// Kotak kucing [kitty] yang sedang lewat pintu ruangan ini pada
   /// [progress] 0–1: keluar ([leaving], dari ambang ke balik kusen) atau
   /// masuk (sebaliknya). Tidak dijepit: badannya hilang di balik kusen.
-  Rect passingBox(
-    KittyId kitty,
-    HouseRoom room,
-    double progress, {
-    required bool leaving,
-  }) {
-    final (inside, behind) = room == HouseRoom.living
+  Rect passingBox(KittyId kitty, double progress, {required bool leaving}) {
+    final (inside, behind) = which == HouseRoom.living
         ? _passLiving
         : _passTerrace;
     final (from, to) = leaving ? (inside, behind) : (behind, inside);

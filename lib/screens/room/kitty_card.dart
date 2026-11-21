@@ -285,7 +285,14 @@ class _KittyCardState extends State<KittyCard> {
               ),
               SizedBox(height: space.s2),
               Text(
-                '${kittyDesc(l, _kitty)} ${l.kittyInRoom(widget.room.name)}',
+                kittyDesc(l, _kitty),
+                style: t.cardText.copyWith(
+                  color: c.inkSoft,
+                  height: _descHeight,
+                ),
+              ),
+              Text(
+                l.kittyInRoom(widget.room.name),
                 style: t.cardText.copyWith(
                   color: c.inkSoft,
                   height: _descHeight,

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/semantics.dart';
@@ -443,6 +444,11 @@ class _RoomViewState extends State<RoomView>
   /// keluar dari ambang ([atDoor]), atau langsung pindah saat kurangi
   /// gerak.
   void _invite(KittyId kitty, {bool atDoor = false}) {
+    // Langsung pindah (tanpa lewat pintu): diumumkan di sini, karena tidak
+    // ada peristiwa keluar ruangan.
+    if ((!widget.life || _still) && _catRoom(kitty) == _house) {
+      _announceLeft(kitty, _house.other);
+    }
     if (widget.life) {
       _life.invite(kitty, atDoor: atDoor && !_still, instant: _still);
     } else {
@@ -786,6 +792,8 @@ class _RoomViewState extends State<RoomView>
   /// Area rumah: ruangan yang bisa digeser, lalu header dan tombol Hias
   /// yang diam di atasnya.
   Widget _houseArea(Size size) {
+    // Sekali per bingkai, bukan per ruangan yang dibangun pager.
+    if (widget.life) _syncKitties(size);
     final s = context.koSize;
     final space = context.koSpace;
     final empty = _empty;
@@ -810,14 +818,22 @@ class _RoomViewState extends State<RoomView>
           // kucing diturunkan di tempatnya semula.
           child: Listener(
             onPointerCancel: (_) => _liftCancel(),
-            child: GestureDetector(
-              onLongPressStart: canLift
-                  ? (d) => _liftStart(d.localPosition)
-                  : null,
-              onLongPressMoveUpdate: canLift
-                  ? (d) => _liftMove(d.localPosition)
-                  : null,
-              onLongPressEnd: canLift ? (_) => _liftEnd() : null,
+            // Hanya sentuhan di atas kucing yang ikut: menahan pintu atau
+            // barang lalu menggeser tetap pindah ruangan.
+            child: RawGestureDetector(
+              gestures: {
+                if (canLift)
+                  _CatLongPress:
+                      GestureRecognizerFactoryWithHandlers<_CatLongPress>(
+                        () => _CatLongPress((p) => _kittyAt(p) != null),
+                        (r) => r
+                          ..onLongPressStart = ((d) =>
+                              _liftStart(d.localPosition))
+                          ..onLongPressMoveUpdate = ((d) =>
+                              _liftMove(d.localPosition))
+                          ..onLongPressEnd = ((_) => _liftEnd()),
+                      ),
+              },
               child: HousePager(
                 key: ValueKey(_pagerJumps),
                 room: _house,
@@ -826,10 +842,7 @@ class _RoomViewState extends State<RoomView>
                 onArrive: (room) {
                   if (room != _arrived) setState(() => _arrived = room);
                 },
-                builder: (context, room) {
-                  if (widget.life) _syncKitties(size);
-                  return _room(RoomGeometry(size, room));
-                },
+                builder: (context, room) => _room(RoomGeometry(size, room)),
               ),
             ),
           ),
@@ -1161,7 +1174,6 @@ class _RoomViewState extends State<RoomView>
     if (!cat.isPassing) return null;
     final box = geo.passingBox(
       kitty,
-      geo.which,
       cat.doorProgress,
       leaving: cat.activity == CatActivity.leaving,
     );
@@ -1376,4 +1388,16 @@ class _RoomViewState extends State<RoomView>
       ),
     );
   }
+}
+
+/// Tahan (500 ms) yang hanya menerima sentuhan yang dimulai di atas kucing
+/// ([allowed], titik lokal rumah).
+class _CatLongPress extends LongPressGestureRecognizer {
+  _CatLongPress(this.allowed);
+
+  final bool Function(Offset local) allowed;
+
+  @override
+  bool isPointerAllowed(PointerDownEvent event) =>
+      allowed(event.localPosition) && super.isPointerAllowed(event);
 }

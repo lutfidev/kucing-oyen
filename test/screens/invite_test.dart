@@ -118,6 +118,10 @@ void main() {
     await tester.tap(_invite);
     await tester.pump();
     expect(kittyView(KittyId.oyen), findsNothing);
+    expect(
+      tester.takeAnnouncements().map((a) => a.message),
+      contains('Oyen keluar ke teras'),
+    );
     await goThroughDoor(tester);
     expect(kittyView(KittyId.oyen), findsOneWidget);
   });
@@ -182,6 +186,20 @@ void main() {
   testWidgets('geser dari lantai kosong tetap pindah ruangan', (tester) async {
     await _pump(tester);
     await tester.flingFrom(const Offset(200, 300), const Offset(-300, 0), 1500);
+    await settle(tester, max: const Duration(seconds: 1));
+    expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
+  });
+
+  testWidgets('tahan pintu lalu geser: tetap pindah ruangan', (tester) async {
+    await _pump(tester);
+    final start = _doorCenter(tester);
+    final gesture = await tester.startGesture(start);
+    await tester.pump(const Duration(milliseconds: 600));
+    for (var i = 1; i <= 10; i++) {
+      await gesture.moveTo(start + Offset(-30.0 * i, 0));
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    await gesture.up();
     await settle(tester, max: const Duration(seconds: 1));
     expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
   });

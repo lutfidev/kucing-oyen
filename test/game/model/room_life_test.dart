@@ -475,6 +475,26 @@ void main() {
       sad: sad,
     );
 
+    test('lapar, mangkuk sedang dipakai: menunggu, tidak pindah ruangan', () {
+      for (var seed = 0; seed < 10; seed++) {
+        final life = RoomLife(
+          random: Random(seed),
+          places: const {},
+          travelWeight: 50,
+        );
+        syncHouse(
+          life,
+          {
+            KittyId.oyen: (HouseRoom.living, Spot(0.5, 0.5)),
+            KittyId.mochi: (HouseRoom.living, Spot(0.3, 0.5)),
+          },
+          hungry: const {KittyId.oyen, KittyId.mochi},
+        );
+        final events = _run(life, 60);
+        expect(events.whereType<LeftRoom>(), isEmpty, reason: 'seed $seed');
+      }
+    });
+
     test('tempat nyaman dekat kucing lain kurang menarik', () {
       const near = LifePlace(120, 560, pose: LifePose.sleep);
       const far = LifePlace(300, 450, pose: LifePose.lounge);
@@ -757,6 +777,15 @@ void main() {
       life.paused = true;
       expect(oyen.room, HouseRoom.terrace);
       expect(oyen.stayLeft, lifeStaySeconds);
+    });
+
+    test('dielus saat berjalan ke pintu: ajakan batal tanpa sisa', () {
+      final life = alone(2);
+      final oyen = life.of(KittyId.oyen);
+      life.invite(KittyId.oyen);
+      life.react(KittyId.oyen, LifePose.petted, 1);
+      expect(oyen.traveling, isFalse);
+      expect(oyen.invited, isFalse);
     });
 
     test('moveTo: diletakkan di lantai lalu diam', () {

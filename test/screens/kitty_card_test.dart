@@ -40,10 +40,8 @@ void main() {
     await openCard(tester);
     expect(card(), findsOneWidget);
     expect(inCard(find.text('Oyen')), findsOneWidget);
-    expect(
-      inCard(find.text('${l10nId.kittyOyenDesc} Sedang di ruang tengah.')),
-      findsOneWidget,
-    );
+    expect(inCard(find.text(l10nId.kittyOyenDesc)), findsOneWidget);
+    expect(inCard(find.text('Sedang di ruang tengah.')), findsOneWidget);
     expect(inCard(find.text('Lapar')), findsOneWidget);
     expect(inCard(find.text('Senang')), findsOneWidget);
     expect(inCard(find.text('55')), findsOneWidget);

@@ -25,8 +25,9 @@ void main() {
       (HouseRoom.living, const Offset(345, 456), const Offset(400, 470)),
       (HouseRoom.terrace, const Offset(46, 456), const Offset(-10, 470)),
     ]) {
+      final geo = RoomGeometry(const Size(390, 652), room);
       Offset feetAt(double p, {required bool leaving}) {
-        final box = design.passingBox(KittyId.mochi, room, p, leaving: leaving);
+        final box = geo.passingBox(KittyId.mochi, p, leaving: leaving);
         return Offset(box.center.dx, design.feetOf(box));
       }
 
@@ -36,8 +37,8 @@ void main() {
       expect(near(feetAt(0, leaving: false), behind), isTrue, reason: '$room');
       expect(near(feetAt(1, leaving: false), inside), isTrue, reason: '$room');
       // Ukuran ikut kedalaman: lebih depan sedikit = sedikit lebih besar.
-      final start = design.passingBox(KittyId.mochi, room, 0, leaving: true);
-      final end = design.passingBox(KittyId.mochi, room, 1, leaving: true);
+      final start = geo.passingBox(KittyId.mochi, 0, leaving: true);
+      final end = geo.passingBox(KittyId.mochi, 1, leaving: true);
       expect(start.width, closeTo(kittyRoomSize * depthScale(456), 1e-9));
       expect(end.width, greaterThan(start.width));
     }

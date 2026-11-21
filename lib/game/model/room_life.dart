@@ -510,6 +510,7 @@ class RoomLife {
       ..item = null
       ..place = null
       ..traveling = false
+      ..invited = false
       ..activity = CatActivity.reacting
       ..pose = pose
       ..heading = LifeHeading.down
@@ -707,7 +708,8 @@ class RoomLife {
       ..place = null
       ..traveling = false
       ..hops = 0;
-    if (bowl != null && !wasEating && _hungry.contains(cat.kitty)) {
+    final hungry = bowl != null && _hungry.contains(cat.kitty);
+    if (hungry && !wasEating) {
       if (_roomOf(bowl) != cat.room) {
         // Selama betah, kucing lapar menunggu (bar turun pelan).
         if (cat.stayLeft <= 0) return _goTravel(cat, events);
@@ -736,7 +738,9 @@ class RoomLife {
       for (var i = 0; i < roomPlaces.length; i++)
         if (!takenPlaces.contains(i))
           (i, roomPlaces[i].weight * _crowd(cat, _placeSpot(roomPlaces[i]))),
-      if (travelWeight > 0 && cat.stayLeft <= 0 && !justEntered)
+      // Kucing lapar menunggu mangkuk yang sedang dipakai, tidak pergi ke
+      // ruangan sebelah lalu langsung balik karena lapar.
+      if (travelWeight > 0 && cat.stayLeft <= 0 && !justEntered && !hungry)
         (_travel, travelWeight.toDouble()),
     ];
     final total = options.fold(0.0, (sum, o) => sum + o.$2);
