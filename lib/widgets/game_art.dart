@@ -77,7 +77,8 @@ class _ItemArtPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.scale(size.width / ItemArt.viewBox);
-    paintPuzzleItem(canvas, item, ghost: ghost);
+    // The tray slot is the frame; no floor marker here.
+    paintPuzzleItem(canvas, item, ghost: ghost, player: false);
   }
 
   @override

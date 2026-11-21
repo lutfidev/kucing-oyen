@@ -149,7 +149,16 @@ void main() {
       expect(await at(scene(), 125, 75), PuzzleArt.floorAlt);
       const pos = Pos(3, 3);
       final player = scene(items: {pos: TileItem.bucketP});
-      expect(await at(player, 154, 175), KoUi.orange);
+      expect(
+        await at(player, 175, 196),
+        isSameColorAs(
+          Color.alphaBlend(
+            KoUi.orange.withValues(alpha: .3),
+            PuzzleArt.floor,
+          ),
+          threshold: .01,
+        ),
+      );
       expect(await at(player, 175, 171), KoUi.water);
       expect(
         await at(
