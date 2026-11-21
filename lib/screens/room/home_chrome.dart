@@ -74,24 +74,47 @@ class _HomeAreaStripState extends State<HomeAreaStrip> {
 
   static const keys = ['santai', 'makan', 'main', 'rawat'];
 
-  Widget _chip(BuildContext context, int i, {required bool fill}) {
+  static final _label = KoUi.small.copyWith(
+    fontSize: 13,
+    height: 1.2,
+    fontWeight: FontWeight.w800,
+    color: KoUi.ink,
+  );
+
+  /// Icon (18) and its gap (4); chip padding (2×8) and outline.
+  static const _iconWidth = 18 + KoUi.s4, _chipChrome = 2 * KoUi.s8 + 4;
+
+  /// FittedBox may shrink a label by at most 10%; beyond that the strip drops
+  /// the icons, and if that is still not enough it scrolls sideways.
+  static const _minFit = .9;
+
+  double _textWidth(BuildContext context, String text) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: _label),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    final width = painter.width;
+    painter.dispose();
+    return width;
+  }
+
+  Widget _chip(
+    BuildContext context,
+    int i, {
+    required bool fill,
+    bool icon = true,
+  }) {
     final content = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icons[i], size: 18, color: KoUi.ink),
-        const SizedBox(width: KoUi.s4),
+        if (icon) ...[
+          Icon(icons[i], size: 18, color: KoUi.ink),
+          const SizedBox(width: KoUi.s4),
+        ],
         Flexible(
-          child: Text(
-            labels[i],
-            maxLines: 1,
-            softWrap: false,
-            style: KoUi.small.copyWith(
-              fontSize: 13,
-              height: 1.2,
-              fontWeight: FontWeight.w800,
-              color: KoUi.ink,
-            ),
-          ),
+          child: Text(labels[i], maxLines: 1, softWrap: false, style: _label),
         ),
       ],
     );
@@ -150,13 +173,18 @@ class _HomeAreaStripState extends State<HomeAreaStrip> {
     decoration: KoUi.homeCard(radius: KoUi.cardRadius),
     child: LayoutBuilder(
       builder: (context, box) {
-        final large = MediaQuery.textScalerOf(context).scale(13) > 15;
-        if (!large) {
+        final slot = (box.maxWidth - 3 * KoUi.s4) / 4;
+        final text = [for (final label in labels) _textWidth(context, label)];
+        bool fits(double extra) => text.every(
+          (width) => (width + extra + _chipChrome) * _minFit <= slot,
+        );
+        final withIcons = fits(_iconWidth);
+        if (withIcons || fits(0)) {
           return Row(
             children: [
               for (var i = 0; i < 4; i++) ...[
                 if (i > 0) const SizedBox(width: KoUi.s4),
-                Expanded(child: _chip(context, i, fill: true)),
+                Expanded(child: _chip(context, i, fill: true, icon: withIcons)),
               ],
             ],
           );

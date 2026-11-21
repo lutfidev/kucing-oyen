@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'dart:ui' show Tristate;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
@@ -10,6 +13,7 @@ import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/l10n/names.dart';
 import 'package:kucing_oren/screens/room/home_labels.dart';
 import 'package:kucing_oren/screens/room/home_view.dart';
+import 'package:kucing_oren/theme/ko_ui.dart';
 import 'package:kucing_oren/widgets/v2/ui_button.dart';
 
 import '../test_helpers.dart';
@@ -142,5 +146,77 @@ void main() {
     await home.tap(t, home.button('dining-choose'));
     expect(find.text(l.diningStock(2, 2)), findsOneWidget);
     expect(find.text(l.diningFresh), findsOneWidget);
+  });
+
+  for (final language in [AppLanguage.ru, AppLanguage.pt]) {
+    for (final scale in [1.0, 1.1, 1.3]) {
+      testWidgets('${language.name} 360 teks $scale: tab terbaca, aksi utuh', (
+        t,
+      ) async {
+        setScreenSize(t, const Size(360, 640));
+        setTextScale(t, scale);
+        final c = await home.load(
+          language: language,
+          home: Home(kitties: [KittyId.oyen, KittyId.salju]),
+        );
+        c.selectHomeKitty(KittyId.oyen);
+        await home.pumpHome(t, c);
+        expect(t.takeException(), isNull);
+        final l = t.element(find.byType(HomeView)).l10n;
+        // Label tab tidak dikecilkan FittedBox lebih dari 10%.
+        for (final a in HomeArea.values) {
+          final text = find.descendant(
+            of: find.byKey(ValueKey('home-tab-${a.name}')),
+            matching: find.byType(Text),
+          );
+          final shown = t.getRect(text).width;
+          final natural = t.getSize(text).width;
+          expect(shown / natural, greaterThanOrEqualTo(.89), reason: a.name);
+        }
+        // Label aksi hanya membungkus di antara kata.
+        for (final label in [l.homeInvitePlay, l.homeActivity('brush')]) {
+          final text = find.descendant(
+            of: home.button('home-selection'),
+            matching: find.text(label),
+          );
+          expect(text, findsOneWidget, reason: label);
+          final style = t.widget<Text>(text).style!;
+          final line =
+              MediaQuery.textScalerOf(t.element(text)).scale(style.fontSize!) *
+              style.height!;
+          final lines = (t.getSize(text).height / line).round();
+          expect(
+            lines,
+            lessThanOrEqualTo(label.split(' ').length),
+            reason: label,
+          );
+        }
+      });
+    }
+  }
+
+  testWidgets('status kucing dua baris, chip area diumumkan', (t) async {
+    final semantics = t.ensureSemantics();
+    final l = await pump(t, area: HomeArea.makan);
+    final status = t.widget<Text>(
+      find.descendant(
+        of: home.button('home-selection'),
+        matching: find.byWidgetPredicate(
+          (w) => w is Text && w.style?.fontSize == KoUi.caption.fontSize,
+        ),
+      ),
+    );
+    expect(status.maxLines, 2);
+    expect(
+      t.getSemantics(home.button('dining-choose')).flagsCollection.isLiveRegion,
+      isTrue,
+    );
+    // Chip hadiah bukan tombol pilihan.
+    expect(
+      t.getSemantics(home.button('home-rewards')).flagsCollection.isSelected,
+      isNot(Tristate.isTrue),
+    );
+    expect(l.homeRewardLater, isNotEmpty);
+    semantics.dispose();
   });
 }

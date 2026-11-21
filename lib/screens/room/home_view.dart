@@ -354,19 +354,24 @@ class _HomeViewState extends State<HomeView> {
     required String label,
     required VoidCallback onPressed,
     bool highlight = false,
-  }) => UiButton(
-    key: key,
-    homeStyle: true,
-    compact: true,
-    selected: highlight,
-    padding: const EdgeInsets.symmetric(
-      horizontal: KoUi.s12,
-      vertical: KoUi.s8,
+    bool live = false,
+  }) => Semantics(
+    // Area status changes (e.g. "X is getting care" → "Mat is free") are
+    // announced, as the old area panels did.
+    liveRegion: live,
+    child: UiButton(
+      key: key,
+      homeStyle: true,
+      compact: true,
+      kind: highlight ? UiButtonKind.primary : UiButtonKind.secondary,
+      padding: const EdgeInsets.symmetric(
+        horizontal: KoUi.s12,
+        vertical: KoUi.s8,
+      ),
+      label: label,
+      icon: icon,
+      onPressed: onPressed,
     ),
-    label: label,
-    icon: icon,
-    kind: UiButtonKind.secondary,
-    onPressed: onPressed,
   );
 
   /// One short line about the area's shared facility; details and the queue
@@ -379,6 +384,7 @@ class _HomeViewState extends State<HomeView> {
       HomeArea.santai => null,
       HomeArea.makan => _chip(
         key: const ValueKey('dining-choose'),
+        live: true,
         icon: Icons.restaurant_rounded,
         label: withQueue(
           c.dining.eating != null
@@ -392,6 +398,7 @@ class _HomeViewState extends State<HomeView> {
       ),
       HomeArea.main => _chip(
         key: const ValueKey('play-choose'),
+        live: true,
         icon: Icons.sports_baseball_rounded,
         label: withQueue(
           c.playing.playing != null
@@ -403,6 +410,7 @@ class _HomeViewState extends State<HomeView> {
       ),
       HomeArea.rawat => _chip(
         key: const ValueKey('care-choose'),
+        live: true,
         icon: Icons.brush_rounded,
         label: withQueue(
           c.caring.using != null
@@ -435,6 +443,30 @@ class _HomeViewState extends State<HomeView> {
       ),
     ),
   );
+
+  /// Icon (20) + gap (8) + side padding (2×8) + outline and rounding slack.
+  static const _actionChrome = 20 + KoUi.s8 + 2 * KoUi.s8 + 6;
+
+  /// Avatar, a short name and the divider; below this the panel stacks.
+  static const _panelIdentityMin = 48 + KoUi.s4 + 56 + 2 * KoUi.s8 + KoUi.s8;
+
+  double _longestWord(BuildContext context, String text) {
+    var widest = 0.0;
+    for (final word in text.split(RegExp(r'\s+'))) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: word,
+          style: KoUi.small.copyWith(fontWeight: FontWeight.w700),
+        ),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+        maxLines: 1,
+      )..layout();
+      widest = math.max(widest, painter.width);
+      painter.dispose();
+    }
+    return widest;
+  }
 
   Widget _selection(
     BuildContext context,
@@ -496,7 +528,7 @@ class _HomeViewState extends State<HomeView> {
                   Text(
                     homeKittyStatus(l, c, kitty),
                     style: KoUi.caption,
-                    maxLines: large ? null : 1,
+                    maxLines: large ? null : 2,
                     overflow: large ? null : TextOverflow.ellipsis,
                   ),
                 ],
@@ -506,6 +538,19 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
     );
+    String label(int i) => switch (actions[i]) {
+      HomeActivity.play => l.homeInvitePlay,
+      HomeActivity.brush => l.homeActivity('brush'),
+      HomeActivity.eat => l.homeInviteEat,
+      HomeActivity.pet => l.petAction,
+      HomeActivity.rest => l.homeRest,
+    };
+    // Wide enough for the longest word, so labels wrap between words only
+    // ("Расчёсывание" must not break mid-word), within 28–40% of the panel.
+    double actionNeed(String text) =>
+        _longestWord(context, text) + _actionChrome;
+    double actionWidth(int i, double panel) =>
+        actionNeed(label(i)).clamp(panel * .28, panel * .45);
     Widget action(int i) => UiButton(
       homeStyle: true,
       compact: true,
@@ -520,13 +565,7 @@ class _HomeViewState extends State<HomeView> {
         HomeActivity.pet => Icons.favorite_rounded,
         HomeActivity.rest => Icons.weekend_rounded,
       },
-      label: switch (actions[i]) {
-        HomeActivity.play => l.homeInvitePlay,
-        HomeActivity.brush => l.homeActivity('brush'),
-        HomeActivity.eat => l.homeInviteEat,
-        HomeActivity.pet => l.petAction,
-        HomeActivity.rest => l.homeRest,
-      },
+      label: label(i),
       onPressed:
           busy ||
               (actions[i] == HomeActivity.eat && !c.canEatFromBowl(kitty)) ||
@@ -545,36 +584,53 @@ class _HomeViewState extends State<HomeView> {
         horizontal: KoUi.s8,
         vertical: KoUi.s4,
       ),
-      child: large
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                identity(),
-                if (local)
-                  Row(
-                    children: [
-                      for (var i = 0; i < actions.length; i++)
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: i == 0 ? 0 : KoUi.s8,
+      child: LayoutBuilder(
+        builder: (context, box) =>
+            large ||
+                (local &&
+                    actionNeed(label(0)) +
+                            actionNeed(label(1)) +
+                            _panelIdentityMin >
+                        box.maxWidth)
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  identity(),
+                  if (local &&
+                      [
+                        for (var i = 0; i < actions.length; i++)
+                          actionNeed(label(i)),
+                      ].every((need) => need <= (box.maxWidth - KoUi.s8) / 2))
+                    Row(
+                      children: [
+                        for (var i = 0; i < actions.length; i++)
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: i == 0 ? 0 : KoUi.s8,
+                              ),
+                              child: action(i),
                             ),
-                            child: action(i),
                           ),
-                        ),
-                    ],
-                  )
-                else
-                  UiButton(
-                    homeStyle: true,
-                    label: l.homeViewArea,
-                    kind: UiButtonKind.secondary,
-                    onPressed: busy ? null : () => sheets.find(kitty),
-                  ),
-              ],
-            )
-          : LayoutBuilder(
-              builder: (context, box) => Row(
+                      ],
+                    )
+                  else if (local)
+                    // A word wider than half the panel: one action per row.
+                    for (var i = 0; i < actions.length; i++)
+                      Padding(
+                        padding: EdgeInsets.only(top: i == 0 ? 0 : KoUi.s8),
+                        child: action(i),
+                      )
+                  else
+                    UiButton(
+                      homeStyle: true,
+                      label: l.homeViewArea,
+                      kind: UiButtonKind.secondary,
+                      onPressed: busy ? null : () => sheets.find(kitty),
+                    ),
+                ],
+              )
+            : Row(
                 children: [
                   Expanded(child: identity()),
                   Container(
@@ -585,12 +641,16 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   if (local) ...[
                     ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: box.maxWidth * .28),
+                      constraints: BoxConstraints(
+                        maxWidth: actionWidth(0, box.maxWidth),
+                      ),
                       child: action(0),
                     ),
                     const SizedBox(width: KoUi.s8),
                     ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: box.maxWidth * .28),
+                      constraints: BoxConstraints(
+                        maxWidth: actionWidth(1, box.maxWidth),
+                      ),
                       child: action(1),
                     ),
                   ] else
@@ -611,7 +671,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                 ],
               ),
-            ),
+      ),
     );
   }
 }
