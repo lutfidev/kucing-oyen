@@ -1,8 +1,4 @@
-import '../gallery/gallery_ui_v2_screen.dart';
-
 import 'dart:math';
-
-import 'package:flutter/widgets.dart';
 
 import 'package:go_router/go_router.dart';
 
@@ -11,13 +7,11 @@ import '../gallery/gallery_kitty_screen.dart';
 import '../gallery/gallery_oyen_screen.dart';
 import '../gallery/gallery_screen.dart';
 import '../gallery/gallery_sound_screen.dart';
-import '../gallery/gallery_v2_screen.dart';
 import '../screens/chapter/chapter_screen.dart';
 import '../screens/level/level_screen.dart';
 import '../screens/room/room_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/shop/shop_screen.dart';
-import '../game/render/v2/art_pack.dart';
 import 'routes.dart';
 
 /// [roomRandom] membuat pengacak posisi kucing tiap kamar dibuka; null =
@@ -27,8 +21,6 @@ GoRouter createRouter({
   String initialLocation = AppRoutes.home,
   Random Function()? roomRandom,
   bool roomLife = true,
-  WidgetBuilder? homeBuilder,
-  Future<ArtPack> Function()? loadShopArt,
 }) {
   return GoRouter(
     initialLocation: initialLocation,
@@ -38,21 +30,12 @@ GoRouter createRouter({
       GoRoute(
         path: AppRoutes.home,
         builder: (context, state) =>
-            homeBuilder?.call(context) ??
             RoomScreen(random: roomRandom?.call(), life: roomLife),
         routes: [
           GoRoute(
             path: 'galeri',
             builder: (context, state) => const GalleryScreen(),
             routes: [
-              GoRoute(
-                path: 'ui-v2',
-                builder: (context, state) => const GalleryUiV2Screen(),
-              ),
-              GoRoute(
-                path: 'aset-v2',
-                builder: (context, state) => const GalleryV2Screen(),
-              ),
               GoRoute(
                 path: 'papan',
                 builder: (context, state) => const GalleryBoardScreen(),
@@ -78,7 +61,6 @@ GoRouter createRouter({
           GoRoute(
             path: 'toko',
             builder: (context, state) => ShopScreen(
-              loadArt: loadShopArt,
               initialTab: ShopTab.parse(state.uri.queryParameters['tab']),
             ),
           ),

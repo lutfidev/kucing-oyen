@@ -1,20 +1,17 @@
 # Ginger Logic (repo `kucing_oren`)
 
-Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kardus) di papan 7x9, lalu Oyen si kucing oren bergerak sendiri mengikuti aturan tetap. Nama game "Ginger Logic" (merek berbahasa Inggris, sama di semua bahasa; "Kucing Oren" judul kerja lama, nama paket dan kelas tetap). Teks tersedia dalam bahasa Inggris (utama), Indonesia, Portugis Brasil, dan Rusia dengan nada santai dan jenaka yang sama; keputusan aktif ada di `docs/DESIGN_NOTES.md`.
+Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kardus) di papan 7x9, lalu Oyen si kucing oren bergerak sendiri mengikuti aturan tetap. Nama game "Ginger Logic" (merek berbahasa Inggris, sama di semua bahasa; "Kucing Oren" judul kerja lama, nama paket dan kelas tetap). Teks di dalam game tersedia dalam bahasa Inggris (utama), Indonesia, Portugis Brasil, dan Rusia dengan nada santai dan jenaka yang sama (lihat `docs/DESIGN_NOTES.md`, "Sebelum langkah 15" dan "Langkah 15").
 
 ## Sumber kebenaran
 
-- `docs/design-v2/`: spesifikasi langkah 1 desain baru (SPEC, SCREENS, VISUAL, mockup dan wireframe), disetujui pemilik repo pada 8 November 2026. Langkah 1 selesai; gunakan sebagai baseline langkah 2 dan catat masukan berikutnya sebagai revisi. Kode v1 diarsipkan di `archive/v1-desain-lama`.
-
+- **Desain v2 dibatalkan (21 Nov 2026).** Pemilik repo memutuskan kembali ke desain v1: gaya v2 terlalu kartun di semua layar, dan empat area rumah v2 terasa hanya ganti tombol, bukan pindah ke ruangan yang benar-benar berbeda. Seluruh v2 (termasuk PR #57 yang ditutup) diarsipkan di branch `archive/v2-desain-kartun`; jangan memakainya sebagai acuan aktif. Perbaikan non-visual v2 hanya dibawa ke v1 satu per satu atas persetujuan pemilik repo. Ide ruangan sungguhan (dapur, ruang main, dll.) dicatat di `docs/DESIGN_NOTES.md`.
 - `docs/GDD.md`: dokumen desain game (aturan Oyen, elemen peta, alur level, bintang, 20 level).
 - `docs/reference/oyen_simulator.py`: simulator + solver acuan. Logika simulasi Dart HARUS identik dengan file ini.
 - `assets/levels/chapter1-2.json`: data 20 level (peta, baki, bintang 3, solusi, jumlah langkah solusi).
-- Acuan visual aktif: `docs/design-brief/rumah-oyen-area/ARAH_DESAIN.md` dan `preview-perbandingan.png`, konsep A di kiri. Pada 8 Nov 2026 pemilik repo meminta seluruh visual diubah termasuk kucing; roadmap dimulai ulang. Ekspor HTML, brief, screenshot dan rencana desain lama dihapus dari acuan aktif. Spesifikasi lengkap berikutnya dibuat pada `docs/design-v2/` di langkah 1. Jangan meminta atau mengikuti ekspor `docs/design/source/` lama. Kode/aset runtime lama tetap menjadi fondasi sampai penggantinya siap.
-- `docs/DESIGN_NOTES.md`: keputusan aktif setelah reset roadmap 8 Nov 2026; catatan lama ada di riwayat Git dan bukan kontrak visual baru.
+- `docs/design/`: ekspor desain UI dari Claude Design (warna, tipografi, layar). Baca `docs/design/source/` (hasil bongkar: 18 halaman, komponen `*.dc.html`, token warna di `13-design-token-komponen-ui.html`), bukan `Kucing Oren.html` yang berupa paket terkompresi 16 MB. Folder ini tidak ikut repo (`.gitignore`), hanya ada di komputer pemilik repo. Kalau tidak ada, beri tahu pemilik repo; jangan menebak isi desain. Desain rumah Oyen (langkah 21–26) ada di `docs/design/rumah-oyen/project/*.dc.html` (satu berkas per artboard, daftar di `canvas.json`), diambil dari link kanvas Claude Design di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md` lewat alat Artifact (aksi `read` dengan `paths` dan `out_dir`). Desain baru dari Claude Design diserahkan pemilik repo sebagai link kanvas, bukan unduhan HTML.
+- `docs/DESIGN_NOTES.md`: keputusan saat desain, GDD, dan data level tidak cocok (dibuat saat pertama dibutuhkan).
 
 ## Struktur
-
-Bagian ini menjelaskan kode runtime yang masih berjalan selama perombakan. Nomor langkah lama dalam uraian teknis adalah sejarah implementasi, bukan status roadmap baru. Mulai pekerjaan berikutnya dari `docs/ROADMAP.md` yang baru. Test sinkronisasi ekspor desain lama bersifat historis dan akan skip saat sumber lama tidak ada; tambahkan kontrak visual baru sesuai spesifikasi baru, jangan mengembalikan ekspor lama.
 
 - `lib/game/sim/`: simulasi Dart murni. `simulate(board, placed)` → `SimResult` (`win`, `vaseBroken`, `steps`, `failReason`, `trace` berisi `SimStep` per langkah, `vaseBrokenAtStep`). `solve(board, inventory, {needSafe})` → `SolveResult` (`minItems`, `solutions`: semua susunan minimum tanpa duplikat) atau null. `Board.parse`, `Level`/`parseLevels`, `Cell`, `Direction` (simbol peta; arah layar di teks lewat `name`), `Item`/`Placement`, `Pos`. Impor lewat `sim/sim.dart`.
 - `lib/game/model/level_session.dart`: `LevelSession(level)`, Dart murni. Fase `SessionPhase` (`arrange` → `running` → `result`). Aksi fase atur `place`/`move`/`remove` mengembalikan `false` kalau ditolak; `canPlaceAt(pos)` untuk petak menyala. `itemAt(pos)` hanya benda pemain (benda bawaan lewat `board.cellAt`), `placed`, `remaining` (sisa baki), `itemsUsed`. Pindah fase: `wake()` → `SimResult`, `finish()` ke layar hasil, `arrangeAgain()` (Atur Lagi/Coba Lagi, susunan tetap), `reset()` (Ulangi, papan kosong); pindah fase yang tidak sah melempar `StateError`. `stars` 0–3, null di fase atur.
@@ -68,54 +65,7 @@ Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API pen
 
 - Profil kamar (langkah 32): `tool/profile_room.dart` dijalankan dengan `flutter run --profile -t tool/profile_room.dart -d <device>`, memakai `MemoryProgressStore` (9 kucing beraksesoris, 20 barang toko + mangkuk), pemanasan 15 detik dan pengukuran `FrameTiming` 60 detik; progres pemain tidak dibaca/ditulis. HP harus terbuka dan kamar tetap di depan. Hasil dan batas pengujian di `docs/performance-room-2026-11-08.md`. `SvgTemplate.bind` menghasilkan `SvgAnimation`: varian template disiapkan sekali dan waktu animasi tetap tepat. `kittyDrawing` memakai cache LRU maksimal 96 varian animasi, tidak menyimpan setiap waktu; sprite diam tetap di cache lama. `test/game/render/svg_binding_test.dart` membandingkan piksel/bounds dengan renderer acuan, termasuk pergantian varian setelah eviksi dan validasi CSS saat binding.
 
-- Fondasi UI v2 (langkah 3): `lib/theme/ko_ui.dart` (`KoUi.theme()` per layar), `lib/widgets/v2/` (`UiEdgeFade` = tepi memudar untuk daftar yang bisa digulir, langkah 14a; `UiButton` (`homeStyle` + `selected` = gradasi oranye), `UiChip`, `UiAreaTabs`, `UiNeed`, `UiCatCard`, `UiHeader`, `UiNavigation`, `UiSheet`/`showUiSheet`). Galeri `/galeri/ui-v2`, test `test/widgets/ui_v2_test.dart`, ekspor `--dart-define=UI_REVIEW=true`, laporan `docs/design-v2/ui/REVIEW.md`. NunitoUi regular dibundel; fallback judul Cyrillic ke NunitoUi. Gunakan komponen v2 untuk layar migrasi langkah 5–12; token/komponen lama masih dipakai layar v1. Jangan memasukkan logika rutinitas atau transaksi ke widget.
-
 ## Aturan penting
-
-- Toko/Hias v2 langkah 9: runtime `ShopScreen` dan `buy_sheet.dart` memakai
-  `KoUi`, `CatalogArt`/`SnackArt`, tujuan dari `itemPurchaseSlot` dan
-  `kittyAdoptionArea`. `shop_parts.dart` tetap untuk galeri/regresi v1.
-  `area_decorate.dart` menyimpan draf `HomeAreas`, filter Gudang, slot aman,
-  seret/pilih-ketuk dan dialog Simpan/Buang/Lanjut. Pause dekorasi dijaga
-  sampai `route.completed`; editor ganda ditolak. `discardAreaLayoutSave`
-  membuang hanya transaksi layout gagal yang cocok, bukan pembelian lain.
-  Fasilitas berubah slot memutus kegiatan. `area_layout_preview.dart`
-  menggambar draf; jangan memakai `home.room.placed` sebagai Gudang v2.
-  Test `shop_v2_flow_test`/`shop_v2_test`; ekspor `SHOP_REVIEW=true`, laporan
-  `docs/design-v2/shop/REVIEW.md`. Harness `loadShopArt` memberi ArtPack
-  yang sudah dimuat untuk test/screenshot, tanpa cache runtime global.
-
-- Area Perawatan v2 langkah 8: `lib/game/model/care.dart` (`CareState`)
-  memproyeksikan jatah gabungan elus/sikat dengan waktu efektif;
-  `ProgressController.caring`/`canInviteCare`, `CarePanel` dan
-  `HomeSheets.caring` menyajikan siap/penuh/batas, ajakan dan batal.
-  Scene memakai `PaintedScenery.care`, alas gratis dan target sikat 48 dp,
-  slot rawat/tunggu serta pose rig yang sama. Kuota +30 Senang/jam,
-  durasi 2/6 detik dan skema snapshot tidak berubah. Test `care_flow_test`
-  dan `care_v2_test`; ekspor `--dart-define=CARE_REVIEW=true`, laporan
-  `docs/design-v2/care/REVIEW.md`.
-
-- Area Bermain v2 langkah 7: proyeksi `lib/game/model/play.dart` (`PlayState`)
-  memakai jam efektif, `HomeAreas.playToy` menyatukan pilihan fasilitas scheduler
-  dan scene. `PlayPanel`, `HomeSheets.playing`, `PlayToyPainter` menangani status,
-  ajakan/antrean dan satu mainan live. Kuota per kucing tidak berubah. Latar
-  `PaintedScenery.play`, review `docs/design-v2/play/REVIEW.md`; test
-  `play_flow_test.dart`/`play_v2_test.dart`, render `--dart-define=PLAY_REVIEW=true`.
-
-- Area Makan v2 langkah 6: `lib/game/model/dining.dart` adalah proyeksi read-only
-  jatah/status mangkuk; `ProgressController.dining` memakai waktu efektif transaksi.
-  `HomeRoutine.queueFor` dibagi scheduler dan UI agar prioritas/fairness sama.
-  `lib/screens/room/dining_panel.dart` dan `HomeSheets.dining` menampilkan stok
-  koleksi, kelayakan individu, ajakan dan batal. `HomeScene` menggambar satu
-  mangkuk terpisah dari prop rig, makan/tunggu terpisah dan transisi giliran.
-  Latar `PaintedScenery.dining`, sumber/prompt di `docs/design-v2/dining/`;
-  test `dining_flow_test.dart` dan `dining_v2_test.dart`, render melalui
-  `--dart-define=DINING_REVIEW=true`. Kuota dan skema snapshot tidak berubah.
-
-- Model rumah v2 langkah 4: `home_areas.dart` (`HomeArea`, `AreaSlot`, `HomeAreas`), `home_routine.dart` (`HomeRoutine`, perjalanan berpasangan, ajakan/FIFO/fairness, ID kegiatan), `household.dart` (area terakhir, kurangi gerak, waktu efektif, migrasi). Model terpisah dari renderer dan belum mengganti mesin layar kamar v1. `ProgressController` mengekspos extension `HouseholdController` melalui `progress_scope.dart`: ajakan/batal, dt aktif, pause bertumpuk, hadiah gabungan dan draf tata letak. Layar langkah 5–9 wajib menggerakkan API lifecycle/rute/iklan/Hias; tidak memutar animasi memakai waktu offline. `HomeAreas` adalah sumber penempatan v2; `Home.room.placed` hanya kompatibilitas kamar v1. Kontrak dan batas ada di `docs/design-v2/model/REVIEW.md`.
-- Penyimpanan gameplay produksi memakai `SnapshotStore` (`progress_snapshot.dart`), JSON satu kunci `progress.snapshot.v2` versi 2; backup raw `progress.backup.v1` sebelum commit pertama, kunci v1/audio tetap. Aksi rumah atomik menerbitkan keadaan setelah sukses; kegagalan ditahan di `householdSaveFailed` dan dicoba lagi lewat `retrySaves`, dengan pengecekan ulang kuota/kelayakan. Adapter test per-bagian lama tetap memakai kontrak v1; test API rumah v2 harus menyediakan `SnapshotStore`. Test model/fixture/transaksi ada di `home_areas_test`, `home_routine_v2_test`, serta `test/app/household_*`.
-
-- Paket aset v2: `tool/art_v2/generate.py` menghasilkan 209 bagian SVG + `assets/art/v2/manifest.json`; `--check` memeriksa konsistensi. `lib/game/render/v2/art_pack.dart` memuat inventaris terbatas dan memvalidasi manifest, `cat_rig.dart` menggabungkan arah/ekspresi/pose serta jangkar aksesoris; `room_art.dart` hanya komposisi seni pratinjau, bukan model rumah. Galeri `/galeri/aset-v2` (`GalleryV2Screen`) menghormati lifecycle/TickerMode/kurangi gerak. Test dan ekspor lembar tinjauan di `test/game/render/v2_art_test.dart` (`--dart-define=ART_REVIEW=true`), widget galeri di `test/gallery/gallery_v2_test.dart`. Ukuran entry APK dapat diukur dengan `tool/art_v2/measure_apk.py`; laporan `docs/design-v2/assets/REVIEW.md`. Jangan membuat satu pack per kucing atau cache berdasarkan waktu.
 
 - Logika simulasi ditulis sebagai Dart murni di `lib/game/sim/`, tanpa import Flame atau Flutter, supaya bisa diuji dengan unit test.
 - Urutan aturan per langkah: sampai mangkuk → duduk di kardus → jatuhkan barang di meja sebelah → kejar ikan terdekat yang terlihat → cek petak depan (air: putar balik, tembok/meja: berputar searah jarum jam, kardus: masuk duduk 2 langkah, ikan: makan, lantai/mangkuk: maju).
@@ -135,7 +85,7 @@ Setiap langkah roadmap memperbarui bagian ini kalau menambah folder atau API pen
 
 Pemilik repo biasanya `/clear` setelah tiap sesi, jadi aturan ini yang berlaku, bukan ingatan percakapan. Kerjakan sendiri tanpa bertanya dan tanpa menyuruh pemilik repo menjalankan perintah:
 
-- **Awal langkah:** `git fetch`, pastikan tidak ada PR terbuka (`gh pr list --state open` kosong) dan PR langkah sebelumnya sudah di-merge ke `origin/main`, lalu `git checkout main && git pull --ff-only`, buat `feat/<nama-langkah>`, hapus branch lokal yang sudah di-merge, `flutter pub get && flutter analyze && flutter test`. Kalau masih ada PR yang belum di-merge, jangan bercabang dari `main` lama; beri tahu pemilik repo. Semua langkah roadmap baru, termasuk langkah 1, memakai branch dan PR.
+- **Awal langkah:** `git fetch`, pastikan tidak ada PR terbuka (`gh pr list --state open` kosong) dan PR langkah sebelumnya sudah di-merge ke `origin/main`, lalu `git checkout main && git pull --ff-only`, buat `feat/<nama-langkah>`, hapus branch lokal yang sudah di-merge, `flutter pub get && flutter analyze && flutter test`. Kalau masih ada PR yang belum di-merge, jangan bercabang dari `main` lama; beri tahu pemilik repo. (Langkah 1 masuk langsung ke `main` tanpa PR.)
 - **Selama langkah:** commit kecil, pesan bahasa Inggris singkat (`feat(sim): ...`, `fix: ...`, `test: ...`, `docs: ...`).
 - **Akhir langkah** (analyze bersih, test hijau, temuan review sudah diperbaiki, langkah sudah dicentang di `docs/ROADMAP.md`): `git push -u origin <branch>` lalu `gh pr create --base main` langsung, tanpa menu pilihan. Kirim link PR-nya. Judul PR `feat: <nama langkah>`. Badan PR berbahasa Indonesia: kalimat pembuka "Langkah N roadmap: ...", daftar perubahan, asumsi baru (kalau ada, juga dicatat di `docs/DESIGN_NOTES.md`), lalu baris "Verifikasi:" berisi hasil `flutter analyze`, jumlah test `flutter test` yang lulus, dan cek lain yang dijalankan.
 - **Merge PR** dilakukan pemilik repo di GitHub; jangan merge sendiri kecuali diminta.
@@ -151,118 +101,8 @@ Pemilik repo nyaman dengan skill superpowers: selalu pakai skill yang cocok. Eff
 - **Cari bug:** `superpowers:systematic-debugging` di sesi utama (high). Kalau penyebabnya bisa di banyak tempat, sebar pencarian ke subagent `Explore` effort low; analisis akar masalah tetap di sesi utama.
 - **Cari kode yang lebar:** subagent `Explore` effort low, hanya kalau bagian "Struktur" di atas dan `grep` langsung tidak cukup.
 - **Review sebelum PR:** `superpowers:requesting-code-review` dengan satu subagent effort high, lalu `superpowers:receiving-code-review` untuk menimbang temuannya sebelum diperbaiki. Sesudah itu `superpowers:verification-before-completion` sebelum push.
-- **Desain, logo, ikon, dan gambar lain:** di sesi utama, karena perlu konteks desain lengkap. Ikuti preview A dan spesifikasi baru yang disepakati pada langkah 1 roadmap. Seluruh kucing/UI/layar mendapat desain baru; runtime diganti bertahap. Verifikasi mockup dan screenshot baru, catat sumber/lisensi aset. Desain HTML lama bukan sumber kebenaran aktif.
+- **Desain, logo, ikon, dan gambar lain:** di sesi utama (high), bukan subagent, karena butuh konteks desain lengkap. Yang ada di `docs/design/source/` disalin persis; yang belum ada desainnya (mis. ikon launcher dan splash di langkah 15) mulai dengan `superpowers:brainstorming`, pakai palet dan gaya desain, cek hasilnya lewat potret layar `test/screenshots/`, lalu catat di `docs/DESIGN_NOTES.md`.
 
 ## Lanjut ke mana
 
 Lihat `docs/ROADMAP.md`: status tiap langkah dan prompt siap tempel. Langkah berikutnya = langkah pertama yang belum dicentang.
-
-## Audit animasi/suara/performa v2 — langkah 13
-
-`effect_pool.dart` mengganti AudioPool dengan maksimal tiga EffectVoice per
-jenis, state selesai native untuk reuse, dan revisi pembatalan ekspansi.
-`SoundPlayer.stopEffects` menghentikan bunyi aktif dan generasi load tertunda;
-GameAudio memanggilnya saat hold/efek dimatikan. Musik/efek ditahan sejak
-inactive sampai resumed. LevelView mengamati lifecycle dan TickerMode tanpa
-mengubah jeda pemain; ReplayView tertutup menunggu Putar lagi. HomeScene
-menjaga fase waktu aktif, menangani viewport nol dan memicu bunyi dari ID
-aktivitas tersimpan yang terlihat. Cache path SvgTemplate dibatasi 512 LRU.
-`tool/profile_fixture.dart` memakai SnapshotStore dalam memori; helper
-`tool/profile_room.dart` mengukur v2 per area/transisi/puzzle atur/kurangi gerak,
-tidak menulis progres pemain. Test polish_v2 dan polish_v2_visual mencakup
-regresi, render serta diagnostik opt-in POLISH_REVIEW/POLISH_PROFILE.
-Laporan `docs/design-v2/polish/REVIEW.md`; FPS HP/TalkBack/audio native belum
-diuji dan wajib ditindaklanjuti langkah 15. Berikutnya langkah 14 setelah PR
-langkah 13 di-merge; jangan merge sendiri.
-
-## Visual puzzle v2 ? langkah 10
-
-Papan runtime memakai `lib/game/render/v2/puzzle_art.dart`; jangan mengubah
-renderer SVG v1 untuk memperbaiki papan baru. Oyen memakai CatRig rumah
-dengan subset sinkron `puzzle_cat_sources.dart`, dibuat ulang melalui
-`python tool/art_v2/embed_puzzle.py` setelah generator aset berubah.
-`--check` dan test kesamaan sumber mencegah drift. Baki/seretan memakai
-renderer benda yang sama. `puzzle_theme.dart` menjembatani token kontrol.
-Test baru `test/screens/puzzle_v2_test.dart`, ekspor `PUZZLE_REVIEW=true`,
-bukti dan batas `docs/design-v2/puzzle/REVIEW.md`.
-
-## Peta, hasil, dan replay v2 — langkah 11
-
-`lib/game/render/v2/journey_art.dart` menggambar peta, pictogram node,
-transisi dan ilustrasi hasil. Geometri/kurva tetap `PictureMapArt`;
-token memakai CatRig rumah dan aksesoris dari subset sinkron beserta
-metadata jangkar yang dihasilkan `embed_puzzle.py`. Inventaris navigasi
-35 bagian terbatas; puzzle tetap 15 bagian. Hasil portrait pendek/teks
-besar dapat digulir; statistik tidak mengecilkan label ke satu baris.
-Vas pecah memiliki replay. Replay Awal/Akhir, ×1/×2 dan jeda lifecycle
-tidak mengubah SimResult/hadiah. Cache paragraf nomor dibatasi 256 entri.
-Test `journey_v2_test.dart`, ekspor `JOURNEY_REVIEW=true`, laporan dan
-47 gambar di `docs/design-v2/journey/`. Berikutnya langkah 12 sesudah
-PR langkah 11 di-merge; tidak merge sendiri.
-
-## Tutorial, petunjuk, koin, Pengaturan v2 — langkah 12
-
-`guidance_art.dart` menggabungkan CatRig/PuzzleArt untuk kartu aturan/tutorial.
-`UiPanel`/`UiSheetHeader` memakai token v2; shell `KoSheet` mempertahankan
-back/drag/double-close, fokus dan 90% tinggi aman. `SheetButton` menjembatani
-ke `UiButton` dengan leading/silent/loading; teks tombol membungkus.
-`home_help.dart` adalah pengenalan opsional dari rumah/Pengaturan, bukan
-modal otomatis yang menghalangi puzzle. Preferensi gerak global di `app.dart`
-OR dengan sistem; jangan menimpa pilihan sistem dengan false aplikasi.
-
-`guidance_transactions.dart` menyimpan transaksi koin/petunjuk produksi
-sebelum publish. Kegagalan disimpan sebagai callback rebuild; `retrySaves`
-tidak memutar iklan/membayar ulang. Reservasi iklan mencegah bonus/petunjuk
-lain bersaing; callback menunggu reset yang aktif dan membandingkan revisi
-reset sukses. Transaksi yang sudah masuk antrean sebelum reset tetap berjalan
-dahulu. Reset gagal tidak membuang pending rumah/bantuan; sukses baru membuang
-semuanya, mereset area dan menjaga bahasa/audio/gerak/jatah hadiah. Adapter
-per-bagian test lama tetap optimistis. `GameAudio.saveFailed/retrySettings`
-menampilkan dan mencoba ulang simpan suara dengan antrean tulis berurutan.
-Test `guidance_progress_test`/`guidance_v2_test`, ekspor `GUIDANCE_REVIEW=true`,
-laporan di `docs/design-v2/guidance/REVIEW.md`. Langkah 13 setelah PR langkah 12
-di-merge; jangan merge sendiri.
-
-
-## Merek dan materi toko v2 — langkah 14
-
-`brand_art.dart` menggunakan kepala SVG Oyen dari subset rig rumah v2, dengan
-crop 20/25/108/97 dan monokrom berlubang. Jangan mengembalikan kepala v1.
-`test/screenshots/brand_test.dart --dart-define=BRAND=true` membuat resource
-Android, grafis fitur empat bahasa, 8 screenshot toko/bahasa dan 9 potret
-Indonesia untuk dokumentasi. Fixture menggunakan SnapshotStore dalam memori,
-sembilan kucing, jam tetap; pastikan setHomeArea berhasil sebelum memotret.
-Potret toko 432×768 dp ×2,5. `screenshot_test.dart` kini khusus rute pemain v2:
-peta 1, Toko barang/kucing/makanan dan Pengaturan empat bahasa, bukan galeri v1.
-Ekspor dengan SCREENSHOTS=true dan SCREENSHOT_DIR=docs/screenshots.
-Setelah generator jalankan `python tool/store_assets.py` untuk RGB PNG toko
-lossless dan manifest, lalu `--check`; `--sheets` membuat contact sheet QA di
-build/store-review. Listing berubah: buat ulang review terjemahan.
-Laporan di docs/design-v2/store/REVIEW.md; belum ada upload/publikasi atau uji
-launcher/splash native HP. Berikutnya langkah 14a–14e (perbaikan desain) lalu langkah 15.
-
-## Rapikan Toko, hasil, puzzle — langkah 14b
-
-Benda pemain di papan ditandai elips lantai `PuzzleArt.playerMark`, bukan kotak
-kertas; baki dan benda diseret memanggil `paintPuzzleItem(player: false)`.
-Tembok `PuzzleArt.wall`. Lencana arah tidur di `facingCenter(dir)`
-(`board_painter.dart`). Sinar hasil memudar radial sampai
-`JourneyArt.raysRadius`; `ResultPage` menaruh padding di dalam scroll supaya
-klipnya selebar layar; mangkuk hasil digeser `JourneyArt.bowlShift`. Header
-Toko memakai dua sisi `Expanded` agar judul di tengah layar; harga memakai
-`CoinView` + `shopBuyShort`/`shopAdopt`/angka. Test `puzzle_polish_test`,
-`result_polish_test`, grup `tata letak 14b` di `shop_v2_test`.
-
-## Header dan panel rumah ringkas — langkah 14c
-
-`HomeAreaStrip` = satu baris chip `home-tab-<area>` (nama pendek, hitungan
-`homeAreaCount` hanya di semantik; teks besar menggulir). Bantuan `home-help`
-dan Hias `home-decorate` adalah `HomeIconButton` di pojok kanan atas kamar.
-Panel kucing `home-selection` satu baris; `UiButton(compact)` berikon mengganti
-ikonnya dengan ⊘ saat nonaktif dan menerima `padding`. Panel area dihapus:
-chip status (`dining-choose`/`play-choose`/`care-choose`, teks `homeStatus*`)
-membuka sheet area yang memuat aturan, stok/siklus, ketersediaan per kucing,
-dan batal `<area>-cancel-<kucing>`. Fungsi `*AvailabilityLabel` ada di
-`home_labels.dart`. Tinggi kamar `_sceneHeight` = tinggi layar − chrome 396
-(termasuk navigasi bawah), dijepit 240…min(480, lebar×1,16).
-Test `home_layout_14c_test`, ekspor `HOME_REVIEW=true` → `docs/design-v2/home/14c-*`.

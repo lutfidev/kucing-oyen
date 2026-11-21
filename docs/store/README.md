@@ -1,7 +1,5 @@
 # Rilis Play Store: Ginger Logic
 
-> **Materi v2 — 10 November 2026:** ikon, grafis fitur dan screenshot dibuat ulang dari aset/runtime v2. [Tinjauan dan batas](../design-v2/store/REVIEW.md), [manifest ukuran/hash](assets-v2.json). Materi belum diunggah ke Play Console. Formulir/produksi di bawah tetap baseline yang wajib diperiksa kembali pada langkah 16.
-
 Semua yang dibutuhkan untuk mengunggah Ginger Logic (`com.gingerlogic.app`, versi `1.0.0+1`) ke Play Console.
 
 ## ⚠️ Wajib sebelum rilis produksi
@@ -23,26 +21,17 @@ Gradle mencetak peringatan "Ginger Logic: ..." saat build release kalau ID aplik
 | `listing-en.md` | Listing toko utama (Inggris, AS): nama aplikasi, deskripsi singkat, deskripsi lengkap |
 | `listing-id.md`, `listing-pt.md`, `listing-ru.md` | Listing toko → Kelola terjemahan → Indonesia, Portugis (Brasil), Rusia |
 | `icon-512.png` | Ikon aplikasi (512×512) |
-| `feature-graphic.png`, `feature-graphic-id/pt/ru.png` | Grafis fitur Inggris dan terjemahan (1024×500) |
-| `screenshots/<bahasa>/*.png` | Screenshot ponsel per bahasa (1080×1920, 8 gambar, unggah urut nama: Santai, Makan, Main, Rawat, Toko aksesoris, peta, fase atur, berhasil) |
+| `feature-graphic.png` | Grafis fitur (1024×500) |
+| `screenshots/<bahasa>/*.png` | Screenshot ponsel per bahasa (1080×1920, 6 gambar, unggah urut nama: kamar, Toko aksesoris, peta, fase atur, fase jalan, berhasil) |
 | `privacy/index.html` | Kebijakan privasi (diunggah ke situs, lalu URL-nya ditempel) |
 
 Gambar dibuat ulang dengan:
 
 ```
 flutter test test/screenshots/brand_test.dart --dart-define=BRAND=true
-flutter test test/screenshots/screenshot_test.dart --dart-define=SCREENSHOTS=true --dart-define=SCREENSHOT_DIR=docs/screenshots
-python tool/store_assets.py
-python tool/store_assets.py --check
 ```
 
-Generator BRAND juga menulis ikon launcher lima densitas, splash/logo empat bahasa, dan `values/colors.xml` dari KoUi v2 di `android/app/src/main/res/`. Splash Indonesia memakai qualifier `in`. Kepala merek berasal dari SVG rig rumah yang sama; grafis fitur memakai CatRig runtime. Sumber/lisensi mengikuti [paket aset v2](../../assets/art/v2/README.md).
-
-Potret diambil dari widget aplikasi lengkap dengan data contoh di memori, jam tetap dan animasi rumah dibekukan. Tidak memakai data pemain atau galeri desain v1. Pemeriksa menolak inventaris kurang/berlebih, PNG transparan, ukuran salah, listing melewati batas dan manifest hash basi. PNG screenshot/feature diserialisasi ke RGB 24 bit; ikon toko tetap RGBA.
-
-Ketentuan gambar diperiksa terhadap [panduan preview assets resmi Google Play](https://support.google.com/googleplay/android-developer/answer/9866151?hl=en) pada 10 November 2026: maksimal delapan screenshot per jenis perangkat, ikon 512×512, grafis fitur 1024×500, screenshot dan grafis fitur tanpa alpha. Pemeriksaan ini terbatas materi; kelayakan produksi/formulir diperiksa lagi pada langkah 16.
-
-Grafis fitur Inggris memakai `feature-graphic.png`; pilih berkas `-id`, `-pt`, `-ru` pada listing bahasa terkait. [Teks alternatif empat bahasa](alt-text.md) tersedia untuk aset toko.
+Perintah itu juga menulis ikon launcher, splash, dan `values/colors.xml` di `android/app/src/main/res/`.
 
 ## Signing
 
@@ -91,7 +80,7 @@ Semua fungsi tersedia tanpa akses khusus (tanpa login).
 
 ### Target audiens dan konten
 
-- Baseline kelompok usia target sebelum redesign: **13–15, 16–17, 18+**, dengan iklan tidak ditandai untuk anak. Tinjau kembali sesuai desain dan fitur final pada langkah 16 roadmap baru; ini bukan keputusan otomatis untuk tampilan baru.
+- Kelompok usia target: **13–15, 16–17, 18+** (keputusan "Sebelum langkah 15" di `docs/DESIGN_NOTES.md`; iklan tidak ditandai untuk anak).
 - "Apakah aplikasi bisa menarik minat anak secara tidak sengaja?": jawab jujur. Gambar imut bisa membuat Google meminta kepatuhan program Keluarga; kalau itu terjadi, ubah permintaan iklan ke mode anak (`ageRestrictedTreatment: AgeRestrictedTreatment.child` di `startAdMob`, `lib/app/admob_sdk.dart`) dan perbarui jawaban di sini.
 - Listing toko tidak memakai kata-kata yang menyasar anak.
 

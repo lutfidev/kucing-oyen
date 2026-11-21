@@ -12,7 +12,6 @@ import 'package:kucing_oren/screens/shop/shop_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
-import 'package:kucing_oren/widgets/v2/ui_button.dart';
 
 import '../test_helpers.dart';
 import 'result_fixtures.dart' show pumpFor;
@@ -24,7 +23,7 @@ void main() {
     await pumpApp(tester);
     expect(find.byType(RoomScreen), findsOneWidget);
 
-    await tester.tap(find.text('Main Puzzle'));
+    await tester.tap(find.text('Main'));
     await settle(tester);
     expect(find.byType(ChapterView), findsOneWidget);
     expect(find.text('Dapur'), findsOneWidget);
@@ -65,14 +64,14 @@ void main() {
     await pumpApp(tester, location: AppRoutes.shop(tab: ShopTab.accessories));
     await settle(tester);
     expect(find.byType(ShopScreen), findsOneWidget);
-    // Tab v2 memakai keadaan selected yang dibaca TalkBack sebagai pilihan.
+    // Tab terpilih memakai keadaan toggled KoPressable.
     expect(
       tester.getSemantics(find.text('Aksesoris')),
-      isSemantics(isSelected: true, hasSelectedState: true),
+      isSemantics(isToggled: true, hasToggledState: true),
     );
     expect(
       tester.getSemantics(find.text('Barang')),
-      isSemantics(isSelected: false, hasSelectedState: true),
+      isSemantics(isToggled: false, hasToggledState: true),
     );
     semantics.dispose();
   });
@@ -142,7 +141,7 @@ void main() {
     tester,
   ) async {
     await pumpApp(tester, progress: testProgress(wonUpTo(10)));
-    await tester.tap(find.text('Main Puzzle'));
+    await tester.tap(find.text('Main'));
     await settle(tester);
     expect(find.text('Ruang Tamu'), findsOneWidget);
     expect(find.bySemanticsLabel('Level 11, main sekarang'), findsOneWidget);
@@ -340,7 +339,5 @@ void main() {
 }
 
 Finder _back(String label) => find.byWidgetPredicate(
-  (w) =>
-      (w is KoIconButton && w.semanticLabel == label) ||
-      (w is UiButton && w.semanticLabel == label),
+  (w) => w is KoIconButton && w.semanticLabel == label,
 );

@@ -1,17 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 
 import '../game/model/accessories.dart';
 import '../game/model/chapter.dart';
 import '../game/model/hints.dart';
 import '../game/model/home.dart';
-import '../game/model/dining.dart';
-import '../game/model/play.dart';
-import '../game/model/care.dart';
-import '../game/model/home_areas.dart';
-import '../game/model/home_routine.dart';
-import '../game/model/household.dart';
 import '../game/model/home_items.dart';
 import '../game/model/kitties.dart';
 import '../game/model/needs.dart';
@@ -22,11 +14,7 @@ import '../game/sim/sim.dart';
 import 'hint_source.dart';
 import 'language.dart';
 import 'progress_store.dart';
-import 'progress_snapshot.dart';
 import 'rewarded_ads.dart';
-
-part 'household_controller.dart';
-part 'guidance_transactions.dart';
 
 /// Hasil [ProgressController.watchAdForCoins].
 enum AdReward {
@@ -41,8 +29,6 @@ enum AdReward {
 
   /// Iklan koin lain sedang diputar.
   busy,
-
-  saveFailed,
 }
 
 /// Bagian progres yang disimpan terpisah, urut tulisnya. Urutan ini memihak
@@ -57,16 +43,6 @@ enum _Part { hints, home, coins, needs, progress, rewards, tutorials, language }
 /// koin, petunjuk, rumah Oyen dan kebutuhan kucingnya, hadiah harian, dan
 /// bahasa. Dimuat sekali sebelum aplikasi jalan (`main`), lalu dibagikan lewat [ProgressScope].
 class ProgressController extends ChangeNotifier implements HintSource {
-  KittyId? _homeSelection;
-  bool _homeSelectionInitialized = false;
-  final ValueNotifier<int> _homePauseRevision = ValueNotifier(0);
-
-  @override
-  void dispose() {
-    _homePauseRevision.dispose();
-    super.dispose();
-  }
-
   ProgressController({
     required List<Level> levels,
     required this.store,
@@ -76,7 +52,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
     Map<int, int> hints = const {},
     Home? home,
     HomeNeeds? needs,
-    Household? household,
     this._rewards = DailyRewards.initial,
     this._language = AppLanguage.system,
     RewardedAds? hintAds,
@@ -86,16 +61,15 @@ class ProgressController extends ChangeNotifier implements HintSource {
        _tutorialsDone = Set.unmodifiable(tutorialsDone),
        _hints = Map.unmodifiable(hints),
        _home = home ?? Home.initial,
-       _needs = needs ?? HomeNeeds.empty,
+       _needs = (needs ?? HomeNeeds.empty).withKitties(
+         (home ?? Home.initial).kitties,
+         (clock ?? DateTime.now)(),
+       ),
        clock = clock ?? DateTime.now,
        _seenDay = dayNumber((clock ?? DateTime.now)()),
        hintAds = hintAds ?? FakeRewardedAds(),
        coinAds = coinAds ?? FakeRewardedAds(),
-       chapters = List.unmodifiable(chaptersOf(levels)) {
-    _household = household ?? Household.migrate(_home, this.clock());
-    _household = _household.copyWith(effectiveAt: _effectiveNow);
-    _needs = _needs.withKitties(_home.kitties, _effectiveNow);
-  }
+       chapters = List.unmodifiable(chaptersOf(levels));
 
   /// Memuat progres, tutorial, koin, petunjuk, rumah, kebutuhan
   /// kucing, hadiah harian, dan bahasa dari [store]. Koin yang belum pernah
@@ -112,50 +86,22 @@ class ProgressController extends ChangeNotifier implements HintSource {
   }) async {
     final progress = await store.load();
     final needs = await store.loadNeeds();
-    final home = await store.loadHome();
-    final now = (clock ?? DateTime.now)();
-    final legacy = ProgressSnapshot(
-      progress: progress,
-      tutorials: await store.loadTutorials(),
-      coins: await store.loadCoins() ?? progress.totalStars * coinsPerStar,
-      hints: await store.loadHints(),
-      home: home,
-      needs: needs,
-      rewards: await store.loadRewards(),
-      language: await store.loadLanguage(),
-      household: Household.migrate(
-        home,
-        now,
-        existing:
-            home != Home.initial ||
-            progress.totalStars > 0 ||
-            needs.cats.isNotEmpty,
-      ),
-    );
-    final raw = store is SnapshotStore
-        ? await (store as SnapshotStore).readSnapshot()
-        : null;
-    final saved = raw == null
-        ? legacy
-        : ProgressSnapshot.fromJson(raw, legacy, now);
     final controller = ProgressController(
       levels: levels,
       store: store,
-      progress: saved.progress,
-      tutorialsDone: saved.tutorials,
-      coins: saved.coins,
-      hints: saved.hints,
-      home: saved.home,
-      needs: saved.needs,
-      rewards: saved.rewards,
-      language: saved.language,
-      household: saved.household,
+      progress: progress,
+      tutorialsDone: await store.loadTutorials(),
+      coins: await store.loadCoins() ?? progress.totalStars * coinsPerStar,
+      hints: await store.loadHints(),
+      home: await store.loadHome(),
+      needs: needs,
+      rewards: await store.loadRewards(),
+      language: await store.loadLanguage(),
       hintAds: hintAds,
       coinAds: coinAds,
       clock: clock,
     );
-    if (!identical(controller._needs, saved.needs) ||
-        (store is SnapshotStore && raw == null)) {
+    if (!identical(controller._needs, needs)) {
       await controller._save({_Part.needs});
     }
     return controller;
@@ -233,51 +179,16 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   @override
   Future<HintUnlock> unlockHint(int levelId, int tier, HintPay pay) async {
-    final revision = _resetRevision;
     bool ready() =>
-        !_resetting &&
-        revision == _resetRevision &&
         tier >= 1 &&
         tier <= maxHintTier &&
         tier == hintTier(levelId) + 1 &&
-        _unlocking.isEmpty &&
-        !_watchingAd;
+        !_unlocking.contains(levelId);
     if (!ready()) return HintUnlock.notReady;
-    if (store is SnapshotStore) {
-      if (_guidanceBusy || _pendingGuidance != null) return HintUnlock.notReady;
-      if (pay == HintPay.coins && _coins - _homeSpend < hintCost(tier)) {
-        return HintUnlock.notEnoughCoins;
-      }
-      _unlocking.add(levelId);
-      if (pay == HintPay.ad) {
-        bool watched;
-        try {
-          watched = await hintAds.show();
-        } on Object {
-          watched = false;
-        }
-        if (!watched) {
-          _unlocking.remove(levelId);
-          return HintUnlock.adFailed;
-        }
-      }
-      await _waitForReset();
-      _unlocking.remove(levelId);
-      if (!ready()) return HintUnlock.notReady;
-      final ok = await _commitGuidance(() {
-        if (revision != _resetRevision || hintTier(levelId) != tier - 1) {
-          return null;
-        }
-        final cost = pay == HintPay.coins ? hintCost(tier) : 0;
-        if (_coins < cost) return null;
-        return _GuidanceChange(coins: -cost, hints: {..._hints, levelId: tier});
-      });
-      return ok ? HintUnlock.opened : HintUnlock.saveFailed;
-    }
     switch (pay) {
       case HintPay.coins:
         final cost = hintCost(tier);
-        if (_coins - _homeSpend < cost) return HintUnlock.notEnoughCoins;
+        if (_coins < cost) return HintUnlock.notEnoughCoins;
         _coins -= cost;
       case HintPay.ad:
         _unlocking.add(levelId);
@@ -302,15 +213,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
   // ── Rumah Oyen ──────────────────────────────────────────────────────
 
   Home _home;
-  late Household _household;
-  final _homePauses = <HouseholdPause>{};
-  bool _homeBusy = false;
-  int _homeSpend = 0;
-  bool _guidanceBusy = false;
-  _GuidanceChange? Function()? _pendingGuidance;
-  _HomeChange? _pendingHome;
-  _HomeChange? Function()? _pendingHomeRebuild;
-  void _notifyHousehold() => notifyListeners();
 
   /// Barang dan tata letak kamar, kucing, aksesoris, dan stok camilan.
   Home get home => _home;
@@ -322,16 +224,16 @@ class ProgressController extends ChangeNotifier implements HintSource {
   HomeNeeds get needs => _needs;
 
   /// Lapar dan Senang [kitty] sekarang.
-  CatNeeds catNeeds(KittyId kitty) => _needs.of(kitty, _effectiveNow);
+  CatNeeds catNeeds(KittyId kitty) => _needs.of(kitty, clock());
 
   /// [kitty] tinggal di kamar, belum makan dari isi mangkuk sekarang, dan
   /// Lapar-nya di bawah [bowlHungerLimit].
   bool canEatFromBowl(KittyId kitty) =>
-      _home.ownsKitty(kitty) && _needs.canEatFromBowl(kitty, _effectiveNow);
+      _home.ownsKitty(kitty) && _needs.canEatFromBowl(kitty, clock());
 
   /// Gelembung koin [kitty] boleh diambil.
   bool canClaimKittyReward(KittyId kitty) =>
-      _home.ownsKitty(kitty) && _needs.canClaim(kitty, _effectiveNow);
+      _home.ownsKitty(kitty) && _needs.canClaim(kitty, clock());
 
   /// Menerapkan aksi rumah yang sudah lolos syaratnya. Keadaan berubah
   /// sebelum `await` pertama, jadi ketukan kedua melihat hasil ketukan
@@ -342,17 +244,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
     HomeNeeds? needs,
     int coins = 0,
   }) async {
-    if (store is SnapshotStore) {
-      return _commitHousehold(
-        _HomeChange(
-          home: home ?? _home,
-          needs: needs ?? _needs,
-          household: _household.sync(_home, home ?? _home),
-          coins: coins,
-        ),
-      );
-    }
-    _household = _household.sync(_home, home ?? _home);
     if (home != null) _home = home;
     if (needs != null) _needs = needs;
     _coins += coins;
@@ -379,7 +270,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     return _changeHome(
       {_Part.home, _Part.needs},
       home: _home.adopt(id),
-      needs: _needs.adopted(id, _effectiveNow),
+      needs: _needs.adopted(id, clock()),
       coins: -kittyOf(id).price,
     );
   }
@@ -447,14 +338,14 @@ class ProgressController extends ChangeNotifier implements HintSource {
     return _changeHome(
       {_Part.home, _Part.needs},
       home: _home.copyWith(pantry: pantry),
-      needs: _needs.feed(kitty, snackOf(snack), _effectiveNow),
+      needs: _needs.feed(kitty, snackOf(snack), clock()),
     );
   }
 
   /// Mengelus [kitty]; gagal kalau batas elus jam ini habis.
   Future<bool> pet(KittyId kitty) async {
     final needs = _home.ownsKitty(kitty) && !catNeeds(kitty).isJoyFull
-        ? _needs.pet(kitty, _effectiveNow)
+        ? _needs.pet(kitty, clock())
         : null;
     if (needs == null) return false;
     return _changeHome({_Part.needs}, needs: needs);
@@ -467,7 +358,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
         _home.ownsKitty(kitty) &&
         roomItemOf(item).toy &&
         _home.room.isPlaced(item);
-    final needs = usable ? _needs.play(kitty, _effectiveNow) : null;
+    final needs = usable ? _needs.play(kitty, clock()) : null;
     if (needs == null) return false;
     return _changeHome({_Part.needs}, needs: needs);
   }
@@ -475,7 +366,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// Selesai menghias: Senang semua kucing naik, paling banyak sekali per
   /// jam. Tata letaknya sudah tersimpan lewat [placeItem] dan [storeItem].
   Future<bool> finishDecorating() async {
-    final needs = _needs.finishDecorating(_home.kitties, _effectiveNow);
+    final needs = _needs.finishDecorating(_home.kitties, clock());
     if (needs == null) return false;
     return _changeHome({_Part.needs}, needs: needs);
   }
@@ -483,7 +374,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// [kitty] makan dari mangkuk.
   Future<bool> eatFromBowl(KittyId kitty) async {
     final needs = _home.ownsKitty(kitty)
-        ? _needs.eatFromBowl(kitty, _effectiveNow)
+        ? _needs.eatFromBowl(kitty, clock())
         : null;
     if (needs == null) return false;
     return _changeHome({_Part.needs}, needs: needs);
@@ -491,9 +382,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// Mengambil gelembung koin [kitty] (+[kittyRewardCoins]).
   Future<bool> claimKittyReward(KittyId kitty) async {
-    final needs = _home.ownsKitty(kitty)
-        ? _needs.claim(kitty, _effectiveNow)
-        : null;
+    final needs = _home.ownsKitty(kitty) ? _needs.claim(kitty, clock()) : null;
     if (needs == null) return false;
     return _changeHome({_Part.needs}, needs: needs, coins: kittyRewardCoins);
   }
@@ -503,7 +392,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// Iklan koin sedang diputar, supaya ketukan kedua tidak memutar dua iklan.
   bool _watchingAd = false;
 
-  int get _today => dayNumber(_effectiveNow);
+  int get _today => dayNumber(clock());
 
   /// Hari saat pendengar terakhir diberi tahu soal hadiah harian (awalnya
   /// hari controller dibuat).
@@ -528,22 +417,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// hari ini sudah diambil.
   Future<bool> claimDailyBonus() async {
     final today = _today;
-    if (_resetting ||
-        _watchingAd ||
-        _unlocking.isNotEmpty ||
-        !_rewards.canClaimBonus(today)) {
-      return false;
-    }
-    if (store is SnapshotStore) {
-      return _commitGuidance(
-        () => _rewards.canClaimBonus(_today)
-            ? _GuidanceChange(
-                coins: dailyBonusCoins,
-                rewards: _rewards.claimBonus(_today),
-              )
-            : null,
-      );
-    }
+    if (!_rewards.canClaimBonus(today)) return false;
     _rewards = _rewards.claimBonus(today);
     _coins += dailyBonusCoins;
     notifyListeners();
@@ -555,47 +429,24 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// dan menghitungnya di jatah hari itu. Iklan yang selesai tetap diberi
   /// hadiah walau hari berganti selama iklan.
   Future<AdReward> watchAdForCoins() async {
-    final revision = _resetRevision;
-    if (_resetting ||
-        _guidanceBusy ||
-        _pendingGuidance != null ||
-        _unlocking.isNotEmpty ||
-        _watchingAd) {
-      return AdReward.busy;
-    }
+    if (_watchingAd) return AdReward.busy;
     if (adsLeft == 0) return AdReward.limitReached;
     _watchingAd = true;
-    pauseHousehold(HouseholdPause.ad);
+    bool watched;
     try {
-      bool watched;
-      try {
-        watched = await coinAds.show();
-      } on Object {
-        watched = false;
-      }
-      if (!watched) return AdReward.failed;
-      await _waitForReset();
-      if (revision != _resetRevision) return AdReward.failed;
-      if (store is SnapshotStore) {
-        final ok = await _commitGuidance(
-          () => _resetRevision == revision
-              ? _GuidanceChange(
-                  coins: adRewardCoins,
-                  rewards: _rewards.watchedAd(_today),
-                )
-              : null,
-        );
-        return ok ? AdReward.rewarded : AdReward.saveFailed;
-      }
-      _rewards = _rewards.watchedAd(_today);
-      _coins += adRewardCoins;
-      notifyListeners();
-      await _save({_Part.rewards, _Part.coins});
-      return AdReward.rewarded;
+      watched = await coinAds.show();
+    } on Object {
+      // SDK iklan yang gagal dimuat dengan error dianggap iklan gagal.
+      watched = false;
     } finally {
       _watchingAd = false;
-      resumeHousehold(HouseholdPause.ad);
     }
+    if (!watched) return AdReward.failed;
+    _rewards = _rewards.watchedAd(_today);
+    _coins += adRewardCoins;
+    notifyListeners();
+    await _save({_Part.rewards, _Part.coins});
+    return AdReward.rewarded;
   }
 
   AppLanguage _language;
@@ -618,92 +469,17 @@ class ProgressController extends ChangeNotifier implements HintSource {
     await _save({_Part.tutorials});
   }
 
-  bool _resetting = false;
-  Completer<void>? _resetDone;
-  Future<void> _waitForReset() async {
-    while (_resetting) {
-      await _resetDone!.future;
-    }
-  }
-
-  int _resetRevision = 0;
-
   /// "Reset progres": menghapus bintang, koin, petunjuk, tutorial,
   /// dan isi rumah (barang, tata letak, kucing, aksesoris, stok); bar Oyen
   /// kembali penuh. Hadiah harian dan hadiah kucing hari ini (supaya tidak
   /// bisa diklaim ulang) dan bahasa tetap. Koin disimpan 0, bukan dihitung
   /// ulang dari bintang.
-  Future<bool> resetProgress() async {
-    if (_resetting) return false;
-    if (store case final SnapshotStore atomic) {
-      _resetting = true;
-      _resetDone = Completer<void>();
-      pauseHousehold(HouseholdPause.resetTransaction);
-      final task = _saving.then((_) async {
-        final now = _effectiveNow;
-        final needs = _needs.reset(now);
-        final household = Household.migrate(
-          Home.initial,
-          now,
-        ).copyWith(reducedMotion: _household.reducedMotion);
-        final candidate = ProgressSnapshot(
-          progress: Progress.empty,
-          tutorials: const {},
-          coins: 0,
-          hints: const {},
-          home: Home.initial,
-          needs: needs,
-          rewards: _rewards,
-          language: _language,
-          household: household,
-        );
-        try {
-          await atomic.writeSnapshot(candidate.toJson());
-        } on Object catch (error) {
-          debugPrint('Reset gagal disimpan: $error');
-          return false;
-        }
-        _resetRevision++;
-        _pendingGuidance = null;
-        _pendingHome = null;
-        _pendingHomeRebuild = null;
-        _homeSelection = null;
-        _homeSelectionInitialized = false;
-        _progress = candidate.progress;
-        _coins = 0;
-        _hints = const {};
-        _home = candidate.home;
-        _needs = needs;
-        _household = household;
-        _tutorialsDone = const {};
-        _unsaved.clear();
-        _persistenceFailed = false;
-        return true;
-      });
-      _saving = task.then<void>((_) {});
-      try {
-        return await task;
-      } finally {
-        _resetting = false;
-        _resetDone!.complete();
-        resumeHousehold(HouseholdPause.resetTransaction);
-        notifyListeners();
-      }
-    }
-    _resetRevision++;
-    _pendingHome = null;
-    _homeSelection = null;
-    _homeSelectionInitialized = false;
-    _pendingHomeRebuild = null;
+  Future<void> resetProgress() async {
     _progress = Progress.empty;
     _coins = 0;
     _hints = const {};
     _home = Home.initial;
-    _needs = _needs.reset(_effectiveNow);
-    _household = Household.migrate(
-      _home,
-      _effectiveNow,
-    ).copyWith(reducedMotion: _household.reducedMotion);
+    _needs = _needs.reset(clock());
     _tutorialsDone = const {};
     notifyListeners();
     await _save({
@@ -714,7 +490,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
       _Part.needs,
       _Part.tutorials,
     });
-    return !hasUnsavedChanges;
   }
 
   /// Menandai tutorial level [id] selesai supaya tidak muncul lagi.
@@ -734,36 +509,14 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// Tulisan berjalan satu per satu, supaya tulisan lama yang lambat tidak
   /// menimpa yang baru.
   Future<void> _saving = Future.value();
-  bool _persistenceFailed = false;
 
   /// Ada perubahan yang menunggu atau gagal disimpan, mis. penyimpanan
   /// perangkat gagal. Tulisan yang sedang berjalan tidak dihitung.
-  bool get hasUnsavedChanges =>
-      _unsaved.isNotEmpty || _pendingHome != null || _pendingGuidance != null;
-  bool get saveFailed =>
-      _persistenceFailed || _pendingHome != null || _pendingGuidance != null;
+  bool get hasUnsavedChanges => _unsaved.isNotEmpty;
 
   /// Mencoba lagi menulis bagian yang gagal disimpan (mis. saat aplikasi
   /// ke latar belakang). Tidak pernah melempar.
-  Future<void> retrySaves() async {
-    if (_pendingGuidance != null && !_guidanceBusy && !_resetting) {
-      final build = _pendingGuidance!;
-      _pendingGuidance = null;
-      await _commitGuidance(build);
-    }
-    if (_pendingHome != null &&
-        !_homeBusy &&
-        !_resetting &&
-        !_guidanceBusy &&
-        _pendingGuidance == null) {
-      final pending = _pendingHome!;
-      final rebuild = _pendingHomeRebuild;
-      _pendingHome = null;
-      _pendingHomeRebuild = null;
-      await _commitHousehold(pending, rebuild: rebuild);
-    }
-    await _save(const {});
-  }
+  Future<void> retrySaves() => _save(const {});
 
   /// Menyimpan [parts] beserta bagian yang tertunda, urut [_Part], dengan
   /// nilai terbaru saat ditulis. Kegagalan tidak dilempar: keadaan di
@@ -771,30 +524,10 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// berikutnya.
   Future<void> _save(Set<_Part> parts) {
     _unsaved.addAll(parts);
-    return _saving = _saving.then((_) async {
-      final wasFailed = _persistenceFailed;
-      _persistenceFailed = false;
-      await _writeUnsaved();
-      if (_persistenceFailed != wasFailed) notifyListeners();
-    });
+    return _saving = _saving.then((_) => _writeUnsaved());
   }
 
   Future<void> _writeUnsaved() async {
-    if (store case final SnapshotStore atomic) {
-      if (_unsaved.isEmpty) return;
-      final parts = {..._unsaved};
-      _unsaved.clear();
-      try {
-        await atomic.writeSnapshot(_snapshot.toJson());
-      } on Object catch (error) {
-        _unsaved.addAll(parts);
-        _persistenceFailed = true;
-        debugPrint('Snapshot gagal disimpan: $error');
-        return;
-      }
-      if (_unsaved.isNotEmpty) await _writeUnsaved();
-      return;
-    }
     while (true) {
       // Selalu bagian paling awal yang belum tersimpan, juga yang ditandai
       // lagi selama tulisan sebelumnya berjalan, supaya urutan [_Part] tetap.
@@ -806,7 +539,6 @@ class ProgressController extends ChangeNotifier implements HintSource {
         await _write(part);
       } on Object catch (error) {
         _unsaved.add(part);
-        _persistenceFailed = true;
         debugPrint('Progres gagal disimpan ($part): $error');
         return;
       }

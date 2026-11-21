@@ -169,28 +169,21 @@ void main() {
       expect(await result, isFalse);
     });
 
-    testWidgets('tidak pernah ditutup: berhenti di batas pengaman', (
-      tester,
-    ) async {
+    test('tidak pernah ditutup: berhenti di batas pengaman', () async {
       final loader = _FakeLoader();
       final ads = _ads(loader, showTimeout: const Duration(milliseconds: 20));
       final result = ads.show();
       final ad = _FakeHandle();
-      await tester.pump();
-      loader.pending.last.complete(ad);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 20));
+      await loader.finish(ad);
       expect(await result, isFalse);
       expect(ad.disposed, isTrue);
       // Tidak tertahan: show berikutnya memakai iklan yang sudah dimuat lagi.
       final next = _FakeHandle();
-      loader.pending.last.complete(next);
-      await tester.pump();
+      await loader.finish(next);
       final again = ads.show();
-      await tester.pump();
+      await pumpEventQueue();
       expect(next.shown, 1);
       next.watchToEnd();
-      await tester.pump();
       expect(await again, isTrue);
     });
 

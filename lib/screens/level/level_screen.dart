@@ -1,5 +1,3 @@
-import '../../theme/puzzle_theme.dart';
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -104,35 +102,30 @@ class _NotFound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final space = context.koSpace;
-    return Theme(
-      data: puzzleTheme(),
-      child: Builder(
-        builder: (context) => Scaffold(
-          body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(space.gutter),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  KoIconButton(
-                    icon: KoIcons.back,
-                    semanticLabel: backLabel,
-                    onPressed: onBack,
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        context.l10n.levelMissing,
-                        textAlign: TextAlign.center,
-                        style: context.koType.body.copyWith(
-                          color: context.koColors.inkSoft,
-                        ),
-                      ),
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(space.gutter),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              KoIconButton(
+                icon: KoIcons.back,
+                semanticLabel: backLabel,
+                onPressed: onBack,
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    context.l10n.levelMissing,
+                    textAlign: TextAlign.center,
+                    style: context.koType.body.copyWith(
+                      color: context.koColors.inkSoft,
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),

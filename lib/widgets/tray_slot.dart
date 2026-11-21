@@ -88,17 +88,6 @@ class TraySlot extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           slot,
-          if (selected)
-            Positioned.fill(
-              child: IgnorePointer(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(radius),
-                    border: Border.all(color: c.orangeLine, width: 3),
-                  ),
-                ),
-              ),
-            ),
           PositionedDirectional(
             end: -s.badgeInset,
             top: -s.badgeInset,

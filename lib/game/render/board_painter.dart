@@ -6,14 +6,14 @@ import 'package:path_drawing/path_drawing.dart';
 import '../../theme/ko_colors.dart';
 import '../../theme/ko_shadow.dart';
 import '../../theme/ko_type.dart';
-import '../../theme/ko_ui.dart';
 import '../sim/direction.dart';
 import '../sim/pos.dart';
 import 'board_scene.dart';
 import 'design_svg.dart';
+import 'oyen_painter.dart';
 import 'svg_template.dart';
 import 'tile.dart';
-import 'v2/puzzle_art.dart';
+import 'tile_painter.dart';
 
 /// Ukuran gambar papan dari `Board.dc.html`, di koordinat desain.
 abstract final class BoardArt {
@@ -91,6 +91,7 @@ void paintBoard(
 /// Nomor jejak putar ulang ([BoardScene.trail]): pill bernomor di pojok
 /// kiri atas petak, gelap kalau aktif (`trail` di `Board.dc.html`).
 void paintBoardTrail(Canvas canvas, BoardScene scene) {
+  const c = KoColors.standard;
   for (final mark in scene.trail) {
     final text = _markText(mark.label, mark.active);
     final width = math.max(
@@ -108,9 +109,9 @@ void paintBoardTrail(Canvas canvas, BoardScene scene) {
     canvas
       ..drawRRect(
         pill.inflate(ring),
-        Paint()..color = mark.active ? KoUi.orange : KoUi.orangePressed,
+        Paint()..color = mark.active ? c.orange : c.orangeLine,
       )
-      ..drawRRect(pill, Paint()..color = mark.active ? KoUi.ink : KoUi.paper)
+      ..drawRRect(pill, Paint()..color = mark.active ? c.ink : c.surface)
       ..drawParagraph(
         text,
         pill.center - Offset(text.width / 2, text.height / 2),
@@ -124,7 +125,7 @@ final _markTexts = <(String, bool), Paragraph>{};
 
 Paragraph _markText(String label, bool active) =>
     _markTexts[(label, active)] ??= () {
-      if (_markTexts.length >= 256) _markTexts.clear();
+      const c = KoColors.standard;
       final builder =
           ParagraphBuilder(
               ParagraphStyle(
@@ -137,7 +138,7 @@ Paragraph _markText(String label, bool active) =>
             )
             ..pushStyle(
               TextStyle(
-                color: active ? KoUi.paper : KoUi.ink,
+                color: active ? c.cream : c.ink,
                 fontFamily: KoFonts.fredoka,
                 fontSize: BoardArt.markFont,
                 fontWeight: FontWeight.w700,
@@ -166,7 +167,7 @@ void paintBoardPath(Canvas canvas, BoardScene scene) {
   canvas.drawPath(
     dashPath(line, dashArray: CircularIntervalList(BoardArt.pathDash)),
     Paint()
-      ..color = KoUi.orangePressed
+      ..color = KoColors.standard.orangeLine
       ..style = PaintingStyle.stroke
       ..strokeWidth = BoardArt.pathWidth
       ..strokeCap = StrokeCap.round
@@ -188,7 +189,7 @@ void paintBoardTiles(
         (i % BoardScene.columns) * Tile.size,
         (i ~/ BoardScene.columns) * Tile.size,
       );
-    paintPuzzleTile(canvas, scene.tiles[i], glowOpacity: glowOpacity);
+    paintTile(canvas, scene.tiles[i], glowOpacity: glowOpacity);
     canvas.restore();
   }
 }
@@ -206,25 +207,21 @@ void paintBoardOyen(Canvas canvas, BoardScene scene, {Offset? at}) {
       tile.dx + BoardArt.oyenOffset.dx,
       tile.dy + BoardArt.oyenOffset.dy,
     );
-  paintPuzzleOyen(canvas, oyen.look, size: BoardArt.oyenSize);
+  paintOyen(canvas, oyen.look, size: BoardArt.oyenSize);
   canvas.restore();
   if (scene.showFacing) _paintFacing(canvas, tile, oyen.look.dir);
 }
 
-/// Pusat lencana arah relatif ke pojok kiri atas petak Oyen: di sisi hadap
-/// setinggi kaki (kiri/kanan), di bawah dagu (bawah), atau di atas kepala
-/// (atas), supaya tidak menutupi wajah Oyen yang tidur maupun gelembung Zzz.
-Offset facingCenter(Direction dir) => switch (dir) {
-  Direction.right => const Offset(56, 38),
-  Direction.left => const Offset(-6, 38),
-  Direction.up => const Offset(25, 0),
-  Direction.down => const Offset(25, 53),
-};
-
 /// Panah di tepi petak Oyen (pojok kiri atasnya di [tile]), ke arah hadapnya
 /// (`facingStyle` di desain).
 void _paintFacing(Canvas canvas, Offset tile, Direction dir) {
-  final center = tile + facingCenter(dir);
+  // Pojok kiri atas ikon 12 px, relatif ke pojok petak.
+  final (fx, fy) = switch (dir) {
+    Direction.right => (44.0, 19.0),
+    Direction.left => (-6.0, 19.0),
+    Direction.up => (19.0, -6.0),
+    Direction.down => (19.0, 44.0),
+  };
   final degrees = switch (dir) {
     Direction.right => 0,
     Direction.down => 90,
@@ -236,7 +233,7 @@ void _paintFacing(Canvas canvas, Offset tile, Direction dir) {
   const c = KoColors.standard;
   canvas
     ..save()
-    ..translate(center.dx, center.dy)
+    ..translate(tile.dx + fx + half, tile.dy + fy + half)
     ..drawCircle(
       Offset.zero,
       radius + BoardArt.facingRing,

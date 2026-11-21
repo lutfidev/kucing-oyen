@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-612 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+491 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -237,7 +237,7 @@ files and anything written there is overwritten.
 | `brokenAtStep` | Broke on step {n} | Quebrou no passo {n} | Vase screen: the step the vase broke. Placeholders: `{n}`. | |
 | `tryAgain` | Try Again | Tentar de Novo | Vase screen button: arrange again. | |
 | `nextAnyway` | Next Anyway | Seguir Assim | Vase screen button: next level anyway. | |
-| `vaseArtLabel` | Oyen reaches the bowl, with broken vase pieces beside him | Oyen chega à tigela, com os cacos do vaso ao lado | Screen reader label of the vase screen picture. | |
+| `vaseArtLabel` | The vase lies broken behind Oyen, and Mom pops in at the door, annoyed | O vaso quebrado atrás do Oyen, e a Mamãe aparece na porta, brava | Screen reader label of the vase screen picture. | |
 | `loopTitle` | Oyen got bored going in circles. | Oyen cansou de andar em círculos. | Fail screen title: going in circles. | |
 | `loopBadge` | Going in circles | Em círculos | Fail screen chip: going in circles. | |
 | `loopMessage` | Round and round, no bowl in sight. Oh well, back to sleep. | Dá voltas e voltas e nada da tigela. Ah, bora dormir de novo. | Fail screen message: going in circles. | |
@@ -518,127 +518,6 @@ files and anything written there is overwritten.
 | `kittyTapHintNewHungry` | {name}, new, hungry. Tap to see their card | {name}, novo, com fome. Toque para ver o cartão | Screen reader label of a newly adopted cat in the room that is also hungry. Placeholders: `{name}`. | |
 | `snackFullNote` | {name} is already full and happy. Save it for later! | {name} já está cheio e feliz. Guarde para depois! | Short note on a cat card when a snack is tapped but the cat's Full and Happy bars are both at 100. {name} is the cat's name. Placeholders: `{name}`. | |
 | `snackEmptyNote` | All gone. Grab more snacks in the Shop! | Acabou. Compre mais petiscos na Loja! | Short note on a cat card when a snack that is out of stock is tapped. | |
-| `uiAreaLounge` | Lounge | Descanso | V2 UI foundation: uiAreaLounge | |
-| `uiAreaDining` | Dining | Comida | V2 UI foundation: uiAreaDining | |
-| `uiAreaPlay` | Play | Brincadeiras | V2 UI foundation: uiAreaPlay | |
-| `uiAreaCare` | Care | Cuidados | V2 UI foundation: uiAreaCare | |
-| `uiPlayPuzzle` | Play Puzzle | Jogar quebra-cabeça | V2 UI foundation: uiPlayPuzzle | |
-| `uiHome` | Home | Casa | V2 UI foundation: uiHome | |
-| `uiCollection` | Collection | Coleção | V2 UI foundation: uiCollection | |
-| `uiShop` | Shop | Loja | V2 UI foundation: uiShop | |
-| `uiLowNeed` | Low needs | Necessidade baixa | V2 UI foundation: uiLowNeed | |
-| `uiInviting` | Inviting… | Convidando… | V2 UI foundation: uiInviting | |
-| `uiInvite` | Invite to area | Convidar para a área | V2 UI foundation: uiInvite | |
-| `uiViewActivity` | View activity | Ver atividade | V2 UI foundation: uiViewActivity | |
-| `uiActivityNote` | Choose an activity for Oyen. The invitation will wait for the current activity. | Escolha uma atividade para Oyen. O convite vai esperar a atividade atual terminar. | V2 UI foundation: uiActivityNote | |
-| `homeCats` | Cats | Gatos | V2 player home: homeCats. | |
-| `homeEmpty` | A quiet spot. Find a cat from your collection. | Um cantinho tranquilo. Encontre um gato na coleção. | V2 player home: homeEmpty. | |
-| `homeChoose` | Choose a cat | Escolha um gato | V2 player home: homeChoose. | |
-| `homeResting` | Relaxing | Descansando | V2 player home: homeResting. | |
-| `homeSleeping` | Sleeping | Dormindo | V2 player home: homeSleeping. | |
-| `homeActivity` | {activity, select, rest{Relax} eat{Eat} play{Play} brush{Brush} pet{Pet} other{Relax}} | {activity, select, rest{Descansar} eat{Comer} play{Brincar} brush{Escovar} pet{Fazer carinho} other{Descansar}} | V2 player home: homeActivity. Placeholders: `{activity}`. | |
-| `homeDoing` | Now: {activity} | Agora: {activity} | V2 player home: homeDoing. Placeholders: `{activity}`. | |
-| `homeTravel` | Heading to {area}… | Indo para {area}… | V2 player home: homeTravel. Placeholders: `{area}`. | |
-| `homeWaiting` | Waiting for {area} · {position} in line | Esperando {area} · posição {position} | V2 player home: homeWaiting. Placeholders: `{area}`, `{position}`. | |
-| `homeAfterActivity` | After this activity: {area} | Depois desta atividade: {area} | V2 player home: homeAfterActivity. Placeholders: `{area}`. | |
-| `homeIneligible` | Already full, or today's activity allowance needs a rest. | Já está satisfeito, ou a cota de atividades precisa descansar. | V2 player home: homeIneligible. | |
-| `homeCancelled` | Invitation cancelled | Convite cancelado | V2 player home: homeCancelled. | |
-| `homeFacilityRemoved` | Activity stopped; the item is in storage. | Atividade interrompida; o item está guardado. | V2 player home: homeFacilityRemoved. | |
-| `homeInviteEat` | Invite to eat | Chamar para comer | V2 player home: homeInviteEat. | |
-| `homeInvitePlay` | Invite to play | Chamar para brincar | V2 player home: homeInvitePlay. | |
-| `homeInviteCare` | Care | Cuidar | V2 player home: homeInviteCare. | |
-| `homeBrush` | Brush | Escovar | V2 player home: homeBrush. | |
-| `homeRest` | Back to lounge | Voltar ao descanso | V2 player home: homeRest. | |
-| `homeInviteFor` | Invite {name} · {activity} | Chamar {name} · {activity} | V2 player home: homeInviteFor. Placeholders: `{name}`, `{activity}`. | |
-| `homeFind` | Find | Encontrar | V2 player home: homeFind. | |
-| `homeViewArea` | View area | Ver área | V2 player home: homeViewArea. | |
-| `homeCancelAfter` | Cancel after this | Cancelar depois desta | V2 player home: homeCancelAfter. | |
-| `homeCancelInvitation` | Cancel invitation | Cancelar convite | V2 player home: homeCancelInvitation. | |
-| `homeRewardAvailable` | Rewards available · {coins} | Recompensas disponíveis · {coins} | V2 player home: homeRewardAvailable. Placeholders: `{coins}`. | |
-| `homeRewardNone` | Everyone is comfy. Rewards will be back. | Tudo tranquilo. As recompensas voltam depois. | V2 player home: homeRewardNone. | |
-| `homeStatusBowl` | Bowl · {left}/{total} | Tigela · {left}/{total} | Compact home chip (Dining area): bowl portions left out of owned cats. Placeholders: `{left}`, `{total}`. | |
-| `homeStatusBowlEmpty` | Bowl empty | Tigela vazia | Compact home chip (Dining area): bowl has no portions until the next cycle. | |
-| `homeStatusToy` | Toy ready | Brinquedo livre | Compact home chip (Play area): the toy is free. | |
-| `homeStatusCare` | Mat is free | Tapetinho livre | Compact home chip (Care area): the grooming mat is free. | |
-| `homeStatusQueue` | {count} waiting | Na fila: {count} | Compact home chip suffix: number of cats waiting for this area's facility. Placeholders: `{count}`. | |
-| `homeRewardLater` | Rewards later | Prêmios depois | Compact home reward chip when no house reward is ready yet. | |
-| `homeRewards` | House rewards | Recompensas da casa | V2 player home: homeRewards. | |
-| `homeClaimAll` | Collect all · {coins} | Coletar tudo · {coins} | V2 player home: homeClaimAll. Placeholders: `{coins}`. | |
-| `homeSaveFailed` | Couldn't save. Your last saved state is safe. | Não foi possível salvar. O último estado salvo está seguro. | V2 player home: homeSaveFailed. | |
-| `homeRetry` | Try again | Tentar de novo | V2 player home: homeRetry. | |
-| `homeMigration` | A bigger home! Your other items are safe in storage. | Uma casa maior! Seus outros itens estão guardados. | V2 player home: homeMigration. | |
-| `homeWelcome` | Welcome home | Boas-vindas à casa | V2 player home: homeWelcome. | |
-| `homeFood` | Food | Comida | V2 player home: homeFood. | |
-| `homeAreaCount` | {area} · {count}/{capacity} | {area} · {count}/{capacity} | V2 player home: homeAreaCount. Placeholders: `{area}`, `{count}`, `{capacity}`. | |
-| `homeLoadFailed` | Couldn't load the room art. | Não foi possível carregar a arte da casa. | V2 player home: homeLoadFailed. | |
-| `homeLoading` | Opening the home… | Abrindo a casa… | V2 player home: homeLoading. | |
-| `diningEmpty` | Bowl empty · fresh portions next cycle | Tigela vazia · novas porções no próximo ciclo | Dining area: no cat has a portion left in this cycle. | |
-| `diningTitle` | Dinner time | Hora de comer | Dining area v2: diningTitle | |
-| `diningStock` | Portions available · {left}/{total} cats | Porções disponíveis · {left}/{total} gatos | Dining area v2: diningStock Placeholders: `{left}`, `{total}`. | |
-| `diningRefill` | Fresh portions in {time} · automatic and free | Novas porções em {time} · automático e grátis | Dining area v2: diningRefill Placeholders: `{time}`. | |
-| `diningFresh` | The 4-hour cycle starts when the first cat finishes eating. | O ciclo de 4 horas começa quando o primeiro gato termina de comer. | Dining area v2: diningFresh | |
-| `diningReady` | Ready to eat · Food +40 | Pode comer · Comida +40 | Dining area v2: diningReady | |
-| `diningFull` | Still full · eats when Food is below 70 | Ainda está de barriga cheia · come com Comida abaixo de 70 | Dining area v2: diningFull | |
-| `diningAlreadyAte` | Portion already eaten · wait for the next cycle | Já comeu a porção · espere o próximo ciclo | Dining area v2: diningAlreadyAte | |
-| `diningUsing` | {name} is eating | {name} está comendo | Dining area v2: diningUsing Placeholders: `{name}`. | |
-| `diningFree` | Bowl ready · one cat eats at a time | Tigela pronta · um gato come por vez | Dining area v2: diningFree | |
-| `diningQueue` | Dining queue · {count} | Fila para comer · {count} | Dining area v2: diningQueue Placeholders: `{count}`. | |
-| `diningChoose` | Choose a cat to eat | Escolha um gato para comer | Dining area v2: diningChoose | |
-| `diningWaiting` | Waiting spot | Lugar de espera | Dining area v2: diningWaiting | |
-| `playTitle` | Playtime | Hora de brincar | Play area: playTitle | |
-| `playRules` | Play for 8 seconds: +10 Joy, once every 30 minutes. Cats can also play on their own. | Brincar por 8 segundos: +10 de Alegria, uma vez a cada 30 minutos. Os gatos também brincam sozinhos. | Play area: playRules | |
-| `playReady` | Ready to play | Pronto para brincar | Play area: playReady | |
-| `playFull` | Joy is full | Alegria cheia | Play area: playFull | |
-| `playCooldown` | Ready again in {minutes} min | Pode brincar de novo em {minutes} min | Play area: playCooldown Placeholders: `{minutes}`. | |
-| `playFree` | Toy ready · one cat at a time | Brinquedo livre · um gato por vez | Play area: playFree | |
-| `playUsing` | {cat} is playing | {cat} está brincando | Play area: playUsing Placeholders: `{cat}`. | |
-| `playChoose` | Choose a playmate | Escolher quem vai brincar | Play area: playChoose | |
-| `playToy` | Toy: {toy} | Brinquedo: {toy} | Play area: playToy Placeholders: `{toy}`. | |
-| `playQueue` | Waiting for a turn · {count} | Na fila para brincar · {count} | Play area: playQueue Placeholders: `{count}`. | |
-| `playActive` | Playing now | Brincando agora | Play area: playActive | |
-| `careTitle` | Time for some care | Hora do carinho | Home grooming area: careTitle | |
-| `careRules` | Pet for 2 seconds or brush for 6: +10 Joy, up to +30 combined per hour. | Carinho por 2 segundos ou escova por 6: +10 de Alegria, até +30 por hora entre os dois. | Home grooming area: careRules | |
-| `careReady` | Ready for care | Pode receber carinho | Home grooming area: careReady | |
-| `careFull` | Joy is full | Alegria cheia | Home grooming area: careFull | |
-| `careCooldown` | Care available in {minutes} min | Carinho disponível em {minutes} min | Home grooming area: careCooldown Placeholders: `{minutes}`. | |
-| `careFree` | Grooming mat is free | Tapetinho livre | Home grooming area: careFree | |
-| `careUsing` | {name} is getting care | {name} está recebendo cuidados | Home grooming area: careUsing Placeholders: `{name}`. | |
-| `careActive` | Getting some care | Recebendo carinho | Home grooming area: careActive | |
-| `careQueue` | Care queue: {count} | Fila de cuidados: {count} | Home grooming area: careQueue Placeholders: `{count}`. | |
-| `careChoose` | Choose a cat to care for | Escolha um gato para cuidar | Home grooming area: careChoose | |
-| `shopDestination` | Destination: {area} | Destino: {area} | V2 shop or area decoration: shopDestination Placeholders: `{area}`. | |
-| `shopStored` | Storage · starting area is full | Depósito · área inicial cheia | V2 shop or area decoration: shopStored | |
-| `shopBalanceAfter` | Balance after: {n} coins | Saldo depois: {n} moedas | V2 shop or area decoration: shopBalanceAfter Placeholders: `{n}`. | |
-| `shopOwnedCollection` | Your collection | Sua coleção | V2 shop or area decoration: shopOwnedCollection | |
-| `shopAdoptIntro` | New friends for Oyen’s home. Check where they will settle in! | Novos amigos para a casa do Oyen. Veja onde vão ficar! | V2 shop or area decoration: shopAdoptIntro | |
-| `shopInArea` | Placed: {area} | Na área: {area} | V2 shop or area decoration: shopInArea Placeholders: `{area}`. | |
-| `shopInStorage` | Safe in storage | Guardado no depósito | V2 shop or area decoration: shopInStorage | |
-| `shopAlreadyOwned` | Already yours | Já é seu | V2 shop or area decoration: shopAlreadyOwned | |
-| `decorateArea` | Decorate · {area} | Decorar · {area} | V2 shop or area decoration: decorateArea Placeholders: `{area}`. | |
-| `decoratePaused` | Decorating · all home activities are paused | Decorando · todas as atividades da casa estão pausadas | V2 shop or area decoration: decoratePaused | |
-| `decorateInstructions` | Choose an item, then tap a slot or drag. Switch areas to place it there. | Escolha um item e toque num espaço ou arraste. Mude de área para colocá-lo lá. | V2 shop or area decoration: decorateInstructions | |
-| `decorateSaveLayout` | Save layout | Salvar disposição | V2 shop or area decoration: decorateSaveLayout | |
-| `decorateDiscard` | Discard changes | Descartar alterações | V2 shop or area decoration: decorateDiscard | |
-| `decorateContinue` | Keep decorating | Continuar decorando | V2 shop or area decoration: decorateContinue | |
-| `decorateUnsaved` | Save your home changes? | Salvar as mudanças da casa? | V2 shop or area decoration: decorateUnsaved | |
-| `decorateStoreItem` | Move to storage | Guardar no depósito | V2 shop or area decoration: decorateStoreItem | |
-| `decorateInvalid` | This slot does not fit. Choose a free slot in an allowed area. | Este espaço não serve. Escolha um espaço livre numa área permitida. | V2 shop or area decoration: decorateInvalid | |
-| `decorateSlot` | {zone} · slot {n} | {zone} · espaço {n} | V2 shop or area decoration: decorateSlot Placeholders: `{zone}`, `{n}`. | |
-| `decorateWall` | Wall | Parede | V2 shop or area decoration: decorateWall | |
-| `decorateFloor` | Floor | Chão | V2 shop or area decoration: decorateFloor | |
-| `decorateAllowed` | Allowed areas: {areas} | Áreas permitidas: {areas} | V2 shop or area decoration: decorateAllowed Placeholders: `{areas}`. | |
-| `decorateBowlFixed` | The built-in bowl stays in the Dining Area. | A tigela da casa fica na Área de Refeições. | V2 shop or area decoration: decorateBowlFixed | |
-| `replayEnd` | End | Fim | Replay control: jump to the final step. | |
-| `replayProgress` | Step {step} of {total} | Passo {step} de {total} | Current replay step and total; includes step zero. Placeholders: `{step}`, `{total}`. | |
-| `guidanceSaveFailed` | Not saved on this device yet. Try saving again. | Ainda não foi salvo neste aparelho. Tente salvar de novo. | Guidance and settings v2: guidanceSaveFailed | |
-| `guidanceLoading` | Loading ad… | Carregando anúncio… | Guidance and settings v2: guidanceLoading | |
-| `guidanceHomeTitle` | Meet Oyen’s home | Conheça a casa do Oyen | Guidance and settings v2: guidanceHomeTitle | |
-| `guidanceHomeBody` | Four free areas: Lounge, Dining, Play, and Care. Cats can do things on their own. Tap a cat to invite them; busy cats wait their turn. Find any cat through Collection. You can always jump straight into a puzzle. | Quatro áreas grátis: Descanso, Comida, Brincar e Cuidados. Os gatos fazem atividades sozinhos. Toque num gato para convidar; se estiver ocupado, ele espera a vez. Encontre os gatos na Coleção. Os puzzles estão sempre disponíveis. | Guidance and settings v2: guidanceHomeBody | |
-| `guidanceMotion` | Reduce motion | Reduzir movimento | Guidance and settings v2: guidanceMotion | |
-| `guidanceMotionInfo` | Gentler animations. Your phone’s reduced motion preference is also respected. | Animações mais suaves. A preferência do aparelho também é respeitada. | Guidance and settings v2: guidanceMotionInfo | |
-| `guidanceResetAreas` | All areas, layouts, queues and home activities are reset too. Language, sound, reduced motion and today’s reward limits stay. | Todas as áreas, decorações, filas e atividades da casa também serão reiniciadas. Idioma, som, movimento reduzido e limites de recompensas de hoje permanecem. | Guidance and settings v2: guidanceResetAreas | |
-| `guidanceSaving` | Saving… | Salvando… | Paid hint storage is in progress, without loading an ad. | |
-| `guidanceConsentFailed` | Couldn’t open the ad privacy choices. Try again later. | Não foi possível abrir as opções de privacidade dos anúncios. Tente de novo mais tarde. | The ad privacy consent form failed to open. | |
 
 ---
 
@@ -683,8 +562,8 @@ WHAT'S INSIDE
 • Rule cards and short tutorials that teach as you go
 • Stuck? Hints reveal one tile at a time, paid with coins or a short optional video ad
 • Coins from new stars, a daily bonus, happy cats, and optional ads
-• Four free areas to relax, eat, play, and care for cats. Decorate each area: cushion bed, scratching post, aquarium, rug, and more from the Shop
-• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Offer snacks and pets, or invite them to eat, play, or get brushed. Claim daily cat rewards together
+• A room for Oyen to decorate your way: cushion bed, scratching post, aquarium, rug, and more from the Shop
+• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Treat them to snacks and pets, and they pay you back in coins
 • Accessories for every cat: ribbons, bandanas, beanies, chef hats, all the way up to a King's Crown
 • Calm music and cute sound effects (each can be switched off)
 • English, Indonesian, Brazilian Portuguese, and Russian
@@ -742,8 +621,8 @@ O QUE TEM
 • Cartas de regras e tutoriais curtinhos que ensinam enquanto você joga
 • Travou? Dicas revelam um quadrado por vez, pagas com moedas ou um anúncio curto opcional
 • Moedas por estrelas novas, bônus diário, gatos bem cuidados e anúncios opcionais
-• Quatro áreas grátis pra descansar, comer, brincar e cuidar dos gatos. Decore cada área: caminha almofadada, arranhador, aquário, tapete e mais coisas da Loja
-• Adote mais oito gatos, do Carvão, todo pretinho, até o Chefe, que vive de terno. Dê petiscos e carinho ou convide pra comer, brincar e escovar. Resgate as recompensas diárias dos gatos de uma vez
+• Um quarto pro Oyen decorar do seu jeito: caminha almofadada, arranhador, aquário, tapete e mais coisas da Loja
+• Adote mais oito gatos, do Carvão, todo pretinho, até o Chefe, que vive de terno. Dê petiscos e carinho, e eles pagam em moedas
 • Acessórios pra todos os gatos: fitinha, bandana, gorro, chapéu de chef e até Coroa de Rei
 • Música tranquila e efeitos fofos (dá pra desligar cada um)
 • Inglês, indonésio, português do Brasil e russo

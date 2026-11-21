@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-612 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+491 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -237,7 +237,7 @@ files and anything written there is overwritten.
 | `brokenAtStep` | Broke on step {n} | Разбита на шаге {n} | Vase screen: the step the vase broke. Placeholders: `{n}`. | |
 | `tryAgain` | Try Again | Ещё раз | Vase screen button: arrange again. | |
 | `nextAnyway` | Next Anyway | Всё равно дальше | Vase screen button: next level anyway. | |
-| `vaseArtLabel` | Oyen reaches the bowl, with broken vase pieces beside him | Ойен добрался до миски, рядом лежат осколки вазы | Screen reader label of the vase screen picture. | |
+| `vaseArtLabel` | The vase lies broken behind Oyen, and Mom pops in at the door, annoyed | За Ойеном разбитая ваза, в дверях появляется недовольная мама | Screen reader label of the vase screen picture. | |
 | `loopTitle` | Oyen got bored going in circles. | Ойену надоело ходить по кругу. | Fail screen title: going in circles. | |
 | `loopBadge` | Going in circles | По кругу | Fail screen chip: going in circles. | |
 | `loopMessage` | Round and round, no bowl in sight. Oh well, back to sleep. | Кругами да кругами, а миски нет. Ну и ладно, спать. | Fail screen message: going in circles. | |
@@ -518,127 +518,6 @@ files and anything written there is overwritten.
 | `kittyTapHintNewHungry` | {name}, new, hungry. Tap to see their card | {name}, новенький, хочет есть. Нажми, чтобы открыть карточку | Screen reader label of a newly adopted cat in the room that is also hungry. Placeholders: `{name}`. | |
 | `snackFullNote` | {name} is already full and happy. Save it for later! | {name} уже сыт и доволен. Прибереги на потом! | Short note on a cat card when a snack is tapped but the cat's Full and Happy bars are both at 100. {name} is the cat's name. Placeholders: `{name}`. | |
 | `snackEmptyNote` | All gone. Grab more snacks in the Shop! | Закончилось. Купи ещё вкусняшек в Магазине! | Short note on a cat card when a snack that is out of stock is tapped. | |
-| `uiAreaLounge` | Lounge | Отдых | V2 UI foundation: uiAreaLounge | |
-| `uiAreaDining` | Dining | Еда | V2 UI foundation: uiAreaDining | |
-| `uiAreaPlay` | Play | Игры | V2 UI foundation: uiAreaPlay | |
-| `uiAreaCare` | Care | Уход | V2 UI foundation: uiAreaCare | |
-| `uiPlayPuzzle` | Play Puzzle | Играть в головоломку | V2 UI foundation: uiPlayPuzzle | |
-| `uiHome` | Home | Дом | V2 UI foundation: uiHome | |
-| `uiCollection` | Collection | Коллекция | V2 UI foundation: uiCollection | |
-| `uiShop` | Shop | Магазин | V2 UI foundation: uiShop | |
-| `uiLowNeed` | Low needs | Низкая потребность | V2 UI foundation: uiLowNeed | |
-| `uiInviting` | Inviting… | Приглашаем… | V2 UI foundation: uiInviting | |
-| `uiInvite` | Invite to area | Позвать в зону | V2 UI foundation: uiInvite | |
-| `uiViewActivity` | View activity | Посмотреть занятие | V2 UI foundation: uiViewActivity | |
-| `uiActivityNote` | Choose an activity for Oyen. The invitation will wait for the current activity. | Выберите занятие для Ойена. Приглашение подождёт окончания текущего занятия. | V2 UI foundation: uiActivityNote | |
-| `homeCats` | Cats | Коты | V2 player home: homeCats. | |
-| `homeEmpty` | A quiet spot. Find a cat from your collection. | Здесь пока тихо. Найди кота в коллекции. | V2 player home: homeEmpty. | |
-| `homeChoose` | Choose a cat | Выбери кота | V2 player home: homeChoose. | |
-| `homeResting` | Relaxing | Отдыхает | V2 player home: homeResting. | |
-| `homeSleeping` | Sleeping | Спит | V2 player home: homeSleeping. | |
-| `homeActivity` | {activity, select, rest{Relax} eat{Eat} play{Play} brush{Brush} pet{Pet} other{Relax}} | {activity, select, rest{Отдых} eat{Еда} play{Игра} brush{Расчёсывание} pet{Ласка} other{Отдых}} | V2 player home: homeActivity. Placeholders: `{activity}`. | |
-| `homeDoing` | Now: {activity} | Сейчас: {activity} | V2 player home: homeDoing. Placeholders: `{activity}`. | |
-| `homeTravel` | Heading to {area}… | Идёт в: {area}… | V2 player home: homeTravel. Placeholders: `{area}`. | |
-| `homeWaiting` | Waiting for {area} · {position} in line | Ждёт: {area} · очередь {position} | V2 player home: homeWaiting. Placeholders: `{area}`, `{position}`. | |
-| `homeAfterActivity` | After this activity: {area} | После этого занятия: {area} | V2 player home: homeAfterActivity. Placeholders: `{area}`. | |
-| `homeIneligible` | Already full, or today's activity allowance needs a rest. | Уже достаточно, или пора отдохнуть от занятий. | V2 player home: homeIneligible. | |
-| `homeCancelled` | Invitation cancelled | Приглашение отменено | V2 player home: homeCancelled. | |
-| `homeFacilityRemoved` | Activity stopped; the item is in storage. | Занятие остановлено: предмет на складе. | V2 player home: homeFacilityRemoved. | |
-| `homeInviteEat` | Invite to eat | Позвать поесть | V2 player home: homeInviteEat. | |
-| `homeInvitePlay` | Invite to play | Позвать играть | V2 player home: homeInvitePlay. | |
-| `homeInviteCare` | Care | Уход | V2 player home: homeInviteCare. | |
-| `homeBrush` | Brush | Расчесать | V2 player home: homeBrush. | |
-| `homeRest` | Back to lounge | Вернуться отдыхать | V2 player home: homeRest. | |
-| `homeInviteFor` | Invite {name} · {activity} | Позвать: {name} · {activity} | V2 player home: homeInviteFor. Placeholders: `{name}`, `{activity}`. | |
-| `homeFind` | Find | Найти | V2 player home: homeFind. | |
-| `homeViewArea` | View area | Показать зону | V2 player home: homeViewArea. | |
-| `homeCancelAfter` | Cancel after this | Отменить после этого | V2 player home: homeCancelAfter. | |
-| `homeCancelInvitation` | Cancel invitation | Отменить приглашение | V2 player home: homeCancelInvitation. | |
-| `homeRewardAvailable` | Rewards available · {coins} | Доступна награда · {coins} | V2 player home: homeRewardAvailable. Placeholders: `{coins}`. | |
-| `homeRewardNone` | Everyone is comfy. Rewards will be back. | Можно отдохнуть. Награды появятся снова. | V2 player home: homeRewardNone. | |
-| `homeStatusBowl` | Bowl · {left}/{total} | Миска · {left}/{total} | Compact home chip (Dining area): bowl portions left out of owned cats. Placeholders: `{left}`, `{total}`. | |
-| `homeStatusBowlEmpty` | Bowl empty | Миска пуста | Compact home chip (Dining area): bowl has no portions until the next cycle. | |
-| `homeStatusToy` | Toy ready | Игрушка свободна | Compact home chip (Play area): the toy is free. | |
-| `homeStatusCare` | Mat is free | Коврик свободен | Compact home chip (Care area): the grooming mat is free. | |
-| `homeStatusQueue` | {count} waiting | В очереди: {count} | Compact home chip suffix: number of cats waiting for this area's facility. Placeholders: `{count}`. | |
-| `homeRewardLater` | Rewards later | Награды позже | Compact home reward chip when no house reward is ready yet. | |
-| `homeRewards` | House rewards | Награды дома | V2 player home: homeRewards. | |
-| `homeClaimAll` | Collect all · {coins} | Забрать всё · {coins} | V2 player home: homeClaimAll. Placeholders: `{coins}`. | |
-| `homeSaveFailed` | Couldn't save. Your last saved state is safe. | Не удалось сохранить. Последнее сохранение в порядке. | V2 player home: homeSaveFailed. | |
-| `homeRetry` | Try again | Повторить | V2 player home: homeRetry. | |
-| `homeMigration` | A bigger home! Your other items are safe in storage. | Дом стал просторнее! Остальные предметы на складе. | V2 player home: homeMigration. | |
-| `homeWelcome` | Welcome home | Добро пожаловать домой | V2 player home: homeWelcome. | |
-| `homeFood` | Food | Сытость | V2 player home: homeFood. | |
-| `homeAreaCount` | {area} · {count}/{capacity} | {area} · {count}/{capacity} | V2 player home: homeAreaCount. Placeholders: `{area}`, `{count}`, `{capacity}`. | |
-| `homeLoadFailed` | Couldn't load the room art. | Не удалось загрузить рисунки дома. | V2 player home: homeLoadFailed. | |
-| `homeLoading` | Opening the home… | Открываем дом… | V2 player home: homeLoading. | |
-| `diningEmpty` | Bowl empty · fresh portions next cycle | Миска пуста · новые порции в следующем цикле | Dining area: no cat has a portion left in this cycle. | |
-| `diningTitle` | Dinner time | Пора кушать | Dining area v2: diningTitle | |
-| `diningStock` | Portions available · {left}/{total} cats | Порции доступны · {left}/{total} котов | Dining area v2: diningStock Placeholders: `{left}`, `{total}`. | |
-| `diningRefill` | Fresh portions in {time} · automatic and free | Новые порции через {time} · автоматически и бесплатно | Dining area v2: diningRefill Placeholders: `{time}`. | |
-| `diningFresh` | The 4-hour cycle starts when the first cat finishes eating. | Цикл на 4 часа начнётся, когда первый кот закончит есть. | Dining area v2: diningFresh | |
-| `diningReady` | Ready to eat · Food +40 | Можно кушать · Еда +40 | Dining area v2: diningReady | |
-| `diningFull` | Still full · eats when Food is below 70 | Пока сыт · поест, когда Еда ниже 70 | Dining area v2: diningFull | |
-| `diningAlreadyAte` | Portion already eaten · wait for the next cycle | Порция съедена · ждём следующего цикла | Dining area v2: diningAlreadyAte | |
-| `diningUsing` | {name} is eating | {name} кушает | Dining area v2: diningUsing Placeholders: `{name}`. | |
-| `diningFree` | Bowl ready · one cat eats at a time | Миска готова · коты едят по очереди | Dining area v2: diningFree | |
-| `diningQueue` | Dining queue · {count} | Очередь к миске · {count} | Dining area v2: diningQueue Placeholders: `{count}`. | |
-| `diningChoose` | Choose a cat to eat | Выбрать кота для кормления | Dining area v2: diningChoose | |
-| `diningWaiting` | Waiting spot | Место ожидания | Dining area v2: diningWaiting | |
-| `playTitle` | Playtime | Время играть | Play area: playTitle | |
-| `playRules` | Play for 8 seconds: +10 Joy, once every 30 minutes. Cats can also play on their own. | Игра длится 8 секунд: +10 к радости раз в 30 минут. Кошки могут играть сами. | Play area: playRules | |
-| `playReady` | Ready to play | Можно играть | Play area: playReady | |
-| `playFull` | Joy is full | Радость на максимуме | Play area: playFull | |
-| `playCooldown` | Ready again in {minutes} min | Можно играть через {minutes} мин | Play area: playCooldown Placeholders: `{minutes}`. | |
-| `playFree` | Toy ready · one cat at a time | Игрушка свободна · по одной кошке | Play area: playFree | |
-| `playUsing` | {cat} is playing | {cat} играет | Play area: playUsing Placeholders: `{cat}`. | |
-| `playChoose` | Choose a playmate | Выбрать кошку для игры | Play area: playChoose | |
-| `playToy` | Toy: {toy} | Игрушка: {toy} | Play area: playToy Placeholders: `{toy}`. | |
-| `playQueue` | Waiting for a turn · {count} | Ждут очереди · {count} | Play area: playQueue Placeholders: `{count}`. | |
-| `playActive` | Playing now | Сейчас играет | Play area: playActive | |
-| `careTitle` | Time for some care | Время заботы | Home grooming area: careTitle | |
-| `careRules` | Pet for 2 seconds or brush for 6: +10 Joy, up to +30 combined per hour. | Погладить — 2 секунды, причесать — 6: +10 радости, вместе до +30 в час. | Home grooming area: careRules | |
-| `careReady` | Ready for care | Можно приласкать | Home grooming area: careReady | |
-| `careFull` | Joy is full | Радость на максимуме | Home grooming area: careFull | |
-| `careCooldown` | Care available in {minutes} min | Можно снова через {minutes} мин | Home grooming area: careCooldown Placeholders: `{minutes}`. | |
-| `careFree` | Grooming mat is free | Коврик свободен | Home grooming area: careFree | |
-| `careUsing` | {name} is getting care | Заботимся о {name} | Home grooming area: careUsing Placeholders: `{name}`. | |
-| `careActive` | Getting some care | Принимает ласку | Home grooming area: careActive | |
-| `careQueue` | Care queue: {count} | В очереди: {count} | Home grooming area: careQueue Placeholders: `{count}`. | |
-| `careChoose` | Choose a cat to care for | Выбрать котика для ухода | Home grooming area: careChoose | |
-| `shopDestination` | Destination: {area} | Куда: {area} | V2 shop or area decoration: shopDestination Placeholders: `{area}`. | |
-| `shopStored` | Storage · starting area is full | Склад · начальная зона заполнена | V2 shop or area decoration: shopStored | |
-| `shopBalanceAfter` | Balance after: {n} coins | После покупки: {n} монет | V2 shop or area decoration: shopBalanceAfter Placeholders: `{n}`. | |
-| `shopOwnedCollection` | Your collection | Твоя коллекция | V2 shop or area decoration: shopOwnedCollection | |
-| `shopAdoptIntro` | New friends for Oyen’s home. Check where they will settle in! | Новые друзья для дома Ойена. Посмотри, где они поселятся! | V2 shop or area decoration: shopAdoptIntro | |
-| `shopInArea` | Placed: {area} | Стоит: {area} | V2 shop or area decoration: shopInArea Placeholders: `{area}`. | |
-| `shopInStorage` | Safe in storage | Хранится на складе | V2 shop or area decoration: shopInStorage | |
-| `shopAlreadyOwned` | Already yours | Уже твоё | V2 shop or area decoration: shopAlreadyOwned | |
-| `decorateArea` | Decorate · {area} | Украсить · {area} | V2 shop or area decoration: decorateArea Placeholders: `{area}`. | |
-| `decoratePaused` | Decorating · all home activities are paused | Украшаем · все занятия в доме на паузе | V2 shop or area decoration: decoratePaused | |
-| `decorateInstructions` | Choose an item, then tap a slot or drag. Switch areas to place it there. | Выбери предмет и нажми на место или перетащи. Смени зону, чтобы поставить его там. | V2 shop or area decoration: decorateInstructions | |
-| `decorateSaveLayout` | Save layout | Сохранить расстановку | V2 shop or area decoration: decorateSaveLayout | |
-| `decorateDiscard` | Discard changes | Отменить изменения | V2 shop or area decoration: decorateDiscard | |
-| `decorateContinue` | Keep decorating | Продолжить украшать | V2 shop or area decoration: decorateContinue | |
-| `decorateUnsaved` | Save your home changes? | Сохранить изменения в доме? | V2 shop or area decoration: decorateUnsaved | |
-| `decorateStoreItem` | Move to storage | Убрать на склад | V2 shop or area decoration: decorateStoreItem | |
-| `decorateInvalid` | This slot does not fit. Choose a free slot in an allowed area. | Это место не подходит. Выбери свободное место в разрешённой зоне. | V2 shop or area decoration: decorateInvalid | |
-| `decorateSlot` | {zone} · slot {n} | {zone} · место {n} | V2 shop or area decoration: decorateSlot Placeholders: `{zone}`, `{n}`. | |
-| `decorateWall` | Wall | Стена | V2 shop or area decoration: decorateWall | |
-| `decorateFloor` | Floor | Пол | V2 shop or area decoration: decorateFloor | |
-| `decorateAllowed` | Allowed areas: {areas} | Разрешённые зоны: {areas} | V2 shop or area decoration: decorateAllowed Placeholders: `{areas}`. | |
-| `decorateBowlFixed` | The built-in bowl stays in the Dining Area. | Встроенная миска остаётся в зоне еды. | V2 shop or area decoration: decorateBowlFixed | |
-| `replayEnd` | End | Конец | Replay control: jump to the final step. | |
-| `replayProgress` | Step {step} of {total} | Шаг {step} из {total} | Current replay step and total; includes step zero. Placeholders: `{step}`, `{total}`. | |
-| `guidanceSaveFailed` | Not saved on this device yet. Try saving again. | Пока не сохранено на устройстве. Попробуй ещё раз. | Guidance and settings v2: guidanceSaveFailed | |
-| `guidanceLoading` | Loading ad… | Загрузка рекламы… | Guidance and settings v2: guidanceLoading | |
-| `guidanceHomeTitle` | Meet Oyen’s home | Знакомься с домом Ойена | Guidance and settings v2: guidanceHomeTitle | |
-| `guidanceHomeBody` | Four free areas: Lounge, Dining, Play, and Care. Cats can do things on their own. Tap a cat to invite them; busy cats wait their turn. Find any cat through Collection. You can always jump straight into a puzzle. | Четыре бесплатные зоны: отдых, еда, игры и уход. Коты могут заниматься своими делами. Нажми на кота, чтобы позвать его; если он занят, он дождётся очереди. Найти кота можно в коллекции. Головоломки доступны в любой момент. | Guidance and settings v2: guidanceHomeBody | |
-| `guidanceMotion` | Reduce motion | Уменьшить движение | Guidance and settings v2: guidanceMotion | |
-| `guidanceMotionInfo` | Gentler animations. Your phone’s reduced motion preference is also respected. | Более спокойная анимация. Настройка уменьшения движения на телефоне тоже учитывается. | Guidance and settings v2: guidanceMotionInfo | |
-| `guidanceResetAreas` | All areas, layouts, queues and home activities are reset too. Language, sound, reduced motion and today’s reward limits stay. | Все зоны, расстановка, очереди и домашние занятия тоже сбросятся. Язык, звук, уменьшение движения и сегодняшние лимиты наград сохранятся. | Guidance and settings v2: guidanceResetAreas | |
-| `guidanceSaving` | Saving… | Сохранение… | Paid hint storage is in progress, without loading an ad. | |
-| `guidanceConsentFailed` | Couldn’t open the ad privacy choices. Try again later. | Не удалось открыть настройки конфиденциальности рекламы. Попробуй позже. | The ad privacy consent form failed to open. | |
 
 ---
 
@@ -683,8 +562,8 @@ WHAT'S INSIDE
 • Rule cards and short tutorials that teach as you go
 • Stuck? Hints reveal one tile at a time, paid with coins or a short optional video ad
 • Coins from new stars, a daily bonus, happy cats, and optional ads
-• Four free areas to relax, eat, play, and care for cats. Decorate each area: cushion bed, scratching post, aquarium, rug, and more from the Shop
-• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Offer snacks and pets, or invite them to eat, play, or get brushed. Claim daily cat rewards together
+• A room for Oyen to decorate your way: cushion bed, scratching post, aquarium, rug, and more from the Shop
+• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Treat them to snacks and pets, and they pay you back in coins
 • Accessories for every cat: ribbons, bandanas, beanies, chef hats, all the way up to a King's Crown
 • Calm music and cute sound effects (each can be switched off)
 • English, Indonesian, Brazilian Portuguese, and Russian
@@ -742,8 +621,8 @@ Ginger Logic: Котоголоволомка
 • Карточки правил и короткое обучение прямо по ходу игры
 • Застрял? Подсказки открывают по одной клетке за монеты или за короткую рекламу по желанию
 • Монеты за новые звёзды, ежедневный бонус, довольных котов и рекламу по желанию
-• Четыре бесплатные зоны для отдыха, еды, игр и ухода. Украшай каждую: матрасик-подушка, когтеточка, аквариум, коврик и другие вещи из Магазина
-• Заведи ещё восемь котов, от чёрного Уголька до Босса, который всегда в костюме. Угощай и гладь их, зови поесть, поиграть или причесаться. Забирай ежедневные награды всех котов вместе
+• Комната Ойена, которую можно обустроить по-своему: матрасик-подушка, когтеточка, аквариум, коврик и другие вещи из Магазина
+• Заведи ещё восемь котов, от чёрного Уголька до Босса, который всегда в костюме. Угощай и гладь их, а они отплатят монетами
 • Аксессуары для всех котов: лента, бандана, шапка-бини, колпак шефа и даже Королевская корона
 • Спокойная музыка и милые звуки (каждое можно выключить)
 • Английский, индонезийский, бразильский португальский и русский

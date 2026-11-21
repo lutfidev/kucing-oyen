@@ -61,7 +61,6 @@ final galleryRoutes = <String>[
   AppRoutes.galleryKitty,
   AppRoutes.gallerySound,
   AppRoutes.galleryMotion,
-  AppRoutes.galleryV2,
 ];
 
 const sizes = <Size>[
@@ -264,11 +263,7 @@ void _cases(AppLanguage language) {
             location: AppRoutes.level(id, chapter: 2),
             progress: p(best: wonUpTo(id - 1)),
           );
-          await tester.tap(
-            find.byWidgetPredicate(
-              (w) => w is KoIconButton && w.semanticLabel == l.rules,
-            ),
-          );
+          await tester.tap(find.text(l.rules));
           await pumpFor(tester, KoSheet.openTime * 2);
           expect(tester.takeException(), isNull);
           final last = find.byType(RuleCard).last;
@@ -460,7 +455,7 @@ void _cases(AppLanguage language) {
           'teks ${scale * 100}%', (tester) async {
         setScreenSize(tester, size);
         setTextScale(tester, scale);
-        await pumpApp(tester, legacyRoom: true, progress: fullRoom());
+        await pumpApp(tester, progress: fullRoom());
         expect(find.byType(KittyView), findsNWidgets(KittyId.values.length));
         expect(tester.takeException(), isNull);
       });
@@ -475,7 +470,6 @@ void _cases(AppLanguage language) {
         }
         await pumpApp(
           tester,
-          legacyRoom: true,
           roomLife: true,
           progress: testProgressWith(
             coins: 99999,
@@ -498,11 +492,7 @@ void _cases(AppLanguage language) {
           'teks ${scale * 100}%', (tester) async {
         setScreenSize(tester, size);
         setTextScale(tester, scale);
-        await pumpApp(
-          tester,
-          legacyRoom: true,
-          progress: fullRoom(fresh: true),
-        );
+        await pumpApp(tester, progress: fullRoom(fresh: true));
         expect(
           find.text(l.kittyNewTag),
           findsNWidgets(KittyId.values.length - 1),
@@ -513,11 +503,7 @@ void _cases(AppLanguage language) {
           'teks ${scale * 100}%', (tester) async {
         setScreenSize(tester, size);
         setTextScale(tester, scale);
-        await pumpApp(
-          tester,
-          legacyRoom: true,
-          progress: fullRoom(fullOyen: true),
-        );
+        await pumpApp(tester, progress: fullRoom(fullOyen: true));
         await openOyenCard(tester, hungry: false);
         await tester.tap(inCard(l.snackPanel));
         await tester.pumpAndSettle();
@@ -538,7 +524,7 @@ void _cases(AppLanguage language) {
           'teks ${scale * 100}%', (tester) async {
         setScreenSize(tester, size);
         setTextScale(tester, scale);
-        await pumpApp(tester, legacyRoom: true, progress: fullRoom());
+        await pumpApp(tester, progress: fullRoom());
         await tester.tap(find.text(l.decorate));
         await tester.pumpAndSettle();
         expect(find.text(l.storageCount(2)), findsOneWidget);
@@ -549,7 +535,7 @@ void _cases(AppLanguage language) {
           '@ $label, teks ${scale * 100}%', (tester) async {
         setScreenSize(tester, size);
         setTextScale(tester, scale);
-        await pumpApp(tester, legacyRoom: true, progress: fullRoom());
+        await pumpApp(tester, progress: fullRoom());
         await openOyenCard(tester);
         await tester.tap(inCard(l.snackPanel));
         await tester.pumpAndSettle();
@@ -595,7 +581,7 @@ void _cases(AppLanguage language) {
               ads: FakeRewardedAds(succeed: false),
             ),
           );
-          await tester.tap(find.byKey(const ValueKey('home-balance')));
+          await tester.tap(find.byType(KoCoinChip));
           await settle(tester);
           if (state == 'iklan gagal') {
             await tester.tap(find.text(l.adRewardButton(20)));

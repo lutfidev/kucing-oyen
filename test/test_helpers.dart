@@ -20,13 +20,10 @@ import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
 import 'package:kucing_oren/l10n/l10n.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
-import 'package:kucing_oren/screens/room/room_view.dart';
-import 'package:kucing_oren/game/render/v2/art_pack.dart';
 import 'package:kucing_oren/theme/theme.dart';
 
 /// Level dibaca langsung dari berkas, tanpa `rootBundle`.
 final testLevels = parseLevels(File(chapter1to2Asset).readAsStringSync());
-ArtPack? _shopPack;
 
 /// Level yang punya tutorial.
 final tutorialLevels = {
@@ -122,26 +119,16 @@ Future<ProgressController> pumpApp(
   Random Function()? roomRandom,
   bool roomLife = false,
   bool wait = true,
-  bool legacyRoom = false,
 }) async {
   final controller = progress ?? testProgress();
-  final pack = _shopPack ??= (await tester.runAsync(ArtPack.load))!;
   await tester.pumpWidget(
     KucingOrenApp(
       progress: controller,
-      loadShopArt: () async => pack,
       audio: audio ?? testAudio(),
       consent: consent,
       initialLocation: location,
       roomRandom: roomRandom ?? () => Random(1),
-      roomLife: legacyRoom ? false : roomLife,
-      homeBuilder: legacyRoom
-          ? (context) => RoomView(
-              progress: ProgressScope.of(context),
-              random: (roomRandom ?? () => Random(1))(),
-              life: roomLife,
-            )
-          : null,
+      roomLife: roomLife,
     ),
   );
   if (wait) {

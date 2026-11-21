@@ -141,13 +141,7 @@ void main() {
     expect(tester.getSize(find.byType(MapToken)), PictureMapArt.tokenSize);
     expect(find.bySemanticsLabel(RegExp('Oyen')), findsNothing);
     expect(
-      tester.getSize(
-        find.byWidgetPredicate(
-          (w) =>
-              w is CustomPaint &&
-              w.size == const Size.square(PictureMapArt.tokenSprite),
-        ),
-      ),
+      tester.getSize(find.byType(KittyView)),
       Size.square(PictureMapArt.tokenSprite),
     );
     semantics.dispose();
