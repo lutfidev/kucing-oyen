@@ -44,7 +44,7 @@ extension CatActivityPlace on CatActivity {
 
 /// Pose kucing di luar barang. Barang yang dipakai menentukan pose kucing
 /// di dalamnya sendiri.
-enum LifePose { idle, lick, walk, sad, happy, petted, eat }
+enum LifePose { idle, lick, walk, sad, happy, petted, eat, sleep, lounge }
 
 /// Arah hadap saat berjalan.
 enum LifeHeading { down, left, right }
@@ -113,6 +113,31 @@ const lifeUseWeights = <ItemUse, int>{
   ItemUse.eat: 0,
 };
 
+/// Prototipe teras (spike): tempat nyaman tanpa barang (ambang pintu,
+/// petak matahari). [stand] = tempat kucing, [pose] dan [heading] selama
+/// di sana, [seconds] lamanya, [weight] bobot undian.
+class LifePlace {
+  const LifePlace(
+    this.stand, {
+    required this.pose,
+    this.heading = LifeHeading.down,
+    this.seconds = lifeSleepSeconds,
+    this.weight = 3,
+  });
+
+  final Spot stand;
+  final LifePose pose;
+  final LifeHeading heading;
+  final double seconds;
+  final int weight;
+}
+
+/// Kucing lain dalam [lifeCrowdRadius] px desain dari tujuan membuat tujuan
+/// itu kurang menarik (bobot dikali [lifeCrowdFactor] per kucing), jadi
+/// kucing menyebar tapi sesekali tetap berkumpul.
+const lifeCrowdRadius = 90.0;
+const lifeCrowdFactor = 0.25;
+
 /// Cara satu kucing memakai satu barang: [stand] = tempat berdiri di lantai
 /// sebelum memakai (kotak kucing seukuran kucing itu), [hops] = jumlah
 /// lompatan dari situ ke barangnya (0 = barang lantai, langsung dipakai).
@@ -145,6 +170,9 @@ class CatLife {
 
   /// Barang yang dituju atau dipakai.
   RoomItemId? item;
+
+  /// Tempat nyaman yang dituju atau ditempati (prototipe teras).
+  int? place;
 
   /// Detik sampai kegiatan diam/pakai/reaksi selesai.
   double remaining;
@@ -195,6 +223,7 @@ class RoomLife {
   Set<RoomItemId> _toys = const {};
   Set<KittyId> _hungry = const {};
   Set<KittyId> _sad = const {};
+  Map<int, LifePlace> _places = const {};
 
   Iterable<CatLife> get cats => _cats.values;
 
@@ -228,7 +257,9 @@ class RoomLife {
     Set<RoomItemId> toys = const {},
     Set<KittyId> hungry = const {},
     Set<KittyId> sad = const {},
+    Map<int, LifePlace> places = const {},
   }) {
+    _places = Map.of(places);
     _cats.removeWhere((kitty, _) => !homes.containsKey(kitty));
     for (final MapEntry(key: kitty, value: home) in homes.entries) {
       _cats.putIfAbsent(
@@ -293,6 +324,7 @@ class RoomLife {
     if (cat == null || _isRaised(cat)) return;
     cat
       ..item = null
+      ..place = null
       ..activity = CatActivity.reacting
       ..pose = pose
       ..heading = LifeHeading.down
@@ -333,6 +365,7 @@ class RoomLife {
     final sad = _sad.contains(cat.kitty);
     cat
       ..item = null
+      ..place = null
       ..activity = sad ? CatActivity.sad : CatActivity.idle
       ..pose = sad ? LifePose.sad : LifePose.idle
       ..heading = LifeHeading.down
@@ -342,7 +375,9 @@ class RoomLife {
   }
 
   void _walk(CatLife cat, double seconds, List<LifeEvent> events) {
-    final target = _routeOf(cat.item, cat.kitty)?.stand;
+    final target = cat.place != null
+        ? _places[cat.place]?.stand
+        : _routeOf(cat.item, cat.kitty)?.stand;
     if (target == null) return _rest(cat);
     final dx = (target.x - cat.spot.x) * spanX;
     final dy = (target.y - cat.spot.y) * spanY;
@@ -359,6 +394,15 @@ class RoomLife {
 
   /// Sampai di tempat berdiri: barang dinding dinaiki dulu.
   void _reach(CatLife cat, List<LifeEvent> events) {
+    if (_places[cat.place] case final place?) {
+      cat
+        ..activity = CatActivity.idle
+        ..pose = place.pose
+        ..heading = place.heading
+        ..elapsed = 0
+        ..remaining = place.seconds * (0.7 + random.nextDouble() * 0.6);
+      return;
+    }
     if (cat.hops == 0) return _arrive(cat, events);
     cat
       ..activity = CatActivity.climbing
@@ -398,6 +442,7 @@ class RoomLife {
     final wasEating = cat.activity == CatActivity.eating;
     cat
       ..item = null
+      ..place = null
       ..hops = 0;
     if (bowl != null &&
         !wasEating &&
@@ -406,26 +451,68 @@ class RoomLife {
       return _go(cat, bowl, events);
     }
     if (_sad.contains(cat.kitty)) return _rest(cat);
-    final options = <(RoomItemId?, int)>[
-      (null, lifeIdleWeight),
+    final takenPlaces = {for (final c in _cats.values) ?c.place};
+    double crowd(Spot stand) {
+      var w = 1.0;
+      for (final other in _cats.values) {
+        if (other.kitty == cat.kitty) continue;
+        final at = other.place != null
+            ? _places[other.place]?.stand ?? other.spot
+            : _routeOf(other.item, other.kitty)?.stand ?? other.spot;
+        final dx = (at.x - stand.x) * spanX;
+        final dy = (at.y - stand.y) * spanY;
+        if (dx * dx + dy * dy < lifeCrowdRadius * lifeCrowdRadius) {
+          w *= lifeCrowdFactor;
+        }
+      }
+      return w;
+    }
+
+    final options = <(Object?, double)>[
+      (null, lifeIdleWeight.toDouble()),
       for (final MapEntry(key: item, value: use) in _uses.entries)
         if (!taken.contains(item) &&
             _routeOf(item, cat.kitty) != null &&
             (lifeUseWeights[use] ?? 0) > 0)
-          (item, lifeUseWeights[use]!),
+          (
+            item,
+            lifeUseWeights[use]! * crowd(_routeOf(item, cat.kitty)!.stand),
+          ),
+      for (final MapEntry(key: id, value: place) in _places.entries)
+        if (!takenPlaces.contains(id)) (id, place.weight * crowd(place.stand)),
     ];
-    final total = options.fold(0, (sum, o) => sum + o.$2);
-    var roll = random.nextInt(total);
-    for (final (item, weight) in options) {
+    final total = options.fold(0.0, (sum, o) => sum + o.$2);
+    var roll = random.nextDouble() * total;
+    for (final (target, weight) in options) {
       roll -= weight;
       if (roll >= 0) continue;
-      if (item == null) {
-        _rest(cat);
-        cat.pose = random.nextBool() ? LifePose.idle : LifePose.lick;
-        return;
+      switch (target) {
+        case null:
+          _rest(cat);
+          cat.pose = random.nextBool() ? LifePose.idle : LifePose.lick;
+        case final RoomItemId item:
+          _go(cat, item, events);
+        case final int place:
+          _goPlace(cat, place, events);
       }
-      return _go(cat, item, events);
+      return;
     }
+    _rest(cat);
+  }
+
+  void _goPlace(CatLife cat, int id, List<LifeEvent> events) {
+    final target = _places[id]!.stand;
+    cat
+      ..place = id
+      ..activity = CatActivity.walking
+      ..pose = LifePose.walk
+      ..elapsed = 0
+      ..heading = target.x < cat.spot.x
+          ? LifeHeading.left
+          : target.x > cat.spot.x
+          ? LifeHeading.right
+          : LifeHeading.down;
+    if (target == cat.spot) _reach(cat, events);
   }
 
   void _go(CatLife cat, RoomItemId item, List<LifeEvent> events) {

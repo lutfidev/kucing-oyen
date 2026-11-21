@@ -28,6 +28,7 @@ import 'decorate.dart';
 import 'kitty_card.dart';
 import 'room_parts.dart';
 import 'room_reaction.dart';
+import 'terrace.dart';
 
 // Tempat kucing di lantai: 4 kolom × 3 baris, diacak tiap kamar dibuka.
 const _slotColumns = [0.08, 0.36, 0.64, 0.92];
@@ -72,6 +73,7 @@ class RoomView extends StatefulWidget {
     required this.progress,
     this.random,
     this.life = true,
+    this.terrace = terraceSpike,
   });
 
   final ProgressController progress;
@@ -82,6 +84,9 @@ class RoomView extends StatefulWidget {
   /// Kamar hidup (desain 21c): kucing berkedip, berjalan ke barang, dan
   /// memakainya; barang bergerak. False = kamar diam (test layar lain).
   final bool life;
+
+  /// Prototipe teras: rumah selebar [houseDesignWidth] yang digeser.
+  final bool terrace;
 
   @override
   State<RoomView> createState() => _RoomViewState();
@@ -98,11 +103,23 @@ class _RoomViewState extends State<RoomView>
     with SingleTickerProviderStateMixin {
   late final Random _random = widget.random ?? Random();
   late final List<Spot> _slots = shuffledKittySlots(_random);
+  late final Rect _floorSpan = widget.terrace
+      ? RoomGeometry(
+          const Size(houseDesignWidth, designRoomHeight),
+          designWidth: houseDesignWidth,
+        ).rangeOf(RoomZone.floor, const Size.square(kittyRoomSize))
+      : _designFloor;
   late final RoomLife _life = RoomLife(
     random: _random,
-    spanX: _designFloor.width,
-    spanY: _designFloor.height,
+    spanX: _floorSpan.width,
+    spanY: _floorSpan.height,
   );
+
+  /// Prototipe teras: geometri seluruh rumah (kucing), gulir, dan barang
+  /// yang sedang dipegang (gulir mati supaya seret barang menang).
+  RoomGeometry? _house;
+  final _scroll = ScrollController();
+  bool _holdingItem = false;
 
   /// Jam kamar: memajukan rutinitas dan waktu animasi. Hanya jalan kalau
   /// kamar hidup dan gerak tidak dikurangi; `TickerMode` mematikannya saat
@@ -173,8 +190,9 @@ class _RoomViewState extends State<RoomView>
   @override
   void initState() {
     super.initState();
+    if (widget.terrace) _scroll.addListener(() => setState(() {}));
     if (widget.life) {
-      _syncKitties();
+      if (!widget.terrace) _syncKitties();
       _refresh = Timer.periodic(roomRefreshInterval, (_) => _refreshNeeds());
     }
   }
@@ -197,6 +215,7 @@ class _RoomViewState extends State<RoomView>
   @override
   void dispose() {
     _ticker.dispose();
+    _scroll.dispose();
     _refresh?.cancel();
     super.dispose();
   }
@@ -262,14 +281,24 @@ class _RoomViewState extends State<RoomView>
                   (id, kitty): ?geo.pathTo(kitty, id, placed),
             };
     }
+    final house = widget.terrace ? _house : null;
+    Spot homeOf(KittyId kitty) => house == null || geo == null
+        ? _spotOf(kitty)
+        : house.catSpotAt(kitty, geo.catBoxOf(kitty, _spotOf(kitty)));
     _life.sync(
-      homes: {for (final kitty in home.kitties) kitty: _spotOf(kitty)},
+      places: house == null ? const {} : terracePlaces(house),
+      homes: {for (final kitty in home.kitties) kitty: homeOf(kitty)},
       targets: {
         for (final id in placed.keys)
           id: {
             for (final kitty in home.kitties)
               if (_paths[(id, kitty)] case final path?)
-                kitty: LifeRoute(path.stand, hops: path.hops),
+                kitty: LifeRoute(
+                  house == null
+                      ? path.stand
+                      : house.catSpotAt(kitty, path.boxes.first),
+                  hops: path.hops,
+                ),
           },
       },
       uses: {for (final id in placed.keys) id: roomItemOf(id).use},
@@ -440,7 +469,9 @@ class _RoomViewState extends State<RoomView>
               children: [
                 Expanded(
                   child: LayoutBuilder(
-                    builder: (context, box) => _room(RoomGeometry(box.biggest)),
+                    builder: (context, box) => widget.terrace
+                        ? _houseView(box.biggest)
+                        : _room(RoomGeometry(box.biggest)),
                   ),
                 ),
                 RoomPanel(
@@ -508,7 +539,14 @@ class _RoomViewState extends State<RoomView>
                 key: ValueKey(n),
                 reaction: r,
                 anchor:
-                    _shownBoxes[kitty] ?? geo.catBoxOf(kitty, _catSpot(kitty)),
+                    (_shownBoxes[kitty] ??
+                            (_house ?? geo).catBoxOf(kitty, _catSpot(kitty)))
+                        .translate(
+                          widget.terrace && _scroll.hasClients
+                              ? -_scroll.offset
+                              : 0,
+                          0,
+                        ),
                 onDone: _reactionDone,
               ),
             if (praise case (final bonus, final n))
@@ -531,8 +569,115 @@ class _RoomViewState extends State<RoomView>
     );
   }
 
-  Widget _room(RoomGeometry geo) {
+  /// Prototipe teras: ruang tengah + teras dalam satu gulir mendatar;
+  /// header dan tombol Hias tetap di tempat.
+  Widget _houseView(Size view) {
+    final geo = RoomGeometry(view);
+    final width = view.width * houseDesignWidth / designRoomWidth;
+    final house = RoomGeometry(
+      Size(width, view.height),
+      designWidth: houseDesignWidth,
+    );
+    _house = house;
+    final offset = _scroll.hasClients ? _scroll.offset : 0.0;
+    final c = context.koColors;
+    final space = context.koSpace;
+    final bob = _animating ? sin(_time * 3) * 4 : 0.0;
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          controller: _scroll,
+          scrollDirection: Axis.horizontal,
+          physics: _holdingItem
+              ? const NeverScrollableScrollPhysics()
+              : const ClampingScrollPhysics(),
+          child: SizedBox(
+            width: width,
+            height: view.height,
+            child: _room(geo, chrome: false),
+          ),
+        ),
+        ..._chrome(),
+        if (offset < 24 && !_decorating)
+          Positioned(
+            right: space.s8 - bob,
+            top: geo.floor.top - 56,
+            child: GestureDetector(
+              onTap: () => _scroll.animateTo(
+                min(
+                  _scroll.position.maxScrollExtent,
+                  terraceStart(house) - view.width * 0.25,
+                ),
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.easeInOut,
+              ),
+              child: DecoratedBox(
+                decoration: ShapeDecoration(
+                  color: c.cream,
+                  shape: StadiumBorder(
+                    side: BorderSide(color: c.orange, width: 2),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(space.s8),
+                  child: KoIcon(KoIcons.arrowRight, size: 22, color: c.orange),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// Header dan baris tombol Hias (tetap di layar walau rumah digeser).
+  List<Widget> _chrome() {
+    final s = context.koSize;
+    final space = context.koSpace;
+    final top = MediaQuery.paddingOf(context).top + space.s6;
+    return [
+      Positioned(
+        left: space.s16,
+        right: space.s16,
+        top: top,
+        child: RoomHeader(
+          coins: _progress.coins,
+          bonus: _progress.canClaimBonus,
+          stars: _progress.progress.totalStars,
+          maxStars: _progress.maxStars,
+          onCoins: () => showCoinSheet(context, _progress),
+        ),
+      ),
+      if (!_empty || _decorating)
+        Positioned(
+          left: space.s16,
+          right: space.s16,
+          top: top + s.roomDecorateGap,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (_decorating)
+                const Flexible(
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: DecorateHint(),
+                  ),
+                )
+              else
+                const Spacer(),
+              SizedBox(width: space.s8),
+              DecorateButton(
+                done: _decorating,
+                onPressed: _decorating ? _finish : _startDecorating,
+              ),
+            ],
+          ),
+        ),
+    ];
+  }
+
+  Widget _room(RoomGeometry geo, {bool chrome = true}) {
     _geo = geo;
+    final house = widget.terrace ? _house! : geo;
     if (widget.life) _syncKitties(geo);
     final c = context.koColors;
     final s = context.koSize;
@@ -553,6 +698,7 @@ class _RoomViewState extends State<RoomView>
             kitty: _catSpot(kitty),
       },
       geo: geo,
+      catGeo: house,
     );
     // Barang yang diangkat digambar paling depan.
     final ordered = [
@@ -577,6 +723,13 @@ class _RoomViewState extends State<RoomView>
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(child: RoomBackground(geo: geo)),
+        if (widget.terrace)
+          Positioned.fill(
+            child: TerraceBackground(
+              house: house,
+              time: _animating ? _time : null,
+            ),
+          ),
         if (_decorating) Positioned.fill(child: ZoneGuides(geo: geo)),
         for (final sprite in sprites.whereType<KittySprite>())
           if (sprite.kitty == _selected)
@@ -704,43 +857,7 @@ class _RoomViewState extends State<RoomView>
           Positioned.fill(
             child: EmptyRoomHints(geo: geo, onShop: _openShop),
           ),
-        Positioned(
-          left: space.s16,
-          right: space.s16,
-          top: top,
-          child: RoomHeader(
-            coins: _progress.coins,
-            bonus: _progress.canClaimBonus,
-            stars: _progress.progress.totalStars,
-            maxStars: _progress.maxStars,
-            onCoins: () => showCoinSheet(context, _progress),
-          ),
-        ),
-        if (!empty || _decorating)
-          Positioned(
-            left: space.s16,
-            right: space.s16,
-            top: top + s.roomDecorateGap,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (_decorating)
-                  const Flexible(
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: DecorateHint(),
-                    ),
-                  )
-                else
-                  const Spacer(),
-                SizedBox(width: space.s8),
-                DecorateButton(
-                  done: _decorating,
-                  onPressed: _decorating ? _finish : _startDecorating,
-                ),
-              ],
-            ),
-          ),
+        if (chrome) ..._chrome(),
       ],
     );
   }
@@ -868,6 +985,14 @@ class _RoomViewState extends State<RoomView>
       // Gerakan tetap paling luar: kalau jenis widget di atasnya berganti
       // saat barang terangkat, pengenal seretnya ikut dibuang di tengah
       // seretan.
+      if (widget.terrace) {
+        art = Listener(
+          onPointerDown: (_) => setState(() => _holdingItem = true),
+          onPointerUp: (_) => setState(() => _holdingItem = false),
+          onPointerCancel: (_) => setState(() => _holdingItem = false),
+          child: art,
+        );
+      }
       art = GestureDetector(
         behavior: HitTestBehavior.opaque,
         onPanDown: (d) => _dragStart(id, sprite.box, d.globalPosition),
@@ -918,6 +1043,8 @@ class _RoomViewState extends State<RoomView>
         LifePose.happy => KittyPose.happy,
         LifePose.petted => KittyPose.petted,
         LifePose.eat => KittyPose.eat,
+        LifePose.sleep => KittyPose.sleep,
+        LifePose.lounge => KittyPose.rebah,
       };
       facing = switch (cat.heading) {
         LifeHeading.down => KittyFacing.down,

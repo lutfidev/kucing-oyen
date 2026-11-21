@@ -71,11 +71,15 @@ Rect hopBox(List<Rect> boxes, double progress, {required double arc}) {
 /// dan tinggi, catatan `n360`), dinding dan lantai membagi tinggi kamar
 /// sebanding desain.
 class RoomGeometry {
-  RoomGeometry(this.room);
+  RoomGeometry(this.room, {this.designWidth = designRoomWidth});
 
   final Size room;
 
-  double get scale => room.width / designRoomWidth;
+  /// Lebar desain yang dipetakan ke lebar [room]: 390 untuk kamar, lebih
+  /// lebar untuk seluruh rumah (prototipe teras), supaya skalanya sama.
+  final double designWidth;
+
+  double get scale => room.width / designWidth;
 
   double get artScale =>
       ((scale + room.height / designRoomHeight) / 2).clamp(0.6, 1.2);
@@ -298,7 +302,9 @@ List<RoomSprite> roomSprites({
   required Map<RoomItemId, Spot> items,
   required Map<KittyId, Spot> cats,
   required RoomGeometry geo,
+  RoomGeometry? catGeo,
 }) {
+  final cg = catGeo ?? geo;
   final placed = [
     for (final item in roomItems)
       if (items[item.id] case final spot?) (item, geo.boxOf(item, spot)),
@@ -308,8 +314,8 @@ List<RoomSprite> roomSprites({
       if (item.zone == RoomZone.floor && !item.flat)
         (box.bottom, ItemSprite(item.id, box)),
     for (final MapEntry(key: kitty, value: spot) in cats.entries)
-      if (geo.catBoxOf(kitty, spot) case final box)
-        (geo.feetOf(box), KittySprite(kitty, box)),
+      if (cg.catBoxOf(kitty, spot) case final box)
+        (cg.feetOf(box), KittySprite(kitty, box)),
   ]..sort((a, b) => a.$1.compareTo(b.$1));
   return [
     for (final (item, box) in placed)
