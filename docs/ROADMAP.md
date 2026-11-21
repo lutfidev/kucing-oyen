@@ -39,6 +39,11 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 12. Tutorial, petunjuk, koin, dan Pengaturan
 - [x] 13. Animasi, suara, aksesibilitas, dan performa
 - [x] 14. Screenshot, ikon, splash, dan materi Play Store baru
+- [x] 14a. Perbaikan visual cepat: panel rumah, ikon koin, tab Toko, latar peta
+- [ ] 14b. Rapikan Toko, layar hasil, dan puzzle
+- [ ] 14c. Header dan panel rumah ringkas seperti konsep A
+- [ ] 14d. Kamar hidup: pose aktivitas, skala dan gaya prop
+- [ ] 14e. Ciri tiap area dan keselarasan gaya rumah dengan puzzle/peta
 - [ ] 15. Pengujian menyeluruh di HP dan kandidat rilis
 - [ ] 16. Persiapan produksi dan release Play Store
 
@@ -284,6 +289,66 @@ setelah PR langkah ini di-merge.
 - Tinjau listing sesuai fitur final dan buat ulang berkas review terjemahan bila teks berubah.
 
 **Selesai jika:** gambar sesuai aplikasi nyata, tidak tercampur screenshot lama, ikon/splash benar dan listing tidak menjanjikan fitur yang belum ada.
+
+## 14a–14e. Perbaikan desain sesudah tinjauan screenshot
+
+Ditambahkan 21 November 2026 atas permintaan pemilik repo, setelah meninjau
+`docs/screenshots/` terhadap konsep A. Disisipkan sebelum langkah 15 supaya
+pengujian HP memakai tampilan yang sudah diperbaiki; nomor 15 dan 16 tetap.
+Setiap langkah satu branch dan PR, diakhiri screenshot ulang (`SCREENSHOTS=true`,
+`SCREENSHOT_DIR=docs/screenshots`) dan, bila materi toko ikut berubah, generator
+`BRAND=true` + `tool/store_assets.py`.
+
+### 14a. Perbaikan visual cepat
+
+**Selesai 21 November 2026:** koin emas di header rumah, Toko dan harga barang;
+bintang emas; tab Toko aktif oranye dan chip koin rata kanan; `UiEdgeFade` di
+panel rumah dan tab Toko; ikon peta tanpa kotak lantai. Dijaga
+`test/widgets/visual_fixes_test.dart`; screenshot dokumentasi dan toko dibuat ulang.
+
+- Panel di bawah kamar tidak boleh tampak terpotong oleh tombol "Main Puzzle":
+  isi muat tanpa terpotong atau jelas bisa digulir (tepi memudar).
+- Saldo koin memakai ikon koin emas yang sama dengan layar hasil di header rumah,
+  Toko dan sheet; ikon bintang di header berwarna emas.
+- Tab Toko menandai tab aktif dengan jelas, tidak menempel tepi layar, dan
+  chip koin rata kanan sejajar judul.
+- Ikon node dan dekor peta bergambar tidak punya kotak latar persegi.
+
+**Selesai jika:** keempat area, Toko per tab dan peta Babak 1–2 di 360×640–412×915
+teks 100%/130% bebas dari masalah di atas, dijaga test.
+
+### 14b. Rapikan Toko, layar hasil, dan puzzle
+
+- Toko: judul di tengah layar; harga kartu aksesoris, adopsi kucing dan camilan
+  memakai ikon koin emas seperti harga barang.
+- Toko: kartu pratinjau tanpa ruang kosong berlebih, kelangkaan sebagai chip,
+  pilihan "Coba di:" ringkas (satu baris yang bisa digeser) sehingga katalog terlihat.
+- Layar hasil: latar sinar penuh tanpa tepi lurus; ilustrasi mangkuk tidak menimpa kaki Oyen.
+- Puzzle: slot baki tanpa bingkai ganda, benda yang ditaruh menyatu dengan petak
+  (bukan stiker putih), lencana arah tidak menutupi wajah Oyen, kontras tembok/lantai naik.
+
+### 14c. Header dan panel rumah ringkas seperti konsep A
+
+- Tab area satu baris chip ringkas; judul area, bantuan dan Hias tidak memakan baris sendiri yang tinggi.
+- Panel kucing: avatar, nama, dua aksi berikon, chip "Hadiah tersedia". Penjelasan
+  aturan (siklus, kuota) pindah ke bantuan/sheet, bukan panel utama.
+- Kamar mendapat ruang layar lebih besar; overflow empat bahasa tetap lulus.
+
+### 14d. Kamar hidup: pose aktivitas, skala dan gaya prop
+
+- Kucing memakai pose sesuai kegiatan (tidur di kasur, makan dari mangkuk, main
+  benang/tiang, disikat) dan tidak berjajar menghadap depan saat diam.
+- Skala kucing terhadap furnitur seimbang; prop (tiang garukan, catnip, alas, sikat,
+  mangkuk, kardus) selaras dengan gaya latar lukisan dan berpijak di lantai.
+- Tidak mengubah aturan, kuota, atau skema simpanan.
+
+### 14e. Ciri tiap area dan keselarasan gaya
+
+- Latar Santai, Makan, Bermain, Perawatan punya ciri sendiri (bukan jendela dan
+  lengkung yang sama); sumber/lisensi aset dicatat.
+- Peta, puzzle, dan Toko diselaraskan dengan gaya rumah (palet, garis, bayangan)
+  supaya perpindahan rumah → puzzle tidak terasa ganti aplikasi.
+- Materi toko dibuat ulang bila tampilannya berubah.
 
 ## 15. Pengujian menyeluruh di HP dan kandidat rilis
 

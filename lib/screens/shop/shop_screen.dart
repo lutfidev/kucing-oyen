@@ -15,9 +15,11 @@ import '../../game/render/v2/art_pack.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
 import '../../theme/ko_ui.dart';
+import '../../widgets/game_art.dart';
 import '../../widgets/v2/catalog_art.dart';
 import '../../widgets/v2/snack_art.dart';
 import '../../widgets/v2/ui_button.dart';
+import '../../widgets/v2/ui_edge_fade.dart';
 import '../coins/coin_sheet.dart';
 import '../room/home_labels.dart';
 import 'buy_sheet.dart';
@@ -105,49 +107,51 @@ class _ShopScreenState extends State<ShopScreen> {
                         ),
                       ),
                       const SizedBox(width: KoUi.s8),
-                      Flexible(
-                        child: UiButton(
-                          homeStyle: true,
-                          label: '${c.coins}',
-                          semanticLabel:
-                              '${l.coinsAmount(c.coins)}, ${l.coinChipAdd}',
-                          icon: Icons.pets_rounded,
-                          kind: UiButtonKind.secondary,
-                          onPressed: () => showCoinSheet(context, c),
-                        ),
+                      UiButton(
+                        key: const ValueKey('shop-balance'),
+                        homeStyle: true,
+                        label: '${c.coins}',
+                        semanticLabel:
+                            '${l.coinsAmount(c.coins)}, ${l.coinChipAdd}',
+                        leading: const CoinView(size: KoUi.coinIcon),
+                        kind: UiButtonKind.secondary,
+                        onPressed: () => showCoinSheet(context, c),
                       ),
                     ],
                   ),
                 ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: KoUi.s16),
-                  child: Row(
-                    children: [
-                      for (final t in ShopTab.values)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            right: KoUi.s8,
-                            bottom: KoUi.s8,
+                UiEdgeFade(
+                  axis: Axis.horizontal,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: KoUi.s16),
+                    child: Row(
+                      children: [
+                        for (final t in ShopTab.values)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              right: KoUi.s8,
+                              bottom: KoUi.s8,
+                            ),
+                            child: UiButton(
+                              key: ValueKey('shop-tab-${t.name}'),
+                              homeStyle: true,
+                              selected: t == tab,
+                              kind: UiButtonKind.secondary,
+                              label: switch (t) {
+                                ShopTab.items => l.shopTabItems,
+                                ShopTab.kitties => l.shopTabKitties,
+                                ShopTab.accessories => l.shopTabAccessories,
+                                ShopTab.snacks => l.shopTabSnacks,
+                              },
+                              onPressed: () => setState(() {
+                                tab = t;
+                                flash = null;
+                              }),
+                            ),
                           ),
-                          child: UiButton(
-                            key: ValueKey('shop-tab-${t.name}'),
-                            homeStyle: true,
-                            selected: t == tab,
-                            kind: UiButtonKind.secondary,
-                            label: switch (t) {
-                              ShopTab.items => l.shopTabItems,
-                              ShopTab.kitties => l.shopTabKitties,
-                              ShopTab.accessories => l.shopTabAccessories,
-                              ShopTab.snacks => l.shopTabSnacks,
-                            },
-                            onPressed: () => setState(() {
-                              tab = t;
-                              flash = null;
-                            }),
-                          ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 if (c.householdSaveFailed)
@@ -293,7 +297,8 @@ class _ShopScreenState extends State<ShopScreen> {
                         ? l.shopCardShortLabel(name, item.price)
                         : l.shopCardBuyLabel(name, item.price),
                     label: owned ? l.shopOwnedTag : '${item.price}',
-                    icon: owned ? Icons.check : Icons.pets_rounded,
+                    icon: owned ? Icons.check : null,
+                    leading: owned ? null : const CoinView(size: KoUi.coinIcon),
                     kind: UiButtonKind.secondary,
                     onPressed: owned || busy
                         ? null
