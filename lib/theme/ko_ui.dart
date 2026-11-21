@@ -27,6 +27,9 @@ abstract final class KoUi {
   static const homeGold = Color(0xFFFFA936);
   static const homeStar = Color(0xFFFFC21A);
   static const coinIcon = 22.0;
+
+  /// Accessory preview art in the shop, beside its details.
+  static const previewArt = 120.0;
   static const homeFloor = Color(0xFFE5B16E);
   static const homeLeaf = Color(0xFF869D60);
   static const s4 = 4.0, s8 = 8.0, s12 = 12.0, s16 = 16.0, s24 = 24.0;

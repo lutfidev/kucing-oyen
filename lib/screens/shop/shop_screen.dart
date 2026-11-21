@@ -19,6 +19,7 @@ import '../../widgets/game_art.dart';
 import '../../widgets/v2/catalog_art.dart';
 import '../../widgets/v2/snack_art.dart';
 import '../../widgets/v2/ui_button.dart';
+import '../../widgets/v2/ui_components.dart';
 import '../../widgets/v2/ui_edge_fade.dart';
 import '../coins/coin_sheet.dart';
 import '../room/home_labels.dart';
@@ -87,35 +88,47 @@ class _ShopScreenState extends State<ShopScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(KoUi.s16),
+                  // Equal-width sides keep the title centred on the
+                  // screen, not between the back button and coin chip.
                   child: Row(
                     children: [
-                      UiButton(
-                        homeStyle: true,
-                        label: '',
-                        semanticLabel: l.backToHome,
-                        compact: true,
-                        icon: Icons.arrow_back_rounded,
-                        kind: UiButtonKind.secondary,
-                        onPressed: () => context.go(AppRoutes.home),
-                      ),
-                      const SizedBox(width: KoUi.s8),
                       Expanded(
-                        child: Text(
-                          l.shop,
-                          textAlign: TextAlign.center,
-                          style: KoUi.title,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: UiButton(
+                            homeStyle: true,
+                            label: '',
+                            semanticLabel: l.backToHome,
+                            compact: true,
+                            icon: Icons.arrow_back_rounded,
+                            kind: UiButtonKind.secondary,
+                            onPressed: () => context.go(AppRoutes.home),
+                          ),
                         ),
                       ),
                       const SizedBox(width: KoUi.s8),
-                      UiButton(
-                        key: const ValueKey('shop-balance'),
-                        homeStyle: true,
-                        label: '${c.coins}',
-                        semanticLabel:
-                            '${l.coinsAmount(c.coins)}, ${l.coinChipAdd}',
-                        leading: const CoinView(size: KoUi.coinIcon),
-                        kind: UiButtonKind.secondary,
-                        onPressed: () => showCoinSheet(context, c),
+                      Text(
+                        l.shop,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: KoUi.title,
+                      ),
+                      const SizedBox(width: KoUi.s8),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: UiButton(
+                            key: const ValueKey('shop-balance'),
+                            homeStyle: true,
+                            label: '${c.coins}',
+                            semanticLabel:
+                                '${l.coinsAmount(c.coins)}, ${l.coinChipAdd}',
+                            leading: const CoinView(size: KoUi.coinIcon),
+                            kind: UiButtonKind.secondary,
+                            onPressed: () => showCoinSheet(context, c),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -371,6 +384,9 @@ class _ShopScreenState extends State<ShopScreen> {
                           : c.coins < kitty.price
                           ? l.shopShortBy(kitty.price - c.coins)
                           : l.shopAdopt(kitty.price),
+                      leading: !owned && c.coins >= kitty.price
+                          ? const CoinView(size: KoUi.coinIcon)
+                          : null,
                       kind: UiButtonKind.secondary,
                       onPressed: busy
                           ? null
@@ -432,7 +448,10 @@ class _ShopScreenState extends State<ShopScreen> {
                     homeStyle: true,
                     label: !c.home.pantry.canAdd(snack.id)
                         ? l.shopStockFull
-                        : l.buyPay(snack.price),
+                        : l.shopBuyShort(snack.price),
+                    leading: c.home.pantry.canAdd(snack.id)
+                        ? const CoinView(size: KoUi.coinIcon)
+                        : null,
                     semanticLabel: !c.home.pantry.canAdd(snack.id)
                         ? l.shopSnackFullLabel(snackName(l, snack.id))
                         : c.coins < snack.price
@@ -467,76 +486,114 @@ class _ShopScreenState extends State<ShopScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(l.shopPreviewOf(kittyName(l, preview)), style: KoUi.heading),
-        card(
-          name: accessoryName(l, selected),
-          art: CatalogArt(
-            pack: pack,
-            kitty: preview,
-            accessory: selected,
-            size: 180,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+        const SizedBox(height: KoUi.s8),
+        Container(
+          key: const ValueKey('shop-preview-card'),
+          decoration: KoUi.homeCard(),
+          padding: const EdgeInsets.all(KoUi.s12),
+          child: Row(
             children: [
-              Text(
-                rarityName(l, accessoryOf(selected).rarity),
-                style: KoUi.label,
+              CatalogArt(
+                pack: pack,
+                kitty: preview,
+                accessory: selected,
+                size: KoUi.previewArt,
               ),
-              Text(accessoryDesc(l, selected), style: KoUi.small),
-              if (!owned && c.coins < accessoryOf(selected).price)
-                Text(l.shopPlayFirst, style: KoUi.small),
-              const SizedBox(height: KoUi.s8),
-              UiButton(
-                key: ValueKey(
-                  owned
-                      ? worn
-                            ? 'shop-preview-remove'
-                            : 'shop-preview-wear'
-                      : c.coins < accessoryOf(selected).price
-                      ? 'shop-preview-short'
-                      : 'shop-preview-buy',
-                ),
-                homeStyle: true,
-                label: owned
-                    ? worn
-                          ? l.accessoryRemove
-                          : l.buyWearOn(kittyName(l, preview))
-                    : c.coins < accessoryOf(selected).price
-                    ? l.notEnoughCoins(accessoryOf(selected).price - c.coins)
-                    : l.buyPay(accessoryOf(selected).price),
-                onPressed:
-                    busy || (!owned && c.coins < accessoryOf(selected).price)
-                    ? null
-                    : owned
-                    ? () => wear(on: !worn)
-                    : () => showBuySheet(
-                        context,
-                        target: BuyAccessory(selected),
-                        progress: c,
-                        previewKitty: preview,
-                        pack: pack,
-                        onWear: (_) => wear(on: true),
+              const SizedBox(width: KoUi.s12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(accessoryName(l, selected), style: KoUi.heading),
+                    const SizedBox(height: KoUi.s4),
+                    UiChip(
+                      label: rarityName(l, accessoryOf(selected).rarity),
+                      icon: Icons.auto_awesome_rounded,
+                    ),
+                    const SizedBox(height: KoUi.s4),
+                    Text(accessoryDesc(l, selected), style: KoUi.small),
+                    if (!owned && c.coins < accessoryOf(selected).price)
+                      Text(l.shopPlayFirst, style: KoUi.small),
+                    const SizedBox(height: KoUi.s8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: UiButton(
+                        key: ValueKey(
+                          owned
+                              ? worn
+                                    ? 'shop-preview-remove'
+                                    : 'shop-preview-wear'
+                              : c.coins < accessoryOf(selected).price
+                              ? 'shop-preview-short'
+                              : 'shop-preview-buy',
+                        ),
+                        homeStyle: true,
+                        label: owned
+                            ? worn
+                                  ? l.accessoryRemove
+                                  : l.buyWearOn(kittyName(l, preview))
+                            : c.coins < accessoryOf(selected).price
+                            ? l.notEnoughCoins(
+                                accessoryOf(selected).price - c.coins,
+                              )
+                            : l.shopBuyShort(accessoryOf(selected).price),
+                        leading:
+                            !owned && c.coins >= accessoryOf(selected).price
+                            ? const CoinView(size: KoUi.coinIcon)
+                            : null,
+                        onPressed:
+                            busy ||
+                                (!owned &&
+                                    c.coins < accessoryOf(selected).price)
+                            ? null
+                            : owned
+                            ? () => wear(on: !worn)
+                            : () => showBuySheet(
+                                context,
+                                target: BuyAccessory(selected),
+                                progress: c,
+                                previewKitty: preview,
+                                pack: pack,
+                                onWear: (_) => wear(on: true),
+                              ),
                       ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
         const SizedBox(height: KoUi.s12),
         Text(l.shopTryOn, style: KoUi.label),
-        Wrap(
-          spacing: KoUi.s8,
-          runSpacing: KoUi.s8,
-          children: [
-            for (final kitty in kitties.where((k) => c.home.ownsKitty(k.id)))
-              UiButton(
-                key: ValueKey('shop-preview-${kitty.id.name}'),
-                label: kittyName(l, kitty.id),
-                semanticLabel: l.shopPreviewPickLabel(kittyName(l, kitty.id)),
-                selected: preview == kitty.id,
-                kind: UiButtonKind.secondary,
-                onPressed: () => setState(() => preview = kitty.id),
-              ),
-          ],
+        const SizedBox(height: KoUi.s4),
+        // One swipeable row so the catalogue stays in view.
+        UiEdgeFade(
+          axis: Axis.horizontal,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final kitty in kitties.where(
+                  (k) => c.home.ownsKitty(k.id),
+                ))
+                  Padding(
+                    padding: const EdgeInsets.only(right: KoUi.s8),
+                    child: UiButton(
+                      key: ValueKey('shop-preview-${kitty.id.name}'),
+                      label: kittyName(l, kitty.id),
+                      semanticLabel: l.shopPreviewPickLabel(
+                        kittyName(l, kitty.id),
+                      ),
+                      selected: preview == kitty.id,
+                      compact: true,
+                      kind: UiButtonKind.secondary,
+                      onPressed: () => setState(() => preview = kitty.id),
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ),
         const SizedBox(height: KoUi.s16),
         grid([
@@ -557,7 +614,11 @@ class _ShopScreenState extends State<ShopScreen> {
                     kind: UiButtonKind.secondary,
                     label: c.home.closet.owns(a.id)
                         ? l.shopOwnedTag
-                        : l.coinsAmount(a.price),
+                        : '${a.price}',
+                    icon: c.home.closet.owns(a.id) ? Icons.check : null,
+                    leading: c.home.closet.owns(a.id)
+                        ? null
+                        : const CoinView(size: KoUi.coinIcon),
                     semanticLabel: accessoryLabel(a.id),
                     onPressed: () => setState(() => selected = a.id),
                   ),
