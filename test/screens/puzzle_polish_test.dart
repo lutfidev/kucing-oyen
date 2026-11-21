@@ -91,8 +91,8 @@ void main() {
           ),
         ),
       );
-      final boundary = key.currentContext!.findRenderObject()!
-          as RenderRepaintBoundary;
+      final boundary =
+          key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
       final d = (await t.runAsync(() async {
         final image = await boundary.toImage();
         final data = await image.toByteData();
@@ -115,17 +115,19 @@ void main() {
     };
     Future<double> overlap(WidgetTester t, Direction dir, Offset center) async {
       // Oyen tidur di petak (2, 2) kanvas 150×150, seperti paintBoardOyen.
-      final d = await pixels(t, (c) {
-        c.translate(
-          50 + BoardArt.oyenOffset.dx,
-          50 + BoardArt.oyenOffset.dy,
-        );
-        paintPuzzleOyen(
-          c,
-          OyenLook(pose: OyenPose.sleep, dir: dir),
-          size: BoardArt.oyenSize,
-        );
-      }, w: 150, h: 150);
+      final d = await pixels(
+        t,
+        (c) {
+          c.translate(50 + BoardArt.oyenOffset.dx, 50 + BoardArt.oyenOffset.dy);
+          paintPuzzleOyen(
+            c,
+            OyenLook(pose: OyenPose.sleep, dir: dir),
+            size: BoardArt.oyenSize,
+          );
+        },
+        w: 150,
+        h: 150,
+      );
       final r = BoardArt.facingIcon / 2 + BoardArt.facingPadding;
       var hit = 0, all = 0;
       for (var y = -r; y <= r; y++) {

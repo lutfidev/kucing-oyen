@@ -152,10 +152,7 @@ void main() {
       expect(
         await at(player, 175, 196),
         isSameColorAs(
-          Color.alphaBlend(
-            KoUi.orange.withValues(alpha: .3),
-            PuzzleArt.floor,
-          ),
+          Color.alphaBlend(KoUi.orange.withValues(alpha: .3), PuzzleArt.floor),
           threshold: .01,
         ),
       );

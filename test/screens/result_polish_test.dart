@@ -39,10 +39,15 @@ Color at(ByteData d, int w, int x, int y) {
 void main() {
   testWidgets('sinar memudar ke tepi, tanpa ujung lurus', (t) async {
     const size = 1400;
-    final d = await pixels(t, (c) {
-      c.translate(size / 2, size / 2);
-      JourneyArt.rays(c);
-    }, size, size);
+    final d = await pixels(
+      t,
+      (c) {
+        c.translate(size / 2, size / 2);
+        JourneyArt.rays(c);
+      },
+      size,
+      size,
+    );
     // Sinar pertama mengarah ke atas (0, -r).
     double alpha(double r) => at(d, size, size ~/ 2, (size / 2 - r).round()).a;
     expect(alpha(100), greaterThan(.05));
@@ -63,8 +68,10 @@ void main() {
     bool honey(Color c) =>
         ((c.r - KoUi.honey.r).abs() + (c.g - KoUi.honey.g).abs()) < .04;
     expect(honey(at(d, w, w ~/ 2, h - 29)), isFalse);
-    expect(honey(at(d, w, w ~/ 2 + JourneyArt.bowlShift.round() + 6, h - 29)),
-        isTrue);
+    expect(
+      honey(at(d, w, w ~/ 2 + JourneyArt.bowlShift.round() + 6, h - 29)),
+      isTrue,
+    );
   });
 
   testWidgets('area gulir hasil selebar layar (sinar tidak terpotong)', (
