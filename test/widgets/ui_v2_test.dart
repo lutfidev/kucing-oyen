@@ -306,6 +306,43 @@ void main() {
     await export(tester, 'id-states');
     expect(tester.takeException(), isNull);
   });
+  testWidgets('sheet footer stays above the system navigation bar', (
+    tester,
+  ) async {
+    // Edge-to-edge Android: the gesture/button bar overlaps the app bottom.
+    tester.view.padding = const FakeViewPadding(bottom: 144);
+    addTearDown(tester.view.resetPadding);
+    await tester.pumpWidget(
+      app(
+        Builder(
+          builder: (context) => Scaffold(
+            body: Center(
+              child: UiButton(
+                label: 'Open',
+                onPressed: () => showUiSheet<void>(
+                  context,
+                  title: 'Details',
+                  closeLabel: 'Close',
+                  body: const Text('Body'),
+                  footer: const Text('Footer'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await settle(tester);
+    final view = tester.view;
+    final screen = view.physicalSize / view.devicePixelRatio;
+    final bar = view.padding.bottom / view.devicePixelRatio;
+    expect(
+      tester.getRect(find.text('Footer')).bottom,
+      lessThanOrEqualTo(screen.height - bar),
+    );
+  });
+
   testWidgets(
     'reduced motion uses a static loading glyph; sheet restores trigger focus',
     (tester) async {

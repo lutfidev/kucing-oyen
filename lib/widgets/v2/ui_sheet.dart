@@ -72,8 +72,15 @@ class _UiSheetState extends State<UiSheet> {
                 MediaQuery.paddingOf(context).vertical) *
             .9,
       ),
+      // `useSafeArea` only guards the top and sides; the footer must clear
+      // the edge-to-edge navigation bar itself (0 while the keyboard is up).
       child: Padding(
-        padding: const EdgeInsets.all(KoUi.s16),
+        padding: EdgeInsets.fromLTRB(
+          KoUi.s16,
+          KoUi.s16,
+          KoUi.s16,
+          KoUi.s16 + MediaQuery.paddingOf(context).bottom,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
