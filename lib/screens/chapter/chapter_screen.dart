@@ -142,6 +142,7 @@ class ChapterView extends StatefulWidget {
 class _ChapterViewState extends State<ChapterView>
     with SingleTickerProviderStateMixin {
   ScrollController? _scroll;
+  double _bottomInset = 0;
   double _scale = 1;
   double _viewport = 0;
 
@@ -329,7 +330,7 @@ class _ChapterViewState extends State<ChapterView>
     const token = PictureMapArt.tokenSize;
     final middle =
         (at.dy + PictureMapArt.tokenOffset.dy + token.height / 2) * _scale;
-    final max = ChapterMap.size.height * _scale - _viewport;
+    final max = ChapterMap.size.height * _scale + _bottomInset - _viewport;
     return (middle - _viewport / 2).clamp(0, math.max(0, max)).toDouble();
   }
 
@@ -394,6 +395,9 @@ class _ChapterViewState extends State<ChapterView>
         final width = constraints.maxWidth;
         _viewport = constraints.maxHeight;
         _scale = width / ChapterMap.size.width;
+        // Edge-to-edge: the floor runs under the navigation bar, but the
+        // last node and boss label must scroll clear of it.
+        _bottomInset = MediaQuery.paddingOf(context).bottom;
         final height = ChapterMap.size.height * _scale;
         _scroll ??= ScrollController(initialScrollOffset: _initialOffset());
         return SingleChildScrollView(
@@ -402,7 +406,7 @@ class _ChapterViewState extends State<ChapterView>
             painter: _JourneyFloor(_scale),
             child: SizedBox(
               width: width,
-              height: math.max(height, _viewport),
+              height: math.max(height + _bottomInset, _viewport),
               child: Align(
                 alignment: Alignment.topCenter,
                 child: SizedBox(

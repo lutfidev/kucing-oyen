@@ -258,6 +258,24 @@ void main() {
     });
   });
 
+  testWidgets('peta digulir habis: bos tidak tertutup bar navigasi HP', (
+    tester,
+  ) async {
+    setScreenSize(tester, const Size(360, 640));
+    tester.view.padding = const FakeViewPadding(bottom: 48);
+    await pumpApp(
+      tester,
+      location: AppRoutes.chapter(1),
+      progress: testProgress(wonUpTo(9)),
+    );
+    await tester.drag(find.byType(Scrollable), const Offset(0, -2000));
+    await settle(tester);
+    expect(
+      tester.getRect(find.byType(ChapterMap)).bottom,
+      lessThanOrEqualTo(640 - 48 + 0.01),
+    );
+  });
+
   group('token Oyen dan latar', () {
     testWidgets('token di kanan atas node level saat ini', (tester) async {
       setScreenSize(tester, const Size(390, 844));
