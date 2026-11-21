@@ -661,6 +661,8 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 > - **Kinerja kamar hidup** di mode profil dengan kamar penuh: ukur waktu bingkai. Kalau sprite kucing yang digambar ulang tiap bingkai jadi masalah, cache per bingkai animasi dengan test; kalau tidak, catat angkanya dan lewati.
 > - **Masukan terjemahan** (kalau ada): terapkan ke ARB dan listing toko, lalu `flutter gen-l10n`, `make_review.py`, dan `overflow_test`.
 > - **Kalau pemilik repo memberi ID AdMob asli**: tempel di `lib/app/ad_ids.dart` dan `admobAppId` di `android/app/build.gradle.kts`, perbarui `ad_ids_test`/`android_project_test`. Keystore dan kunci tidak pernah masuk repo.
+> - **Pesan gagal persetujuan iklan** (dari arsip v2, commit `ad6864f`, disetujui 21 Nov 2026): kalau `showPrivacyOptions()` melempar, Pengaturan sekarang menampilkan `privacyLinkFailed` (pesan link kebijakan privasi). Tambah pesan sendiri di keempat ARB, dengan test yang gagal dulu di `settings_screen_test`.
+> - **Suara efek bertumpuk** (disetujui 21 Nov 2026): di HP, biarkan beberapa kucing kamar aktif bersamaan (dengkur, kunyah, meong). Kalau suaranya menumpuk dan mengganggu, baru terapkan batas suara serentak seperti `lib/app/effect_pool.dart` di arsip v2 (commit `5b88504`); kalau tidak, catat dan lewati.
 > - Sisanya (keystore, unggah kebijakan privasi, Data safety, rating konten, unggah bundle) ditulis sebagai daftar periksa di badan PR, mengikuti `docs/store/README.md`.
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 32".
@@ -670,6 +672,8 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 **Waktu:** setelah langkah 32 selesai. Disepakati pemilik repo pada 8 Nov 2026; belum dikerjakan.
 
 **Bahan brainstorming 8 Nov 2026 (belum keputusan desain):**
+
+> **21 Nov 2026:** arah "satu area per layar" di bawah ini sudah dicoba di v2 dan dibatalkan (terasa hanya ganti tombol). Arah baru: satu rumah yang nyambung, mulai dari ruang tengah lalu teras di kanan yang bisa dijelajahi dengan menggeser layar; sedang diuji lewat prototipe (lihat `docs/DESIGN_NOTES.md`, "21 Nov 2026").
 
 **Pilihan visual pemilik repo:** konsep **A — satu area per layar** pada [preview perbandingan](design-brief/rumah-oyen-area/preview-perbandingan.png), sisi kiri. Pemilik repo menyukai gambar tersebut dan meminta hasil yang sangat mendekatinya. Acuan ini dipilih untuk pengembangan sesudah langkah 32; rincian fitur dan interaksi masih dibahas. Konsep B tidak menjadi pilihan utama. Preview dibuat dengan alat imagegen bawaan; merupakan konsep raster, belum aset UI atau sprite siap pakai.
 
