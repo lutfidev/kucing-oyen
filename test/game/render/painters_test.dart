@@ -2,11 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/render/render.dart';
-import 'package:kucing_oren/game/render/v2/puzzle_art.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
-import 'package:kucing_oren/theme/ko_ui.dart';
 
-/// Runtime board pixels with a 10px margin for its frame.
+/// Gambar papan ke piksel, dengan tepi 10 px untuk bingkainya.
 Future<Image> _renderBoard(BoardScene scene) async {
   const margin = 10.0;
   final recorder = PictureRecorder();
@@ -160,24 +158,19 @@ void main() {
     final at = await _sampler(await _renderBoard(scene));
 
     // Lantai (1,1) biasa, (2,1) selang.
-    expect(at(75, 75), _near(const Color(0xFFF4D6A5)));
-    expect(at(125, 75), _near(const Color(0xFFEDC791)));
-    // Wallpaper, cupboard and fridge surfaces.
-    expect(at(5, 205), _near(PuzzleArt.wall));
-    expect(at(160, 70), _near(KoUi.honey));
-    expect(at(175, 30), _near(KoUi.paper));
-    // Valid destination: paper 45% over the wooden floor.
-    expect(
-      at(175, 175),
-      _near(
-        Color.alphaBlend(KoUi.paper.withValues(alpha: .45), PuzzleArt.floor),
-      ),
-    );
+    expect(at(75, 75), _near(const Color(0xFFF7E8CE)));
+    expect(at(125, 75), _near(const Color(0xFFF1DDBA)));
+    // Bata tembok (0,4), lemari di dalam ruangan (3,1), kulkas (3,0).
+    expect(at(5, 205), _near(const Color(0xFFB07A4F)));
+    expect(at(160, 70), _near(const Color(0xFFC99466)));
+    expect(at(175, 30), _near(const Color(0xFFEEF3F2)));
+    // Petak menyala (3,3): #F59A33 28% di atas lantai #F7E8CE.
+    expect(at(175, 175), _near(const Color(0xFFF6D2A3)));
     // Badan Oyen tidur, titik (80, 70) sprite: 194 + 80·0,62, 138 + 70·0,62.
-    expect(at(225, 175), isNot(_near(PuzzleArt.floorAlt)));
-    // Lencana arah kiri setinggi kaki (facingCenter), bukan di wajah.
-    expect(at(200, 188), _near(const Color(0xFFF59A33)));
-    expect(at(194, 197), _near(const Color(0xFFFFFBF3)));
+    expect(at(244, 181), _near(const Color(0xFFF29A3A)));
+    // Panah arah hadap kiri berpusat di (200, 175): isi oranye, cincin krem.
+    expect(at(200, 182), _near(const Color(0xFFF59A33)));
+    expect(at(200, 184), _near(const Color(0xFFFFFBF3)));
     // Cincin bingkai di luar papan dan di sudut yang terpotong.
     expect(at(-2, 225), _near(const Color(0xFF5E3B22)));
     expect(at(3, 3), _near(const Color(0xFF5E3B22)));
@@ -194,18 +187,12 @@ void main() {
     );
     final at = await _sampler(await _renderBoard(scene));
 
-    // Player item sits on a soft orange floor ring, not a paper sticker.
-    expect(at(154, 175), _near(PuzzleArt.floor));
-    expect(
-      at(175, 196),
-      _near(
-        Color.alphaBlend(KoUi.orange.withValues(alpha: .3), PuzzleArt.floor),
-      ),
-    );
+    // Cincin oranye ember pemain: lingkaran r 18 di tengah petak (3,3).
+    expect(at(175 + 18, 175), _near(const Color(0xFFF28C28)));
     // Air di ember.
-    expect(at(175, 171), _near(KoUi.water));
+    expect(at(175, 180), _near(const Color(0xFF8FD3F0)));
     // Perut Oyen (50, 77) sprite → 194 + 31, 188 + 47,74.
-    expect(at(225, 236), isNot(_near(PuzzleArt.floor)));
+    expect(at(225, 236), _near(const Color(0xFFFBD9A8)));
   });
 
   test('piksel jalur Oyen: putus-putus 2 9 lewat tengah petak', () async {
@@ -215,13 +202,13 @@ void main() {
       path: const [Pos(4, 3), Pos(5, 3), Pos(5, 4)],
     );
     final at = await _sampler(await _renderBoard(scene));
-    const line = KoUi.orangePressed;
+    const line = Color(0xFFE07A10);
     // Garis dari (225, 175): titik di 225–227, celah 9, titik 236–238.
     expect(at(226, 175), _near(line));
-    expect(at(232, 175), _near(const Color(0xFFEDC791)));
+    expect(at(232, 175), _near(const Color(0xFFF1DDBA)));
     expect(at(237, 175), _near(line));
     // Tebal 4: 2 px di atas dan bawah garis.
-    expect(at(226, 172), _near(const Color(0xFFEDC791)));
+    expect(at(226, 172), _near(const Color(0xFFF1DDBA)));
   });
 
   test('piksel nomor jejak putar ulang: pill 20 px di (3, 3)', () async {
@@ -235,13 +222,13 @@ void main() {
     );
     final at = await _sampler(await _renderBoard(scene));
     // Tidak menyala: isi krem dengan cincin 1,5 px oranye tua.
-    expect(at(52, 263), _near(KoUi.orangePressed));
-    expect(at(55, 263), _near(KoUi.paper));
+    expect(at(52, 263), _near(const Color(0xFFE07A10)));
+    expect(at(55, 263), _near(const Color(0xFFFFFBF3)));
     // Menyala: isi gelap dengan cincin 2 px oranye.
-    expect(at(102, 263), _near(KoUi.orange));
-    expect(at(105, 263), _near(KoUi.ink));
+    expect(at(102, 263), _near(const Color(0xFFF59A33)));
+    expect(at(105, 263), _near(const Color(0xFF3B2716)));
     // Tinggi 20: dari y 253 sampai 273, lalu lantai lagi.
-    expect(at(113, 254), _near(KoUi.ink));
+    expect(at(113, 254), _near(const Color(0xFF3B2716)));
     expect(at(113, 278), isNot(_near(const Color(0xFF3B2716))));
   });
 
@@ -306,22 +293,16 @@ void main() {
       ),
     );
     final at = await render({const Pos(3, 3): Item.water});
-    // Hint water uses opacity .7 above the wooden floor.
-    expect(
-      at(175, 171),
-      _near(
-        Color.alphaBlend(KoUi.water.withValues(alpha: .7), PuzzleArt.floor),
-        tolerance: 3,
-      ),
-    );
+    // Air #8FD3F0 dengan opasitas 0,7 di atas lantai #F7E8CE.
+    expect(at(175, 175), _near(const Color(0xFFAED9E6), tolerance: 3));
     // Petak tanpa petunjuk tetap lantai.
-    expect(at(175, 275), _near(const Color(0xFFF4D6A5)));
+    expect(at(175, 275), _near(const Color(0xFFF7E8CE)));
     // Benda pemain menutupi gambar samar.
     final covered = await render(
       {const Pos(3, 3): Item.water},
       items: {const Pos(3, 3): TileItem.bucketP},
     );
-    expect(covered(175, 171), _near(KoUi.water));
+    expect(covered(175, 180), _near(const Color(0xFF8FD3F0)));
   });
 
   test('piksel benda petunjuk di atas kotak menyala', () async {
@@ -334,16 +315,8 @@ void main() {
         ),
       ),
     );
-    // Paper highlight is below the translucent hint, preserving item color.
-    expect(
-      at(175, 171),
-      _near(
-        Color.alphaBlend(
-          KoUi.water.withValues(alpha: .7),
-          Color.alphaBlend(KoUi.paper.withValues(alpha: .45), PuzzleArt.floor),
-        ),
-        tolerance: 3,
-      ),
-    );
+    // Lantai + oranye 0,28 dulu, lalu air 0,7 di atasnya: warna ember tidak
+    // tertutup kotak menyala.
+    expect(at(175, 175), _near(const Color(0xFFAED3D9), tolerance: 3));
   });
 }

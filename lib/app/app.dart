@@ -6,11 +6,9 @@ import 'package:go_router/go_router.dart';
 
 import '../l10n/l10n.dart';
 import '../theme/theme.dart';
-import '../game/render/v2/art_pack.dart';
 import 'ad_consent.dart';
 import 'game_audio.dart';
 import 'language.dart';
-import 'household_driver.dart';
 import 'progress_scope.dart';
 import 'progress_store.dart';
 import 'router.dart';
@@ -26,8 +24,6 @@ class KucingOrenApp extends StatefulWidget {
     this.initialLocation = AppRoutes.home,
     this.roomRandom,
     this.roomLife = true,
-    this.homeBuilder,
-    this.loadShopArt,
   });
 
   /// Data level dan progres pemain, dibagikan ke semua layar. Tidak boleh
@@ -51,13 +47,6 @@ class KucingOrenApp extends StatefulWidget {
   /// kecuali yang menguji rutinitas.
   final bool roomLife;
 
-  /// Override for isolated screen fixtures; the player home always defaults
-  /// to RoomScreen. Legacy room regressions can keep testing their component.
-  @visibleForTesting
-  final WidgetBuilder? homeBuilder;
-  @visibleForTesting
-  final Future<ArtPack> Function()? loadShopArt;
-
   @override
   State<KucingOrenApp> createState() => _KucingOrenAppState();
 }
@@ -68,8 +57,6 @@ class _KucingOrenAppState extends State<KucingOrenApp>
     initialLocation: widget.initialLocation,
     roomRandom: widget.roomRandom,
     roomLife: widget.roomLife,
-    homeBuilder: widget.homeBuilder,
-    loadShopArt: widget.loadShopArt,
   );
   final ThemeData _theme = KoTheme.light();
   late final GameAudio _audio =
@@ -83,24 +70,18 @@ class _KucingOrenAppState extends State<KucingOrenApp>
   late final AppLifecycleListener _lifecycle = AppLifecycleListener(
     onResume: () => widget.progress.refreshDay(),
     onPause: () => unawaited(widget.progress.retrySaves()),
-    onStateChange: (state) => state == AppLifecycleState.resumed
-        ? _audio.release(AudioHold.background)
-        : _audio.hold(AudioHold.background),
+    onHide: () => _audio.hold(AudioHold.background),
+    onShow: () => _audio.release(AudioHold.background),
   );
 
   /// Bahasa yang sedang dipakai; aplikasi dibangun ulang hanya saat
   /// pilihan bahasa berubah, bukan tiap progres berubah.
   late AppLanguage _language = widget.progress.language;
-  late bool _reducedMotion = widget.progress.household.reducedMotion;
 
   @override
   void initState() {
     super.initState();
     _lifecycle;
-    if (WidgetsBinding.instance.lifecycleState case final state?
-        when state != AppLifecycleState.resumed) {
-      _audio.hold(AudioHold.background);
-    }
     WidgetsBinding.instance.addObserver(this);
     widget.progress.addListener(_onProgress);
     _router.routerDelegate.addListener(_onRoute);
@@ -114,13 +95,7 @@ class _KucingOrenAppState extends State<KucingOrenApp>
 
   void _onProgress() {
     final language = widget.progress.language;
-    final reduced = widget.progress.household.reducedMotion;
-    if (language != _language || reduced != _reducedMotion) {
-      setState(() {
-        _language = language;
-        _reducedMotion = reduced;
-      });
-    }
+    if (language != _language) setState(() => _language = language);
   }
 
   /// Bahasa HP berganti saat aplikasi terbuka.
@@ -155,18 +130,6 @@ class _KucingOrenAppState extends State<KucingOrenApp>
           supportedLocales: AppLocalizations.supportedLocales,
           theme: _theme,
           routerConfig: _router,
-          builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              disableAnimations:
-                  MediaQuery.disableAnimationsOf(context) || _reducedMotion,
-            ),
-            child: HouseholdDriver(
-              progress: widget.progress,
-              router: _router,
-              enabled: widget.roomLife,
-              child: child!,
-            ),
-          ),
         ),
       ),
     );

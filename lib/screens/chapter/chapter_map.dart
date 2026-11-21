@@ -6,11 +6,11 @@ import '../../game/model/accessories.dart';
 import '../../game/model/chapter.dart';
 import '../../game/model/progress.dart';
 import '../../game/render/render.dart';
-import '../../game/render/v2/journey_art.dart';
 import '../../game/sim/sim.dart';
 import '../../theme/theme.dart';
 import 'map_node.dart';
 import 'map_token.dart';
+
 export 'map_node.dart' show NodeState, PictureNode;
 
 /// Letak token Oyen di peta: titik pijakan [at] (koordinat [ChapterMap])
@@ -218,7 +218,7 @@ class _Paw extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.translate(size.width / 2, size.height / 2);
-    JourneyArt.paw(canvas);
+    paintMapPaw(canvas);
   }
 
   @override
@@ -236,7 +236,11 @@ class _MapArt extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.translate(0, ChapterMap.shift.dy);
-    JourneyArt.map(canvas, chapter, PictureMapArt.pointsFor(compact: compact));
+    paintPictureMap(
+      canvas,
+      chapter: chapter,
+      points: PictureMapArt.pointsFor(compact: compact),
+    );
   }
 
   @override

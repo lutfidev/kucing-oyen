@@ -1,6 +1,6 @@
 # Ginger Logic — Dokumen Desain Game
 
-Fondasi aturan: 15 Okt 2026 · @Lutfi. Arah visual diganti 8 Nov 2026; lihat roadmap dan brief baru.
+Oct 15, 2026 · @Lutfi
 
 ## Ringkasan
 
@@ -13,31 +13,8 @@ Kucing Oren adalah game puzzle mobile untuk semua umur: pemain tidak mengendalik
 | Target | Semua umur, sesi 1–3 menit per level |
 | Platform | Android dulu, Flutter + Flame |
 | Orientasi | Portrait, grid 7 × 9 petak (area main 5 × 7) |
-| Bahasa | Inggris (utama), Indonesia, Portugis Brasil, Rusia; santai dan jenaka (lihat `docs/DESIGN_NOTES.md`) |
+| Bahasa | Inggris (utama), Indonesia, Portugis Brasil, Rusia; santai dan jenaka (lihat `docs/DESIGN_NOTES.md`, "Sebelum langkah 15") |
 | Versi pertama | Babak 1 Dapur + Babak 2 Ruang Tamu, 20 level |
-
-Paket seni desain v2 langkah 2 tersedia untuk tinjauan pada [galeri aset](design-v2/assets/REVIEW.md), dengan empat area berlapis dan satu rig karakter rumah/puzzle. Integrasi layar mengikuti roadmap; paket ini tidak mengubah urutan aturan atau hasil solver di bawah.
-
-Fondasi UI langkah 3 tersedia di [galeri komponen v2](design-v2/ui/REVIEW.md): header, tab empat area, kartu/kebutuhan, sheet dan CTA Main Puzzle. Komponen menerima data model; aturan aktivitas dan migrasi diterapkan pada langkah 4, integrasi layar rumah mulai langkah 5.
-
-Area Makan rumah v2 (langkah 6) menampilkan satu fasilitas makan dan satu titik
-tunggu, ajakan/otomatis serta jatah per kucing. Siklus mangkuk tetap 4 jam sejak
-makan pertama selesai, Makanan +40 bila <70, tanpa biaya isi ulang. Rincian dan
-render runtime: [tinjauan Makan](design-v2/dining/REVIEW.md).
-
-Area Bermain rumah v2 (langkah 7) menampilkan satu fasilitas mainan dan satu
-posisi tunggu. Bola dasar gratis; mainan katalog terpasang dipilih sesuai urutan
-katalog, tanpa kuota tambahan. Otomatis bila Senang <70 atau diajak saat belum
-penuh: +10 Senang setelah 8 detik, sekali per 30 menit. Hadiah tetap gabungan
-10 koin/kucing/hari bila Makanan dan Senang ≥70. [Tinjauan Bermain](design-v2/play/REVIEW.md).
-
-Bantuan/Pengaturan v2 (langkah 12) memakai tutorial 1/3/6 yang dapat dilewati,
-lima kartu aturan dan tiga tingkat petunjuk berurutan. Bantuan rumah opsional
-mengenalkan area/ajakan/koleksi tanpa menghalangi puzzle. Bonus 20/hari, iklan
-20 maksimal 10/hari dan biaya petunjuk 20/40/80 tetap. Transaksi snapshot
-produksi diterbitkan setelah simpan sukses; retry tidak meminta iklan/bayaran
-ulang. Reset mencakup area/antrean/kegiatan dan tetap mempertahankan bahasa,
-suara, kurangi gerak dan jatah hadiah. [Bukti implementasi](design-v2/guidance/REVIEW.md).
 
 ## Aturan Oyen
 
@@ -611,37 +588,99 @@ Versi pertama berisi 20 level di dokumen ini, gratis, dengan iklan berhadiah seb
 - [x] Simpan progres bintang secara lokal
 - [x] Iklan berhadiah untuk petunjuk
 
-## Rumah Oyen dan desain baru
+**Sesudah versi pertama: rumah Oyen** (langkah 21–26 roadmap, diputuskan 26 Okt 2026). Beranda menjadi kamar Oyen yang bisa dihias dengan barang dari Toko, berisi kucing koleksi (hanya di kamar, tidak ikut puzzle) yang punya kebutuhan dan memberi hadiah koin kalau dirawat. Aksesoris (pita, bandana, beanie, topi koki, kacamata bulat, dll.) dibeli sekali dan bisa dipakai semua kucing; Lemari Kostum beserta peci dan sarung dihapus. Peta babak menjadi ilustrasi ruangan. Koin tetap dari bintang, bonus harian, dan iklan berhadiah pilihan pemain (10 per hari). Aturan Oyen, level, dan bintang tidak berubah. Rinciannya di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`.
 
-Langkah 9 menghubungkan Toko v2, koleksi, aksesoris dan Hias per area.
-Pembelian menunjukkan tujuan area/Gudang serta saldo sesudah, dan adopsi
-memakai kapasitas termasuk reservasi perjalanan. Hias menggunakan draf
-slot aman, simpan/buang/lanjut dan Gudang tanpa mengubah kepemilikan;
-mangkuk tetap di Makan. Bonus hias hanya setelah layout berubah dan
-tetap maksimal +5 Senang/60 menit. Rutinitas dijeda selama editor.
-[Tinjauan langkah 9](design-v2/shop/REVIEW.md).
+## Prompt Claude Design
 
-Langkah 8 menyediakan Area Perawatan v2: alas/sikat gratis, satu kegiatan
-serentak dan satu posisi tunggu. Ajakan Elus (2 detik) dan Sikat (6 detik)
-memberi +10 Senang saat selesai, maksimal +30 gabungan per jam/kucing.
-Sikat otomatis mengikuti scheduler dan batas sekali/30 menit; Elus hanya
-atas tindakan pemain. Panel/sheet menjelaskan Senang penuh atau sisa waktu
-jatah, antrean, serta batal setelah kegiatan. Tidak menambah kebersihan,
-mandi atau penalti offline. [Tinjauan langkah 8](design-v2/care/REVIEW.md).
+> **Catatan (langkah 26):** prompt ini dipakai untuk desain versi pertama dan disimpan sebagai sejarah. Beranda dan Lemari Kostum di dalamnya (layar 1 dan 12) sudah diganti rumah Oyen: Beranda adalah kamar Oyen (desain 19), Lemari Kostum diganti Toko dengan tab Aksesoris (desain 20), dan peta babak menjadi ilustrasi ruangan (desain 23). Aturan main tidak berubah. Desain rumah Oyen ada di `docs/superpowers/specs/2026-10-26-rumah-oyen-design.md`.
 
-Langkah 4 menyediakan model empat area dan rutinitas tersimpan terpisah dari gambar: kapasitas 3/2/2/2, antrean pemain/otomatis, perjalanan berpasangan pada rumah penuh, pembatalan aman dan efek kegiatan sesuai kuota v1. Snapshot gameplay versi 2 dan backup v1 menjaga progres selama migrasi; aksi rumah baru diterbitkan setelah simpan sukses. [Kontrak integrasi dan verifikasi](design-v2/model/REVIEW.md). Layar rumah baru beserta penggerak lifecycle mengikuti langkah 5–9; runtime kamar v1 masih dipertahankan.
+Salin seluruh blok di bawah ke Claude Design. Layar gameplay sengaja memakai peta Level 13 yang sudah dicek, supaya mockup cocok dengan data level yang nanti dibangun di Flutter.
 
-Spesifikasi langkah 1 di [docs/design-v2](design-v2/README.md) disetujui pemilik repo pada 8 November 2026, mencakup alur empat area, kebutuhan/hadiah, migrasi dan seluruh keluarga layar. Implementasi mengikuti roadmap berikutnya; perilaku runtime lama tidak berubah dalam langkah dokumentasi ini.
+```markdown
+Desain UI untuk game puzzle mobile berjudul "Kucing Oren". Semua teks di dalam game memakai Bahasa Indonesia yang santai dan jenaka.
 
-Rumah, koleksi kucing, aksesoris dan kebutuhan sudah tersedia pada runtime. Pada 8 November 2026 pemilik repo memilih perombakan seluruh visual mengikuti konsep A (satu area per layar), termasuk bentuk kucing. Rumah baru mendukung aktivitas otomatis dan ajakan pemain; rincian area, aturan kebutuhan dan hadiah ditetapkan pada langkah 1 roadmap baru.
+## Konsep
+Pemain menuntun Oyen, kucing oren gempal yang bandel, ke mangkuk makannya. Pemain TIDAK mengendalikan Oyen. Pemain hanya menaruh benda (ikan asin, ember air, kardus) di petak lantai, lalu menekan "Bangunkan Oyen". Oyen bergerak langkah demi langkah dengan aturan tetap: mendekati ikan terdekat yang terlihat lurus, putar balik kalau ketemu air, belok kanan kalau mentok tembok, masuk dan duduk di kardus, dan menjatuhkan barang di meja sebelahnya. Vas Ibu tidak boleh sampai jatuh.
 
-Acuan aktif: [brief baru](design-brief/rumah-oyen-area/ARAH_DESAIN.md), [preview konsep A di kiri](design-brief/rumah-oyen-area/preview-perbandingan.png), dan [roadmap](ROADMAP.md). Prompt desain lama dihapus. Bagian aturan, simulator dan data level di atas tetap menjadi fondasi puzzle sampai ada keputusan perubahan gameplay yang eksplisit.
+Game dibangun dengan Flutter + Flame. Buat komponen yang konsisten dan design token yang jelas (warna, tipografi, jarak, radius, bayangan).
 
-## Visual puzzle v2 ? langkah 10
+## Format
+- Mobile portrait 390x844.
+- Prototipe yang bisa diklik sesuai alur di bagian bawah.
 
-Papan dan benda puzzle memakai seni kayu/paper v2 dan rig Oyen yang sama
-dengan rumah. Bingkai oranye menandai benda pemain, genangan/ember
-membedakan air bawaan dan air pemain. Tujuan sah disorot, petunjuk samar
-tetap di bawah benda; pilih-lalu-ketuk dan seretan tetap tersedia.
-Grid 7?9, aturan, solusi, bintang dan data 20 level tidak berubah.
-[Bukti dan batas verifikasi](design-v2/puzzle/REVIEW.md).
+## Gaya visual
+- Kartun flat yang hangat, dilihat dari atas (top-down), dengan bayangan lembut.
+- Papan permainan berupa grid 7 kolom x 9 baris petak persegi (sekitar 50px per petak), diletakkan di tengah layar. Baris dan kolom terluar adalah tembok/perabot.
+- Oyen adalah karakter ORISINAL: kucing oren belang (tabby) yang bulat, pipi tembam, mata besar setengah mengantuk, ekor tebal, ekspresi "tanpa dosa". Jangan menyerupai kucing kartun terkenal mana pun.
+- Warna: krem hangat untuk lantai, oranye untuk Oyen dan tombol utama, biru muda untuk air dan mangkuk, cokelat kardus, hijau toska untuk status berhasil, merah bata untuk vas dan peringatan.
+- Tipografi sans-serif membulat yang ramah, angka mudah dibaca.
+- Jangan memakai logo, merek, atau kemasan produk nyata apa pun.
+
+## Elemen papan (pakai ikon/ilustrasi yang konsisten)
+- Tembok dan perabot dapur/ruang tamu (kulkas, lemari, rak)
+- Lantai
+- Mangkuk makan (tujuan)
+- Meja kosong, meja dengan gelas plastik, meja dengan vas Ibu
+- Ikan asin bawaan, genangan air bawaan, kardus bawaan
+- Benda pemain: ikan asin, ember air, kardus (sedikit berbeda dari versi bawaan, misalnya dengan garis tepi oranye)
+- Oyen dalam 4 arah hadap, ditambah pose: tidur, jalan, kaget, duduk dalam kardus, menjatuhkan barang, makan, senang
+
+## Layar
+
+1. **Beranda**
+   Logo teks "Kucing Oren" dengan Oyen tidur melingkar di atasnya. Tombol besar "Main", total bintang (contoh: 24/60), tombol Lemari Kostum dan Pengaturan.
+
+2. **Peta Babak 1 – Dapur**
+   10 level berupa jejak kaki kucing yang berkelok di atas ilustrasi lantai dapur. Setiap level menunjukkan 0–3 bintang; level terkunci tampil pudar dengan gembok. Level 10 adalah bos "Pesta Ikan Asin", tampil lebih besar. Di bawah ada pratinjau Babak 2 – Ruang Tamu (terkunci).
+
+3. **Gameplay – Fase Atur (Level 13 "Vas Ibu")**
+   - Bar atas: tombol kembali, "Level 13 · Vas Ibu", target bintang 3 ("⭐⭐⭐ pakai 2 benda"), tombol "Aturan".
+   - Papan memakai peta ini (# tembok, . lantai, T mangkuk, M meja, G meja+gelas, V meja+vas, < Oyen menghadap kiri):
+     #######
+     #..#..#
+     #..#..#
+     #.V.<.#
+     #G.T..#
+     #.....#
+     #.....#
+     #..M..#
+     #######
+   - Oyen tidur dengan "Zzz".
+   - Baki bawah berisi 1 ikan dan 1 ember, dengan angka sisa. Tunjukkan satu ember sedang diseret jari, dengan petak tujuan yang menyala.
+   - Tombol utama besar "Bangunkan Oyen".
+
+4. **Gameplay – Fase Jalan (Level 13)**
+   - Ember sudah di kolom 3 baris 3, ikan di kolom 2 baris 4 (dihitung dari 0 di pojok kiri atas).
+   - Oyen sedang kaget di depan ember, dengan tanda seru di gelembung pikiran.
+   - Penghitung langkah ("Langkah 1"), tombol jeda, dan tombol percepat x2.
+
+5. **Kartu Aturan Oyen** (bottom sheet)
+   Lima kartu bergambar sesuai urutan: jatuhkan barang di sebelahnya → kejar ikan terdekat (seri: depan, kanan, kiri, belakang) → air: putar balik → tembok/meja: belok kanan → kardus: masuk dan duduk 2 langkah. Aturan yang belum dipelajari tampil terkunci.
+
+6. **Hasil – Berhasil**
+   Oyen makan dengan bahagia di mangkuk. Animasi 3 bintang, jumlah langkah, jumlah benda dipakai. Penjelasan bintang: ⭐ sampai mangkuk · ⭐⭐ vas aman · ⭐⭐⭐ benda paling sedikit. Tombol "Ulangi" dan "Lanjut".
+
+7. **Hasil – Vas Pecah**
+   Oyen sampai di mangkuk tapi vas pecah di belakangnya, Ibu muncul dari pintu dengan wajah kesal. Hanya 1 bintang. Teks: "Sampai sih... tapi vas Ibu?" Tombol "Coba Lagi" dan "Lanjut Saja".
+
+8. **Gagal – Oyen Bosan**
+   Oyen tertidur lagi di tengah jalan. Teks: "Oyen bosan mondar-mandir." Tombol "Putar Ulang" dan "Atur Lagi".
+
+9. **Putar Ulang**
+   Papan dengan jejak langkah Oyen bernomor, slider waktu, dan tombol mundur/maju satu langkah.
+
+10. **Petunjuk** (bottom sheet)
+    Tiga tingkat: sorot petak pertama, tunjukkan jenis benda, tampilkan solusi lengkap. Setiap tingkat dibuka dengan tombol "Tonton iklan" atau koin.
+
+11. **Tutorial Level 1**
+    Overlay gelap dengan tangan penunjuk ke tombol "Bangunkan Oyen" dan teks pendek: "Oyen nggak bisa disuruh. Bangunkan saja dia!"
+
+12. **Lemari Kostum**
+    Grid kostum Oyen (peci, sarung, topi koki, kacamata), dengan pratinjau Oyen di atas dan harga dalam koin.
+
+## Alur prototipe
+Beranda → Peta Babak 1 → Fase Atur → Fase Jalan → Berhasil / Vas Pecah / Oyen Bosan → (Putar Ulang) → Peta Babak 1.
+Dari Fase Atur: tombol "Aturan" membuka Kartu Aturan; ikon bohlam membuka Petunjuk. Dari Beranda: Lemari Kostum.
+```
+
+Setelah hasil pertama keluar, poles dulu layar Fase Atur dan Fase Jalan: di situlah pemain menghabiskan hampir seluruh waktunya.

@@ -5,7 +5,6 @@ import '../game/model/home_items.dart';
 import '../game/model/rules.dart';
 import '../game/model/snacks.dart';
 import '../game/render/render.dart';
-import '../game/render/v2/puzzle_art.dart';
 import '../game/sim/item.dart';
 import '../l10n/l10n.dart';
 import '../l10n/names.dart';
@@ -77,8 +76,7 @@ class _ItemArtPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.scale(size.width / ItemArt.viewBox);
-    // The tray slot is the frame; no floor marker here.
-    paintPuzzleItem(canvas, item, ghost: ghost, player: false);
+    paintItemArt(canvas, item, ghost: ghost);
   }
 
   @override
@@ -147,7 +145,7 @@ class _LiftedItemPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) =>
-      paintPuzzleLiftedItem(canvas, item, shadow: shadow);
+      paintLiftedItem(canvas, item, shadow: shadow);
 
   @override
   bool shouldRepaint(_LiftedItemPainter old) =>

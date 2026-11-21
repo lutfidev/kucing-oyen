@@ -39,7 +39,6 @@ Future<void> _pumpLevel(
   HintSource? hints,
   Tutorial? tutorial,
   GameAudio? audio,
-  ValueNotifier<bool>? visible,
 }) async {
   _nextTaps = 0;
   setScreenSize(tester, size);
@@ -48,13 +47,7 @@ Future<void> _pumpLevel(
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context)
             .copyWith(disableAnimations: disableAnimations),
-        child: visible == null
-            ? child!
-            : ValueListenableBuilder<bool>(
-                valueListenable: visible,
-                builder: (context, enabled, _) =>
-                    TickerMode(enabled: enabled, child: child!),
-              ),
+        child: child!,
       ),
       home: LevelView(
         level: _levels[id - 1],
@@ -518,60 +511,6 @@ void main() {
     int step(WidgetTester tester) =>
         tester.widget<StepCounter>(find.byType(StepCounter)).step;
 
-    testWidgets('covered puzzle freezes and does not accumulate hidden time', (
-      tester,
-    ) async {
-      final visible = ValueNotifier(true);
-      await _pumpLevel(tester, 13, visible: visible);
-      await placeSolution(tester, 13);
-      await wake(tester);
-      final before = step(tester);
-      visible.value = false;
-      await tester.pump();
-      expect(_game(tester).animate, isFalse);
-      await tester.pump(const Duration(seconds: 10));
-      expect(step(tester), before);
-      visible.value = true;
-      await tester.pump();
-      expect(step(tester), before);
-      await tester.pump(RunClock.stepTime);
-      expect(step(tester), before + 1);
-      await tester.pumpWidget(const SizedBox());
-      visible.dispose();
-    });
-
-    testWidgets(
-      'puzzle clock freezes while inactive and resumes without jump',
-      (tester) async {
-        await _pumpLevel(tester, 13);
-        await placeSolution(tester, 13);
-        await wake(tester);
-        await tester.pump(const Duration(milliseconds: 50));
-        final before = step(tester);
-        tester.binding.handleAppLifecycleStateChanged(
-          AppLifecycleState.inactive,
-        );
-        await tester.pump(const Duration(seconds: 10));
-        expect(step(tester), before);
-        tester.binding.handleAppLifecycleStateChanged(
-          AppLifecycleState.resumed,
-        );
-        await tester.pump();
-        expect(step(tester), before);
-        await tester.pump(RunClock.stepTime);
-        expect(step(tester), before + 1);
-        await tester.tap(find.text('Jeda'));
-        await tester.pump();
-        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-        await tester.pump(const Duration(seconds: 10));
-        tester.binding.handleAppLifecycleStateChanged(
-          AppLifecycleState.resumed,
-        );
-        await tester.pump(const Duration(seconds: 1));
-        expect(step(tester), before + 1);
-      },
-    );
-
     String caption(WidgetTester tester) =>
         tester.widget<RunCaption>(find.byType(RunCaption)).text;
 
@@ -979,7 +918,6 @@ void main() {
       expect(tester.getSize(_board), size);
       await tester.tap(find.text('Lihat hasil'));
       await showResult(tester);
-      await tester.ensureVisible(find.text('Ulangi'));
       await tester.tap(find.text('Ulangi'));
       await tester.pumpAndSettle();
       expect(tester.getSize(_board), size);

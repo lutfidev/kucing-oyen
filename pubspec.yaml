@@ -34,13 +34,6 @@ flutter:
   # Teks per bahasa dari lib/l10n/*.arb (gen-l10n).
   generate: true
   assets:
-    - assets/art/v2/manifest.json
-    - assets/art/v2/LICENSE.txt
-    - assets/art/v2/cats/
-    - assets/art/v2/accessories/
-    - assets/art/v2/items/
-    - assets/art/v2/rooms/
-    - assets/art/v2/scenes/
     - assets/levels/
     # Lisensi font (ditampilkan di halaman lisensi aplikasi).
     - assets/fonts/OFL-Fredoka.txt
@@ -59,14 +52,6 @@ flutter:
         - asset: assets/fonts/Fredoka-SemiBold.ttf
           weight: 600
         - asset: assets/fonts/Fredoka-Bold.ttf
-          weight: 700
-    - family: NunitoUi
-      fonts:
-        - asset: assets/fonts/Nunito-Variable.ttf
-          weight: 400
-        - asset: assets/fonts/Nunito-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Nunito-Bold.ttf
           weight: 700
     - family: Nunito
       fonts:

@@ -23,7 +23,6 @@ import '../../l10n/captions.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
 import '../../theme/theme.dart';
-import '../../theme/puzzle_theme.dart';
 import '../../widgets/widgets.dart';
 import '../replay/replay_view.dart';
 import '../result/result_view.dart';
@@ -134,7 +133,7 @@ class LevelView extends StatefulWidget {
 }
 
 class _LevelViewState extends State<LevelView>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver
+    with SingleTickerProviderStateMixin
     implements BoardInput {
   late final LevelSession _session = LevelSession(widget.level);
   late final KucingGame _game = KucingGame(scene: _buildScene(), input: this);
@@ -166,8 +165,6 @@ class _LevelViewState extends State<LevelView>
   bool _replaying = false;
   Duration _lastTick = Duration.zero;
   bool _reduceMotion = false;
-  bool _visible = true;
-  bool _foreground = true;
 
   Level get _level => widget.level;
 
@@ -185,10 +182,6 @@ class _LevelViewState extends State<LevelView>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _foreground =
-        (WidgetsBinding.instance.lifecycleState ?? AppLifecycleState.resumed) ==
-        AppLifecycleState.resumed;
     widget.hints?.addListener(_onHints);
   }
 
@@ -212,25 +205,17 @@ class _LevelViewState extends State<LevelView>
     super.didChangeDependencies();
     _reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
     // Loop Flame tidak ikut TickerMode sendiri (rute tertutup rute lain).
-    _visible = TickerMode.valuesOf(context).enabled;
+    _game.animate = TickerMode.valuesOf(context).enabled && !_reduceMotion;
     final clock = _run?.clock;
     if (_reduceMotion && clock != null && !clock.done) {
       clock.skipToEnd();
       _syncTicker();
       _game.scene = _buildScene();
     }
-    _syncTicker();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    _foreground = state == AppLifecycleState.resumed;
-    _syncTicker();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     widget.hints?.removeListener(_onHints);
     _ticker.dispose();
     super.dispose();
@@ -554,11 +539,10 @@ class _LevelViewState extends State<LevelView>
   /// langkah.
   void _syncTicker() {
     final clock = _run?.clock;
-    _game.animate = _visible && _foreground && !_reduceMotion;
     _game.moveTime = clock == null
         ? 0
         : clock.interval.inMicroseconds / Duration.microsecondsPerSecond;
-    if (!_visible || !_foreground || clock == null || !clock.playing) {
+    if (clock == null || !clock.playing) {
       _ticker.stop();
     } else if (!_ticker.isActive) {
       _lastTick = Duration.zero;
@@ -657,12 +641,7 @@ class _LevelViewState extends State<LevelView>
   void _closeReplay() => setState(() => _replaying = false);
 
   @override
-  Widget build(BuildContext context) => Theme(
-    data: puzzleTheme(),
-    child: Builder(builder: _build),
-  );
-
-  Widget _build(BuildContext context) {
+  Widget build(BuildContext context) {
     final space = context.koSpace;
     final drag = _drag;
     final run = _run;

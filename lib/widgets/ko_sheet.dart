@@ -3,9 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../theme/theme.dart';
-import '../theme/ko_ui.dart';
-import '../theme/puzzle_theme.dart';
-import 'v2/ui_button.dart';
+import 'ko_pressable.dart';
 
 /// Membuka sheet bawah (sheet Aturan desain 05 dan Petunjuk desain 10 di
 /// layar level, sheet Tambah Koin di kamar dan Toko, konfirmasi
@@ -19,26 +17,20 @@ Future<void> showKoSheet(
   Color? barrierColor,
   required Widget Function(BuildContext context, VoidCallback onClose) builder,
 }) {
-  final trigger = FocusManager.instance.primaryFocus;
   final reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
   return showGeneralDialog<void>(
     context: context,
     barrierDismissible: true,
     barrierLabel: barrierLabel,
-    barrierColor: barrierColor ?? KoUi.scrim,
+    barrierColor: barrierColor ?? context.koColors.scrim,
     transitionDuration: reduceMotion ? Duration.zero : KoSheet.openTime,
     pageBuilder: (context, _, _) {
       final route = ModalRoute.of(context);
       // Hanya menutup sheet ini, walau dipanggil lagi saat sheet sedang
       // menutup (layar level di bawahnya tidak ikut ditutup).
-      return Theme(
-        data: puzzleTheme(),
-        child: Builder(
-          builder: (context) => builder(context, () {
-            if (route?.isCurrent ?? false) Navigator.of(context).pop();
-          }),
-        ),
-      );
+      return builder(context, () {
+        if (route?.isCurrent ?? false) Navigator.of(context).pop();
+      });
     },
     transitionBuilder: (context, animation, _, child) {
       final t = CurvedAnimation(parent: animation, curve: Curves.easeOut);
@@ -54,9 +46,7 @@ Future<void> showKoSheet(
         child: child,
       );
     },
-  ).whenComplete(() {
-    if (trigger?.context != null) trigger!.requestFocus();
-  });
+  );
 }
 
 /// Bingkai sheet bawah: pegangan, [header], lalu [children] yang digulir
@@ -70,7 +60,6 @@ class KoSheet extends StatefulWidget {
     required this.header,
     required this.children,
     required this.onClose,
-    this.footer,
   });
 
   /// Nama sheet untuk pembaca layar.
@@ -78,7 +67,6 @@ class KoSheet extends StatefulWidget {
   final Widget header;
   final List<Widget> children;
   final VoidCallback onClose;
-  final Widget? footer;
 
   /// Sheet naik [openRise] sambil muncul dalam [openTime] (`koSheet`).
   static const openTime = Duration(milliseconds: 350);
@@ -100,13 +88,11 @@ class _KoSheetState extends State<KoSheet> with SingleTickerProviderStateMixin {
     duration: const Duration(milliseconds: 200),
   )..addListener(_onSettle);
 
-  final _titleFocus = FocusNode();
   double _drag = 0;
   double _settleFrom = 0;
 
   @override
   void dispose() {
-    _titleFocus.dispose();
     _settle.dispose();
     super.dispose();
   }
@@ -138,7 +124,7 @@ class _KoSheetState extends State<KoSheet> with SingleTickerProviderStateMixin {
     final media = MediaQuery.of(context);
     // Bar atas layar level (desain: sheet mulai 18 px di bawahnya).
     final top = media.padding.top + space.s8 + s.iconButton + space.s16;
-    const sheetRadius = Radius.circular(KoUi.sheetRadius);
+    final sheetRadius = Radius.circular(context.koRadius.sheet);
 
     final header = GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -155,7 +141,7 @@ class _KoSheetState extends State<KoSheet> with SingleTickerProviderStateMixin {
             ),
           ),
           SizedBox(height: space.s10),
-          Focus(focusNode: _titleFocus, autofocus: true, child: widget.header),
+          widget.header,
         ],
       ),
     );
@@ -164,13 +150,7 @@ class _KoSheetState extends State<KoSheet> with SingleTickerProviderStateMixin {
       alignment: Alignment.bottomCenter,
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: math.max(
-            0,
-            math.min(
-              (media.size.height - media.padding.vertical) * .9,
-              media.size.height - top - media.viewInsets.bottom,
-            ),
-          ),
+          maxHeight: math.max(0, media.size.height - top),
         ),
         child: Transform.translate(
           offset: Offset(0, _drag),
@@ -184,8 +164,7 @@ class _KoSheetState extends State<KoSheet> with SingleTickerProviderStateMixin {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: KoUi.paper,
-                  border: Border.all(color: KoUi.ink, width: KoUi.outline),
+                  color: c.cream,
                   borderRadius: BorderRadius.vertical(top: sheetRadius),
                   boxShadow: context.koShadow.sheet,
                 ),
@@ -210,10 +189,6 @@ class _KoSheetState extends State<KoSheet> with SingleTickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    if (widget.footer != null) ...[
-                      const SizedBox(height: KoUi.s12),
-                      widget.footer!,
-                    ],
                   ],
                 ),
               ),
@@ -238,7 +213,6 @@ class SheetButton extends StatelessWidget {
     required this.onPressed,
     this.labelColor,
     this.silent = false,
-    this.loading = false,
   });
 
   final String label;
@@ -250,24 +224,47 @@ class SheetButton extends StatelessWidget {
 
   /// Lihat [KoPressable.silent].
   final bool silent;
-  final bool loading;
 
   /// Warna label saat aktif; default [KoColors.ink].
   final Color? labelColor;
 
   @override
   Widget build(BuildContext context) {
-    return UiButton(
-      label: label,
-      leading: icon,
-      kind: color == context.koColors.brick
-          ? UiButtonKind.danger
-          : color == context.koColors.orange
-          ? UiButtonKind.primary
-          : UiButtonKind.secondary,
-      silent: silent,
-      loading: loading,
+    final c = context.koColors;
+    final s = context.koSize;
+    final space = context.koSpace;
+    final enabled = onPressed != null;
+    return KoPressable(
       onPressed: onPressed,
+      silent: silent,
+      semanticLabel: label,
+      color: enabled ? color : c.disabled,
+      borderColor: enabled ? line : c.disabledLine,
+      borderWidth: s.border,
+      edgeColor: enabled ? edge : null,
+      depth: context.koShadow.pressIcon,
+      radius: context.koRadius.icon,
+      height: s.hintButton,
+      padding: EdgeInsets.symmetric(horizontal: space.s8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon,
+          SizedBox(width: space.s6),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                maxLines: 1,
+                style: context.koType.chipLabel.copyWith(
+                  color: enabled ? labelColor ?? c.ink : c.onLockedSoft,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -28,10 +28,6 @@ class SvgTemplate {
 
   final List<_Element> _nodes;
 
-  /// Shared parsing reuse is bounded even for callers with dynamic paths.
-  static const pathCacheLimit = 512;
-  static int get cachedPaths => _pathCache.length;
-
   /// Ada elemen dengan atribut `style` (animasi). Kalau tidak, [render]
   /// dengan waktu apa pun sama dengan gambar diam, jadi boleh di-cache.
   late final bool animated = _hasStyle(_nodes);
@@ -505,12 +501,7 @@ Path _geometry(String name, Map<String, String> a) {
   switch (name) {
     case 'path':
       final d = a['d'] ?? '';
-      final path = _pathCache.remove(d) ?? parseSvgPathData(d);
-      _pathCache[d] = path;
-      if (_pathCache.length > SvgTemplate.pathCacheLimit) {
-        _pathCache.remove(_pathCache.keys.first);
-      }
-      return path;
+      return _pathCache.putIfAbsent(d, () => parseSvgPathData(d));
     case 'circle':
       final r = _num(a, 'r');
       return Path()..addOval(

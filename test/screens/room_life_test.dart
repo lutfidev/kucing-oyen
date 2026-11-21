@@ -29,7 +29,6 @@ Future<ProgressController> _pump(
   setScreenSize(tester, const Size(390, 844));
   return pumpApp(
     tester,
-    legacyRoom: true,
     progress: progress ?? testProgressWith(home: _furnished()),
     roomRandom: () => Random(seed),
     roomLife: true,
@@ -134,7 +133,6 @@ void main() {
     setScreenSize(tester, const Size(390, 844));
     await pumpApp(
       tester,
-      legacyRoom: true,
       progress: progress,
       audio: audio,
       roomRandom: () => Random(1),
@@ -159,7 +157,6 @@ void main() {
     setScreenSize(tester, const Size(390, 844));
     await pumpApp(
       tester,
-      legacyRoom: true,
       progress: progress,
       audio: audio,
       roomRandom: () => Random(1),
@@ -338,7 +335,6 @@ void main() {
       setScreenSize(tester, const Size(390, 844));
       await pumpApp(
         tester,
-        legacyRoom: true,
         progress: withNeeds({KittyId.oyen: (80, 50)}),
         audio: audio,
         roomRandom: () => Random(1),

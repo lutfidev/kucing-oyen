@@ -27,7 +27,6 @@ Future<ProgressController> pumpRoom(
     progress: progress ?? testProgressWith(),
     roomRandom: random,
     roomLife: life,
-    legacyRoom: true,
   );
 }
 

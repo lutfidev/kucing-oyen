@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 
 import '../../game/model/level_session.dart';
 import '../../game/model/replay.dart';
@@ -8,10 +8,7 @@ import '../../game/render/render.dart';
 import '../../l10n/captions.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
-import '../../theme/puzzle_theme.dart';
 import '../../theme/theme.dart';
-import '../../widgets/v2/ui_button.dart';
-import '../../widgets/widgets.dart';
 import '../result/result_parts.dart';
 import 'replay_parts.dart';
 
@@ -48,7 +45,7 @@ class ReplayView extends StatefulWidget {
 }
 
 class _ReplayViewState extends State<ReplayView>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+    with SingleTickerProviderStateMixin {
   late final _level = widget.session.level;
   late final _result = widget.session.result!;
   late final _placed = widget.session.placed;
@@ -58,18 +55,6 @@ class _ReplayViewState extends State<ReplayView>
   late final Ticker _ticker = createTicker(_onTick);
   int _step = 0;
   bool _reduceMotion = false;
-  bool _fast = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed && _playing) setState(_ticker.stop);
-  }
 
   /// Waktu sejak langkah terakhir dimajukan putar otomatis.
   Duration _sinceStep = Duration.zero;
@@ -83,12 +68,11 @@ class _ReplayViewState extends State<ReplayView>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _reduceMotion = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    if (_reduceMotion || !TickerMode.valuesOf(context).enabled) _ticker.stop();
+    if (_reduceMotion) _ticker.stop();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _ticker.dispose();
     super.dispose();
   }
@@ -117,7 +101,7 @@ class _ReplayViewState extends State<ReplayView>
   void _onTick(Duration elapsed) {
     _sinceStep += elapsed - _lastTick;
     _lastTick = elapsed;
-    if (_sinceStep < ReplayView.autoStepTime ~/ (_fast ? 2 : 1)) return;
+    if (_sinceStep < ReplayView.autoStepTime) return;
     _sinceStep = Duration.zero;
     setState(() {
       _step++;
@@ -126,12 +110,7 @@ class _ReplayViewState extends State<ReplayView>
   }
 
   @override
-  Widget build(BuildContext context) => Theme(
-    data: puzzleTheme(),
-    child: Builder(builder: _build),
-  );
-
-  Widget _build(BuildContext context) {
+  Widget build(BuildContext context) {
     final space = context.koSpace;
     final l = context.l10n;
     final captions = [for (final c in _captions) replayCaptionText(l, c)];
@@ -158,43 +137,7 @@ class _ReplayViewState extends State<ReplayView>
             announce: !_playing,
           ),
         ),
-        SizedBox(height: space.s8),
-        Row(
-          children: [
-            KoIconButton(
-              semanticLabel: l.replayStart,
-              onPressed: _step > 0 ? () => _go(0) : null,
-              icon: KoIcons.stepBack,
-            ),
-            Expanded(
-              child: Text(
-                l.replayProgress(_step, _last),
-                textAlign: TextAlign.center,
-                style: context.koType.caption,
-              ),
-            ),
-            KoIconButton(
-              semanticLabel: l.replayEnd,
-              onPressed: _step < _last ? () => _go(_last) : null,
-              icon: KoIcons.stepForward,
-            ),
-            if (!_reduceMotion) ...[
-              SizedBox(width: space.s8),
-              UiButton(
-                label: _fast ? '×2' : '×1',
-                semanticLabel: l.doubleSpeed,
-                kind: UiButtonKind.secondary,
-                compact: true,
-                selected: _fast,
-                onPressed: () => setState(() {
-                  _fast = !_fast;
-                  _sinceStep = Duration.zero;
-                }),
-              ),
-            ],
-          ],
-        ),
-        SizedBox(height: space.s8),
+        SizedBox(height: space.s14),
         Row(
           children: [
             if (!_reduceMotion) ...[

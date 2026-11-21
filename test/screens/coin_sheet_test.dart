@@ -7,7 +7,7 @@ import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
-import 'package:kucing_oren/widgets/v2/ui_button.dart';
+import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
 
@@ -34,7 +34,7 @@ Future<ProgressController> _openFromHome(
 }) async {
   setScreenSize(tester, const Size(390, 844));
   await pumpApp(tester, progress: progress, audio: audio);
-  await _tap(tester, find.byKey(const ValueKey('home-balance')));
+  await _tap(tester, find.byType(KoCoinChip));
   return progress;
 }
 
@@ -51,8 +51,11 @@ Finder _inCard(String name, String text) =>
 /// Tombol berlabel [label] bisa ditekan.
 bool _enabled(WidgetTester tester, String label) =>
     tester
-        .widget<UiButton>(
-          find.ancestor(of: find.text(label), matching: find.byType(UiButton)),
+        .widget<KoPressable>(
+          find.ancestor(
+            of: find.text(label),
+            matching: find.byType(KoPressable),
+          ),
         )
         .onPressed !=
     null;
@@ -69,7 +72,7 @@ void main() {
       findsOneWidget,
     );
 
-    await _tap(tester, find.byKey(const ValueKey('home-balance')));
+    await _tap(tester, find.byType(KoCoinChip));
     expect(find.text('Tambah Koin'), findsOneWidget);
     expect(
       find.text(
@@ -197,7 +200,7 @@ void main() {
       await tester.binding.handlePopRoute();
       await settle(tester);
       expect(find.text('Tambah Koin'), findsNothing);
-      expect(find.text('Main Puzzle'), findsOneWidget);
+      expect(find.text('Main'), findsOneWidget);
     });
   });
 

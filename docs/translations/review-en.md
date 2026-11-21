@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-612 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+491 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -237,7 +237,7 @@ files and anything written there is overwritten.
 | `brokenAtStep` | Broke on step {n} | Pecah di langkah {n} | Vase screen: the step the vase broke. Placeholders: `{n}`. | |
 | `tryAgain` | Try Again | Coba Lagi | Vase screen button: arrange again. | |
 | `nextAnyway` | Next Anyway | Lanjut Saja | Vase screen button: next level anyway. | |
-| `vaseArtLabel` | Oyen reaches the bowl, with broken vase pieces beside him | Oyen sampai ke mangkuk, dengan pecahan vas di sampingnya | Screen reader label of the vase screen picture. | |
+| `vaseArtLabel` | The vase lies broken behind Oyen, and Mom pops in at the door, annoyed | Vas pecah di belakang Oyen, Ibu muncul dari pintu dengan wajah kesal | Screen reader label of the vase screen picture. | |
 | `loopTitle` | Oyen got bored going in circles. | Oyen bosan mondar-mandir. | Fail screen title: going in circles. | |
 | `loopBadge` | Going in circles | Muter terus | Fail screen chip: going in circles. | |
 | `loopMessage` | Round and round, no bowl in sight. Oh well, back to sleep. | Jalannya muter-muter terus, nggak ketemu mangkuk. Ya sudah, tidur lagi. | Fail screen message: going in circles. | |
@@ -518,127 +518,6 @@ files and anything written there is overwritten.
 | `kittyTapHintNewHungry` | {name}, new, hungry. Tap to see their card | {name}, baru, lapar. Ketuk untuk lihat kartunya | Screen reader label of a newly adopted cat in the room that is also hungry. Placeholders: `{name}`. | |
 | `snackFullNote` | {name} is already full and happy. Save it for later! | {name} sudah kenyang dan senang. Simpan buat nanti! | Short note on a cat card when a snack is tapped but the cat's Full and Happy bars are both at 100. {name} is the cat's name. Placeholders: `{name}`. | |
 | `snackEmptyNote` | All gone. Grab more snacks in the Shop! | Stoknya habis. Beli camilan lagi di Toko! | Short note on a cat card when a snack that is out of stock is tapped. | |
-| `uiAreaLounge` | Lounge | Santai | V2 UI foundation: uiAreaLounge | |
-| `uiAreaDining` | Dining | Makan | V2 UI foundation: uiAreaDining | |
-| `uiAreaPlay` | Play | Bermain | V2 UI foundation: uiAreaPlay | |
-| `uiAreaCare` | Care | Perawatan | V2 UI foundation: uiAreaCare | |
-| `uiPlayPuzzle` | Play Puzzle | Main Puzzle | V2 UI foundation: uiPlayPuzzle | |
-| `uiHome` | Home | Rumah | V2 UI foundation: uiHome | |
-| `uiCollection` | Collection | Koleksi | V2 UI foundation: uiCollection | |
-| `uiShop` | Shop | Toko | V2 UI foundation: uiShop | |
-| `uiLowNeed` | Low needs | Kebutuhan rendah | V2 UI foundation: uiLowNeed | |
-| `uiInviting` | Inviting… | Mengundang… | V2 UI foundation: uiInviting | |
-| `uiInvite` | Invite to area | Ajak ke area | V2 UI foundation: uiInvite | |
-| `uiViewActivity` | View activity | Lihat kegiatan | V2 UI foundation: uiViewActivity | |
-| `uiActivityNote` | Choose an activity for Oyen. The invitation will wait for the current activity. | Pilih kegiatan untuk Oyen. Ajakan akan menunggu kegiatan yang sedang berjalan. | V2 UI foundation: uiActivityNote | |
-| `homeCats` | Cats | Kucing | V2 player home: homeCats. | |
-| `homeEmpty` | A quiet spot. Find a cat from your collection. | Area ini lagi sepi. Temukan kucing lewat koleksi, yuk. | V2 player home: homeEmpty. | |
-| `homeChoose` | Choose a cat | Pilih kucing | V2 player home: homeChoose. | |
-| `homeResting` | Relaxing | Bersantai | V2 player home: homeResting. | |
-| `homeSleeping` | Sleeping | Tidur | V2 player home: homeSleeping. | |
-| `homeActivity` | {activity, select, rest{Relax} eat{Eat} play{Play} brush{Brush} pet{Pet} other{Relax}} | {activity, select, rest{Santai} eat{Makan} play{Main} brush{Sikat} pet{Elus} other{Santai}} | V2 player home: homeActivity. Placeholders: `{activity}`. | |
-| `homeDoing` | Now: {activity} | Sedang: {activity} | V2 player home: homeDoing. Placeholders: `{activity}`. | |
-| `homeTravel` | Heading to {area}… | Menuju {area}… | V2 player home: homeTravel. Placeholders: `{area}`. | |
-| `homeWaiting` | Waiting for {area} · {position} in line | Menunggu {area} · antrean {position} | V2 player home: homeWaiting. Placeholders: `{area}`, `{position}`. | |
-| `homeAfterActivity` | After this activity: {area} | Sesudah kegiatan ini: {area} | V2 player home: homeAfterActivity. Placeholders: `{area}`. | |
-| `homeIneligible` | Already full, or today's activity allowance needs a rest. | Sudah cukup, atau jatah kegiatan sedang istirahat. | V2 player home: homeIneligible. | |
-| `homeCancelled` | Invitation cancelled | Ajakan dibatalkan | V2 player home: homeCancelled. | |
-| `homeFacilityRemoved` | Activity stopped; the item is in storage. | Kegiatan berhenti; barangnya di Gudang. | V2 player home: homeFacilityRemoved. | |
-| `homeInviteEat` | Invite to eat | Ajak makan | V2 player home: homeInviteEat. | |
-| `homeInvitePlay` | Invite to play | Ajak main | V2 player home: homeInvitePlay. | |
-| `homeInviteCare` | Care | Rawat | V2 player home: homeInviteCare. | |
-| `homeBrush` | Brush | Sikat | V2 player home: homeBrush. | |
-| `homeRest` | Back to lounge | Kembali Santai | V2 player home: homeRest. | |
-| `homeInviteFor` | Invite {name} · {activity} | Ajak {name} · {activity} | V2 player home: homeInviteFor. Placeholders: `{name}`, `{activity}`. | |
-| `homeFind` | Find | Temukan | V2 player home: homeFind. | |
-| `homeViewArea` | View area | Lihat area | V2 player home: homeViewArea. | |
-| `homeCancelAfter` | Cancel after this | Batal setelah ini | V2 player home: homeCancelAfter. | |
-| `homeCancelInvitation` | Cancel invitation | Batalkan ajakan | V2 player home: homeCancelInvitation. | |
-| `homeRewardAvailable` | Rewards available · {coins} | Hadiah tersedia · {coins} | V2 player home: homeRewardAvailable. Placeholders: `{coins}`. | |
-| `homeRewardNone` | Everyone is comfy. Rewards will be back. | Santai dulu. Hadiah akan tersedia lagi. | V2 player home: homeRewardNone. | |
-| `homeStatusBowl` | Bowl · {left}/{total} | Mangkuk · {left}/{total} | Compact home chip (Dining area): bowl portions left out of owned cats. Placeholders: `{left}`, `{total}`. | |
-| `homeStatusBowlEmpty` | Bowl empty | Mangkuk kosong | Compact home chip (Dining area): bowl has no portions until the next cycle. | |
-| `homeStatusToy` | Toy ready | Mainan siap | Compact home chip (Play area): the toy is free. | |
-| `homeStatusCare` | Mat is free | Alas siap | Compact home chip (Care area): the grooming mat is free. | |
-| `homeStatusQueue` | {count} waiting | {count} menunggu | Compact home chip suffix: number of cats waiting for this area's facility. Placeholders: `{count}`. | |
-| `homeRewardLater` | Rewards later | Hadiah nanti | Compact home reward chip when no house reward is ready yet. | |
-| `homeRewards` | House rewards | Hadiah rumah | V2 player home: homeRewards. | |
-| `homeClaimAll` | Collect all · {coins} | Ambil semua · {coins} | V2 player home: homeClaimAll. Placeholders: `{coins}`. | |
-| `homeSaveFailed` | Couldn't save. Your last saved state is safe. | Belum berhasil disimpan. Keadaan terakhir tetap aman. | V2 player home: homeSaveFailed. | |
-| `homeRetry` | Try again | Coba lagi | V2 player home: homeRetry. | |
-| `homeMigration` | A bigger home! Your other items are safe in storage. | Rumah lebih luas! Barang lainnya aman di Gudang. | V2 player home: homeMigration. | |
-| `homeWelcome` | Welcome home | Selamat datang di rumah | V2 player home: homeWelcome. | |
-| `homeFood` | Food | Makanan | V2 player home: homeFood. | |
-| `homeAreaCount` | {area} · {count}/{capacity} | {area} · {count}/{capacity} | V2 player home: homeAreaCount. Placeholders: `{area}`, `{count}`, `{capacity}`. | |
-| `homeLoadFailed` | Couldn't load the room art. | Gambar rumah belum berhasil dimuat. | V2 player home: homeLoadFailed. | |
-| `homeLoading` | Opening the home… | Membuka rumah… | V2 player home: homeLoading. | |
-| `diningEmpty` | Bowl empty · fresh portions next cycle | Mangkuk kosong · jatah baru di siklus berikutnya | Dining area: no cat has a portion left in this cycle. | |
-| `diningTitle` | Dinner time | Waktunya makan | Dining area v2: diningTitle | |
-| `diningStock` | Portions available · {left}/{total} cats | Jatah tersedia · {left}/{total} kucing | Dining area v2: diningStock Placeholders: `{left}`, `{total}`. | |
-| `diningRefill` | Fresh portions in {time} · automatic and free | Jatah baru dalam {time} · otomatis dan gratis | Dining area v2: diningRefill Placeholders: `{time}`. | |
-| `diningFresh` | The 4-hour cycle starts when the first cat finishes eating. | Siklus 4 jam dimulai saat kucing pertama selesai makan. | Dining area v2: diningFresh | |
-| `diningReady` | Ready to eat · Food +40 | Bisa makan · Makanan +40 | Dining area v2: diningReady | |
-| `diningFull` | Still full · eats when Food is below 70 | Masih kenyang · makan saat Makanan di bawah 70 | Dining area v2: diningFull | |
-| `diningAlreadyAte` | Portion already eaten · wait for the next cycle | Jatahnya sudah dimakan · tunggu siklus berikutnya | Dining area v2: diningAlreadyAte | |
-| `diningUsing` | {name} is eating | {name} sedang makan | Dining area v2: diningUsing Placeholders: `{name}`. | |
-| `diningFree` | Bowl ready · one cat eats at a time | Mangkuk siap · satu kucing makan bergantian | Dining area v2: diningFree | |
-| `diningQueue` | Dining queue · {count} | Antrean makan · {count} | Dining area v2: diningQueue Placeholders: `{count}`. | |
-| `diningChoose` | Choose a cat to eat | Pilih kucing untuk makan | Dining area v2: diningChoose | |
-| `diningWaiting` | Waiting spot | Tempat menunggu | Dining area v2: diningWaiting | |
-| `playTitle` | Playtime | Waktunya main | Play area: playTitle | |
-| `playRules` | Play for 8 seconds: +10 Joy, once every 30 minutes. Cats can also play on their own. | Main 8 detik: +10 Senang, sekali tiap 30 menit. Oyen juga bisa main sendiri. | Play area: playRules | |
-| `playReady` | Ready to play | Siap main | Play area: playReady | |
-| `playFull` | Joy is full | Senang sudah penuh | Play area: playFull | |
-| `playCooldown` | Ready again in {minutes} min | Bisa main lagi dalam {minutes} menit | Play area: playCooldown Placeholders: `{minutes}`. | |
-| `playFree` | Toy ready · one cat at a time | Mainan siap · satu kucing bergantian | Play area: playFree | |
-| `playUsing` | {cat} is playing | {cat} sedang main | Play area: playUsing Placeholders: `{cat}`. | |
-| `playChoose` | Choose a playmate | Pilih teman main | Play area: playChoose | |
-| `playToy` | Toy: {toy} | Mainan: {toy} | Play area: playToy Placeholders: `{toy}`. | |
-| `playQueue` | Waiting for a turn · {count} | Menunggu giliran · {count} | Play area: playQueue Placeholders: `{count}`. | |
-| `playActive` | Playing now | Lagi asyik main | Play area: playActive | |
-| `careTitle` | Time for some care | Waktunya dimanja | Home grooming area: careTitle | |
-| `careRules` | Pet for 2 seconds or brush for 6: +10 Joy, up to +30 combined per hour. | Elus 2 detik atau sikat 6 detik: +10 Senang, gabungan maksimal +30 per jam. | Home grooming area: careRules | |
-| `careReady` | Ready for care | Siap dimanja | Home grooming area: careReady | |
-| `careFull` | Joy is full | Senang sudah penuh | Home grooming area: careFull | |
-| `careCooldown` | Care available in {minutes} min | Jatah kembali dalam {minutes} menit | Home grooming area: careCooldown Placeholders: `{minutes}`. | |
-| `careFree` | Grooming mat is free | Alas rawat tersedia | Home grooming area: careFree | |
-| `careUsing` | {name} is getting care | {name} sedang dirawat | Home grooming area: careUsing Placeholders: `{name}`. | |
-| `careActive` | Getting some care | Sedang dimanja | Home grooming area: careActive | |
-| `careQueue` | Care queue: {count} | Antrean rawat: {count} | Home grooming area: careQueue Placeholders: `{count}`. | |
-| `careChoose` | Choose a cat to care for | Pilih kucing untuk dirawat | Home grooming area: careChoose | |
-| `shopDestination` | Destination: {area} | Tujuan: {area} | V2 shop or area decoration: shopDestination Placeholders: `{area}`. | |
-| `shopStored` | Storage · starting area is full | Gudang · area awal penuh | V2 shop or area decoration: shopStored | |
-| `shopBalanceAfter` | Balance after: {n} coins | Saldo sesudah: {n} koin | V2 shop or area decoration: shopBalanceAfter Placeholders: `{n}`. | |
-| `shopOwnedCollection` | Your collection | Koleksimu | V2 shop or area decoration: shopOwnedCollection | |
-| `shopAdoptIntro` | New friends for Oyen’s home. Check where they will settle in! | Teman baru untuk rumah Oyen. Lihat dulu area sambutannya! | V2 shop or area decoration: shopAdoptIntro | |
-| `shopInArea` | Placed: {area} | Dipajang: {area} | V2 shop or area decoration: shopInArea Placeholders: `{area}`. | |
-| `shopInStorage` | Safe in storage | Aman di Gudang | V2 shop or area decoration: shopInStorage | |
-| `shopAlreadyOwned` | Already yours | Sudah jadi milikmu | V2 shop or area decoration: shopAlreadyOwned | |
-| `decorateArea` | Decorate · {area} | Hias · {area} | V2 shop or area decoration: decorateArea Placeholders: `{area}`. | |
-| `decoratePaused` | Decorating · all home activities are paused | Sedang dihias · semua kegiatan rumah dijeda | V2 shop or area decoration: decoratePaused | |
-| `decorateInstructions` | Choose an item, then tap a slot or drag. Switch areas to place it there. | Pilih barang, lalu ketuk slot atau seret. Pindah area untuk menaruhnya di sana. | V2 shop or area decoration: decorateInstructions | |
-| `decorateSaveLayout` | Save layout | Simpan tata letak | V2 shop or area decoration: decorateSaveLayout | |
-| `decorateDiscard` | Discard changes | Buang perubahan | V2 shop or area decoration: decorateDiscard | |
-| `decorateContinue` | Keep decorating | Lanjut menghias | V2 shop or area decoration: decorateContinue | |
-| `decorateUnsaved` | Save your home changes? | Simpan perubahan rumah? | V2 shop or area decoration: decorateUnsaved | |
-| `decorateStoreItem` | Move to storage | Simpan ke Gudang | V2 shop or area decoration: decorateStoreItem | |
-| `decorateInvalid` | This slot does not fit. Choose a free slot in an allowed area. | Slot ini belum cocok. Pilih slot kosong di area yang diizinkan. | V2 shop or area decoration: decorateInvalid | |
-| `decorateSlot` | {zone} · slot {n} | {zone} · slot {n} | V2 shop or area decoration: decorateSlot Placeholders: `{zone}`, `{n}`. | |
-| `decorateWall` | Wall | Dinding | V2 shop or area decoration: decorateWall | |
-| `decorateFloor` | Floor | Lantai | V2 shop or area decoration: decorateFloor | |
-| `decorateAllowed` | Allowed areas: {areas} | Bisa ditaruh: {areas} | V2 shop or area decoration: decorateAllowed Placeholders: `{areas}`. | |
-| `decorateBowlFixed` | The built-in bowl stays in the Dining Area. | Mangkuk bawaan tetap di Area Makan. | V2 shop or area decoration: decorateBowlFixed | |
-| `replayEnd` | End | Akhir | Replay control: jump to the final step. | |
-| `replayProgress` | Step {step} of {total} | Langkah {step} dari {total} | Current replay step and total; includes step zero. Placeholders: `{step}`, `{total}`. | |
-| `guidanceSaveFailed` | Not saved on this device yet. Try saving again. | Belum tersimpan di perangkat. Coba simpan lagi. | Guidance and settings v2: guidanceSaveFailed | |
-| `guidanceLoading` | Loading ad… | Memuat iklan… | Guidance and settings v2: guidanceLoading | |
-| `guidanceHomeTitle` | Meet Oyen’s home | Kenalan dengan rumah Oyen | Guidance and settings v2: guidanceHomeTitle | |
-| `guidanceHomeBody` | Four free areas: Lounge, Dining, Play, and Care. Cats can do things on their own. Tap a cat to invite them; busy cats wait their turn. Find any cat through Collection. You can always jump straight into a puzzle. | Empat area gratis: Santai, Makan, Main, dan Rawat. Kucing bisa beraktivitas sendiri. Ketuk kucing untuk mengajaknya; kalau sibuk, ia menunggu giliran. Temukan kucing lewat Koleksi. Main Puzzle selalu bisa langsung dimainkan. | Guidance and settings v2: guidanceHomeBody | |
-| `guidanceMotion` | Reduce motion | Kurangi gerak | Guidance and settings v2: guidanceMotion | |
-| `guidanceMotionInfo` | Gentler animations. Your phone’s reduced motion preference is also respected. | Animasi lebih tenang. Preferensi kurangi gerak HP juga tetap diikuti. | Guidance and settings v2: guidanceMotionInfo | |
-| `guidanceResetAreas` | All areas, layouts, queues and home activities are reset too. Language, sound, reduced motion and today’s reward limits stay. | Semua area, tata letak, antrean dan kegiatan rumah ikut direset. Bahasa, suara, kurangi gerak dan jatah hadiah hari ini tetap. | Guidance and settings v2: guidanceResetAreas | |
-| `guidanceSaving` | Saving… | Menyimpan… | Paid hint storage is in progress, without loading an ad. | |
-| `guidanceConsentFailed` | Couldn’t open the ad privacy choices. Try again later. | Pilihan privasi iklan belum bisa dibuka. Coba lagi nanti, ya. | The ad privacy consent form failed to open. | |
 
 ---
 
@@ -683,8 +562,8 @@ WHAT'S INSIDE
 • Rule cards and short tutorials that teach as you go
 • Stuck? Hints reveal one tile at a time, paid with coins or a short optional video ad
 • Coins from new stars, a daily bonus, happy cats, and optional ads
-• Four free areas to relax, eat, play, and care for cats. Decorate each area: cushion bed, scratching post, aquarium, rug, and more from the Shop
-• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Offer snacks and pets, or invite them to eat, play, or get brushed. Claim daily cat rewards together
+• A room for Oyen to decorate your way: cushion bed, scratching post, aquarium, rug, and more from the Shop
+• Adopt eight more cats, from Charcoal the black cat to Boss, who is always in a suit. Treat them to snacks and pets, and they pay you back in coins
 • Accessories for every cat: ribbons, bandanas, beanies, chef hats, all the way up to a King's Crown
 • Calm music and cute sound effects (each can be switched off)
 • English, Indonesian, Brazilian Portuguese, and Russian

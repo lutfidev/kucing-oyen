@@ -8,7 +8,6 @@ import '../../app/game_audio.dart';
 import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
 import '../../l10n/l10n.dart';
-import '../../theme/puzzle_theme.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
@@ -27,43 +26,20 @@ class ResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final space = context.koSpace;
-    return Theme(
-      data: puzzleTheme(),
-      child: ColoredBox(
-        color: background,
-        // System insets go into the scroll padding (not a SafeArea) so the
-        // scroll clip spans the whole screen and rays never show a straight
-        // edge under the status or navigation bar.
-        child: LayoutBuilder(
-          builder: (context, box) {
-            final padding =
-                EdgeInsets.fromLTRB(
-                  space.gutter,
-                  space.s8,
-                  space.gutter,
-                  space.s16,
-                ) +
-                MediaQuery.paddingOf(context);
-            final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
-            final inner = box.deflate(padding);
-            // Preserve the outcome illustration on short portrait screens;
-            // controls remain reachable by scrolling instead of hiding art.
-            final baseHeight = inner.maxWidth < inner.maxHeight ? 760.0 : 590.0;
-            final height = math.max(
-              inner.maxHeight,
-              baseHeight + (textScale - 1) * 650,
-            );
-            return SingleChildScrollView(
-              padding: padding,
-              child: SizedBox(
-                height: height,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: children,
-                ),
-              ),
-            );
-          },
+    return ColoredBox(
+      color: background,
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            space.gutter,
+            space.s8,
+            space.gutter,
+            space.s16,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: children,
+          ),
         ),
       ),
     );
@@ -324,6 +300,7 @@ class ResultStat extends StatelessWidget {
     final space = context.koSpace;
     final s = context.koSize;
     final r = context.koRadius;
+    final gap = compact ? space.s8 : space.s10;
     final icon = this.icon;
     final leading =
         this.leading ??
@@ -335,32 +312,34 @@ class ResultStat extends StatelessWidget {
       label: '$prefix$value $label',
       excludeSemantics: true,
       child: Container(
-        height: 68 + (MediaQuery.textScalerOf(context).scale(16) / 16 - 1) * 70,
+        height: compact ? s.statBoxCompact : s.statBox,
         padding: EdgeInsets.symmetric(horizontal: space.s8),
         decoration: BoxDecoration(
           color: c.surface,
           borderRadius: BorderRadius.circular(compact ? r.statCompact : r.stat),
           border: Border.all(color: c.line, width: s.border),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (leading != null) ...[leading, SizedBox(width: space.s4)],
-                  Text('$prefix$value', style: t.heading),
-                ],
-              ),
+        child: Center(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (leading != null) ...[leading, SizedBox(width: gap)],
+                Text(
+                  '$prefix$value',
+                  maxLines: 1,
+                  style: compact ? t.numberCompact : t.number,
+                ),
+                SizedBox(width: gap),
+                Text(
+                  label,
+                  maxLines: 1,
+                  style: t.chipLabel.copyWith(color: c.inkSoft),
+                ),
+              ],
             ),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: t.caption.copyWith(color: c.inkSoft),
-            ),
-          ],
+          ),
         ),
       ),
     );
