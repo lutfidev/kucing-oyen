@@ -38,6 +38,6 @@ Satu ruangan per layar, **berperspektif satu titik hilang**: dinding belakang di
 ## Agar bisa disalin ke game
 
 - Gambar ruangan sebagai SVG di dalam `.dc.html`, dengan lapisan terpisah: **latar** (dinding, lantai, pemandangan lewat pintu), **kusen pintu depan**, dan **cahaya/bayangan**.
-- Tuliskan koordinat penting di catatan artboard: sudut lantai (trapesium), titik hilang, bukaan pintu dan ambangnya, jalur pintu, dinding untuk barang dinding, dan **tempat nyaman** kucing (ruang tengah: bawah jendela, tengah lantai, ambang pintu; teras: petak matahari, dekat pagar, dekat pot, ambang pintu).
+- Tuliskan koordinat penting di catatan artboard: sudut lantai (trapesium), titik hilang, bukaan pintu dan ambangnya, jalur pintu, dinding untuk barang dinding (ruang tengah), titik gantung di balok atap (teras), letak ikon perhatian, dan **tempat nyaman** kucing (ruang tengah: bawah jendela, tengah lantai, ambang pintu; teras: petak matahari, dekat pagar, dekat pot, ambang pintu).
 - Ukuran sprite menurut kedalaman: tuliskan skala di garis paling belakang dan paling depan lantai.
 - Animasi kecil boleh (awan bergerak, daun bergoyang, cahaya berdenyut pelan) dalam CSS `@keyframes` seperti kamar v1.
