@@ -163,7 +163,7 @@ void main() {
     expect(at(75, 75), _near(const Color(0xFFF4D6A5)));
     expect(at(125, 75), _near(const Color(0xFFEDC791)));
     // Wallpaper, cupboard and fridge surfaces.
-    expect(at(5, 205), _near(KoUi.peach));
+    expect(at(5, 205), _near(PuzzleArt.wall));
     expect(at(160, 70), _near(KoUi.honey));
     expect(at(175, 30), _near(KoUi.paper));
     // Valid destination: paper 45% over the wooden floor.
@@ -175,8 +175,9 @@ void main() {
     );
     // Badan Oyen tidur, titik (80, 70) sprite: 194 + 80·0,62, 138 + 70·0,62.
     expect(at(225, 175), isNot(_near(PuzzleArt.floorAlt)));
-    expect(at(200, 182), _near(const Color(0xFFF59A33)));
-    expect(at(200, 184), _near(const Color(0xFFFFFBF3)));
+    // Lencana arah kiri setinggi kaki (facingCenter), bukan di wajah.
+    expect(at(200, 188), _near(const Color(0xFFF59A33)));
+    expect(at(194, 197), _near(const Color(0xFFFFFBF3)));
     // Cincin bingkai di luar papan dan di sudut yang terpotong.
     expect(at(-2, 225), _near(const Color(0xFF5E3B22)));
     expect(at(3, 3), _near(const Color(0xFF5E3B22)));
@@ -193,8 +194,14 @@ void main() {
     );
     final at = await _sampler(await _renderBoard(scene));
 
-    // Player item has an orange rounded-square marker.
-    expect(at(154, 175), _near(KoUi.orange));
+    // Player item sits on a soft orange floor ring, not a paper sticker.
+    expect(at(154, 175), _near(PuzzleArt.floor));
+    expect(
+      at(175, 196),
+      _near(
+        Color.alphaBlend(KoUi.orange.withValues(alpha: .3), PuzzleArt.floor),
+      ),
+    );
     // Air di ember.
     expect(at(175, 171), _near(KoUi.water));
     // Perut Oyen (50, 77) sprite → 194 + 31, 188 + 47,74.

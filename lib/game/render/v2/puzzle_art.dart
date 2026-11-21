@@ -15,6 +15,12 @@ abstract final class PuzzleArt {
   static const floor = Color(0xFFF4D6A5);
   static const floorAlt = Color(0xFFEDC791);
   static const wood = Color(0xFFC18B52);
+
+  /// Walls/cupboards, darker than [floor] so the room outline reads at a glance.
+  static const wall = Color(0xFFE0AE7C);
+
+  /// Soft floor ring under items the player placed (instead of a sticker).
+  static const playerMark = Rect.fromLTWH(7, 35, 36, 13);
   static const fish = Color(0xFFB0C6B5);
   static const blue = Color(0xFF498BA7);
   static final cat = ArtPack.oyen(puzzleCatSources);
@@ -87,16 +93,16 @@ void paintPuzzleItem(
   bool player = true,
 }) {
   if (player && !ghost) {
-    PuzzleArt.box(c, const Rect.fromLTWH(4, 5, 42, 40), KoUi.paper, radius: 12);
-    c.drawRRect(
-      RRect.fromRectAndRadius(
-        const Rect.fromLTWH(4, 5, 42, 40),
-        const Radius.circular(12),
-      ),
+    c.drawOval(
+      PuzzleArt.playerMark,
+      Paint()..color = KoUi.orange.withValues(alpha: .3),
+    );
+    c.drawOval(
+      PuzzleArt.playerMark,
       Paint()
-        ..color = KoUi.orange
+        ..color = KoUi.orange.withValues(alpha: .8)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.5,
+        ..strokeWidth = 2,
     );
   }
   switch (item) {
@@ -221,7 +227,12 @@ void _paintPuzzleFloor(Canvas c, Tile tile) {
 void _paintPuzzleObject(Canvas c, Tile tile, double glowOpacity) {
   final kind = tile.kind;
   if (kind.isWallish) {
-    PuzzleArt.box(c, const Rect.fromLTWH(1, 1, 48, 48), KoUi.peach, radius: 3);
+    PuzzleArt.box(
+      c,
+      const Rect.fromLTWH(1, 1, 48, 48),
+      PuzzleArt.wall,
+      radius: 3,
+    );
     PuzzleArt.line(
       c,
       const Offset(2, 41),
@@ -485,9 +496,9 @@ void paintPuzzleLiftedItem(Canvas c, Item item, {required Color shadow}) {
   );
   c.translate(0, 12);
   c.scale(ItemArt.liftSize / 50);
-  paintPuzzleItem(c, item);
+  paintPuzzleItem(c, item, player: false);
   c.restore();
   c.scale(ItemArt.liftSize / 50);
-  paintPuzzleItem(c, item);
+  paintPuzzleItem(c, item, player: false);
   c.restore();
 }

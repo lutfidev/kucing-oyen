@@ -14,6 +14,7 @@ import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_areas.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/render/v2/art_pack.dart';
 import 'package:kucing_oren/game/render/v2/painted_scenery.dart';
@@ -23,6 +24,7 @@ import 'package:kucing_oren/screens/shop/shop_screen.dart';
 import 'package:kucing_oren/theme/ko_ui.dart';
 import 'package:kucing_oren/widgets/game_art.dart';
 import 'package:kucing_oren/widgets/v2/ui_button.dart';
+import 'package:kucing_oren/widgets/v2/ui_components.dart';
 import 'package:kucing_oren/widgets/v2/ui_edge_fade.dart';
 import 'package:kucing_oren/widgets/v2/catalog_art.dart';
 
@@ -467,4 +469,91 @@ void main() {
       c.dispose();
     },
   );
+
+  group('tata letak 14b', () {
+    Finder coinIn(String k) =>
+        find.descendant(of: key(k), matching: find.byType(CoinView));
+
+    testWidgets('judul Toko tepat di tengah layar', (t) async {
+      final c = await load();
+      await pump(t, c, tab: ShopTab.items);
+      final title = t.getRect(find.text('Toko'));
+      expect(title.center.dx, closeTo(390 / 2, 1));
+      c.dispose();
+    });
+
+    testWidgets('harga adopsi, aksesoris, camilan memakai ikon koin', (
+      t,
+    ) async {
+      final c = await load();
+      await pump(t, c, tab: ShopTab.kitties);
+      expect(coinIn('shop-kitty-telon'), findsOneWidget);
+      await tap(t, 'shop-tab-accessories');
+      await tap(t, 'shop-accessory-${accessories.last.id.name}');
+      expect(coinIn('shop-preview-buy'), findsOneWidget);
+      // Ikon koin tidak dibacakan; satuannya tetap ada di label semantik.
+      final semantics = t.ensureSemantics();
+      expect(
+        t.getSemantics(key('shop-preview-buy')).label,
+        contains(l10nId.buyPay(accessories.last.price)),
+      );
+      semantics.dispose();
+      expect(
+        coinIn('shop-accessory-${accessories.last.id.name}'),
+        findsOneWidget,
+      );
+      await tap(t, 'shop-tab-snacks');
+      expect(coinIn('shop-snack-${snacks.first.id.name}'), findsOneWidget);
+      c.dispose();
+    });
+
+    testWidgets('saldo besar tetap satu baris di 360 dp, teks 130%, ru', (
+      t,
+    ) async {
+      setScreenSize(t, const Size(360, 640));
+      setTextScale(t, 1.3);
+      Future<double> chip(int coins) async {
+        final c = await load(lang: AppLanguage.ru, coins: coins);
+        await pump(t, c, tab: ShopTab.items);
+        final h = t.getSize(key('shop-balance')).height;
+        c.dispose();
+        return h;
+      }
+
+      expect(await chip(99999), await chip(480));
+    });
+
+    testWidgets('pratinjau ringkas, kelangkaan chip, Coba di satu baris', (
+      t,
+    ) async {
+      final c = await load();
+      await pump(t, c, tab: ShopTab.accessories);
+      final card = t.getRect(find.byKey(const ValueKey('shop-preview-card')));
+      expect(card.height, lessThan(260));
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('shop-preview-card')),
+          matching: find.byType(UiChip),
+        ),
+        findsOneWidget,
+      );
+      final picks = [
+        for (final k in ['oyen', 'salju'])
+          t.getRect(find.byKey(ValueKey('shop-preview-$k'))),
+      ];
+      expect(picks[0].top, picks[1].top);
+      expect(
+        find.ancestor(
+          of: find.byKey(const ValueKey('shop-preview-oyen')),
+          matching: find.byWidgetPredicate(
+            (w) =>
+                w is SingleChildScrollView &&
+                w.scrollDirection == Axis.horizontal,
+          ),
+        ),
+        findsOneWidget,
+      );
+      c.dispose();
+    });
+  });
 }

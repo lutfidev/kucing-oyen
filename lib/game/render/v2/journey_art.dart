@@ -86,17 +86,35 @@ abstract final class JourneyArt {
     }
   }
 
+  /// Rays fade to nothing before this radius, so no straight tip shows.
+  static const double raysRadius = 640;
+
+  /// Bowl sits beside Oyen (to the right of centre), not over the paws.
+  static const double bowlShift = 84;
+
   static void rays(Canvas c) {
+    const half = raysRadius * 65 / 310;
+    final paint = Paint()
+      ..shader = Gradient.radial(
+        Offset.zero,
+        raysRadius,
+        [
+          KoUi.honey.withValues(alpha: .16),
+          KoUi.honey.withValues(alpha: .16),
+          KoUi.honey.withValues(alpha: 0),
+        ],
+        const [0, .3, 1],
+      );
     for (var i = 0; i < 12; i++) {
       c.save();
       c.rotate(i * math.pi / 6);
       c.drawPath(
         Path()
           ..moveTo(0, 0)
-          ..lineTo(-65, -310)
-          ..lineTo(65, -310)
+          ..lineTo(-half, -raysRadius)
+          ..lineTo(half, -raysRadius)
           ..close(),
-        Paint()..color = KoUi.honey.withValues(alpha: .16),
+        paint,
       );
       c.restore();
     }
@@ -511,7 +529,7 @@ abstract final class JourneyArt {
       Rect.fromLTWH(center - 86, size.height - 185, 172, 172),
       motion: broken ? CatMotion.startled : CatMotion.win,
     );
-    final bowl = Offset(center, size.height - 29);
+    final bowl = Offset(center + bowlShift, size.height - 29);
     PuzzleArt.shape(
       c,
       Path()
@@ -541,7 +559,7 @@ abstract final class JourneyArt {
     }
     if (broken) {
       for (var k = 0; k < 4; k++) {
-        final x = center + 60 + k % 2 * 19.0;
+        final x = center - bowlShift - 26 + k % 2 * 19.0;
         final y = size.height - 48 + k ~/ 2 * 15.0;
         PuzzleArt.shape(
           c,
