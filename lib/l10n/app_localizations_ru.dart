@@ -2131,4 +2131,34 @@ class AppLocalizationsRu extends AppLocalizations {
     });
     return '$name $_temp0';
   }
+
+  @override
+  String kittyInRoom(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Сейчас в гостиной.',
+      'terrace': 'Сейчас на террасе.',
+      'other': 'Сейчас в гостиной.',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String inviteTo(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Позвать в гостиную',
+      'terrace': 'Позвать на террасу',
+      'other': 'Позвать в гостиную',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String liftHint(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Неси к двери, чтобы позвать в гостиную',
+      'terrace': 'Неси к двери, чтобы позвать на террасу',
+      'other': 'Неси к двери, чтобы позвать в гостиную',
+    });
+    return '$_temp0';
+  }
 }

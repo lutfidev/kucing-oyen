@@ -256,6 +256,9 @@ class CatLife {
   /// memilih pindah ruangan sendiri.
   double stayLeft = 0;
 
+  /// Sedang diajak pindah: betah dimulai saat masuk ruangan tujuan.
+  bool invited = false;
+
   /// Detik sampai kegiatan diam/pakai/reaksi/lewat pintu selesai.
   double remaining;
 
@@ -449,6 +452,47 @@ class RoomLife {
     _rest(cat);
   }
 
+  /// Pemain mengajak [kitty] ke ruangan sebelah (tombol kartu atau
+  /// tahan-seret): ia berjalan ke ambang lalu lewat pintu, atau langsung
+  /// keluar dari ambang ([atDoor], dilepas di pintu), atau langsung ada di
+  /// ambang ruangan tujuan ([instant], kurangi gerak). Sesudah masuk ia
+  /// betah [lifeStaySeconds]. Ajakan baru mengganti yang lama, jadi pemain
+  /// bisa memanggilnya balik kapan saja.
+  void invite(KittyId kitty, {bool atDoor = false, bool instant = false}) {
+    final cat = _cats[kitty];
+    if (cat == null) return;
+    if (cat.isPassing) _finishPassing(cat);
+    _rest(cat);
+    if (instant) {
+      final to = cat.room.other;
+      cat
+        ..room = to
+        ..spot = floor.threshold(to)
+        ..stayLeft = lifeStaySeconds;
+      return;
+    }
+    cat
+      ..invited = true
+      ..stayLeft = 0
+      ..traveling = true;
+    if (atDoor) {
+      cat.spot = floor.threshold(cat.room);
+      _reach(cat, const []);
+    } else {
+      _startWalk(cat, floor.threshold(cat.room), const []);
+    }
+  }
+
+  /// Kucing [kitty] diletakkan pemain di [spot] (dilepas di lantai), lalu
+  /// diam dan lanjut seperti biasa.
+  void moveTo(KittyId kitty, Spot spot) {
+    final cat = _cats[kitty];
+    if (cat == null) return;
+    if (cat.isPassing) _finishPassing(cat);
+    _rest(cat);
+    cat.spot = spot;
+  }
+
   /// Kucing di barang dinding atau sedang melompat ke atau darinya.
   static bool _isRaised(CatLife cat) =>
       cat.hops > 0 && (cat.isHopping || cat.activity == CatActivity.using);
@@ -502,6 +546,11 @@ class RoomLife {
           _enter(cat, events);
         case CatActivity.entering:
           cat.traveling = false;
+          if (cat.invited) {
+            cat
+              ..invited = false
+              ..stayLeft = lifeStaySeconds;
+          }
           events.add(EnteredRoom(cat.kitty, cat.room));
           _next(cat, events, justEntered: true);
         default:
@@ -517,6 +566,7 @@ class RoomLife {
       ..item = null
       ..place = null
       ..traveling = false
+      ..invited = false
       ..activity = sad ? CatActivity.sad : CatActivity.idle
       ..pose = sad ? LifePose.sad : LifePose.idle
       ..heading = LifeHeading.down
@@ -540,8 +590,10 @@ class RoomLife {
       ..remaining = lifeDoorSeconds;
   }
 
-  /// Lewat pintu langsung selesai: kucing diam di ambang ruangan tujuan.
+  /// Lewat pintu langsung selesai: kucing diam di ambang ruangan tujuan
+  /// (dan betah di sana kalau diajak).
   void _finishPassing(CatLife cat) {
+    final invited = cat.invited;
     if (cat.activity == CatActivity.leaving) {
       final to = cat.room.other;
       cat
@@ -549,6 +601,7 @@ class RoomLife {
         ..spot = floor.threshold(to);
     }
     _rest(cat);
+    if (invited) cat.stayLeft = lifeStaySeconds;
   }
 
   void _walk(CatLife cat, double seconds, List<LifeEvent> events) {
@@ -655,8 +708,12 @@ class RoomLife {
       ..traveling = false
       ..hops = 0;
     if (bowl != null && !wasEating && _hungry.contains(cat.kitty)) {
-      if (_roomOf(bowl) != cat.room) return _goTravel(cat, events);
-      if (!taken.contains(bowl)) return _go(cat, bowl, events);
+      if (_roomOf(bowl) != cat.room) {
+        // Selama betah, kucing lapar menunggu (bar turun pelan).
+        if (cat.stayLeft <= 0) return _goTravel(cat, events);
+      } else if (!taken.contains(bowl)) {
+        return _go(cat, bowl, events);
+      }
     }
     if (_sad.contains(cat.kitty)) return _rest(cat);
     final roomPlaces = places[cat.room] ?? const <LifePlace>[];

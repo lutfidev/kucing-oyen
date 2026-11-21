@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../game/model/house.dart';
@@ -72,6 +74,155 @@ class RoomChip extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Pintu menyala saat kucing diangkat (`AdeganTengah.dc.html` mode
+/// `angkat`): bukaan diisi kuning lembut dengan garis tebal yang
+/// berdenyut (`rmDenyut`), lalu garis putus oranye di atasnya. [time] =
+/// detik denyut, null = diam (kurangi gerak).
+class DoorGlow extends StatelessWidget {
+  const DoorGlow({super.key, required this.geo, this.time});
+
+  final RoomGeometry geo;
+  final double? time;
+
+  /// Opasitas desain: isi 0,3, garis tebal 0,45; denyut 0,78–1 tiap 5 detik.
+  static const fillOpacity = 0.3;
+  static const ringOpacity = 0.45;
+  static const pulseLow = 0.78;
+  static const pulseSeconds = 5.0;
+
+  /// Tebal garis (px desain): garis tebal 10, garis putus 3,5 (8 garis, 6
+  /// celah).
+  static const ringWidth = 10.0;
+  static const dashWidth = 3.5;
+  static const dash = 8.0;
+  static const gap = 6.0;
+
+  /// Kekuatan denyut pada detik [time] (1 = penuh).
+  static double pulse(double? time) {
+    if (time == null) return 1;
+    final phase = (time % pulseSeconds) / pulseSeconds;
+    return pulseLow +
+        (1 - pulseLow) * (0.5 - 0.5 * math.cos(2 * math.pi * phase));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    return IgnorePointer(
+      child: CustomPaint(
+        size: Size.infinite,
+        painter: _DoorGlowPainter(
+          door: geo.door,
+          glow: c.star,
+          line: c.orange,
+          pulse: pulse(time),
+          unit: geo.artScale,
+        ),
+      ),
+    );
+  }
+}
+
+class _DoorGlowPainter extends CustomPainter {
+  _DoorGlowPainter({
+    required this.door,
+    required this.glow,
+    required this.line,
+    required this.pulse,
+    required this.unit,
+  });
+
+  final Path door;
+  final Color glow;
+  final Color line;
+  final double pulse;
+  final double unit;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawPath(
+      door,
+      Paint()..color = glow.withValues(alpha: DoorGlow.fillOpacity * pulse),
+    );
+    canvas.drawPath(
+      door,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeJoin = StrokeJoin.round
+        ..strokeWidth = DoorGlow.ringWidth * unit
+        ..color = glow.withValues(alpha: DoorGlow.ringOpacity * pulse),
+    );
+    final dashPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeJoin = StrokeJoin.round
+      ..strokeWidth = DoorGlow.dashWidth * unit
+      ..color = line;
+    for (final metric in door.computeMetrics()) {
+      for (
+        var d = 0.0;
+        d < metric.length;
+        d += (DoorGlow.dash + DoorGlow.gap) * unit
+      ) {
+        canvas.drawPath(
+          metric.extractPath(d, d + DoorGlow.dash * unit),
+          dashPaint,
+        );
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_DoorGlowPainter old) =>
+      old.pulse != pulse || old.door != door || old.unit != unit;
+}
+
+/// Status saat kucing diangkat (`HeaderRumah.dc.html`, `isAngkat`):
+/// "Bawa ke pintu untuk ajak ke …", dibacakan pembaca layar.
+class LiftStatus extends StatelessWidget {
+  const LiftStatus({super.key, required this.to});
+
+  /// Ruangan tujuan kalau kucing dilepas di pintu.
+  final HouseRoom to;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    final space = context.koSpace;
+    return Semantics(
+      liveRegion: true,
+      container: true,
+      child: Container(
+        constraints: BoxConstraints(minHeight: s.roomDecorateButton),
+        padding: EdgeInsetsDirectional.only(
+          start: space.s10,
+          end: space.s16,
+          top: space.s4,
+          bottom: space.s4,
+        ),
+        decoration: BoxDecoration(
+          color: c.surface,
+          borderRadius: BorderRadius.circular(context.koRadius.pill),
+          boxShadow: KoShadow.solid(c.line, s.border),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            KoIcon(KoIcons.door, size: s.iconCompact, color: c.orangeDeep),
+            SizedBox(width: space.s8),
+            Flexible(
+              child: Text(
+                context.l10n.liftHint(to.name),
+                style: context.koType.cardBodyStrong.copyWith(color: c.ink),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

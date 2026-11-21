@@ -493,5 +493,8 @@
   "snackEmptyNote": "Stoknya habis. Beli camilan lagi di Toko!",
   "roomName": "{room, select, living{Ruang tengah} terrace{Teras} other{Ruang tengah}}",
   "doorTo": "{room, select, living{Pergi ke ruang tengah} terrace{Pergi ke teras} other{Pergi ke ruang tengah}}",
-  "kittyLeftTo": "{name} {room, select, living{pindah ke ruang tengah} terrace{keluar ke teras} other{pindah ke ruang tengah}}"
+  "kittyLeftTo": "{name} {room, select, living{pindah ke ruang tengah} terrace{keluar ke teras} other{pindah ke ruang tengah}}",
+  "kittyInRoom": "{room, select, living{Sedang di ruang tengah.} terrace{Sedang di teras.} other{Sedang di ruang tengah.}}",
+  "inviteTo": "{room, select, living{Ajak ke ruang tengah} terrace{Ajak ke teras} other{Ajak ke ruang tengah}}",
+  "liftHint": "{room, select, living{Bawa ke pintu untuk ajak ke ruang tengah} terrace{Bawa ke pintu untuk ajak ke teras} other{Bawa ke pintu untuk ajak ke ruang tengah}}"
 }

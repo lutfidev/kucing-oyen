@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/accessories.dart';
+import '../../game/model/house.dart';
 import '../../game/model/kitties.dart';
 import '../../game/model/needs.dart';
 import '../../game/model/room_life.dart';
@@ -23,21 +24,30 @@ import 'room_reaction.dart';
 
 enum _Panel { snacks, accessories }
 
-/// Kartu kucing di kamar (`Kamar.dc.html`, keadaan `kartu`): nama,
-/// keterangan Toko, bar Lapar dan Senang, lalu Camilan, Elus, dan
-/// Aksesoris. Isinya bisa digulir di layar pendek.
+/// Kartu kucing di kamar (`Kamar.dc.html`, keadaan `kartu`;
+/// `RuangTengah.dc.html`): nama, keterangan Toko dan ruangannya sekarang,
+/// bar Lapar dan Senang, Camilan, Elus, dan Aksesoris, lalu "Ajak ke …"
+/// ruangan sebelah. Isinya bisa digulir di layar pendek.
 class KittyCard extends StatefulWidget {
   const KittyCard({
     super.key,
     required this.progress,
     required this.kitty,
+    required this.room,
     required this.onReaction,
+    required this.onInvite,
     required this.onClose,
   });
 
   final ProgressController progress;
   final KittyId kitty;
+
+  /// Ruangan tempat kucing berada sekarang.
+  final HouseRoom room;
   final void Function(RoomReaction reaction) onReaction;
+
+  /// "Ajak ke …": kucing diajak ke ruangan sebelah (kartu ditutup).
+  final VoidCallback onInvite;
   final VoidCallback onClose;
 
   @override
@@ -206,6 +216,15 @@ class _KittyCardState extends State<KittyCard> {
                 ),
                 SizedBox(height: space.s12),
                 _buttons(),
+                SizedBox(height: space.s12),
+                KoButton(
+                  key: const ValueKey('kitty-invite'),
+                  kind: KoButtonKind.success,
+                  icon: KoIcons.doorOut,
+                  height: context.koSize.roomCardButton,
+                  label: l.inviteTo(widget.room.other.name),
+                  onPressed: widget.onInvite,
+                ),
                 if (_panel == _Panel.snacks) ...[
                   SizedBox(height: space.s12),
                   _snacks(),
@@ -266,7 +285,7 @@ class _KittyCardState extends State<KittyCard> {
               ),
               SizedBox(height: space.s2),
               Text(
-                kittyDesc(l, _kitty),
+                '${kittyDesc(l, _kitty)} ${l.kittyInRoom(widget.room.name)}',
                 style: t.cardText.copyWith(
                   color: c.inkSoft,
                   height: _descHeight,

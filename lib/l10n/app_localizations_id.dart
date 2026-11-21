@@ -1940,4 +1940,34 @@ class AppLocalizationsId extends AppLocalizations {
     });
     return '$name $_temp0';
   }
+
+  @override
+  String kittyInRoom(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Sedang di ruang tengah.',
+      'terrace': 'Sedang di teras.',
+      'other': 'Sedang di ruang tengah.',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String inviteTo(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Ajak ke ruang tengah',
+      'terrace': 'Ajak ke teras',
+      'other': 'Ajak ke ruang tengah',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String liftHint(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Bawa ke pintu untuk ajak ke ruang tengah',
+      'terrace': 'Bawa ke pintu untuk ajak ke teras',
+      'other': 'Bawa ke pintu untuk ajak ke ruang tengah',
+    });
+    return '$_temp0';
+  }
 }

@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-494 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+497 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -521,6 +521,9 @@ files and anything written there is overwritten.
 | `roomName` | {room, select, living{Living room} terrace{Terrace} other{Living room}} | {room, select, living{Ruang tengah} terrace{Teras} other{Ruang tengah}} | Name of a room of Oyen's house: the living room or the terrace. Shown on the small chip that leads back to the living room. Placeholders: `{room}`. | |
 | `doorTo` | {room, select, living{Go to the living room} terrace{Go to the terrace} other{Go to the living room}} | {room, select, living{Pergi ke ruang tengah} terrace{Pergi ke teras} other{Pergi ke ruang tengah}} | Screen-reader label of the open door between the two rooms of Oyen's house; tapping it walks to the other room. Placeholders: `{room}`. | |
 | `kittyLeftTo` | {name} {room, select, living{went to the living room} terrace{went out to the terrace} other{went to the living room}} | {name} {room, select, living{pindah ke ruang tengah} terrace{keluar ke teras} other{pindah ke ruang tengah}} | Short screen-reader announcement when a cat walks out of the room the player is looking at, through the door to the other room. Placeholders: `{name}`, `{room}`. | |
+| `kittyInRoom` | {room, select, living{In the living room right now.} terrace{Out on the terrace right now.} other{In the living room right now.}} | {room, select, living{Sedang di ruang tengah.} terrace{Sedang di teras.} other{Sedang di ruang tengah.}} | Sentence added after a cat's description on its card: which room of the house the cat is in now. Placeholders: `{room}`. | |
+| `inviteTo` | {room, select, living{Take to the living room} terrace{Take to the terrace} other{Take to the living room}} | {room, select, living{Ajak ke ruang tengah} terrace{Ajak ke teras} other{Ajak ke ruang tengah}} | Green button on a cat's card (and screen-reader action on the cat): the cat walks through the door to the named room and stays there a while. Placeholders: `{room}`. | |
+| `liftHint` | {room, select, living{Bring to the door to go to the living room} terrace{Bring to the door to go to the terrace} other{Bring to the door to go to the living room}} | {room, select, living{Bawa ke pintu untuk ajak ke ruang tengah} terrace{Bawa ke pintu untuk ajak ke teras} other{Bawa ke pintu untuk ajak ke ruang tengah}} | Status shown while the player holds and drags a cat: drop it on the glowing door to send it to the named room. Placeholders: `{room}`. | |
 
 ---
 

@@ -2714,5 +2714,32 @@
         "type": "String"
       }
     }
+  },
+  "kittyInRoom": "{room, select, living{In the living room right now.} terrace{Out on the terrace right now.} other{In the living room right now.}}",
+  "@kittyInRoom": {
+    "description": "Sentence added after a cat's description on its card: which room of the house the cat is in now.",
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteTo": "{room, select, living{Take to the living room} terrace{Take to the terrace} other{Take to the living room}}",
+  "@inviteTo": {
+    "description": "Green button on a cat's card (and screen-reader action on the cat): the cat walks through the door to the named room and stays there a while.",
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "liftHint": "{room, select, living{Bring to the door to go to the living room} terrace{Bring to the door to go to the terrace} other{Bring to the door to go to the living room}}",
+  "@liftHint": {
+    "description": "Status shown while the player holds and drags a cat: drop it on the glowing door to send it to the named room.",
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
   }
 }

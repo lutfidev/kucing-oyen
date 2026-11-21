@@ -2101,4 +2101,34 @@ class AppLocalizationsPt extends AppLocalizations {
     });
     return '$name $_temp0';
   }
+
+  @override
+  String kittyInRoom(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Agora está na sala.',
+      'terrace': 'Agora está na varanda.',
+      'other': 'Agora está na sala.',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String inviteTo(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Levar para a sala',
+      'terrace': 'Levar para a varanda',
+      'other': 'Levar para a sala',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String liftHint(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Leve até a porta para ir à sala',
+      'terrace': 'Leve até a porta para ir à varanda',
+      'other': 'Leve até a porta para ir à sala',
+    });
+    return '$_temp0';
+  }
 }

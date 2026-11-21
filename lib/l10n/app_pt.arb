@@ -493,5 +493,8 @@
   "snackEmptyNote": "Acabou. Compre mais petiscos na Loja!",
   "roomName": "{room, select, living{Sala} terrace{Varanda} other{Sala}}",
   "doorTo": "{room, select, living{Ir para a sala} terrace{Ir para a varanda} other{Ir para a sala}}",
-  "kittyLeftTo": "{name} {room, select, living{foi para a sala} terrace{saiu para a varanda} other{foi para a sala}}"
+  "kittyLeftTo": "{name} {room, select, living{foi para a sala} terrace{saiu para a varanda} other{foi para a sala}}",
+  "kittyInRoom": "{room, select, living{Agora está na sala.} terrace{Agora está na varanda.} other{Agora está na sala.}}",
+  "inviteTo": "{room, select, living{Levar para a sala} terrace{Levar para a varanda} other{Levar para a sala}}",
+  "liftHint": "{room, select, living{Leve até a porta para ir à sala} terrace{Leve até a porta para ir à varanda} other{Leve até a porta para ir à sala}}"
 }

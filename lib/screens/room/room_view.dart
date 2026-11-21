@@ -128,6 +128,15 @@ class RoomView extends StatefulWidget {
   State<RoomView> createState() => _RoomViewState();
 }
 
+/// Kucing yang diangkat membesar 1,1× (`AdeganTengah` mode `angkat`), dan
+/// dilepas di pintu kalau jari dalam [liftDoorSlop] px desain dari
+/// bukaannya.
+const liftScale = 1.1;
+const liftDoorSlop = 16.0;
+
+/// Kucing yang diangkat naik 30 px desain di atas jari.
+const catLift = 30.0;
+
 /// Selang penyegaran bar kebutuhan, gelembung hadiah, dan label mangkuk.
 const roomRefreshInterval = Duration(seconds: 30);
 
@@ -209,6 +218,16 @@ class _RoomViewState extends State<RoomView>
 
   final _trayKey = GlobalKey();
 
+  /// Kucing yang sedang diangkat (tahan-seret), kotaknya saat diangkat,
+  /// dan titik jari (lokal rumah) saat mulai dan sekarang.
+  KittyId? _lifted;
+  Rect _liftBox = Rect.zero;
+  Offset _liftDown = Offset.zero;
+  Offset _liftPointer = Offset.zero;
+
+  /// Kotak kucing yang diangkat sekarang (sebelum diangkat ke atas jari).
+  Rect get _liftedBox => _liftBox.shift(_liftPointer - _liftDown);
+
   /// Kamar baru: belum punya barang selain mangkuk.
   bool get _empty =>
       _progress.home.room.owned.every((id) => roomItemOf(id).builtIn);
@@ -267,7 +286,11 @@ class _RoomViewState extends State<RoomView>
     final dt = ((elapsed - _lastTick).inMicroseconds / 1e6).clamp(0.0, 0.1);
     _lastTick = elapsed;
     _time += dt;
-    _life.paused = _selected != null || _decorating || _reaction != null;
+    _life.paused =
+        _selected != null ||
+        _decorating ||
+        _reaction != null ||
+        _lifted != null;
     for (final event in _life.advance(dt)) {
       switch (event) {
         case ReachedBowl(:final kitty):
@@ -385,6 +408,81 @@ class _RoomViewState extends State<RoomView>
   }
 
   void _closeCard() => setState(() => _selected = null);
+
+  /// Ajak [kitty] ke ruangan sebelah: berjalan lewat pintu, langsung
+  /// keluar dari ambang ([atDoor]), atau langsung pindah saat kurangi
+  /// gerak.
+  void _invite(KittyId kitty, {bool atDoor = false}) {
+    if (widget.life) {
+      _life.invite(kitty, atDoor: atDoor && !_still, instant: _still);
+    } else {
+      final to = _homeOf(kitty).$1.other;
+      _homes[kitty] = (to, const HouseFloor().threshold(to));
+    }
+    setState(() {});
+  }
+
+  /// Kucing paling depan di bawah [point] (lokal rumah), atau null.
+  KittyId? _kittyAt(Offset point) {
+    final geo = _geo;
+    if (geo == null) return null;
+    KittyId? best;
+    var bestFeet = double.negativeInfinity;
+    for (final MapEntry(key: kitty, value: box) in _shownBoxes.entries) {
+      final feet = geo.feetOf(box);
+      if (box.contains(point) && feet > bestFeet) {
+        best = kitty;
+        bestFeet = feet;
+      }
+    }
+    return best;
+  }
+
+  void _liftStart(Offset point) {
+    final kitty = _kittyAt(point);
+    final box = _shownBoxes[kitty];
+    if (kitty == null || box == null) return;
+    setState(() {
+      _lifted = kitty;
+      _liftBox = box;
+      _liftDown = point;
+      _liftPointer = point;
+    });
+  }
+
+  void _liftMove(Offset point) {
+    if (_lifted == null) return;
+    setState(() => _liftPointer = point);
+  }
+
+  /// Lepas kucing yang diangkat: di pintu (dilebarkan [liftDoorSlop]) =
+  /// diajak ke ruangan sebelah; di tempat lain = diletakkan di lantai di
+  /// bawah jari.
+  void _liftEnd() {
+    final kitty = _lifted;
+    final geo = _geo;
+    if (kitty == null || geo == null) return;
+    final box = _liftedBox;
+    final door = geo.door.getBounds().inflate(liftDoorSlop * geo.artScale);
+    setState(() => _lifted = null);
+    if (door.contains(_liftPointer)) {
+      _invite(kitty, atDoor: true);
+      return;
+    }
+    final spot = geo.catSpotAt(kitty, box);
+    if (widget.life) {
+      _life.moveTo(kitty, spot);
+    } else {
+      _homes[kitty] = (geo.which, spot);
+    }
+  }
+
+  /// Kucing yang memakai barang [id] (null kalau sedang diangkat).
+  KittyId? _userOf(RoomItemId id) {
+    if (!widget.life || _decorating) return null;
+    final user = _life.userOf(id);
+    return user == _lifted ? null : user;
+  }
 
   void _react(KittyId kitty, RoomReaction reaction) {
     if (reaction.sound case final sound?) _sound(sound);
@@ -585,7 +683,12 @@ class _RoomViewState extends State<RoomView>
                     key: ValueKey(selected),
                     progress: _progress,
                     kitty: selected,
+                    room: _catRoom(selected),
                     onReaction: (r) => _react(selected, r),
+                    onInvite: () {
+                      _closeCard();
+                      _invite(selected);
+                    },
                     onClose: _closeCard,
                   ),
                 ),
@@ -637,22 +740,35 @@ class _RoomViewState extends State<RoomView>
         _house == HouseRoom.terrace &&
         arrived == HouseRoom.terrace &&
         !_decorating;
+    final lifted = _lifted;
+    // Tahan-seret kucing: satu pengenal untuk seluruh ruangan, supaya
+    // seretan tidak putus saat kucing pindah lapisan.
+    final canLift = !_decorating && _selected == null;
     return Stack(
       key: const ValueKey('room-area'),
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(
-          child: HousePager(
-            room: _house,
-            enabled: !_decorating,
-            onRoom: (room) => setState(() => _house = room),
-            onArrive: (room) {
-              if (room != _arrived) setState(() => _arrived = room);
-            },
-            builder: (context, room) {
-              if (widget.life) _syncKitties(size);
-              return _room(RoomGeometry(size, room));
-            },
+          child: GestureDetector(
+            onLongPressStart: canLift
+                ? (d) => _liftStart(d.localPosition)
+                : null,
+            onLongPressMoveUpdate: canLift
+                ? (d) => _liftMove(d.localPosition)
+                : null,
+            onLongPressEnd: canLift ? (_) => _liftEnd() : null,
+            child: HousePager(
+              room: _house,
+              enabled: !_decorating && lifted == null,
+              onRoom: (room) => setState(() => _house = room),
+              onArrive: (room) {
+                if (room != _arrived) setState(() => _arrived = room);
+              },
+              builder: (context, room) {
+                if (widget.life) _syncKitties(size);
+                return _room(RoomGeometry(size, room));
+              },
+            ),
           ),
         ),
         Positioned(
@@ -667,7 +783,7 @@ class _RoomViewState extends State<RoomView>
             onCoins: () => showCoinSheet(context, _progress),
           ),
         ),
-        if (!empty || _decorating || terrace)
+        if (!empty || _decorating || terrace || lifted != null)
           Positioned(
             left: space.s16,
             right: space.s16,
@@ -675,7 +791,14 @@ class _RoomViewState extends State<RoomView>
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (_decorating)
+                if (lifted != null)
+                  Flexible(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: LiftStatus(to: _catRoom(lifted).other),
+                    ),
+                  )
+                else if (_decorating)
                   const Flexible(
                     child: Align(
                       alignment: AlignmentDirectional.centerStart,
@@ -694,7 +817,9 @@ class _RoomViewState extends State<RoomView>
                 // Hias per ruangan menyusul (langkah 35): sampai itu hanya
                 // di ruang tengah, supaya barang dari Gudang tidak pindah
                 // ke ruangan yang tidak tampil.
-                if ((!empty || _decorating) && _house == HouseRoom.living) ...[
+                if ((!empty || _decorating) &&
+                    _house == HouseRoom.living &&
+                    lifted == null) ...[
                   SizedBox(width: space.s8),
                   DecorateButton(
                     done: _decorating,
@@ -713,7 +838,9 @@ class _RoomViewState extends State<RoomView>
   Widget _room(RoomGeometry geo) {
     final living = geo.which == HouseRoom.living;
     if (geo.which == _house) _geo = geo;
-    bool here(KittyId kitty) => _catRoom(kitty) == geo.which;
+    final current = geo.which == _house;
+    final lifted = current ? _lifted : null;
+    bool here(KittyId kitty) => _catRoom(kitty) == geo.which && kitty != lifted;
     final c = context.koColors;
     final s = context.koSize;
     final space = context.koSpace;
@@ -773,6 +900,13 @@ class _RoomViewState extends State<RoomView>
           ),
           _ => null,
         },
+      if (lifted != null)
+        SceneShadow.ofCat(
+          _liftedBox,
+          geo.feetOf(_liftedBox),
+          unit: unit,
+          lifted: true,
+        ),
     ].nonNulls.toList();
     final scene = RoomScene(
       geo: geo,
@@ -832,12 +966,37 @@ class _RoomViewState extends State<RoomView>
             rect: box,
             child: _kitty(kitty, box, hopFacing: _hopFacing(kitty, geo)),
           ),
+        // Kucing yang diangkat: naik 30 px desain dan sedikit membesar
+        // dengan titik tumpu di kakinya (`AdeganTengah` mode `angkat`).
+        if (lifted != null)
+          Positioned.fromRect(
+            key: ValueKey(lifted),
+            rect: _liftedBox,
+            child: IgnorePointer(
+              child: Transform.translate(
+                offset: Offset(0, -catLift * unit),
+                child: Transform.scale(
+                  scale: liftScale,
+                  alignment: const Alignment(0, 2 * catFeetFactor - 1),
+                  child: _kitty(lifted, _liftedBox),
+                ),
+              ),
+            ),
+          ),
       ],
     );
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(child: scene),
+        if (lifted != null)
+          Positioned.fill(
+            child: DoorGlow(
+              key: const ValueKey('door-glow'),
+              geo: geo,
+              time: _animating ? _time : null,
+            ),
+          ),
         // Petunjuk rumah kosong di bawah gelembung dan tanda di atas kucing,
         // supaya gelembung hadiah Oyen tetap bisa diketuk.
         if (empty && !_decorating)
@@ -949,7 +1108,7 @@ class _RoomViewState extends State<RoomView>
         case KittySprite(:final kitty):
           boxes[kitty] = sprite.box;
         case ItemSprite(:final id):
-          final user = widget.life && !_decorating ? _life.userOf(id) : null;
+          final user = _userOf(id);
           if (user == null) continue;
           boxes[user] = geo.userBoxOf(id, sprite.box);
       }
@@ -1007,7 +1166,7 @@ class _RoomViewState extends State<RoomView>
   }) {
     final s = context.koSize;
     final id = sprite.id;
-    final user = widget.life && !_decorating ? _life.userOf(id) : null;
+    final user = _userOf(id);
     final time = _animating ? _time : null;
     if (user != null) {
       final mirror = geo.mirrorsInUse(id, sprite.box);
@@ -1091,6 +1250,12 @@ class _RoomViewState extends State<RoomView>
       },
       excludeSemantics: true,
       onTap: () => _select(kitty),
+      customSemanticsActions: {
+        CustomSemanticsAction(
+          label: l.inviteTo(_catRoom(kitty).other.name),
+        ): () =>
+            _invite(kitty),
+      },
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => _select(kitty),
