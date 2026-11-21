@@ -586,7 +586,6 @@ class _ShopScreenState extends State<ShopScreen> {
                         kittyName(l, kitty.id),
                       ),
                       selected: preview == kitty.id,
-                      compact: true,
                       kind: UiButtonKind.secondary,
                       onPressed: () => setState(() => preview = kitty.id),
                     ),

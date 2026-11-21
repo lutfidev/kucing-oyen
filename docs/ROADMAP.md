@@ -40,7 +40,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 13. Animasi, suara, aksesibilitas, dan performa
 - [x] 14. Screenshot, ikon, splash, dan materi Play Store baru
 - [x] 14a. Perbaikan visual cepat: panel rumah, ikon koin, tab Toko, latar peta
-- [ ] 14b. Rapikan Toko, layar hasil, dan puzzle
+- [x] 14b. Rapikan Toko, layar hasil, dan puzzle
 - [ ] 14c. Header dan panel rumah ringkas seperti konsep A
 - [ ] 14d. Kamar hidup: pose aktivitas, skala dan gaya prop
 - [ ] 14e. Ciri tiap area dan keselarasan gaya rumah dengan puzzle/peta
@@ -318,6 +318,15 @@ panel rumah dan tab Toko; ikon peta tanpa kotak lantai. Dijaga
 teks 100%/130% bebas dari masalah di atas, dijaga test.
 
 ### 14b. Rapikan Toko, layar hasil, dan puzzle
+
+**Selesai 21 November 2026:** judul Toko di tengah layar (dua sisi sama lebar),
+harga adopsi/aksesoris/camilan berikon koin, pratinjau aksesoris berdampingan
+dengan chip kelangkaan, "Coba di:" satu baris geser; sinar hasil memudar
+(`JourneyArt.raysRadius`) dan selebar layar, mangkuk di samping Oyen
+(`bowlShift`); benda pemain di papan tanpa stiker (elips `PuzzleArt.playerMark`),
+baki satu bingkai, lencana arah `facingCenter` di luar wajah, tembok
+`PuzzleArt.wall` lebih gelap. Dijaga `puzzle_polish_test`, `result_polish_test`,
+grup `tata letak 14b` di `shop_v2_test`; screenshot dan materi toko dibuat ulang.
 
 - Toko: judul di tengah layar; harga kartu aksesoris, adopsi kucing dan camilan
   memakai ikon koin emas seperti harga barang.

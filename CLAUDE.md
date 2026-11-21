@@ -240,3 +240,15 @@ lossless dan manifest, lalu `--check`; `--sheets` membuat contact sheet QA di
 build/store-review. Listing berubah: buat ulang review terjemahan.
 Laporan di docs/design-v2/store/REVIEW.md; belum ada upload/publikasi atau uji
 launcher/splash native HP. Berikutnya langkah 14a–14e (perbaikan desain) lalu langkah 15.
+
+## Rapikan Toko, hasil, puzzle — langkah 14b
+
+Benda pemain di papan ditandai elips lantai `PuzzleArt.playerMark`, bukan kotak
+kertas; baki dan benda diseret memanggil `paintPuzzleItem(player: false)`.
+Tembok `PuzzleArt.wall`. Lencana arah tidur di `facingCenter(dir)`
+(`board_painter.dart`). Sinar hasil memudar radial sampai
+`JourneyArt.raysRadius`; `ResultPage` menaruh padding di dalam scroll supaya
+klipnya selebar layar; mangkuk hasil digeser `JourneyArt.bowlShift`. Header
+Toko memakai dua sisi `Expanded` agar judul di tengah layar; harga memakai
+`CoinView` + `shopBuyShort`/`shopAdopt`/angka. Test `puzzle_polish_test`,
+`result_polish_test`, grup `tata letak 14b` di `shop_v2_test`.
