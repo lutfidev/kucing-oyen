@@ -3059,6 +3059,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{room, select, living{Go to the living room} terrace{Go to the terrace} other{Go to the living room}}'**
   String doorTo(String room);
+
+  /// Short screen-reader announcement when a cat walks out of the room the player is looking at, through the door to the other room.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} {room, select, living{went to the living room} terrace{went out to the terrace} other{went to the living room}}'**
+  String kittyLeftTo(String name, String room);
+
+  /// Sentence added after a cat's description on its card: which room of the house the cat is in now.
+  ///
+  /// In en, this message translates to:
+  /// **'{room, select, living{In the living room right now.} terrace{Out on the terrace right now.} other{In the living room right now.}}'**
+  String kittyInRoom(String room);
+
+  /// Green button on a cat's card (and screen-reader action on the cat): the cat walks through the door to the named room and stays there a while.
+  ///
+  /// In en, this message translates to:
+  /// **'{room, select, living{Take to the living room} terrace{Take to the terrace} other{Take to the living room}}'**
+  String inviteTo(String room);
+
+  /// Status shown while the player holds and drags a cat: drop it on the glowing door to send it to the named room.
+  ///
+  /// In en, this message translates to:
+  /// **'{room, select, living{Bring to the door to go to the living room} terrace{Bring to the door to go to the terrace} other{Bring to the door to go to the living room}}'**
+  String liftHint(String room);
+
+  /// Screen-reader label of the door when a cat in the other room needs a look (shown as a small icon by the door): where the door goes, then which cat needs what. need is hungry, sad, or reward (a coin gift).
+  ///
+  /// In en, this message translates to:
+  /// **'{room, select, living{To the living room. {need, select, hungry{{name} is hungry in there} sad{{name} is feeling down in there} other{{name} has a coin gift for you}}} terrace{To the terrace. {need, select, hungry{{name} is hungry out there} sad{{name} is feeling down out there} other{{name} has a coin gift for you}}} other{To the living room. {need, select, hungry{{name} is hungry in there} sad{{name} is feeling down in there} other{{name} has a coin gift for you}}}}'**
+  String doorAttention(String room, String name, String need);
 }
 
 class _AppLocalizationsDelegate

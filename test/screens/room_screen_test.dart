@@ -7,6 +7,7 @@ import 'package:kucing_oren/app/progress_store.dart';
 import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
@@ -42,15 +43,29 @@ void main() {
 
   group('posisi kucing', () {
     test('seed sama = posisi sama, seed lain = posisi lain', () {
-      final a = kittySpots(allKitties, Random(1));
-      expect(kittySpots(allKitties, Random(1)), a);
-      expect(kittySpots(allKitties, Random(2)), isNot(a));
+      final a = houseHomes(allKitties, Random(1));
+      expect(houseHomes(allKitties, Random(1)), a);
+      expect(houseHomes(allKitties, Random(2)), isNot(a));
     });
 
-    test('sembilan kucing di sembilan tempat berbeda', () {
-      final spots = kittySpots(allKitties, Random(3));
-      expect(spots.keys, unorderedEquals(allKitties));
-      expect(spots.values.toSet(), hasLength(allKitties.length));
+    test('Oyen di tengah ruang tengah, yang lain dibagi bergantian', () {
+      for (var seed = 0; seed < 20; seed++) {
+        final homes = houseHomes(allKitties, Random(seed));
+        expect(homes.keys, unorderedEquals(allKitties));
+        expect(homes[KittyId.oyen], (HouseRoom.living, starterOyenSpot));
+        final rooms = homes.values.map((h) => h.$1).toList();
+        // Oyen + 4 di ruang tengah, 4 di teras.
+        expect(rooms.where((r) => r == HouseRoom.terrace), hasLength(4));
+        expect(homes.values.map((h) => h.$2).toSet(), hasLength(9));
+        for (final (room, spot) in homes.values) {
+          expect(const HouseFloor().onDoorPath(room, spot), isFalse);
+        }
+      }
+    });
+
+    test('kucing kedua (satu-satunya selain Oyen) di teras', () {
+      final homes = houseHomes({KittyId.oyen, KittyId.mochi}, Random(5));
+      expect(homes[KittyId.mochi]!.$1, HouseRoom.terrace);
     });
   });
 
@@ -175,6 +190,9 @@ void main() {
         ),
       );
       expect(kittyView(KittyId.oyen), findsOneWidget);
+      // Salju (satu-satunya selain Oyen) mulai di teras.
+      expect(kittyView(KittyId.salju), findsNothing);
+      await goThroughDoor(tester);
       expect(
         tester.widget<KittyView>(kittyView(KittyId.salju)).look.accessory,
         AccessoryId.pita,
@@ -191,8 +209,18 @@ void main() {
         );
         final (room, geo) = roomOf(tester);
         final corners = <Offset>{};
+        final boxes = <KittyId, Rect>{};
+        for (final _ in HouseRoom.values) {
+          for (final kitty in allKitties) {
+            if (kittyView(kitty).evaluate().isNotEmpty) {
+              boxes[kitty] = tester.getRect(kittyView(kitty));
+            }
+          }
+          await goThroughDoor(tester);
+        }
+        expect(boxes.keys, unorderedEquals(allKitties));
         for (final kitty in allKitties) {
-          final box = tester.getRect(kittyView(kitty)).shift(-room.topLeft);
+          final box = boxes[kitty]!.shift(-room.topLeft);
           expect(box.left, greaterThanOrEqualTo(0), reason: '$kitty');
           expect(box.right, lessThanOrEqualTo(room.width), reason: '$kitty');
           // Kaki di zona lantai (y 398–646 desain).
@@ -213,11 +241,13 @@ void main() {
           home: Home(kitties: const [KittyId.salju]),
         ),
       );
+      await goThroughDoor(tester);
       final before = tester.getRect(kittyView(KittyId.salju));
       await tester.tap(find.text('Toko'));
       await settle(tester);
       await tester.binding.handlePopRoute();
       await settle(tester);
+      // Kamar tetap terpasang di bawah Toko: masih di teras.
       expect(tester.getRect(kittyView(KittyId.salju)), before);
     });
 
@@ -320,6 +350,31 @@ void main() {
         ),
       );
     });
+  });
+
+  testWidgets('beli kucing dari teras: "Lihat di kamar" ke ruang tengah', (
+    tester,
+  ) async {
+    await pumpRoom(tester, progress: testProgressWith(coins: 300));
+    await goThroughDoor(tester);
+    expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
+    await tester.tap(find.text('Toko'));
+    await settle(tester);
+    await tester.tap(find.text('Kucing'));
+    await settle(tester);
+    final card = find.byKey(const ValueKey('shop-kitty-salju'));
+    await tester.ensureVisible(card);
+    await settle(tester);
+    await tester.tap(card);
+    await settle(tester);
+    await tester.tap(find.byKey(const ValueKey('buy-confirm')));
+    await settle(tester);
+    await tester.tap(find.byKey(const ValueKey('buy-room')));
+    await settle(tester);
+    expect(find.byType(RoomView), findsOneWidget);
+    expect(find.byKey(const ValueKey('house-living')), findsOneWidget);
+    expect(find.byKey(const ValueKey('house-terrace')), findsNothing);
+    expect(kittyView(KittyId.salju), findsOneWidget);
   });
 
   group('KeepInside', () {

@@ -324,6 +324,23 @@ abstract final class KoIcons {
     KoIconShape.path('M10 20v-5h4v5'),
   ], strokeWidth: 2.4);
 
+  /// Status "Bawa ke pintu …" saat kucing diangkat (pintu,
+  /// `HeaderRumah.dc.html`).
+  static const door = KoIconData([
+    KoIconShape.path('M5 21V4.5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1V21'),
+    KoIconShape.path('M3 21h18'),
+    KoIconShape.circle(Offset(13, 12.5), 1),
+  ], strokeWidth: 2.4);
+
+  /// Tombol "Ajak ke …" di kartu kucing (pintu dan panah keluar,
+  /// `RuangTengah.dc.html`).
+  static const doorOut = KoIconData([
+    KoIconShape.path('M4 21V4.5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1V21'),
+    KoIconShape.path('M2.5 21h13'),
+    KoIconShape.path('M17 12h5M19.5 9.5 22 12l-2.5 2.5'),
+    KoIconShape.circle(Offset(11, 12.5), 1, paint: KoIconPaint.fill),
+  ], strokeWidth: 2.4);
+
   /// Catatan "milikmu selamanya" di sheet beli aksesoris (desain 20).
   static const shield = KoIconData([
     KoIconShape.path('M12 3 4 7v5c0 5 3.4 8 8 9 4.6-1 8-4 8-9V7z'),

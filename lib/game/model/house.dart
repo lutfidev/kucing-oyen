@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'home_items.dart';
+import 'kitties.dart';
 
 /// Rumah Oyen dua ruangan (langkah 33, desain `rumah-dua-ruangan`):
 /// ruang tengah dan teras, dihubungkan satu pintu. Semua angka di sini
@@ -46,6 +47,32 @@ bool canPlaceIn(RoomItemId id, HouseRoom room) {
   final item = roomItemOf(id);
   if (item.builtIn) return false;
   return item.zone == RoomZone.floor || terraceHangers.contains(id);
+}
+
+/// Kebutuhan kucing di ruangan sebelah yang ditandai di dekat pintu.
+enum DoorNeed { hungry, sad, reward }
+
+/// Satu ikon perhatian di pintu untuk [kitties] (kucing di ruangan
+/// sebelah): lapar, lalu sedih, lalu hadiah koin; kebutuhan yang sama
+/// diurutkan menurut [KittyId]. Null = tidak ada yang perlu dicek.
+(KittyId, DoorNeed)? doorAttention(
+  Iterable<KittyId> kitties, {
+  required bool Function(KittyId) hungry,
+  required bool Function(KittyId) sad,
+  required bool Function(KittyId) reward,
+}) {
+  final sorted = kitties.toList()..sort((a, b) => a.index - b.index);
+  for (final need in DoorNeed.values) {
+    final test = switch (need) {
+      DoorNeed.hungry => hungry,
+      DoorNeed.sad => sad,
+      DoorNeed.reward => reward,
+    };
+    for (final kitty in sorted) {
+      if (test(kitty)) return (kitty, need);
+    }
+  }
+  return null;
 }
 
 typedef HousePoint = ({double x, double y});
@@ -135,6 +162,12 @@ class HouseFloor {
           (x: 124, y: 578),
           (x: 4, y: 492),
         ];
+
+  /// Titik kaki [spot] berada di jalur pintu ruangan [room].
+  bool onDoorPath(HouseRoom room, Spot spot) {
+    final feet = feetAt(spot);
+    return _inPolygon(doorPath(room), feet);
+  }
 
   /// Barang lantai [item] di [spot] menutup jalur pintu: jejaknya (selebar
   /// gambar, 12 × skala px di belakang kaki) bersinggungan dengan

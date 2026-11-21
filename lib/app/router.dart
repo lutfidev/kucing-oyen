@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:go_router/go_router.dart';
 
+import '../game/model/kitties.dart';
 import '../gallery/gallery_board_screen.dart';
 import '../gallery/gallery_kitty_screen.dart';
 import '../gallery/gallery_oyen_screen.dart';
@@ -29,8 +30,12 @@ GoRouter createRouter({
     routes: [
       GoRoute(
         path: AppRoutes.home,
-        builder: (context, state) =>
-            RoomScreen(random: roomRandom?.call(), life: roomLife),
+        builder: (context, state) => RoomScreen(
+          random: roomRandom?.call(),
+          life: roomLife,
+          showKitty: KittyId.values
+              .asNameMap()[state.uri.queryParameters[AppRoutes.homeKittyParam]],
+        ),
         routes: [
           GoRoute(
             path: 'galeri',

@@ -8,6 +8,7 @@ import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/room.dart';
+import 'package:kucing_oren/screens/room/door_parts.dart';
 import 'package:kucing_oren/screens/room/room_geometry.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
@@ -43,6 +44,12 @@ Finder kittyView(KittyId kitty) =>
 }
 
 const allKitties = KittyId.values;
+
+/// Ketuk pintu ke ruangan sebelah lalu tunggu transisinya.
+Future<void> goThroughDoor(WidgetTester tester) async {
+  await tester.tap(find.byType(DoorButton));
+  await settle(tester, max: const Duration(seconds: 1));
+}
 
 /// Semua barang ditaruh di posisi bawaannya.
 Room fullRoom() {

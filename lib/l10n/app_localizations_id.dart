@@ -1930,4 +1930,69 @@ class AppLocalizationsId extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String kittyLeftTo(String name, String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'pindah ke ruang tengah',
+      'terrace': 'keluar ke teras',
+      'other': 'pindah ke ruang tengah',
+    });
+    return '$name $_temp0';
+  }
+
+  @override
+  String kittyInRoom(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Sedang di ruang tengah.',
+      'terrace': 'Sedang di teras.',
+      'other': 'Sedang di ruang tengah.',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String inviteTo(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Ajak ke ruang tengah',
+      'terrace': 'Ajak ke teras',
+      'other': 'Ajak ke ruang tengah',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String liftHint(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Bawa ke pintu untuk ajak ke ruang tengah',
+      'terrace': 'Bawa ke pintu untuk ajak ke teras',
+      'other': 'Bawa ke pintu untuk ajak ke ruang tengah',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String doorAttention(String room, String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name di ruang tengah lapar',
+      'sad': '$name di ruang tengah lesu',
+      'other': 'Ada hadiah koin dari $name',
+    });
+    String _temp1 = intl.Intl.selectLogic(need, {
+      'hungry': '$name di teras lapar',
+      'sad': '$name di teras lesu',
+      'other': 'Ada hadiah koin dari $name',
+    });
+    String _temp2 = intl.Intl.selectLogic(need, {
+      'hungry': '$name di ruang tengah lapar',
+      'sad': '$name di ruang tengah lesu',
+      'other': 'Ada hadiah koin dari $name',
+    });
+    String _temp3 = intl.Intl.selectLogic(room, {
+      'living': 'Ke ruang tengah. $_temp0',
+      'terrace': 'Ke teras. $_temp1',
+      'other': 'Ke ruang tengah. $_temp2',
+    });
+    return '$_temp3';
+  }
 }

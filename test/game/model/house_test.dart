@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/house.dart';
+import 'package:kucing_oren/game/model/kitties.dart';
 
 void main() {
   const floor = HouseFloor();
@@ -119,5 +120,61 @@ void main() {
     }
     final free = floor.spotAtFeet(146, 432);
     expect(floor.allowedSpot(kasur, HouseRoom.living, free), free);
+  });
+
+  group('ikon perhatian di pintu', () {
+    (KittyId, DoorNeed)? attention(
+      Set<KittyId> kitties, {
+      Set<KittyId> hungry = const {},
+      Set<KittyId> sad = const {},
+      Set<KittyId> reward = const {},
+    }) => doorAttention(
+      kitties,
+      hungry: hungry.contains,
+      sad: sad.contains,
+      reward: reward.contains,
+    );
+
+    test('lapar menang atas hadiah koin', () {
+      expect(
+        attention(
+          {KittyId.mochi, KittyId.salju},
+          hungry: {KittyId.salju},
+          reward: {KittyId.mochi},
+        ),
+        (KittyId.salju, DoorNeed.hungry),
+      );
+    });
+
+    test('sedih menang atas hadiah koin', () {
+      expect(
+        attention(
+          {KittyId.mochi, KittyId.salju},
+          sad: {KittyId.salju},
+          reward: {KittyId.mochi},
+        ),
+        (KittyId.salju, DoorNeed.sad),
+      );
+    });
+
+    test('kebutuhan sama: urutan KittyId', () {
+      expect(
+        attention(
+          {KittyId.telon, KittyId.mochi},
+          reward: {KittyId.telon, KittyId.mochi},
+        ),
+        (
+          KittyId.values.firstWhere(
+            (k) => k == KittyId.telon || k == KittyId.mochi,
+          ),
+          DoorNeed.reward,
+        ),
+      );
+    });
+
+    test('tidak ada kebutuhan: null', () {
+      expect(attention({KittyId.mochi}), isNull);
+      expect(attention(const {}, hungry: {KittyId.mochi}), isNull);
+    });
   });
 }

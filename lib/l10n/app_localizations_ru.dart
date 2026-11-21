@@ -2121,4 +2121,69 @@ class AppLocalizationsRu extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String kittyLeftTo(String name, String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'теперь в гостиной',
+      'terrace': 'теперь на террасе',
+      'other': 'теперь в гостиной',
+    });
+    return '$name $_temp0';
+  }
+
+  @override
+  String kittyInRoom(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Сейчас в гостиной.',
+      'terrace': 'Сейчас на террасе.',
+      'other': 'Сейчас в гостиной.',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String inviteTo(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Позвать в гостиную',
+      'terrace': 'Позвать на террасу',
+      'other': 'Позвать в гостиную',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String liftHint(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Неси к двери, чтобы позвать в гостиную',
+      'terrace': 'Неси к двери, чтобы позвать на террасу',
+      'other': 'Неси к двери, чтобы позвать в гостиную',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String doorAttention(String room, String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name хочет есть в гостиной',
+      'sad': '$name грустит в гостиной',
+      'other': '$name: для тебя подарок, монетки',
+    });
+    String _temp1 = intl.Intl.selectLogic(need, {
+      'hungry': '$name хочет есть на террасе',
+      'sad': '$name грустит на террасе',
+      'other': '$name: для тебя подарок, монетки',
+    });
+    String _temp2 = intl.Intl.selectLogic(need, {
+      'hungry': '$name хочет есть в гостиной',
+      'sad': '$name грустит в гостиной',
+      'other': '$name: для тебя подарок, монетки',
+    });
+    String _temp3 = intl.Intl.selectLogic(room, {
+      'living': 'В гостиную. $_temp0',
+      'terrace': 'На террасу. $_temp1',
+      'other': 'В гостиную. $_temp2',
+    });
+    return '$_temp3';
+  }
 }

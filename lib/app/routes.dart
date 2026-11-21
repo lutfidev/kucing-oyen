@@ -1,3 +1,4 @@
+import '../game/model/kitties.dart';
 import '../game/model/sounds.dart';
 import '../screens/shop/shop_tab.dart';
 
@@ -6,6 +7,13 @@ import '../screens/shop/shop_tab.dart';
 abstract final class AppRoutes {
   /// Beranda: kamar Oyen (desain 19).
   static const home = '/';
+
+  /// Beranda yang membuka ruangan tempat [kitty] berada (`/?kucing=mochi`;
+  /// "Lihat di kamar" sesudah membeli kucing).
+  static String homeShowing(KittyId kitty) => '/?$homeKittyParam=${kitty.name}';
+
+  /// Parameter [homeShowing].
+  static const homeKittyParam = 'kucing';
 
   /// Galeri token dan komponen untuk cek visual terhadap desain. Tidak ada
   /// tombolnya di aplikasi; buka dengan `flutter run --route /galeri`.

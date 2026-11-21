@@ -2091,4 +2091,69 @@ class AppLocalizationsPt extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String kittyLeftTo(String name, String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'foi para a sala',
+      'terrace': 'saiu para a varanda',
+      'other': 'foi para a sala',
+    });
+    return '$name $_temp0';
+  }
+
+  @override
+  String kittyInRoom(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Agora está na sala.',
+      'terrace': 'Agora está na varanda.',
+      'other': 'Agora está na sala.',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String inviteTo(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Levar para a sala',
+      'terrace': 'Levar para a varanda',
+      'other': 'Levar para a sala',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String liftHint(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Leve até a porta para ir à sala',
+      'terrace': 'Leve até a porta para ir à varanda',
+      'other': 'Leve até a porta para ir à sala',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String doorAttention(String room, String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name está com fome na sala',
+      'sad': '$name está sem ânimo na sala',
+      'other': '$name tem moedas de presente para você',
+    });
+    String _temp1 = intl.Intl.selectLogic(need, {
+      'hungry': '$name está com fome na varanda',
+      'sad': '$name está sem ânimo na varanda',
+      'other': '$name tem moedas de presente para você',
+    });
+    String _temp2 = intl.Intl.selectLogic(need, {
+      'hungry': '$name está com fome na sala',
+      'sad': '$name está sem ânimo na sala',
+      'other': '$name tem moedas de presente para você',
+    });
+    String _temp3 = intl.Intl.selectLogic(room, {
+      'living': 'Para a sala. $_temp0',
+      'terrace': 'Para a varanda. $_temp1',
+      'other': 'Para a sala. $_temp2',
+    });
+    return '$_temp3';
+  }
 }
