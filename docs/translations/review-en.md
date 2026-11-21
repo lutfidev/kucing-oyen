@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-606 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+612 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -556,6 +556,12 @@ files and anything written there is overwritten.
 | `homeCancelInvitation` | Cancel invitation | Batalkan ajakan | V2 player home: homeCancelInvitation. | |
 | `homeRewardAvailable` | Rewards available · {coins} | Hadiah tersedia · {coins} | V2 player home: homeRewardAvailable. Placeholders: `{coins}`. | |
 | `homeRewardNone` | Everyone is comfy. Rewards will be back. | Santai dulu. Hadiah akan tersedia lagi. | V2 player home: homeRewardNone. | |
+| `homeStatusBowl` | Bowl · {left}/{total} | Mangkuk · {left}/{total} | Compact home chip (Dining area): bowl portions left out of owned cats. Placeholders: `{left}`, `{total}`. | |
+| `homeStatusBowlEmpty` | Bowl empty | Mangkuk kosong | Compact home chip (Dining area): bowl has no portions until the next cycle. | |
+| `homeStatusToy` | Toy ready | Mainan siap | Compact home chip (Play area): the toy is free. | |
+| `homeStatusCare` | Mat is free | Alas siap | Compact home chip (Care area): the grooming mat is free. | |
+| `homeStatusQueue` | {count} waiting | {count} menunggu | Compact home chip suffix: number of cats waiting for this area's facility. Placeholders: `{count}`. | |
+| `homeRewardLater` | Rewards later | Hadiah nanti | Compact home reward chip when no house reward is ready yet. | |
 | `homeRewards` | House rewards | Hadiah rumah | V2 player home: homeRewards. | |
 | `homeClaimAll` | Collect all · {coins} | Ambil semua · {coins} | V2 player home: homeClaimAll. Placeholders: `{coins}`. | |
 | `homeSaveFailed` | Couldn't save. Your last saved state is safe. | Belum berhasil disimpan. Keadaan terakhir tetap aman. | V2 player home: homeSaveFailed. | |

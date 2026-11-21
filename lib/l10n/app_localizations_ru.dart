@@ -2239,6 +2239,28 @@ class AppLocalizationsRu extends AppLocalizations {
   String get homeRewardNone => 'Можно отдохнуть. Награды появятся снова.';
 
   @override
+  String homeStatusBowl(int left, int total) {
+    return 'Миска · $left/$total';
+  }
+
+  @override
+  String get homeStatusBowlEmpty => 'Миска пуста';
+
+  @override
+  String get homeStatusToy => 'Игрушка свободна';
+
+  @override
+  String get homeStatusCare => 'Коврик свободен';
+
+  @override
+  String homeStatusQueue(int count) {
+    return 'В очереди: $count';
+  }
+
+  @override
+  String get homeRewardLater => 'Награды позже';
+
+  @override
   String get homeRewards => 'Награды дома';
 
   @override

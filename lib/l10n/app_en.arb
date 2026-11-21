@@ -2877,6 +2877,43 @@
   "@homeRewardNone": {
     "description": "V2 player home: homeRewardNone."
   },
+  "homeStatusBowl": "Bowl · {left}/{total}",
+  "@homeStatusBowl": {
+    "description": "Compact home chip (Dining area): bowl portions left out of owned cats.",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homeStatusBowlEmpty": "Bowl empty",
+  "@homeStatusBowlEmpty": {
+    "description": "Compact home chip (Dining area): bowl has no portions until the next cycle."
+  },
+  "homeStatusToy": "Toy ready",
+  "@homeStatusToy": {
+    "description": "Compact home chip (Play area): the toy is free."
+  },
+  "homeStatusCare": "Mat is free",
+  "@homeStatusCare": {
+    "description": "Compact home chip (Care area): the grooming mat is free."
+  },
+  "homeStatusQueue": "{count} waiting",
+  "@homeStatusQueue": {
+    "description": "Compact home chip suffix: number of cats waiting for this area's facility.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeRewardLater": "Rewards later",
+  "@homeRewardLater": {
+    "description": "Compact home reward chip when no house reward is ready yet."
+  },
   "homeRewards": "House rewards",
   "@homeRewards": {
     "description": "V2 player home: homeRewards."

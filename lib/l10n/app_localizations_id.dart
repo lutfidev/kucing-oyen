@@ -2051,6 +2051,28 @@ class AppLocalizationsId extends AppLocalizations {
   String get homeRewardNone => 'Santai dulu. Hadiah akan tersedia lagi.';
 
   @override
+  String homeStatusBowl(int left, int total) {
+    return 'Mangkuk · $left/$total';
+  }
+
+  @override
+  String get homeStatusBowlEmpty => 'Mangkuk kosong';
+
+  @override
+  String get homeStatusToy => 'Mainan siap';
+
+  @override
+  String get homeStatusCare => 'Alas siap';
+
+  @override
+  String homeStatusQueue(int count) {
+    return '$count menunggu';
+  }
+
+  @override
+  String get homeRewardLater => 'Hadiah nanti';
+
+  @override
   String get homeRewards => 'Hadiah rumah';
 
   @override
