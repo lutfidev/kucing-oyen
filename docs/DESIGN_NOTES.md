@@ -238,4 +238,6 @@ tidak ditumpuk di atas kamar seperti mockup karena kaki kucing dan mangkuk
 berada di 0,88 tinggi kamar; panel berada tepat di bawahnya. Teks tab aktif
 tetap cokelat tua (bukan putih seperti mockup) demi kontras di atas oranye.
 Chip hadiah selalu tampil ("Hadiah nanti" saat kosong) supaya sheet hadiah
-tetap terjangkau. Latar persegi tidak diregangkan lebih dari ×1,16.
+tetap terjangkau. Batas tinggi kamar tetap rumus lama (lebar layar ×1,16,
+maks 480 dp), sehingga latar persegi bisa teregang vertikal sampai ±1,26× di
+390 dp; kucing dan prop digambar terpisah dan tidak ikut teregang.

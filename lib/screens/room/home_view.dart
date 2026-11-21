@@ -312,8 +312,10 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  /// Room height = what is left after the compact chrome, clamped so the
-  /// square painted backdrop is never stretched more than before (×1.16).
+  /// Room height = what is left after the compact chrome (bottom navigation
+  /// included), clamped by the old cap of screen width ×1.16. The square
+  /// painted backdrop may stretch up to ~1.26× at 390 dp; cats and props are
+  /// drawn separately and keep their proportions.
   double _sceneHeight(BuildContext context, BoxConstraints box, bool twoLine) {
     final grow = MediaQuery.textScalerOf(context).scale(16) - 16;
     final chrome = 396 + grow * 6 + (twoLine ? 30 : 0);

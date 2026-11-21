@@ -31,7 +31,8 @@ Alternatif ditolak: (a) panel kucing menumpang di atas kamar seperti mockup —
 menutupi kaki kucing dan mangkuk yang diposisikan pada 0,88 tinggi kamar;
 (b) mempertahankan panel area tapi dilipat — tetap memakan baris dan butuh
 interaksi tambahan. Tinggi kamar = sisa layar dikurangi perkiraan chrome,
-dijepit 240…lebar×1,16 (latar persegi diregangkan `BoxFit.fill`, batas lama).
+dijepit 240…min(480, lebar layar×1,16) (batas lama; latar persegi `BoxFit.fill`
+bisa teregang vertikal ±1,26× di 390 dp).
 
 ## Teks baru (empat ARB)
 `homeStatusBowl`, `homeStatusBowlEmpty`, `homeStatusToy`, `homeStatusCare`,
