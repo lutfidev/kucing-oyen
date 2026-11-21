@@ -33,27 +33,65 @@ import 'room_parts.dart';
 import 'room_reaction.dart';
 import 'room_scene.dart';
 
-// Tempat kucing di lantai: 4 kolom × 3 baris, diacak tiap kamar dibuka.
-const _slotColumns = [0.08, 0.36, 0.64, 0.92];
-const _slotRows = [0.08, 0.5, 0.92];
-
-/// Dua belas tempat kucing urut acak [random].
-List<Spot> shuffledKittySlots(Random random) => [
-  for (final y in _slotRows)
-    for (final x in _slotColumns) Spot(x, y),
-]..shuffle(random);
-
-/// Tempat tiap kucing di [kitties]: kucing yang sama selalu memakai urutan
-/// [KittyId]-nya, jadi kucing yang baru diadopsi tidak memindahkan yang
-/// lain.
-Map<KittyId, Spot> kittySpots(Iterable<KittyId> kitties, Random random) {
-  final slots = shuffledKittySlots(random);
-  return {for (final kitty in kitties) kitty: slots[kitty.index]};
-}
-
-/// Oyen di rumah baru (hanya mangkuk): kaki di (205, 556) seperti desain
+/// Oyen saat rumah dibuka: kaki di (205, 556) seperti desain
 /// (`AdeganTengah.dc.html` isi `baru`), jauh dari gelembung ajakan.
 final starterOyenSpot = const HouseFloor().spotAtFeet(205, 556);
+
+/// Jarak paling dekat dua kucing di tempat awalnya (px desain).
+const _homeGap = 60.0;
+
+/// Ruangan dan tempat awal tiap kucing saat rumah dibuka (tidak disimpan):
+/// Oyen di tengah ruang tengah, kucing lain dibagi bergantian ke teras dan
+/// ruang tengah menurut urutan acak [random], di tempat acak yang tidak di
+/// jalur pintu dan tidak menempel kucing lain. Kucing [fresh] (baru, tag
+/// "Baru!") selalu di ruang tengah supaya langsung terlihat.
+Map<KittyId, (HouseRoom, Spot)> houseHomes(
+  Iterable<KittyId> kitties,
+  Random random, {
+  Set<KittyId> fresh = const {},
+}) {
+  final owned = kitties.toSet();
+  final homes = <KittyId, (HouseRoom, Spot)>{
+    if (owned.contains(KittyId.oyen))
+      KittyId.oyen: (HouseRoom.living, starterOyenSpot),
+  };
+  final others = [
+    for (final kitty in KittyId.values)
+      if (kitty != KittyId.oyen && owned.contains(kitty)) kitty,
+  ]..shuffle(random);
+  var shared = 0;
+  for (final kitty in others) {
+    var room = HouseRoom.living;
+    if (!fresh.contains(kitty) && (shared++).isEven) room = HouseRoom.terrace;
+    homes[kitty] = (room, freeHomeSpot(room, homes.values, random));
+  }
+  return homes;
+}
+
+/// Tempat acak di lantai [room] yang tidak di jalur pintu dan (kalau bisa)
+/// tidak dekat [taken] di ruangan yang sama.
+Spot freeHomeSpot(
+  HouseRoom room,
+  Iterable<(HouseRoom, Spot)> taken,
+  Random random,
+) {
+  const floor = HouseFloor();
+  Spot? fallback;
+  for (var tries = 0; tries < 60; tries++) {
+    final spot = Spot(
+      0.1 + random.nextDouble() * 0.8,
+      0.1 + random.nextDouble() * 0.8,
+    );
+    if (floor.onDoorPath(room, spot)) continue;
+    fallback ??= spot;
+    if (taken.every(
+      (t) => t.$1 != room || floor.distance(t.$2, spot) >= _homeGap,
+    )) {
+      return spot;
+    }
+  }
+  return fallback ?? Spot(0.3, 0.6);
+}
 
 /// Titik merah Toko: ada barang atau kucing yang belum dimiliki dan
 /// terjangkau [coins]. Camilan tidak dihitung.
@@ -96,7 +134,17 @@ const roomRefreshInterval = Duration(seconds: 30);
 class _RoomViewState extends State<RoomView>
     with SingleTickerProviderStateMixin {
   late final Random _random = widget.random ?? Random();
-  late final List<Spot> _slots = shuffledKittySlots(_random);
+
+  /// Ruangan dan tempat awal tiap kucing; kucing yang baru dibeli muncul
+  /// di ruang tengah.
+  late final Map<KittyId, (HouseRoom, Spot)> _homes = houseHomes(
+    _progress.home.kitties,
+    _random,
+    fresh: {
+      for (final kitty in _progress.home.kitties)
+        if (_progress.home.isFresh(kitty)) kitty,
+    },
+  );
   late final RoomLife _life = RoomLife(random: _random);
 
   /// Jam kamar: memajukan rutinitas dan waktu animasi. Hanya jalan kalau
@@ -165,12 +213,21 @@ class _RoomViewState extends State<RoomView>
   bool get _empty =>
       _progress.home.room.owned.every((id) => roomItemOf(id).builtIn);
 
-  Spot _spotOf(KittyId kitty) =>
-      _empty && kitty == KittyId.oyen ? starterOyenSpot : _slots[kitty.index];
+  (HouseRoom, Spot) _homeOf(KittyId kitty) => _homes.putIfAbsent(
+    kitty,
+    () => (
+      HouseRoom.living,
+      freeHomeSpot(HouseRoom.living, _homes.values, _random),
+    ),
+  );
 
   /// Tempat kucing sekarang: dari rutinitas kalau kamar hidup.
   Spot _catSpot(KittyId kitty) =>
-      widget.life ? _life.of(kitty).spot : _spotOf(kitty);
+      widget.life ? _life.of(kitty).spot : _homeOf(kitty).$2;
+
+  /// Ruangan kucing sekarang.
+  HouseRoom _catRoom(KittyId kitty) =>
+      widget.life ? _life.of(kitty).room : _homeOf(kitty).$1;
 
   @override
   void initState() {
@@ -217,11 +274,25 @@ class _RoomViewState extends State<RoomView>
           _eatFromBowl(kitty);
         case UsedToy(:final kitty, :final item):
           _progress.play(kitty, item);
+        case LeftRoom(:final kitty, :final from) when from == _house:
+          _announceLeft(kitty, from.other);
         case LeftRoom() || EnteredRoom():
           break;
       }
     }
     setState(() {});
+  }
+
+  /// Pembaca layar: kucing keluar dari ruangan yang sedang dibuka.
+  void _announceLeft(KittyId kitty, HouseRoom to) {
+    final l = context.l10n;
+    unawaited(
+      SemanticsService.sendAnnouncement(
+        View.of(context),
+        l.kittyLeftTo(kittyName(l, kitty), to.name),
+        Directionality.of(context),
+      ),
+    );
   }
 
   Future<void> _eatFromBowl(KittyId kitty) async {
@@ -246,31 +317,25 @@ class _RoomViewState extends State<RoomView>
   }
 
   /// Kucing yang dimiliki, kebutuhannya, dan tempat memakai tiap barang
-  /// ke rutinitas.
-  void _syncKitties([RoomGeometry? geo]) {
+  /// (di ruangannya, rumah seukuran [size]) ke rutinitas.
+  void _syncKitties([Size? size]) {
     final home = _progress.home;
     final placed = home.room.placed;
     final key = (
-      geo?.room,
+      size,
       _decorating,
-      Object.hashAllUnordered(placed.entries.map((e) => (e.key, e.value))),
+      Object.hashAllUnordered(
+        placed.entries.map((e) => (e.key, e.value, home.room.roomOf(e.key))),
+      ),
       Object.hashAllUnordered(home.kitties),
     );
     if (key != _pathsKey) {
       _pathsKey = key;
-      _paths = geo == null || _decorating
-          ? const {}
-          : {
-              for (final id in placed.keys)
-                for (final kitty in home.kitties)
-                  (id, kitty): ?geo.pathTo(kitty, id, placed),
-            };
+      _paths = size == null || _decorating ? const {} : _pathsFor(size);
     }
     _life.sync(
-      homes: {
-        for (final kitty in home.kitties)
-          kitty: (HouseRoom.living, _spotOf(kitty)),
-      },
+      homes: {for (final kitty in home.kitties) kitty: _homeOf(kitty)},
+      itemRooms: {for (final id in placed.keys) id: home.room.roomOf(id)},
       targets: {
         for (final id in placed.keys)
           id: {
@@ -293,6 +358,24 @@ class _RoomViewState extends State<RoomView>
           if (_progress.catNeeds(kitty).isSad) kitty,
       },
     );
+  }
+
+  /// Rute tiap kucing ke tiap barang, di ruangan barang itu.
+  Map<(RoomItemId, KittyId), ItemPath> _pathsFor(Size size) {
+    final home = _progress.home;
+    final paths = <(RoomItemId, KittyId), ItemPath>{};
+    for (final room in HouseRoom.values) {
+      final geo = RoomGeometry(size, room);
+      final items = home.room.placedIn(room);
+      for (final id in items.keys) {
+        for (final kitty in home.kitties) {
+          if (geo.pathTo(kitty, id, items) case final path?) {
+            paths[(id, kitty)] = path;
+          }
+        }
+      }
+    }
+    return paths;
   }
 
   void _select(KittyId kitty) {
@@ -566,7 +649,10 @@ class _RoomViewState extends State<RoomView>
             onArrive: (room) {
               if (room != _arrived) setState(() => _arrived = room);
             },
-            builder: (context, room) => _room(RoomGeometry(size, room)),
+            builder: (context, room) {
+              if (widget.life) _syncKitties(size);
+              return _room(RoomGeometry(size, room));
+            },
           ),
         ),
         Positioned(
@@ -622,12 +708,12 @@ class _RoomViewState extends State<RoomView>
     );
   }
 
-  /// Isi satu ruangan [geo]: latar, barang, kucing, dan tanda di atasnya.
-  /// Kucing tinggal di ruang tengah sampai rutinitas dua ruangan ada.
+  /// Isi satu ruangan [geo]: latar, barang, kucing di ruangan itu (yang
+  /// lewat pintu di belakang kusen), dan tanda di atasnya.
   Widget _room(RoomGeometry geo) {
     final living = geo.which == HouseRoom.living;
     if (geo.which == _house) _geo = geo;
-    if (widget.life && living) _syncKitties(geo);
+    bool here(KittyId kitty) => _catRoom(kitty) == geo.which;
     final c = context.koColors;
     final s = context.koSize;
     final space = context.koSpace;
@@ -643,10 +729,9 @@ class _RoomViewState extends State<RoomView>
           dragging: dragSpot,
       },
       cats: {
-        if (living)
-          for (final kitty in home.kitties)
-            if (!widget.life || _life.of(kitty).activity.onFloor)
-              kitty: _catSpot(kitty),
+        for (final kitty in home.kitties)
+          if (here(kitty) && (!widget.life || _life.of(kitty).activity.onFloor))
+            kitty: _catSpot(kitty),
       },
       geo: geo,
     );
@@ -658,8 +743,8 @@ class _RoomViewState extends State<RoomView>
         if (sprite is ItemSprite && sprite.id == dragging) sprite,
     ];
     final hopping = {
-      if (living)
-        for (final kitty in home.kitties) kitty: ?_hopBox(kitty, geo),
+      for (final kitty in home.kitties)
+        if (here(kitty)) kitty: ?_hopBox(kitty, geo),
     };
     final catBoxes = {..._catBoxes(sprites, geo), ...hopping};
     if (geo.which == _house) _shownBoxes = catBoxes;
@@ -693,6 +778,10 @@ class _RoomViewState extends State<RoomView>
       geo: geo,
       time: _animating ? _time : null,
       shadows: shadows,
+      passing: [
+        for (final kitty in home.kitties)
+          if (here(kitty)) ?_passing(kitty, geo),
+      ],
       floor: [
         // Pintu di bawah kucing dan barang: kucing di ambang tetap bisa
         // diketuk.
@@ -829,6 +918,25 @@ class _RoomViewState extends State<RoomView>
                 ),
               ),
       ],
+    );
+  }
+
+  /// Kucing [kitty] yang sedang lewat pintu ruangan [geo], digambar di
+  /// belakang kusen; null kalau tidak sedang lewat.
+  Widget? _passing(KittyId kitty, RoomGeometry geo) {
+    if (!widget.life || _decorating) return null;
+    final cat = _life.of(kitty);
+    if (!cat.isPassing) return null;
+    final box = geo.passingBox(
+      kitty,
+      geo.which,
+      cat.doorProgress,
+      leaving: cat.activity == CatActivity.leaving,
+    );
+    return Positioned.fromRect(
+      key: ValueKey('passing-${kitty.name}'),
+      rect: box,
+      child: IgnorePointer(child: ExcludeSemantics(child: _kitty(kitty, box))),
     );
   }
 

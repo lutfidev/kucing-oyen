@@ -20,6 +20,29 @@ void main() {
     expect(small.sy, closeTo(488 / 652, 1e-9));
   });
 
+  test('lewat pintu: dari ambang ke balik kusen, dan sebaliknya', () {
+    for (final (room, inside, behind) in [
+      (HouseRoom.living, const Offset(345, 456), const Offset(400, 470)),
+      (HouseRoom.terrace, const Offset(46, 456), const Offset(-10, 470)),
+    ]) {
+      Offset feetAt(double p, {required bool leaving}) {
+        final box = design.passingBox(KittyId.mochi, room, p, leaving: leaving);
+        return Offset(box.center.dx, design.feetOf(box));
+      }
+
+      bool near(Offset a, Offset b) => (a - b).distance < 1e-6;
+      expect(near(feetAt(0, leaving: true), inside), isTrue, reason: '$room');
+      expect(near(feetAt(1, leaving: true), behind), isTrue, reason: '$room');
+      expect(near(feetAt(0, leaving: false), behind), isTrue, reason: '$room');
+      expect(near(feetAt(1, leaving: false), inside), isTrue, reason: '$room');
+      // Ukuran ikut kedalaman: lebih depan sedikit = sedikit lebih besar.
+      final start = design.passingBox(KittyId.mochi, room, 0, leaving: true);
+      final end = design.passingBox(KittyId.mochi, room, 1, leaving: true);
+      expect(start.width, closeTo(kittyRoomSize * depthScale(456), 1e-9));
+      expect(end.width, greaterThan(start.width));
+    }
+  });
+
   test('kucing: ukuran mengikuti kedalaman, kaki di 92% kotak', () {
     final threshold = floor.threshold(HouseRoom.living);
     // Desain: Arang duduk di ambang pintu (tengah 345, kaki 456).

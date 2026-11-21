@@ -13,6 +13,7 @@ import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/screens/room/room_geometry.dart';
 import 'package:kucing_oren/screens/room/room_reaction.dart';
+import 'package:kucing_oren/screens/room/room_scene.dart';
 import 'package:kucing_oren/screens/room/room_view.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
@@ -33,6 +34,17 @@ Future<ProgressController> _pump(
     roomRandom: () => Random(seed),
     roomLife: true,
   );
+}
+
+/// Ketuk Oyen lewat pembaca layar: kucing bergerak terus dan bisa
+/// tertutup barang di depannya.
+Future<void> _tapOyen(WidgetTester tester) async {
+  final semantics = tester.ensureSemantics();
+  tester.semantics.tap(
+    find.semantics.byLabel(RegExp(r'^Oyen.*Ketuk untuk lihat kartunya$')),
+  );
+  semantics.dispose();
+  await tester.pump();
 }
 
 /// Kamar dengan kasur, bola, dan kardus (plus mangkuk bawaan).
@@ -90,8 +102,7 @@ void main() {
     tester,
   ) async {
     await _pump(tester);
-    await tester.tap(kittyView(KittyId.oyen));
-    await tester.pump();
+    await _tapOyen(tester);
     final rect = tester.getRect(kittyView(KittyId.oyen).first);
     for (var i = 0; i < 50; i++) {
       await tester.pump(const Duration(milliseconds: 100));
@@ -321,7 +332,7 @@ void main() {
     // Isi mangkuk tidak bertambah lama karena jam mundur.
     expect(find.text('Terisi lagi 4 jam'), findsOneWidget);
 
-    await tester.tap(kittyView(KittyId.oyen));
+    await _tapOyen(tester);
     await settle(tester, max: const Duration(seconds: 1));
     expect(tester.takeException(), isNull);
     expect(find.text('60'), findsNWidgets(2));
@@ -340,8 +351,7 @@ void main() {
         roomRandom: () => Random(1),
         roomLife: true,
       );
-      await tester.tap(kittyView(KittyId.oyen));
-      await tester.pump();
+      await _tapOyen(tester);
       final pet = find.text('Elus');
       await tester.ensureVisible(pet);
       await tester.pump();
@@ -379,6 +389,71 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
     }
     expect(tester.widget<KittyView>(room.first).look, look);
+  });
+
+  group('dua ruangan', () {
+    /// Oyen dan Mochi; Mochi (satu-satunya selain Oyen) mulai di teras.
+    /// Mochi lapar, jadi ia berjalan ke mangkuk di ruang tengah.
+    ProgressController hungryMochi() => withNeeds(
+      {KittyId.oyen: (90, 90), KittyId.mochi: (30, 80)},
+      home: Home(room: Room().buy(RoomItemId.kasur), kitties: {KittyId.mochi}),
+    );
+
+    final passing = find.byKey(const ValueKey('passing-mochi'));
+
+    testWidgets('kucing di ruangan lain tidak digambar; masuk lewat pintu', (
+      tester,
+    ) async {
+      await _pump(tester, progress: hungryMochi());
+      expect(kittyView(KittyId.mochi), findsNothing);
+      expect(kittyView(KittyId.oyen), findsOneWidget);
+      expect(await _until(tester, () => passing.evaluate().isNotEmpty), isTrue);
+      // Di lapisan "sedang lewat pintu", di belakang kusen kanan.
+      final scene = tester.widget<RoomScene>(find.byType(RoomScene));
+      expect(scene.passing.map((w) => w.key), [
+        const ValueKey('passing-mochi'),
+      ]);
+      final (room, _) = roomOf(tester);
+      expect(tester.getRect(passing).center.dx - room.left, greaterThan(330));
+      expect(await _until(tester, () => passing.evaluate().isEmpty), isTrue);
+      expect(kittyView(KittyId.mochi), findsOneWidget);
+    });
+
+    testWidgets('kucing yang keluar dari ruangan yang dibuka diumumkan', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await _pump(tester, progress: hungryMochi());
+      tester.semantics.tap(find.semantics.byLabel('Pergi ke teras'));
+      await tester.pump();
+      tester.takeAnnouncements();
+      expect(await _until(tester, () => passing.evaluate().isNotEmpty), isTrue);
+      expect(await _until(tester, () => passing.evaluate().isEmpty), isTrue);
+      expect(
+        tester.takeAnnouncements().map((a) => a.message),
+        contains('Mochi pindah ke ruang tengah'),
+      );
+      // Di ruang tengah (tidak dibuka) Mochi masuk tanpa diumumkan.
+      for (var i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(tester.takeAnnouncements(), isEmpty);
+      semantics.dispose();
+    });
+
+    testWidgets('kurangi gerak: kucing di teras tetap di teras', (
+      tester,
+    ) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      await _pump(tester, progress: hungryMochi());
+      await tester.pump(const Duration(seconds: 10));
+      expect(kittyView(KittyId.mochi), findsNothing);
+      expect(passing, findsNothing);
+    });
   });
 
   group('barang dipakai', () {

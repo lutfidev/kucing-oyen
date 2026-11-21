@@ -2121,4 +2121,14 @@ class AppLocalizationsRu extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String kittyLeftTo(String name, String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'теперь в гостиной',
+      'terrace': 'теперь на террасе',
+      'other': 'теперь в гостиной',
+    });
+    return '$name $_temp0';
+  }
 }

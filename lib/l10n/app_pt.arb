@@ -492,5 +492,6 @@
   "snackFullNote": "{name} já está cheio e feliz. Guarde para depois!",
   "snackEmptyNote": "Acabou. Compre mais petiscos na Loja!",
   "roomName": "{room, select, living{Sala} terrace{Varanda} other{Sala}}",
-  "doorTo": "{room, select, living{Ir para a sala} terrace{Ir para a varanda} other{Ir para a sala}}"
+  "doorTo": "{room, select, living{Ir para a sala} terrace{Ir para a varanda} other{Ir para a sala}}",
+  "kittyLeftTo": "{name} {room, select, living{foi para a sala} terrace{saiu para a varanda} other{foi para a sala}}"
 }

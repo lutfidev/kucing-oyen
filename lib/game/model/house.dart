@@ -136,6 +136,12 @@ class HouseFloor {
           (x: 4, y: 492),
         ];
 
+  /// Titik kaki [spot] berada di jalur pintu ruangan [room].
+  bool onDoorPath(HouseRoom room, Spot spot) {
+    final feet = feetAt(spot);
+    return _inPolygon(doorPath(room), feet);
+  }
+
   /// Barang lantai [item] di [spot] menutup jalur pintu: jejaknya (selebar
   /// gambar, 12 × skala px di belakang kaki) bersinggungan dengan
   /// [doorPath]. Barang rata (karpet) dan barang dinding boleh di sana.

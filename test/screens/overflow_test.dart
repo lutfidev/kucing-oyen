@@ -33,6 +33,7 @@ import 'package:url_launcher_platform_interface/link.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../test_helpers.dart';
+import 'room_fixtures.dart' show goThroughDoor;
 import 'result_fixtures.dart';
 
 /// Semua rute harus bebas overflow dari layar kecil sampai besar, juga
@@ -456,7 +457,11 @@ void _cases(AppLanguage language) {
         setScreenSize(tester, size);
         setTextScale(tester, scale);
         await pumpApp(tester, progress: fullRoom());
-        expect(find.byType(KittyView), findsNWidgets(KittyId.values.length));
+        // Oyen + 4 di ruang tengah, 4 di teras.
+        expect(find.byType(KittyView), findsNWidgets(5));
+        expect(tester.takeException(), isNull);
+        await goThroughDoor(tester);
+        expect(find.byType(KittyView), findsNWidgets(4));
         expect(tester.takeException(), isNull);
       });
       testWidgets('tanpa overflow: kamar hidup dengan gelembung hadiah dan '

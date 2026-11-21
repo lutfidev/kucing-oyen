@@ -3,8 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/house.dart';
+import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
+import 'package:kucing_oren/screens/room/door_parts.dart';
 import 'package:kucing_oren/screens/room/house_pager.dart';
+import 'package:kucing_oren/screens/room/room_scene.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
@@ -139,19 +142,20 @@ void main() {
   });
 
   testWidgets('kucing di depan pintu tetap bisa diketuk', (tester) async {
+    // Tempat awal kucing tidak di depan pintu, jadi diperiksa susunan
+    // lapisannya: pintu di lapisan lantai, di bawah semua kucing.
     await pumpRoom(
       tester,
       progress: testProgressWith(home: Home(kitties: allKitties)),
     );
+    final scene = tester.widget<RoomScene>(find.byType(RoomScene));
+    expect(scene.floor.whereType<DoorButton>(), hasLength(1));
+    expect(scene.sprites.where((w) => w.key is ValueKey<KittyId>), isNotEmpty);
     final (room, geo) = roomOf(tester);
     final door = geo.doorTap.shift(room.topLeft);
-    Rect? overlap;
-    for (final kitty in allKitties) {
-      final box = tester.getRect(kittyView(kitty));
-      if (box.overlaps(door)) overlap = box.intersect(door);
-    }
-    expect(overlap, isNotNull, reason: 'tidak ada kucing di depan pintu');
-    await tester.tapAt(overlap!.center);
+    final oyen = tester.getRect(kittyView(KittyId.oyen));
+    expect(oyen.overlaps(door), isFalse);
+    await tester.tap(kittyView(KittyId.oyen));
     await tester.pumpAndSettle();
     expect(find.text('Elus'), findsOneWidget);
     expect(_chip(), findsNothing);

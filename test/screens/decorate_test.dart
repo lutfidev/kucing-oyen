@@ -280,7 +280,7 @@ void main() {
       tester,
       progress: withNeeds(const {}, home: decoratedHome()),
     );
-    await tester.tap(kittyView(KittyId.salju));
+    await tester.tap(kittyView(KittyId.oyen));
     await tester.pumpAndSettle();
     expect(find.byType(KittyCard), findsOneWidget);
     // Kartu menutupi tombol Hias: tutup lewat latar, lalu masuk mode hias.

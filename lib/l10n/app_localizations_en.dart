@@ -2073,4 +2073,14 @@ class AppLocalizationsEn extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String kittyLeftTo(String name, String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'went to the living room',
+      'terrace': 'went out to the terrace',
+      'other': 'went to the living room',
+    });
+    return '$name $_temp0';
+  }
 }

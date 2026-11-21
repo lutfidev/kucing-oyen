@@ -201,6 +201,30 @@ class RoomGeometry {
 
   double feetOf(Rect catBox) => catBox.top + catBox.height * catFeetFactor;
 
+  /// Jalan kaki kucing lewat pintu (px desain): dari ambang ke balik kusen
+  /// ruang tengah, dan dari balik kusen teras ke ambangnya.
+  static const _passLiving = ((345.0, 456.0), (400.0, 470.0));
+  static const _passTerrace = ((46.0, 456.0), (-10.0, 470.0));
+
+  /// Kotak kucing [kitty] yang sedang lewat pintu ruangan [room] pada
+  /// [progress] 0–1: keluar ([leaving], dari ambang ke balik kusen) atau
+  /// masuk (sebaliknya). Tidak dijepit: badannya hilang di balik kusen.
+  Rect passingBox(
+    KittyId kitty,
+    HouseRoom room,
+    double progress, {
+    required bool leaving,
+  }) {
+    final (inside, behind) = room == HouseRoom.living
+        ? _passLiving
+        : _passTerrace;
+    final (from, to) = leaving ? (inside, behind) : (behind, inside);
+    final t = progress.clamp(0.0, 1.0);
+    final x = from.$1 + (to.$1 - from.$1) * t;
+    final y = from.$2 + (to.$2 - from.$2) * t;
+    return catBoxAtFeet(kitty, x * sx, y * sy);
+  }
+
   /// [Spot] kucing [kitty] untuk kotak sprite [box] (kebalikan [catBoxOf],
   /// dijepit ke lantai).
   Spot catSpotAt(KittyId kitty, Rect box) =>

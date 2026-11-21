@@ -3059,6 +3059,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{room, select, living{Go to the living room} terrace{Go to the terrace} other{Go to the living room}}'**
   String doorTo(String room);
+
+  /// Short screen-reader announcement when a cat walks out of the room the player is looking at, through the door to the other room.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} {room, select, living{went to the living room} terrace{went out to the terrace} other{went to the living room}}'**
+  String kittyLeftTo(String name, String room);
 }
 
 class _AppLocalizationsDelegate

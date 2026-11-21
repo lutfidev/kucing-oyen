@@ -2701,5 +2701,18 @@
         "type": "String"
       }
     }
+  },
+  "kittyLeftTo": "{name} {room, select, living{went to the living room} terrace{went out to the terrace} other{went to the living room}}",
+  "@kittyLeftTo": {
+    "description": "Short screen-reader announcement when a cat walks out of the room the player is looking at, through the door to the other room.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Mochi"
+      },
+      "room": {
+        "type": "String"
+      }
+    }
   }
 }

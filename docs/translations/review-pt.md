@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-493 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+494 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -520,6 +520,7 @@ files and anything written there is overwritten.
 | `snackEmptyNote` | All gone. Grab more snacks in the Shop! | Acabou. Compre mais petiscos na Loja! | Short note on a cat card when a snack that is out of stock is tapped. | |
 | `roomName` | {room, select, living{Living room} terrace{Terrace} other{Living room}} | {room, select, living{Sala} terrace{Varanda} other{Sala}} | Name of a room of Oyen's house: the living room or the terrace. Shown on the small chip that leads back to the living room. Placeholders: `{room}`. | |
 | `doorTo` | {room, select, living{Go to the living room} terrace{Go to the terrace} other{Go to the living room}} | {room, select, living{Ir para a sala} terrace{Ir para a varanda} other{Ir para a sala}} | Screen-reader label of the open door between the two rooms of Oyen's house; tapping it walks to the other room. Placeholders: `{room}`. | |
+| `kittyLeftTo` | {name} {room, select, living{went to the living room} terrace{went out to the terrace} other{went to the living room}} | {name} {room, select, living{foi para a sala} terrace{saiu para a varanda} other{foi para a sala}} | Short screen-reader announcement when a cat walks out of the room the player is looking at, through the door to the other room. Placeholders: `{name}`, `{room}`. | |
 
 ---
 
