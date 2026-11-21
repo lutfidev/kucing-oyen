@@ -41,7 +41,7 @@ Fondasi: Flutter + Flame, Android portrait, simulator/solver dan 20 level, progr
 - [x] 14. Screenshot, ikon, splash, dan materi Play Store baru
 - [x] 14a. Perbaikan visual cepat: panel rumah, ikon koin, tab Toko, latar peta
 - [x] 14b. Rapikan Toko, layar hasil, dan puzzle
-- [ ] 14c. Header dan panel rumah ringkas seperti konsep A
+- [x] 14c. Header dan panel rumah ringkas seperti konsep A
 - [ ] 14d. Kamar hidup: pose aktivitas, skala dan gaya prop
 - [ ] 14e. Ciri tiap area dan keselarasan gaya rumah dengan puzzle/peta
 - [ ] 15. Pengujian menyeluruh di HP dan kandidat rilis
@@ -337,6 +337,15 @@ grup `tata letak 14b` di `shop_v2_test`; screenshot dan materi toko dibuat ulang
   (bukan stiker putih), lencana arah tidak menutupi wajah Oyen, kontras tembok/lantai naik.
 
 ### 14c. Header dan panel rumah ringkas seperti konsep A
+
+**Selesai 21 November 2026:** tab area satu baris chip (ikon + nama pendek;
+hitungan hanya di label pembaca layar), judul area dihapus, bantuan dan Hias
+jadi tombol ikon bulat 48 dp di pojok kanan atas kamar; panel kucing satu
+baris (avatar, nama, status satu baris, dua aksi berikon); panel area diganti
+chip status pendek + chip hadiah, sedangkan aturan, stok/siklus mangkuk,
+ketersediaan dan antrean beserta batal pindah ke sheet area. Kamar 390×844
+naik dari 414 ke 452 dp. Dijaga `home_layout_14c_test`; screenshot dan materi
+toko dibuat ulang.
 
 - Tab area satu baris chip ringkas; judul area, bantuan dan Hias tidak memakan baris sendiri yang tinggi.
 - Panel kucing: avatar, nama, dua aksi berikon, chip "Hadiah tersedia". Penjelasan
