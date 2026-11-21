@@ -2161,4 +2161,29 @@ class AppLocalizationsRu extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String doorAttention(String room, String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name хочет есть в гостиной',
+      'sad': '$name грустит в гостиной',
+      'other': '$name: для тебя подарок, монетки',
+    });
+    String _temp1 = intl.Intl.selectLogic(need, {
+      'hungry': '$name хочет есть на террасе',
+      'sad': '$name грустит на террасе',
+      'other': '$name: для тебя подарок, монетки',
+    });
+    String _temp2 = intl.Intl.selectLogic(need, {
+      'hungry': '$name хочет есть в гостиной',
+      'sad': '$name грустит в гостиной',
+      'other': '$name: для тебя подарок, монетки',
+    });
+    String _temp3 = intl.Intl.selectLogic(room, {
+      'living': 'В гостиную. $_temp0',
+      'terrace': 'На террасу. $_temp1',
+      'other': 'В гостиную. $_temp2',
+    });
+    return '$_temp3';
+  }
 }

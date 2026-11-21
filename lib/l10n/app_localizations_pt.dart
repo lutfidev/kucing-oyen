@@ -2131,4 +2131,29 @@ class AppLocalizationsPt extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String doorAttention(String room, String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name está com fome na sala',
+      'sad': '$name está sem ânimo na sala',
+      'other': '$name tem moedas de presente para você',
+    });
+    String _temp1 = intl.Intl.selectLogic(need, {
+      'hungry': '$name está com fome na varanda',
+      'sad': '$name está sem ânimo na varanda',
+      'other': '$name tem moedas de presente para você',
+    });
+    String _temp2 = intl.Intl.selectLogic(need, {
+      'hungry': '$name está com fome na sala',
+      'sad': '$name está sem ânimo na sala',
+      'other': '$name tem moedas de presente para você',
+    });
+    String _temp3 = intl.Intl.selectLogic(room, {
+      'living': 'Para a sala. $_temp0',
+      'terrace': 'Para a varanda. $_temp1',
+      'other': 'Para a sala. $_temp2',
+    });
+    return '$_temp3';
+  }
 }

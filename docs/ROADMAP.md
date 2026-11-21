@@ -682,7 +682,7 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 33".
 
-## 34. Rumah dua ruangan: kucing di dua ruangan
+## 34. Rumah dua ruangan: kucing di dua ruangan ✅
 
 **Hasil:** kucing menyebar ke tempat nyaman, berjalan sendiri lewat pintu, bisa diajak pindah (tombol kartu dan tahan-seret) lalu betah 5 menit, dan ikon perhatian di pintu memberi tahu kucing di ruangan sebelah.
 

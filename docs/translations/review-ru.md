@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-497 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+498 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -524,6 +524,7 @@ files and anything written there is overwritten.
 | `kittyInRoom` | {room, select, living{In the living room right now.} terrace{Out on the terrace right now.} other{In the living room right now.}} | {room, select, living{Сейчас в гостиной.} terrace{Сейчас на террасе.} other{Сейчас в гостиной.}} | Sentence added after a cat's description on its card: which room of the house the cat is in now. Placeholders: `{room}`. | |
 | `inviteTo` | {room, select, living{Take to the living room} terrace{Take to the terrace} other{Take to the living room}} | {room, select, living{Позвать в гостиную} terrace{Позвать на террасу} other{Позвать в гостиную}} | Green button on a cat's card (and screen-reader action on the cat): the cat walks through the door to the named room and stays there a while. Placeholders: `{room}`. | |
 | `liftHint` | {room, select, living{Bring to the door to go to the living room} terrace{Bring to the door to go to the terrace} other{Bring to the door to go to the living room}} | {room, select, living{Неси к двери, чтобы позвать в гостиную} terrace{Неси к двери, чтобы позвать на террасу} other{Неси к двери, чтобы позвать в гостиную}} | Status shown while the player holds and drags a cat: drop it on the glowing door to send it to the named room. Placeholders: `{room}`. | |
+| `doorAttention` | {room, select, living{To the living room. {need, select, hungry{{name} is hungry in there} sad{{name} is feeling down in there} other{{name} has a coin gift for you}}} terrace{To the terrace. {need, select, hungry{{name} is hungry out there} sad{{name} is feeling down out there} other{{name} has a coin gift for you}}} other{To the living room. {need, select, hungry{{name} is hungry in there} sad{{name} is feeling down in there} other{{name} has a coin gift for you}}}} | {room, select, living{В гостиную. {need, select, hungry{{name} хочет есть в гостиной} sad{{name} грустит в гостиной} other{{name}: для тебя подарок, монетки}}} terrace{На террасу. {need, select, hungry{{name} хочет есть на террасе} sad{{name} грустит на террасе} other{{name}: для тебя подарок, монетки}}} other{В гостиную. {need, select, hungry{{name} хочет есть в гостиной} sad{{name} грустит в гостиной} other{{name}: для тебя подарок, монетки}}}} | Screen-reader label of the door when a cat in the other room needs a look (shown as a small icon by the door): where the door goes, then which cat needs what. need is hungry, sad, or reward (a coin gift). Placeholders: `{room}`, `{name}`, `{need}`. | |
 
 ---
 

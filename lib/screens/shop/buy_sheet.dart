@@ -202,7 +202,10 @@ class _BuySheetState extends State<_BuySheet> {
               icon: KoIcons.house,
               onPressed: () {
                 widget.onClose();
-                context.go(AppRoutes.home);
+                context.go(switch (target) {
+                  BuyKitty(:final id) => AppRoutes.homeShowing(id),
+                  _ => AppRoutes.home,
+                });
               },
             ),
           }

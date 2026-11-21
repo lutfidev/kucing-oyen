@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../game/model/house.dart';
+import '../../game/model/needs.dart';
+import '../../game/render/render.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -222,6 +224,63 @@ class LiftStatus extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Ikon perhatian di dekat pintu untuk kucing di ruangan sebelah
+/// (`AdeganTengah`/`AdeganTeras` isi `ikon`): tanda lapar atau lesu, atau
+/// gelembung hadiah koin. Hanya penanda: tidak bisa diketuk dan tanpa
+/// semantik sendiri (label pintunya yang menyebut kucingnya).
+class DoorAttention extends StatelessWidget {
+  const DoorAttention({
+    super.key,
+    required this.geo,
+    required this.need,
+    this.time,
+  });
+
+  final RoomGeometry geo;
+  final DoorNeed need;
+
+  /// Detik naik-turun; null = diam.
+  final double? time;
+
+  /// Letak desain ikon di area rumah 390×652.
+  static const _mark = {
+    HouseRoom.living: Offset(327, 238),
+    HouseRoom.terrace: Offset(15, 238),
+  };
+  static const _bubble = {
+    HouseRoom.living: Offset(319, 226),
+    HouseRoom.terrace: Offset(7, 226),
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final reward = need == DoorNeed.reward;
+    final at = (reward ? _bubble : _mark)[geo.which]!;
+    final view = reward ? RoomArt.coinBubbleViewBox : RoomArt.sadMarkViewBox;
+    final box = geo.fromDesign(at & view);
+    return Positioned.fromRect(
+      rect: box,
+      child: IgnorePointer(
+        child: ExcludeSemantics(
+          child: reward
+              ? CoinBubbleView(
+                  coins: kittyRewardCoins,
+                  label: '',
+                  onTap: () {},
+                  size: box.width,
+                  time: time,
+                )
+              : SadMarkView(
+                  hungry: need == DoorNeed.hungry,
+                  size: box.width,
+                  time: time,
+                ),
         ),
       ),
     );

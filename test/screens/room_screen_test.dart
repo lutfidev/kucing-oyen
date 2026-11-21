@@ -352,6 +352,31 @@ void main() {
     });
   });
 
+  testWidgets('beli kucing dari teras: "Lihat di kamar" ke ruang tengah', (
+    tester,
+  ) async {
+    await pumpRoom(tester, progress: testProgressWith(coins: 300));
+    await goThroughDoor(tester);
+    expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
+    await tester.tap(find.text('Toko'));
+    await settle(tester);
+    await tester.tap(find.text('Kucing'));
+    await settle(tester);
+    final card = find.byKey(const ValueKey('shop-kitty-salju'));
+    await tester.ensureVisible(card);
+    await settle(tester);
+    await tester.tap(card);
+    await settle(tester);
+    await tester.tap(find.byKey(const ValueKey('buy-confirm')));
+    await settle(tester);
+    await tester.tap(find.byKey(const ValueKey('buy-room')));
+    await settle(tester);
+    expect(find.byType(RoomView), findsOneWidget);
+    expect(find.byKey(const ValueKey('house-living')), findsOneWidget);
+    expect(find.byKey(const ValueKey('house-terrace')), findsNothing);
+    expect(kittyView(KittyId.salju), findsOneWidget);
+  });
+
   group('KeepInside', () {
     const room = Size(390, 600);
     const child = Size(60, 30);

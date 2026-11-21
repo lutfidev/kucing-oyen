@@ -113,9 +113,14 @@ class RoomView extends StatefulWidget {
     required this.progress,
     this.random,
     this.life = true,
+    this.showKitty,
   });
 
   final ProgressController progress;
+
+  /// Buka ruangan tempat kucing ini berada, tanpa geser (mis. "Lihat di
+  /// kamar" sesudah membeli kucing).
+  final KittyId? showKitty;
 
   /// Pengacak posisi kucing dan rutinitasnya; null = acak sungguhan.
   final Random? random;
@@ -199,6 +204,9 @@ class _RoomViewState extends State<RoomView>
   /// Ruangan yang sedang dibuka (awal ruang tengah, tidak disimpan).
   HouseRoom _house = HouseRoom.living;
 
+  /// Naik tiap ruangan dibuka tanpa geser (pager dibangun ulang).
+  int _pagerJumps = 0;
+
   /// Ruangan yang sudah tampil penuh: chip "Ruang tengah" muncul di akhir
   /// transisi (`TransisiRuang.dc.html`).
   HouseRoom _arrived = HouseRoom.living;
@@ -251,6 +259,7 @@ class _RoomViewState extends State<RoomView>
   @override
   void initState() {
     super.initState();
+    _house = _arrived = _roomShowing(widget.showKitty) ?? HouseRoom.living;
     if (widget.life) {
       _syncKitties();
       _refresh = Timer.periodic(roomRefreshInterval, (_) => _refreshNeeds());
@@ -270,6 +279,25 @@ class _RoomViewState extends State<RoomView>
     if (widget.life && _still) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _eatWithoutWalking());
     }
+  }
+
+  @override
+  void didUpdateWidget(RoomView old) {
+    super.didUpdateWidget(old);
+    if (widget.showKitty != old.showKitty) {
+      if (_roomShowing(widget.showKitty) case final room?) {
+        _house = _arrived = room;
+        // Pager baru = langsung di ruangan itu, tanpa animasi geser.
+        _pagerJumps++;
+      }
+    }
+  }
+
+  /// Ruangan kucing [kitty], atau null.
+  HouseRoom? _roomShowing(KittyId? kitty) {
+    if (kitty == null || !_progress.home.ownsKitty(kitty)) return null;
+    if (widget.life) _syncKitties();
+    return _catRoom(kitty);
   }
 
   @override
@@ -475,6 +503,25 @@ class _RoomViewState extends State<RoomView>
     } else {
       _homes[kitty] = (geo.which, spot);
     }
+  }
+
+  /// Kucing di ruangan [room] yang perlu dicek, untuk ikon di pintu ke
+  /// sana: lapar (aturan tanda lesu), lesu, lalu hadiah koin (kamar hidup,
+  /// bukan kucing yang masih bertanda baru, seperti gelembungnya).
+  (KittyId, DoorNeed)? _doorAttention(HouseRoom room) {
+    final home = _progress.home;
+    return doorAttention(
+      [
+        for (final kitty in home.kitties)
+          if (_catRoom(kitty) == room) kitty,
+      ],
+      hungry: (kitty) => _progress.catNeeds(kitty).hunger <= sadThreshold,
+      sad: (kitty) => _progress.catNeeds(kitty).isSad,
+      reward: (kitty) =>
+          widget.life &&
+          !home.isFresh(kitty) &&
+          _progress.canClaimKittyReward(kitty),
+    );
   }
 
   /// Kucing yang memakai barang [id] (null kalau sedang diangkat).
@@ -758,6 +805,7 @@ class _RoomViewState extends State<RoomView>
                 : null,
             onLongPressEnd: canLift ? (_) => _liftEnd() : null,
             child: HousePager(
+              key: ValueKey(_pagerJumps),
               room: _house,
               enabled: !_decorating && lifted == null,
               onRoom: (room) => setState(() => _house = room),
@@ -882,6 +930,7 @@ class _RoomViewState extends State<RoomView>
     final overlayTop =
         top + s.roomDecorateGap + s.roomDecorateButton + space.s8;
     final unit = geo.artScale;
+    final attention = _decorating ? null : _doorAttention(geo.which.other);
     final shadows = [
       for (final sprite in ordered)
         switch (sprite) {
@@ -922,7 +971,14 @@ class _RoomViewState extends State<RoomView>
         if (!_decorating)
           DoorButton(
             geo: geo,
-            label: context.l10n.doorTo(geo.which.other.name),
+            label: switch (attention) {
+              (final kitty, final need) => context.l10n.doorAttention(
+                geo.which.other.name,
+                kittyName(context.l10n, kitty),
+                need.name,
+              ),
+              null => context.l10n.doorTo(geo.which.other.name),
+            },
             onTap: () => _goTo(geo.which.other),
           ),
         if (_decorating) Positioned.fill(child: ZoneGuides(geo: geo)),
@@ -989,6 +1045,8 @@ class _RoomViewState extends State<RoomView>
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(child: scene),
+        if (attention case (_, final need))
+          DoorAttention(geo: geo, need: need, time: _animating ? _time : null),
         if (lifted != null)
           Positioned.fill(
             child: DoorGlow(

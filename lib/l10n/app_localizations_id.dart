@@ -1970,4 +1970,29 @@ class AppLocalizationsId extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String doorAttention(String room, String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name di ruang tengah lapar',
+      'sad': '$name di ruang tengah lesu',
+      'other': 'Ada hadiah koin dari $name',
+    });
+    String _temp1 = intl.Intl.selectLogic(need, {
+      'hungry': '$name di teras lapar',
+      'sad': '$name di teras lesu',
+      'other': 'Ada hadiah koin dari $name',
+    });
+    String _temp2 = intl.Intl.selectLogic(need, {
+      'hungry': '$name di ruang tengah lapar',
+      'sad': '$name di ruang tengah lesu',
+      'other': 'Ada hadiah koin dari $name',
+    });
+    String _temp3 = intl.Intl.selectLogic(room, {
+      'living': 'Ke ruang tengah. $_temp0',
+      'terrace': 'Ke teras. $_temp1',
+      'other': 'Ke ruang tengah. $_temp2',
+    });
+    return '$_temp3';
+  }
 }

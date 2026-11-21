@@ -3083,6 +3083,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{room, select, living{Bring to the door to go to the living room} terrace{Bring to the door to go to the terrace} other{Bring to the door to go to the living room}}'**
   String liftHint(String room);
+
+  /// Screen-reader label of the door when a cat in the other room needs a look (shown as a small icon by the door): where the door goes, then which cat needs what. need is hungry, sad, or reward (a coin gift).
+  ///
+  /// In en, this message translates to:
+  /// **'{room, select, living{To the living room. {need, select, hungry{{name} is hungry in there} sad{{name} is feeling down in there} other{{name} has a coin gift for you}}} terrace{To the terrace. {need, select, hungry{{name} is hungry out there} sad{{name} is feeling down out there} other{{name} has a coin gift for you}}} other{To the living room. {need, select, hungry{{name} is hungry in there} sad{{name} is feeling down in there} other{{name} has a coin gift for you}}}}'**
+  String doorAttention(String room, String name, String need);
 }
 
 class _AppLocalizationsDelegate
