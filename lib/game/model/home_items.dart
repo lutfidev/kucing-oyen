@@ -81,6 +81,11 @@ class RoomItem {
   double get width => _width * scale;
   double get height => _height * scale;
 
+  /// Ukuran gambar `Barang.dc.html` tanpa [scale] kamar v1; rumah dua
+  /// ruangan mengalikannya dengan skala kedalaman (`depthScale`).
+  double get baseWidth => _width;
+  double get baseHeight => _height;
+
   /// Barang bawaan (mangkuk): selalu ada, tidak dijual, tidak ke Gudang.
   bool get builtIn => id == RoomItemId.mangkuk;
 

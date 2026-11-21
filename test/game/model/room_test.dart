@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/room.dart';
 
 void main() {
@@ -42,8 +43,9 @@ void main() {
     expect(stored.spotOf(RoomItemId.kardus), isNull);
     expect(stored.stored, [RoomItemId.kardus]);
 
-    final back = stored.place(RoomItemId.kardus, Spot(0.5, 0.5));
-    expect(back.spotOf(RoomItemId.kardus), Spot(0.5, 0.5));
+    // Spot di kiri lantai: tidak menutup jalur pintu, jadi tidak digeser.
+    final back = stored.place(RoomItemId.kardus, Spot(0.2, 0.5));
+    expect(back.spotOf(RoomItemId.kardus), Spot(0.2, 0.5));
     expect(back.stored, isEmpty);
   });
 
@@ -77,7 +79,7 @@ void main() {
     final room = Room.fromJson({
       'owned': ['kardus', 'kursiAsing', 7, null, 'bola'],
       'placed': {
-        'kardus': [0.5, 0.5],
+        'kardus': [0.2, 0.5],
         'bola': 'a',
         'tikus': [0.1, 0.1],
         'kursiAsing': [0, 0],
@@ -91,7 +93,7 @@ void main() {
     });
     expect(room.placed, {
       RoomItemId.mangkuk: bowlSpot,
-      RoomItemId.kardus: Spot(0.5, 0.5),
+      RoomItemId.kardus: Spot(0.2, 0.5),
     });
     expect(room.stored, [RoomItemId.bola]);
 
@@ -102,5 +104,91 @@ void main() {
   test('owned hasil beli tidak bisa diubah', () {
     final room = Room().buy(RoomItemId.bola);
     expect(() => room.owned.add(RoomItemId.jam), throwsUnsupportedError);
+  });
+
+  group('dua ruangan', () {
+    const floor = HouseFloor();
+    final owned = [RoomItemId.kasur, RoomItemId.lukisan, RoomItemId.hammock];
+
+    test('simpanan tanpa terrace: semua barang di ruang tengah', () {
+      final room = Room.fromJson({
+        'owned': ['kasur'],
+        'placed': {
+          'kasur': [0.1, 0.2],
+        },
+      });
+      expect(room.roomOf(RoomItemId.kasur), HouseRoom.living);
+      expect(room.placedIn(HouseRoom.terrace), isEmpty);
+      expect(room.placedIn(HouseRoom.living).keys, {
+        RoomItemId.mangkuk,
+        RoomItemId.kasur,
+      });
+    });
+
+    test('barang teras tersimpan lewat JSON', () {
+      final room = Room(owned: owned)
+          .place(RoomItemId.kasur, Spot(0.5, 0.9), room: HouseRoom.terrace);
+      expect(room.roomOf(RoomItemId.kasur), HouseRoom.terrace);
+      final back = Room.fromJson(room.toJson());
+      expect(back, room);
+      expect(back.roomOf(RoomItemId.kasur), HouseRoom.terrace);
+      expect(back.placedIn(HouseRoom.terrace).keys, {RoomItemId.kasur});
+    });
+
+    test('barang dinding biasa tidak bisa ke teras, gantungan bisa', () {
+      final room = Room(owned: owned);
+      expect(
+        room.place(RoomItemId.lukisan, Spot(0, 0), room: HouseRoom.terrace),
+        room,
+      );
+      final hung = room.place(
+        RoomItemId.hammock,
+        Spot(0, 0),
+        room: HouseRoom.terrace,
+      );
+      expect(hung.roomOf(RoomItemId.hammock), HouseRoom.terrace);
+      // Nama yang tidak boleh di teras dibaca sebagai ruang tengah.
+      final json = hung.toJson()..['terrace'] = ['hammock', 'lukisan', 7];
+      json['placed'] = <String, dynamic>{
+        ...(json['placed'] as Map<String, dynamic>),
+        'lukisan': [0.2, 0.2],
+      };
+      final read = Room.fromJson(json);
+      expect(read.roomOf(RoomItemId.lukisan), HouseRoom.living);
+      expect(read.roomOf(RoomItemId.hammock), HouseRoom.terrace);
+    });
+
+    test('barang lama di jalur pintu digeser ke tempat yang boleh', () {
+      final kasur = roomItemOf(RoomItemId.kasur);
+      final blocked = floor.spotAtFeet(300, 500);
+      expect(floor.blocksDoor(kasur, HouseRoom.living, blocked), isTrue);
+      final room = Room.fromJson({
+        'owned': ['kasur'],
+        'placed': {'kasur': blocked.toJson()},
+      });
+      final spot = room.spotOf(RoomItemId.kasur)!;
+      expect(floor.blocksDoor(kasur, HouseRoom.living, spot), isFalse);
+      final placed = room.place(RoomItemId.kasur, blocked);
+      expect(
+        floor.blocksDoor(
+          kasur,
+          HouseRoom.living,
+          placed.spotOf(RoomItemId.kasur)!,
+        ),
+        isFalse,
+      );
+    });
+
+    test('ke Gudang menghapus ruangannya; beli di ruang tengah', () {
+      final room = Room(owned: owned)
+          .place(RoomItemId.kasur, Spot(0.5, 0.9), room: HouseRoom.terrace)
+          .store(RoomItemId.kasur);
+      expect(room.roomOf(RoomItemId.kasur), HouseRoom.living);
+      expect(room.placedIn(HouseRoom.terrace), isEmpty);
+      expect(
+        Room.initial.buy(RoomItemId.bola).roomOf(RoomItemId.bola),
+        HouseRoom.living,
+      );
+    });
   });
 }
