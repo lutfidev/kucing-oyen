@@ -211,16 +211,20 @@ void paintBoardOyen(Canvas canvas, BoardScene scene, {Offset? at}) {
   if (scene.showFacing) _paintFacing(canvas, tile, oyen.look.dir);
 }
 
+/// Pusat lencana arah relatif ke pojok kiri atas petak Oyen: di sisi
+/// hadap tetapi di atas kepala (kiri/kanan) atau di bawah dagu (bawah),
+/// supaya tidak menutupi wajah Oyen yang tidur.
+Offset facingCenter(Direction dir) => switch (dir) {
+  Direction.right => const Offset(50, 2),
+  Direction.left => const Offset(0, 2),
+  Direction.up => const Offset(25, 0),
+  Direction.down => const Offset(25, 53),
+};
+
 /// Panah di tepi petak Oyen (pojok kiri atasnya di [tile]), ke arah hadapnya
 /// (`facingStyle` di desain).
 void _paintFacing(Canvas canvas, Offset tile, Direction dir) {
-  // Pojok kiri atas ikon 12 px, relatif ke pojok petak.
-  final (fx, fy) = switch (dir) {
-    Direction.right => (44.0, 19.0),
-    Direction.left => (-6.0, 19.0),
-    Direction.up => (19.0, -6.0),
-    Direction.down => (19.0, 44.0),
-  };
+  final center = tile + facingCenter(dir);
   final degrees = switch (dir) {
     Direction.right => 0,
     Direction.down => 90,
@@ -232,7 +236,7 @@ void _paintFacing(Canvas canvas, Offset tile, Direction dir) {
   const c = KoColors.standard;
   canvas
     ..save()
-    ..translate(tile.dx + fx + half, tile.dy + fy + half)
+    ..translate(center.dx, center.dy)
     ..drawCircle(
       Offset.zero,
       radius + BoardArt.facingRing,

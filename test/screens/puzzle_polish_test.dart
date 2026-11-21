@@ -106,4 +106,46 @@ void main() {
   test('tembok kontras dengan lantai', () {
     expect(contrast(PuzzleArt.wall, PuzzleArt.floor), greaterThan(1.3));
   });
+
+  group('lencana arah tidak menutupi wajah Oyen', () {
+    // Pusat lama (sebelum 14b) untuk membuktikan test bisa gagal.
+    const old = {
+      Direction.right: Offset(50, 25),
+      Direction.left: Offset(0, 25),
+    };
+    Future<double> overlap(WidgetTester t, Direction dir, Offset center) async {
+      // Oyen tidur di petak (2, 2) kanvas 150×150, seperti paintBoardOyen.
+      final d = await pixels(t, (c) {
+        c.translate(
+          50 + BoardArt.oyenOffset.dx,
+          50 + BoardArt.oyenOffset.dy,
+        );
+        paintPuzzleOyen(
+          c,
+          OyenLook(pose: OyenPose.sleep, dir: dir),
+          size: BoardArt.oyenSize,
+        );
+      }, w: 150, h: 150);
+      final r = BoardArt.facingIcon / 2 + BoardArt.facingPadding;
+      var hit = 0, all = 0;
+      for (var y = -r; y <= r; y++) {
+        for (var x = -r; x <= r; x++) {
+          if (x * x + y * y > r * r) continue;
+          all++;
+          final p = const Offset(50, 50) + center + Offset(x, y);
+          if (at(d, 150, p.dx.round(), p.dy.round()).a > .5) hit++;
+        }
+      }
+      return hit / all;
+    }
+
+    for (final dir in Direction.values) {
+      testWidgets('$dir', (t) async {
+        expect(await overlap(t, dir, facingCenter(dir)), lessThan(.05));
+        if (old[dir] case final o?) {
+          expect(await overlap(t, dir, o), greaterThan(.1));
+        }
+      });
+    }
+  });
 }
