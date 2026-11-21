@@ -2,6 +2,8 @@
 
 Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jadi setiap langkah harus bisa dikerjakan dari nol tanpa ingatan sesi sebelumnya.
 
+> **21 Nov 2026:** perombakan desain v2 dibatalkan, repo kembali ke v1 (lihat `docs/DESIGN_NOTES.md`, "21 Nov 2026: kembali ke desain v1"). v2 diarsipkan di branch `archive/v2-desain-kartun`. Sebelum melanjutkan langkah 32, sepakati dulu dengan pemilik repo perbaikan v2 mana yang dibawa.
+
 ## Cara memakai
 
 - Langkah berikutnya = langkah pertama yang belum dicentang di **Status**. Mulai dan akhiri langkah sesuai "Alur git per langkah roadmap" di `CLAUDE.md`.

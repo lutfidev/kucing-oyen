@@ -4,6 +4,7 @@ Game puzzle mobile (Flutter + Flame). Pemain menaruh benda (ikan, ember air, kar
 
 ## Sumber kebenaran
 
+- **Desain v2 dibatalkan (21 Nov 2026).** Pemilik repo memutuskan kembali ke desain v1: gaya v2 terlalu kartun di semua layar, dan empat area rumah v2 terasa hanya ganti tombol, bukan pindah ke ruangan yang benar-benar berbeda. Seluruh v2 (termasuk PR #57 yang ditutup) diarsipkan di branch `archive/v2-desain-kartun`; jangan memakainya sebagai acuan aktif. Perbaikan non-visual v2 hanya dibawa ke v1 satu per satu atas persetujuan pemilik repo. Ide ruangan sungguhan (dapur, ruang main, dll.) dicatat di `docs/DESIGN_NOTES.md`.
 - `docs/GDD.md`: dokumen desain game (aturan Oyen, elemen peta, alur level, bintang, 20 level).
 - `docs/reference/oyen_simulator.py`: simulator + solver acuan. Logika simulasi Dart HARUS identik dengan file ini.
 - `assets/levels/chapter1-2.json`: data 20 level (peta, baki, bintang 3, solusi, jumlah langkah solusi).
