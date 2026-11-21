@@ -45,9 +45,7 @@ void main() {
       expect(state.debugEdges, (true, false));
     });
 
-    testWidgets('isi pendek tidak memudar dan posisi gulir tetap', (
-      tester,
-    ) async {
+    testWidgets('isi pendek tidak memudar', (tester) async {
       final controller = ScrollController();
       await tester.pumpWidget(
         host(
@@ -65,7 +63,6 @@ void main() {
       await tester.pump();
       final state = tester.state(find.byType(UiEdgeFade)) as dynamic;
       expect(state.debugEdges, (false, false));
-      expect(find.byKey(const ValueKey('edge-fade')), findsOneWidget);
     });
   });
 

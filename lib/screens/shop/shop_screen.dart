@@ -108,6 +108,7 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                       const SizedBox(width: KoUi.s8),
                       UiButton(
+                        key: const ValueKey('shop-balance'),
                         homeStyle: true,
                         label: '${c.coins}',
                         semanticLabel:

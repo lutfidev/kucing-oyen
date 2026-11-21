@@ -30,40 +30,40 @@
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 1037701,
-      "sha256": "1f48c4b6234e02bb3da832b8fbf9ecbfd044fd7d1c612ed03a05b5b84eb4f210"
+      "bytes": 1030349,
+      "sha256": "f7c71ea469ddd4185b47361bde054fbc9e156dd277138bdc6179c6b87a0eafce"
     },
     {
       "path": "docs/store/screenshots/en/02-makan.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 936442,
-      "sha256": "86cdc2f77f8bc0d5f40d76636d121e071e04e3086816ac264bfe6fd3579e9a92"
+      "bytes": 931482,
+      "sha256": "9d853d8c079ee8d94dbd0e2a3c52e38b828af1e15ba20ffc2a8b39e262b29e3e"
     },
     {
       "path": "docs/store/screenshots/en/03-main.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 915757,
-      "sha256": "7e4b5023823735e713d61dccfb98b9cc233123324e1e0b4e2f7755b1cb5f00af"
+      "bytes": 909753,
+      "sha256": "86201a8d30ed000c5a2d1a475f0d97a951d18737210176350a63b6f5c6bd63b9"
     },
     {
       "path": "docs/store/screenshots/en/04-rawat.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 883443,
-      "sha256": "f99103a5671c5aeae9bfa2e36d0607b4c519f5fc55bfa5e67ef327b03aeca764"
+      "bytes": 877484,
+      "sha256": "f8104e9feedb21e80edddf790afcec33b5573ca26cee0ed20be7cc527572e21d"
     },
     {
       "path": "docs/store/screenshots/en/05-toko-aksesoris.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 222059,
-      "sha256": "38d0a178b2e3c6753622b56d6ce0417590e8ac14a5dbd75c607ee6ce98a9a80a"
+      "bytes": 216961,
+      "sha256": "9bf94145e59fa51e027100052e882484051266366f7802f43d75aeec3ded807b"
     },
     {
       "path": "docs/store/screenshots/en/06-peta-babak-2.png",
@@ -94,40 +94,40 @@
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 1034345,
-      "sha256": "31aa01c4a6b2f73f45c79eaf2d5f64317923cff7a96e882858808c2e811165c5"
+      "bytes": 1025698,
+      "sha256": "6118200147169bb80e375dd3781ac3653b9c27b1d735874eb88e5fcdfe6c1084"
     },
     {
       "path": "docs/store/screenshots/id/02-makan.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 938455,
-      "sha256": "7b71120c3c3ac304e9cee3b209ac63268ca0de70a9c087d5518bbe51537d5af7"
+      "bytes": 933280,
+      "sha256": "1efea6c172f21ae2782803384d37f13b774e5f7d896648cf5696e3fc1584f24d"
     },
     {
       "path": "docs/store/screenshots/id/03-main.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 916474,
-      "sha256": "520fab57136a10a45e5a5b35f546573e956855f89bd8660bf9fd42da9c2e18c8"
+      "bytes": 910423,
+      "sha256": "16d7e7c09bf413cdb6f60fa20b7e94def2c0b1dd1e9297f2f79b07e1d6c5daa9"
     },
     {
       "path": "docs/store/screenshots/id/04-rawat.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 885362,
-      "sha256": "8c7d642b7a2ffbff86ff31e728d7ca97e96547003881d72e427c8a46493ce34d"
+      "bytes": 879568,
+      "sha256": "c7cecd5befbf4684e870263ffb12f49824f35310fd5687d7f028f55add3bd34c"
     },
     {
       "path": "docs/store/screenshots/id/05-toko-aksesoris.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 220929,
-      "sha256": "831c60578f725c28acfdb91851f888ccaceb6590f9b45c680cefd86f1489a9e2"
+      "bytes": 219871,
+      "sha256": "26c55c82c88103a5622650971c36380d0ab200ce49111104f9425b119176d9fe"
     },
     {
       "path": "docs/store/screenshots/id/06-peta-babak-2.png",
@@ -158,40 +158,40 @@
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 1047048,
-      "sha256": "f36bbff33324f70ba25b668b2851159bfd6d137295b2675c07e3daae57d958c0"
+      "bytes": 1040009,
+      "sha256": "3a5c76828e723cade36cc1bbf63d5be764eb1945a8ac46b1614aa786ad5ab044"
     },
     {
       "path": "docs/store/screenshots/pt/02-makan.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 947300,
-      "sha256": "1fb2950f99eb510f686ec43c2028338f91f1d8da261a5db2e1a48d76341b3a0b"
+      "bytes": 943004,
+      "sha256": "78b023de9c0e91474cbdb1cb1fa7ea9ac04686f5b5025dcd703ce696b0c007f6"
     },
     {
       "path": "docs/store/screenshots/pt/03-main.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 929142,
-      "sha256": "46c09b2a9825ae3086efc8f0c4af829e972d314411fce43bbec0f7a64a67dec4"
+      "bytes": 924254,
+      "sha256": "584f4b957d64906c16092f6906d5287be5bc1d5453160dcf54c3dffc8ec5da3b"
     },
     {
       "path": "docs/store/screenshots/pt/04-rawat.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 891950,
-      "sha256": "8d391cdb3d49e62decc14e50223ca7d17c98db2c58b3ecee13476969b73ec624"
+      "bytes": 886055,
+      "sha256": "41035eb8ecdae2f9812d05c1bcd6355c313a286a15ab77a9e30eeb571f819ba7"
     },
     {
       "path": "docs/store/screenshots/pt/05-toko-aksesoris.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 226660,
-      "sha256": "9a7fa83093eeb6c70f9273b959745bac656c6308ede9675d6988f5d2a6ffb9fd"
+      "bytes": 224662,
+      "sha256": "4c95b61424a338c336f690201275b7ec5f09d64bab0c79fe9d9cdfa0e25d148a"
     },
     {
       "path": "docs/store/screenshots/pt/06-peta-babak-2.png",
@@ -222,40 +222,40 @@
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 1041039,
-      "sha256": "b58e77996f95825ea047b795c096b268e9f462df776f0c8db7bd7fb0a4bcd08a"
+      "bytes": 1034471,
+      "sha256": "69e724618abdcb5a983bd59dfc4612bf0d00a891240f57a498eda61f0efb54ae"
     },
     {
       "path": "docs/store/screenshots/ru/02-makan.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 938650,
-      "sha256": "afb62aad899b9ea1f3f6e86756f3d297135ea96682d5944cf28956922f3731be"
+      "bytes": 933938,
+      "sha256": "3db6adc1f0954e8f0851aece27ee64b40e161007b92dda3d1b24fecf47736793"
     },
     {
       "path": "docs/store/screenshots/ru/03-main.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 917814,
-      "sha256": "1ac052dd69c8e5af83b5b4c7f91a0222c5d98909441e5c52276b6db29302ce56"
+      "bytes": 912101,
+      "sha256": "9fde0c6f83f125cf0420d5fae2580744dd77896794c0d36d8e0f403a0d5e6f06"
     },
     {
       "path": "docs/store/screenshots/ru/04-rawat.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 884743,
-      "sha256": "bcdde5d92d4a4c144cdc679e6d99910c7a699a43d6217126c03ed93b30ba462a"
+      "bytes": 878855,
+      "sha256": "5aa5571c8852a3be8fac34fd6e001702de66a36476eb560de43ac9e6cba8d352"
     },
     {
       "path": "docs/store/screenshots/ru/05-toko-aksesoris.png",
       "width": 1080,
       "height": 1920,
       "mode": "RGB",
-      "bytes": 219186,
-      "sha256": "7f61e4a71cd97edca5ec40790f71d59beed0064e6897b5f559bfb3f002cea1bd"
+      "bytes": 214225,
+      "sha256": "03d91aa9eda03dba0446e8065165affed6b01e772f8a80a5357aeeff998ba527"
     },
     {
       "path": "docs/store/screenshots/ru/06-peta-babak-2.png",
@@ -326,40 +326,40 @@
       "width": 864,
       "height": 1536,
       "mode": "RGBA",
-      "bytes": 846048,
-      "sha256": "ddb54f561fc72e1a6946df39e36706e41e3ffbacb5c3225ed9341f67d21c2780"
+      "bytes": 838857,
+      "sha256": "b4df2a0ee7356616de047d7d2f6792d42c01e7796c0ac1f5d4ed281472b3d2a5"
     },
     {
       "path": "docs/screenshots/02-makan.png",
       "width": 864,
       "height": 1536,
       "mode": "RGBA",
-      "bytes": 780630,
-      "sha256": "1be8ccd4a3b9d80890cb9913cddc178086192dc4b9b8d5c4414158c01e97958f"
+      "bytes": 773764,
+      "sha256": "d4b03759e83c167b621ff88d95fb7d420ce4c5872521e97544fd82b58dc07170"
     },
     {
       "path": "docs/screenshots/03-main.png",
       "width": 864,
       "height": 1536,
       "mode": "RGBA",
-      "bytes": 759524,
-      "sha256": "a562de8a7216206f1d9f8a79f1668addc5a821d6867c8ffd450784b5642024f1"
+      "bytes": 753264,
+      "sha256": "6b43432136d8c879749d4a8d3fa2fe0387d2802175fc632937c7fe77550e2dfe"
     },
     {
       "path": "docs/screenshots/04-rawat.png",
       "width": 864,
       "height": 1536,
       "mode": "RGBA",
-      "bytes": 736909,
-      "sha256": "e6234aa7074b9e298ce23cb6bf63703680d278e4c3ae3d2c13ada396301698e1"
+      "bytes": 730676,
+      "sha256": "f1821343ce4e5eeda9a0ccb3599b0ea22c4544b74868cbd6406d068f0e4e11ea"
     },
     {
       "path": "docs/screenshots/05-toko-aksesoris.png",
       "width": 864,
       "height": 1536,
       "mode": "RGBA",
-      "bytes": 190525,
-      "sha256": "9b2e106a68a1ef071f6def0399d204c22042f854be88042b63e1ff4ac66f9e0a"
+      "bytes": 188985,
+      "sha256": "60e3508ff25245e9a9c67d4d47e54d04dd8fa04561b8b492b0f0523457b9e175"
     },
     {
       "path": "docs/screenshots/06-peta-babak-2.png",
@@ -406,24 +406,24 @@
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 238311,
-      "sha256": "db6bfe308b732f873b98dbed4f998d6054ea7a19b0f7a7dbae7ec9a75af7759d"
+      "bytes": 236087,
+      "sha256": "72132cfdc5d1191ba06afd760f7d08e7811c46c67922f8c5904845eb804f49f3"
     },
     {
       "path": "docs/screenshots/en/12-koleksi-kucing.png",
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 177310,
-      "sha256": "a436fb73b10912154000d53ab66d3f3589090b03be2a73a8005c5c0754c0e25a"
+      "bytes": 175164,
+      "sha256": "2f83b24b7c90c82a0cf378f936f642144c16d140b311d68ef33f01ad7b283510"
     },
     {
       "path": "docs/screenshots/en/13-toko-camilan.png",
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 181934,
-      "sha256": "5648fb5c038e89880a9896bb5a36b472ae8d6d42263a88383b6fa09949dfd9e4"
+      "bytes": 179802,
+      "sha256": "5a1167fe46397e14c85ec4b73f988124e524cec1f05da08f9943eae335e5e3a8"
     },
     {
       "path": "docs/screenshots/en/14-pengaturan.png",
@@ -446,24 +446,24 @@
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 231821,
-      "sha256": "cafa9d0a1be67b03ae7e26543ed65703a689e6fa02e823f9971ce1f09185480c"
+      "bytes": 230413,
+      "sha256": "1c586d0927a6cfca742e4d3f96804fd55c8a5d58a4efeb70e3b3215e7334d43d"
     },
     {
       "path": "docs/screenshots/id/12-koleksi-kucing.png",
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 174063,
-      "sha256": "5830c9c71b179c5056eaccf5c0c00aa6ff90b1c20f2830b9d4a2c2ac9e19ba9e"
+      "bytes": 172759,
+      "sha256": "9473f02b3458467a3f36c139b0f8042d5ae7d685bf3ea37396dd3279867d4cb5"
     },
     {
       "path": "docs/screenshots/id/13-toko-camilan.png",
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 176709,
-      "sha256": "0226963570619a8f7b492bd403750f0eb1ec89264a73ad941c723331368892b6"
+      "bytes": 175899,
+      "sha256": "0bcba9fa05597232f1e3cda6d362b1e8e300c027d6aea21f1f547497655647a9"
     },
     {
       "path": "docs/screenshots/id/14-pengaturan.png",
@@ -486,24 +486,24 @@
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 246254,
-      "sha256": "5bab9813371dbcc743dc7abdff1a4f4d89870ddd73968077eb0a0fe1ec9400cb"
+      "bytes": 244687,
+      "sha256": "c763104bdb40db9f81a3c99d57bbba35479c0d5da0bb4a7bdf3cec62f32d148b"
     },
     {
       "path": "docs/screenshots/pt/12-koleksi-kucing.png",
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 180792,
-      "sha256": "15edfae8b4940216965f860b2d0e660f03ede9e4aca19ad4f10eb9894e1390f0"
+      "bytes": 179181,
+      "sha256": "216396b8c06c17e77af5a44f1027842621955c0872df320ea5305a125282ff94"
     },
     {
       "path": "docs/screenshots/pt/13-toko-camilan.png",
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 190695,
-      "sha256": "0b9386f4dfe3c452f03ebebf121e13ec8b486d6c2f905d8e00c7f43d405f0597"
+      "bytes": 189325,
+      "sha256": "f0c1675d0c785384cc25287d33cd8f571f5b7aa98c4df8e0cff8027b280aa7bd"
     },
     {
       "path": "docs/screenshots/pt/14-pengaturan.png",
@@ -526,24 +526,24 @@
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 235998,
-      "sha256": "bc95870391946c6e9b2532b4241390572c0cd73c8044dc8c452d60d231fca739"
+      "bytes": 234294,
+      "sha256": "3bea7da9443d32877a10833fe590f79ae9ec50bf6b75f6096cb4c6c6e109e59a"
     },
     {
       "path": "docs/screenshots/ru/12-koleksi-kucing.png",
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 175754,
-      "sha256": "73330d3e892d92612d1a67d6bcd1e0929e25bdfb02984f7f9062f54718f7f6fb"
+      "bytes": 174238,
+      "sha256": "bf3a3e200ff833dbe8c66ffed4c4c4328d2cace48a523e9a4894b6194b13255b"
     },
     {
       "path": "docs/screenshots/ru/13-toko-camilan.png",
       "width": 780,
       "height": 1688,
       "mode": "RGBA",
-      "bytes": 183233,
-      "sha256": "f5da5c1534f263493b070ebe4b04ee48ee6a9cea8d10c7305639dd8e2796d84b"
+      "bytes": 181775,
+      "sha256": "6aa1546e5d7df7ccb62bb7d80a48ca59547d2a5eeb7532db5f4f5c53dbb45341"
     },
     {
       "path": "docs/screenshots/ru/14-pengaturan.png",

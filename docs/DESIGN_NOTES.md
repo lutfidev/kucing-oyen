@@ -218,7 +218,6 @@ splash branding empat bahasa. Potret adalah render runtime host 432×768 dp,
 pengujian OS/HP. Persetujuan visual pemilik repo dan pemeriksaan native
 dilanjutkan pada langkah 15; upload/produksi tetap langkah 16.
 
-
 ## 21 November 2026 — perbaikan desain sesudah tinjauan (langkah 14a–14e)
 
 Pemilik repo meninjau screenshot langkah 14 dan meminta kekurangan desain
@@ -229,5 +228,6 @@ sebelum pengujian HP; nomor 15 dan 16 tetap supaya rujukan lama benar.
 ikon tapak tidak lagi berarti koin. Bintang di header berwarna `KoUi.homeStar`.
 Tombol rumah (`homeStyle`) yang `selected` memakai gradasi oranye seperti strip
 area, jadi tab Toko dan pilihan Hias jelas aktif. Daftar yang terpotong memakai
-`UiEdgeFade` (tepi memudar hanya ke arah isi yang tersembunyi). Ikon benda di
+`UiEdgeFade` (gradasi ke warna latar di tepi yang menyembunyikan isi; overlay,
+bukan ShaderMask, supaya kamar yang beranimasi tidak butuh layer offscreen). Ikon benda di
 peta digambar tanpa lantai papan (`paintPuzzleTile(floor: false)`).

@@ -319,6 +319,8 @@ teks 100%/130% bebas dari masalah di atas, dijaga test.
 
 ### 14b. Rapikan Toko, layar hasil, dan puzzle
 
+- Toko: judul di tengah layar; harga kartu aksesoris, adopsi kucing dan camilan
+  memakai ikon koin emas seperti harga barang.
 - Toko: kartu pratinjau tanpa ruang kosong berlebih, kelangkaan sebagai chip,
   pilihan "Coba di:" ringkas (satu baris yang bisa digeser) sehingga katalog terlihat.
 - Layar hasil: latar sinar penuh tanpa tepi lurus; ilustrasi mangkuk tidak menimpa kaki Oyen.

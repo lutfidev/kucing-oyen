@@ -20,7 +20,10 @@ import 'package:kucing_oren/game/render/v2/painted_scenery.dart';
 import 'package:kucing_oren/screens/room/area_decorate.dart';
 import 'package:kucing_oren/screens/room/home_view.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
+import 'package:kucing_oren/theme/ko_ui.dart';
+import 'package:kucing_oren/widgets/game_art.dart';
 import 'package:kucing_oren/widgets/v2/ui_button.dart';
+import 'package:kucing_oren/widgets/v2/ui_edge_fade.dart';
 import 'package:kucing_oren/widgets/v2/catalog_art.dart';
 
 import '../app/household_progress_test.dart' show AtomicTestStore;
@@ -406,4 +409,62 @@ void main() {
       });
     }
   }
+
+  testWidgets(
+    'langkah 14a: koin emas, tepi memudar, tab aktif, chip rata kanan',
+    (t) async {
+      final c = await load();
+      await pump(t, c);
+      expect(
+        find.descendant(
+          of: find.byType(UiEdgeFade),
+          matching: key('home-scroll'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: key('home-balance'),
+          matching: find.byType(CoinView),
+        ),
+        findsOneWidget,
+      );
+
+      await pump(t, c, tab: ShopTab.accessories);
+      expect(
+        find.descendant(
+          of: find.byType(UiEdgeFade),
+          matching: key('shop-tab-accessories'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: key('shop-balance'),
+          matching: find.byType(CoinView),
+        ),
+        findsOneWidget,
+      );
+      final screen = t.view.physicalSize / t.view.devicePixelRatio;
+      expect(
+        t.getRect(key('shop-balance')).right,
+        closeTo(screen.width - 16, 1),
+      );
+      LinearGradient gradient(String tab) =>
+          (t
+                          .widget<AnimatedContainer>(
+                            find.descendant(
+                              of: key('shop-tab-$tab'),
+                              matching: find.byType(AnimatedContainer),
+                            ),
+                          )
+                          .decoration!
+                      as BoxDecoration)
+                  .gradient!
+              as LinearGradient;
+      expect(gradient('accessories').colors.last, KoUi.orange);
+      expect(gradient('items').colors.last, isNot(KoUi.orange));
+      c.dispose();
+    },
+  );
 }
