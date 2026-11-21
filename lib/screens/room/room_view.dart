@@ -296,7 +296,9 @@ class _RoomViewState extends State<RoomView>
   /// Ruangan kucing [kitty], atau null.
   HouseRoom? _roomShowing(KittyId? kitty) {
     if (kitty == null || !_progress.home.ownsKitty(kitty)) return null;
-    if (widget.life) _syncKitties();
+    // Rute dihitung dengan ukuran rumah terakhir: tanpa ukuran, semua
+    // kucing kehilangan rutenya dan turun dari barangnya.
+    if (widget.life) _syncKitties(_geo?.room);
     return _catRoom(kitty);
   }
 
@@ -483,16 +485,23 @@ class _RoomViewState extends State<RoomView>
     setState(() => _liftPointer = point);
   }
 
+  /// Angkat batal: kucing kembali ke tempatnya tanpa pindah.
+  void _liftCancel() {
+    if (_lifted == null) return;
+    setState(() => _lifted = null);
+  }
+
   /// Lepas kucing yang diangkat: di pintu (dilebarkan [liftDoorSlop]) =
   /// diajak ke ruangan sebelah; di tempat lain = diletakkan di lantai di
   /// bawah jari.
   void _liftEnd() {
     final kitty = _lifted;
     final geo = _geo;
-    if (kitty == null || geo == null) return;
+    if (kitty == null) return;
+    setState(() => _lifted = null);
+    if (geo == null) return;
     final box = _liftedBox;
     final door = geo.door.getBounds().inflate(liftDoorSlop * geo.artScale);
-    setState(() => _lifted = null);
     if (door.contains(_liftPointer)) {
       _invite(kitty, atDoor: true);
       return;
@@ -796,26 +805,32 @@ class _RoomViewState extends State<RoomView>
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(
-          child: GestureDetector(
-            onLongPressStart: canLift
-                ? (d) => _liftStart(d.localPosition)
-                : null,
-            onLongPressMoveUpdate: canLift
-                ? (d) => _liftMove(d.localPosition)
-                : null,
-            onLongPressEnd: canLift ? (_) => _liftEnd() : null,
-            child: HousePager(
-              key: ValueKey(_pagerJumps),
-              room: _house,
-              enabled: !_decorating && lifted == null,
-              onRoom: (room) => setState(() => _house = room),
-              onArrive: (room) {
-                if (room != _arrived) setState(() => _arrived = room);
-              },
-              builder: (context, room) {
-                if (widget.life) _syncKitties(size);
-                return _room(RoomGeometry(size, room));
-              },
+          // Pengenal tahan tidak memberi tahu kalau pointernya dibatalkan
+          // sistem (tirai notifikasi, telepon masuk) sesudah diterima:
+          // kucing diturunkan di tempatnya semula.
+          child: Listener(
+            onPointerCancel: (_) => _liftCancel(),
+            child: GestureDetector(
+              onLongPressStart: canLift
+                  ? (d) => _liftStart(d.localPosition)
+                  : null,
+              onLongPressMoveUpdate: canLift
+                  ? (d) => _liftMove(d.localPosition)
+                  : null,
+              onLongPressEnd: canLift ? (_) => _liftEnd() : null,
+              child: HousePager(
+                key: ValueKey(_pagerJumps),
+                room: _house,
+                enabled: !_decorating && lifted == null,
+                onRoom: (room) => setState(() => _house = room),
+                onArrive: (room) {
+                  if (room != _arrived) setState(() => _arrived = room);
+                },
+                builder: (context, room) {
+                  if (widget.life) _syncKitties(size);
+                  return _room(RoomGeometry(size, room));
+                },
+              ),
             ),
           ),
         ),

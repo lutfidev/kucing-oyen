@@ -158,6 +158,27 @@ void main() {
     expect(find.byType(KittyCard), findsNothing);
   });
 
+  testWidgets('angkat dibatalkan sistem: kucing turun, status hilang', (
+    tester,
+  ) async {
+    await _pump(tester);
+    final start = tester.getCenter(kittyView(KittyId.oyen));
+    final gesture = await tester.startGesture(start);
+    await tester.pump(const Duration(milliseconds: 600));
+    await gesture.moveTo(start + const Offset(-40, 20));
+    await tester.pump();
+    expect(find.byKey(const ValueKey('door-glow')), findsOneWidget);
+    await gesture.cancel();
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.byKey(const ValueKey('door-glow')), findsNothing);
+    expect(find.text('Bawa ke pintu untuk ajak ke teras'), findsNothing);
+    expect(kittyView(KittyId.oyen), findsOneWidget);
+    // Rutinitas dan geser ruangan jalan lagi.
+    await tester.flingFrom(const Offset(200, 300), const Offset(-300, 0), 1500);
+    await settle(tester, max: const Duration(seconds: 1));
+    expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
+  });
+
   testWidgets('geser dari lantai kosong tetap pindah ruangan', (tester) async {
     await _pump(tester);
     await tester.flingFrom(const Offset(200, 300), const Offset(-300, 0), 1500);

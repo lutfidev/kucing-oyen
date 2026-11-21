@@ -391,6 +391,20 @@ void main() {
     expect(tester.widget<KittyView>(room.first).look, look);
   });
 
+  testWidgets('"Lihat di kamar" tidak menurunkan kucing dari barangnya', (
+    tester,
+  ) async {
+    await _pump(tester);
+    expect(
+      await _until(tester, () => _inUseBy(KittyId.oyen).evaluate().isNotEmpty),
+      isTrue,
+    );
+    final router = GoRouter.of(tester.element(find.byType(Scaffold).first));
+    router.go(AppRoutes.homeShowing(KittyId.oyen));
+    await tester.pump();
+    expect(_inUseBy(KittyId.oyen), findsOneWidget);
+  });
+
   group('dua ruangan', () {
     /// Oyen dan Mochi; Mochi (satu-satunya selain Oyen) mulai di teras.
     /// Mochi lapar, jadi ia berjalan ke mangkuk di ruang tengah.
