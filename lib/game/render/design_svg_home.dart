@@ -1003,8 +1003,6 @@ const roomItemViewBoxes = <String, (double, double, double, double)>{
   'puding': (0, 0, 40, 34),
 };
 
-
-
 /// Tanda lesu di atas kucing, viewBox 0 0 48 52 (`TandaLesu.dc.html`).
 const sadMarkSvg = r'''
     <circle cx="11" cy="48" r="2.8" fill="#EEF2F7" stroke="#6E86A8" stroke-width="1.6"></circle>

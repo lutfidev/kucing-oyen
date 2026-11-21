@@ -731,20 +731,25 @@ void main() {
     testWidgets('$folder/19-teras$suffix', (tester) async {
       setScreenSize(tester, small ? const Size(360, 640) : _size);
       const floor = HouseFloor();
-      final room = Room(
-        owned: const [RoomItemId.monstera, RoomItemId.catnip, RoomItemId.kasur],
-      )
-          .place(RoomItemId.kasur, floor.spotAtFeet(146, 432))
-          .place(
-            RoomItemId.monstera,
-            floor.spotAtFeet(353, 540),
-            room: HouseRoom.terrace,
-          )
-          .place(
-            RoomItemId.catnip,
-            floor.spotAtFeet(350, 640),
-            room: HouseRoom.terrace,
-          );
+      final room =
+          Room(
+                owned: const [
+                  RoomItemId.monstera,
+                  RoomItemId.catnip,
+                  RoomItemId.kasur,
+                ],
+              )
+              .place(RoomItemId.kasur, floor.spotAtFeet(146, 432))
+              .place(
+                RoomItemId.monstera,
+                floor.spotAtFeet(353, 540),
+                room: HouseRoom.terrace,
+              )
+              .place(
+                RoomItemId.catnip,
+                floor.spotAtFeet(350, 640),
+                room: HouseRoom.terrace,
+              );
       await withShadows(() async {
         await tester.pumpWidget(
           capturable(

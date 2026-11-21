@@ -191,20 +191,23 @@ void main() {
       expect(design.pathTo(KittyId.oyen, RoomItemId.rak, placed), isNull);
     });
 
-    test('rak tinggi dengan tiang di belakang dekatnya: lewat puncak tiang', () {
-      final rak = {RoomItemId.rak: Spot(0.5, 0.5)};
-      expect(design.pathTo(KittyId.oyen, RoomItemId.rak, rak), isNull);
-      final placed = {...rak, RoomItemId.tiang: floor.spotAtFeet(200, 420)};
-      final path = design.pathTo(KittyId.oyen, RoomItemId.rak, placed)!;
-      expect(path.hops, 2);
-      final [stand, perch, _] = path.boxes;
-      final post = design.boxOf(
-        roomItemOf(RoomItemId.tiang),
-        placed[RoomItemId.tiang]!,
-      );
-      expect(design.feetOf(stand), closeTo(post.bottom, 0.01));
-      expect(design.feetOf(perch), lessThan(post.top + post.height * 0.1));
-    });
+    test(
+      'rak tinggi dengan tiang di belakang dekatnya: lewat puncak tiang',
+      () {
+        final rak = {RoomItemId.rak: Spot(0.5, 0.5)};
+        expect(design.pathTo(KittyId.oyen, RoomItemId.rak, rak), isNull);
+        final placed = {...rak, RoomItemId.tiang: floor.spotAtFeet(200, 420)};
+        final path = design.pathTo(KittyId.oyen, RoomItemId.rak, placed)!;
+        expect(path.hops, 2);
+        final [stand, perch, _] = path.boxes;
+        final post = design.boxOf(
+          roomItemOf(RoomItemId.tiang),
+          placed[RoomItemId.tiang]!,
+        );
+        expect(design.feetOf(stand), closeTo(post.bottom, 0.01));
+        expect(design.feetOf(perch), lessThan(post.top + post.height * 0.1));
+      },
+    );
 
     test('pijakan di depan lantai tidak dipakai', () {
       final placed = {
