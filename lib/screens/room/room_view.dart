@@ -90,12 +90,6 @@ class RoomView extends StatefulWidget {
   State<RoomView> createState() => _RoomViewState();
 }
 
-/// Px desain per satu satuan [Spot] lantai, untuk kecepatan jalan: lebar
-/// zona kaki di tengah kedalamannya dan tingginya (`HouseFloor`). Diganti
-/// jarak lantai sungguhan di langkah 34.
-const _floorSpanX = 340.0;
-const _floorSpanY = 248.0;
-
 /// Selang penyegaran bar kebutuhan, gelembung hadiah, dan label mangkuk.
 const roomRefreshInterval = Duration(seconds: 30);
 
@@ -103,11 +97,7 @@ class _RoomViewState extends State<RoomView>
     with SingleTickerProviderStateMixin {
   late final Random _random = widget.random ?? Random();
   late final List<Spot> _slots = shuffledKittySlots(_random);
-  late final RoomLife _life = RoomLife(
-    random: _random,
-    spanX: _floorSpanX,
-    spanY: _floorSpanY,
-  );
+  late final RoomLife _life = RoomLife(random: _random);
 
   /// Jam kamar: memajukan rutinitas dan waktu animasi. Hanya jalan kalau
   /// kamar hidup dan gerak tidak dikurangi; `TickerMode` mematikannya saat
@@ -227,6 +217,8 @@ class _RoomViewState extends State<RoomView>
           _eatFromBowl(kitty);
         case UsedToy(:final kitty, :final item):
           _progress.play(kitty, item);
+        case LeftRoom() || EnteredRoom():
+          break;
       }
     }
     setState(() {});
@@ -275,7 +267,10 @@ class _RoomViewState extends State<RoomView>
             };
     }
     _life.sync(
-      homes: {for (final kitty in home.kitties) kitty: _spotOf(kitty)},
+      homes: {
+        for (final kitty in home.kitties)
+          kitty: (HouseRoom.living, _spotOf(kitty)),
+      },
       targets: {
         for (final id in placed.keys)
           id: {
@@ -1010,6 +1005,8 @@ class _RoomViewState extends State<RoomView>
         LifePose.happy => KittyPose.happy,
         LifePose.petted => KittyPose.petted,
         LifePose.eat => KittyPose.eat,
+        LifePose.sleep => KittyPose.sleep,
+        LifePose.lounge => KittyPose.rebah,
       };
       facing = switch (cat.heading) {
         LifeHeading.down => KittyFacing.down,

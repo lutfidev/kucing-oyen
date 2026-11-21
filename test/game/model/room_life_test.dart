@@ -2,14 +2,19 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room_life.dart';
 
 /// Satu bingkai jam kamar.
 const _frame = 1 / 30;
 
+/// Rutinitas satu ruangan seperti v1: tanpa tempat nyaman dan tanpa pindah
+/// ruangan, supaya test barang tetap memeriksa hal yang sama.
 RoomLife _life(int seed) =>
-    RoomLife(random: Random(seed), spanX: 280, spanY: 130);
+    RoomLife(random: Random(seed), places: const {}, travelWeight: 0);
+
+const _floor = HouseFloor();
 
 final _bed = Spot(0.9, 0.2);
 final _ball = Spot(0.1, 0.8);
@@ -31,7 +36,7 @@ void _sync(
   Set<KittyId> hungry = const {},
   Set<KittyId> sad = const {},
 }) => life.sync(
-  homes: {for (final k in kitties) k: Spot(0.5, 0.5)},
+  homes: {for (final k in kitties) k: (HouseRoom.living, Spot(0.5, 0.5))},
   targets: {
     for (final MapEntry(key: item, value: spot)
         in (targets ??
@@ -225,7 +230,10 @@ void main() {
     _run(life, 4);
     final oyen = life.of(KittyId.oyen).spot;
     life.sync(
-      homes: {KittyId.oyen: Spot(0.5, 0.5), KittyId.mochi: Spot(0.1, 0.1)},
+      homes: {
+        KittyId.oyen: (HouseRoom.living, Spot(0.5, 0.5)),
+        KittyId.mochi: (HouseRoom.living, Spot(0.1, 0.1)),
+      },
       targets: {
         RoomItemId.kasur: {
           KittyId.oyen: LifeRoute(_bed),
@@ -428,7 +436,7 @@ void main() {
   test('lukisan dan jam tidak dituju walau diberi rute', () {
     final life = _life(3);
     life.sync(
-      homes: {KittyId.oyen: Spot(0.5, 0.5)},
+      homes: {KittyId.oyen: (HouseRoom.living, Spot(0.5, 0.5))},
       targets: {
         RoomItemId.lukisan: {KittyId.oyen: LifeRoute(Spot(0.2, 0))},
         RoomItemId.jam: {KittyId.oyen: LifeRoute(Spot(0.8, 0))},
@@ -439,5 +447,206 @@ void main() {
       },
     );
     _run(life, 60, () => expect(life.of(KittyId.oyen).item, isNull));
+  });
+
+  group('dua ruangan', () {
+    final bedSpot = _floor.spotAtFeet(120, 560);
+    final bowlSpot = _floor.spotAtFeet(300, 600);
+
+    void syncHouse(
+      RoomLife life,
+      Map<KittyId, (HouseRoom, Spot)> homes, {
+      Set<KittyId> hungry = const {},
+      Set<KittyId> sad = const {},
+    }) => life.sync(
+      homes: homes,
+      targets: {
+        RoomItemId.kasur: {for (final k in homes.keys) k: LifeRoute(bedSpot)},
+        RoomItemId.mangkuk: {
+          for (final k in homes.keys) k: LifeRoute(bowlSpot),
+        },
+      },
+      uses: _uses,
+      itemRooms: const {
+        RoomItemId.kasur: HouseRoom.living,
+        RoomItemId.mangkuk: HouseRoom.living,
+      },
+      hungry: hungry,
+      sad: sad,
+    );
+
+    test('tempat nyaman dekat kucing lain kurang menarik', () {
+      const near = LifePlace(120, 560, pose: LifePose.sleep);
+      const far = LifePlace(300, 450, pose: LifePose.lounge);
+      var nearCount = 0;
+      var farCount = 0;
+      for (var seed = 0; seed < 200; seed++) {
+        final life = RoomLife(
+          random: Random(seed),
+          places: const {
+            HouseRoom.living: [near, far],
+          },
+          travelWeight: 0,
+        );
+        life.sync(
+          homes: {
+            KittyId.oyen: (HouseRoom.living, _floor.spotAtFeet(200, 500)),
+            // Mochi lesu: diam di sebelah tempat yang dekat.
+            KittyId.mochi: (HouseRoom.living, _floor.spotAtFeet(130, 570)),
+          },
+          targets: const {},
+          uses: const {},
+          sad: const {KittyId.mochi},
+        );
+        final oyen = life.of(KittyId.oyen);
+        for (var t = 0.0; t < 10 && oyen.place == null; t += _frame) {
+          life.advance(_frame);
+        }
+        switch (oyen.place) {
+          case 0:
+            nearCount++;
+          case 1:
+            farCount++;
+        }
+      }
+      expect(farCount / (farCount + nearCount), greaterThanOrEqualTo(0.7));
+      expect(nearCount, greaterThan(0));
+    });
+
+    test('kucing di teras tidak memakai barang ruang tengah', () {
+      for (var seed = 0; seed < 10; seed++) {
+        final life = RoomLife(random: Random(seed));
+        syncHouse(life, {KittyId.oyen: (HouseRoom.terrace, Spot(0.5, 0.5))});
+        final oyen = life.of(KittyId.oyen);
+        _run(life, 120, () {
+          if (oyen.room == HouseRoom.terrace) {
+            expect(oyen.item, isNull, reason: 'seed $seed');
+          }
+        });
+      }
+    });
+
+    test('pindah ruangan: ke ambang, keluar, lalu masuk di ambang sebelah', () {
+      final life = RoomLife(random: Random(4));
+      syncHouse(life, {
+        KittyId.oyen: (HouseRoom.living, Spot(0.5, 0.5)),
+        KittyId.mochi: (HouseRoom.terrace, Spot(0.5, 0.5)),
+        KittyId.arang: (HouseRoom.living, Spot(0.3, 0.8)),
+      });
+      final seen = {for (final c in life.cats) c.kitty: <CatActivity>[]};
+      final rooms = {for (final c in life.cats) c.kitty: c.room};
+      var moves = 0;
+      final events = _run(life, 600, () {
+        for (final cat in life.cats) {
+          final list = seen[cat.kitty]!;
+          if (list.lastOrNull != cat.activity) list.add(cat.activity);
+          if (cat.activity case CatActivity.leaving || CatActivity.entering) {
+            expect(cat.activity.onFloor, isFalse);
+            expect(cat.doorProgress, inInclusiveRange(0, 1));
+          }
+          if (cat.room != rooms[cat.kitty]) {
+            moves++;
+            expect(cat.activity, CatActivity.entering);
+            expect(cat.spot, _floor.threshold(cat.room));
+            final n = list.length;
+            expect(list.sublist(n - 2), [
+              CatActivity.leaving,
+              CatActivity.entering,
+            ]);
+            // Berjalan ke ambang, kecuali sudah duduk di ambang pintu.
+            expect(list[n - 3], anyOf(CatActivity.walking, CatActivity.idle));
+            rooms[cat.kitty] = cat.room;
+          }
+        }
+      });
+      expect(moves, greaterThan(0));
+      for (final kitty in seen.keys) {
+        final rooms = [
+          for (final e in events)
+            switch (e) {
+              LeftRoom(kitty: final k, :final from) when k == kitty =>
+                'left ${from.name}',
+              EnteredRoom(kitty: final k, :final to) when k == kitty =>
+                'entered ${to.name}',
+              _ => null,
+            },
+        ].nonNulls.toList();
+        for (var i = 0; i < rooms.length; i++) {
+          expect(rooms[i], startsWith(i.isEven ? 'left' : 'entered'));
+        }
+      }
+    });
+
+    test('kucing lapar di teras berjalan ke ruang tengah untuk makan', () {
+      final life = RoomLife(random: Random(2));
+      syncHouse(
+        life,
+        {KittyId.mochi: (HouseRoom.terrace, Spot(0.5, 0.5))},
+        hungry: {KittyId.mochi},
+      );
+      final mochi = life.of(KittyId.mochi);
+      while (mochi.activity == CatActivity.idle) {
+        life.advance(_frame);
+      }
+      expect(mochi.traveling, isTrue);
+      expect(mochi.activity, CatActivity.walking);
+      final events = <LifeEvent>[];
+      for (var t = 0.0; t < 60 && events.whereType<ReachedBowl>().isEmpty;) {
+        events.addAll(life.advance(_frame));
+        t += _frame;
+      }
+      expect(events, contains(const ReachedBowl(KittyId.mochi)));
+      expect(mochi.room, HouseRoom.living);
+    });
+
+    for (final pausing in [false, true]) {
+      test('${pausing ? 'paused' : 'interrupt'} saat keluar pintu: '
+          'langsung di ruangan tujuan', () {
+        final life = RoomLife(random: Random(2));
+        syncHouse(
+          life,
+          {KittyId.mochi: (HouseRoom.terrace, Spot(0.5, 0.5))},
+          hungry: {KittyId.mochi},
+        );
+        final mochi = life.of(KittyId.mochi);
+        while (mochi.activity != CatActivity.leaving) {
+          life.advance(_frame);
+        }
+        if (pausing) {
+          life.paused = true;
+        } else {
+          life.interrupt();
+        }
+        expect(mochi.room, HouseRoom.living);
+        expect(mochi.activity, CatActivity.idle);
+        expect(mochi.spot, _floor.threshold(HouseRoom.living));
+        expect(mochi.traveling, isFalse);
+      });
+    }
+
+    test('sync ulang tidak memindahkan kucing yang sudah di teras', () {
+      final life = RoomLife(random: Random(2));
+      syncHouse(life, {KittyId.oyen: (HouseRoom.terrace, Spot(0.4, 0.6))});
+      _run(life, 3);
+      final oyen = life.of(KittyId.oyen);
+      final spot = oyen.spot;
+      syncHouse(life, {KittyId.oyen: (HouseRoom.living, Spot(0.5, 0.5))});
+      expect(oyen.room, HouseRoom.terrace);
+      expect(oyen.spot, spot);
+    });
+
+    test('tempat nyaman desain: tiga di ruang tengah, empat di teras', () {
+      expect(lifePlaces[HouseRoom.living]!.map((p) => (p.x, p.y, p.pose)), [
+        (146.0, 432.0, LifePose.lounge),
+        (200.0, 560.0, LifePose.sleep),
+        (345.0, 456.0, LifePose.idle),
+      ]);
+      expect(lifePlaces[HouseRoom.terrace]!.map((p) => (p.x, p.y, p.pose)), [
+        (182.0, 600.0, LifePose.lounge),
+        (282.0, 432.0, LifePose.idle),
+        (296.0, 556.0, LifePose.idle),
+        (46.0, 456.0, LifePose.idle),
+      ]);
+    });
   });
 }
