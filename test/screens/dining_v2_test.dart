@@ -98,8 +98,13 @@ void main() {
     );
     expect((bowl.painter! as DiningBowlPainter).empty, isFalse);
     await capture(tester, 'makan-antrean-id');
+    // Antrean dan tombol batal ada di sheet area (langkah 14c).
+    await home.tap(tester, find.byKey(const ValueKey('dining-choose')));
     await home.tap(tester, find.byKey(const ValueKey('dining-cancel-salju')));
     expect(c.dining.queue, isEmpty);
+    await tester.binding.handlePopRoute();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
     await home.tap(tester, find.byKey(const ValueKey('dining-bowl')));
     expect(find.byKey(const ValueKey('dining-invite-salju')), findsOneWidget);
     await home.tap(tester, find.byKey(const ValueKey('dining-invite-salju')));
@@ -113,11 +118,12 @@ void main() {
       final c = await setupDining(tester, consumed: true);
       expect(c.dining.portionsLeft, 0);
       final l = tester.element(find.byType(HomeView)).l10n;
+      expect(find.text(l.homeStatusBowlEmpty), findsOneWidget);
+      await capture(tester, 'makan-jatah-habis-id');
+      await home.tap(tester, find.byKey(const ValueKey('dining-choose')));
       expect(find.text(l.diningRefill('4:00')), findsOneWidget);
       expect(find.text(l.diningEmpty), findsOneWidget);
       expect(find.text(l.diningFree), findsNothing);
-      await capture(tester, 'makan-jatah-habis-id');
-      await home.tap(tester, find.byKey(const ValueKey('dining-choose')));
       final invite = tester.widget<UiButton>(
         find.byKey(const ValueKey('dining-invite-oyen')),
       );
