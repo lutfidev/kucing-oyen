@@ -22,6 +22,7 @@ class UiButton extends StatefulWidget {
     this.autofocus = false,
     this.compact = false,
     this.homeStyle = false,
+    this.padding,
   });
   final String label;
   final String? semanticLabel;
@@ -33,6 +34,9 @@ class UiButton extends StatefulWidget {
   final bool loading, autofocus, compact;
   final bool homeStyle;
   final bool? selected;
+
+  /// Overrides the default inner padding (compact buttons have none sideways).
+  final EdgeInsetsGeometry? padding;
   @override
   State<UiButton> createState() => _UiButtonState();
 }
@@ -107,10 +111,12 @@ class _UiButtonState extends State<UiButton> {
               minHeight: KoUi.target,
               minWidth: KoUi.target,
             ),
-            padding: EdgeInsets.symmetric(
-              horizontal: widget.compact ? 0 : KoUi.s16,
-              vertical: KoUi.s12,
-            ),
+            padding:
+                widget.padding ??
+                EdgeInsets.symmetric(
+                  horizontal: widget.compact ? 0 : KoUi.s16,
+                  vertical: KoUi.s12,
+                ),
             decoration:
                 (widget.homeStyle
                         ? KoUi.homeCard(radius: KoUi.buttonRadius)
@@ -178,7 +184,13 @@ class _UiButtonState extends State<UiButton> {
                   ExcludeSemantics(child: widget.leading!),
                   const SizedBox(width: KoUi.s8),
                 ] else if (widget.icon != null) ...[
-                  Icon(widget.icon, color: foreground),
+                  Icon(
+                    // Compact buttons swap their icon for the "unavailable"
+                    // mark instead of adding a second icon at the end.
+                    widget.compact && !enabled ? Icons.block : widget.icon,
+                    size: widget.compact ? 20 : null,
+                    color: foreground,
+                  ),
                   const SizedBox(width: KoUi.s8),
                 ],
                 Flexible(
@@ -194,7 +206,9 @@ class _UiButtonState extends State<UiButton> {
                             .copyWith(color: foreground),
                   ),
                 ),
-                if (!enabled && !widget.loading) ...[
+                if (!enabled &&
+                    !widget.loading &&
+                    !(widget.compact && widget.icon != null)) ...[
                   const SizedBox(width: KoUi.s8),
                   Icon(Icons.block, size: KoUi.s16, color: foreground),
                 ],

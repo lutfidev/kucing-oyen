@@ -18,9 +18,6 @@ import '../../widgets/v2/catalog_art.dart';
 import '../shop/shop_tab.dart';
 import 'home_labels.dart';
 import 'home_scene.dart';
-import 'dining_panel.dart';
-import 'play_panel.dart';
-import 'care_panel.dart';
 
 enum _CatPanel { snacks, accessories }
 
@@ -138,6 +135,25 @@ class HomeSheets {
     footer: const SizedBox.shrink(),
   );
 
+  /// Facility state and rules, moved here from the home screen (step 14c).
+  Widget _summary(List<Widget> lines) => Padding(
+    padding: const EdgeInsets.only(bottom: KoUi.s12),
+    child: Container(
+      decoration: KoUi.homeCard(),
+      padding: const EdgeInsets.all(KoUi.s12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: KoUi.s4,
+        children: lines,
+      ),
+    ),
+  );
+
+  String _clock(Duration left) {
+    final minutes = (left.inSeconds / 60).ceil();
+    return '${minutes ~/ 60}:${(minutes % 60).toString().padLeft(2, '0')}';
+  }
+
   Future<void> dining() => showUiSheet<void>(
     context,
     title: l.diningChoose,
@@ -147,6 +163,27 @@ class HomeSheets {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _error(),
+          _summary([
+            Text(
+              l.diningStock(c.dining.portionsLeft, c.dining.owned.length),
+              key: const ValueKey('dining-stock'),
+              style: KoUi.body,
+            ),
+            Text(
+              c.dining.refillIn == null
+                  ? l.diningFresh
+                  : l.diningRefill(_clock(c.dining.refillIn!)),
+              style: KoUi.caption,
+            ),
+            Text(
+              c.dining.eating == null
+                  ? c.dining.portionsLeft == 0
+                        ? l.diningEmpty
+                        : l.diningFree
+                  : l.diningUsing(kittyName(l, c.dining.eating!)),
+              style: KoUi.small,
+            ),
+          ]),
           for (final kitty in KittyId.values.where(c.home.ownsKitty))
             Padding(
               padding: const EdgeInsets.only(bottom: KoUi.s12),
@@ -175,6 +212,7 @@ class HomeSheets {
                   ),
                   if (c.household.routine.invitations.containsKey(kitty))
                     UiButton(
+                      key: ValueKey('dining-cancel-${kitty.name}'),
                       label: l.homeCancelInvitation,
                       kind: UiButtonKind.secondary,
                       onPressed: busy ? null : () => c.cancelInvitation(kitty),
@@ -197,7 +235,16 @@ class HomeSheets {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _error(),
-          Text(l.playRules, style: KoUi.small),
+          _summary([
+            Text(l.playRules, style: KoUi.small),
+            Text(l.playToy(roomItemName(l, c.playing.toy)), style: KoUi.small),
+            Text(
+              c.playing.playing == null
+                  ? l.playFree
+                  : l.playUsing(kittyName(l, c.playing.playing!)),
+              style: KoUi.small,
+            ),
+          ]),
           for (final kitty in KittyId.values.where(c.home.ownsKitty))
             Padding(
               padding: const EdgeInsets.only(bottom: KoUi.s12),
@@ -228,6 +275,7 @@ class HomeSheets {
                   ),
                   if (c.household.routine.invitations.containsKey(kitty))
                     UiButton(
+                      key: ValueKey('play-cancel-${kitty.name}'),
                       label: l.homeCancelInvitation,
                       kind: UiButtonKind.secondary,
                       onPressed: busy ? null : () => c.cancelInvitation(kitty),
@@ -250,7 +298,18 @@ class HomeSheets {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _error(),
-          Text(l.careRules, style: KoUi.small),
+          _summary([
+            Text(l.careRules, style: KoUi.small),
+            Semantics(
+              liveRegion: true,
+              child: Text(
+                c.caring.using == null
+                    ? l.careFree
+                    : l.careUsing(kittyName(l, c.caring.using!)),
+                style: KoUi.small,
+              ),
+            ),
+          ]),
           for (final kitty in KittyId.values.where(c.home.ownsKitty))
             Padding(
               padding: const EdgeInsets.only(bottom: KoUi.s12),
@@ -288,6 +347,7 @@ class HomeSheets {
                   if (c.household.routine.invitations.containsKey(kitty) ||
                       c.household.routine.activities.containsKey(kitty))
                     UiButton(
+                      key: ValueKey('care-cancel-${kitty.name}'),
                       label: c.household.routine.activities.containsKey(kitty)
                           ? l.homeCancelAfter
                           : l.homeCancelInvitation,

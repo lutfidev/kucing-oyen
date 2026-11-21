@@ -126,8 +126,12 @@ void main() {
         isFalse,
       );
       await capture(tester, 'main-antrean-id');
+      await home.tap(tester, find.byKey(const ValueKey('play-choose')));
       await home.tap(tester, find.byKey(const ValueKey('play-cancel-salju')));
       expect(c.playing.queue, isEmpty);
+      await tester.binding.handlePopRoute();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
       await home.tap(tester, find.byKey(const ValueKey('play-toy')));
       expect(
         tester
@@ -181,11 +185,8 @@ void main() {
       );
       expect((toy.painter! as PlayToyPainter).time, isNull);
       final l = tester.element(find.byType(HomeView)).l10n;
-      expect(find.text('Oyen · ${l.playCooldown(30)}'), findsOneWidget);
-      await tester.ensureVisible(
-        find.byKey(const ValueKey('play-availability')),
-      );
-      await tester.pump();
+      await home.tap(tester, find.byKey(const ValueKey('play-choose')));
+      expect(find.text(l.playCooldown(30)), findsOneWidget);
       await capture(tester, 'main-cooldown-id');
       expect(tester.takeException(), isNull);
     },

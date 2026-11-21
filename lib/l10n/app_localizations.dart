@@ -3276,6 +3276,42 @@ abstract class AppLocalizations {
   /// **'Everyone is comfy. Rewards will be back.'**
   String get homeRewardNone;
 
+  /// Compact home chip (Dining area): bowl portions left out of owned cats.
+  ///
+  /// In en, this message translates to:
+  /// **'Bowl · {left}/{total}'**
+  String homeStatusBowl(int left, int total);
+
+  /// Compact home chip (Dining area): bowl has no portions until the next cycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bowl empty'**
+  String get homeStatusBowlEmpty;
+
+  /// Compact home chip (Play area): the toy is free.
+  ///
+  /// In en, this message translates to:
+  /// **'Toy ready'**
+  String get homeStatusToy;
+
+  /// Compact home chip (Care area): the grooming mat is free.
+  ///
+  /// In en, this message translates to:
+  /// **'Mat is free'**
+  String get homeStatusCare;
+
+  /// Compact home chip suffix: number of cats waiting for this area's facility.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} waiting'**
+  String homeStatusQueue(int count);
+
+  /// Compact home reward chip when no house reward is ready yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards later'**
+  String get homeRewardLater;
+
   /// V2 player home: homeRewards.
   ///
   /// In en, this message translates to:

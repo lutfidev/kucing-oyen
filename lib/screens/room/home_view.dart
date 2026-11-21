@@ -22,9 +22,6 @@ import '../coins/coin_sheet.dart';
 import 'home_labels.dart';
 import 'home_scene.dart';
 import 'home_sheets.dart';
-import 'dining_panel.dart';
-import 'play_panel.dart';
-import 'care_panel.dart';
 import 'area_decorate.dart';
 
 /// The v2 player home. Model changes publish only after their snapshot saves.
@@ -175,15 +172,11 @@ class _HomeViewState extends State<HomeView> {
                           ],
                           labels: [
                             for (final a in HomeArea.values)
-                              l.homeAreaCount(
-                                a == HomeArea.main
-                                    ? l.homeActivity('play')
-                                    : a == HomeArea.rawat
-                                    ? l.homeInviteCare
-                                    : homeAreaLabel(l, a),
-                                c.household.routine.present(a).length,
-                                a.capacity,
-                              ),
+                              a == HomeArea.main
+                                  ? l.homeActivity('play')
+                                  : a == HomeArea.rawat
+                                  ? l.homeInviteCare
+                                  : homeAreaLabel(l, a),
                           ],
                           selected: area.index,
                           onChanged: (i) async {
@@ -206,106 +199,67 @@ class _HomeViewState extends State<HomeView> {
                             () => c.retrySaves(),
                             l.homeRetry,
                           ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                homeAreaLabel(l, area),
-                                style: KoUi.heading,
+                        SizedBox(
+                          height: _sceneHeight(context, box, twoLineHeader),
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: pack != null
+                                    ? HomeScene(
+                                        pack: pack,
+                                        progress: c,
+                                        area: area,
+                                        selected: selected,
+                                        animate: widget.life && !still,
+                                        onBowl: sheets.dining,
+                                        onToy: sheets.playing,
+                                        onCare: sheets.caring,
+                                        onSelect: (kitty) {
+                                          c.selectHomeKitty(kitty);
+                                          c.seeKitty(kitty);
+                                        },
+                                      )
+                                    : _loading(context, snapshot),
                               ),
-                            ),
-                            IconButton(
-                              tooltip: l.guidanceHomeTitle,
-                              onPressed: () => showHomeHelp(context),
-                              icon: const Icon(
-                                Icons.help_outline,
-                                color: KoUi.ink,
-                              ),
-                              constraints: const BoxConstraints(
-                                minWidth: KoUi.target,
-                                minHeight: KoUi.target,
-                              ),
-                            ),
-                            UiButton(
-                              key: const ValueKey('home-decorate'),
-                              homeStyle: true,
-                              label: l.decorate,
-                              icon: Icons.edit_outlined,
-                              kind: UiButtonKind.secondary,
-                              onPressed:
-                                  pack == null ||
-                                      c.householdBusy ||
-                                      c.householdSaveFailed
-                                  ? null
-                                  : () => showAreaDecorate(context, c, pack),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: KoUi.s8),
-                        if (pack != null)
-                          SizedBox(
-                            height: (box.maxHeight - 430).clamp(
-                              240.0,
-                              math.min(430.0, box.maxWidth * 1.16),
-                            ),
-                            child: HomeScene(
-                              pack: pack,
-                              progress: c,
-                              area: area,
-                              selected: selected,
-                              animate: widget.life && !still,
-                              onBowl: sheets.dining,
-                              onToy: sheets.playing,
-                              onCare: sheets.caring,
-                              onSelect: (kitty) {
-                                c.selectHomeKitty(kitty);
-                                c.seeKitty(kitty);
-                              },
-                            ),
-                          )
-                        else
-                          Container(
-                            height: 240,
-                            alignment: Alignment.center,
-                            decoration: KoUi.homeCard(),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  snapshot.hasError
-                                      ? l.homeLoadFailed
-                                      : l.homeLoading,
-                                  style: KoUi.body,
+                              Positioned(
+                                top: KoUi.s4,
+                                right: KoUi.s4,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    HomeIconButton(
+                                      key: const ValueKey('home-help'),
+                                      icon: Icons.help_outline_rounded,
+                                      label: l.guidanceHomeTitle,
+                                      onPressed: () => showHomeHelp(context),
+                                    ),
+                                    HomeIconButton(
+                                      key: const ValueKey('home-decorate'),
+                                      icon: Icons.edit_outlined,
+                                      label: l.decorate,
+                                      onPressed:
+                                          pack == null ||
+                                              c.householdBusy ||
+                                              c.householdSaveFailed
+                                          ? null
+                                          : () => showAreaDecorate(
+                                              context,
+                                              c,
+                                              pack,
+                                            ),
+                                    ),
+                                  ],
                                 ),
-                                if (snapshot.hasError)
-                                  UiButton(
-                                    homeStyle: true,
-                                    label: l.homeRetry,
-                                    onPressed: () => setState(() {
-                                      _art = _load();
-                                    }),
-                                  ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
+                        ),
                         const SizedBox(height: KoUi.s8),
                         if (present.isEmpty)
                           Padding(
                             padding: const EdgeInsets.all(KoUi.s8),
                             child: Text(l.homeEmpty, style: KoUi.small),
                           ),
-                        if (area == HomeArea.makan) ...[
-                          DiningPanel(progress: c, onChoose: sheets.dining),
-                          const SizedBox(height: KoUi.s8),
-                        ],
-                        if (area == HomeArea.main) ...[
-                          PlayPanel(progress: c, onChoose: sheets.playing),
-                          const SizedBox(height: KoUi.s8),
-                        ],
-                        if (area == HomeArea.rawat) ...[
-                          CarePanel(progress: c, onChoose: sheets.caring),
-                          const SizedBox(height: KoUi.s8),
-                        ],
                         if (selected != null)
                           _selection(context, selected, sheets, pack)
                         else
@@ -317,15 +271,24 @@ class _HomeViewState extends State<HomeView> {
                             onPressed: sheets.collection,
                           ),
                         const SizedBox(height: KoUi.s8),
-                        UiButton(
-                          homeStyle: true,
-                          key: const ValueKey('home-rewards'),
-                          label: c.householdRewardCoins > 0
-                              ? l.homeRewardAvailable(c.householdRewardCoins)
-                              : l.homeRewardNone,
-                          icon: Icons.redeem,
-                          kind: UiButtonKind.secondary,
-                          onPressed: sheets.rewards,
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: KoUi.s8,
+                          runSpacing: KoUi.s8,
+                          children: [
+                            ?_areaChip(context, area, sheets),
+                            _chip(
+                              key: const ValueKey('home-rewards'),
+                              icon: Icons.redeem,
+                              label: c.householdRewardCoins > 0
+                                  ? l.homeRewardAvailable(
+                                      c.householdRewardCoins,
+                                    )
+                                  : l.homeRewardLater,
+                              highlight: c.householdRewardCoins > 0,
+                              onPressed: sheets.rewards,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -349,6 +312,119 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  /// Room height = what is left after the compact chrome (bottom navigation
+  /// included), clamped by the old cap of screen width ×1.16. The square
+  /// painted backdrop may stretch up to ~1.26× at 390 dp; cats and props are
+  /// drawn separately and keep their proportions.
+  double _sceneHeight(BuildContext context, BoxConstraints box, bool twoLine) {
+    final grow = MediaQuery.textScalerOf(context).scale(16) - 16;
+    final chrome = 396 + grow * 6 + (twoLine ? 30 : 0);
+    return (box.maxHeight - chrome).clamp(
+      240.0,
+      math.min(480.0, box.maxWidth * 1.16),
+    );
+  }
+
+  Widget _loading(BuildContext context, AsyncSnapshot<ArtPack> snapshot) {
+    final l = context.l10n;
+    return Container(
+      alignment: Alignment.center,
+      decoration: KoUi.homeCard(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            snapshot.hasError ? l.homeLoadFailed : l.homeLoading,
+            style: KoUi.body,
+          ),
+          if (snapshot.hasError)
+            UiButton(
+              homeStyle: true,
+              label: l.homeRetry,
+              onPressed: () => setState(() {
+                _art = _load();
+              }),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _chip({
+    required Key key,
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+    bool highlight = false,
+    bool live = false,
+  }) => Semantics(
+    // Area status changes (e.g. "X is getting care" → "Mat is free") are
+    // announced, as the old area panels did.
+    liveRegion: live,
+    child: UiButton(
+      key: key,
+      homeStyle: true,
+      compact: true,
+      kind: highlight ? UiButtonKind.primary : UiButtonKind.secondary,
+      padding: const EdgeInsets.symmetric(
+        horizontal: KoUi.s12,
+        vertical: KoUi.s8,
+      ),
+      label: label,
+      icon: icon,
+      onPressed: onPressed,
+    ),
+  );
+
+  /// One short line about the area's shared facility; details and the queue
+  /// (with cancel) live in the area sheet it opens.
+  Widget? _areaChip(BuildContext context, HomeArea area, HomeSheets sheets) {
+    final l = context.l10n;
+    String withQueue(String text, int waiting) =>
+        waiting == 0 ? text : '$text · ${l.homeStatusQueue(waiting)}';
+    return switch (area) {
+      HomeArea.santai => null,
+      HomeArea.makan => _chip(
+        key: const ValueKey('dining-choose'),
+        live: true,
+        icon: Icons.restaurant_rounded,
+        label: withQueue(
+          c.dining.eating != null
+              ? l.diningUsing(kittyName(l, c.dining.eating!))
+              : c.dining.portionsLeft == 0
+              ? l.homeStatusBowlEmpty
+              : l.homeStatusBowl(c.dining.portionsLeft, c.dining.owned.length),
+          c.dining.queue.length,
+        ),
+        onPressed: sheets.dining,
+      ),
+      HomeArea.main => _chip(
+        key: const ValueKey('play-choose'),
+        live: true,
+        icon: Icons.sports_baseball_rounded,
+        label: withQueue(
+          c.playing.playing != null
+              ? l.playUsing(kittyName(l, c.playing.playing!))
+              : l.homeStatusToy,
+          c.playing.queue.length,
+        ),
+        onPressed: sheets.playing,
+      ),
+      HomeArea.rawat => _chip(
+        key: const ValueKey('care-choose'),
+        live: true,
+        icon: Icons.brush_rounded,
+        label: withQueue(
+          c.caring.using != null
+              ? l.careUsing(kittyName(l, c.caring.using!))
+              : l.homeStatusCare,
+          c.caring.queue.length,
+        ),
+        onPressed: sheets.caring,
+      ),
+    };
+  }
+
   Widget _notice(String text, VoidCallback action, String label) => Padding(
     padding: const EdgeInsets.only(bottom: KoUi.s8),
     child: Container(
@@ -369,6 +445,30 @@ class _HomeViewState extends State<HomeView> {
       ),
     ),
   );
+
+  /// Icon (20) + gap (8) + side padding (2×8) + outline and rounding slack.
+  static const _actionChrome = 20 + KoUi.s8 + 2 * KoUi.s8 + 6;
+
+  /// Avatar, a short name and the divider; below this the panel stacks.
+  static const _panelIdentityMin = 48 + KoUi.s4 + 56 + 2 * KoUi.s8 + KoUi.s8;
+
+  double _longestWord(BuildContext context, String text) {
+    var widest = 0.0;
+    for (final word in text.split(RegExp(r'\s+'))) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: word,
+          style: KoUi.small.copyWith(fontWeight: FontWeight.w700),
+        ),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+        maxLines: 1,
+      )..layout();
+      widest = math.max(widest, painter.width);
+      painter.dispose();
+    }
+    return widest;
+  }
 
   Widget _selection(
     BuildContext context,
@@ -392,14 +492,14 @@ class _HomeViewState extends State<HomeView> {
       onTap: () => sheets.cat(kitty),
       borderRadius: BorderRadius.circular(KoUi.buttonRadius),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: KoUi.s8),
+        padding: const EdgeInsets.symmetric(vertical: KoUi.s4),
         child: Row(
           children: [
             if (pack != null)
               ExcludeSemantics(
                 child: SizedBox(
-                  width: 54,
-                  height: 54,
+                  width: 48,
+                  height: 48,
                   child: CustomPaint(
                     painter: HomeCatPainter(
                       pack,
@@ -417,8 +517,22 @@ class _HomeViewState extends State<HomeView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(kittyName(l, kitty), style: KoUi.heading),
-                  Text(homeKittyStatus(l, c, kitty), style: KoUi.caption),
+                  // Long names shrink instead of being cut off.
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(
+                      kittyName(l, kitty),
+                      style: KoUi.heading,
+                      maxLines: 1,
+                    ),
+                  ),
+                  Text(
+                    homeKittyStatus(l, c, kitty),
+                    style: KoUi.caption,
+                    maxLines: large ? null : 2,
+                    overflow: large ? null : TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ),
@@ -426,17 +540,34 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
     );
+    String label(int i) => switch (actions[i]) {
+      HomeActivity.play => l.homeInvitePlay,
+      HomeActivity.brush => l.homeActivity('brush'),
+      HomeActivity.eat => l.homeInviteEat,
+      HomeActivity.pet => l.petAction,
+      HomeActivity.rest => l.homeRest,
+    };
+    // Wide enough for the longest word, so labels wrap between words only
+    // ("Расчёсывание" must not break mid-word), within 28–40% of the panel.
+    double actionNeed(String text) =>
+        _longestWord(context, text) + _actionChrome;
+    double actionWidth(int i, double panel) =>
+        actionNeed(label(i)).clamp(panel * .28, panel * .45);
     Widget action(int i) => UiButton(
       homeStyle: true,
       compact: true,
-      kind: i == 0 ? UiButtonKind.primary : UiButtonKind.secondary,
-      label: switch (actions[i]) {
-        HomeActivity.play => l.homeInvitePlay,
-        HomeActivity.brush => l.homeActivity('brush'),
-        HomeActivity.eat => l.homeInviteEat,
-        HomeActivity.pet => l.petAction,
-        HomeActivity.rest => l.homeRest,
+      padding: const EdgeInsets.symmetric(
+        horizontal: KoUi.s8,
+        vertical: KoUi.s8,
+      ),
+      icon: switch (actions[i]) {
+        HomeActivity.play => Icons.sports_esports_rounded,
+        HomeActivity.brush => Icons.brush_rounded,
+        HomeActivity.eat => Icons.restaurant_rounded,
+        HomeActivity.pet => Icons.favorite_rounded,
+        HomeActivity.rest => Icons.weekend_rounded,
       },
+      label: label(i),
       onPressed:
           busy ||
               (actions[i] == HomeActivity.eat && !c.canEatFromBowl(kitty)) ||
@@ -455,43 +586,94 @@ class _HomeViewState extends State<HomeView> {
         horizontal: KoUi.s8,
         vertical: KoUi.s4,
       ),
-      child: large || !local
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                identity(),
-                if (local)
-                  Row(
-                    children: [
-                      for (var i = 0; i < actions.length; i++)
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: i == 0 ? 0 : KoUi.s8,
+      child: LayoutBuilder(
+        builder: (context, box) =>
+            large ||
+                (local &&
+                    actionNeed(label(0)) +
+                            actionNeed(label(1)) +
+                            _panelIdentityMin >
+                        box.maxWidth)
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  identity(),
+                  if (local &&
+                      [
+                        for (var i = 0; i < actions.length; i++)
+                          actionNeed(label(i)),
+                      ].every((need) => need <= (box.maxWidth - KoUi.s8) / 2))
+                    Row(
+                      children: [
+                        for (var i = 0; i < actions.length; i++)
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: i == 0 ? 0 : KoUi.s8,
+                              ),
+                              child: action(i),
                             ),
-                            child: action(i),
                           ),
-                        ),
-                    ],
-                  )
-                else
-                  UiButton(
-                    homeStyle: true,
-                    label: l.homeViewArea,
-                    kind: UiButtonKind.secondary,
-                    onPressed: busy ? null : () => sheets.find(kitty),
+                      ],
+                    )
+                  else if (local)
+                    // A word wider than half the panel: one action per row.
+                    for (var i = 0; i < actions.length; i++)
+                      Padding(
+                        padding: EdgeInsets.only(top: i == 0 ? 0 : KoUi.s8),
+                        child: action(i),
+                      )
+                  else
+                    UiButton(
+                      homeStyle: true,
+                      label: l.homeViewArea,
+                      kind: UiButtonKind.secondary,
+                      onPressed: busy ? null : () => sheets.find(kitty),
+                    ),
+                ],
+              )
+            : Row(
+                children: [
+                  Expanded(child: identity()),
+                  Container(
+                    width: KoUi.outline,
+                    height: 36,
+                    margin: const EdgeInsets.symmetric(horizontal: KoUi.s8),
+                    color: KoUi.homeLine,
                   ),
-              ],
-            )
-          : Row(
-              children: [
-                Expanded(child: identity()),
-                const SizedBox(width: KoUi.s8),
-                SizedBox(width: 86, child: action(0)),
-                const SizedBox(width: KoUi.s8),
-                SizedBox(width: 66, child: action(1)),
-              ],
-            ),
+                  if (local) ...[
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: actionWidth(0, box.maxWidth),
+                      ),
+                      child: action(0),
+                    ),
+                    const SizedBox(width: KoUi.s8),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: actionWidth(1, box.maxWidth),
+                      ),
+                      child: action(1),
+                    ),
+                  ] else
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: box.maxWidth * .45),
+                      child: UiButton(
+                        homeStyle: true,
+                        compact: true,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: KoUi.s8,
+                          vertical: KoUi.s8,
+                        ),
+                        icon: Icons.visibility_outlined,
+                        label: l.homeViewArea,
+                        kind: UiButtonKind.secondary,
+                        onPressed: busy ? null : () => sheets.find(kitty),
+                      ),
+                    ),
+                ],
+              ),
+      ),
     );
   }
 }

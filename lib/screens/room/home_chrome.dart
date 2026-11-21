@@ -4,8 +4,8 @@ import '../../theme/ko_ui.dart';
 import '../../widgets/v2/ui_button.dart';
 import '../../widgets/tap_sound.dart';
 
-/// Four visible destinations at normal text size; enlarged text can scroll.
-/// Counts stay in the label and full names remain available to screen readers.
+/// One row of compact area chips (concept A); enlarged text scrolls sideways.
+/// Counts and full area names are announced to screen readers only.
 class HomeAreaStrip extends StatefulWidget {
   const HomeAreaStrip({
     super.key,
@@ -72,87 +72,135 @@ class _HomeAreaStripState extends State<HomeAreaStrip> {
     Icons.brush_outlined,
   ];
 
+  static const keys = ['santai', 'makan', 'main', 'rawat'];
+
+  static final _label = KoUi.small.copyWith(
+    fontSize: 13,
+    height: 1.2,
+    fontWeight: FontWeight.w800,
+    color: KoUi.ink,
+  );
+
+  /// Icon (18) and its gap (4); chip padding (2×8) and outline.
+  static const _iconWidth = 18 + KoUi.s4, _chipChrome = 2 * KoUi.s8 + 4;
+
+  /// FittedBox may shrink a label by at most 10%; beyond that the strip drops
+  /// the icons, and if that is still not enough it scrolls sideways.
+  static const _minFit = .9;
+
+  double _textWidth(BuildContext context, String text) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: _label),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    final width = painter.width;
+    painter.dispose();
+    return width;
+  }
+
+  Widget _chip(
+    BuildContext context,
+    int i, {
+    required bool fill,
+    bool icon = true,
+  }) {
+    final content = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (icon) ...[
+          Icon(icons[i], size: 18, color: KoUi.ink),
+          const SizedBox(width: KoUi.s4),
+        ],
+        Flexible(
+          child: Text(labels[i], maxLines: 1, softWrap: false, style: _label),
+        ),
+      ],
+    );
+    return Semantics(
+      key: _keys[i],
+      button: true,
+      selected: i == selected,
+      label: semantics[i],
+      excludeSemantics: true,
+      onTap: tapSound(context, () => onChanged(i)),
+      child: Material(
+        key: ValueKey('home-tab-${keys[i]}'),
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(KoUi.chipRadius),
+          onTap: tapSound(context, () => onChanged(i)),
+          // 40 dp chip inside a 48 dp touch target.
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: KoUi.s4),
+            child: AnimatedContainer(
+              duration: MediaQuery.disableAnimationsOf(context)
+                  ? Duration.zero
+                  : KoUi.tabTime,
+              constraints: const BoxConstraints(minHeight: 40),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: KoUi.s8),
+              decoration: BoxDecoration(
+                gradient: i == selected
+                    ? const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [KoUi.homeGold, KoUi.orange],
+                      )
+                    : null,
+                color: i == selected ? null : KoUi.homePaper,
+                borderRadius: BorderRadius.circular(KoUi.chipRadius),
+                border: Border.all(
+                  color: i == selected ? KoUi.orangePressed : KoUi.homeLine,
+                  width: KoUi.outline,
+                ),
+              ),
+              child: fill
+                  ? FittedBox(fit: BoxFit.scaleDown, child: content)
+                  : content,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(KoUi.s4),
+    key: const ValueKey('home-tabs'),
+    padding: const EdgeInsets.symmetric(horizontal: KoUi.s4),
     decoration: KoUi.homeCard(radius: KoUi.cardRadius),
     child: LayoutBuilder(
       builder: (context, box) {
-        final large = MediaQuery.textScalerOf(context).scale(13) > 15;
-        final width = large
-            ? box.maxWidth.clamp(360, 440) / 3
-            : box.maxWidth / 4;
-        final tabs = Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (var i = 0; i < 4; i++)
-              SizedBox(
-                width: width,
-                key: _keys[i],
-                child: Semantics(
-                  button: true,
-                  selected: i == selected,
-                  label: semantics[i],
-                  excludeSemantics: true,
-                  onTap: tapSound(context, () => onChanged(i)),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(KoUi.buttonRadius),
-                      onTap: tapSound(context, () => onChanged(i)),
-                      child: AnimatedContainer(
-                        duration: MediaQuery.disableAnimationsOf(context)
-                            ? Duration.zero
-                            : KoUi.tabTime,
-                        constraints: const BoxConstraints(
-                          minHeight: KoUi.target,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: KoUi.s4,
-                          vertical: KoUi.s8,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: i == selected
-                              ? const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [KoUi.homeGold, KoUi.orange],
-                                )
-                              : null,
-                          borderRadius: BorderRadius.circular(
-                            KoUi.buttonRadius,
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(icons[i], size: 21, color: KoUi.ink),
-                            const SizedBox(height: KoUi.s4),
-                            Text(
-                              labels[i],
-                              textAlign: TextAlign.center,
-                              style: KoUi.small.copyWith(
-                                fontSize: 13,
-                                height: 1.2,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
+        final slot = (box.maxWidth - 3 * KoUi.s4) / 4;
+        final text = [for (final label in labels) _textWidth(context, label)];
+        bool fits(double extra) => text.every(
+          (width) => (width + extra + _chipChrome) * _minFit <= slot,
         );
-        return large
-            ? SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                controller: _scroll,
-                child: tabs,
-              )
-            : tabs;
+        final withIcons = fits(_iconWidth);
+        if (withIcons || fits(0)) {
+          return Row(
+            children: [
+              for (var i = 0; i < 4; i++) ...[
+                if (i > 0) const SizedBox(width: KoUi.s4),
+                Expanded(child: _chip(context, i, fill: true, icon: withIcons)),
+              ],
+            ],
+          );
+        }
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          controller: _scroll,
+          child: Row(
+            children: [
+              for (var i = 0; i < 4; i++) ...[
+                if (i > 0) const SizedBox(width: KoUi.s4),
+                _chip(context, i, fill: false),
+              ],
+            ],
+          ),
+        );
       },
     ),
   );
@@ -237,4 +285,56 @@ class HomeNavigation extends StatelessWidget {
       ],
     ),
   );
+}
+
+/// Round icon button laid over the room (help, decorate): 48 dp target,
+/// tooltip and screen-reader label instead of a tall titled row.
+class HomeIconButton extends StatelessWidget {
+  const HomeIconButton({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+  final IconData icon;
+  final String label;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onPressed != null;
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: label,
+      excludeSemantics: true,
+      onTap: enabled ? tapSound(context, onPressed) : null,
+      child: Tooltip(
+        message: label,
+        child: Material(
+          color: Colors.transparent,
+          shape: const CircleBorder(),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: enabled ? tapSound(context, onPressed) : null,
+            child: SizedBox.square(
+              dimension: KoUi.target,
+              child: Center(
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: KoUi.homeCard(radius: 20),
+                  child: Icon(
+                    icon,
+                    size: 22,
+                    color: enabled ? KoUi.ink : KoUi.mutedInk,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

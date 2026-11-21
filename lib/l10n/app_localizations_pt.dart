@@ -2212,6 +2212,28 @@ class AppLocalizationsPt extends AppLocalizations {
   String get homeRewardNone => 'Tudo tranquilo. As recompensas voltam depois.';
 
   @override
+  String homeStatusBowl(int left, int total) {
+    return 'Tigela · $left/$total';
+  }
+
+  @override
+  String get homeStatusBowlEmpty => 'Tigela vazia';
+
+  @override
+  String get homeStatusToy => 'Brinquedo livre';
+
+  @override
+  String get homeStatusCare => 'Tapetinho livre';
+
+  @override
+  String homeStatusQueue(int count) {
+    return 'Na fila: $count';
+  }
+
+  @override
+  String get homeRewardLater => 'Prêmios depois';
+
+  @override
   String get homeRewards => 'Recompensas da casa';
 
   @override

@@ -2193,6 +2193,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeRewardNone => 'Everyone is comfy. Rewards will be back.';
 
   @override
+  String homeStatusBowl(int left, int total) {
+    return 'Bowl · $left/$total';
+  }
+
+  @override
+  String get homeStatusBowlEmpty => 'Bowl empty';
+
+  @override
+  String get homeStatusToy => 'Toy ready';
+
+  @override
+  String get homeStatusCare => 'Mat is free';
+
+  @override
+  String homeStatusQueue(int count) {
+    return '$count waiting';
+  }
+
+  @override
+  String get homeRewardLater => 'Rewards later';
+
+  @override
   String get homeRewards => 'House rewards';
 
   @override

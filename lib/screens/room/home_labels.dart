@@ -1,7 +1,10 @@
 import '../../app/progress_scope.dart';
+import '../../game/model/care.dart';
+import '../../game/model/dining.dart';
 import '../../game/model/home_areas.dart';
 import '../../game/model/home_routine.dart';
 import '../../game/model/kitties.dart';
+import '../../game/model/play.dart';
 import '../../l10n/l10n.dart';
 
 String homeAreaLabel(AppLocalizations l, HomeArea area) => switch (area) {
@@ -38,3 +41,36 @@ String homeKittyStatus(
     null => r.sleeping.contains(kitty) ? l.homeSleeping : l.homeResting,
   };
 }
+
+String diningAvailabilityLabel(AppLocalizations l, DiningAvailability status) =>
+    switch (status) {
+      DiningAvailability.ready => l.diningReady,
+      DiningAvailability.full => l.diningFull,
+      DiningAvailability.alreadyAte => l.diningAlreadyAte,
+    };
+
+String playAvailabilityLabel(
+  AppLocalizations l,
+  PlayState state,
+  KittyId kitty,
+) => switch (state.availability(kitty)) {
+  PlayAvailability.ready => l.playReady,
+  PlayAvailability.full => l.playFull,
+  PlayAvailability.cooldown => l.playCooldown(
+    (state.cooldown(kitty).inMicroseconds / Duration.microsecondsPerMinute)
+        .ceil(),
+  ),
+};
+
+String careAvailabilityLabel(
+  AppLocalizations l,
+  CareState state,
+  KittyId kitty,
+) => switch (state.availability(kitty)) {
+  CareAvailability.ready => l.careReady,
+  CareAvailability.full => l.careFull,
+  CareAvailability.limit => l.careCooldown(
+    (state.cooldown(kitty).inMicroseconds / Duration.microsecondsPerMinute)
+        .ceil(),
+  ),
+};

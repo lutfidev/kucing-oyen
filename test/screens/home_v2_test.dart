@@ -123,6 +123,11 @@ Future<void> export(WidgetTester tester, String name) async {
 Finder cat(KittyId id) => find.byKey(ValueKey('home-cat-${id.name}'));
 Finder button(String key) => find.byKey(ValueKey(key));
 
+/// Area tabs show short names; counts are in the screen-reader label (14c).
+Finder tabLabel(String label) => find.byWidgetPredicate(
+  (w) => w is Semantics && w.properties.label == label,
+);
+
 class WaitingAds implements RewardedAds {
   final done = Completer<bool>();
   @override
@@ -230,7 +235,7 @@ void main() {
       await tap(tester, find.text(l10nId.close));
       expect(c.household.migrationNotice, isFalse);
       store.fail = true;
-      await tap(tester, find.text('Makan · 0/2'));
+      await tap(tester, button('home-tab-makan'));
       expect(c.household.lastArea, HomeArea.santai);
       expect(c.householdSaveFailed, isTrue);
       store.fail = false;
@@ -354,7 +359,7 @@ void main() {
       await pumpHome(tester, c);
       expect(cat(KittyId.oyen), findsOneWidget);
       expect(cat(KittyId.salju), findsNothing);
-      expect(find.text('Santai · 1/3'), findsOneWidget);
+      expect(tabLabel('Santai · 1/3'), findsOneWidget);
       await export(tester, 'santai-baru-id');
       await tap(tester, find.text('Main Puzzle'));
       await settle(tester);
@@ -388,9 +393,12 @@ void main() {
       for (final label in [
         'Santai · 3/3',
         'Makan · 2/2',
-        'Main · 2/2',
-        'Rawat · 2/2',
+        'Bermain · 2/2',
+        'Perawatan · 2/2',
       ]) {
+        expect(tabLabel(label), findsOneWidget);
+      }
+      for (final label in ['Santai', 'Makan', 'Main', 'Rawat']) {
         expect(find.text(label).hitTestable(), findsOneWidget);
       }
       final scene = tester.getRect(button('home-scene'));
@@ -408,7 +416,7 @@ void main() {
       }
       await export(tester, 'santai-penuh-id');
       final before = c.household.routine.toJson();
-      await tap(tester, find.text('Makan · 2/2'));
+      await tap(tester, button('home-tab-makan'));
       expect(c.household.lastArea, HomeArea.makan);
       expect(c.household.routine.toJson(), before);
       expect(cat(KittyId.oyen), findsNothing);
@@ -639,7 +647,11 @@ void main() {
             await tester.pump(const Duration(milliseconds: 250));
             expect(cat(KittyId.kembang), findsOneWidget);
             expect(
-              find.text(l.homeAreaCount(l.homeInviteCare, 2, 2)).hitTestable(),
+              find.byWidgetPredicate(
+                (w) =>
+                    w is Semantics &&
+                    w.properties.label == l.homeAreaCount(l.uiAreaCare, 2, 2),
+              ),
               findsOneWidget,
             );
             expect(tester.takeException(), isNull);

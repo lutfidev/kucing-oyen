@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-606 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+612 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -556,6 +556,12 @@ files and anything written there is overwritten.
 | `homeCancelInvitation` | Cancel invitation | Cancelar convite | V2 player home: homeCancelInvitation. | |
 | `homeRewardAvailable` | Rewards available · {coins} | Recompensas disponíveis · {coins} | V2 player home: homeRewardAvailable. Placeholders: `{coins}`. | |
 | `homeRewardNone` | Everyone is comfy. Rewards will be back. | Tudo tranquilo. As recompensas voltam depois. | V2 player home: homeRewardNone. | |
+| `homeStatusBowl` | Bowl · {left}/{total} | Tigela · {left}/{total} | Compact home chip (Dining area): bowl portions left out of owned cats. Placeholders: `{left}`, `{total}`. | |
+| `homeStatusBowlEmpty` | Bowl empty | Tigela vazia | Compact home chip (Dining area): bowl has no portions until the next cycle. | |
+| `homeStatusToy` | Toy ready | Brinquedo livre | Compact home chip (Play area): the toy is free. | |
+| `homeStatusCare` | Mat is free | Tapetinho livre | Compact home chip (Care area): the grooming mat is free. | |
+| `homeStatusQueue` | {count} waiting | Na fila: {count} | Compact home chip suffix: number of cats waiting for this area's facility. Placeholders: `{count}`. | |
+| `homeRewardLater` | Rewards later | Prêmios depois | Compact home reward chip when no house reward is ready yet. | |
 | `homeRewards` | House rewards | Recompensas da casa | V2 player home: homeRewards. | |
 | `homeClaimAll` | Collect all · {coins} | Coletar tudo · {coins} | V2 player home: homeClaimAll. Placeholders: `{coins}`. | |
 | `homeSaveFailed` | Couldn't save. Your last saved state is safe. | Não foi possível salvar. O último estado salvo está seguro. | V2 player home: homeSaveFailed. | |

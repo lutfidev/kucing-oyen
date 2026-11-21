@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-606 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+612 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -556,6 +556,12 @@ files and anything written there is overwritten.
 | `homeCancelInvitation` | Cancel invitation | Отменить приглашение | V2 player home: homeCancelInvitation. | |
 | `homeRewardAvailable` | Rewards available · {coins} | Доступна награда · {coins} | V2 player home: homeRewardAvailable. Placeholders: `{coins}`. | |
 | `homeRewardNone` | Everyone is comfy. Rewards will be back. | Можно отдохнуть. Награды появятся снова. | V2 player home: homeRewardNone. | |
+| `homeStatusBowl` | Bowl · {left}/{total} | Миска · {left}/{total} | Compact home chip (Dining area): bowl portions left out of owned cats. Placeholders: `{left}`, `{total}`. | |
+| `homeStatusBowlEmpty` | Bowl empty | Миска пуста | Compact home chip (Dining area): bowl has no portions until the next cycle. | |
+| `homeStatusToy` | Toy ready | Игрушка свободна | Compact home chip (Play area): the toy is free. | |
+| `homeStatusCare` | Mat is free | Коврик свободен | Compact home chip (Care area): the grooming mat is free. | |
+| `homeStatusQueue` | {count} waiting | В очереди: {count} | Compact home chip suffix: number of cats waiting for this area's facility. Placeholders: `{count}`. | |
+| `homeRewardLater` | Rewards later | Награды позже | Compact home reward chip when no house reward is ready yet. | |
 | `homeRewards` | House rewards | Награды дома | V2 player home: homeRewards. | |
 | `homeClaimAll` | Collect all · {coins} | Забрать всё · {coins} | V2 player home: homeClaimAll. Placeholders: `{coins}`. | |
 | `homeSaveFailed` | Couldn't save. Your last saved state is safe. | Не удалось сохранить. Последнее сохранение в порядке. | V2 player home: homeSaveFailed. | |

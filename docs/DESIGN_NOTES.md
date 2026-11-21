@@ -231,3 +231,13 @@ area, jadi tab Toko dan pilihan Hias jelas aktif. Daftar yang terpotong memakai
 `UiEdgeFade` (gradasi ke warna latar di tepi yang menyembunyikan isi; overlay,
 bukan ShaderMask, supaya kamar yang beranimasi tidak butuh layer offscreen). Ikon benda di
 peta digambar tanpa lantai papan (`paintPuzzleTile(floor: false)`).
+
+14c: hitungan kucing per area tidak lagi tampil di tab (konsep A hanya nama);
+tetap dibacakan pembaca layar dan terlihat dari kucing di kamar. Panel kucing
+tidak ditumpuk di atas kamar seperti mockup karena kaki kucing dan mangkuk
+berada di 0,88 tinggi kamar; panel berada tepat di bawahnya. Teks tab aktif
+tetap cokelat tua (bukan putih seperti mockup) demi kontras di atas oranye.
+Chip hadiah selalu tampil ("Hadiah nanti" saat kosong) supaya sheet hadiah
+tetap terjangkau. Batas tinggi kamar tetap rumus lama (lebar layar ×1,16,
+maks 480 dp), sehingga latar persegi bisa teregang vertikal sampai ±1,26× di
+390 dp; kucing dan prop digambar terpisah dan tidak ikut teregang.

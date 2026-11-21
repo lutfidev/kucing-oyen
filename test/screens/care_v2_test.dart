@@ -115,8 +115,12 @@ void main() {
         );
       }
       await capture(tester, 'rawat-antrean-id');
+      await home.tap(tester, find.byKey(const ValueKey('care-choose')));
       await home.tap(tester, find.byKey(const ValueKey('care-cancel-salju')));
       expect(c.caring.queue, isEmpty);
+      await tester.binding.handlePopRoute();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
       await home.tap(tester, brush);
       await home.tap(
         tester,

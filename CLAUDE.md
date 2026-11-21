@@ -252,3 +252,17 @@ klipnya selebar layar; mangkuk hasil digeser `JourneyArt.bowlShift`. Header
 Toko memakai dua sisi `Expanded` agar judul di tengah layar; harga memakai
 `CoinView` + `shopBuyShort`/`shopAdopt`/angka. Test `puzzle_polish_test`,
 `result_polish_test`, grup `tata letak 14b` di `shop_v2_test`.
+
+## Header dan panel rumah ringkas — langkah 14c
+
+`HomeAreaStrip` = satu baris chip `home-tab-<area>` (nama pendek, hitungan
+`homeAreaCount` hanya di semantik; teks besar menggulir). Bantuan `home-help`
+dan Hias `home-decorate` adalah `HomeIconButton` di pojok kanan atas kamar.
+Panel kucing `home-selection` satu baris; `UiButton(compact)` berikon mengganti
+ikonnya dengan ⊘ saat nonaktif dan menerima `padding`. Panel area dihapus:
+chip status (`dining-choose`/`play-choose`/`care-choose`, teks `homeStatus*`)
+membuka sheet area yang memuat aturan, stok/siklus, ketersediaan per kucing,
+dan batal `<area>-cancel-<kucing>`. Fungsi `*AvailabilityLabel` ada di
+`home_labels.dart`. Tinggi kamar `_sceneHeight` = tinggi layar − chrome 396
+(termasuk navigasi bawah), dijepit 240…min(480, lebar×1,16).
+Test `home_layout_14c_test`, ekspor `HOME_REVIEW=true` → `docs/design-v2/home/14c-*`.
