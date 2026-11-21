@@ -667,34 +667,37 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 32".
 
-## 33. Rapikan informasi dan tata letak kamar Oyen
+## 33. Rumah dua ruangan: gambar dan pindah ruangan
 
-**Waktu:** setelah langkah 32 selesai. Disepakati pemilik repo pada 8 Nov 2026; belum dikerjakan.
+**Waktu:** dimulai 21 Nov 2026 sesudah link kanvas desain diserahkan; langkah 32 tetap terbuka (cek HP dan rilis berjalan terpisah). Arah "satu area per layar" dari bahan 8 Nov dibatalkan (riwayatnya di `docs/DESIGN_NOTES.md`, "Bahan langkah 33 lama").
 
-**Bahan brainstorming 8 Nov 2026 (belum keputusan desain):**
-
-> **21 Nov 2026:** arah "satu area per layar" di bawah ini sudah dicoba di v2 dan dibatalkan (terasa hanya ganti tombol). Arah baru: satu rumah yang nyambung, mulai dari ruang tengah lalu teras di kanan yang bisa dijelajahi dengan menggeser layar; sedang diuji lewat prototipe (lihat `docs/DESIGN_NOTES.md`, "21 Nov 2026").
-
-**Pilihan visual pemilik repo:** konsep **A — satu area per layar** pada [preview perbandingan](design-brief/rumah-oyen-area/preview-perbandingan.png), sisi kiri. Pemilik repo menyukai gambar tersebut dan meminta hasil yang sangat mendekatinya. Acuan ini dipilih untuk pengembangan sesudah langkah 32; rincian fitur dan interaksi masih dibahas. Konsep B tidak menjadi pilihan utama. Preview dibuat dengan alat imagegen bawaan; merupakan konsep raster, belum aset UI atau sprite siap pakai.
-
-- **Ide pemilik repo:** tempat khusus untuk kucing lain beraktivitas, misalnya mandi, makan, dan aktivitas lain; dibahas sesudah melihat kamar penuh terlalu ramai.
-- **Preferensi pemilik repo:** gabungan aktivitas otomatis dan ajakan pemain. Kucing dapat beraktivitas sendiri, tetapi pemain juga dapat mengajak mereka; rincian kontrol, prioritas, dan hadiah belum diputuskan.
-- **Usul asisten untuk dibahas:** beranda sebagai ruang santai, dengan area makan, istirahat/bermain, dan perawatan yang dapat dikunjungi terpisah. Kucing yang sedang beraktivitas berada di area terkait, sehingga seluruh koleksi tidak harus berkumpul di beranda.
-- **Arah tampilan terpilih:** satu area per layar, seperti konsep A; perpindahan melalui pilihan area. Jumlah area, batas 3–4 kucing yang terlihat, satu tombol hadiah gabungan, serta konsep B sebagai peta rumah baru usul asisten, belum disetujui pemilik repo secara terpisah.
-- **Hal yang perlu diputuskan:** cara ajakan pemain berinteraksi dengan rutinitas otomatis; hubungan area dengan kebutuhan Lapar/Senang yang sudah ada; apakah mandi hanya interaksi lucu atau mekanik baru. Usul asisten: mulai dengan aktivitas opsional dan hindari menambah kewajiban perawatan yang mengalihkan perhatian dari puzzle.
-- Perubahan beberapa ruangan/aktivitas merupakan perluasan fitur: sepakati konsep dan lingkupnya dahulu, lalu tentukan langkah tersendiri bila terlalu besar untuk perapian UI langkah 33. Belum mengubah GDD, aturan kebutuhan, atau kode game.
-
-**Masalah:** pada potret HP dengan kamar awal (Oyen dan mangkuk), bagian tengah terasa kosong sementara area bawah padat. Gelembung ajakan ke Toko terlalu lebar dan label waktu isi ulang mangkuk terlalu dekat dengan Oyen. Ekspresi sedih belum cukup menjelaskan kebutuhan kucing atau tindakan yang bisa dilakukan pemain.
+**Hasil:** Beranda menjadi ruang tengah dan teras berperspektif yang digambar dari desain, dihubungkan pintu yang bisa diketuk atau digeser, dengan transisi searah perjalanan.
 
 > **Baca dulu:**
-> - desain kamar di `docs/design/rumah-oyen/project/`
-> - `lib/screens/room/`, komponen gelembung dan label mangkuk, serta model kebutuhan kucing
-> - `docs/DESIGN_NOTES.md` bagian "Langkah 23", "Langkah 24", dan "Langkah 31"
+> - spec `docs/superpowers/specs/2026-11-21-rumah-dua-ruangan-design.md`
+> - rencana `docs/superpowers/plans/2026-11-21-rumah-dua-ruangan.md` (Global Constraints, Review Focus, Task 1–5)
+> - desain di `docs/design/rumah-dua-ruangan/project/` (link kanvas di spec; catatan koordinat di `canvas.json`)
 >
-> **Lalu:**
-> - Sepakati revisi desain sebelum implementasi: ukuran, posisi, dan kapan gelembung ajakan ke Toko muncul; posisi label isi ulang mangkuk; keseimbangan ruang kamar awal dan kamar penuh.
-> - Buat kebutuhan Oyen dan tindakan yang dapat dilakukan lebih jelas ketika ia tampak sedih, tanpa menambah kepadatan informasi.
-> - Pertahankan kejelasan tombol Main dan navigasi bawah yang dinilai sudah baik oleh pemilik repo.
-> - Verifikasi kamar awal dan penuh, keempat bahasa, layar kecil, dan teks 130%; periksa potret layar dan sesuaikan aset toko bila tampilannya berubah.
+> **Lalu:** kerjakan Task 1–5 rencana: `SvgTemplate` (gradien, clip, poligon, kelas), model rumah (`lib/game/model/house.dart`, ruangan barang, jalur pintu), lapisan gambar dari desain, `RoomGeometry` perspektif dan `RoomScene`, lalu teras, pintu, dan `HousePager`. Cek di HP: teras langsung terlihat, geser enak, ketuk kucing tidak terganggu.
 >
-> Catat keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 33".
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 33".
+
+## 34. Rumah dua ruangan: kucing di dua ruangan
+
+**Hasil:** kucing menyebar ke tempat nyaman, berjalan sendiri lewat pintu, bisa diajak pindah (tombol kartu dan tahan-seret) lalu betah 5 menit, dan ikon perhatian di pintu memberi tahu kucing di ruangan sebelah.
+
+> **Baca dulu:** spec dan rencana di atas (Task 6–9), catatan langkah 33 di `docs/DESIGN_NOTES.md`.
+>
+> **Lalu:** kerjakan Task 6–9 rencana. Cek di HP: kucing melakukan hal menarik kalau didiamkan, dan efek suara bertumpuk atau tidak (butir langkah 32).
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 34".
+
+## 35. Rumah dua ruangan: Hias, pemain baru, dan cek akhir
+
+**Hasil:** Hias per ruangan dengan jalur pintu yang dijaga, titik gantung teras dan Gudang yang diredupkan, rumah pemain baru (termasuk sisa langkah 33 lama), lalu overflow, potret layar, potret toko, dan profil kinerja di HP.
+
+> **Baca dulu:** spec dan rencana di atas (Task 10–13).
+>
+> **Lalu:** kerjakan Task 10–13 rencana.
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 35".
