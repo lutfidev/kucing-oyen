@@ -305,6 +305,11 @@ class ProgressController extends ChangeNotifier implements HintSource {
   late Household _household;
   final _homePauses = <HouseholdPause>{};
   bool _homeBusy = false;
+
+  /// A background routine tick is being written. It never blocks player
+  /// actions: they wait for [_tickDone] and are then built from fresh state.
+  bool _tickBusy = false;
+  Future<void> _tickDone = Future.value();
   int _homeSpend = 0;
   bool _guidanceBusy = false;
   _GuidanceChange? Function()? _pendingGuidance;
@@ -364,6 +369,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// Membeli barang [id]; langsung ditaruh di posisi bawaannya. Gagal tanpa
   /// efek kalau sudah dimiliki atau koin kurang, begitu juga pembelian lain.
   Future<bool> buyItem(RoomItemId id) async {
+    if (_tickWait case final wait?) await wait;
     if (!_home.room.canBuy(id, _coins)) return false;
     return _changeHome(
       {_Part.home},
@@ -375,6 +381,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// Membeli kucing [id]; bar-nya mulai penuh sekarang dan ia bertanda
   /// "Baru!" sampai [seeKitty].
   Future<bool> buyKitty(KittyId id) async {
+    if (_tickWait case final wait?) await wait;
     if (!_home.canBuyKitty(id, _coins)) return false;
     return _changeHome(
       {_Part.home, _Part.needs},
@@ -387,12 +394,14 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// Kartu [kitty] dibuka: tag "Baru!"-nya hilang. False tanpa efek kalau
   /// [kitty] tidak bertanda baru.
   Future<bool> seeKitty(KittyId kitty) async {
+    if (_tickWait case final wait?) await wait;
     if (!_home.isFresh(kitty)) return false;
     return _changeHome({_Part.home}, home: _home.seen(kitty));
   }
 
   /// Membeli aksesoris [id] untuk semua kucing; belum dipakai.
   Future<bool> buyAccessory(AccessoryId id) async {
+    if (_tickWait case final wait?) await wait;
     if (!_home.closet.canBuy(id, _coins)) return false;
     return _changeHome(
       {_Part.home},
@@ -403,6 +412,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// Membeli satu camilan [id]; gagal kalau koin kurang atau stok penuh.
   Future<bool> buySnack(SnackId id) async {
+    if (_tickWait case final wait?) await wait;
     final price = snackOf(id).price;
     if (_coins < price || !_home.pantry.canAdd(id)) return false;
     return _changeHome(
@@ -415,6 +425,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// [kitty] memakai aksesoris [id], atau melepasnya kalau [id] null.
   /// Gagal kalau kucing atau aksesorisnya tidak dimiliki.
   Future<bool> wearAccessory(KittyId kitty, AccessoryId? id) async {
+    if (_tickWait case final wait?) await wait;
     if (!_home.ownsKitty(kitty)) return false;
     if (id != null && !_home.closet.owns(id)) return false;
     if (_home.closet.wearingOf(kitty) == id) return true;
@@ -425,6 +436,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// Menaruh barang [id] di [spot], juga dari Gudang.
   Future<bool> placeItem(RoomItemId id, Spot spot) async {
+    if (_tickWait case final wait?) await wait;
     if (!_home.room.owns(id)) return false;
     if (_home.room.spotOf(id) == spot) return true;
     return _changeHome({
@@ -434,6 +446,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// Memindahkan barang [id] ke Gudang; mangkuk tidak bisa.
   Future<bool> storeItem(RoomItemId id) async {
+    if (_tickWait case final wait?) await wait;
     final room = _home.room.store(id);
     if (identical(room, _home.room)) return false;
     return _changeHome({_Part.home}, home: _home.copyWith(room: room));
@@ -441,6 +454,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// Memberi [kitty] satu camilan [snack] dari stok.
   Future<bool> feed(KittyId kitty, SnackId snack) async {
+    if (_tickWait case final wait?) await wait;
     final pantry = _home.pantry.take(snack);
     if (!_home.ownsKitty(kitty) || pantry == null) return false;
     if (catNeeds(kitty).isFull) return false;
@@ -453,6 +467,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// Mengelus [kitty]; gagal kalau batas elus jam ini habis.
   Future<bool> pet(KittyId kitty) async {
+    if (_tickWait case final wait?) await wait;
     final needs = _home.ownsKitty(kitty) && !catNeeds(kitty).isJoyFull
         ? _needs.pet(kitty, _effectiveNow)
         : null;
@@ -463,6 +478,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// [kitty] memakai mainan [item] yang ditaruh di kamar; gagal kalau
   /// [item] bukan mainan, tidak ditaruh, atau [kitty] baru saja bermain.
   Future<bool> play(KittyId kitty, RoomItemId item) async {
+    if (_tickWait case final wait?) await wait;
     final usable =
         _home.ownsKitty(kitty) &&
         roomItemOf(item).toy &&
@@ -475,6 +491,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// Selesai menghias: Senang semua kucing naik, paling banyak sekali per
   /// jam. Tata letaknya sudah tersimpan lewat [placeItem] dan [storeItem].
   Future<bool> finishDecorating() async {
+    if (_tickWait case final wait?) await wait;
     final needs = _needs.finishDecorating(_home.kitties, _effectiveNow);
     if (needs == null) return false;
     return _changeHome({_Part.needs}, needs: needs);
@@ -482,6 +499,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// [kitty] makan dari mangkuk.
   Future<bool> eatFromBowl(KittyId kitty) async {
+    if (_tickWait case final wait?) await wait;
     final needs = _home.ownsKitty(kitty)
         ? _needs.eatFromBowl(kitty, _effectiveNow)
         : null;
@@ -491,6 +509,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// Mengambil gelembung koin [kitty] (+[kittyRewardCoins]).
   Future<bool> claimKittyReward(KittyId kitty) async {
+    if (_tickWait case final wait?) await wait;
     final needs = _home.ownsKitty(kitty)
         ? _needs.claim(kitty, _effectiveNow)
         : null;

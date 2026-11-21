@@ -104,13 +104,14 @@ extension HouseholdController on ProgressController {
     if (_homePauses.remove(reason)) _homePauseRevision.value++;
   }
 
-  Future<bool> inviteKitty(KittyId kitty, HomeActivity activity) {
+  Future<bool> inviteKitty(KittyId kitty, HomeActivity activity) async {
+    if (_tickWait case final wait?) await wait;
     if (_homePauses.contains(HouseholdPause.decorating) ||
         !_home.ownsKitty(kitty)) {
       return Future.value(false);
     }
     final routine = _household.routine.invite(kitty, activity);
-    if (identical(routine, _household.routine)) return Future.value(true);
+    if (identical(routine, _household.routine)) return true;
     return _commitHousehold(
       _HomeChange(
         home: _home,
@@ -120,8 +121,9 @@ extension HouseholdController on ProgressController {
     );
   }
 
-  Future<bool> cancelInvitation(KittyId kitty) {
-    if (!_home.ownsKitty(kitty)) return Future.value(false);
+  Future<bool> cancelInvitation(KittyId kitty) async {
+    if (_tickWait case final wait?) await wait;
+    if (!_home.ownsKitty(kitty)) return false;
     return _commitHousehold(
       _HomeChange(
         home: _home,
@@ -146,7 +148,7 @@ extension HouseholdController on ProgressController {
       );
     }
 
-    return _commitHousehold(build(), rebuild: build);
+    return _commitHousehold(build(), rebuild: build, tick: true);
   }
 
   List<KittyId> get claimableKitties => [
@@ -155,7 +157,8 @@ extension HouseholdController on ProgressController {
   ];
   int get householdRewardCoins => claimableKitties.length * kittyRewardCoins;
 
-  Future<bool> claimAllKittyRewards() {
+  Future<bool> claimAllKittyRewards() async {
+    if (_tickWait case final wait?) await wait;
     _HomeChange? build() {
       final now = _effectiveNow;
       var needs = _needs;
@@ -177,37 +180,49 @@ extension HouseholdController on ProgressController {
     }
 
     final change = build();
-    if (change == null) return Future.value(false);
+    if (change == null) return false;
     return _commitHousehold(change, rebuild: build);
   }
 
-  Future<bool> setHomeArea(HomeArea area) => _commitHousehold(
-    _HomeChange(
-      home: _home,
-      needs: _needs,
-      household: _household.copyWith(lastArea: area),
-    ),
-  );
-  Future<bool> setReducedMotion(bool value) => _commitHousehold(
-    _HomeChange(
-      home: _home,
-      needs: _needs,
-      household: _household.copyWith(reducedMotion: value),
-    ),
-  );
-  Future<bool> acknowledgeHomeMigration() => _commitHousehold(
-    _HomeChange(
-      home: _home,
-      needs: _needs,
-      household: _household.copyWith(migrationNotice: false),
-    ),
-  );
+  Future<bool> setHomeArea(HomeArea area) async {
+    if (_tickWait case final wait?) await wait;
+    return _commitHousehold(
+      _HomeChange(
+        home: _home,
+        needs: _needs,
+        household: _household.copyWith(lastArea: area),
+      ),
+    );
+  }
+
+  Future<bool> setReducedMotion(bool value) async {
+    if (_tickWait case final wait?) await wait;
+    return _commitHousehold(
+      _HomeChange(
+        home: _home,
+        needs: _needs,
+        household: _household.copyWith(reducedMotion: value),
+      ),
+    );
+  }
+
+  Future<bool> acknowledgeHomeMigration() async {
+    if (_tickWait case final wait?) await wait;
+    return _commitHousehold(
+      _HomeChange(
+        home: _home,
+        needs: _needs,
+        household: _household.copyWith(migrationNotice: false),
+      ),
+    );
+  }
 
   /// Draft changes become visible together, with a single decorate bonus only
   /// when the actual layout changed. Built-in facilities remain available.
-  Future<bool> saveAreaLayout(HomeAreas draft) {
+  Future<bool> saveAreaLayout(HomeAreas draft) async {
+    if (_tickWait case final wait?) await wait;
     final normal = HomeAreas.fromJson(draft.toJson(), _home);
-    if (normal == _household.areas) return Future.value(false);
+    if (normal == _household.areas) return false;
     var routine = _household.routine;
     for (final entry in routine.activities.entries) {
       final facility = entry.value.facility;
@@ -290,21 +305,34 @@ extension _HouseholdTransactions on ProgressController {
     household: _household.copyWith(effectiveAt: _effectiveNow),
   );
 
+  /// Player actions computed while a background tick is being written would
+  /// be built from stale state, so they wait for that write first. Null when
+  /// no tick is in flight, keeping the synchronous double-tap guard intact.
+  Future<void>? get _tickWait => _tickBusy ? _tickDone : null;
+
+  /// [tick] = a background routine advance. It does not mark the house busy
+  /// (UI stays responsive); player commits queue behind it instead.
   Future<bool> _commitHousehold(
     _HomeChange change, {
     _HomeChange? Function()? rebuild,
+    bool tick = false,
   }) {
     if (_resetting ||
         _guidanceBusy ||
         _pendingGuidance != null ||
         _homeBusy ||
+        _tickBusy ||
         _pendingHome != null ||
         store is! SnapshotStore) {
       return Future.value(false);
     }
-    _homeBusy = true;
-    _homeSpend = change.coins < 0 ? -change.coins : 0;
-    _notifyHousehold();
+    if (tick) {
+      _tickBusy = true;
+    } else {
+      _homeBusy = true;
+      _homeSpend = change.coins < 0 ? -change.coins : 0;
+      _notifyHousehold();
+    }
     final task = _saving.then((_) async {
       final actual = rebuild == null ? change : rebuild();
       if (actual == null) return false;
@@ -340,10 +368,16 @@ extension _HouseholdTransactions on ProgressController {
       return true;
     });
     _saving = task.then<void>((_) {});
-    return task.whenComplete(() {
-      _homeBusy = false;
-      _homeSpend = 0;
+    final done = task.whenComplete(() {
+      if (tick) {
+        _tickBusy = false;
+      } else {
+        _homeBusy = false;
+        _homeSpend = 0;
+      }
       _notifyHousehold();
     });
+    if (tick) _tickDone = done.then<void>((_) {});
+    return done;
   }
 }

@@ -64,6 +64,28 @@ void main() {
   );
 
   test(
+    'a background tick write neither blocks nor drops player actions',
+    () async {
+      final store = AtomicTestStore()..home = Home(kitties: KittyId.values);
+      final c = await load(store);
+      await c.advanceHousehold(0);
+      store.hold = Completer<void>();
+      final tick = c.advanceHousehold(.25);
+      // Real-device writes take ~50 ms; the UI must not read that as busy.
+      expect(c.householdBusy, isFalse);
+      final area = c.setHomeArea(HomeArea.makan);
+      final seen = c.seeKitty(KittyId.values.last);
+      store.hold!.complete();
+      store.hold = null;
+      expect(await tick, isTrue);
+      expect(await area, isTrue);
+      expect(c.household.lastArea, HomeArea.makan);
+      await seen;
+      expect((await load(store)).household.lastArea, HomeArea.makan);
+    },
+  );
+
+  test(
     'routine start, completion failure, restart and same-ID retry',
     () async {
       final store = AtomicTestStore()
