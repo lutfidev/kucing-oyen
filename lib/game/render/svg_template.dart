@@ -15,7 +15,13 @@ import 'css_animation.dart';
 /// Flame. String `d` path diurai dengan `parseSvgPathData`.
 ///
 /// Hanya subset yang dipakai desain: elemen `g`, `rect`, `circle`,
-/// `ellipse`, `path`, `text`; atribut `fill`, `stroke`, `stroke-width`,
+/// `ellipse`, `path`, `polygon`, `polyline`, `line`, `text`; `<defs>` berisi
+/// `linearGradient`/`radialGradient` (satuan `objectBoundingBox`, `stop`
+/// dengan `stop-color` dan `stop-opacity`) dan `clipPath` (dipakai lewat
+/// `fill="url(#id)"` dan `clip-path="url(#id)"` di `g`); warna `#rgb`,
+/// `#rrggbb`, dan `rgba()`; atribut `class` yang dipetakan `classes` ke
+/// deklarasi CSS (digabung di depan `style`); atribut `fill`, `stroke`,
+/// `stroke-width`,
 /// `stroke-linecap`, `stroke-linejoin`, `stroke-dasharray`, `opacity`
 /// (juga di `g`), `fill-opacity`, `transform` (translate, scale, rotate, skewY)
 /// dengan `transform-origin` "x y", dan
@@ -23,10 +29,38 @@ import 'css_animation.dart';
 /// ([CssStyle]) yang dievaluasi pada waktu `time` dengan [keyframes].
 /// Elemen lain membuat [render] gagal supaya tidak ada yang hilang diam-diam.
 class SvgTemplate {
-  SvgTemplate(String source, {this.keyframes = const {}})
-    : _nodes = _parse(source);
+  SvgTemplate(
+    String source, {
+    this.keyframes = const {},
+    Map<String, String> classes = const {},
+  }) : _nodes = _withClasses(_parse(source), classes) {
+    _collectDefs(_nodes, _defs);
+  }
 
   final List<_Element> _nodes;
+
+  /// Isi `<defs>` menurut `id` (gradien dan clip).
+  final _Defs _defs = {};
+
+  /// Atribut `class` diganti gaya dari `classes`; kelas lain (mis.
+  /// `rm-anim`, penanda kurangi gerak) diabaikan.
+  static List<_Element> _withClasses(
+    List<_Element> nodes,
+    Map<String, String> classes,
+  ) {
+    for (final el in nodes) {
+      final names = el.attrs.remove('class');
+      if (names != null) {
+        final css = [
+          for (final name in names.split(RegExp(r'\s+'))) ?classes[name],
+          ?el.attrs['style'],
+        ].where((c) => c.trim().isNotEmpty).join('; ');
+        if (css.isNotEmpty) el.attrs['style'] = css;
+      }
+      _withClasses(el.children, classes);
+    }
+    return nodes;
+  }
 
   /// Ada elemen dengan atribut `style` (animasi). Kalau tidak, [render]
   /// dengan waktu apa pun sama dengan gambar diam, jadi boleh di-cache.
@@ -45,8 +79,10 @@ class SvgTemplate {
   /// Gaya animasi divalidasi saat binding, juga jika [SvgAnimation.render]
   /// nanti dipanggil tanpa waktu. Pakai [render] untuk SVG diam yang
   /// sengaja mengabaikan gaya animasi yang tidak didukung.
-  SvgAnimation bind(Map<String, Object> vals) =>
-      SvgAnimation._(_bindNodes(_nodes, vals, const {}, keyframes), keyframes);
+  SvgAnimation bind(Map<String, Object> vals) => SvgAnimation._(
+    _bindNodes(_nodes, vals, const {}, keyframes, _defs),
+    keyframes,
+  );
 
   /// [vals] berisi nilai `{{nama}}`, juga bersarang lewat titik
   /// (`{{c.fur}}` = `vals['c']['fur']`). Blok `sc-if` tampil kalau nilainya
@@ -61,6 +97,7 @@ class SvgTemplate {
     _Emitter(
       time,
       keyframes,
+      _defs,
     ).emit(_nodes, vals, const {}, _Affine.identity, ops);
     return SvgDrawing._(List.unmodifiable(ops));
   }
@@ -216,12 +253,92 @@ List<Object?> _list(_Element el, Map<String, Object> vals) {
   return value;
 }
 
+typedef _Defs = Map<String, _Element>;
+
+/// Isi `<defs>` di mana pun letaknya, menurut `id`.
+void _collectDefs(List<_Element> nodes, _Defs defs) {
+  for (final el in nodes) {
+    if (el.name == 'defs') {
+      for (final def in el.children) {
+        final id = def.attrs['id'];
+        if (id != null) defs[id] = def;
+      }
+    } else {
+      _collectDefs(el.children, defs);
+    }
+  }
+}
+
+final _urlPattern = RegExp(r'^url\(#([\w-]+)\)$');
+
+/// Elemen `<defs>` yang dirujuk `url(#id)`, salah satu dari [kinds].
+_Element _ref(String value, _Defs defs, Set<String> kinds) {
+  final id = _urlPattern.firstMatch(value.trim())?[1];
+  final def = id == null ? null : defs[id];
+  if (def == null || !kinds.contains(def.name)) {
+    throw FormatException('Rujukan tidak dikenal', value);
+  }
+  return def;
+}
+
+/// Bentuk `clipPath` (gabungan anaknya).
+Path _clipOf(String value, _Defs defs) {
+  final def = _ref(value, defs, const {'clipPath'});
+  final path = Path();
+  for (final child in def.children) {
+    path.addPath(_geometry(child.name, child.attrs), Offset.zero);
+  }
+  return path;
+}
+
+/// Shader gradien `url(#id)` untuk bentuk dengan kotak isi [box]
+/// (`objectBoundingBox`: koordinat gradien pecahan kotak itu).
+Shader _gradientOf(String value, _Defs defs, Rect box) {
+  final def = _ref(value, defs, const {'linearGradient', 'radialGradient'});
+  final colors = <Color>[];
+  final stops = <double>[];
+  for (final stop in def.children) {
+    if (stop.name != 'stop') continue;
+    final color = _color(stop.attrs['stop-color'] ?? '#000000')!;
+    colors.add(
+      color.withValues(alpha: color.a * _num(stop.attrs, 'stop-opacity', 1)),
+    );
+    stops.add(_num(stop.attrs, 'offset'));
+  }
+  final unit = Float64List.fromList([
+    box.width, 0, 0, 0, //
+    0, box.height, 0, 0,
+    0, 0, 1, 0,
+    box.left, box.top, 0, 1,
+  ]);
+  final a = def.attrs;
+  if (def.name == 'radialGradient') {
+    return Gradient.radial(
+      Offset(_num(a, 'cx', 0.5), _num(a, 'cy', 0.5)),
+      _num(a, 'r', 0.5),
+      colors,
+      stops,
+      TileMode.clamp,
+      unit,
+    );
+  }
+  return Gradient.linear(
+    Offset(_num(a, 'x1'), _num(a, 'y1')),
+    Offset(_num(a, 'x2', 1), _num(a, 'y2')),
+    colors,
+    stops,
+    TileMode.clamp,
+    unit,
+  );
+}
+
 /// Menyusun perintah gambar pada satu waktu animasi.
 class _Emitter {
-  _Emitter(this.time, this.keyframes);
+  _Emitter(this.time, this.keyframes, this.defs);
 
   final double? time;
   final Map<String, CssKeyframes> keyframes;
+  final _Defs defs;
 
   void emit(
     List<_Element> nodes,
@@ -231,6 +348,7 @@ class _Emitter {
     List<_Op> ops,
   ) {
     for (final el in nodes) {
+      if (el.name == 'defs') continue;
       if (el.name == 'sc-if') {
         if (_condition(el.attrs['value'] ?? '', vals)) {
           emit(el.children, vals, inherited, matrix, ops);
@@ -281,7 +399,10 @@ class _Emitter {
           var (ox, oy) = (css.originX, css.originY);
           if (css.centerOrigin) {
             final box = _localBounds(el, vals, inherited);
-            (ox, oy) = (box.center.dx, box.center.dy);
+            (ox, oy) = (
+              box.left + box.width * css.boxX,
+              box.top + box.height * css.boxY,
+            );
           }
           m = m * _Affine.of(frame.matrix(ox, oy));
           if (frame.opacity case final o?) attrs['opacity'] = '$o';
@@ -290,7 +411,8 @@ class _Emitter {
       switch (el.name) {
         case 'g':
           final opacity = _num(attrs, 'opacity', 1);
-          final children = opacity < 1 ? <_Op>[] : ops;
+          final clip = attrs['clip-path'];
+          final children = opacity < 1 || clip != null ? <_Op>[] : ops;
           emit(
             el.children,
             vals,
@@ -301,13 +423,30 @@ class _Emitter {
             m,
             children,
           );
-          if (opacity < 1 && children.isNotEmpty) {
-            ops.add(_GroupOp(List.unmodifiable(children), opacity));
+          var group = children;
+          if (clip != null && children.isNotEmpty) {
+            group = [
+              _ClipOp(
+                List.unmodifiable(children),
+                _clipOf(clip, defs),
+                m.storage,
+              ),
+            ];
+            if (opacity >= 1) ops.addAll(group);
+          }
+          if (opacity < 1 && group.isNotEmpty) {
+            ops.add(_GroupOp(List.unmodifiable(group), opacity));
           }
         case 'text':
           ops.add(_TextOp.from(attrs, el.text, m));
-        case 'rect' || 'circle' || 'ellipse' || 'path':
-          ops.add(_ShapeOp.from(el.name, attrs, m));
+        case 'rect' ||
+            'circle' ||
+            'ellipse' ||
+            'path' ||
+            'polygon' ||
+            'polyline' ||
+            'line':
+          ops.add(_ShapeOp.from(el.name, attrs, m, defs));
         default:
           throw UnsupportedError('Elemen <${el.name}> belum didukung');
       }
@@ -329,6 +468,7 @@ class _Emitter {
     _Emitter(
       null,
       keyframes,
+      defs,
     ).emit([bare], vals, inherited, _Affine.identity, ops);
     return SvgDrawing._(ops).bounds;
   }
@@ -339,12 +479,16 @@ List<_BoundNode> _bindNodes(
   Map<String, Object> vals,
   Map<String, String> inherited,
   Map<String, CssKeyframes> keyframes,
+  _Defs defs,
 ) {
   final result = <_BoundNode>[];
   for (final el in nodes) {
+    if (el.name == 'defs') continue;
     if (el.name == 'sc-if') {
       if (_condition(el.attrs['value'] ?? '', vals)) {
-        result.addAll(_bindNodes(el.children, vals, inherited, keyframes));
+        result.addAll(
+          _bindNodes(el.children, vals, inherited, keyframes, defs),
+        );
       }
       continue;
     }
@@ -359,6 +503,7 @@ List<_BoundNode> _bindNodes(
               {...vals, name: item},
               inherited,
               keyframes,
+              defs,
             ),
           );
         }
@@ -385,14 +530,32 @@ List<_BoundNode> _bindNodes(
     final matrix = transform == null
         ? _Affine.identity
         : _parseTransform(transform, attrs['transform-origin']);
-    final center = css?.centerOrigin ?? false
-        ? _Emitter(null, keyframes)._localBounds(el, vals, inherited).center
+    Offset boxOrigin(CssStyle css) {
+      final box = _Emitter(
+        null,
+        keyframes,
+        defs,
+      )._localBounds(el, vals, inherited);
+      return Offset(
+        box.left + box.width * css.boxX,
+        box.top + box.height * css.boxY,
+      );
+    }
+
+    final center = css != null && css.centerOrigin
+        ? boxOrigin(css)
         : Offset(css?.originX ?? 0, css?.originY ?? 0);
     final children = el.name == 'g'
-        ? _bindNodes(el.children, vals, {
-            for (final MapEntry(:key, :value) in attrs.entries)
-              if (_inherited.contains(key)) key: value,
-          }, keyframes)
+        ? _bindNodes(
+            el.children,
+            vals,
+            {
+              for (final MapEntry(:key, :value) in attrs.entries)
+                if (_inherited.contains(key)) key: value,
+            },
+            keyframes,
+            defs,
+          )
         : const <_BoundNode>[];
     final _Op? leaf = switch (el.name) {
       'g' => null,
@@ -400,9 +563,14 @@ List<_BoundNode> _bindNodes(
       'rect' ||
       'circle' ||
       'ellipse' ||
-      'path' => _ShapeOp.from(el.name, attrs, _Affine.identity),
+      'path' ||
+      'polygon' ||
+      'polyline' ||
+      'line' => _ShapeOp.from(el.name, attrs, _Affine.identity, defs),
       _ => throw UnsupportedError('Elemen <${el.name}> belum didukung'),
     };
+    final clipRef = el.name == 'g' ? attrs['clip-path'] : null;
+    final clip = clipRef == null ? null : _clipOf(clipRef, defs);
     result.add(
       _BoundNode(
         matrix,
@@ -412,16 +580,19 @@ List<_BoundNode> _bindNodes(
         _num(attrs, 'opacity', 1),
         leaf,
         children,
+        clip,
         // Bentuk dasar dibuat lagi seperti render acuan. Memakai ulang
         // Path oval/persegi pada transformasi animasi yang berbeda bisa
         // memakai cache raster native dengan pembulatan tepi berbeda.
         leaf is _ShapeOp &&
                 (el.name != 'path' ||
                     (keyframes[css?.animation]?.animatesOpacity ?? false))
-            ? (alpha) => _ShapeOp.from(el.name, {
-                ...attrs,
-                'opacity': '$alpha',
-              }, _Affine.identity)
+            ? (alpha) => _ShapeOp.from(
+                el.name,
+                {...attrs, 'opacity': '$alpha'},
+                _Affine.identity,
+                defs,
+              )
             : null,
       ),
     );
@@ -438,6 +609,7 @@ class _BoundNode {
     this.opacity,
     this.leaf,
     this.children,
+    this.clip,
     this.shapeAtOpacity,
   );
 
@@ -448,6 +620,9 @@ class _BoundNode {
   final double opacity;
   final _Op? leaf;
   final List<_BoundNode> children;
+
+  /// `clip-path` di `g`, di koordinat elemen ini.
+  final Path? clip;
   final _Op Function(double)? shapeAtOpacity;
 
   void emit(
@@ -469,11 +644,17 @@ class _BoundNode {
       ops.add(m.isIdentity ? op : _PlacedOp(op, m.storage));
       return;
     }
-    final output = alpha < 1 ? <_Op>[] : ops;
+    final clipPath = clip;
+    final output = alpha < 1 || clipPath != null ? <_Op>[] : ops;
     for (final child in children) {
       child.emit(time, keyframes, m, output);
     }
-    if (alpha < 1 && output.isNotEmpty) ops.add(_GroupOp(output, alpha));
+    var group = output;
+    if (clipPath != null && output.isNotEmpty) {
+      group = [_ClipOp(output, clipPath, m.storage)];
+      if (alpha >= 1) ops.addAll(group);
+    }
+    if (alpha < 1 && group.isNotEmpty) ops.add(_GroupOp(group, alpha));
   }
 }
 
@@ -482,8 +663,20 @@ double _num(Map<String, String> a, String key, [double fallback = 0]) {
   return v == null ? fallback : double.parse(v);
 }
 
+final _rgbaPattern = RegExp(
+  r'^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)$',
+);
+
 Color? _color(String value) {
   if (value == 'none') return null;
+  if (_rgbaPattern.firstMatch(value.trim()) case final m?) {
+    return Color.fromRGBO(
+      int.parse(m[1]!),
+      int.parse(m[2]!),
+      int.parse(m[3]!),
+      m[4] == null ? 1 : double.parse(m[4]!),
+    );
+  }
   final hex = value.startsWith('#') ? value.substring(1) : null;
   if (hex != null && hex.length == 6) {
     return Color(0xFF000000 | int.parse(hex, radix: 16));
@@ -499,6 +692,22 @@ final _pathCache = <String, Path>{};
 
 Path _geometry(String name, Map<String, String> a) {
   switch (name) {
+    case 'polygon' || 'polyline':
+      final n = _numbers(a['points'] ?? '');
+      final path = Path();
+      for (var i = 0; i + 1 < n.length; i += 2) {
+        if (i == 0) {
+          path.moveTo(n[i], n[i + 1]);
+        } else {
+          path.lineTo(n[i], n[i + 1]);
+        }
+      }
+      if (name == 'polygon') path.close();
+      return path;
+    case 'line':
+      return Path()
+        ..moveTo(_num(a, 'x1'), _num(a, 'y1'))
+        ..lineTo(_num(a, 'x2'), _num(a, 'y2'));
     case 'path':
       final d = a['d'] ?? '';
       return _pathCache.putIfAbsent(d, () => parseSvgPathData(d));
@@ -606,10 +815,21 @@ class _ShapeOp extends _Op {
     required this.layerOpacity,
   });
 
-  factory _ShapeOp.from(String name, Map<String, String> a, _Affine m) {
+  factory _ShapeOp.from(
+    String name,
+    Map<String, String> a,
+    _Affine m,
+    _Defs defs,
+  ) {
     final path = _geometry(name, a);
     final opacity = _num(a, 'opacity', 1);
-    final fillColor = _color(a['fill'] ?? '#000000');
+    final fillRef = a['fill'] ?? '#000000';
+    final fillShader = fillRef.startsWith('url(')
+        ? _gradientOf(fillRef, defs, path.getBounds())
+        : null;
+    final fillColor = fillShader != null
+        ? const Color(0xFF000000)
+        : _color(fillRef);
     final strokeColor = _color(a['stroke'] ?? 'none');
     final strokeWidth = _num(a, 'stroke-width', 1);
     final hasStroke = strokeColor != null && strokeWidth > 0;
@@ -621,6 +841,7 @@ class _ShapeOp extends _Op {
     Paint? fill;
     if (fillColor != null) {
       fill = Paint()
+        ..shader = fillShader
         ..color = fillColor.withValues(
           alpha: fillColor.a * _num(a, 'fill-opacity', 1) * alpha,
         );
@@ -686,6 +907,44 @@ class _ShapeOp extends _Op {
     if (stroke != null) canvas.drawPath(strokePath, stroke!);
     if (layer) canvas.restore();
   }
+}
+
+/// `<g clip-path>`: anaknya dipotong bentuk clip (di koordinat [matrix]).
+class _ClipOp extends _Op {
+  _ClipOp(this.children, this.clip, super.matrix);
+
+  final List<_Op> children;
+  final Path clip;
+
+  @override
+  Rect get bounds {
+    final m = matrix;
+    final area = m == null ? clip.getBounds() : clip.transform(m).getBounds();
+    final inner = children
+        .map((op) => op.bounds)
+        .reduce((a, b) => a.expandToInclude(b));
+    return inner.intersect(area);
+  }
+
+  @override
+  Path get outline => clip;
+
+  @override
+  void paint(Canvas canvas) {
+    // Anak sudah membawa matriksnya sendiri dari akar, jadi hanya bentuk
+    // clip yang dipindah ke koordinat kanvas.
+    final m = matrix;
+    canvas
+      ..save()
+      ..clipPath(m == null ? clip : clip.transform(m));
+    for (final op in children) {
+      op.paint(canvas);
+    }
+    canvas.restore();
+  }
+
+  @override
+  void draw(Canvas canvas) => paint(canvas);
 }
 
 /// `<g opacity>`: semua anaknya digambar di satu lapisan transparan, seperti

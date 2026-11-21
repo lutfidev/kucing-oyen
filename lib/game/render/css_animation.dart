@@ -5,7 +5,7 @@ import 'dart:math' as math;
 ///
 /// Hanya subset yang dipakai desain: fungsi transform `rotate`,
 /// `translate(X|Y)`, `scale(X|Y)`, properti `opacity`, `transform-origin`
-/// px (di koordinat pengguna) atau `center` (hanya bersama
+/// px (di koordinat pengguna) atau `center`/persen (hanya bersama
 /// `transform-box: fill-box`), `animation` (nama, durasi, easing,
 /// `infinite`, `alternate`), dan `animation-delay`. Yang lain membuat
 /// pengurai gagal supaya tidak ada gerak yang hilang atau salah diam-diam.
@@ -297,6 +297,8 @@ class CssStyle {
     this.originY = 0,
     this.fillBox = false,
     this.centerOrigin = false,
+    this.boxX = 0.5,
+    this.boxY = 0.5,
     this.animation,
     this.duration = 0,
     this.easing = 'ease',
@@ -310,6 +312,8 @@ class CssStyle {
     var originX = 0.0;
     var originY = 0.0;
     var center = false;
+    var percent = false;
+    var (boxX, boxY) = (0.5, 0.5);
     String? name;
     var duration = 0.0;
     var easing = 'ease';
@@ -320,6 +324,18 @@ class CssStyle {
         case 'transform-origin':
           if (value == 'center') {
             center = true;
+          } else if (value.contains('%')) {
+            final parts = value.split(RegExp(r'\s+'));
+            double frac(String p) {
+              if (!p.endsWith('%')) {
+                throw FormatException('transform-origin campuran', value);
+              }
+              return double.parse(p.substring(0, p.length - 1)) / 100;
+            }
+
+            percent = true;
+            boxX = frac(parts[0]);
+            boxY = parts.length > 1 ? frac(parts[1]) : boxX;
           } else {
             final parts = value.split(RegExp(r'\s+'));
             originX = _length(parts[0]);
@@ -356,12 +372,14 @@ class CssStyle {
     final fillBox = d['transform-box'] == 'fill-box';
     // Dengan `fill-box`, origin px dihitung dari pojok kotak isi (dan origin
     // bawaan SVG 0 0 = pojok itu juga), bukan dari koordinat pengguna.
-    // Desain hanya memakai `fill-box` bersama `center`.
-    if (fillBox != center) {
+    // Desain hanya memakai `fill-box` bersama `center` atau persen
+    // (titik di kotak isi, mis. `50% 100%` = tengah-bawah).
+    final boxOrigin = center || percent;
+    if (fillBox != boxOrigin) {
       throw FormatException(
         fillBox
-            ? 'fill-box hanya didukung dengan transform-origin: center'
-            : 'transform-origin: center hanya didukung dengan fill-box',
+            ? 'fill-box hanya didukung dengan transform-origin center atau persen'
+            : 'transform-origin center atau persen hanya didukung dengan fill-box',
         style,
       );
     }
@@ -369,7 +387,9 @@ class CssStyle {
       originX: originX,
       originY: originY,
       fillBox: fillBox,
-      centerOrigin: center,
+      centerOrigin: boxOrigin,
+      boxX: boxX,
+      boxY: boxY,
       animation: name,
       duration: duration,
       easing: easing,
@@ -382,8 +402,13 @@ class CssStyle {
   final double originY;
   final bool fillBox;
 
-  /// `transform-origin: center` (pusat kotak isi kalau [fillBox]).
+  /// Titik putar di kotak isi (`fill-box`): `center` atau persen, di
+  /// pecahan [boxX], [boxY] kotak itu.
   final bool centerOrigin;
+
+  /// Pecahan lebar dan tinggi kotak isi untuk titik putar (0,5 = tengah).
+  final double boxX;
+  final double boxY;
 
   final String? animation;
   final double duration;
