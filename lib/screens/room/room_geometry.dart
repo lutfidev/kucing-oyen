@@ -85,6 +85,38 @@ class RoomGeometry {
 
   Offset toScreen(double x, double y) => Offset(x * sx, y * sy);
 
+  /// Bukaan pintu (desain `kRuangTengah`/`kTeras`): dinding kanan ruang
+  /// tengah, dinding kiri teras.
+  static const _doorOpening = {
+    HouseRoom.living: [
+      (320.0, 212.0),
+      (382.0, 203.0),
+      (382.0, 489.0),
+      (320.0, 403.0),
+    ],
+    HouseRoom.terrace: [
+      (8.0, 203.0),
+      (70.0, 212.0),
+      (70.0, 403.0),
+      (8.0, 489.0),
+    ],
+  };
+
+  /// Kotak ketuk pintu, desain: 64×172.
+  static const _doorTap = {
+    HouseRoom.living: Rect.fromLTWH(320, 205, 64, 172),
+    HouseRoom.terrace: Rect.fromLTWH(6, 205, 64, 172),
+  };
+
+  /// Bukaan pintu ruangan ini di layar.
+  Path get door {
+    final points = [for (final (x, y) in _doorOpening[which]!) toScreen(x, y)];
+    return Path()..addPolygon(points, true);
+  }
+
+  /// Kotak ketuk pintu ruangan ini di layar.
+  Rect get doorTap => fromDesign(_doorTap[which]!, stretch: true);
+
   /// Dinding belakang ruang tengah untuk barang dinding.
   Rect get wallZone => Rect.fromLTRB(
     houseWallLeft * sx,

@@ -385,6 +385,11 @@ abstract final class KoIcons {
     KoIconShape.circle(Offset(16, 18), 2.4, paint: KoIconPaint.fill),
   ], strokeWidth: 0);
 
+  /// Kembali ke ruang tengah: chip di teras (`HeaderRumah.dc.html`).
+  static const roomBack = KoIconData([
+    KoIconShape.path('M14.5 6 8.5 12l6 6'),
+  ], strokeWidth: 2.8);
+
   /// Jam: label "Terisi lagi" di atas mangkuk kosong (`Kamar.dc.html`).
   static const clock = KoIconData([
     KoIconShape.circle(Offset(12, 12), 9),

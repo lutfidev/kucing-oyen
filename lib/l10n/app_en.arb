@@ -2683,5 +2683,23 @@
   "snackEmptyNote": "All gone. Grab more snacks in the Shop!",
   "@snackEmptyNote": {
     "description": "Short note on a cat card when a snack that is out of stock is tapped."
+  },
+  "roomName": "{room, select, living{Living room} terrace{Terrace} other{Living room}}",
+  "@roomName": {
+    "description": "Name of a room of Oyen's house: the living room or the terrace. Shown on the small chip that leads back to the living room.",
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "doorTo": "{room, select, living{Go to the living room} terrace{Go to the terrace} other{Go to the living room}}",
+  "@doorTo": {
+    "description": "Screen-reader label of the open door between the two rooms of Oyen's house; tapping it walks to the other room.",
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -490,5 +490,7 @@
   "kittyTapHintNew": "{name}, baru. Ketuk untuk lihat kartunya",
   "kittyTapHintNewHungry": "{name}, baru, lapar. Ketuk untuk lihat kartunya",
   "snackFullNote": "{name} sudah kenyang dan senang. Simpan buat nanti!",
-  "snackEmptyNote": "Stoknya habis. Beli camilan lagi di Toko!"
+  "snackEmptyNote": "Stoknya habis. Beli camilan lagi di Toko!",
+  "roomName": "{room, select, living{Ruang tengah} terrace{Teras} other{Ruang tengah}}",
+  "doorTo": "{room, select, living{Pergi ke ruang tengah} terrace{Pergi ke teras} other{Pergi ke ruang tengah}}"
 }

@@ -2101,4 +2101,24 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get snackEmptyNote => 'Закончилось. Купи ещё вкусняшек в Магазине!';
+
+  @override
+  String roomName(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Гостиная',
+      'terrace': 'Терраса',
+      'other': 'Гостиная',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String doorTo(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Пойти в гостиную',
+      'terrace': 'Выйти на террасу',
+      'other': 'Пойти в гостиную',
+    });
+    return '$_temp0';
+  }
 }

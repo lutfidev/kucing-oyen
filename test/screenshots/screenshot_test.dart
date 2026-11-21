@@ -18,6 +18,7 @@ import 'package:kucing_oren/game/kucing_game.dart';
 import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/room.dart';
@@ -722,6 +723,53 @@ void main() {
       }
     });
   }, skip: !screenshotsEnabled);
+
+  // Rumah dua ruangan (langkah 33): teras berisi barang lantai, dan
+  // transisi di tengah jalan (210 ms dari 420 ms).
+  for (final small in [false, true]) {
+    final suffix = small ? '-360x640' : '';
+    testWidgets('$folder/19-teras$suffix', (tester) async {
+      setScreenSize(tester, small ? const Size(360, 640) : _size);
+      const floor = HouseFloor();
+      final room = Room(
+        owned: const [RoomItemId.monstera, RoomItemId.catnip, RoomItemId.kasur],
+      )
+          .place(RoomItemId.kasur, floor.spotAtFeet(146, 432))
+          .place(
+            RoomItemId.monstera,
+            floor.spotAtFeet(353, 540),
+            room: HouseRoom.terrace,
+          )
+          .place(
+            RoomItemId.catnip,
+            floor.spotAtFeet(350, 640),
+            room: HouseRoom.terrace,
+          );
+      await withShadows(() async {
+        await tester.pumpWidget(
+          capturable(
+            KucingOrenApp(
+              roomLife: false,
+              progress: testProgressWith(
+                coins: 480,
+                best: _designProgress,
+                home: Home(room: room),
+                clock: () => roomNow,
+              ),
+              roomRandom: () => Random(1),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.bySemanticsLabel('Pergi ke teras'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 210));
+        await capture(tester, '$folder/19-transisi$suffix');
+        await tester.pumpAndSettle();
+        await capture(tester, '$folder/19-teras$suffix');
+      });
+    }, skip: !screenshotsEnabled);
+  }
 
   for (final small in [false, true]) {
     final suffix = small ? '-360x640' : '';

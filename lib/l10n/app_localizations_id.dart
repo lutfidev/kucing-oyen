@@ -1910,4 +1910,24 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get snackEmptyNote => 'Stoknya habis. Beli camilan lagi di Toko!';
+
+  @override
+  String roomName(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Ruang tengah',
+      'terrace': 'Teras',
+      'other': 'Ruang tengah',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String doorTo(String room) {
+    String _temp0 = intl.Intl.selectLogic(room, {
+      'living': 'Pergi ke ruang tengah',
+      'terrace': 'Pergi ke teras',
+      'other': 'Pergi ke ruang tengah',
+    });
+    return '$_temp0';
+  }
 }

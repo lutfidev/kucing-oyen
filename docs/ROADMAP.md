@@ -667,7 +667,7 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 32".
 
-## 33. Rumah dua ruangan: gambar dan pindah ruangan
+## 33. Rumah dua ruangan: gambar dan pindah ruangan ✅
 
 **Waktu:** dimulai 21 Nov 2026 sesudah link kanvas desain diserahkan; langkah 32 tetap terbuka (cek HP dan rilis berjalan terpisah). Arah "satu area per layar" dari bahan 8 Nov dibatalkan (riwayatnya di `docs/DESIGN_NOTES.md`, "Bahan langkah 33 lama").
 
