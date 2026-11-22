@@ -1757,10 +1757,16 @@ class AppLocalizationsRu extends AppLocalizations {
       'lesu': 'вялый',
       'rebah': 'лежит и отдыхает',
       'petted': 'мурчит от поглаживаний',
+      'endus': 'принюхивается',
+      'geser1': 'подвигается',
+      'geser2': 'подвигается',
       'other': 'сидит спокойно',
     });
     return '$_temp0';
   }
+
+  @override
+  String get neighborKumis => 'Kumis';
 
   @override
   String kittyLabel(String name, String pose) {

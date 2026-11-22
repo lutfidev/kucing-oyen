@@ -1,12 +1,16 @@
 """Menulis lib/game/render/design_svg_lane.dart dari desain Gang Depan.
 
-Pakai: python tool/design/make_lane_svg.py docs/design/gang-depan/project lib/game/render/design_svg_lane.dart
+Pakai: python tool/design/make_lane_svg.py docs/design/gang-depan/project lib/game/render/design_svg_lane.dart [--kitty lib/game/render/design_svg_home.dart]
+
+Dengan --kitty, `kittySvg` dan `kittyKeyframes` di berkas itu juga ditulis
+ulang dari `Kucing.dc.html` Gang Depan (Kumis, pose `endus`/`geser`).
 """
 import json
 import re
 import sys
 
 src, out = sys.argv[1], sys.argv[2]
+kitty_out = sys.argv[sys.argv.index('--kitty') + 1] if '--kitty' in sys.argv else None
 
 
 def text(name):
@@ -149,3 +153,23 @@ lines += [
 ]
 open(out, 'w', encoding='utf-8', newline='\n').write('\n'.join(lines))
 print('ok')
+
+
+def replace_const(dart_text, name, body):
+    """Ganti isi `const [name] = r'''...''';` dengan [body]."""
+    head = f"const {name} = r'''"
+    start = dart_text.index(head) + len(head)
+    end = dart_text.index("''';", start)
+    assert "'''" not in body
+    return dart_text[:start] + '\n' + body + '\n' + dart_text[end:]
+
+
+if kitty_out:
+    kucing = text('Kucing')
+    inner = re.search(r'<svg\b[^>]*>\n(.*?)\n\s*</svg>', kucing, re.S).group(1)
+    frames = '\n'.join(re.findall(r'@keyframes [^\n]*', kucing))
+    home = open(kitty_out, encoding='utf-8').read()
+    home = replace_const(home, 'kittySvg', inner)
+    home = replace_const(home, 'kittyKeyframes', frames)
+    open(kitty_out, 'w', encoding='utf-8', newline='\n').write(home)
+    print('ok kitty')

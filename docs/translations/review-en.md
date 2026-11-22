@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-504 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+505 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -444,7 +444,8 @@ files and anything written there is overwritten.
 | `buySeeRoom` | See it in the room | Lihat di kamar | Buy sheet button after a purchase: open the room. | |
 | `buyWearOn` | Wear on {name} | Pakai di {name} | Buy sheet button after buying an accessory: put it on this cat. Placeholders: `{name}`. | |
 | `buyNotEnoughHelp` | Play a puzzle or watch a rewarded ad to get more coins. | Main puzzle atau tonton iklan berhadiah buat nambah koin. | Buy sheet hint when the player cannot afford the item. | |
-| `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} other{sitting still}} | {pose, select, idle{duduk diam} lick{menjilat kaki} walk1{jalan} walk2{jalan} sleep{tidur melingkar} eat{makan dari mangkuk} play{main menepuk mainan} scratch{menggaruk tiang} happy{senang} lesu{lesu} rebah{rebahan santai} petted{dielus dan mendengkur} other{duduk diam}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
+| `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} endus{sniffing} geser1{scooting over} geser2{scooting over} other{sitting still}} | {pose, select, idle{duduk diam} lick{menjilat kaki} walk1{jalan} walk2{jalan} sleep{tidur melingkar} eat{makan dari mangkuk} play{main menepuk mainan} scratch{menggaruk tiang} happy{senang} lesu{lesu} rebah{rebahan santai} petted{dielus dan mendengkur} endus{mengendus} geser1{bergeser di tempat duduk} geser2{bergeser di tempat duduk} other{duduk diam}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
+| `neighborKumis` | Kumis | Kumis | Name of the neighbour cat in the Front Lane (a stall cat with a moustache-like grey patch and a scarf). Same in every language. | |
 | `kittyLabel` | {name} {pose} | {name} {pose} | Screen reader label of a room cat: name and what it is doing. Placeholders: `{name}`, `{pose}`. | |
 | `kittyLabelAccessory` | {name} {pose}, wearing a {accessory} | {name} {pose}, memakai {accessory} | Screen reader label of a room cat wearing an accessory. Placeholders: `{name}`, `{pose}`, `{accessory}`. | |
 | `shopSnackFullLabel` | Buy {name}, stock full | Beli {name}, stok penuh | Screen reader label of the snack buy button when the stock is full. Placeholders: `{name}`. | |

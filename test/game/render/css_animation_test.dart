@@ -17,7 +17,7 @@ CssTransformFn _fn(CssFrame frame) => frame.transform!.single;
 
 void main() {
   test('semua @keyframes desain terurai', () {
-    expect(_kitty, hasLength(15));
+    expect(_kitty, hasLength(16));
     expect(_items, hasLength(10));
     expect(CssKeyframes.parse(roomBadgeKeyframes).keys, ['gkBob', 'tlBob']);
   });

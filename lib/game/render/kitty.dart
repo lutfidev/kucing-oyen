@@ -1,8 +1,10 @@
 import '../model/accessories.dart';
 import '../model/kitties.dart';
+import '../model/neighbor.dart';
 
 /// Pose sprite kucing kamar (`Kucing.dc.html`). Pose `walk` desain dipilih
-/// pemanggil: [walk1] dan [walk2] berganti tiap 220 ms saat jalan.
+/// pemanggil: [walk1] dan [walk2] berganti tiap 220 ms saat jalan; pose
+/// `geser` begitu juga dengan [geser1] dan [geser2] ([KittyLook.shiftPose]).
 enum KittyPose {
   idle,
   lick,
@@ -16,6 +18,13 @@ enum KittyPose {
   lesu,
   rebah,
   petted,
+
+  /// Mengendus ke samping (Gang Depan: Oyen dan Kumis di bangku).
+  endus,
+
+  /// Bergeser sambil duduk, dua bingkai (Kumis memberi tempat di bangku).
+  geser1,
+  geser2,
 }
 
 /// Arah hadap sprite kamar: ke depan, atau ke samping (kanan dicerminkan).
@@ -74,6 +83,13 @@ class KittyColors {
     this.sleepBody = const [],
     this.sleepHead = const [],
     this.delay = 0,
+    this.brow = 'none',
+    this.kumisOn = false,
+    this.scarfOn = false,
+    this.notch = false,
+    this.shortTail = false,
+    this.tailBand = false,
+    this.noAcc = false,
   });
 
   final String fur;
@@ -119,6 +135,19 @@ class KittyColors {
   /// Jeda awal kedip dan napas (detik, negatif) supaya kucing tidak
   /// berkedip serempak (`delay` palet desain).
   final double delay;
+
+  /// Ciri Kumis (`Kucing.dc.html` Gang Depan): alis abu [brow] dan bercak
+  /// "kumis" berwarna [mask] di bawah hidung ([kumisOn]), syal merah-krem
+  /// ([scarfOn]), telinga kanan sompek ([notch]), ekor pendek bengkok
+  /// ([shortTail]) bergaris [stripe] ([tailBand]), dan tanpa aksesoris
+  /// Toko ([noAcc]).
+  final String brow;
+  final bool kumisOn;
+  final bool scarfOn;
+  final bool notch;
+  final bool shortTail;
+  final bool tailBand;
+  final bool noAcc;
 
   /// Telapak mengikuti perut kalau tidak ditulis sendiri (desain).
   String get paw => pawOverride ?? belly;
@@ -403,25 +432,98 @@ const kittyPalette = <KittyId, KittyColors>{
   ),
 };
 
+const _gray = '#8494A7';
+const _grayDeep = '#5E6E82';
+
+/// Palet kucing tetangga, disalin dari `P.kumis` di `Kucing.dc.html` Gang
+/// Depan.
+const neighborPalette = <Neighbor, KittyColors>{
+  Neighbor.kumis: KittyColors(
+    fur: '#F7F1E6',
+    head: '#FAF5EC',
+    stripe: _grayDeep,
+    tail: '#93A2B4',
+    tailTip: '#55657A',
+    belly: '#FFFFFF',
+    muzzle: '#FFFFFF',
+    earL: '#7F8FA2',
+    earR: '#7F8FA2',
+    earIn: '#E9BCB4',
+    earTip: '#E9BCB4',
+    eye: '#C99A2E',
+    pupil: true,
+    line: '#3A2618',
+    mouth: '#3A2618',
+    nose: '#C98585',
+    blush: '#E9A09A',
+    blushOp: 0.3,
+    whisker: '#3A2618',
+    whiskerOp: 0.5,
+    edge: '#E2D7C6',
+    delay: -1.6,
+    mask: '#6E7E92',
+    brow: '#4E5C6E',
+    kumisOn: true,
+    scarfOn: true,
+    notch: true,
+    shortTail: true,
+    tailBand: true,
+    noAcc: true,
+    body: [
+      FurPatch(28, 66, 6.5, 9.5, _gray),
+      FurPatch(72, 66, 6.5, 9.5, _gray),
+      FurPatch(50, 55, 17, 5, _gray),
+    ],
+    scratch: [FurPatch(52, 52, 11, 10, _gray), FurPatch(30, 64, 4, 6, _gray)],
+    lie: [FurPatch(66, 77, 23, 6.5, _gray), FurPatch(84, 83, 6, 5, _grayDeep)],
+    headPatches: [
+      FurPatch(50, 25, 22.5, 11, _gray),
+      FurPatch(43, 20.5, 2.2, 4.6, _grayDeep),
+      FurPatch(50, 19, 2.2, 5, _grayDeep),
+      FurPatch(57, 20.5, 2.2, 4.6, _grayDeep),
+    ],
+    sleepBody: [
+      FurPatch(60, 42, 27, 11, _gray),
+      FurPatch(81, 53, 9, 10, _gray),
+      FurPatch(56, 38, 3, 6, _grayDeep),
+      FurPatch(68, 39, 3, 6, _grayDeep),
+    ],
+    sleepHead: [FurPatch(31, 49, 15, 7.5, _gray)],
+  ),
+};
+
 /// Kucing kamar yang digambar: siapa, pose, arah, aksesoris, dan mainan.
 /// [time] = detik animasi (kedip, ekor, napas, dan gerak pose desain 21c);
 /// null = sprite diam, juga saat kurangi gerak.
+///
+/// Tepat satu dari [kitty] (kucing milik pemain) dan [neighbor] (kucing
+/// tetangga, Gang Depan) diisi.
 class KittyLook {
   const KittyLook({
-    required this.kitty,
+    this.kitty,
+    this.neighbor,
     this.pose = KittyPose.idle,
     this.facing = KittyFacing.down,
     this.accessory,
     this.toy = KittyToy.ball,
     this.post = true,
     this.mirror = false,
+    this.bowl = true,
     this.time,
-  });
+  }) : assert(
+         (kitty == null) != (neighbor == null),
+         'KittyLook butuh tepat satu kucing atau tetangga',
+       );
 
   /// Kotak gambar desain (100×100), isinya boleh keluar (topi, gelembung).
   static const viewBox = 100.0;
 
-  final KittyId kitty;
+  final KittyId? kitty;
+  final Neighbor? neighbor;
+
+  /// Mangkuk di pose [KittyPose.eat] (`mangkuk` desain); false = minum dari
+  /// piring air gang yang digambar latarnya.
+  final bool bowl;
   final KittyPose pose;
   final KittyFacing facing;
   final AccessoryId? accessory;
@@ -451,8 +553,18 @@ class KittyLook {
       ? KittyPose.walk2
       : KittyPose.walk1;
 
-  KittyColors get colors => kittyPalette[kitty]!;
+  /// Bingkai geser pada detik [time]: [KittyPose.geser1] dan
+  /// [KittyPose.geser2] bergantian seperti jalan (`Kucing.dc.html`).
+  static KittyPose shiftPose(double time) =>
+      (time / walkFrameSeconds).floor().isOdd
+      ? KittyPose.geser2
+      : KittyPose.geser1;
 
+  KittyColors get colors =>
+      kitty != null ? kittyPalette[kitty]! : neighborPalette[neighbor]!;
+
+  /// Kucing ini atau tetangga ini tidak bisa diganti lewat [copyWith]
+  /// selain dengan [kitty] (untuk kucing milik pemain).
   KittyLook copyWith({
     KittyId? kitty,
     KittyPose? pose,
@@ -462,16 +574,19 @@ class KittyLook {
     KittyToy? toy,
     bool? post,
     bool? mirror,
+    bool? bowl,
     double? time,
     bool still = false,
   }) => KittyLook(
     kitty: kitty ?? this.kitty,
+    neighbor: kitty != null ? null : neighbor,
     pose: pose ?? this.pose,
     facing: facing ?? this.facing,
     accessory: clearAccessory ? null : accessory ?? this.accessory,
     toy: toy ?? this.toy,
     post: post ?? this.post,
     mirror: mirror ?? this.mirror,
+    bowl: bowl ?? this.bowl,
     time: still ? null : time ?? this.time,
   );
 
@@ -479,21 +594,33 @@ class KittyLook {
   bool operator ==(Object other) =>
       other is KittyLook &&
       other.kitty == kitty &&
+      other.neighbor == neighbor &&
       other.pose == pose &&
       other.facing == facing &&
       other.accessory == accessory &&
       other.toy == toy &&
       other.post == post &&
       other.mirror == mirror &&
+      other.bowl == bowl &&
       other.time == time;
 
   @override
-  int get hashCode =>
-      Object.hash(kitty, pose, facing, accessory, toy, post, mirror, time);
+  int get hashCode => Object.hash(
+    kitty,
+    neighbor,
+    pose,
+    facing,
+    accessory,
+    toy,
+    post,
+    mirror,
+    bowl,
+    time,
+  );
 
   @override
   String toString() =>
-      'KittyLook(${kitty.name}, ${pose.name}, ${facing.name}, '
-      '${accessory?.name}, ${toy.name}, post: $post, '
-      'mirror: $mirror, time: $time)';
+      'KittyLook(${kitty?.name ?? neighbor?.name}, ${pose.name}, '
+      '${facing.name}, ${accessory?.name}, ${toy.name}, post: $post, '
+      'mirror: $mirror, bowl: $bowl, time: $time)';
 }

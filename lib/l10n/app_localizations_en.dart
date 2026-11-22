@@ -1723,10 +1723,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'lesu': 'listless',
       'rebah': 'lounging',
       'petted': 'being petted, purring',
+      'endus': 'sniffing',
+      'geser1': 'scooting over',
+      'geser2': 'scooting over',
       'other': 'sitting still',
     });
     return '$_temp0';
   }
+
+  @override
+  String get neighborKumis => 'Kumis';
 
   @override
   String kittyLabel(String name, String pose) {

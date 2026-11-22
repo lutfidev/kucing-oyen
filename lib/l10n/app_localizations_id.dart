@@ -1607,10 +1607,16 @@ class AppLocalizationsId extends AppLocalizations {
       'lesu': 'lesu',
       'rebah': 'rebahan santai',
       'petted': 'dielus dan mendengkur',
+      'endus': 'mengendus',
+      'geser1': 'bergeser di tempat duduk',
+      'geser2': 'bergeser di tempat duduk',
       'other': 'duduk diam',
     });
     return '$_temp0';
   }
+
+  @override
+  String get neighborKumis => 'Kumis';
 
   @override
   String kittyLabel(String name, String pose) {

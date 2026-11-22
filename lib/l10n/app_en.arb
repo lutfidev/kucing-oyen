@@ -2172,7 +2172,7 @@
   "@buyNotEnoughHelp": {
     "description": "Buy sheet hint when the player cannot afford the item."
   },
-  "kittyPose": "{pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} other{sitting still}}",
+  "kittyPose": "{pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} endus{sniffing} geser1{scooting over} geser2{scooting over} other{sitting still}}",
   "@kittyPose": {
     "description": "What a room cat is doing, for its screen reader label.",
     "placeholders": {
@@ -2180,6 +2180,10 @@
         "type": "String"
       }
     }
+  },
+  "neighborKumis": "Kumis",
+  "@neighborKumis": {
+    "description": "Name of the neighbour cat in the Front Lane (a stall cat with a moustache-like grey patch and a scarf). Same in every language."
   },
   "kittyLabel": "{name} {pose}",
   "@kittyLabel": {

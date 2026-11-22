@@ -1740,10 +1740,16 @@ class AppLocalizationsPt extends AppLocalizations {
       'lesu': 'sem ânimo',
       'rebah': 'deitado de boa',
       'petted': 'recebendo carinho, ronronando',
+      'endus': 'cheirando',
+      'geser1': 'chegando pro lado',
+      'geser2': 'chegando pro lado',
       'other': 'sentado quietinho',
     });
     return '$_temp0';
   }
+
+  @override
+  String get neighborKumis => 'Kumis';
 
   @override
   String kittyLabel(String name, String pose) {

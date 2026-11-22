@@ -7,6 +7,7 @@
 /// Sprite kucing kamar, viewBox 100x100 (`Kucing.dc.html`).
 const kittySvg = r'''
   <g transform="{{flipT}}">
+  <g transform="{{leanT}}">
 
     <sc-if value="{{isSit}}" hint-placeholder-val="{{ true }}">
       <ellipse cx="50" cy="92" rx="31" ry="6.5" fill="#7A4A1F" opacity="0.16"></ellipse>
@@ -31,6 +32,9 @@ const kittySvg = r'''
           <path d="{{tailD}}" stroke="{{c.edge}}" stroke-width="14" fill="none" stroke-linecap="round"></path>
         </sc-if>
         <path d="{{tailD}}" stroke="{{c.tail}}" stroke-width="11" fill="none" stroke-linecap="round"></path>
+        <sc-if value="{{c.tailBand}}" hint-placeholder-val="{{ false }}">
+          <path d="{{tailD}}" stroke="{{c.stripe}}" stroke-width="11" fill="none" stroke-dasharray="2.6 4.4" stroke-dashoffset="-3"></path>
+        </sc-if>
         <path d="{{tailTipD}}" stroke="{{c.tailTip}}" stroke-width="11" fill="none" stroke-linecap="round"></path>
       </g>
     </sc-if>
@@ -48,10 +52,10 @@ const kittySvg = r'''
         <path d="M25 68 L31 70 M24 75 L30 76 M75 68 L69 70 M76 75 L70 76" stroke="{{c.stripe}}" stroke-width="2.6" stroke-linecap="round"></path>
       </sc-if>
       <sc-if value="{{pawLOn}}" hint-placeholder-val="{{ true }}">
-        <ellipse cx="39" cy="{{pawL}}" rx="7" ry="5" fill="{{c.paw}}"></ellipse>
+        <ellipse cx="{{pawLX}}" cy="{{pawL}}" rx="7" ry="5" fill="{{c.paw}}"></ellipse>
       </sc-if>
       <sc-if value="{{pawROn}}" hint-placeholder-val="{{ true }}">
-        <ellipse cx="61" cy="{{pawR}}" rx="7" ry="5" fill="{{c.paw}}"></ellipse>
+        <ellipse cx="{{pawRX}}" cy="{{pawR}}" rx="7" ry="5" fill="{{c.paw}}"></ellipse>
       </sc-if>
     </sc-if>
 
@@ -99,9 +103,9 @@ const kittySvg = r'''
         </g>
         <g transform="{{earRT}}">
           <sc-if value="{{hasEdge}}" hint-placeholder-val="{{ false }}">
-            <path d="M79 38 L77 11 L55 25 Z" fill="{{c.edge}}" stroke="{{c.edge}}" stroke-width="7" stroke-linejoin="round"></path>
+            <path d="{{earRD}}" fill="{{c.edge}}" stroke="{{c.edge}}" stroke-width="7" stroke-linejoin="round"></path>
           </sc-if>
-          <path d="M79 38 L77 11 L55 25 Z" fill="{{c.earR}}" stroke="{{c.earR}}" stroke-width="4" stroke-linejoin="round"></path>
+          <path d="{{earRD}}" fill="{{c.earR}}" stroke="{{c.earR}}" stroke-width="4" stroke-linejoin="round"></path>
           <path d="M74 32 L72.5 18 L61 26 Z" fill="{{c.earIn}}" stroke="{{c.earIn}}" stroke-width="2" stroke-linejoin="round"></path>
           <sc-if value="{{c.earTipOn}}" hint-placeholder-val="{{ false }}">
             <path d="M78.2 19.5 L77 11 L69.5 15.8 Z" fill="{{c.earTip}}" stroke="{{c.earTip}}" stroke-width="4" stroke-linejoin="round"></path>
@@ -129,6 +133,10 @@ const kittySvg = r'''
 
         <g transform="{{faceT}}">
           <ellipse cx="50" cy="56" rx="11" ry="7.5" fill="{{c.muzzle}}"></ellipse>
+          <sc-if value="{{c.kumisOn}}" hint-placeholder-val="{{ false }}">
+            <path d="M50 53.6 C46 51.8 40.6 52.4 36.8 56.6 C38.4 58.6 41.2 59.6 44.2 59.2 C46.6 58.9 48.6 57.9 50 56.6 C51.4 57.9 53.4 58.9 55.8 59.2 C58.8 59.6 61.6 58.6 63.2 56.6 C59.4 52.4 54 51.8 50 53.6 Z" fill="{{c.mask}}"></path>
+            <path d="M29 33.6 L37.6 32 M62.4 32 L71 33.6" stroke="{{c.brow}}" stroke-width="2.2" stroke-linecap="round" opacity="0.85"></path>
+          </sc-if>
           <ellipse cx="26" cy="55" rx="6" ry="3.5" fill="{{c.blush}}" opacity="{{blushOp}}"></ellipse>
           <ellipse cx="74" cy="55" rx="6" ry="3.5" fill="{{c.blush}}" opacity="{{blushOp}}"></ellipse>
 
@@ -199,6 +207,17 @@ const kittySvg = r'''
           </sc-if>
         </g>
 
+        <sc-if value="{{c.scarfOn}}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{dangleOn}}" hint-placeholder-val="{{ true }}">
+            <g class="kc-anim" style="{{syalAnim}}">
+              <path d="M60 70 L61 86 L67.4 85.4 L65.6 69 Z" fill="#D9574A"></path>
+              <path d="M60.6 75.4 L66.4 74.8 M61 80.6 L66.9 80" stroke="#FCE6C8" stroke-width="2.2"></path>
+              <path d="M61.4 86 v2.6 M63.6 85.8 v2.6 M65.8 85.6 v2.6" stroke="#B8443A" stroke-width="1.3" stroke-linecap="round"></path>
+            </g>
+          </sc-if>
+          <path d="M27 62 Q50 74 73 62 L74 68.5 Q50 81 26 68.5 Z" fill="#D9574A" stroke="#B8443A" stroke-width="1" stroke-linejoin="round"></path>
+          <path d="M33.5 65.4 Q34 69.4 33.4 72.4 M41 68 V75.2 M50 69.2 V76.6 M59 68 V75.2 M66.5 65.4 Q66 69.4 66.6 72.4" stroke="#FCE6C8" stroke-width="3" stroke-linecap="round"></path>
+        </sc-if>
         <sc-if value="{{neckOn}}" hint-placeholder-val="{{ false }}">
           <sc-if value="{{a.bandana}}" hint-placeholder-val="{{ false }}">
             <sc-if value="{{dangleOn}}" hint-placeholder-val="{{ true }}">
@@ -264,7 +283,7 @@ const kittySvg = r'''
       <g class="kc-anim" style="{{sleepAnim}}">
         <sc-if value="{{hasEdge}}" hint-placeholder-val="{{ false }}">
           <ellipse cx="56" cy="60" rx="39.6" ry="28.6" fill="{{c.edge}}"></ellipse>
-          <path d="M14 52 L13 33 L29 43 Z M43 44 L52 31 L56 48 Z" fill="{{c.edge}}" stroke="{{c.edge}}" stroke-width="6.5" stroke-linejoin="round"></path>
+          <path d="{{sleepEarsD}}" fill="{{c.edge}}" stroke="{{c.edge}}" stroke-width="6.5" stroke-linejoin="round"></path>
           <ellipse cx="34" cy="61" rx="25.6" ry="19.6" fill="{{c.edge}}"></ellipse>
           <ellipse cx="34" cy="66" rx="27.6" ry="14.6" fill="{{c.edge}}"></ellipse>
         </sc-if>
@@ -276,7 +295,7 @@ const kittySvg = r'''
           <path d="M44 36 Q48 45 44 54 M58 33.5 Q62 44 58 54 M72 36 Q75 45 71 55 M84 44 Q86 51 82 58" stroke="{{c.stripe}}" stroke-width="3.4" fill="none" stroke-linecap="round"></path>
         </sc-if>
         <path d="M14 52 L13 33 L29 43 Z" fill="{{c.earL}}" stroke="{{c.earL}}" stroke-width="3.5" stroke-linejoin="round"></path>
-        <path d="M43 44 L52 31 L56 48 Z" fill="{{c.earR}}" stroke="{{c.earR}}" stroke-width="3.5" stroke-linejoin="round"></path>
+        <path d="{{sleepEarRD}}" fill="{{c.earR}}" stroke="{{c.earR}}" stroke-width="3.5" stroke-linejoin="round"></path>
         <path d="M17 47 L16.5 38 L24 43 Z" fill="{{c.earIn}}"></path>
         <sc-if value="{{c.earTipOn}}" hint-placeholder-val="{{ false }}">
           <path d="M13.2 39 L13 33 L18.4 36.4 Z" fill="{{c.earTip}}" stroke="{{c.earTip}}" stroke-width="3.5" stroke-linejoin="round"></path>
@@ -296,7 +315,14 @@ const kittySvg = r'''
         <ellipse cx="16" cy="67" rx="5" ry="3" fill="{{c.blush}}" opacity="{{blushOp}}"></ellipse>
         <ellipse cx="52" cy="67" rx="5" ry="3" fill="{{c.blush}}" opacity="{{blushOp}}"></ellipse>
         <path d="M19 62 Q25 67 31 62 M37 62 Q43 67 49 62" stroke="{{c.line}}" stroke-width="2.4" fill="none" stroke-linecap="round"></path>
+        <sc-if value="{{c.kumisOn}}" hint-placeholder-val="{{ false }}">
+          <path d="M34 68.4 C31.4 67.2 27.8 67.6 25.6 70.4 C28 72 31.6 71.8 34 70.2 C36.4 71.8 40 72 42.4 70.4 C40.2 67.6 36.6 67.2 34 68.4 Z" fill="{{c.mask}}"></path>
+        </sc-if>
         <path d="M32 67.5 L36 67.5 L34 70 Z" fill="{{c.nose}}" stroke="{{c.nose}}" stroke-width="1.2" stroke-linejoin="round"></path>
+        <sc-if value="{{c.scarfOn}}" hint-placeholder-val="{{ false }}">
+          <path d="M21 77 Q34 83.5 47 77" stroke="#D9574A" stroke-width="4.6" fill="none" stroke-linecap="round"></path>
+          <path d="M21 77 Q34 83.5 47 77" stroke="#FCE6C8" stroke-width="4.6" fill="none" stroke-dasharray="2.2 3.6"></path>
+        </sc-if>
 
         <sc-if value="{{a.kacamata}}" hint-placeholder-val="{{ false }}">
           <circle cx="25" cy="62.5" r="6.4" fill="none" stroke="{{glassInk}}" stroke-width="1.7"></circle>
@@ -336,10 +362,13 @@ const kittySvg = r'''
         </sc-if>
 
         <sc-if value="{{hasEdge}}" hint-placeholder-val="{{ false }}">
-          <path d="M92 62 C98 86 62 96 26 88" stroke="{{c.edge}}" stroke-width="14" fill="none" stroke-linecap="round"></path>
+          <path d="{{sleepTailD}}" stroke="{{c.edge}}" stroke-width="14" fill="none" stroke-linecap="round"></path>
         </sc-if>
-        <path d="M92 62 C98 86 62 96 26 88" stroke="{{c.tail}}" stroke-width="11" fill="none" stroke-linecap="round"></path>
-        <path d="M30 89 C28 88.5 27 88.3 26 88" stroke="{{c.tailTip}}" stroke-width="11" fill="none" stroke-linecap="round"></path>
+        <path d="{{sleepTailD}}" stroke="{{c.tail}}" stroke-width="11" fill="none" stroke-linecap="round"></path>
+        <sc-if value="{{c.tailBand}}" hint-placeholder-val="{{ false }}">
+          <path d="{{sleepTailD}}" stroke="{{c.stripe}}" stroke-width="11" fill="none" stroke-dasharray="2.6 4.4"></path>
+        </sc-if>
+        <path d="{{sleepTipD}}" stroke="{{c.tailTip}}" stroke-width="11" fill="none" stroke-linecap="round"></path>
         <sc-if value="{{c.stripes}}" hint-placeholder-val="{{ true }}">
           <path d="M76 88 L74 82 M88 80 L84 76" stroke="{{c.stripe}}" stroke-width="2.6" stroke-linecap="round"></path>
         </sc-if>
@@ -479,7 +508,7 @@ const kittySvg = r'''
       <ellipse cx="57" cy="96" rx="7" ry="4.2" fill="{{c.paw}}"></ellipse>
     </sc-if>
 
-    <sc-if value="{{isEat}}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{showBowl}}" hint-placeholder-val="{{ false }}">
       <g transform="translate(23 72)">
         <path d="M4 8 L50 8 L45 25 Q27 29 9 25 Z" fill="#2F86B8"></path>
         <path d="M17 16 Q22 12.5 27 16 Q22 19.5 17 16 Z M27 16 L31 13.4 L31 18.6 Z" fill="#BFE7F7"></path>
@@ -491,6 +520,7 @@ const kittySvg = r'''
         <circle cx="31" cy="4.6" r="1.3" fill="#8E5A30"></circle>
       </g>
     </sc-if>
+  </g>
   </g>
 
   <sc-if value="{{isHappy}}" hint-placeholder-val="{{ false }}">
@@ -1036,6 +1066,7 @@ const kittyKeyframes = r'''
 @keyframes kcRoll{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
 @keyframes kcSway{0%{transform:rotate(-7deg)}100%{transform:rotate(7deg)}}
 @keyframes kcSwaySoft{0%{transform:rotate(-2.5deg)}100%{transform:rotate(2.5deg)}}
+@keyframes kcSniff{0%{transform:translate(0,0)}100%{transform:translate(-1.6px,0.7px)}}
 ''';
 
 /// `@keyframes` barang kamar (`Barang.dc.html`), disalin utuh.
