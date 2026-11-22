@@ -1,8 +1,48 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../game/render/render.dart';
 import '../../theme/theme.dart';
 import 'room_geometry.dart';
+
+/// Tali gantungan teras (`AdeganTeras.dc.html`: `#B07A4F`, ujung bulat):
+/// garis [ropes] di layar setebal [width].
+class HangRopes extends StatelessWidget {
+  const HangRopes({super.key, required this.ropes, required this.width});
+
+  final List<(Offset, Offset)> ropes;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) => IgnorePointer(
+    child: CustomPaint(
+      painter: _RopePainter(ropes, width, context.koColors.wood),
+    ),
+  );
+}
+
+class _RopePainter extends CustomPainter {
+  _RopePainter(this.ropes, this.width, this.color);
+
+  final List<(Offset, Offset)> ropes;
+  final double width;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = width
+      ..strokeCap = StrokeCap.round;
+    for (final (a, b) in ropes) {
+      canvas.drawLine(a, b, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_RopePainter old) =>
+      old.width != width || old.color != color || !listEquals(old.ropes, ropes);
+}
 
 /// Bayangan lembut di kaki kucing atau barang: elips [oval] (layar) dengan
 /// [opacity] warna `roomShadow`.

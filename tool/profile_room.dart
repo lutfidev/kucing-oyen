@@ -1,4 +1,6 @@
 // Jalankan: flutter run --profile -t tool/profile_room.dart -d <device>
+// Tambah --dart-define=SWITCH_ROOMS=true untuk mengukur sambil pindah
+// ruangan bolak-balik (pintu diketuk tiap 2,5 detik).
 // Data uji hanya di memori; tidak membaca atau menulis progres pemain.
 // ignore_for_file: avoid_print
 
@@ -20,6 +22,7 @@ import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
+import 'package:kucing_oren/screens/room/door_parts.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,14 +64,22 @@ Future<void> main() async {
       roomRandom: () => Random(1),
     ),
   );
+  Timer? switching;
   Timer(const Duration(seconds: 15), () {
     measuring = true;
     print(
-      'ROOM_PROFILE_START cats=${store.home.kitties.length} items=${room.placed.length}',
+      'ROOM_PROFILE_START cats=${store.home.kitties.length} items=${room.placed.length} switch=$_switchRooms',
     );
+    if (_switchRooms) {
+      switching = Timer.periodic(
+        const Duration(milliseconds: 2500),
+        (_) => _tapDoor(),
+      );
+    }
   });
   Timer(const Duration(seconds: 75), () {
     measuring = false;
+    switching?.cancel();
     Map<String, Object> stats(List<double> values) {
       values.sort();
       double percentile(double p) => values[((values.length - 1) * p).round()];
@@ -87,6 +98,7 @@ Future<void> main() async {
     }
     print(
       'ROOM_PROFILE_RESULT ${jsonEncode({
+        'switch_rooms': _switchRooms,
         'frames': frames.length,
         'seconds': 60,
         'cats': store.home.kitties.length,
@@ -98,4 +110,25 @@ Future<void> main() async {
       })}',
     );
   });
+}
+
+const _switchRooms = bool.fromEnvironment('SWITCH_ROOMS');
+
+/// Membuka pintu ruangan yang sedang tampil: cari [DoorButton] di pohon
+/// widget lalu panggil `onTap`-nya langsung (sentuhan sungguhan bisa
+/// mengenai kucing di depan pintu dan membuka kartunya). Selama transisi
+/// kedua ruangan dibangun; ketukan dilewati sampai tinggal satu.
+void _tapDoor() {
+  final doors = <DoorButton>[];
+  void visit(Element element) {
+    final widget = element.widget;
+    if (widget is DoorButton) {
+      doors.add(widget);
+      return;
+    }
+    element.visitChildElements(visit);
+  }
+
+  WidgetsBinding.instance.rootElement?.visitChildElements(visit);
+  if (doors.length == 1) doors.single.onTap();
 }

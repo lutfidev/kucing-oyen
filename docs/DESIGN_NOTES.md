@@ -603,6 +603,39 @@ Rencana: `docs/superpowers/plans/2026-11-21-rumah-dua-ruangan.md`, Task 6–9.
 - **Perbaikan kecil sesudah review.** Kucing lapar tidak memilih pindah ruangan sendiri (menunggu mangkuk yang sedang dipakai, tidak bolak-balik lewat pintu). Kucing yang dielus saat diajak kehilangan ajakannya sepenuhnya. Ajakan dengan kurangi gerak diumumkan pembaca layar. Tahan-seret hanya menerima sentuhan yang dimulai di atas kucing, jadi menahan pintu lalu menggeser tetap pindah ruangan (lantai kosong memang tidak pernah menelan geser). Rutinitas disinkronkan sekali per bingkai, bukan per ruangan yang dibangun. Kartu kucing menampilkan keterangan dan ruangannya sebagai dua baris.
 - **Belum dicek di HP:** HP tidak tersambung saat langkah ini selesai. Yang perlu dicek: kucing melakukan hal menarik kalau didiamkan, tahan-seret terasa enak dan tidak bentrok dengan geser, dan efek suara bertumpuk atau tidak saat beberapa kucing aktif (butir langkah 32).
 
+## Langkah 35: rumah dua ruangan, Hias, pemain baru, dan cek akhir
+
+Rencana: `docs/superpowers/plans/2026-11-21-rumah-dua-ruangan.md`, Task 10–13. Dikerjakan 22 Nov 2026 sesudah PR #61 (dokumen Gang Depan). Saat itu `main` belum berisi langkah 35 sama sekali: Hias masih hanya di ruang tengah (dengan catatan "menyusul di langkah 35"), dan belum ada titik gantung teras, Gudang yang diredupkan, maupun teras pemain baru.
+
+- **Hias per ruangan.** Tombol Hias ada di kedua ruangan. Seret dan ketuk Gudang menaruh barang di ruangan yang sedang dibuka (`ProgressController.placeItem(id, spot, room:)`, gagal kalau `canPlaceIn` menolak). Spot yang sama di ruangan lain tetap dihitung pindah. Barang yang dilepas di jalur pintu bergeser lewat `allowedSpot` seperti sebelumnya. Geser ruangan mati selama Hias, jadi Selesai dan tombol kembali sistem menutup Hias di ruangan itu.
+- **Panduan Hias** mengikuti `AdeganTengah`/`AdeganTeras` mode `hias`:
+  - Area dinding (ruang tengah) dan poligon lantai bergaris putus `6 5`.
+  - Jalur pintu diarsir miring 45° (4 px tiap 10 px) dengan garis `#C9650C` `7 5`, plus chip "⊘ Jalur pintu".
+  - Di teras: cincin titik gantung berdenyut, dan garis G1–G2.
+
+  Panduan digambar **di atas** barang dan kucing seperti desain (z 890). Kalau di lapisan lantai, chip jalur pintu tertutup kasur (terlihat di potret).
+- **Label titik gantung (keputusan asisten).** Desain menaruh "Titik gantung · hammock" di (146,182) dan "Lampu bulan" di (266,182), tapi label hammock lebih lebar dari celah 120 px itu, juga di kanvas, jadi keduanya bertumpuk. Label hammock ditaruh di tengah G1–G2 (x 195), label lampu satu baris lebih bawah (y 210) di bawah G3.
+- **Gantungan teras.**
+  - Hammock: pojok kiri-atas (143,5, 350), skala 0,86. Tali `#B07A4F` 2,2 px dari balok y 162 ke kait sprite (x 150,4 dan 239,8, y 356). Diurutkan seperti kaki y 464, dengan bayangan elips (195,462) rx 42 opasitas 0,11.
+  - Lampu bulan (keputusan asisten, desain tidak memberi kotaknya): skala 0,75, tengah-atas (305,200), tali dari y 162, di belakang barang lantai.
+  - Spot gantungan diabaikan. Diseret di teras, gantungan mengikuti jari lalu kembali ke titik gantungnya kecuali dilepas di Gudang.
+  - Kucing melompat ke hammock dari kedalaman hammock (y 464), bukan dari garis lantai belakang.
+- **Gudang di teras.**
+  - Barang dinding selain hammock dan lampu bulan diredupkan (opasitas 0,42, `grayscale(0.5)`), dengan label pembaca layar "…, hanya bisa dipasang di ruang tengah".
+  - Ketukan slot redup memunculkan keterangan gelap "Bisa dipasang di ruang tengah" di atas slot, dengan panah dan garis `#A9530A` 3 px di slotnya (`Teras.dc.html`).
+  - Menaruh gantungan di teras memunculkan "Gantung di balok atap" dengan cara yang sama.
+  - Lebar keterangan 222/196 px desain, dijepit 12 px dari tepi layar, dan hilang sesudah 2,4 detik.
+- **Pemain baru.**
+  - Gelembung ajakan di ruang tengah paling lebar 186 px desain × `sx` (170 di 360×640) dan mengangguk 4 px tiap 1,8 detik (`rtNudge`, diam saat kurangi gerak). Gelembung tidak menutupi Oyen.
+  - Teras baru menampilkan empat tempat nyaman: elips putus `rx 40s ry 12s` dengan ikon tapak, tanpa semantik dan tanpa petunjuk Toko.
+  - Sisa langkah 33 lama "kucing sedih kurang jelas butuh apa" sudah dijawab tanda lesu lapar/sedih, teks kebutuhan di kartu, dan ikon pintu (langkah 34), jadi tidak ada kode baru. Label mangkuk tetap `KeepInside` dan tidak dekat Oyen di tata letak dua ruangan.
+- **Potret.**
+  - `19-teras-hammock`, `19-teras-hias`, `19-teras-hias-redup`, `19-teras-hias-lampu` (juga 360×640).
+  - `19-teras-baru` di keempat bahasa (Rusia juga 360×640).
+  - Potret toko `01-kamar` dibuat ulang. Sebelumnya masih kamar satu ruangan lama, sekarang ruang tengah dua ruangan.
+- **Overflow:** Hias teras (chip zona dan kedua keterangan Gudang di dalam layar), kucing diangkat, kartu kucing dengan tombol ajak, dan ruang tengah dengan ikon pintu. Semua di 360×640 sampai 412×915, teks 100%/130%, keempat bahasa.
+- **Profil kinerja di HP belum diukur.** Tidak ada HP tersambung saat langkah ini dikerjakan. `tool/profile_room.dart` sekarang punya `--dart-define=SWITCH_ROOMS=true` (pintu diketuk tiap 2,5 detik selama pengukuran). Yang perlu dijalankan: sekali diam dan sekali dengan `SWITCH_ROOMS`, lalu bandingkan dengan batas langkah 32 (bingkai > 16,67 ms ≲ 3%) dan catat di `docs/performance-room-2026-11-08.md`. Dikerjakan bersama cek HP langkah 32.
+
 ## Bahan langkah 33 lama (8 Nov 2026, dibatalkan 21 Nov 2026)
 
 Isi lama langkah 33 di `docs/ROADMAP.md`, disimpan sebagai riwayat. Langkah 33–35 sekarang rumah dua ruangan (spec `docs/superpowers/specs/2026-11-21-rumah-dua-ruangan-design.md`); masalah tata letak kamar awal di bawah dikerjakan di langkah 35.

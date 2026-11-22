@@ -127,6 +127,8 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.roomDecorateGap,
     required this.roomHintBorder,
     required this.roomBubbleTail,
+    required this.roomBubbleNod,
+    required this.roomBubbleMax,
     required this.roomPraiseTop,
     required this.roomPraiseInset,
     required this.roomBubbleLabel,
@@ -142,6 +144,9 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.roomLiftScale,
     required this.roomLiftShadow,
     required this.roomTraySlotWidth,
+    required this.roomTraySelect,
+    required this.roomTrayTip,
+    required this.roomTrayTipWide,
     required this.roomTraySlotHeight,
     required this.roomTraySlotWidthCompact,
     required this.roomTraySlotHeightCompact,
@@ -293,6 +298,8 @@ class KoSize extends ThemeExtension<KoSize> {
     roomDecorateGap: 56,
     roomHintBorder: 2.5,
     roomBubbleTail: 14,
+    roomBubbleNod: 4,
+    roomBubbleMax: 186,
     roomPraiseTop: 120,
     roomPraiseInset: 40,
     roomBubbleLabel: 18,
@@ -308,6 +315,9 @@ class KoSize extends ThemeExtension<KoSize> {
     roomLiftScale: 1.06,
     roomLiftShadow: 18,
     roomTraySlotWidth: 76,
+    roomTraySelect: 3,
+    roomTrayTip: 196,
+    roomTrayTipWide: 222,
     roomTraySlotHeight: 64,
     roomTraySlotWidthCompact: 64,
     roomTraySlotHeightCompact: 54,
@@ -673,6 +683,12 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Ekor gelembung ajakan kamar baru.
   final double roomBubbleTail;
 
+  /// Anggukan gelembung ajakan kamar baru, px desain (rtNudge).
+  final double roomBubbleNod;
+
+  /// Lebar maksimum gelembung ajakan kamar baru (desain 186, dikali sx).
+  final double roomBubbleMax;
+
   /// Jarak pujian menghias dari bawah status bar (desain: top 164 − 44).
   final double roomPraiseTop;
 
@@ -717,6 +733,15 @@ class KoSize extends ThemeExtension<KoSize> {
 
   /// Kotak barang di baki Gudang (`BakiGudang.dc.html`).
   final double roomTraySlotWidth;
+
+  /// Tebal garis slot Gudang yang dipilih (desain 3 px).
+  final double roomTraySelect;
+
+  /// Lebar keterangan gantungan teras di atas slot Gudang (desain 196).
+  final double roomTrayTip;
+
+  /// Lebar keterangan slot Gudang yang redup (desain 222).
+  final double roomTrayTipWide;
 
   final double roomTraySlotHeight;
 
@@ -920,6 +945,8 @@ class KoSize extends ThemeExtension<KoSize> {
     double? roomDecorateGap,
     double? roomHintBorder,
     double? roomBubbleTail,
+    double? roomBubbleNod,
+    double? roomBubbleMax,
     double? roomPraiseTop,
     double? roomPraiseInset,
     double? roomBubbleLabel,
@@ -935,6 +962,9 @@ class KoSize extends ThemeExtension<KoSize> {
     double? roomLiftScale,
     double? roomLiftShadow,
     double? roomTraySlotWidth,
+    double? roomTraySelect,
+    double? roomTrayTip,
+    double? roomTrayTipWide,
     double? roomTraySlotHeight,
     double? roomTraySlotWidthCompact,
     double? roomTraySlotHeightCompact,
@@ -1086,6 +1116,8 @@ class KoSize extends ThemeExtension<KoSize> {
       roomDecorateGap: roomDecorateGap ?? this.roomDecorateGap,
       roomHintBorder: roomHintBorder ?? this.roomHintBorder,
       roomBubbleTail: roomBubbleTail ?? this.roomBubbleTail,
+      roomBubbleNod: roomBubbleNod ?? this.roomBubbleNod,
+      roomBubbleMax: roomBubbleMax ?? this.roomBubbleMax,
       roomPraiseTop: roomPraiseTop ?? this.roomPraiseTop,
       roomPraiseInset: roomPraiseInset ?? this.roomPraiseInset,
       roomBubbleLabel: roomBubbleLabel ?? this.roomBubbleLabel,
@@ -1101,6 +1133,9 @@ class KoSize extends ThemeExtension<KoSize> {
       roomLiftScale: roomLiftScale ?? this.roomLiftScale,
       roomLiftShadow: roomLiftShadow ?? this.roomLiftShadow,
       roomTraySlotWidth: roomTraySlotWidth ?? this.roomTraySlotWidth,
+      roomTraySelect: roomTraySelect ?? this.roomTraySelect,
+      roomTrayTip: roomTrayTip ?? this.roomTrayTip,
+      roomTrayTipWide: roomTrayTipWide ?? this.roomTrayTipWide,
       roomTraySlotHeight: roomTraySlotHeight ?? this.roomTraySlotHeight,
       roomTraySlotWidthCompact:
           roomTraySlotWidthCompact ?? this.roomTraySlotWidthCompact,
@@ -1264,6 +1299,8 @@ class KoSize extends ThemeExtension<KoSize> {
       roomDecorateGap: d(roomDecorateGap, other.roomDecorateGap),
       roomHintBorder: d(roomHintBorder, other.roomHintBorder),
       roomBubbleTail: d(roomBubbleTail, other.roomBubbleTail),
+      roomBubbleNod: d(roomBubbleNod, other.roomBubbleNod),
+      roomBubbleMax: d(roomBubbleMax, other.roomBubbleMax),
       roomPraiseTop: d(roomPraiseTop, other.roomPraiseTop),
       roomPraiseInset: d(roomPraiseInset, other.roomPraiseInset),
       roomBubbleLabel: d(roomBubbleLabel, other.roomBubbleLabel),
@@ -1279,6 +1316,9 @@ class KoSize extends ThemeExtension<KoSize> {
       roomLiftScale: d(roomLiftScale, other.roomLiftScale),
       roomLiftShadow: d(roomLiftShadow, other.roomLiftShadow),
       roomTraySlotWidth: d(roomTraySlotWidth, other.roomTraySlotWidth),
+      roomTraySelect: d(roomTraySelect, other.roomTraySelect),
+      roomTrayTip: d(roomTrayTip, other.roomTrayTip),
+      roomTrayTipWide: d(roomTrayTipWide, other.roomTrayTipWide),
       roomTraySlotHeight: d(roomTraySlotHeight, other.roomTraySlotHeight),
       roomTraySlotWidthCompact: d(
         roomTraySlotWidthCompact,

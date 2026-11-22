@@ -113,6 +113,61 @@ void main() {
       );
       expect(find.text('Kamar masih sepi. Ke Toko, yuk!'), findsNothing);
       expect(find.text('Hiasan dinding?'), findsNothing);
+      await goThroughDoor(tester);
+      expect(find.byType(EmptyTerraceSpots), findsNothing);
+    });
+
+    for (final size in [const Size(390, 844), const Size(360, 640)]) {
+      testWidgets('gelembung pemain baru maks 186 × sx, tidak menutupi Oyen '
+          '(${size.width.round()}×${size.height.round()})', (tester) async {
+        await pumpRoom(tester, size: size);
+        final (room, geo) = roomOf(tester);
+        final bubble = tester.getRect(
+          find
+              .ancestor(
+                of: find.text('Kamar masih sepi. Ke Toko, yuk!'),
+                matching: find.byType(ConstrainedBox),
+              )
+              .first,
+        );
+        expect(bubble.width, lessThanOrEqualTo(186 * geo.sx + 0.01));
+        final oyen = tester.getRect(kittyView(KittyId.oyen));
+        expect(bubble.overlaps(oyen), isFalse);
+        expect(bubble.right, lessThanOrEqualTo(room.right));
+        expect(find.text('Hiasan dinding?'), findsOneWidget);
+        expect(find.text('Kasur, mungkin?'), findsOneWidget);
+      });
+    }
+
+    testWidgets('teras baru: empat tempat nyaman, tanpa petunjuk Toko', (
+      tester,
+    ) async {
+      await pumpRoom(tester);
+      await goThroughDoor(tester);
+      expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
+      expect(find.byType(EmptyRoomHints), findsNothing);
+      expect(find.text('Kamar masih sepi. Ke Toko, yuk!'), findsNothing);
+      final (room, geo) = roomOf(tester);
+      for (final spot in EmptyTerraceSpots.spots) {
+        final rect = tester
+            .getRect(find.byKey(ValueKey('terrace-spot-${spot.dx.round()}')))
+            .shift(-room.topLeft);
+        expect(
+          rect.center,
+          offsetMoreOrLessEquals(geo.toScreen(spot.dx, spot.dy), epsilon: 0.01),
+        );
+        expect(
+          rect.width,
+          closeTo(80 * depthScale(spot.dy) * geo.artScale, 0.01),
+        );
+      }
+    });
+
+    test('anggukan gelembung: 0 → 1 → 0 dalam 1,8 detik', () {
+      expect(EmptyRoomHints.nod(null), 0);
+      expect(EmptyRoomHints.nod(0), 0);
+      expect(EmptyRoomHints.nod(0.9), closeTo(1, 1e-9));
+      expect(EmptyRoomHints.nod(1.8), closeTo(0, 1e-9));
     });
 
     testWidgets('header: chip koin, logo, dan total bintang', (tester) async {

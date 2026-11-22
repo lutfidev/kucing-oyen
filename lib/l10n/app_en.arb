@@ -2540,6 +2540,35 @@
   "@zoneFloor": {
     "description": "Label of the floor area while decorating."
   },
+  "zoneDoorPath": "Door path",
+  "@zoneDoorPath": {
+    "description": "Label of the hatched door path, where no furniture may stand, while decorating."
+  },
+  "zoneHangHammock": "Hang point · hammock",
+  "@zoneHangHammock": {
+    "description": "Label of the two terrace beam hooks for the hammock while decorating."
+  },
+  "zoneHangLamp": "Moon lamp",
+  "@zoneHangLamp": {
+    "description": "Label of the terrace beam hook for the moon lamp while decorating."
+  },
+  "storageLivingOnly": "{item}, can only go in the living room",
+  "@storageLivingOnly": {
+    "description": "Screen reader label of a dimmed storage slot on the terrace: a wall item that can only hang in the living room.",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "livingOnlyNote": "Only fits in the living room",
+  "@livingOnlyNote": {
+    "description": "Short note shown above a dimmed storage slot when tapped on the terrace."
+  },
+  "hangNote": "Hung from the roof beam",
+  "@hangNote": {
+    "description": "Short note when the hammock or moon lamp is put on the terrace: it hangs from the roof beam."
+  },
   "storage": "Storage",
   "@storage": {
     "description": "Title of the storage tray with owned items that are not in the room."

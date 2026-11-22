@@ -10,6 +10,7 @@ import 'package:kucing_oren/app/rewarded_ads.dart';
 import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/progress.dart';
@@ -574,6 +575,34 @@ void main() {
       expect(await c.placeItem(RoomItemId.bola, Spot(0, 0)), isFalse);
       expect(await c.placeItem(RoomItemId.kardus, Spot(0, 1)), isTrue);
       expect(storeOf(c).home.room.spotOf(RoomItemId.kardus), Spot(0, 1));
+    });
+
+    test('tata letak: taruh di teras, barang dinding tidak boleh', () async {
+      final c = controller(
+        home: owning([RoomItemId.kasur, RoomItemId.lukisan]),
+      );
+      expect(
+        await c.placeItem(
+          RoomItemId.kasur,
+          Spot(0.5, 0.5),
+          room: HouseRoom.terrace,
+        ),
+        isTrue,
+      );
+      expect(c.home.room.roomOf(RoomItemId.kasur), HouseRoom.terrace);
+      expect(storeOf(c).home.room.roomOf(RoomItemId.kasur), HouseRoom.terrace);
+      // Spot sama, ruangan beda: tetap dipindah.
+      expect(await c.placeItem(RoomItemId.kasur, Spot(0.5, 0.5)), isTrue);
+      expect(c.home.room.roomOf(RoomItemId.kasur), HouseRoom.living);
+      expect(
+        await c.placeItem(
+          RoomItemId.lukisan,
+          Spot(0.5, 0.5),
+          room: HouseRoom.terrace,
+        ),
+        isFalse,
+      );
+      expect(c.home.room.roomOf(RoomItemId.lukisan), HouseRoom.living);
     });
 
     test('beri camilan: stok berkurang, bar naik; stok habis gagal', () async {

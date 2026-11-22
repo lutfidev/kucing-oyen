@@ -1956,6 +1956,26 @@ class AppLocalizationsPt extends AppLocalizations {
   String get zoneFloor => 'Área do chão';
 
   @override
+  String get zoneDoorPath => 'Passagem da porta';
+
+  @override
+  String get zoneHangHammock => 'Ponto de pendurar · rede';
+
+  @override
+  String get zoneHangLamp => 'Lâmpada lua';
+
+  @override
+  String storageLivingOnly(String item) {
+    return '$item, só pode ficar na sala';
+  }
+
+  @override
+  String get livingOnlyNote => 'Só cabe na sala';
+
+  @override
+  String get hangNote => 'Pendurado na viga do telhado';
+
+  @override
   String get storage => 'Depósito';
 
   @override

@@ -40,6 +40,31 @@ const perchTops = <RoomItemId, double>{
   RoomItemId.akuarium: 4,
 };
 
+/// Gantungan teras (desain `kTeras`): hammock dengan pojok kiri-atas
+/// [hammockTopLeft] skala [hammockScale], tali dari balok y [hangRopeTop]
+/// ke kait sprite di [hammockHooks] (pecahan lebar) dan [hammockHookY]
+/// (pecahan tinggi), urut gambar seperti kaki y [hammockDepth], bayangan
+/// di [hammockShadow] (rx [hammockShadowRadius], opasitas
+/// [hammockShadowOpacity]).
+const hammockTopLeft = (x: 143.5, y: 350.0);
+const hammockScale = 0.86;
+const hangRopeTop = 162.0;
+const hammockHooks = (150.4 - 143.5, 239.8 - 143.5);
+const hammockHookY = 356.0 - 350.0;
+const hammockDepth = 464.0;
+const hammockShadow = (x: 195.0, y: 462.0);
+const hammockShadowRadius = 42.0;
+const hammockShadowOpacity = 0.11;
+
+/// Lampu bulan di teras tergantung di G3 (keputusan asisten: desain tidak
+/// memberi kotaknya): tengah-atas [lampTopCenter], skala [lampScale],
+/// tali dari [hangRopeTop].
+const lampTopCenter = (x: 305.0, y: 200.0);
+const lampScale = 0.75;
+
+/// Lebar tali gantungan, px desain.
+const hangRopeWidth = 2.2;
+
 /// Rute seekor kucing ke barang: [stand] = tempat berdiri di lantai,
 /// [boxes] = kotak kucing dari tempat berdiri, pijakan (kalau ada), sampai
 /// kucing di dalam barang. [hops] = jumlah lompatan (0 = barang lantai).
@@ -122,6 +147,35 @@ class RoomGeometry {
     houseWallBottom * sy,
   );
 
+  /// Barang [id] digantung di balok atap: hammock dan lampu bulan di
+  /// teras. Spot-nya diabaikan.
+  bool hangs(RoomItemId id) =>
+      which == HouseRoom.terrace && terraceHangers.contains(id);
+
+  Rect _hangBox(RoomItem item) {
+    final base = Size(item.baseWidth, item.baseHeight) * artScale;
+    if (item.id == RoomItemId.hammock) {
+      return toScreen(hammockTopLeft.x, hammockTopLeft.y) & base * hammockScale;
+    }
+    final size = base * lampScale;
+    final at = toScreen(lampTopCenter.x, lampTopCenter.y);
+    return Offset(at.dx - size.width / 2, at.dy) & size;
+  }
+
+  /// Tali gantungan [id] berkotak [box] (dari balok ke kaitnya), di layar.
+  List<(Offset, Offset)> ropesOf(RoomItemId id, Rect box) {
+    final top = hangRopeTop * sy;
+    if (id != RoomItemId.hammock) {
+      return [(Offset(box.center.dx, top), box.topCenter)];
+    }
+    final k = box.width / (roomItemOf(id).baseWidth * hammockScale);
+    final hookY = box.top + hammockHookY * k;
+    return [
+      for (final x in [hammockHooks.$1, hammockHooks.$2])
+        (Offset(box.left + x * k, top), Offset(box.left + x * k, hookY)),
+    ];
+  }
+
   Size _wallSize(RoomItem item) =>
       Size(item.baseWidth, item.baseHeight) * houseWallScale;
 
@@ -129,6 +183,7 @@ class RoomGeometry {
       Size(item.baseWidth, item.baseHeight) * (scale * artScale);
 
   Rect boxOf(RoomItem item, Spot spot) {
+    if (hangs(item.id)) return _hangBox(item);
     if (item.zone == RoomZone.wall) {
       final size = _wallSize(item);
       final left =
@@ -281,7 +336,8 @@ class RoomGeometry {
     if (item.zone == RoomZone.floor) {
       return path([onFloor(user.center.dx, userFeet), user], 0);
     }
-    final base = houseFloorBack * sy;
+    // Di bawah hammock teras kucing melompat dari kedalaman hammock.
+    final base = (hangs(id) ? hammockDepth : houseFloorBack) * sy;
     final up = catHopUp * artScale;
     if (base - userFeet <= up) {
       return path([onFloor(user.center.dx, base), user], 1);
@@ -360,10 +416,14 @@ List<RoomSprite> roomSprites({
     for (final item in roomItems)
       if (items[item.id] case final spot?) (item, geo.boxOf(item, spot)),
   ];
+  bool hammock(RoomItem item) =>
+      item.id == RoomItemId.hammock && geo.hangs(item.id);
   final standing = <(double, RoomSprite)>[
     for (final (item, box) in placed)
       if (item.zone == RoomZone.floor && !item.flat)
-        (box.bottom, ItemSprite(item.id, box)),
+        (box.bottom, ItemSprite(item.id, box))
+      else if (hammock(item))
+        (hammockDepth * geo.sy, ItemSprite(item.id, box)),
     for (final MapEntry(key: kitty, value: spot) in cats.entries)
       if (geo.catBoxOf(kitty, spot) case final box)
         (geo.feetOf(box), KittySprite(kitty, box)),
@@ -372,7 +432,8 @@ List<RoomSprite> roomSprites({
     for (final (item, box) in placed)
       if (item.flat) ItemSprite(item.id, box, flat: true),
     for (final (item, box) in placed)
-      if (item.zone == RoomZone.wall) ItemSprite(item.id, box),
+      if (item.zone == RoomZone.wall && !hammock(item))
+        ItemSprite(item.id, box),
     for (final (_, sprite) in standing) sprite,
   ];
 }

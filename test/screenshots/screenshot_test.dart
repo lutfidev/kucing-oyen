@@ -23,6 +23,7 @@ import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/snacks.dart';
+import 'package:kucing_oren/screens/room/door_parts.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
@@ -491,10 +492,13 @@ void main() {
   for (final language in AppLanguage.supported) {
     final screens = <String, (String, Size)>{
       '19-kamar-baru': (AppRoutes.home, _size),
+      // Teras baru (langkah 35): lewat pintu dari kamar baru.
+      '19-teras-baru': (AppRoutes.home, _size),
       '03-fase-atur-level-13': (AppRoutes.level(13, chapter: 2), _size),
       '15-pengaturan': (AppRoutes.settings, _size),
       if (language == AppLanguage.ru) ...{
         '19-kamar-baru-360x640': (AppRoutes.home, const Size(360, 640)),
+        '19-teras-baru-360x640': (AppRoutes.home, const Size(360, 640)),
         '03-fase-atur-level-13-360x640': (
           AppRoutes.level(13, chapter: 2),
           const Size(360, 640),
@@ -530,6 +534,10 @@ void main() {
             ),
           );
           await settle(tester);
+          if (name.startsWith('19-teras')) {
+            await tester.tap(find.byType(DoorButton));
+            await settle(tester);
+          }
           await capture(tester, path);
         });
       }, skip: !screenshotsEnabled);
@@ -772,6 +780,73 @@ void main() {
         await capture(tester, '$folder/19-transisi$suffix');
         await tester.pumpAndSettle();
         await capture(tester, '$folder/19-teras$suffix');
+      });
+    }, skip: !screenshotsEnabled);
+  }
+
+  // Hias di teras (langkah 35, desain 9): hammock dan lampu bulan di titik
+  // gantung, jalur pintu, dan jam di Gudang yang diredupkan sesudah
+  // diketuk.
+  for (final small in [false, true]) {
+    final suffix = small ? '-360x640' : '';
+    testWidgets('$folder/19-teras-hias$suffix', (tester) async {
+      setScreenSize(tester, small ? const Size(360, 640) : _size);
+      const floor = HouseFloor();
+      final room =
+          Room(
+                owned: const [
+                  RoomItemId.monstera,
+                  RoomItemId.catnip,
+                  RoomItemId.hammock,
+                  RoomItemId.lampuBulan,
+                  RoomItemId.jam,
+                  RoomItemId.lukisan,
+                ],
+              )
+              .place(
+                RoomItemId.monstera,
+                floor.spotAtFeet(353, 540),
+                room: HouseRoom.terrace,
+              )
+              .place(
+                RoomItemId.catnip,
+                floor.spotAtFeet(350, 640),
+                room: HouseRoom.terrace,
+              )
+              .place(
+                RoomItemId.hammock,
+                Spot(0.5, 0.5),
+                room: HouseRoom.terrace,
+              );
+      await withShadows(() async {
+        await tester.pumpWidget(
+          capturable(
+            KucingOrenApp(
+              roomLife: false,
+              progress: testProgressWith(
+                coins: 480,
+                best: _designProgress,
+                home: Home(room: room),
+                clock: () => roomNow,
+              ),
+              roomRandom: () => Random(1),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byType(DoorButton));
+        await tester.pumpAndSettle();
+        await capture(tester, '$folder/19-teras-hammock$suffix');
+        await tester.tap(find.text('Hias'));
+        await tester.pumpAndSettle();
+        await capture(tester, '$folder/19-teras-hias$suffix');
+        await tester.tap(find.text('Jam Kucing'));
+        await tester.pump();
+        await capture(tester, '$folder/19-teras-hias-redup$suffix');
+        await tester.tap(find.text('Lampu Bulan'));
+        await tester.pump();
+        await capture(tester, '$folder/19-teras-hias-lampu$suffix');
+        await tester.pump(const Duration(seconds: 3));
       });
     }, skip: !screenshotsEnabled);
   }

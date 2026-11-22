@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:path_drawing/path_drawing.dart';
 
+import '../../game/model/house.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
@@ -291,16 +293,36 @@ class RoomMenuButton extends StatelessWidget {
 /// Kamar baru (hanya mangkuk): dua bidang kosong bergaris putus-putus dan
 /// gelembung ajakan ke Toko (`Kamar.dc.html`, keadaan `baru`).
 class EmptyRoomHints extends StatelessWidget {
-  const EmptyRoomHints({super.key, required this.geo, required this.onShop});
+  const EmptyRoomHints({
+    super.key,
+    required this.geo,
+    required this.onShop,
+    this.time,
+  });
 
   final RoomGeometry geo;
   final VoidCallback onShop;
+
+  /// Detik anggukan gelembung (null = diam, mis. kurangi gerak).
+  final double? time;
 
   // Letak desain area rumah 390×652 (`AdeganTengah.dc.html` isi `baru`,
   // `RuangTengah.dc.html`).
   static const wallSpot = Rect.fromLTWH(212, 176, 88, 70);
   static const floorSpot = Rect.fromLTWH(82, 398, 126, 56);
   static const bubbleAt = Offset(20, 570);
+
+  /// Satu anggukan `rtNudge` (detik): naik lalu turun, `ease-in-out`.
+  static const nodSeconds = 1.8;
+
+  /// Geser vertikal anggukan pada detik [time], 0 sampai 1 (kali tinggi
+  /// anggukan): 0 → 1 → 0 dalam [nodSeconds].
+  static double nod(double? time) {
+    if (time == null) return 0;
+    final t = (time % nodSeconds) / nodSeconds;
+    final half = t < 0.5 ? t * 2 : 2 - t * 2;
+    return Curves.easeInOut.transform(half);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -310,6 +332,7 @@ class EmptyRoomHints extends StatelessWidget {
     final wall = geo.fromDesign(wallSpot);
     final floor = geo.fromDesign(floorSpot);
     final bubble = geo.fromDesign(bubbleAt & Size.zero).topLeft;
+    final lift = nod(time) * s.roomBubbleNod * geo.artScale;
     return Stack(
       children: [
         Positioned.fromRect(
@@ -338,15 +361,79 @@ class EmptyRoomHints extends StatelessWidget {
         ),
         Positioned(
           left: bubble.dx,
-          top: bubble.dy,
+          top: bubble.dy - lift,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: geo.room.width - bubble.dx * 2,
+              maxWidth: min(
+                s.roomBubbleMax * geo.sx,
+                geo.room.width - bubble.dx * 2,
+              ),
             ),
             child: _InviteBubble(text: l.roomEmptyBubble, onTap: onShop),
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Teras baru (`AdeganTeras.dc.html` isi `baru`): empat tempat nyaman
+/// sebagai elips putus-putus `rx 40s ry 12s` dengan ikon tapak, tanpa
+/// semantik. Petunjuk Toko hanya ada di ruang tengah.
+class EmptyTerraceSpots extends StatelessWidget {
+  const EmptyTerraceSpots({super.key, required this.geo});
+
+  final RoomGeometry geo;
+
+  /// Titik kaki desain: petak matahari, dekat pagar, dekat pot, ambang.
+  static const spots = [
+    Offset(182, 600),
+    Offset(282, 432),
+    Offset(296, 556),
+    Offset(46, 456),
+  ];
+  static const radiusX = 40.0;
+  static const radiusY = 12.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    final unit = geo.artScale;
+    return IgnorePointer(
+      child: ExcludeSemantics(
+        child: Stack(
+          children: [
+            for (final spot in spots)
+              () {
+                final k = depthScale(spot.dy) * unit;
+                final at = geo.toScreen(spot.dx, spot.dy);
+                return Positioned.fromRect(
+                  key: ValueKey('terrace-spot-${spot.dx.round()}'),
+                  rect: Rect.fromCenter(
+                    center: at,
+                    width: radiusX * 2 * k,
+                    height: radiusY * 2 * k,
+                  ),
+                  child: CustomPaint(
+                    painter: _DashedOval(
+                      fill: c.roomPlaceFill,
+                      line: c.roomPlaceLine,
+                      width: s.border,
+                    ),
+                    child: Center(
+                      child: KoIcon(
+                        KoIcons.paw,
+                        size: s.iconCompact * unit,
+                        color: c.roomPlaceInk,
+                      ),
+                    ),
+                  ),
+                );
+              }(),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -585,4 +672,38 @@ class KeepInside extends SingleChildLayoutDelegate {
       old.margin != margin ||
       old.top != top ||
       old.centered != centered;
+}
+
+/// Elips berisi [fill] dengan garis putus-putus [line] setebal [width]
+/// (CSS `border-radius: 50%; border: 2px dashed`), garis di dalam kotak.
+class _DashedOval extends CustomPainter {
+  _DashedOval({required this.fill, required this.line, required this.width});
+
+  final Color fill;
+  final Color line;
+  final double width;
+
+  /// Pola putus CSS untuk garis 2 px (`dashed`: garis dan celah 2× tebal).
+  static const _dash = 2.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final oval = (Offset.zero & size).deflate(width / 2);
+    canvas.drawOval(oval, Paint()..color = fill);
+    final dashed = dashPath(
+      Path()..addOval(oval),
+      dashArray: CircularIntervalList([width * _dash, width * _dash]),
+    );
+    canvas.drawPath(
+      dashed,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = width
+        ..color = line,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_DashedOval old) =>
+      old.fill != fill || old.line != line || old.width != width;
 }

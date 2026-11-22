@@ -1977,6 +1977,26 @@ class AppLocalizationsRu extends AppLocalizations {
   String get zoneFloor => 'Пол';
 
   @override
+  String get zoneDoorPath => 'Проход к двери';
+
+  @override
+  String get zoneHangHammock => 'Крепление · гамак';
+
+  @override
+  String get zoneHangLamp => 'Лампа-луна';
+
+  @override
+  String storageLivingOnly(String item) {
+    return '$item, только для гостиной';
+  }
+
+  @override
+  String get livingOnlyNote => 'Только для гостиной';
+
+  @override
+  String get hangNote => 'Висит на балке крыши';
+
+  @override
   String get storage => 'Кладовка';
 
   @override

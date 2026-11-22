@@ -692,7 +692,9 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 34".
 
-## 35. Rumah dua ruangan: Hias, pemain baru, dan cek akhir
+## 35. Rumah dua ruangan: Hias, pemain baru, dan cek akhir ✅
+
+**Status:** selesai 22 Nov 2026, kecuali profil kinerja di HP (tidak ada HP tersambung). Profil itu diukur bersama cek HP langkah 32; perintahnya di `docs/DESIGN_NOTES.md`, "Langkah 35".
 
 **Hasil:** Hias per ruangan dengan jalur pintu yang dijaga, titik gantung teras dan Gudang yang diredupkan, rumah pemain baru (termasuk sisa langkah 33 lama), lalu overflow, potret layar, potret toko, dan profil kinerja di HP.
 

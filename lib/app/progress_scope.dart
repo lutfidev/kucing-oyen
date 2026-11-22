@@ -5,6 +5,7 @@ import '../game/model/chapter.dart';
 import '../game/model/hints.dart';
 import '../game/model/home.dart';
 import '../game/model/home_items.dart';
+import '../game/model/house.dart';
 import '../game/model/kitties.dart';
 import '../game/model/needs.dart';
 import '../game/model/progress.dart';
@@ -314,13 +315,20 @@ class ProgressController extends ChangeNotifier implements HintSource {
     }, home: _home.copyWith(closet: _home.closet.wear(kitty, id)));
   }
 
-  /// Menaruh barang [id] di [spot], juga dari Gudang.
-  Future<bool> placeItem(RoomItemId id, Spot spot) async {
-    if (!_home.room.owns(id)) return false;
-    if (_home.room.spotOf(id) == spot) return true;
+  /// Menaruh barang [id] di [spot] di [room], juga dari Gudang; gagal
+  /// kalau belum dimiliki atau tidak boleh di ruangan itu.
+  Future<bool> placeItem(
+    RoomItemId id,
+    Spot spot, {
+    HouseRoom room = HouseRoom.living,
+  }) async {
+    if (!_home.room.owns(id) || !canPlaceIn(id, room)) return false;
+    if (_home.room.spotOf(id) == spot && _home.room.roomOf(id) == room) {
+      return true;
+    }
     return _changeHome({
       _Part.home,
-    }, home: _home.copyWith(room: _home.room.place(id, spot)));
+    }, home: _home.copyWith(room: _home.room.place(id, spot, room: room)));
   }
 
   /// Memindahkan barang [id] ke Gudang; mangkuk tidak bisa.

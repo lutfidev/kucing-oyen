@@ -227,6 +227,14 @@ class _RoomViewState extends State<RoomView>
 
   final _trayKey = GlobalKey();
 
+  /// Keterangan di atas slot Gudang (barang redup atau gantungan teras):
+  /// barangnya, teksnya, dan kotak slot di layar. Hilang sendiri.
+  (RoomItemId, String, Rect)? _trayTip;
+  Timer? _trayTipTimer;
+
+  /// Lama keterangan slot Gudang tampil.
+  static const trayTipDuration = Duration(milliseconds: 2400);
+
   /// Kucing yang sedang diangkat (tahan-seret), kotaknya saat diangkat,
   /// dan titik jari (lokal rumah) saat mulai dan sekarang.
   KittyId? _lifted;
@@ -307,6 +315,7 @@ class _RoomViewState extends State<RoomView>
   void dispose() {
     _ticker.dispose();
     _refresh?.cancel();
+    _trayTipTimer?.cancel();
     super.dispose();
   }
 
@@ -585,8 +594,15 @@ class _RoomViewState extends State<RoomView>
     _decorating = true;
     _selected = null;
     _reaction = null;
+    _clearTrayTip();
     _life.interrupt();
   });
+
+  /// Keterangan slot Gudang hilang (tanpa setState).
+  void _clearTrayTip() {
+    _trayTipTimer?.cancel();
+    _trayTip = null;
+  }
 
   /// Selesai menghias (juga tombol kembali sistem): kembali ke mode normal,
   /// lalu pujian, dengan bonus Senang kalau belum diberikan sejam ini.
@@ -597,6 +613,7 @@ class _RoomViewState extends State<RoomView>
       _decorating = false;
       _dragging = null;
       _dragSpot = null;
+      _clearTrayTip();
     });
     final bonus = await _progress.finishDecorating();
     if (!mounted) return;
@@ -614,7 +631,9 @@ class _RoomViewState extends State<RoomView>
 
   void _dragUpdate(RoomItemId id, Offset pointer) {
     final geo = _geo;
-    if (geo == null) return;
+    // Barang tidak bisa diseret lewat pintu (spec): hanya barang di
+    // ruangan yang sedang dibuka.
+    if (geo == null || _progress.home.room.roomOf(id) != _house) return;
     _dragPointer = pointer;
     setState(() {
       _dragging = id;
@@ -626,20 +645,76 @@ class _RoomViewState extends State<RoomView>
   }
 
   /// Lepas di atas baki = masuk Gudang (kecuali mangkuk), selain itu
-  /// ditaruh. Keduanya langsung disimpan.
+  /// ditaruh. Keduanya langsung disimpan. Gantungan teras hanya bisa ke
+  /// Gudang: dilepas di tempat lain, ia kembali ke titik gantungnya.
   void _dragEnd(RoomItemId id) {
     final spot = _dragSpot;
     if (_dragging == id) {
       if (_overTray(_dragPointer) && !roomItemOf(id).builtIn) {
         _progress.storeItem(id);
-      } else if (spot != null) {
-        _progress.placeItem(id, spot);
+      } else if (spot != null && !(_geo?.hangs(id) ?? false)) {
+        _progress.placeItem(id, spot, room: _house);
       }
     }
     setState(() {
       _dragging = null;
       _dragSpot = null;
     });
+  }
+
+  /// Ketuk barang di Gudang: ditaruh di posisi bawaannya di ruangan ini;
+  /// gantungan teras memunculkan "Gantung di balok atap".
+  Future<void> _placeFromTray(RoomItemId id, Rect slot) async {
+    final placed = await _progress.placeItem(
+      id,
+      roomItemOf(id).defaultSpot,
+      room: _house,
+    );
+    if (!mounted) return;
+    if (placed && _house == HouseRoom.terrace && terraceHangers.contains(id)) {
+      _showTrayTip(id, context.l10n.hangNote, slot);
+    } else if (_trayTip != null) {
+      _trayTipTimer?.cancel();
+      setState(() => _trayTip = null);
+    }
+  }
+
+  void _showTrayTip(RoomItemId id, String text, Rect slot) {
+    _trayTipTimer?.cancel();
+    _trayTipTimer = Timer(trayTipDuration, () {
+      if (mounted) setState(() => _trayTip = null);
+    });
+    setState(() => _trayTip = (id, text, slot));
+  }
+
+  /// Keterangan [text] di atas slot Gudang [slot] (layar), di atas baki
+  /// (`Teras.dc.html`: lebar 222 untuk barang redup, 196 untuk gantungan,
+  /// dijepit 12 px dari tepi layar).
+  Widget _trayTipAt(RoomItemId id, String text, Rect slot) {
+    final s = context.koSize;
+    final space = context.koSpace;
+    final screen = MediaQuery.sizeOf(context).width;
+    final tray = _trayKey.currentContext?.findRenderObject() as RenderBox?;
+    final trayTop = tray != null && tray.hasSize
+        ? tray.localToGlobal(Offset.zero).dy
+        : slot.top;
+    final unit = _geo?.artScale ?? 1;
+    final wide = !canPlaceIn(id, _house);
+    final width = min(
+      (wide ? s.roomTrayTipWide : s.roomTrayTip) * unit,
+      screen - space.s12 * 2,
+    );
+    final left = (slot.center.dx - width / 2)
+        .clamp(space.s12, max(space.s12, screen - space.s12 - width))
+        .toDouble();
+    return Positioned(
+      left: left,
+      width: width,
+      bottom: MediaQuery.sizeOf(context).height - trayTop + space.s14,
+      child: IgnorePointer(
+        child: TrayTip(text: text, arrowX: slot.center.dx - left),
+      ),
+    );
   }
 
   bool _overTray(Offset pointer) {
@@ -702,9 +777,16 @@ class _RoomViewState extends State<RoomView>
                             key: _trayKey,
                             items: home.room.stored,
                             compact: compact,
-                            onPlace: (id) => _progress.placeItem(
+                            dimmed: {
+                              for (final id in home.room.stored)
+                                if (!canPlaceIn(id, _house)) id,
+                            },
+                            selected: _trayTip?.$1,
+                            onPlace: _placeFromTray,
+                            onDimmed: (id, slot) => _showTrayTip(
                               id,
-                              roomItemOf(id).defaultSpot,
+                              context.l10n.livingOnlyNote,
+                              slot,
                             ),
                           )
                         : RoomMenu(
@@ -727,6 +809,11 @@ class _RoomViewState extends State<RoomView>
                 ),
               ],
             ),
+            if ((_decorating, _trayTip) case (
+              true,
+              (final id, final text, final slot),
+            ))
+              _trayTipAt(id, text, slot),
             if (selected != null) ...[
               Positioned.fill(
                 child: GestureDetector(
@@ -890,12 +977,7 @@ class _RoomViewState extends State<RoomView>
                   )
                 else
                   const Spacer(),
-                // Hias per ruangan menyusul (langkah 35): sampai itu hanya
-                // di ruang tengah, supaya barang dari Gudang tidak pindah
-                // ke ruangan yang tidak tampil.
-                if ((!empty || _decorating) &&
-                    _house == HouseRoom.living &&
-                    lifted == null) ...[
+                if ((!empty || _decorating) && lifted == null) ...[
                   SizedBox(width: space.s8),
                   DecorateButton(
                     done: _decorating,
@@ -938,12 +1020,19 @@ class _RoomViewState extends State<RoomView>
       },
       geo: geo,
     );
-    // Barang yang diangkat digambar paling depan.
+    // Barang yang diangkat digambar paling depan. Gantungan teras tidak
+    // punya spot: ia mengikuti jari dan kembali ke titik gantungnya.
     final ordered = [
       for (final sprite in sprites)
         if (sprite is! ItemSprite || sprite.id != dragging) sprite,
       for (final sprite in sprites)
-        if (sprite is ItemSprite && sprite.id == dragging) sprite,
+        if (sprite is ItemSprite && sprite.id == dragging)
+          geo.hangs(sprite.id) && geo.which == _house
+              ? ItemSprite(
+                  sprite.id,
+                  sprite.box.shift(_dragPointer - _dragDown),
+                )
+              : sprite,
     ];
     final hopping = {
       for (final kitty in home.kitties)
@@ -970,6 +1059,18 @@ class _RoomViewState extends State<RoomView>
                     SceneShadow.lifted,
                   )
                 : SceneShadow.ofItem(sprite.box, unit: unit),
+          ItemSprite(:final id)
+              when id == RoomItemId.hammock &&
+                  geo.hangs(id) &&
+                  id != dragging =>
+            SceneShadow(
+              Rect.fromCenter(
+                center: geo.toScreen(hammockShadow.x, hammockShadow.y),
+                width: hammockShadowRadius * 2 * unit,
+                height: hammockShadowRadius * 0.4 * unit,
+              ),
+              hammockShadowOpacity,
+            ),
           KittySprite(:final box) => SceneShadow.ofCat(
             box,
             geo.feetOf(box),
@@ -994,6 +1095,16 @@ class _RoomViewState extends State<RoomView>
           if (here(kitty)) ?_passing(kitty, geo),
       ],
       floor: [
+        // Garis panduan Hias di bawah barang: barang yang diangkat tetap di
+        // atasnya (chipnya di atas semua, lihat di bawah).
+        if (_decorating && geo.which == _house)
+          Positioned.fill(
+            child: ZoneGuides(geo: geo, time: _animating ? _time : null),
+          ),
+        // Tempat nyaman teras pemain baru di bawah kucing (kucing yang sudah
+        // dibeli tanpa barang bisa duduk di sana).
+        if (_empty && !living && !_decorating)
+          Positioned.fill(child: EmptyTerraceSpots(geo: geo)),
         // Pintu di bawah kucing dan barang: kucing di ambang tetap bisa
         // diketuk.
         if (!_decorating)
@@ -1009,7 +1120,6 @@ class _RoomViewState extends State<RoomView>
             },
             onTap: () => _goTo(geo.which.other),
           ),
-        if (_decorating) Positioned.fill(child: ZoneGuides(geo: geo)),
         for (final sprite in sprites.whereType<KittySprite>())
           if (sprite.kitty == _selected)
             Positioned(
@@ -1028,7 +1138,17 @@ class _RoomViewState extends State<RoomView>
             ),
       ],
       sprites: [
-        for (final sprite in ordered)
+        for (final sprite in ordered) ...[
+          // Tali gantungan teras tepat di belakang barangnya.
+          if (sprite case ItemSprite(:final id)
+              when geo.hangs(id) && id != dragging)
+            Positioned.fill(
+              key: ValueKey('rope-${id.name}'),
+              child: HangRopes(
+                ropes: geo.ropesOf(id, sprite.box),
+                width: hangRopeWidth * unit,
+              ),
+            ),
           if (sprite case ItemSprite(:final id) when id == dragging)
             _itemSprite(sprite, geo, bowlFull, lifted: true)
           else
@@ -1043,6 +1163,7 @@ class _RoomViewState extends State<RoomView>
                 ),
               ),
             },
+        ],
         // Kucing yang melompat ke atau dari barang dinding, paling depan.
         for (final MapEntry(key: kitty, value: box) in hopping.entries)
           Positioned.fromRect(
@@ -1073,6 +1194,11 @@ class _RoomViewState extends State<RoomView>
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(child: scene),
+        // Chip panduan Hias di atas barang dan kucing, seperti desain
+        // (z 890): label jalur pintu tidak tertutup barang. Garis dan
+        // arsirnya di lapisan lantai. Sentuhan tembus.
+        if (_decorating)
+          Positioned.fill(child: ZoneGuides(geo: geo, labels: true)),
         if (attention case (_, final need))
           DoorAttention(geo: geo, need: need, time: _animating ? _time : null),
         if (lifted != null)
@@ -1087,7 +1213,11 @@ class _RoomViewState extends State<RoomView>
         // supaya gelembung hadiah Oyen tetap bisa diketuk.
         if (empty && !_decorating)
           Positioned.fill(
-            child: EmptyRoomHints(geo: geo, onShop: _openShop),
+            child: EmptyRoomHints(
+              geo: geo,
+              onShop: _openShop,
+              time: _animating ? _time : null,
+            ),
           ),
         if (!_decorating)
           for (final MapEntry(key: kitty, value: box) in catBoxes.entries)
@@ -1283,7 +1413,10 @@ class _RoomViewState extends State<RoomView>
       // Barang diam tidak digambar ulang tiap bingkai.
       time: RoomItemArt.isAnimated(id) ? time : null,
     );
-    if (_decorating) {
+    // Hanya ruangan yang sedang dibuka yang bisa dihias: selama transisi
+    // pintu kedua ruangan dibangun, dan barang ruangan yang sedang keluar
+    // tidak boleh terseret ke ruangan ini.
+    if (_decorating && geo.which == _house) {
       final l = context.l10n;
       art = DecorOutline(
         child: Semantics(
