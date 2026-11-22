@@ -9,6 +9,8 @@ import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/screens/room/decorate.dart';
 import 'package:kucing_oren/screens/room/kitty_card.dart';
+import 'package:kucing_oren/screens/room/room_geometry.dart';
+import 'package:kucing_oren/screens/room/room_scene.dart';
 import 'package:kucing_oren/screens/room/room_view.dart';
 
 import '../test_helpers.dart';
@@ -327,14 +329,16 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('Gudang'), findsOneWidget);
   });
+
   group('dua ruangan', () {
     Future<ProgressController> pumpTerrace(
       WidgetTester tester, {
       bool decorate = true,
+      Home? home,
     }) async {
       final p = await pumpRoom(
         tester,
-        progress: withNeeds(const {}, home: decoratedHome()),
+        progress: withNeeds(const {}, home: home ?? decoratedHome()),
       );
       await goThroughDoor(tester);
       expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
@@ -422,6 +426,87 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
       expect(find.text('Hias'), findsOneWidget);
+    });
+
+    /// Rumah [decoratedHome] dengan hammock dan lampu bulan di Gudang.
+    Home withHangers() {
+      final home = decoratedHome();
+      var room = home.room;
+      for (final id in [RoomItemId.hammock, RoomItemId.lampuBulan]) {
+        room = room.buy(id).store(id);
+      }
+      return home.copyWith(room: room);
+    }
+
+    testWidgets('hammock dari Gudang digantung di teras dengan dua tali', (
+      tester,
+    ) async {
+      final progress = await pumpTerrace(tester, home: withHangers());
+      await tester.tap(find.text('Hammock Jendela'));
+      await tester.pump();
+      expect(progress.home.room.roomOf(RoomItemId.hammock), HouseRoom.terrace);
+      expect(find.text('Gantung di balok atap'), findsOneWidget);
+      final ropes = tester.widget<HangRopes>(find.byType(HangRopes));
+      expect(ropes.ropes, hasLength(2));
+      final (room, _) = roomOf(tester);
+      final terrace = RoomGeometry(room.size, HouseRoom.terrace);
+      expect(
+        boxIn(tester, RoomItemId.hammock).topLeft,
+        offsetMoreOrLessEquals(
+          terrace.boxOf(roomItemOf(RoomItemId.hammock), Spot(0, 0)).topLeft,
+          epsilon: 0.01,
+        ),
+      );
+      await tester.pump(const Duration(seconds: 3));
+      expect(find.text('Gantung di balok atap'), findsNothing);
+    });
+
+    testWidgets('barang dinding di Gudang teras diredupkan', (tester) async {
+      final semantics = tester.ensureSemantics();
+      final progress = await pumpTerrace(tester, home: withHangers());
+      expect(
+        find.bySemanticsLabel(
+          'Jam Kucing, hanya bisa dipasang di ruang tengah',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.bySemanticsLabel('Taruh Lampu Bulan di kamar'),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Jam Kucing'));
+      await tester.pump();
+      expect(find.text('Bisa dipasang di ruang tengah'), findsOneWidget);
+      expect(progress.home.room.isPlaced(RoomItemId.jam), isFalse);
+      await tester.pump(const Duration(seconds: 3));
+      semantics.dispose();
+    });
+
+    testWidgets('gantungan diseret di teras kembali ke titik gantung', (
+      tester,
+    ) async {
+      final progress = await pumpTerrace(tester, home: withHangers());
+      await tester.tap(find.text('Hammock Jendela'));
+      await tester.pump(const Duration(seconds: 3));
+      final before = boxIn(tester, RoomItemId.hammock);
+      await dragFramed(
+        tester,
+        itemView(RoomItemId.hammock),
+        const Offset(-60, 120),
+      );
+      await tester.pumpAndSettle();
+      expect(boxIn(tester, RoomItemId.hammock), before);
+      expect(progress.home.room.roomOf(RoomItemId.hammock), HouseRoom.terrace);
+      // Dilepas di baki: masuk Gudang.
+      final tray = tester.getRect(find.byType(StorageTray));
+      final from = tester.getCenter(itemView(RoomItemId.hammock));
+      await dragFramed(
+        tester,
+        itemView(RoomItemId.hammock),
+        tray.center - from,
+      );
+      await tester.pumpAndSettle();
+      expect(progress.home.room.isPlaced(RoomItemId.hammock), isFalse);
     });
   });
 }

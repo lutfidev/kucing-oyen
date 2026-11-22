@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../game/model/home_items.dart';
@@ -442,17 +444,28 @@ class DecorOutline extends StatelessWidget {
 /// Baki Gudang di panel bawah saat menghias (`BakiGudang.dc.html`): barang
 /// yang dimiliki tapi tidak ditaruh; ketuk untuk menaruhnya di posisi
 /// bawaan. Barang yang dilepas di atas baki masuk ke Gudang.
+///
+/// Barang [dimmed] tidak bisa dipasang di ruangan ini (barang dinding di
+/// teras): diredupkan, dan ketukannya memanggil [onDimmed]. [selected]
+/// diberi garis (slot yang keterangannya sedang tampil). Kedua callback
+/// menerima kotak slot di layar, untuk keterangan di atasnya.
 class StorageTray extends StatelessWidget {
   const StorageTray({
     super.key,
     required this.items,
     required this.compact,
     required this.onPlace,
+    this.dimmed = const {},
+    this.selected,
+    this.onDimmed,
   });
 
   final List<RoomItemId> items;
   final bool compact;
-  final void Function(RoomItemId id) onPlace;
+  final void Function(RoomItemId id, Rect slot) onPlace;
+  final Set<RoomItemId> dimmed;
+  final RoomItemId? selected;
+  final void Function(RoomItemId id, Rect slot)? onDimmed;
 
   @override
   Widget build(BuildContext context) {
@@ -541,7 +554,11 @@ class StorageTray extends StatelessWidget {
                       itemBuilder: (context, i) => _TraySlot(
                         id: items[i],
                         compact: compact,
-                        onPressed: () => onPlace(items[i]),
+                        dimmed: dimmed.contains(items[i]),
+                        selected: selected == items[i],
+                        onPressed: (slot) => dimmed.contains(items[i])
+                            ? onDimmed?.call(items[i], slot)
+                            : onPlace(items[i], slot),
                       ),
                     ),
             ),
@@ -559,12 +576,25 @@ class _TraySlot extends StatelessWidget {
   const _TraySlot({
     required this.id,
     required this.compact,
+    required this.dimmed,
+    required this.selected,
     required this.onPressed,
   });
 
   final RoomItemId id;
   final bool compact;
-  final VoidCallback onPressed;
+  final bool dimmed;
+  final bool selected;
+  final void Function(Rect slot) onPressed;
+
+  /// Slot redup: opasitas 0,42 dan `grayscale(0.5)` desain.
+  static const dimOpacity = 0.42;
+  static const _grayscale = ColorFilter.matrix([
+    0.6063, 0.3576, 0.0361, 0, 0, //
+    0.1063, 0.8576, 0.0361, 0, 0, //
+    0.1063, 0.3576, 0.5361, 0, 0, //
+    0, 0, 0, 1, 0,
+  ]);
 
   @override
   Widget build(BuildContext context) {
@@ -575,56 +605,148 @@ class _TraySlot extends StatelessWidget {
     final name = roomItemName(l, id);
     final width = compact ? s.roomTraySlotWidthCompact : s.roomTraySlotWidth;
     final height = compact ? s.roomTraySlotHeightCompact : s.roomTraySlotHeight;
-    return Semantics(
-      button: true,
-      label: l.storagePlaceLabel(name),
-      excludeSemantics: true,
-      onTap: onPressed,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onPressed,
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: Alignment.topCenter,
-          child: SizedBox(
-            width: width,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: width,
-                  height: height,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: c.floor,
-                    borderRadius: BorderRadius.circular(context.koRadius.slot),
-                    border: Border.all(color: c.lineDeep, width: s.border),
-                    boxShadow: KoShadow.solid(
-                      c.lineDeep,
-                      context.koShadow.pressIcon,
-                    ),
-                  ),
-                  child: RoomItemView(
-                    id: id,
-                    box:
-                        Size(s.roomTrayArtWidth, s.roomTrayArtHeight) *
-                        (height / s.roomTraySlotHeight),
-                  ),
+    void tap() {
+      final box = context.findRenderObject() as RenderBox?;
+      onPressed(
+        box == null || !box.hasSize
+            ? Rect.zero
+            : box.localToGlobal(Offset.zero) & box.size,
+      );
+    }
+
+    Widget slot = FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.topCenter,
+      child: SizedBox(
+        width: width,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: width,
+              height: height,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: c.floor,
+                borderRadius: BorderRadius.circular(context.koRadius.slot),
+                border: Border.all(color: c.lineDeep, width: s.border),
+                boxShadow: KoShadow.solid(
+                  c.lineDeep,
+                  context.koShadow.pressIcon,
                 ),
-                SizedBox(height: space.s4),
-                Text(
-                  name,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  style: context.koType.tagTiny.copyWith(
-                    color: c.ink,
-                    height: nameHeight,
-                  ),
-                ),
-              ],
+              ),
+              child: RoomItemView(
+                id: id,
+                box:
+                    Size(s.roomTrayArtWidth, s.roomTrayArtHeight) *
+                    (height / s.roomTraySlotHeight),
+              ),
             ),
+            SizedBox(height: space.s4),
+            Text(
+              name,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: context.koType.tagTiny.copyWith(
+                color: c.ink,
+                height: nameHeight,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (dimmed) {
+      slot = Opacity(
+        opacity: dimOpacity,
+        child: ColorFiltered(colorFilter: _grayscale, child: slot),
+      );
+    }
+    if (selected) {
+      slot = DecoratedBox(
+        position: DecorationPosition.foreground,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(context.koRadius.slot),
+          border: Border.all(
+            color: c.roomTraySelect,
+            width: s.roomTraySelect,
+            strokeAlign: BorderSide.strokeAlignOutside,
           ),
         ),
+        child: slot,
+      );
+    }
+    return Semantics(
+      button: true,
+      label: dimmed ? l.storageLivingOnly(name) : l.storagePlaceLabel(name),
+      excludeSemantics: true,
+      onTap: tap,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: tap,
+        child: slot,
+      ),
+    );
+  }
+}
+
+/// Keterangan gelap di atas slot Gudang (`Teras.dc.html` keadaan `hias`):
+/// "Bisa dipasang di ruang tengah" atau "Gantung di balok atap", dengan
+/// panah ke slot di [arrowX] (dari tepi kiri keterangan).
+class TrayTip extends StatelessWidget {
+  const TrayTip({super.key, required this.text, required this.arrowX});
+
+  final String text;
+  final double arrowX;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    final space = context.koSpace;
+    final tail = s.roomBubbleTail;
+    return Semantics(
+      liveRegion: true,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            left: arrowX - tail / 2,
+            bottom: -tail / 2,
+            child: Transform.rotate(
+              angle: math.pi / 4,
+              child: Container(
+                width: tail,
+                height: tail,
+                decoration: BoxDecoration(
+                  color: c.ink,
+                  borderRadius: BorderRadius.circular(space.s2),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(
+              horizontal: space.s12,
+              vertical: space.s8,
+            ),
+            decoration: BoxDecoration(
+              color: c.ink,
+              borderRadius: BorderRadius.circular(context.koRadius.control),
+              boxShadow: context.koShadow.card,
+            ),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                style: context.koType.cardBodyStrong.copyWith(color: c.cream),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -275,4 +275,83 @@ void main() {
       );
     });
   });
+
+  group('gantungan teras', () {
+    final terrace = RoomGeometry(const Size(390, 652), HouseRoom.terrace);
+    final hammock = roomItemOf(RoomItemId.hammock);
+    final lamp = roomItemOf(RoomItemId.lampuBulan);
+
+    test('hammock di titik gantung, skala 0,86, spot diabaikan', () {
+      for (final spot in [Spot(0, 0), Spot(1, 1)]) {
+        final box = terrace.boxOf(hammock, spot);
+        expect(box.left, closeTo(143.5, 0.01));
+        expect(box.top, closeTo(350, 0.01));
+        expect(box.width, closeTo(103.2, 0.05));
+        expect(box.height, closeTo(60.2, 0.05));
+      }
+      // Di ruang tengah tetap barang dinding biasa.
+      expect(design.hangs(RoomItemId.hammock), isFalse);
+      expect(terrace.hangs(RoomItemId.jam), isFalse);
+    });
+
+    test('tali hammock tegak dari balok ke kait', () {
+      final box = terrace.boxOf(hammock, Spot(0.5, 0.5));
+      final ropes = terrace.ropesOf(RoomItemId.hammock, box);
+      expect(ropes, hasLength(2));
+      expect(ropes[0].$1.dx, closeTo(150.4, 0.05));
+      expect(ropes[1].$1.dx, closeTo(239.8, 0.05));
+      for (final (top, bottom) in ropes) {
+        expect(top.dy, 162);
+        expect(bottom.dy, closeTo(356, 0.05));
+        expect(bottom.dx, top.dx);
+      }
+    });
+
+    test('lampu bulan tergantung di G3', () {
+      final box = terrace.boxOf(lamp, Spot(0.2, 0.2));
+      expect(box.topCenter.dx, closeTo(305, 0.01));
+      expect(box.top, closeTo(200, 0.01));
+      final ropes = terrace.ropesOf(RoomItemId.lampuBulan, box);
+      expect(ropes.single.$1, const Offset(305, 162));
+    });
+
+    test('hammock diurutkan seperti kaki y 464, lampu di belakang', () {
+      final sprites = roomSprites(
+        items: {
+          RoomItemId.hammock: Spot(0.5, 0.5),
+          RoomItemId.lampuBulan: Spot(0.5, 0.5),
+          RoomItemId.kasur: floor.spotAtFeet(195, 600),
+          RoomItemId.kardus: floor.spotAtFeet(120, 420),
+        },
+        cats: const {},
+        geo: terrace,
+      );
+      final order = [for (final s in sprites) (s as ItemSprite).id];
+      expect(order, [
+        RoomItemId.lampuBulan,
+        RoomItemId.kardus,
+        RoomItemId.hammock,
+        RoomItemId.kasur,
+      ]);
+    });
+
+    test('hammock tidak memotong jalur pintu teras, dan bisa dipakai', () {
+      final box = terrace.boxOf(hammock, Spot(0.5, 0.5));
+      final path = Path()
+        ..addPolygon([
+          for (final p in floor.doorPath(HouseRoom.terrace)) Offset(p.x, p.y),
+        ], true);
+      final overlap = Path.combine(
+        PathOperation.intersect,
+        path,
+        Path()..addRect(box),
+      );
+      expect(overlap.getBounds().isEmpty, isTrue);
+      final route = terrace.pathTo(KittyId.oyen, RoomItemId.hammock, {
+        RoomItemId.hammock: Spot(0.5, 0.5),
+      });
+      expect(route, isNotNull);
+      expect(route!.hops, 1);
+    });
+  });
 }

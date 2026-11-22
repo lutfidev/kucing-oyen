@@ -118,6 +118,7 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.roomPlaceLine,
     required this.roomPlaceFill,
     required this.roomPlaceInk,
+    required this.roomTraySelect,
     required this.roomDragShadow,
     required this.roomShadow,
     required this.onWaterDeep,
@@ -234,6 +235,7 @@ class KoColors extends ThemeExtension<KoColors> {
     roomPlaceLine: Color(0x8CA9530A), // rgba(169,83,10,.55),
     roomPlaceFill: Color(0x59FFFBF3), // rgba(255,251,243,.35),
     roomPlaceInk: Color(0xB3A9530A), // rgba(169,83,10,.7),
+    roomTraySelect: Color(0xFFA9530A),
     roomDragShadow: Color(0x383B2716), // rgba(59,39,22,.22),
     roomShadow: Color(0xFF3B2716), // Bayangan elips di kaki kucing dan barang (#3B2716; opasitas di RoomScene)
     onWaterDeep: Color(0xFFFFFFFF),
@@ -541,6 +543,9 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Ikon tapak tempat nyaman teras kosong.
   final Color roomPlaceInk;
 
+  /// Garis slot Gudang yang keterangannya sedang tampil.
+  final Color roomTraySelect;
+
   /// Bayangan elips di bawah barang yang diangkat.
   final Color roomDragShadow;
 
@@ -662,6 +667,7 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? roomPlaceLine,
     Color? roomPlaceFill,
     Color? roomPlaceInk,
+    Color? roomTraySelect,
     Color? roomDragShadow,
     Color? roomShadow,
     Color? onWaterDeep,
@@ -777,6 +783,7 @@ class KoColors extends ThemeExtension<KoColors> {
       roomPlaceLine: roomPlaceLine ?? this.roomPlaceLine,
       roomPlaceFill: roomPlaceFill ?? this.roomPlaceFill,
       roomPlaceInk: roomPlaceInk ?? this.roomPlaceInk,
+      roomTraySelect: roomTraySelect ?? this.roomTraySelect,
       roomDragShadow: roomDragShadow ?? this.roomDragShadow,
       roomShadow: roomShadow ?? this.roomShadow,
       onWaterDeep: onWaterDeep ?? this.onWaterDeep,
@@ -898,6 +905,7 @@ class KoColors extends ThemeExtension<KoColors> {
       roomPlaceLine: c(roomPlaceLine, other.roomPlaceLine),
       roomPlaceFill: c(roomPlaceFill, other.roomPlaceFill),
       roomPlaceInk: c(roomPlaceInk, other.roomPlaceInk),
+      roomTraySelect: c(roomTraySelect, other.roomTraySelect),
       roomDragShadow: c(roomDragShadow, other.roomDragShadow),
       roomShadow: c(roomShadow, other.roomShadow),
       onWaterDeep: c(onWaterDeep, other.onWaterDeep),
