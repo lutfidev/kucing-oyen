@@ -63,10 +63,7 @@ void main() {
             oyenRoomSize,
           ),
           _seated(
-            const KittyLook(
-              neighbor: Neighbor.kumis,
-              facing: KittyFacing.left,
-            ),
+            const KittyLook(neighbor: Neighbor.kumis, facing: KittyFacing.left),
             laneBenchRight.x,
             kittyRoomSize,
           ),
