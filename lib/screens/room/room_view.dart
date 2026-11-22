@@ -1192,8 +1192,14 @@ class _RoomViewState extends State<RoomView>
         // supaya gelembung hadiah Oyen tetap bisa diketuk.
         if (empty && !_decorating)
           Positioned.fill(
-            child: EmptyRoomHints(geo: geo, onShop: _openShop),
+            child: EmptyRoomHints(
+              geo: geo,
+              onShop: _openShop,
+              time: _animating ? _time : null,
+            ),
           ),
+        if (_empty && !living && !_decorating)
+          Positioned.fill(child: EmptyTerraceSpots(geo: geo)),
         if (!_decorating)
           for (final MapEntry(key: kitty, value: box) in catBoxes.entries)
             if (_progress.catNeeds(kitty) case final needs when needs.isSad)

@@ -392,13 +392,22 @@ abstract final class KoIcons {
     ),
   ], strokeWidth: 2.4);
 
-  /// Gagang seret di pojok barang saat menghias (enam titik).
   /// Jalur pintu saat menghias: lingkaran dicoret (`AdeganTengah.dc.html`).
   static const noEntry = KoIconData([
     KoIconShape.circle(Offset(12, 12), 9),
     KoIconShape.path('M5.6 5.6l12.8 12.8'),
   ], strokeWidth: 3);
 
+  /// Tapak di tempat nyaman teras kosong (`AdeganTeras.dc.html`).
+  static const paw = KoIconData([
+    KoIconShape.ellipse(Offset(12, 16), 5, 4, paint: KoIconPaint.fill),
+    KoIconShape.circle(Offset(6, 10), 2.2, paint: KoIconPaint.fill),
+    KoIconShape.circle(Offset(10, 6.5), 2.2, paint: KoIconPaint.fill),
+    KoIconShape.circle(Offset(14, 6.5), 2.2, paint: KoIconPaint.fill),
+    KoIconShape.circle(Offset(18, 10), 2.2, paint: KoIconPaint.fill),
+  ], strokeWidth: 0);
+
+  /// Gagang seret di pojok barang saat menghias (enam titik).
   static const grip = KoIconData([
     KoIconShape.circle(Offset(8, 6), 2.4, paint: KoIconPaint.fill),
     KoIconShape.circle(Offset(16, 6), 2.4, paint: KoIconPaint.fill),

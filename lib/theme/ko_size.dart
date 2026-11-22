@@ -127,6 +127,8 @@ class KoSize extends ThemeExtension<KoSize> {
     required this.roomDecorateGap,
     required this.roomHintBorder,
     required this.roomBubbleTail,
+    required this.roomBubbleNod,
+    required this.roomBubbleMax,
     required this.roomPraiseTop,
     required this.roomPraiseInset,
     required this.roomBubbleLabel,
@@ -296,6 +298,8 @@ class KoSize extends ThemeExtension<KoSize> {
     roomDecorateGap: 56,
     roomHintBorder: 2.5,
     roomBubbleTail: 14,
+    roomBubbleNod: 4,
+    roomBubbleMax: 186,
     roomPraiseTop: 120,
     roomPraiseInset: 40,
     roomBubbleLabel: 18,
@@ -679,6 +683,12 @@ class KoSize extends ThemeExtension<KoSize> {
   /// Ekor gelembung ajakan kamar baru.
   final double roomBubbleTail;
 
+  /// Anggukan gelembung ajakan kamar baru, px desain (rtNudge).
+  final double roomBubbleNod;
+
+  /// Lebar maksimum gelembung ajakan kamar baru (desain 186, dikali sx).
+  final double roomBubbleMax;
+
   /// Jarak pujian menghias dari bawah status bar (desain: top 164 − 44).
   final double roomPraiseTop;
 
@@ -935,6 +945,8 @@ class KoSize extends ThemeExtension<KoSize> {
     double? roomDecorateGap,
     double? roomHintBorder,
     double? roomBubbleTail,
+    double? roomBubbleNod,
+    double? roomBubbleMax,
     double? roomPraiseTop,
     double? roomPraiseInset,
     double? roomBubbleLabel,
@@ -1104,6 +1116,8 @@ class KoSize extends ThemeExtension<KoSize> {
       roomDecorateGap: roomDecorateGap ?? this.roomDecorateGap,
       roomHintBorder: roomHintBorder ?? this.roomHintBorder,
       roomBubbleTail: roomBubbleTail ?? this.roomBubbleTail,
+      roomBubbleNod: roomBubbleNod ?? this.roomBubbleNod,
+      roomBubbleMax: roomBubbleMax ?? this.roomBubbleMax,
       roomPraiseTop: roomPraiseTop ?? this.roomPraiseTop,
       roomPraiseInset: roomPraiseInset ?? this.roomPraiseInset,
       roomBubbleLabel: roomBubbleLabel ?? this.roomBubbleLabel,
@@ -1285,6 +1299,8 @@ class KoSize extends ThemeExtension<KoSize> {
       roomDecorateGap: d(roomDecorateGap, other.roomDecorateGap),
       roomHintBorder: d(roomHintBorder, other.roomHintBorder),
       roomBubbleTail: d(roomBubbleTail, other.roomBubbleTail),
+      roomBubbleNod: d(roomBubbleNod, other.roomBubbleNod),
+      roomBubbleMax: d(roomBubbleMax, other.roomBubbleMax),
       roomPraiseTop: d(roomPraiseTop, other.roomPraiseTop),
       roomPraiseInset: d(roomPraiseInset, other.roomPraiseInset),
       roomBubbleLabel: d(roomBubbleLabel, other.roomBubbleLabel),
