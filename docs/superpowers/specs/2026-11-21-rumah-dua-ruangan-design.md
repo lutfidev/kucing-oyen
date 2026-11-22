@@ -19,7 +19,7 @@ Arah ini dipilih dari tiga gambar konsep di kanvas https://claude.ai/artifact/FS
 ## Bukan tujuan
 
 - CCTV. Ditunda sampai ada ruangan ketiga; nanti bentuknya monitor dinding yang dibeli di Toko, bukan menu.
-- Ruangan ketiga dan seterusnya, barang khusus teras, atau perubahan katalog Toko.
+- Ruangan ketiga dan seterusnya, barang khusus teras, atau perubahan katalog Toko. (22 Nov 2026: tempat ketiga di luar rumah, gang lewat pintu depan, disepakati di `docs/superpowers/specs/2026-11-22-gang-depan-design.md`.)
 - Kebutuhan baru. Bar Lapar/Senang, mangkuk, hadiah koin, camilan, elus, dan aksesoris tetap seperti v1.
 - Perubahan puzzle, peta, atau layar lain.
 
