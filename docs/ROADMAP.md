@@ -719,7 +719,7 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 36".
 
-## 37. Gang Depan: kunjungan Kumis dan rutinitas gang
+## 37. Gang Depan: kunjungan Kumis dan rutinitas gang ✅
 
 **Hasil:** jadwal kunjungan harian ber-seed, pertemuan pertama yang diingat permanen, Oyen keluar dan pulang lewat pintu kucing, dan rutinitas dua kucing di gang termasuk naskah pertemuan pertama.
 

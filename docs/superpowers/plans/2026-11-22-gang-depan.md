@@ -498,6 +498,7 @@ Branch `feat/gang-depan-layar`.
   - `LaneCamera({required bool home, required Widget from, required Widget to, required RoomGeometry geo, required VoidCallback onDone})`:
     - `from` ditransformasi `Matrix4` (zoom di sekitar `focus`).
     - Daun pintu digambar `paintDoorLeaf` di sudut `doorDeg`.
+    - **Keputusan pemilik repo (22 Nov 2026):** aturan penempatan barang tetap. Barang ruang tengah yang berada di belakang daun yang berayun (kasur bawaan di (118,434), barang di strip x 95–160 dekat y 400–430) ditutup tepi daun sedikit demi sedikit: bagian barang di belakang poligon daun yang sedang terproyeksi tidak tergambar di atas daun. Cek pergi dan pulang di 70–88° dengan kasur bawaan dan kamar penuh. Gerakannya harus mulus di kedua arah, tanpa pergantian mendadak siapa yang di depan.
     - `to` dipotong `ClipPath` bukaan yang sudah ditransformasi kamera, dengan skala `laneScale`.
     - Ketuk selama berjalan = langsung ke akhir.
     - Kurangi gerak = crossfade `laneFadeMs`.
