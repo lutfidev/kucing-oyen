@@ -701,3 +701,38 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 > **Lalu:** kerjakan Task 10–13 rencana.
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 35".
+
+## 36. Gang Depan: gambar pintu depan, gang, dan Kumis
+
+**Waktu:** sesudah langkah 35 di-merge.
+
+**Hasil:** ruang tengah punya pintu depan tertutup dengan pintu kucing di dinding kiri, gang digambar dari desain (lapisan, bangku dua lapis, animasi), Kumis dan pose `endus`/`geser` ada di templat kucing, dan daun pintu bisa diproyeksikan ke sudut ayun mana pun.
+
+> **Baca dulu:**
+> - spec `docs/superpowers/specs/2026-11-22-gang-depan-design.md`
+> - rencana `docs/superpowers/plans/2026-11-22-gang-depan.md` (Global Constraints, Review Focus, Task 1–5)
+> - desain di `docs/design/gang-depan/project/` (link kanvas di spec; catatan koordinat di `canvas.json`)
+>
+> **Lalu:** kerjakan Task 1–5 rencana.
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 36".
+
+## 37. Gang Depan: kunjungan Kumis dan rutinitas gang
+
+**Hasil:** jadwal kunjungan harian ber-seed, pertemuan pertama yang diingat permanen, Oyen keluar dan pulang lewat pintu kucing, dan rutinitas dua kucing di gang termasuk naskah pertemuan pertama.
+
+> **Baca dulu:** spec dan rencana di atas (Task 6–9), catatan langkah 36 di `docs/DESIGN_NOTES.md`.
+>
+> **Lalu:** kerjakan Task 6–9 rencana.
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 37".
+
+## 38. Gang Depan: layar, kamera, dan cek akhir
+
+**Hasil:** ekor di pintu kucing dan Oyen menyelinap, kamera menembus pintu ke gang dan pulang, Oyen dan Kumis hidup di gang, lalu overflow, potret layar keempat bahasa, dan profil kinerja di HP.
+
+> **Baca dulu:** spec dan rencana di atas (Task 10–13).
+>
+> **Lalu:** kerjakan Task 10–13 rencana. Cek di HP: ekor Kumis mudah dikenali, gerakan kamera terasa seperti melangkah keluar, dan Kumis masih ada saat pemain menyusul.
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 38".

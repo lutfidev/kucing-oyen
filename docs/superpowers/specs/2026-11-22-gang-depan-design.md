@@ -1,6 +1,6 @@
 # Rumah Oyen: pintu depan dan Gang Depan
 
-Disepakati pemilik repo pada 22 Nov 2026. Memperluas rumah dua ruangan (`docs/superpowers/specs/2026-11-21-rumah-dua-ruangan-design.md`) dengan tempat ketiga di luar rumah. Brief untuk Claude Design ada di `docs/design-brief/gang-depan.md`. Pratinjau konsep (sketsa kasar di atas potret layar game, bukan gambar final): https://claude.ai/artifact/59AgVWDnrnRnLjgJHmX2jM.
+Disepakati pemilik repo pada 22 Nov 2026. Memperluas rumah dua ruangan (`docs/superpowers/specs/2026-11-21-rumah-dua-ruangan-design.md`) dengan tempat ketiga di luar rumah. Brief untuk Claude Design ada di `docs/design-brief/gang-depan.md`. Kanvas desain (diserahkan 22 Nov 2026): https://claude.ai/code/artifact/ea089b1c-2bf2-4906-932c-895e4bf207df, salinan lokal di `docs/design/gang-depan/project/` (catatan koordinat di `canvas.json`). Rencana: `docs/superpowers/plans/2026-11-22-gang-depan.md`. Pratinjau konsep (sketsa kasar di atas potret layar game, bukan gambar final): https://claude.ai/artifact/59AgVWDnrnRnLjgJHmX2jM.
 
 ## Maksud
 
