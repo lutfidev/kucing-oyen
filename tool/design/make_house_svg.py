@@ -1,20 +1,31 @@
 """Menulis lib/game/render/design_svg_house.dart dari desain rumah dua ruangan.
 
-Pakai: python tool/design/make_house_svg.py docs/design/rumah-dua-ruangan/project lib/game/render/design_svg_house.dart
+Pakai: python tool/design/make_house_svg.py docs/design/rumah-dua-ruangan/project docs/design/gang-depan/project lib/game/render/design_svg_house.dart
+
+Lapisan ruang tengah (`LatarTengah`, `CahayaTengah`, `KusenTengah`) dibaca
+dari kanvas Gang Depan, yang menambah pintu depan di dinding kiri; lapisan
+teras dari kanvas rumah dua ruangan.
 """
 import re
 import sys
 
-src, out = sys.argv[1], sys.argv[2]
+src, lane, out = sys.argv[1], sys.argv[2], sys.argv[3]
+
+# Berkas yang diambil dari kanvas Gang Depan.
+FROM_LANE = {'LatarTengah', 'CahayaTengah', 'KusenTengah'}
+
+
+def folder(name):
+    return lane if name in FROM_LANE else src
 
 
 def svgs(name):
-    text = open(f'{src}/{name}.dc.html', encoding='utf-8').read().replace('\r\n', '\n')
+    text = open(f'{folder(name)}/{name}.dc.html', encoding='utf-8').read().replace('\r\n', '\n')
     return [m.group(1) for m in re.finditer(r'<svg\b[^>]*>(.*?)</svg>', text, re.S)]
 
 
 def keyframes(name):
-    text = open(f'{src}/{name}.dc.html', encoding='utf-8').read()
+    text = open(f'{folder(name)}/{name}.dc.html', encoding='utf-8').read()
     return '\n'.join(re.findall(r'@keyframes [^\n]*', text))
 
 
@@ -30,8 +41,9 @@ parts = [
 ]
 
 lines = [
-    '// Isi <svg> desain rumah dua ruangan (docs/design/rumah-dua-ruangan/project),',
-    '// disalin utuh. Jangan diketik ulang: tulis ulang dengan',
+    '// Isi <svg> desain rumah dua ruangan (docs/design/rumah-dua-ruangan/project;',
+    '// ruang tengah dari docs/design/gang-depan/project), disalin utuh.',
+    '// Jangan diketik ulang: tulis ulang dengan',
     '// tool/design/make_house_svg.py. Dijaga design_sync_test.',
     '',
     'library;',
