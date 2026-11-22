@@ -566,8 +566,9 @@ void main() {
 
     test('tata letak: taruh, ke Gudang, taruh lagi', () async {
       final c = controller(home: owning([RoomItemId.kardus]));
-      expect(await c.placeItem(RoomItemId.kardus, Spot(0.2, 0.5)), isTrue);
-      expect(c.home.room.spotOf(RoomItemId.kardus), Spot(0.2, 0.5));
+      // Kiri depan lantai: di luar jalur pintu teras dan pintu depan.
+      expect(await c.placeItem(RoomItemId.kardus, Spot(0.2, 0.95)), isTrue);
+      expect(c.home.room.spotOf(RoomItemId.kardus), Spot(0.2, 0.95));
       expect(await c.storeItem(RoomItemId.kardus), isTrue);
       expect(c.home.room.stored, [RoomItemId.kardus]);
       expect(await c.storeItem(RoomItemId.kardus), isFalse);
