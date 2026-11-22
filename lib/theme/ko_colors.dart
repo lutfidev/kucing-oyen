@@ -110,6 +110,7 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.roomSelectFill,
     required this.roomZoneLine,
     required this.roomZoneFill,
+    required this.roomFloorZoneFill,
     required this.roomItemDecorFill,
     required this.roomDoorPathFill,
     required this.roomDoorPathHatch,
@@ -225,8 +226,9 @@ class KoColors extends ThemeExtension<KoColors> {
     roomHintFloorInk: Color(0xFF8E5A30),
     roomScrim: Color(0x383B2716), // rgba(59,39,22,.22),
     roomSelectFill: Color(0x2EF59A33), // rgba(245,154,51,.18),
-    roomZoneLine: Color(0x8C2F86B8), // rgba(47,134,184,.55),
+    roomZoneLine: Color(0x992F86B8), // rgba(47,134,184,.6),
     roomZoneFill: Color(0x0D2F86B8), // rgba(47,134,184,.05),
+    roomFloorZoneFill: Color(0x0A2F86B8),
     roomItemDecorFill: Color(0x122F86B8), // rgba(47,134,184,.07),
     roomDoorPathFill: Color(0x1AC9650C), // rgba(201,101,12,.10),
     roomDoorPathHatch: Color(0x52C9650C), // rgba(201,101,12,.32),
@@ -519,6 +521,9 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Isi area dinding/lantai saat menghias.
   final Color roomZoneFill;
 
+  /// Isi poligon lantai saat menghias (rgba(47,134,184,.04)).
+  final Color roomFloorZoneFill;
+
   /// Isi kotak barang saat menghias.
   final Color roomItemDecorFill;
 
@@ -659,6 +664,7 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? roomSelectFill,
     Color? roomZoneLine,
     Color? roomZoneFill,
+    Color? roomFloorZoneFill,
     Color? roomItemDecorFill,
     Color? roomDoorPathFill,
     Color? roomDoorPathHatch,
@@ -775,6 +781,7 @@ class KoColors extends ThemeExtension<KoColors> {
       roomSelectFill: roomSelectFill ?? this.roomSelectFill,
       roomZoneLine: roomZoneLine ?? this.roomZoneLine,
       roomZoneFill: roomZoneFill ?? this.roomZoneFill,
+      roomFloorZoneFill: roomFloorZoneFill ?? this.roomFloorZoneFill,
       roomItemDecorFill: roomItemDecorFill ?? this.roomItemDecorFill,
       roomDoorPathFill: roomDoorPathFill ?? this.roomDoorPathFill,
       roomDoorPathHatch: roomDoorPathHatch ?? this.roomDoorPathHatch,
@@ -897,6 +904,7 @@ class KoColors extends ThemeExtension<KoColors> {
       roomSelectFill: c(roomSelectFill, other.roomSelectFill),
       roomZoneLine: c(roomZoneLine, other.roomZoneLine),
       roomZoneFill: c(roomZoneFill, other.roomZoneFill),
+      roomFloorZoneFill: c(roomFloorZoneFill, other.roomFloorZoneFill),
       roomItemDecorFill: c(roomItemDecorFill, other.roomItemDecorFill),
       roomDoorPathFill: c(roomDoorPathFill, other.roomDoorPathFill),
       roomDoorPathHatch: c(roomDoorPathHatch, other.roomDoorPathHatch),

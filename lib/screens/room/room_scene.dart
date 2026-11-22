@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../game/render/render.dart';
@@ -40,7 +41,7 @@ class _RopePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_RopePainter old) =>
-      old.width != width || old.color != color || old.ropes != ropes;
+      old.width != width || old.color != color || !listEquals(old.ropes, ropes);
 }
 
 /// Bayangan lembut di kaki kucing atau barang: elips [oval] (layar) dengan

@@ -9,7 +9,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kucing_oren/app/app.dart';
@@ -115,24 +114,21 @@ Future<void> main() async {
 
 const _switchRooms = bool.fromEnvironment('SWITCH_ROOMS');
 
-/// Mengetuk pintu ruangan yang sedang tampil seperti jari: cari
-/// [DoorButton] di pohon widget, lalu kirim sentuhan ke tengahnya. Selama
-/// transisi kedua ruangan dibangun; ketukan dilewati sampai tinggal satu.
+/// Membuka pintu ruangan yang sedang tampil: cari [DoorButton] di pohon
+/// widget lalu panggil `onTap`-nya langsung (sentuhan sungguhan bisa
+/// mengenai kucing di depan pintu dan membuka kartunya). Selama transisi
+/// kedua ruangan dibangun; ketukan dilewati sampai tinggal satu.
 void _tapDoor() {
-  final boxes = <RenderBox>[];
+  final doors = <DoorButton>[];
   void visit(Element element) {
-    if (element.widget is DoorButton) {
-      final box = element.findRenderObject();
-      if (box is RenderBox && box.hasSize && box.attached) boxes.add(box);
+    final widget = element.widget;
+    if (widget is DoorButton) {
+      doors.add(widget);
       return;
     }
     element.visitChildElements(visit);
   }
 
   WidgetsBinding.instance.rootElement?.visitChildElements(visit);
-  if (boxes.length != 1) return;
-  final at = boxes.single.localToGlobal(boxes.single.size.center(Offset.zero));
-  final binding = GestureBinding.instance;
-  binding.handlePointerEvent(PointerDownEvent(position: at, pointer: 9001));
-  binding.handlePointerEvent(PointerUpEvent(position: at, pointer: 9001));
+  if (doors.length == 1) doors.single.onTap();
 }

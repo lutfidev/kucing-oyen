@@ -105,15 +105,26 @@ class DecorateHint extends StatelessWidget {
   }
 }
 
-//// Panduan mode Hias (`AdeganTengah.dc.html`/`AdeganTeras.dc.html` mode
+/// Panduan mode Hias (`AdeganTengah.dc.html`/`AdeganTeras.dc.html` mode
 /// `hias`): area dinding (ruang tengah), area lantai, jalur pintu yang
 /// diarsir, dan di teras titik gantung hammock dan lampu bulan; dengan
 /// labelnya. [time] = detik denyut titik gantung (null = diam).
+///
+/// Dua lapisan: garis dan arsir ([labels] false) di lapisan lantai, di
+/// bawah barang, supaya barang yang diangkat tetap di atasnya; chip
+/// ([labels] true) di atas barang dan kucing seperti desain (z 890),
+/// supaya chip jalur pintu tidak tertutup kasur.
 class ZoneGuides extends StatelessWidget {
-  const ZoneGuides({super.key, required this.geo, this.time});
+  const ZoneGuides({
+    super.key,
+    required this.geo,
+    this.time,
+    this.labels = false,
+  });
 
   final RoomGeometry geo;
   final double? time;
+  final bool labels;
 
   // Letak desain area rumah 390×652.
   static const wall = Rect.fromLTWH(88, 150, 214, 182);
@@ -177,23 +188,28 @@ class ZoneGuides extends StatelessWidget {
     final door = [
       for (final p in const HouseFloor().doorPath(geo.which)) Offset(p.x, p.y),
     ];
+    if (!labels) {
+      return IgnorePointer(
+        child: CustomPaint(
+          size: Size.infinite,
+          painter: _ZonePainter(
+            sx: geo.sx,
+            sy: geo.sy,
+            wall: terrace ? null : wall,
+            floor: floor,
+            door: door,
+            hang: terrace,
+            // Hanya cincin teras yang berdenyut: ruang tengah tidak
+            // digambar ulang tiap bingkai.
+            pulse: terrace ? pulse(time) : 1,
+            colors: c,
+          ),
+        ),
+      );
+    }
     return IgnorePointer(
       child: Stack(
         children: [
-          Positioned.fill(
-            child: CustomPaint(
-              painter: _ZonePainter(
-                sx: geo.sx,
-                sy: geo.sy,
-                wall: terrace ? null : wall,
-                floor: floor,
-                door: door,
-                hang: terrace,
-                pulse: pulse(time),
-                colors: c,
-              ),
-            ),
-          ),
           if (!terrace) label(wallLabel, _ZoneLabel(l.zoneWall)),
           label(floorLabel, _ZoneLabel(l.zoneFloor)),
           label(
@@ -285,7 +301,7 @@ class _ZonePainter extends CustomPainter {
     }
     final floorPath = _polygon(floor);
     canvas
-      ..drawPath(floorPath, fill)
+      ..drawPath(floorPath, Paint()..color = colors.roomFloorZoneFill)
       ..drawPath(_dashed(floorPath, _areaDash), stroke(colors.roomZoneLine, 2));
 
     final doorPath = _polygon(door);
@@ -400,7 +416,7 @@ class _ZoneLabel extends StatelessWidget {
   }
 }
 
-// Garis putus-putus dan gagang di sekeliling barang saat menghias.
+/// Garis putus-putus dan gagang di sekeliling barang saat menghias.
 class DecorOutline extends StatelessWidget {
   const DecorOutline({super.key, required this.child});
 

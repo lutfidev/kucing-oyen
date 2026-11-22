@@ -594,8 +594,15 @@ class _RoomViewState extends State<RoomView>
     _decorating = true;
     _selected = null;
     _reaction = null;
+    _clearTrayTip();
     _life.interrupt();
   });
+
+  /// Keterangan slot Gudang hilang (tanpa setState).
+  void _clearTrayTip() {
+    _trayTipTimer?.cancel();
+    _trayTip = null;
+  }
 
   /// Selesai menghias (juga tombol kembali sistem): kembali ke mode normal,
   /// lalu pujian, dengan bonus Senang kalau belum diberikan sejam ini.
@@ -606,6 +613,7 @@ class _RoomViewState extends State<RoomView>
       _decorating = false;
       _dragging = null;
       _dragSpot = null;
+      _clearTrayTip();
     });
     final bonus = await _progress.finishDecorating();
     if (!mounted) return;
@@ -623,7 +631,9 @@ class _RoomViewState extends State<RoomView>
 
   void _dragUpdate(RoomItemId id, Offset pointer) {
     final geo = _geo;
-    if (geo == null) return;
+    // Barang tidak bisa diseret lewat pintu (spec): hanya barang di
+    // ruangan yang sedang dibuka.
+    if (geo == null || _progress.home.room.roomOf(id) != _house) return;
     _dragPointer = pointer;
     setState(() {
       _dragging = id;
@@ -1085,6 +1095,16 @@ class _RoomViewState extends State<RoomView>
           if (here(kitty)) ?_passing(kitty, geo),
       ],
       floor: [
+        // Garis panduan Hias di bawah barang: barang yang diangkat tetap di
+        // atasnya (chipnya di atas semua, lihat di bawah).
+        if (_decorating && geo.which == _house)
+          Positioned.fill(
+            child: ZoneGuides(geo: geo, time: _animating ? _time : null),
+          ),
+        // Tempat nyaman teras pemain baru di bawah kucing (kucing yang sudah
+        // dibeli tanpa barang bisa duduk di sana).
+        if (_empty && !living && !_decorating)
+          Positioned.fill(child: EmptyTerraceSpots(geo: geo)),
         // Pintu di bawah kucing dan barang: kucing di ambang tetap bisa
         // diketuk.
         if (!_decorating)
@@ -1174,12 +1194,11 @@ class _RoomViewState extends State<RoomView>
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(child: scene),
-        // Panduan Hias di atas barang dan kucing, seperti desain (z 890):
-        // label jalur pintu tidak tertutup barang. Sentuhan tembus.
+        // Chip panduan Hias di atas barang dan kucing, seperti desain
+        // (z 890): label jalur pintu tidak tertutup barang. Garis dan
+        // arsirnya di lapisan lantai. Sentuhan tembus.
         if (_decorating)
-          Positioned.fill(
-            child: ZoneGuides(geo: geo, time: _animating ? _time : null),
-          ),
+          Positioned.fill(child: ZoneGuides(geo: geo, labels: true)),
         if (attention case (_, final need))
           DoorAttention(geo: geo, need: need, time: _animating ? _time : null),
         if (lifted != null)
@@ -1200,8 +1219,6 @@ class _RoomViewState extends State<RoomView>
               time: _animating ? _time : null,
             ),
           ),
-        if (_empty && !living && !_decorating)
-          Positioned.fill(child: EmptyTerraceSpots(geo: geo)),
         if (!_decorating)
           for (final MapEntry(key: kitty, value: box) in catBoxes.entries)
             if (_progress.catNeeds(kitty) case final needs when needs.isSad)
@@ -1396,7 +1413,10 @@ class _RoomViewState extends State<RoomView>
       // Barang diam tidak digambar ulang tiap bingkai.
       time: RoomItemArt.isAnimated(id) ? time : null,
     );
-    if (_decorating) {
+    // Hanya ruangan yang sedang dibuka yang bisa dihias: selama transisi
+    // pintu kedua ruangan dibangun, dan barang ruangan yang sedang keluar
+    // tidak boleh terseret ke ruangan ini.
+    if (_decorating && geo.which == _house) {
       final l = context.l10n;
       art = DecorOutline(
         child: Semantics(

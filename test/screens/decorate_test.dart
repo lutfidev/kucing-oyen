@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,8 +9,10 @@ import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/screens/room/decorate.dart';
+import 'package:kucing_oren/screens/room/door_parts.dart';
 import 'package:kucing_oren/screens/room/kitty_card.dart';
 import 'package:kucing_oren/screens/room/room_geometry.dart';
+import 'package:kucing_oren/screens/room/room_parts.dart';
 import 'package:kucing_oren/screens/room/room_scene.dart';
 import 'package:kucing_oren/screens/room/room_view.dart';
 
@@ -354,16 +357,73 @@ void main() {
       expect(find.text('Jalur pintu'), findsOneWidget);
       expect(find.text('Area dinding'), findsOneWidget);
       expect(find.text('Titik gantung · hammock'), findsNothing);
-      // Panduan di atas barang (desain z 890), bukan di lapisan lantai:
-      // label jalur pintu tidak tertutup kasur.
+      // Chip panduan di atas barang (desain z 890): label jalur pintu tidak
+      // tertutup kasur. Garis dan arsir di lapisan lantai, di bawah barang
+      // yang diangkat.
+      bool labels(Widget w) => w is ZoneGuides && w.labels;
+      bool lines(Widget w) => w is ZoneGuides && !w.labels;
+      final scene = find.byType(RoomScene);
       expect(
-        find.descendant(
-          of: find.byType(RoomScene),
-          matching: find.byType(ZoneGuides),
+        find.descendant(of: scene, matching: find.byWidgetPredicate(labels)),
+        findsNothing,
+      );
+      expect(find.byWidgetPredicate(labels), findsOneWidget);
+      expect(
+        find.descendant(of: scene, matching: find.byWidgetPredicate(lines)),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('Hias di tengah transisi: barang ruangan yang keluar '
+        'tidak bisa diseret', (tester) async {
+      final progress = await pumpRoom(
+        tester,
+        progress: withNeeds(const {}, home: decoratedHome()),
+      );
+      final spot = progress.home.room.spotOf(RoomItemId.kasur);
+      await tester.tap(find.byType(DoorButton));
+      await tester.pump(const Duration(milliseconds: 120));
+      await tester.tap(find.text('Hias'));
+      await tester.pump();
+      // Ruang tengah masih bergeser keluar: kasurnya terlihat tapi tanpa
+      // garis hias dan tanpa seret.
+      expect(
+        find.ancestor(
+          of: itemView(RoomItemId.kasur),
+          matching: find.byType(DecorOutline),
         ),
         findsNothing,
       );
-      expect(find.byType(ZoneGuides), findsOneWidget);
+      final gesture = await tester.startGesture(
+        tester.getCenter(itemView(RoomItemId.kasur)),
+        kind: PointerDeviceKind.touch,
+      );
+      for (var i = 0; i < 8; i++) {
+        await gesture.moveBy(const Offset(20, 5));
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(progress.home.room.roomOf(RoomItemId.kasur), HouseRoom.living);
+      expect(progress.home.room.spotOf(RoomItemId.kasur), spot);
+    });
+
+    testWidgets('teras baru: tempat nyaman di bawah kucing', (tester) async {
+      await pumpRoom(
+        tester,
+        progress: testProgressWith(
+          home: Home(kitties: const [KittyId.oyen, KittyId.mochi]),
+        ),
+      );
+      await goThroughDoor(tester);
+      expect(find.byType(EmptyTerraceSpots), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(RoomScene),
+          matching: find.byType(EmptyTerraceSpots),
+        ),
+        findsOneWidget,
+      );
     });
 
     testWidgets('panduan jalur pintu dan titik gantung di teras', (

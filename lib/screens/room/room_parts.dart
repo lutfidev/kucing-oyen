@@ -1,11 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:path_drawing/path_drawing.dart';
 
+import '../../game/model/house.dart';
 import '../../l10n/l10n.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
-import '../../game/model/house.dart';
 import 'room_geometry.dart';
 
 /// Header kamar: chip koin, logo satu baris, dan total bintang.
@@ -414,20 +415,17 @@ class EmptyTerraceSpots extends StatelessWidget {
                     width: radiusX * 2 * k,
                     height: radiusY * 2 * k,
                   ),
-                  child: KoDashedBorder(
-                    color: c.roomPlaceLine,
-                    radius: radiusY * k,
-                    child: DecoratedBox(
-                      decoration: ShapeDecoration(
-                        color: c.roomPlaceFill,
-                        shape: const StadiumBorder(),
-                      ),
-                      child: Center(
-                        child: KoIcon(
-                          KoIcons.paw,
-                          size: s.iconCompact * unit,
-                          color: c.roomPlaceInk,
-                        ),
+                  child: CustomPaint(
+                    painter: _DashedOval(
+                      fill: c.roomPlaceFill,
+                      line: c.roomPlaceLine,
+                      width: s.border,
+                    ),
+                    child: Center(
+                      child: KoIcon(
+                        KoIcons.paw,
+                        size: s.iconCompact * unit,
+                        color: c.roomPlaceInk,
                       ),
                     ),
                   ),
@@ -674,4 +672,38 @@ class KeepInside extends SingleChildLayoutDelegate {
       old.margin != margin ||
       old.top != top ||
       old.centered != centered;
+}
+
+/// Elips berisi [fill] dengan garis putus-putus [line] setebal [width]
+/// (CSS `border-radius: 50%; border: 2px dashed`), garis di dalam kotak.
+class _DashedOval extends CustomPainter {
+  _DashedOval({required this.fill, required this.line, required this.width});
+
+  final Color fill;
+  final Color line;
+  final double width;
+
+  /// Pola putus CSS untuk garis 2 px (`dashed`: garis dan celah 2× tebal).
+  static const _dash = 2.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final oval = (Offset.zero & size).deflate(width / 2);
+    canvas.drawOval(oval, Paint()..color = fill);
+    final dashed = dashPath(
+      Path()..addOval(oval),
+      dashArray: CircularIntervalList([width * _dash, width * _dash]),
+    );
+    canvas.drawPath(
+      dashed,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = width
+        ..color = line,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_DashedOval old) =>
+      old.fill != fill || old.line != line || old.width != width;
 }
