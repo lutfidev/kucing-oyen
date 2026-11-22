@@ -178,10 +178,7 @@ void paintDoorLeaf(
     final hole = e['h'] as List?;
     if (hole != null) {
       path
-        ..addPath(
-          _polygon([for (final p in hole) at(p as List)]),
-          Offset.zero,
-        )
+        ..addPath(_polygon([for (final p in hole) at(p as List)]), Offset.zero)
         ..fillType = PathFillType.evenOdd;
     }
     final stroke = e['st'];

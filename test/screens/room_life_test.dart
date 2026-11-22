@@ -6,6 +6,7 @@ import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/app/routes.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/room.dart';
@@ -520,7 +521,12 @@ void main() {
       tester,
     ) async {
       final home = Home(
-        room: Room().buy(RoomItemId.jendelaBurung).buy(RoomItemId.tiang),
+        room: Room()
+            .buy(RoomItemId.jendelaBurung)
+            .buy(RoomItemId.tiang)
+            // Tiang di bawah jendela burung (posisi bawaannya sejak Gang
+            // Depan di kanan, jauh dari jendela).
+            .place(RoomItemId.tiang, const HouseFloor().spotAtFeet(134, 414)),
       );
       await _pump(tester, progress: testProgressWith(home: home, coins: 0));
       final post = tester.getRect(itemView(RoomItemId.tiang));
@@ -558,7 +564,12 @@ void main() {
       'dielus di jendela burung: tetap di jendela, reaksi di atasnya',
       (tester) async {
         final home = Home(
-          room: Room().buy(RoomItemId.jendelaBurung).buy(RoomItemId.tiang),
+          room: Room()
+              .buy(RoomItemId.jendelaBurung)
+              .buy(RoomItemId.tiang)
+              // Tiang di bawah jendela burung (posisi bawaannya sejak Gang
+              // Depan di kanan, jauh dari jendela).
+              .place(RoomItemId.tiang, const HouseFloor().spotAtFeet(134, 414)),
         );
         await _pump(
           tester,

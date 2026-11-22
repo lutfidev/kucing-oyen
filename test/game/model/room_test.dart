@@ -43,16 +43,17 @@ void main() {
     expect(stored.spotOf(RoomItemId.kardus), isNull);
     expect(stored.stored, [RoomItemId.kardus]);
 
-    // Spot di kiri lantai: tidak menutup jalur pintu, jadi tidak digeser.
-    final back = stored.place(RoomItemId.kardus, Spot(0.2, 0.5));
-    expect(back.spotOf(RoomItemId.kardus), Spot(0.2, 0.5));
+    // Spot di kiri depan lantai: tidak menutup jalur pintu teras maupun
+    // pintu depan, jadi tidak digeser.
+    final back = stored.place(RoomItemId.kardus, Spot(0.2, 0.95));
+    expect(back.spotOf(RoomItemId.kardus), Spot(0.2, 0.95));
     expect(back.stored, isEmpty);
   });
 
   test('mangkuk tidak bisa ke Gudang, tapi bisa digeser', () {
     expect(Room.initial.store(RoomItemId.mangkuk), Room.initial);
-    final moved = Room.initial.place(RoomItemId.mangkuk, Spot(0.1, 0.2));
-    expect(moved.spotOf(RoomItemId.mangkuk), Spot(0.1, 0.2));
+    final moved = Room.initial.place(RoomItemId.mangkuk, Spot(0.5, 0.9));
+    expect(moved.spotOf(RoomItemId.mangkuk), Spot(0.5, 0.9));
   });
 
   test('barang yang tidak dimiliki tidak bisa ditaruh atau disimpan', () {
@@ -79,7 +80,7 @@ void main() {
     final room = Room.fromJson({
       'owned': ['kardus', 'kursiAsing', 7, null, 'bola'],
       'placed': {
-        'kardus': [0.2, 0.5],
+        'kardus': [0.2, 0.95],
         'bola': 'a',
         'tikus': [0.1, 0.1],
         'kursiAsing': [0, 0],
@@ -93,7 +94,7 @@ void main() {
     });
     expect(room.placed, {
       RoomItemId.mangkuk: bowlSpot,
-      RoomItemId.kardus: Spot(0.2, 0.5),
+      RoomItemId.kardus: Spot(0.2, 0.95),
     });
     expect(room.stored, [RoomItemId.bola]);
 
@@ -191,4 +192,93 @@ void main() {
       );
     });
   });
+
+  group('simpanan lama dan pintu depan', () {
+    const floor = HouseFloor();
+    final tiang = roomItemOf(RoomItemId.tiang);
+    final kasur = roomItemOf(RoomItemId.kasur);
+    // Posisi bawaan tiang garukan v1 (pojok kiri) jatuh di jalur pintu
+    // depan.
+    final oldTiang = spotAt(tiang, 20, 330);
+
+    test('posisi bawaan baru tiang garukan di luar jalur pintu depan', () {
+      expect(floor.blocksDoor(tiang, HouseRoom.living, oldTiang), isTrue);
+      // AdeganTengah: kiri 266 (lebar 50 × skala 0,78), tengah kaki 285,6.
+      final feet = floor.feetAt(tiang.defaultSpot);
+      expect(feet.x, closeTo(285.6, 0.5));
+      expect(feet.y, closeTo(414, 0.5));
+      expect(
+        floor.blocksDoor(tiang, HouseRoom.living, tiang.defaultSpot),
+        isFalse,
+      );
+    });
+
+    test('hanya barang yang menutup jalur dipindah, ke tempat bebas', () {
+      final kasurAt = floor.spotAtFeet(195, 630);
+      // Barang di luar jalur tetap, juga kalau bertumpuk (aturan v1).
+      final kardusAt = floor.spotAtFeet(200, 635);
+      final room = Room.fromJson({
+        'owned': ['tiang', 'kasur', 'kardus'],
+        'placed': {
+          'tiang': oldTiang.toJson(),
+          'kasur': kasurAt.toJson(),
+          'kardus': kardusAt.toJson(),
+        },
+      });
+      expect(room.spotOf(RoomItemId.kasur), kasurAt);
+      expect(room.spotOf(RoomItemId.kardus), kardusAt);
+      final moved = room.spotOf(RoomItemId.tiang)!;
+      expect(moved, isNot(oldTiang));
+      expect(floor.blocksDoor(tiang, HouseRoom.living, moved), isFalse);
+      for (final (other, at) in [
+        (kasur, kasurAt),
+        (roomItemOf(RoomItemId.kardus), kardusAt),
+      ]) {
+        expect(
+          floor.footprint(tiang, moved).overlaps(floor.footprint(other, at)),
+          isFalse,
+        );
+      }
+    });
+
+    test('tanpa tempat bebas: masuk Gudang, tetap dimiliki', () {
+      final room = Room.fromJson({
+        'owned': ['tiang'],
+        'placed': {'tiang': oldTiang.toJson()},
+      }, floor: const _FullFloor());
+      expect(room.owns(RoomItemId.tiang), isTrue);
+      expect(room.isPlaced(RoomItemId.tiang), isFalse);
+      expect(room.stored, [RoomItemId.tiang]);
+    });
+
+    test('mangkuk tidak pernah ke Gudang', () {
+      final blocked = floor.spotAtFeet(60, 480);
+      final room = Room.fromJson({
+        'owned': <String>[],
+        'placed': {'mangkuk': blocked.toJson()},
+      }, floor: const _FullFloor());
+      final spot = room.spotOf(RoomItemId.mangkuk)!;
+      expect(
+        floor.blocksDoor(
+          roomItemOf(RoomItemId.mangkuk),
+          HouseRoom.living,
+          spot,
+        ),
+        isFalse,
+      );
+    });
+  });
+}
+
+/// Lantai tanpa tempat bebas sama sekali (ruangan penuh).
+class _FullFloor extends HouseFloor {
+  const _FullFloor();
+
+  @override
+  Spot? freeSpot(
+    RoomItem item,
+    HouseRoom room,
+    Spot spot,
+    Iterable<({RoomItem item, Spot spot})> others,
+  ) => null;
 }

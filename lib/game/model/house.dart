@@ -163,21 +163,38 @@ class HouseFloor {
           (x: 4, y: 492),
         ];
 
-  /// Titik kaki [spot] berada di jalur pintu ruangan [room].
+  /// Jalur pintu depan ruang tengah (Gang Depan, `kPintuDepan`): dari
+  /// ambang pintu kucing di dinding kiri ke tengah lantai.
+  static const frontDoorPath = <HousePoint>[
+    (x: 72, y: 402),
+    (x: 6, y: 491),
+    (x: 124, y: 570),
+    (x: 178, y: 508),
+  ];
+
+  /// Semua jalur pintu ruangan [room]: ruang tengah punya pintu teras dan
+  /// pintu depan, teras hanya pintu ke ruang tengah.
+  List<List<HousePoint>> doorPaths(HouseRoom room) => [
+    doorPath(room),
+    if (room == HouseRoom.living) frontDoorPath,
+  ];
+
+  /// Tempat Oyen berdiri sebelum menyelinap lewat pintu kucing pintu depan
+  /// (bayangan desain di (70, 436)).
+  Spot get frontThreshold => spotAtFeet(70, 436);
+
+  /// Titik kaki [spot] berada di salah satu jalur pintu ruangan [room].
   bool onDoorPath(HouseRoom room, Spot spot) {
     final feet = feetAt(spot);
-    return _inPolygon(doorPath(room), feet);
+    return doorPaths(room).any((path) => _inPolygon(path, feet));
   }
 
-  /// Barang lantai [item] di [spot] menutup jalur pintu: jejaknya (selebar
-  /// gambar, 12 × skala px di belakang kaki) bersinggungan dengan
-  /// [doorPath]. Barang rata (karpet) dan barang dinding boleh di sana.
-  bool blocksDoor(RoomItem item, HouseRoom room, Spot spot) {
-    if (item.zone != RoomZone.floor || item.flat) return false;
+  /// Jejak barang lantai [item] di [spot] (px desain): selebar gambar, 12 ×
+  /// skala px di belakang kaki.
+  ItemFootprint footprint(RoomItem item, Spot spot) {
     final feet = itemFeet(item, spot);
     final half = itemSize(item, feet.scale).width / 2;
-    return _rectTouches(
-      doorPath(room),
+    return ItemFootprint(
       feet.x - half,
       feet.y - 12 * feet.scale,
       feet.x + half,
@@ -185,16 +202,56 @@ class HouseFloor {
     );
   }
 
+  /// Barang lantai [item] di [spot] menutup jalur pintu: jejaknya
+  /// ([footprint]) bersinggungan dengan salah satu [doorPaths]. Barang rata
+  /// (karpet) dan barang dinding boleh di sana.
+  bool blocksDoor(RoomItem item, HouseRoom room, Spot spot) {
+    if (item.zone != RoomZone.floor || item.flat) return false;
+    final f = footprint(item, spot);
+    return doorPaths(room)
+        .any((path) => _rectTouches(path, f.left, f.top, f.right, f.bottom));
+  }
+
   /// [spot] kalau tidak menutup jalur pintu; selain itu spot terdekat
   /// (jarak kaki) di kisi 41×41 yang tidak menutupnya.
   Spot allowedSpot(RoomItem item, HouseRoom room, Spot spot) {
-    if (!blocksDoor(item, room, spot)) return spot;
+    bool ok(Spot candidate) => !blocksDoor(item, room, candidate);
+    return ok(spot) ? spot : _nearest(spot, ok) ?? spot;
+  }
+
+  /// Tempat untuk barang lantai [item] dari simpanan lama yang menutup
+  /// jalur pintu (keputusan pemilik repo, Gang Depan): [spot] kalau sudah
+  /// bebas, selain itu spot terdekat (jarak kaki, kisi 41×41) yang tidak
+  /// menutup jalur pintu dan jejaknya tidak bersinggungan dengan jejak
+  /// barang lantai lain yang tidak rata di [others]. Null kalau tidak ada
+  /// (ruangan penuh).
+  Spot? freeSpot(
+    RoomItem item,
+    HouseRoom room,
+    Spot spot,
+    Iterable<({RoomItem item, Spot spot})> others,
+  ) {
+    final taken = [
+      for (final o in others)
+        if (o.item.zone == RoomZone.floor && !o.item.flat)
+          footprint(o.item, o.spot),
+    ];
+    bool free(Spot candidate) {
+      if (blocksDoor(item, room, candidate)) return false;
+      final f = footprint(item, candidate);
+      return !taken.any(f.overlaps);
+    }
+
+    return free(spot) ? spot : _nearest(spot, free);
+  }
+
+  Spot? _nearest(Spot spot, bool Function(Spot) ok) {
     Spot? best;
     var bestDistance = double.infinity;
     for (var i = 0; i <= 40; i++) {
       for (var j = 0; j <= 40; j++) {
         final candidate = Spot(i / 40, j / 40);
-        if (blocksDoor(item, room, candidate)) continue;
+        if (!ok(candidate)) continue;
         final d = distance(spot, candidate);
         if (d < bestDistance) {
           bestDistance = d;
@@ -202,9 +259,31 @@ class HouseFloor {
         }
       }
     }
-    return best ?? spot;
+    return best;
   }
 }
+
+/// Jejak barang lantai di koordinat desain ([HouseFloor.footprint]).
+class ItemFootprint {
+  const ItemFootprint(this.left, this.top, this.right, this.bottom);
+
+  final double left;
+  final double top;
+  final double right;
+  final double bottom;
+
+  /// Bersinggungan dengan [other] (tepi yang menempel tidak dihitung).
+  bool overlaps(ItemFootprint other) =>
+      left < other.right &&
+      other.left < right &&
+      top < other.bottom &&
+      other.top < bottom;
+}
+
+/// Garis potong kucing yang lewat pintu kucing (`kPintuDepan`, `kGang`):
+/// pintu depan ruang tengah dan pintu pulang di gang, x desain.
+const flapClipX = 45.2;
+const laneFlapClipX = 344.8;
 
 /// Persegi (l, t, r, b) bersinggungan dengan poligon cembung atau tidak.
 bool _rectTouches(

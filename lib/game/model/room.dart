@@ -6,10 +6,17 @@ import 'house.dart';
 /// dimiliki dan selalu ditaruh di ruang tengah. Barang lantai tidak pernah
 /// menutup jalur pintu ([HouseFloor.allowedSpot]).
 class Room {
+  /// Barang yang dibaca dari simpanan dan menutup jalur pintu (mis. tiang
+  /// garukan lama di jalur pintu depan) dipindah ke tempat bebas terdekat
+  /// ([HouseFloor.freeSpot]), urut katalog sesudah barang yang tidak
+  /// menutup; kalau ruangannya penuh, barang itu masuk Gudang. Mangkuk
+  /// tidak pernah ke Gudang. Barang lain tidak bergeser. [floor] hanya
+  /// diganti di test.
   factory Room({
     Iterable<RoomItemId> owned = const [],
     Map<RoomItemId, Spot> placed = const {},
     Map<RoomItemId, HouseRoom> rooms = const {},
+    HouseFloor floor = const HouseFloor(),
   }) {
     final all = {RoomItemId.mangkuk, ...owned};
     final spots = {
@@ -24,10 +31,33 @@ class Room {
             canPlaceIn(key, value))
           key: value,
     };
-    return Room._(all, {
-      for (final MapEntry(:key, :value) in spots.entries)
-        key: _allowed(key, terrace[key] ?? HouseRoom.living, value),
-    }, terrace);
+    HouseRoom roomOf(RoomItemId id) => terrace[id] ?? HouseRoom.living;
+    final kept = <RoomItemId, Spot>{};
+    final blocked = <RoomItem>[];
+    for (final item in roomItems) {
+      final spot = spots[item.id];
+      if (spot == null) continue;
+      if (floor.blocksDoor(item, roomOf(item.id), spot)) {
+        blocked.add(item);
+      } else {
+        kept[item.id] = spot;
+      }
+    }
+    for (final item in blocked) {
+      final room = roomOf(item.id);
+      final free = floor.freeSpot(item, room, spots[item.id]!, [
+        for (final MapEntry(:key, :value) in kept.entries)
+          if (roomOf(key) == room) (item: roomItemOf(key), spot: value),
+      ]);
+      if (free != null) {
+        kept[item.id] = free;
+      } else if (item.builtIn) {
+        kept[item.id] = floor.allowedSpot(item, room, spots[item.id]!);
+      } else {
+        terrace.remove(item.id);
+      }
+    }
+    return Room._(all, kept, terrace);
   }
 
   Room._(
@@ -130,7 +160,10 @@ class Room {
   /// Nama barang yang tidak dikenal, letak yang rusak, dan letak barang
   /// yang tidak dimiliki dibuang. Tanpa `terrace` (simpanan v1), semua
   /// barang di ruang tengah; barang yang tidak boleh di teras juga.
-  factory Room.fromJson(Map<String, dynamic> json) {
+  factory Room.fromJson(
+    Map<String, dynamic> json, {
+    HouseFloor floor = const HouseFloor(),
+  }) {
     final names = RoomItemId.values.asNameMap();
     final owned = json['owned'];
     final placed = json['placed'];
@@ -154,6 +187,7 @@ class Room {
           for (final name in terrace)
             if (names[name] case final RoomItemId id) id: HouseRoom.terrace,
       },
+      floor: floor,
     );
   }
 

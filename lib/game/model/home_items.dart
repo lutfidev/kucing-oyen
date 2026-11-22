@@ -204,8 +204,12 @@ const roomItems = [
     ItemUse.scratch,
     50,
     152,
-    20,
-    330,
+    // Gang Depan: pojok kiri lama (20, 330) jatuh di jalur pintu depan.
+    // Sekarang seperti `AdeganTengah` (`barang('tiang', 266, 414)`: kiri
+    // 266, kaki y 414, jadi tengah kaki x 285,6), dihitung balik lewat
+    // `HouseFloor.spotAtFeet`.
+    291.85,
+    305.15,
     scale: 0.95,
     toy: true,
   ),
