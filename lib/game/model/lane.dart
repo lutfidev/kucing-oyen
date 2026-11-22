@@ -29,6 +29,10 @@ const laneHopSeconds = 0.42;
 /// Depan pintu pulang: Oyen berdiri di sini sebelum masuk pintu kucing.
 const laneThreshold = (x: 300.0, y: 470.0);
 
+/// Kaki Oyen saat lewat pintu kucing pintu pulang (`AdeganGang` "masuk",
+/// dipotong di `laneFlapClipX`).
+const laneFlapFeet = (x: 338.0, y: 437.0);
+
 /// Tempat nyaman gang selain bangku: dua teduh pohon, piring air (minum
 /// dengan pose makan tanpa mangkuk), tangga warung (skala dari y 404), dan
 /// depan pintu pulang.
