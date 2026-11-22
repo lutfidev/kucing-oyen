@@ -232,8 +232,7 @@ void main() {
         ..start(firstMeeting: false, midVisit: true);
       life.oyenGoesHome();
       var t = 0.0;
-      while (life.of(LaneCat.oyen)!.activity != CatActivity.leaving &&
-          t < 30) {
+      while (life.of(LaneCat.oyen)!.activity != CatActivity.leaving && t < 30) {
         life.advance(_frame);
         t += _frame;
       }
