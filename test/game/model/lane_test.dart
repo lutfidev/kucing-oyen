@@ -81,22 +81,22 @@ void main() {
 
     test('heldUntil memperpanjang kunjungan yang berjalan', () {
       final v = laneVisitsOn(day).first;
-      final held = v.end.add(const Duration(minutes: 15));
+      final held = v.until(v.end.add(const Duration(minutes: 15)));
       final at = laneVisitAt(
         v.end.add(const Duration(minutes: 10)),
-        heldUntil: held,
+        held: held,
       );
       expect(at?.start, v.start);
-      expect(at?.end, held);
-      expect(laneVisitAt(held, heldUntil: held), isNull);
+      expect(at?.end, held.end);
+      expect(laneVisitAt(held.end, held: held), isNull);
     });
 
     test('heldUntil tidak menghidupkan kunjungan pagi yang sudah lewat', () {
       final visits = laneVisitsOn(day);
       final last = visits.last;
-      final held = last.end.add(const Duration(minutes: 1));
+      final held = last.until(last.end.add(const Duration(minutes: 1)));
       final between = visits.first.end.add(const Duration(minutes: 30));
-      expect(laneVisitAt(between, heldUntil: held), isNull);
+      expect(laneVisitAt(between, held: held), isNull);
     });
 
     test('perpanjangan yang menabrak kunjungan berikutnya digabung', () {
@@ -115,10 +115,27 @@ void main() {
       final held = laneVisitAt(
         next.start.subtract(const Duration(minutes: 1)),
         forced: forced,
-        heldUntil: next.end.add(const Duration(minutes: 4)),
+        held: next.until(next.end.add(const Duration(minutes: 4))),
       );
       expect(held?.start, forced.start);
       expect(held?.end, next.end.add(const Duration(minutes: 4)));
+    });
+
+    test('perpanjangan yang menyentuh kunjungan berikutnya tanpa celah', () {
+      final start = DateTime(2026, 11, 22, 3);
+      final forced = LaneVisit(
+        start: start,
+        end: start.add(const Duration(minutes: 10)),
+      );
+      final held = forced.until(forced.end.add(const Duration(minutes: 1)));
+      expect(
+        laneVisitAt(
+          forced.end.add(const Duration(seconds: 30)),
+          forced: forced,
+          held: held,
+        ),
+        isNotNull,
+      );
     });
 
     test('kunjungan paksa yang dimulai sekarang terlihat', () {
@@ -145,10 +162,10 @@ void main() {
 
     test('kunjungan kemarin yang diperpanjang lewat tengah malam', () {
       final yesterday = laneVisitsOn(DateTime(2026, 11, 21)).last;
-      final held = DateTime(2026, 11, 22, 0, 5);
-      final at = laneVisitAt(DateTime(2026, 11, 22, 0, 1), heldUntil: held);
+      final held = yesterday.until(DateTime(2026, 11, 22, 0, 5));
+      final at = laneVisitAt(DateTime(2026, 11, 22, 0, 1), held: held);
       expect(at?.start, yesterday.start);
-      expect(at?.end, held);
+      expect(at?.end, held.end);
     });
 
     test('LaneVisit.contains dan until', () {

@@ -141,25 +141,21 @@ List<LaneVisit> laneVisitsOn(DateTime day) {
 /// Kunjungan yang sedang berjalan pada [now], atau null.
 ///
 /// Kunjungan kemarin (yang diperpanjang melewati tengah malam), hari ini,
-/// dan [forced] dipertimbangkan bersama. [heldUntil] memperpanjang
-/// kunjungan terakhir yang dimulai sebelum [heldUntil], yaitu kunjungan
-/// saat pemain di gang atau saat momen ekor. Kunjungan yang dimulai sebelum
-/// kunjungan lain berakhir digabung, jadi tidak pernah ada dua Kumis.
-LaneVisit? laneVisitAt(DateTime now, {DateTime? heldUntil, LaneVisit? forced}) {
+/// [forced], dan perpanjangan [held] dipertimbangkan bersama. [held] dimulai
+/// di awal kunjungan yang sedang berjalan saat perpanjangan dipasang
+/// (pemain di gang, momen ekor), jadi hanya kunjungan itu yang diperpanjang.
+/// Kunjungan yang dimulai sebelum kunjungan lain berakhir (atau tepat saat
+/// berakhir) digabung, jadi tidak pernah ada dua Kumis atau celah.
+LaneVisit? laneVisitAt(DateTime now, {LaneVisit? held, LaneVisit? forced}) {
   final visits = [
-    ...laneVisitsOn(now.subtract(const Duration(days: 1))),
+    ...laneVisitsOn(DateTime(now.year, now.month, now.day - 1)),
     ...laneVisitsOn(now),
     ?forced,
+    ?held,
   ]..sort((a, b) => a.start.compareTo(b.start));
-  if (heldUntil != null) {
-    final i = visits.lastIndexWhere((v) => v.start.isBefore(heldUntil));
-    if (i >= 0 && visits[i].end.isBefore(heldUntil)) {
-      visits[i] = visits[i].until(heldUntil);
-    }
-  }
   LaneVisit? current;
   for (final v in visits) {
-    if (current != null && v.start.isBefore(current.end)) {
+    if (current != null && !v.start.isAfter(current.end)) {
       if (v.end.isAfter(current.end)) current = current.until(v.end);
       continue;
     }

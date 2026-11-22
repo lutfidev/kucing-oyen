@@ -347,8 +347,24 @@ class LaneLife {
 
   final math.Random random;
 
-  /// Kartu Oyen atau Kumis terbuka: rutinitas berhenti.
-  bool paused = false;
+  bool _paused = false;
+
+  /// Kartu Oyen atau Kumis terbuka: rutinitas berhenti. Kucing yang sedang
+  /// lewat pintu kucing langsung selesai di sisi tujuan, supaya tidak
+  /// tertahan di balik kusen.
+  bool get paused => _paused;
+  set paused(bool value) {
+    if (value && !_paused) {
+      for (final actor in List.of(_actors.values)) {
+        final head = _queues[actor.cat]?.firstOrNull;
+        if (head is _Door) {
+          head.t = lifeDoorSeconds;
+          _step(actor, 0);
+        }
+      }
+    }
+    _paused = value;
+  }
 
   final _actors = <LaneCat, LaneActor>{};
   final _queues = <LaneCat, List<_Step>>{};
@@ -358,6 +374,7 @@ class LaneLife {
   bool _meeting = false;
   bool _meetingStarted = false;
   bool _leaving = false;
+  bool _oyenGoingHome = false;
   bool _puff = false;
   bool _heart = false;
   LaneMoment _moment = LaneMoment.arriving;
@@ -392,6 +409,7 @@ class LaneLife {
     _queues.clear();
     _events.clear();
     _leaving = false;
+    _oyenGoingHome = false;
     _puff = false;
     _heart = false;
     _meetingStarted = false;
@@ -446,6 +464,7 @@ class LaneLife {
     _leaving = true;
     _moment = LaneMoment.leaving;
     for (final cat in _actors.keys) {
+      if (cat == LaneCat.oyen && _oyenGoingHome) continue;
       _trimQueue(cat);
     }
     final kumis = _actors[LaneCat.kumis];
@@ -460,7 +479,7 @@ class LaneLife {
         ..add(_Walk(kumisLeavePath.sublist(1), fadeOut: true))
         ..add(_Call(() => _remove(LaneCat.kumis, const KumisGone())));
     }
-    if (_actors.containsKey(LaneCat.oyen)) {
+    if (_actors.containsKey(LaneCat.oyen) && !_oyenGoingHome) {
       _queue(LaneCat.oyen)
           .add(_Wait(() => !_actors.containsKey(LaneCat.kumis)));
       _queueOyenHome();
@@ -470,10 +489,13 @@ class LaneLife {
 
   /// Oyen lapar pulang lebih dulu; Kumis tetap di gang sendirian.
   void oyenGoesHome() {
-    if (!_actors.containsKey(LaneCat.oyen)) return;
+    if (!_actors.containsKey(LaneCat.oyen) || _oyenGoingHome) return;
     _abortMeeting();
-    for (final cat in _actors.keys) {
-      _trimQueue(cat);
+    _trimQueue(LaneCat.oyen);
+    // Kumis yang sedang pergi tetap pergi; selain itu ia berhenti menunggu
+    // Oyen dan lanjut sendirian.
+    if (!_leaving && _actors.containsKey(LaneCat.kumis)) {
+      _trimQueue(LaneCat.kumis);
     }
     _queueOyenHome();
     if (!_leaving) _moment = LaneMoment.alone;
@@ -657,6 +679,7 @@ class LaneLife {
   }
 
   void _queueOyenHome() {
+    _oyenGoingHome = true;
     final oyen = _actors[LaneCat.oyen]!;
     final q = _queue(LaneCat.oyen);
     if (oyen.onBench || _endsOnBench(LaneCat.oyen)) {

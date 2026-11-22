@@ -962,6 +962,26 @@ void main() {
       expect(back.activity, CatActivity.idle);
     });
 
+    test('comeHome di tengah pintu kucing: tanpa WentOut palsu', () {
+      final life = house(9);
+      final oyen = life.of(KittyId.oyen);
+      life.goOut(KittyId.oyen);
+      until(life, () => oyen.activity == CatActivity.leaving);
+      life.comeHome(KittyId.oyen, instant: true);
+      expect(oyen.outside, isFalse);
+      expect(life.advance(_frame).whereType<WentOut>(), isEmpty);
+
+      final paused = house(9);
+      final cat = paused.of(KittyId.oyen);
+      paused.goOut(KittyId.oyen);
+      until(paused, () => cat.activity == CatActivity.leaving);
+      paused.paused = true;
+      paused.comeHome(KittyId.oyen, instant: true);
+      paused.paused = false;
+      expect(paused.advance(_frame).whereType<WentOut>(), isEmpty);
+      expect(cat.outside, isFalse);
+    });
+
     test('sync dengan kucing baru tidak memasukkan Oyen yang di luar', () {
       final life = house(7);
       life.goOut(KittyId.oyen, instant: true);

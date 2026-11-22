@@ -498,6 +498,10 @@ class ProgressController extends ChangeNotifier implements HintSource {
   Future<void> resetProgress() async {
     _progress = Progress.empty;
     _metNeighbor = false;
+    _laneHeld = null;
+    _laneForced = null;
+    _laneForcedUsed = false;
+    _oyenHomeFrom = null;
     _coins = 0;
     _hints = const {};
     _home = Home.initial;
@@ -543,7 +547,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// Perpanjangan kunjungan (pemain di gang, momen ekor) dan kunjungan
   /// paksa: hanya di memori, hilang kalau aplikasi ditutup.
-  DateTime? _laneHeld;
+  LaneVisit? _laneHeld;
   LaneVisit? _laneForced;
   bool _laneForcedUsed = false;
 
@@ -552,7 +556,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
 
   /// Kunjungan yang sedang berjalan menurut jam, atau null.
   LaneVisit? get laneVisit => lanesOpen
-      ? laneVisitAt(clock(), heldUntil: _laneHeld, forced: _laneForced)
+      ? laneVisitAt(clock(), held: _laneHeld, forced: _laneForced)
       : null;
 
   /// Oyen sedang di gang: ada kunjungan dan ia belum pulang karena lapar.
@@ -561,9 +565,14 @@ class ProgressController extends ChangeNotifier implements HintSource {
     return visit != null && visit.start != _oyenHomeFrom;
   }
 
+  /// Memperpanjang kunjungan yang sedang berjalan sampai [until]. Di antara
+  /// kunjungan tidak ada yang diperpanjang (gang tetap kosong).
   void _holdUntil(DateTime until) {
+    final visit = laneVisit;
+    if (visit == null) return;
     final held = _laneHeld;
-    if (held == null || until.isAfter(held)) _laneHeld = until;
+    final end = held != null && held.end.isAfter(until) ? held.end : until;
+    _laneHeld = LaneVisit(start: visit.start, end: end);
   }
 
   /// Dipanggil tiap penyegaran selama pemain di gang: kunjungan tidak

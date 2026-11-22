@@ -184,6 +184,38 @@ void main() {
       expect(c.laneVisit, isNull);
     });
 
+    test(
+      'holdLane dan followTail di antara kunjungan tidak memanggil Kumis',
+      () {
+        final now = visit.end.add(const Duration(minutes: 30));
+        final c = testProgressWith(best: {1: 3}, clock: () => now);
+        c.holdLane();
+        c.followTail();
+        expect(c.laneVisit, isNull);
+        expect(c.oyenInLane, isFalse);
+        final night = testProgressWith(
+          best: {1: 3},
+          clock: () => DateTime(2026, 11, 22, 3),
+        );
+        night.holdLane();
+        expect(night.laneVisit, isNull);
+      },
+    );
+
+    test(
+      'resetProgress: kunjungan paksa bisa datang lagi di sesi ini',
+      () async {
+        var now = DateTime(2026, 11, 22, 3);
+        final c = testProgressWith(best: {1: 3}, clock: () => now);
+        expect(c.forceFirstVisit(), isTrue);
+        await c.resetProgress();
+        expect(c.laneVisit, isNull);
+        await c.record(1, 3);
+        now = now.add(const Duration(minutes: 11));
+        expect(c.forceFirstVisit(), isTrue);
+      },
+    );
+
     test('sendOyenHome: Oyen pulang, kunjungan berlanjut, berikutnya ikut', () {
       final visits = laneVisitsOn(day);
       var now = visits[0].start.add(const Duration(minutes: 1));

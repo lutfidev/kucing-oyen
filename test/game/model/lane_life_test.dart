@@ -215,6 +215,67 @@ void main() {
     expect(life.of(LaneCat.kumis), isNotNull);
   });
 
+  test('oyenGoesHome sesudah leave: Kumis tetap pergi, Oyen sekali lewat', () {
+    final life = LaneLife(random: Random(12))
+      ..start(firstMeeting: false, midVisit: true);
+    life
+      ..leave()
+      ..oyenGoesHome();
+    final events = _run(life, 60);
+    expect(events, [const KumisGone(), const OyenEnteredHouse()]);
+  });
+
+  test('leave sesudah oyenGoesHome, atau oyenGoesHome dua kali: '
+      'Oyen sekali lewat pintu', () {
+    for (final second in [true, false]) {
+      final life = LaneLife(random: Random(13))
+        ..start(firstMeeting: false, midVisit: true);
+      life.oyenGoesHome();
+      var t = 0.0;
+      while (life.of(LaneCat.oyen)!.activity != CatActivity.leaving &&
+          t < 30) {
+        life.advance(_frame);
+        t += _frame;
+      }
+      if (second) {
+        life.leave();
+      } else {
+        life.oyenGoesHome();
+      }
+      var doors = 1;
+      var wasLeaving = true;
+      final events = _run(life, 60, (_) {
+        final leaving = life.of(LaneCat.oyen)?.activity == CatActivity.leaving;
+        if (leaving && !wasLeaving) doors++;
+        wasLeaving = leaving;
+      });
+      expect(doors, 1, reason: 'leave=$second');
+      expect(events.whereType<OyenEnteredHouse>(), hasLength(1));
+      if (second) expect(events, contains(const KumisGone()));
+    }
+  });
+
+  test('dijeda di tengah pintu kucing: langsung selesai', () {
+    final life = LaneLife(random: Random(14))..start(firstMeeting: false);
+    _run(life, 0.3);
+    expect(life.of(LaneCat.oyen)!.isPassing, isTrue);
+    life.paused = true;
+    expect(life.of(LaneCat.oyen)!.isPassing, isFalse);
+
+    final home = LaneLife(random: Random(14))
+      ..start(firstMeeting: false, midVisit: true)
+      ..oyenGoesHome();
+    var t = 0.0;
+    while (home.of(LaneCat.oyen)?.activity != CatActivity.leaving && t < 30) {
+      home.advance(_frame);
+      t += _frame;
+    }
+    home.paused = true;
+    expect(home.of(LaneCat.oyen), isNull);
+    home.paused = false;
+    expect(home.advance(_frame), [const OyenEnteredHouse()]);
+  });
+
   test('dijeda: tidak bergerak', () {
     final life = LaneLife(random: Random(10))..start(firstMeeting: false);
     _run(life, 1);

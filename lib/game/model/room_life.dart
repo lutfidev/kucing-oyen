@@ -587,6 +587,8 @@ class RoomLife {
     if (cat.activity == CatActivity.leaving && cat.viaFlap) {
       _finishPassing(cat);
     }
+    // Keluar yang belum dilaporkan batal: Oyen langsung masuk lagi.
+    _pending.removeWhere((e) => e is WentOut && e.kitty == kitty);
     if (!cat.outside) {
       if (cat.goingOut) {
         cat.goingOut = false;
