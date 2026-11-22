@@ -185,8 +185,10 @@ class ZoneGuides extends StatelessWidget {
       );
     }
 
-    final door = [
-      for (final p in const HouseFloor().doorPath(geo.which)) Offset(p.x, p.y),
+    // Ruang tengah punya dua jalur: pintu teras dan pintu depan.
+    final doors = [
+      for (final path in const HouseFloor().doorPaths(geo.which))
+        [for (final p in path) Offset(p.x, p.y)],
     ];
     if (!labels) {
       return IgnorePointer(
@@ -197,7 +199,7 @@ class ZoneGuides extends StatelessWidget {
             sy: geo.sy,
             wall: terrace ? null : wall,
             floor: floor,
-            door: door,
+            doors: doors,
             hang: terrace,
             // Hanya cincin teras yang berdenyut: ruang tengah tidak
             // digambar ulang tiap bingkai.
@@ -236,7 +238,7 @@ class _ZonePainter extends CustomPainter {
     required this.sy,
     required this.wall,
     required this.floor,
-    required this.door,
+    required this.doors,
     required this.hang,
     required this.pulse,
     required this.colors,
@@ -246,7 +248,7 @@ class _ZonePainter extends CustomPainter {
   final double sy;
   final Rect? wall;
   final List<Offset> floor;
-  final List<Offset> door;
+  final List<List<Offset>> doors;
   final bool hang;
   final double pulse;
   final KoColors colors;
@@ -304,30 +306,35 @@ class _ZonePainter extends CustomPainter {
       ..drawPath(floorPath, Paint()..color = colors.roomFloorZoneFill)
       ..drawPath(_dashed(floorPath, _areaDash), stroke(colors.roomZoneLine, 2));
 
-    final doorPath = _polygon(door);
-    canvas
-      ..save()
-      ..clipPath(doorPath)
-      ..drawPath(doorPath, Paint()..color = colors.roomDoorPathFill);
-    final bounds = doorPath.getBounds();
     final hatch = Paint()
       ..color = colors.roomDoorPathHatch
       ..strokeWidth = 4;
-    // Garis miring 45° tiap 10 px (pola `rotate(45)` desain).
-    for (
-      var x = bounds.left - bounds.height;
-      x < bounds.right + bounds.height;
-      x += 10 * 1.4142
-    ) {
-      canvas.drawLine(
-        Offset(x, bounds.bottom),
-        Offset(x + bounds.height, bounds.top),
-        hatch,
-      );
+    for (final door in doors) {
+      final doorPath = _polygon(door);
+      canvas
+        ..save()
+        ..clipPath(doorPath)
+        ..drawPath(doorPath, Paint()..color = colors.roomDoorPathFill);
+      final bounds = doorPath.getBounds();
+      // Garis miring 45° tiap 10 px (pola `rotate(45)` desain).
+      for (
+        var x = bounds.left - bounds.height;
+        x < bounds.right + bounds.height;
+        x += 10 * 1.4142
+      ) {
+        canvas.drawLine(
+          Offset(x, bounds.bottom),
+          Offset(x + bounds.height, bounds.top),
+          hatch,
+        );
+      }
+      canvas
+        ..restore()
+        ..drawPath(
+          _dashed(doorPath, _doorDash),
+          stroke(colors.orangeDeep, 2.4),
+        );
     }
-    canvas
-      ..restore()
-      ..drawPath(_dashed(doorPath, _doorDash), stroke(colors.orangeDeep, 2.4));
 
     if (hang) {
       final ringFill = Paint()

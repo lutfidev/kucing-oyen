@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -16,7 +17,7 @@ CssTransformFn _fn(CssFrame frame) => frame.transform!.single;
 
 void main() {
   test('semua @keyframes desain terurai', () {
-    expect(_kitty, hasLength(15));
+    expect(_kitty, hasLength(16));
     expect(_items, hasLength(10));
     expect(CssKeyframes.parse(roomBadgeKeyframes).keys, ['gkBob', 'tlBob']);
   });
@@ -56,6 +57,33 @@ void main() {
     );
     expect(_fn(style.frameAt(0.45, _kitty)!).args, [0, closeTo(2.6, 1e-9)]);
     expect(_fn(style.frameAt(0.9, _kitty)!).args[1], closeTo(0, 1e-9));
+  });
+
+  test('skewX di keyframe: tenda gang −2,2° di tengah 3,2 detik', () {
+    // `ggKibar` di LatarGang.dc.html (Gang Depan).
+    final keyframes = CssKeyframes.parse(
+      '@keyframes ggKibar{0%,100%{transform:skewX(0deg)}'
+      '50%{transform:skewX(-2.2deg)}}',
+    );
+    final style = CssStyle.parse(
+      'transform-box: fill-box; transform-origin: 50% 0%; '
+      'animation: ggKibar 3.2s ease-in-out infinite',
+    );
+    final mid = style.frameAt(1.6, keyframes)!;
+    expect(_fn(mid).args.first, closeTo(-2.2, 1e-9));
+    final (a, b, c, d, _, _) = mid.matrix(0, 0);
+    expect((a, b, d), (1, 0, 1));
+    expect(c, closeTo(math.tan(-2.2 * math.pi / 180), 1e-12));
+    final (_, _, c0, _, _, _) = style.frameAt(0, keyframes)!.matrix(0, 0);
+    expect(c0, closeTo(0, 1e-12));
+    // skewY juga dikenal.
+    final y = CssKeyframes.parse(
+      '@keyframes k{0%{transform:skewY(0deg)}100%{transform:skewY(10deg)}}',
+    );
+    final (_, by, _, _, _, _) = CssStyle.parse(
+      'animation: k 1s linear infinite',
+    ).frameAt(0.5, y)!.matrix(0, 0);
+    expect(by, closeTo(math.tan(5 * math.pi / 180), 1e-12));
   });
 
   test('burung lompat: (−8, 0) di 20% dari 2,6 detik', () {

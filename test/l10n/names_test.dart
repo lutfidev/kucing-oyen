@@ -4,6 +4,7 @@ import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/chapter.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/neighbor.dart';
 import 'package:kucing_oren/game/model/snacks.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/sim/sim.dart';
@@ -66,6 +67,27 @@ void main() {
     expect(
       oyenLabel(ru, const OyenLook(pose: OyenPose.walk, dir: Direction.up)),
       'Ойен идёт, смотрит вверх',
+    );
+  });
+
+  test('Kumis: nama sama di semua bahasa, label tanpa aksesoris', () {
+    for (final code in ['en', 'id', 'pt', 'ru']) {
+      final l = lookupAppLocalizations(Locale(code));
+      expect(neighborName(l, Neighbor.kumis), 'Kumis');
+    }
+    const look = KittyLook(
+      neighbor: Neighbor.kumis,
+      pose: KittyPose.endus,
+      accessory: AccessoryId.pita,
+    );
+    expect(kittyLabel(l10nId, look), 'Kumis mengendus');
+    expect(kittyLabel(en, look), 'Kumis sniffing');
+    expect(
+      kittyLabel(
+        ru,
+        const KittyLook(kitty: KittyId.oyen, pose: KittyPose.geser1),
+      ),
+      contains('подвигается'),
     );
   });
 

@@ -3,6 +3,7 @@ import 'dart:ui';
 import '../model/house.dart';
 import 'css_animation.dart';
 import 'design_svg_house.dart';
+import 'design_svg_lane.dart';
 import 'svg_template.dart';
 
 /// Lapisan gambar satu ruangan, urut dari belakang (desain `kSkala`):
@@ -18,7 +19,9 @@ final _keyframes = CssKeyframes.parse(houseKeyframesCss);
 String _source(HouseRoom room, HouseLayer layer) => switch ((room, layer)) {
   (HouseRoom.living, HouseLayer.back) => houseLivingBackSvg,
   (HouseRoom.living, HouseLayer.floorLight) => houseLivingFloorLightSvg,
-  (HouseRoom.living, HouseLayer.frame) => houseLivingFrameSvg,
+  // Kusen pintu teras (kanan) dan kusen pintu depan (kiri, Gang Depan).
+  (HouseRoom.living, HouseLayer.frame) =>
+    houseLivingFrameSvg + livingFrontFrameSvg,
   (HouseRoom.living, HouseLayer.airLight) => houseLivingAirLightSvg,
   (HouseRoom.terrace, HouseLayer.back) => houseTerraceBackSvg,
   (HouseRoom.terrace, HouseLayer.floorLight) => houseTerraceFloorLightSvg,

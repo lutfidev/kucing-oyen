@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -5,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/render/design_svg.dart';
 import 'package:kucing_oren/game/render/design_svg_home.dart';
 import 'package:kucing_oren/game/render/design_svg_house.dart';
+import 'package:kucing_oren/game/render/design_svg_lane.dart';
 import 'package:kucing_oren/game/render/picture_map_art.dart';
 import 'package:kucing_oren/game/render/result_art.dart';
 
@@ -18,13 +20,49 @@ const _home = 'docs/design/rumah-oyen/project';
 /// Desain rumah dua ruangan (langkah 33–35).
 const _house = 'docs/design/rumah-dua-ruangan/project';
 
+/// Desain Gang Depan (langkah 36–38): juga sumber lapisan ruang tengah
+/// (pintu depan di dinding kiri).
+const _lane = 'docs/design/gang-depan/project';
+
+/// Lapisan ruang tengah dibaca dari kanvas Gang Depan.
+const _fromLane = {
+  'LatarTengah.dc.html',
+  'CahayaTengah.dc.html',
+  'KusenTengah.dc.html',
+};
+
+/// Setiap `<svg>` di berkas [path], berurutan: tag pembuka dan isinya.
+List<(String, String)> _svgsOf(String path) => [
+  for (final m in RegExp(
+    r'(<svg\b[^>]*>)(.*?)</svg>',
+    dotAll: true,
+  ).allMatches(File(path).readAsStringSync().replaceAll('\r\n', '\n')))
+    (m[1]!, m[2]!),
+];
+
 /// Isi setiap `<svg>` di komponen desain rumah dua ruangan, berurutan.
 List<String> _houseSvgs(String name) => [
-  for (final m in RegExp(r'<svg\b[^>]*>(.*?)</svg>', dotAll: true).allMatches(
-    File('$_house/$name').readAsStringSync().replaceAll('\r\n', '\n'),
+  for (final (_, body) in _svgsOf(
+    '${_fromLane.contains(name) ? _lane : _house}/$name',
   ))
-    m[1]!,
+    body,
 ];
+
+/// Isi setiap `<svg>` di komponen desain Gang Depan, berurutan, tanpa
+/// spasi di tepi (salinannya juga dipangkas: Dart membuang baris pertama
+/// string tiga kutip yang kosong).
+List<String> _laneSvgs(String name) => [
+  for (final (_, body) in _svgsOf('$_lane/$name')) body.trim(),
+];
+
+/// Isi `<svg>` di komponen Gang Depan [name] yang (dengan tagnya) memuat
+/// [marker], tanpa spasi di tepi.
+String _laneSvgWith(String name, String marker) =>
+    _svgsOf('$_lane/$name')
+        .where((svg) => svg.$1.contains(marker) || svg.$2.contains(marker))
+        .single
+        .$2
+        .trim();
 
 /// Akhir baris disamakan (checkout Windows bisa CRLF), tepi dibuang.
 String _lf(String s) => s.replaceAll('\r\n', '\n').trim();
@@ -249,9 +287,8 @@ void main() {
       : null;
 
   group('isi SVG sama dengan desain rumah Oyen', () {
-    test('Kucing.dc.html', () {
-      expect(_lf(kittySvg), _innerHome('Kucing.dc.html'));
-    });
+    // Kucing.dc.html sekarang dari kanvas Gang Depan (Kumis, endus, geser):
+    // dicek di grup Gang Depan.
 
     test('IkonAksesoris.dc.html', () {
       expect(_lf(accessoryIconSvg), _innerHome('IkonAksesoris.dc.html'));
@@ -352,6 +389,8 @@ void main() {
 
   final houseMissing = !Directory(_house).existsSync()
       ? '$_house tidak ada (desain tidak ikut repo)'
+      : !Directory(_lane).existsSync()
+      ? '$_lane tidak ada (desain tidak ikut repo)'
       : null;
 
   group('isi SVG sama dengan desain rumah dua ruangan', () {
@@ -374,7 +413,7 @@ void main() {
     }
 
     test('@keyframes dan kelas animasi lapisan', () {
-      final source = File('$_house/LatarTengah.dc.html').readAsStringSync();
+      final source = File('$_lane/LatarTengah.dc.html').readAsStringSync();
       for (final line in houseKeyframesCss.split('\n')) {
         expect(source, contains(line));
       }
@@ -386,4 +425,71 @@ void main() {
       }
     });
   }, skip: houseMissing);
+
+  final laneMissing = !Directory(_lane).existsSync()
+      ? '$_lane tidak ada (desain tidak ikut repo)'
+      : null;
+
+  group('isi SVG sama dengan desain Gang Depan', () {
+    final layers = {
+      'LatarGang.dc.html': [laneBackSvg],
+      'CahayaGang.dc.html': [laneFloorLightSvg, laneAirLightSvg],
+      'KusenGang.dc.html': [laneFrameSvg],
+      'KusenDepan.dc.html': [livingFrontFrameSvg],
+      'Bangku.dc.html': [benchBackSvg, benchFrontSvg],
+      'PenandaGang.dc.html': [laneMarkerSvg],
+    };
+    for (final MapEntry(key: file, value: svgs) in layers.entries) {
+      test(file, () => expect(_laneSvgs(file), svgs));
+    }
+
+    test('ekor Kumis dan gelembung "!" (AdeganTengah)', () {
+      expect(_laneSvgWith('AdeganTengah.dc.html', 'ek-goyang'), kumisTailSvg);
+      expect(_laneSvgWith('AdeganTengah.dc.html', 'at-seru'), seruSvg);
+    });
+
+    test('@keyframes dan kelas animasi gang', () {
+      final sources = [
+        for (final f in [
+          'CahayaGang.dc.html',
+          'PenandaGang.dc.html',
+          'AdeganTengah.dc.html',
+        ])
+          File('$_lane/$f').readAsStringSync(),
+      ].join('\n');
+      for (final line in laneKeyframesCss.split('\n')) {
+        expect(sources, contains(line));
+      }
+      String norm(String s) =>
+          s.replaceAllMapped(RegExp(r'\s*([:;])\s*'), (m) => m[1]!);
+      for (final MapEntry(key: name, value: css) in laneClassStyles.entries) {
+        final rule = RegExp('\\.$name\\{([^}]*)\\}').firstMatch(sources)![1]!;
+        expect(norm(css), norm(rule), reason: name);
+      }
+    });
+
+    test('templat kucing dan @keyframes-nya (Kucing.dc.html Gang Depan)', () {
+      final source = File('$_lane/Kucing.dc.html')
+          .readAsStringSync()
+          .replaceAll('\r\n', '\n');
+      final inner = RegExp(
+        r'<svg\b[^>]*>\n(.*?)\n\s*</svg>',
+        dotAll: true,
+      ).firstMatch(source)![1]!;
+      expect(_lf(kittySvg), _lf(inner));
+      final frames = RegExp(r'@keyframes [^\n]*').allMatches(source);
+      expect(_lf(kittyKeyframes).split('\n'), [for (final m in frames) m[0]!]);
+    });
+
+    test('data daun pintu sama dengan DATA di PintuDepan', () {
+      final source = File('$_lane/PintuDepan.dc.html')
+          .readAsStringSync()
+          .replaceAll('\r\n', '\n');
+      final json = RegExp(
+        r'const DATA = (\{.*?\});\n',
+        dotAll: true,
+      ).firstMatch(source)![1]!;
+      expect(doorLeafData, jsonDecode(json));
+    });
+  }, skip: laneMissing);
 }

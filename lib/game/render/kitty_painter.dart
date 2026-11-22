@@ -66,6 +66,41 @@ const _tailLie = (
   'M92 98 C91.2 98 90.6 98 90 98',
 );
 
+/// Ekor pendek bengkok (Kumis, `tailsPendek` di `Kucing.dc.html` Gang
+/// Depan) untuk tiap jalur ekor biasa: (badan, ujung, titik putar).
+const _shortTails = <(String, String), (String, String, String)>{
+  _tailBase: (
+    'M73 78 C84 80 89.5 72 87.5 64',
+    'M87.5 64 C86.8 60.6 84.4 58.8 80.8 58.6',
+    '73px 78px',
+  ),
+  _tailUp: (
+    'M73 73 C82 71 85.5 61 83.5 53',
+    'M83.5 53 C82.8 49.6 80.4 47.8 76.8 47.6',
+    '73px 73px',
+  ),
+  _tailPlay: (
+    'M73 75 C84 74 89 65 87 57',
+    'M87 57 C86.3 53.6 83.9 51.8 80.3 51.6',
+    '73px 75px',
+  ),
+  _tailWalk2: (
+    'M73 78 C85 77 90.5 69 89 61.5',
+    'M89 61.5 C88.3 58.1 85.9 56.3 82.3 56.1',
+    '73px 78px',
+  ),
+  _tailScratch: (
+    'M32 86 C20 88 13 81 15 73',
+    'M15 73 C15.7 69.6 18.1 67.8 21.7 67.6',
+    '32px 86px',
+  ),
+  _tailLie: (
+    'M92 88 C99 89 101 94 96.5 97',
+    'M96.5 97 C94.4 98.6 91.6 98.6 89.4 97.4',
+    '92px 88px',
+  ),
+};
+
 List<Map<String, Object>> _patches(List<FurPatch> patches) => [
   for (final p in patches)
     {'cx': p.cx, 'cy': p.cy, 'rx': p.rx, 'ry': p.ry, 'f': p.fill},
@@ -88,6 +123,10 @@ Map<String, Object> kittyVals(KittyLook look) {
   final happy = pose == KittyPose.happy;
   final petted = pose == KittyPose.petted;
   final play = pose == KittyPose.play;
+  final geser1 = pose == KittyPose.geser1;
+  final geser2 = pose == KittyPose.geser2;
+  final geser = geser1 || geser2;
+  final endus = pose == KittyPose.endus;
   final side =
       (look.facing == KittyFacing.left || look.facing == KittyFacing.right) &&
       isSit;
@@ -102,6 +141,9 @@ Map<String, Object> kittyVals(KittyLook look) {
     KittyPose.petted => 'rotate(7 50 60)',
     KittyPose.scratch => 'translate(-12 -14) rotate(-6 50 50)',
     KittyPose.lesu || KittyPose.rebah => 'translate(-8 30)',
+    KittyPose.endus => 'translate(${tx - 7} 6) rotate(-9 50 62)',
+    KittyPose.geser1 => 'translate($tx -0.5)',
+    KittyPose.geser2 => 'translate(${tx - 1} 0.5)',
   };
   final tail = switch (pose) {
     KittyPose.happy || KittyPose.petted => _tailUp,
@@ -111,30 +153,39 @@ Map<String, Object> kittyVals(KittyLook look) {
     KittyPose.lesu || KittyPose.rebah => _tailLie,
     _ => _tailBase,
   };
-  final accessory = look.accessory;
+  // Tetangga tidak memakai aksesoris Toko (`noAcc` desain).
+  final accessory = c.noAcc ? null : look.accessory;
   final a = {for (final id in _headGroup) id.name: accessory == id};
   // Gaya animasi desain (`A()` di `Kucing.dc.html`); kosong = diam.
   final anim = look.time != null;
   String A(String style) => anim ? style : '';
-  final tailOrigin = switch (tail) {
-    _ when identical(tail, _tailUp) => '73px 72px',
-    _ when identical(tail, _tailPlay) => '73px 74px',
-    _ when identical(tail, _tailScratch) => '32px 86px',
-    _ when identical(tail, _tailLie) => '92px 88px',
-    _ => '73px 77px',
-  };
+  final (tailD, tailTipD, tailOrigin) = c.shortTail
+      ? _shortTails[tail]!
+      : (
+          tail.$1,
+          tail.$2,
+          switch (tail) {
+            _ when identical(tail, _tailUp) => '73px 72px',
+            _ when identical(tail, _tailPlay) => '73px 74px',
+            _ when identical(tail, _tailScratch) => '32px 86px',
+            _ when identical(tail, _tailLie) => '92px 88px',
+            _ => '73px 77px',
+          },
+        );
   final tailAnim = switch (pose) {
     KittyPose.happy ||
     KittyPose.petted ||
     KittyPose.play => 'kcWag 0.9s ease-in-out infinite',
-    _ when walking => 'kcTail 0.9s ease-in-out infinite',
+    _ when walking || geser => 'kcTail 0.9s ease-in-out infinite',
     KittyPose.rebah => 'kcTail 3.4s ease-in-out infinite',
     KittyPose.lesu => 'none',
     _ => 'kcTail 2.6s ease-in-out infinite',
   };
-  final eyeOpen = pose == KittyPose.idle || walking || play || isRebah;
+  final eyeOpen = pose == KittyPose.idle || walking || geser || play || isRebah;
   final dl = c.delay;
-  final headAnim = pose == KittyPose.eat
+  final headAnim = endus
+      ? A('animation: kcSniff 0.42s ease-in-out infinite alternate')
+      : pose == KittyPose.eat
       ? A('animation: kcNom 0.45s ease-in-out infinite alternate')
       : petted
       ? A(
@@ -149,12 +200,20 @@ Map<String, Object> kittyVals(KittyLook look) {
   const twinkle =
       'transform-box: fill-box; transform-origin: center; '
       'animation: kcTwinkle 1.2s ease-in-out infinite';
+  // Telinga kanan sompek Kumis, saat duduk dan saat tidur.
+  const earSleepR = 'M43 44 L52 31 L56 48 Z';
+  const earSleepRNotch = 'M43 44 L48.6 34.6 L51 36.4 L52.4 32.6 L56 48 Z';
+  final sleepEarR = c.notch ? earSleepRNotch : earSleepR;
   return {
     'c': {
       'fur': c.fur,
       'head': c.head,
       'stripe': c.stripe,
       'stripes': c.stripes,
+      'tailBand': c.tailBand,
+      'kumisOn': c.kumisOn,
+      'scarfOn': c.scarfOn,
+      'brow': c.brow,
       'tail': c.tail,
       'tailTip': c.tailTip,
       'belly': c.belly,
@@ -202,11 +261,30 @@ Map<String, Object> kittyVals(KittyLook look) {
     'isScratch': isScratch,
     'showHead': !isSleep,
     'showTail': !isSleep,
-    'tailD': tail.$1,
-    'tailTipD': tail.$2,
+    'tailD': tailD,
+    'tailTipD': tailTipD,
+    'leanT': geser1
+        ? 'rotate(-6 50 92) translate(-1.5 0)'
+        : geser2
+        ? 'rotate(-7.5 50 92) translate(-4 0)'
+        : 'translate(0 0)',
+    'earRD': c.notch
+        ? 'M79 38 L78 17.2 L75.2 18.8 L72.6 14.8 L55 25 Z'
+        : 'M79 38 L77 11 L55 25 Z',
+    'sleepEarRD': sleepEarR,
+    'sleepEarsD': 'M14 52 L13 33 L29 43 Z $sleepEarR',
+    'sleepTailD': c.shortTail
+        ? 'M92 62 C98 78 88 90 72 91'
+        : 'M92 62 C98 86 62 96 26 88',
+    'sleepTipD': c.shortTail
+        ? 'M72 91 C68.6 91.2 66.2 89.4 65.6 85.8'
+        : 'M30 89 C28 88.5 27 88.3 26 88',
+    'pawLX': geser1 ? 35 : (geser2 ? 38 : 39),
+    'pawRX': geser2 ? 57 : 61,
+    'showBowl': pose == KittyPose.eat && look.bowl,
     'showPost': isScratch && look.post,
-    'pawL': walk1 ? 85 : (walk2 ? 91 : 88),
-    'pawR': walk1 ? 91 : (walk2 ? 85 : 88),
+    'pawL': walk1 || geser1 ? 84 : (walk2 || geser2 ? 91 : 88),
+    'pawR': walk1 || geser1 ? 91 : (walk2 || geser2 ? 84 : 88),
     'pawLOn': isSit && pose != KittyPose.lick,
     'pawROn': isSit && !play,
     'isLick': pose == KittyPose.lick,
@@ -216,7 +294,7 @@ Map<String, Object> kittyVals(KittyLook look) {
     'isPetted': petted,
     'toyBall': look.toy == KittyToy.ball,
     'toyMouse': look.toy == KittyToy.mouse,
-    'eyeSleepy': pose == KittyPose.idle || walking || isRebah,
+    'eyeSleepy': pose == KittyPose.idle || walking || geser || endus || isRebah,
     'eyeWide': play,
     'eyeClosed': pose == KittyPose.lick || petted || isScratch,
     'eyeHappy': happy || pose == KittyPose.eat,
@@ -224,6 +302,8 @@ Map<String, Object> kittyVals(KittyLook look) {
     'mouthW':
         pose == KittyPose.idle ||
         walking ||
+        geser ||
+        endus ||
         play ||
         petted ||
         isScratch ||
@@ -243,7 +323,7 @@ Map<String, Object> kittyVals(KittyLook look) {
     'headAnim': headAnim,
     'sleepAnim': sleepAnim,
     'accAnim': isSleep ? sleepAnim : headAnim,
-    'syalAnim': walking
+    'syalAnim': walking || geser
         ? A(
             'transform-origin: 64px 69px; '
             'animation: kcSway 0.44s ease-in-out infinite alternate',

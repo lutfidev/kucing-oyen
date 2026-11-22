@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/neighbor.dart';
 import 'package:kucing_oren/game/render/render.dart';
 
 /// Tepi di luar viewBox 100×100: topi dan gelembung boleh keluar kotak.
@@ -259,6 +260,95 @@ void main() {
         ),
         isFalse,
       );
+    });
+  });
+
+  group('Kumis (Gang Depan)', () {
+    const kumis = KittyLook(neighbor: Neighbor.kumis);
+
+    test('palet tetangga dari Kucing.dc.html', () {
+      final c = kumis.colors;
+      expect(c.fur, '#F7F1E6');
+      expect(c.stripe, '#5E6E82');
+      expect(c.eye, '#C99A2E');
+      expect(c.mask, '#6E7E92');
+      expect(c.kumisOn && c.scarfOn && c.notch, isTrue);
+      expect(c.shortTail && c.tailBand && c.noAcc, isTrue);
+      expect(neighborPalette.keys, Neighbor.values);
+    });
+
+    test('tepat satu kucing: milik pemain atau tetangga', () {
+      expect(() => KittyLook(), throwsAssertionError);
+      expect(
+        () => KittyLook(kitty: KittyId.oyen, neighbor: Neighbor.kumis),
+        throwsAssertionError,
+      );
+      expect(kumis.kitty, isNull);
+      expect(kumis, isNot(const KittyLook(kitty: KittyId.oyen)));
+    });
+
+    test('tanpa aksesoris walau diminta', () {
+      final vals = kittyVals(
+        const KittyLook(neighbor: Neighbor.kumis, accessory: AccessoryId.pita),
+      );
+      expect((vals['a']! as Map).values, everyElement(isFalse));
+      expect((vals['b']! as Map).values, everyElement(isFalse));
+    });
+
+    test('telinga sompek dan ekor pendek bengkok', () {
+      final vals = kittyVals(kumis);
+      expect(vals['earRD'], 'M79 38 L78 17.2 L75.2 18.8 L72.6 14.8 L55 25 Z');
+      expect(vals['tailD'], 'M73 78 C84 80 89.5 72 87.5 64');
+      expect(vals['tailTipD'], 'M87.5 64 C86.8 60.6 84.4 58.8 80.8 58.6');
+      final sleep = kittyVals(kumis.copyWith(pose: KittyPose.sleep));
+      expect(sleep['sleepTailD'], 'M92 62 C98 78 88 90 72 91');
+      final oyen = kittyVals(const KittyLook(kitty: KittyId.oyen));
+      expect(oyen['earRD'], 'M79 38 L77 11 L55 25 Z');
+      expect(oyen['tailD'], 'M73 77 C94 79 98 58 86 45');
+    });
+
+    test('syal merah dan kumis abu tergambar', () async {
+      final at = await _sampler(kumis);
+      expect(at(45, 71), _near(_hex('#D9574A')));
+      expect(at(43, 56), _near(_hex('#6E7E92')));
+    });
+  });
+
+  group('pose endus dan geser (semua kucing)', () {
+    test('endus: kepala maju dan miring, mengendus saat bergerak', () {
+      const look = KittyLook(kitty: KittyId.oyen, pose: KittyPose.endus);
+      expect(kittyVals(look)['headT'], 'translate(-7 6) rotate(-9 50 62)');
+      expect(kittyVals(look)['headAnim'], '');
+      expect(
+        kittyVals(look.copyWith(time: 1))['headAnim'],
+        contains('kcSniff'),
+      );
+      expect(kittyVals(look)['eyeSleepy'], isTrue);
+    });
+
+    test('geser: badan condong, kaki depan bergantian', () {
+      final one = kittyVals(
+        const KittyLook(kitty: KittyId.oyen, pose: KittyPose.geser1),
+      );
+      final two = kittyVals(
+        const KittyLook(kitty: KittyId.oyen, pose: KittyPose.geser2),
+      );
+      expect(one['leanT'], 'rotate(-6 50 92) translate(-1.5 0)');
+      expect(two['leanT'], 'rotate(-7.5 50 92) translate(-4 0)');
+      expect((one['pawLX'], two['pawLX']), (35, 38));
+      expect((one['pawRX'], two['pawRX']), (61, 57));
+      expect(
+        kittyVals(const KittyLook(kitty: KittyId.oyen))['leanT'],
+        'translate(0 0)',
+      );
+      expect(KittyLook.shiftPose(0), KittyPose.geser1);
+      expect(KittyLook.shiftPose(KittyLook.walkFrameSeconds), KittyPose.geser2);
+    });
+
+    test('pose makan tanpa mangkuk (piring air gang)', () {
+      const eat = KittyLook(kitty: KittyId.oyen, pose: KittyPose.eat);
+      expect(kittyVals(eat)['showBowl'], isTrue);
+      expect(kittyVals(eat.copyWith(bowl: false))['showBowl'], isFalse);
     });
   });
 }

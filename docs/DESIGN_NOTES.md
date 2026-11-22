@@ -636,6 +636,42 @@ Rencana: `docs/superpowers/plans/2026-11-21-rumah-dua-ruangan.md`, Task 10–13.
 - **Overflow:** Hias teras (chip zona dan kedua keterangan Gudang di dalam layar), kucing diangkat, kartu kucing dengan tombol ajak, dan ruang tengah dengan ikon pintu. Semua di 360×640 sampai 412×915, teks 100%/130%, keempat bahasa.
 - **Profil kinerja di HP belum diukur.** Tidak ada HP tersambung saat langkah ini dikerjakan. `tool/profile_room.dart` sekarang punya `--dart-define=SWITCH_ROOMS=true` (pintu diketuk tiap 2,5 detik selama pengukuran). Yang perlu dijalankan: sekali diam dan sekali dengan `SWITCH_ROOMS`, lalu bandingkan dengan batas langkah 32 (bingkai > 16,67 ms ≲ 3%) dan catat di `docs/performance-room-2026-11-08.md`. Dikerjakan bersama cek HP langkah 32.
 
+## Langkah 36: Gang Depan, gambar pintu depan, gang, dan Kumis
+
+Rencana: `docs/superpowers/plans/2026-11-22-gang-depan.md`, Task 1–5. Kanvas: link di spec `docs/superpowers/specs/2026-11-22-gang-depan-design.md`, salinan lokal `docs/design/gang-depan/project/`.
+
+- **Desain disalin skrip, bukan diketik.**
+  - `tool/design/make_lane_svg.py` menulis `design_svg_lane.dart`: lapisan gang, bangku dua lapis, kusen pintu depan, penanda, ekor Kumis, "!", `@keyframes`, kelas, dan `doorLeafData` dari `DATA` `PintuDepan`.
+  - Dengan `--kitty`, skrip itu juga menulis ulang `kittySvg`/`kittyKeyframes` dari `Kucing.dc.html` Gang Depan.
+  - `make_house_svg.py` sekarang mengambil lapisan ruang tengah dari kanvas Gang Depan, karena pintu depan ada di `LatarTengah` baru.
+  - Isi SVG yang diawali baris baru dipangkas: Dart membuang baris pertama string tiga kutip yang kosong. Test sinkron membandingkan teks yang dipangkas.
+- **Desain menang atas angka awal spec** (sudah di rencana): kamera 1,7 detik dengan pembagian `kKamera`, kurangi gerak 240 ms, dan daun pintu diproyeksikan per titik (`door_leaf.dart`, port `P3` desain), bukan homografi gambar.
+- **Kumis.**
+  - Tetangga `Neighbor.kumis`, bukan `KittyId`. `KittyLook` sekarang punya `kitty` atau `neighbor`, tepat satu.
+  - Palet `neighborPalette` disalin dari `P.kumis`: belang abu kebiruan, bercak kumis, alis, syal merah-krem, telinga kanan sompek, dan ekor pendek bengkok bergaris.
+  - Kumis tidak memakai aksesoris Toko walau diminta. Labelnya "Kumis" di semua bahasa.
+- **Pose baru untuk semua kucing:** `endus` (kepala maju, `kcSniff`) dan `geser1`/`geser2` (condong, kaki depan bergantian; `KittyLook.shiftPose` seperti `walkPose`).
+  - Desain Gang Depan juga menggeser 1 px kaki bingkai jalan (`walk1` kiri 85 → 84, `walk2` kanan 85 → 84). Ini diikuti karena templatnya dipakai semua kucing.
+  - `bowl: false` = pose makan tanpa mangkuk (piring air gang).
+- **Pintu depan di ruang tengah.**
+  - Daun pintu tertutup dengan jendela, panel, pintu kucing, dan keset digambar di antara latar dan cahaya lantai.
+  - `KusenDepan` digabung ke lapisan kusen ruang tengah.
+  - Jalur pintu depan (72,402) (6,491) (124,570) (178,508) ikut `blocksDoor`/`allowedSpot`, dan Hias mengarsir kedua jalur.
+- **Tiang garukan.**
+  - Posisi bawaannya sekarang seperti `AdeganTengah` `barang('tiang', 266, 414)`. Di desain itu 266 adalah tepi kiri, jadi tengah kakinya x 285,6, bukan 266 seperti tertulis di rencana.
+  - Akibatnya, dengan tata letak bawaan tiang tidak lagi di bawah jendela burung (kiri), jadi kucing baru naik ke jendela burung kalau pemain memindah tiang lewat Hias.
+- **Simpanan lama (keputusan pemilik repo).** Saat `Room` dimuat, hanya barang yang menutup jalur pintu yang dipindah ke `HouseFloor.freeSpot`: tempat terdekat yang tidak menutup jalur pintu dan jejaknya tidak bertumpuk dengan barang lantai lain. Urutannya urut katalog, sesudah barang yang tidak menutup jalur.
+  - Kalau tidak ada tempat bebas, barang itu masuk Gudang. Mangkuk tidak pernah ke Gudang (`allowedSpot`).
+  - Barang lain tidak bergeser, juga kalau bertumpuk (aturan v1).
+  - Seret di Hias tetap memakai `allowedSpot`.
+- **Gang.**
+  - `LaneScene` menumpuk lapisan urut `kGang`: latar, daun pintu pulang 8°, cahaya tanah, bayangan, kucing lewat pintu, kusen, bangku belakang, kucing di bangku, bangku depan, kucing lain, lalu cahaya udara dan kupu-kupu.
+  - Geometri gang (bangku, titik lompat, tempat nyaman, jalur Kumis, `laneScale`) ada di `lib/game/model/lane.dart`.
+  - Gang belum bisa dibuka dari kamar. Kamera dan alurnya di langkah 38.
+- **Potret:** `test/screenshots/lane_screenshot_test.dart` (`36-gang-utama`, `36-gang-kosong`, `36-kumis-pose`). Potret `19-kamar` dan potret toko `01-kamar` sekarang dengan pintu depan.
+- **Belum diputuskan (untuk langkah 38, tanya pemilik repo):** daun pintu depan yang berayun 70–88° saat kamera (`kKamera`) melewati strip lantai x 95–160 dekat y 400–430, di luar jalur pintu desain. Barang di sana (kasur desain di (118,434), rumah kucing yang dibeli, tiang lama yang dipindah ke pojok kiri) akan tergambar di atas daun yang terbuka. Ada dua pilihan: jadikan zona ayun bebas barang, atau gambar barang di belakang daun di bawah pintu selama kamera bergerak.
+- **Untuk langkah 38:** kelas animasi `pg-bob` penanda ada di tag `<svg>` desain, jadi `laneMarkerSvg` tidak bergoyang sendiri. Ayunannya dibuat di widget penanda.
+
 ## Bahan langkah 33 lama (8 Nov 2026, dibatalkan 21 Nov 2026)
 
 Isi lama langkah 33 di `docs/ROADMAP.md`, disimpan sebagai riwayat. Langkah 33–35 sekarang rumah dua ruangan (spec `docs/superpowers/specs/2026-11-21-rumah-dua-ruangan-design.md`); masalah tata letak kamar awal di bawah dikerjakan di langkah 35.

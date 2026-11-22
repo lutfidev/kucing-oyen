@@ -78,7 +78,9 @@ void main() {
     final blocked = floor.spotAtFeet(300, 500);
     expect(floor.blocksDoor(kasur, HouseRoom.living, blocked), isTrue);
     expect(
-      floor.blocksDoor(kasur, HouseRoom.living, floor.spotAtFeet(146, 432)),
+      // Kasur bawah jendela seperti AdeganTengah Gang Depan (kaki y 434,
+      // tengah x 179), di antara jalur pintu depan dan pintu teras.
+      floor.blocksDoor(kasur, HouseRoom.living, floor.spotAtFeet(179, 434)),
       isFalse,
     );
     expect(
@@ -118,7 +120,7 @@ void main() {
         }
       }
     }
-    final free = floor.spotAtFeet(146, 432);
+    final free = floor.spotAtFeet(179, 434);
     expect(floor.allowedSpot(kasur, HouseRoom.living, free), free);
   });
 
@@ -175,6 +177,78 @@ void main() {
     test('tidak ada kebutuhan: null', () {
       expect(attention({KittyId.mochi}), isNull);
       expect(attention(const {}, hungry: {KittyId.mochi}), isNull);
+    });
+  });
+
+  group('pintu depan (Gang Depan)', () {
+    const floor = HouseFloor();
+    final kardus = roomItemOf(RoomItemId.kardus);
+    final kasur = roomItemOf(RoomItemId.kasur);
+
+    test('jalur pintu depan di ruang tengah, bukan di teras', () {
+      expect(floor.doorPaths(HouseRoom.living), hasLength(2));
+      expect(floor.doorPaths(HouseRoom.terrace), hasLength(1));
+      expect(
+        floor.onDoorPath(HouseRoom.living, floor.spotAtFeet(60, 480)),
+        isTrue,
+      );
+      expect(
+        floor.onDoorPath(HouseRoom.terrace, floor.spotAtFeet(60, 480)),
+        isTrue,
+        reason: 'jalur pintu teras di sudut yang sama',
+      );
+      expect(
+        floor.onDoorPath(HouseRoom.living, floor.spotAtFeet(150, 600)),
+        isFalse,
+      );
+      expect(
+        floor.blocksDoor(kardus, HouseRoom.living, floor.spotAtFeet(60, 480)),
+        isTrue,
+      );
+      final moved = floor.allowedSpot(
+        kardus,
+        HouseRoom.living,
+        floor.spotAtFeet(60, 480),
+      );
+      expect(floor.blocksDoor(kardus, HouseRoom.living, moved), isFalse);
+    });
+
+    test('ambang pintu depan dan garis potong pintu kucing', () {
+      final feet = floor.feetAt(floor.frontThreshold);
+      expect(feet.x, closeTo(70, 0.01));
+      expect(feet.y, closeTo(436, 0.01));
+      expect(flapClipX, 45.2);
+      expect(laneFlapClipX, 344.8);
+    });
+
+    test('freeSpot: terdekat, bebas jalur pintu dan barang lain', () {
+      final kasurAt = floor.spotAtFeet(200, 560);
+      // Kardus ingin di tempat kasur: digeser ke spot bebas terdekat.
+      final free = floor.freeSpot(kardus, HouseRoom.living, kasurAt, [
+        (item: kasur, spot: kasurAt),
+      ])!;
+      expect(free, isNot(kasurAt));
+      expect(floor.blocksDoor(kardus, HouseRoom.living, free), isFalse);
+      expect(
+        floor.footprint(kardus, free).overlaps(floor.footprint(kasur, kasurAt)),
+        isFalse,
+      );
+      expect(floor.distance(free, kasurAt), lessThan(60));
+      // Tempat yang sudah bebas dipakai apa adanya.
+      final open = floor.spotAtFeet(200, 620);
+      expect(floor.freeSpot(kardus, HouseRoom.living, open, const []), open);
+    });
+
+    test('freeSpot: null kalau semua tempat terisi', () {
+      final everywhere = [
+        for (var i = 0; i <= 40; i++)
+          for (var j = 0; j <= 40; j++)
+            (item: kasur, spot: Spot(i / 40, j / 40)),
+      ];
+      expect(
+        floor.freeSpot(kardus, HouseRoom.living, Spot(0.5, 0.5), everywhere),
+        isNull,
+      );
     });
   });
 }

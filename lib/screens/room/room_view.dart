@@ -1090,6 +1090,18 @@ class _RoomViewState extends State<RoomView>
       geo: geo,
       time: _animating ? _time : null,
       shadows: shadows,
+      // Pintu depan ke Gang Depan di dinding kiri, tertutup dengan pintu
+      // kucing (artboard 1).
+      door: [
+        if (living)
+          const Positioned.fill(
+            child: DoorLeafView(
+              side: DoorLeafSide.front,
+              angleDeg: 0,
+              flapDeg: 0,
+            ),
+          ),
+      ],
       passing: [
         for (final kitty in home.kitties)
           if (here(kitty)) ?_passing(kitty, geo),

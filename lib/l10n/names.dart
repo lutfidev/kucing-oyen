@@ -2,6 +2,7 @@ import '../game/model/accessories.dart';
 import '../game/model/chapter.dart';
 import '../game/model/home_items.dart';
 import '../game/model/kitties.dart';
+import '../game/model/neighbor.dart';
 import '../game/model/snacks.dart';
 import '../game/render/kitty.dart';
 import '../game/render/oyen.dart';
@@ -238,12 +239,22 @@ String rarityName(AppLocalizations l, Rarity rarity) => switch (rarity) {
   Rarity.special => l.raritySpecial,
 };
 
+/// Nama kucing tetangga (sama di semua bahasa).
+String neighborName(AppLocalizations l, Neighbor neighbor) =>
+    switch (neighbor) {
+      Neighbor.kumis => l.neighborKumis,
+    };
+
 /// Label pembaca layar kucing kamar ("Oyen duduk diam, memakai Pita"),
 /// sama dengan `aria-label` di `Kucing.dc.html`.
 String kittyLabel(AppLocalizations l, KittyLook look) {
-  final name = kittyName(l, look.kitty);
+  final kitty = look.kitty;
+  final name = kitty != null
+      ? kittyName(l, kitty)
+      : neighborName(l, look.neighbor!);
   final pose = l.kittyPose(look.pose.name);
-  final accessory = look.accessory;
+  // Tetangga tidak memakai aksesoris Toko (`noAcc` desain).
+  final accessory = kitty != null ? look.accessory : null;
   return accessory == null
       ? l.kittyLabel(name, pose)
       : l.kittyLabelAccessory(name, pose, accessoryName(l, accessory));

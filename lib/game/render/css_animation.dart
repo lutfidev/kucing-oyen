@@ -61,6 +61,14 @@ CssMatrix _fnMatrix(CssTransformFn fn) => switch (fn.name) {
     return (math.cos(r), math.sin(r), -math.sin(r), math.cos(r), 0.0, 0.0);
   }(),
   'translate' => (1.0, 0.0, 0.0, 1.0, fn.args[0], fn.args[1]),
+  'skew' => (
+    1.0,
+    math.tan(fn.args[1] * math.pi / 180),
+    math.tan(fn.args[0] * math.pi / 180),
+    1.0,
+    0.0,
+    0.0,
+  ),
   _ => (fn.args[0], 0.0, 0.0, fn.args[1], 0.0, 0.0),
 };
 
@@ -117,6 +125,8 @@ List<CssTransformFn> parseCssTransform(String value) {
       'scale' => CssTransformFn('scale', [n[0], n.length > 1 ? n[1] : n[0]]),
       'scaleX' => CssTransformFn('scale', [n[0], 1]),
       'scaleY' => CssTransformFn('scale', [1, n[0]]),
+      'skewX' => CssTransformFn('skew', [n[0], 0]),
+      'skewY' => CssTransformFn('skew', [0, n[0]]),
       _ => throw FormatException('transform CSS tidak dikenal', value),
     });
   }

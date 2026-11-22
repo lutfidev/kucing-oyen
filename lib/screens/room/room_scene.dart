@@ -92,6 +92,7 @@ class RoomScene extends StatelessWidget {
     this.shadows = const [],
     this.floor = const [],
     this.passing = const [],
+    this.door = const [],
   });
 
   final RoomGeometry geo;
@@ -102,6 +103,10 @@ class RoomScene extends StatelessWidget {
   final List<Widget> floor;
   final List<Widget> passing;
   final List<Widget> sprites;
+
+  /// Di antara latar dan cahaya lantai: daun pintu depan ruang tengah
+  /// (Gang Depan), di atas dinding dan di bawah cahaya dan kucing.
+  final List<Widget> door;
 
   /// Blur bayangan (desain `filter: blur(1.5px)`), px desain.
   static const shadowBlur = 1.5;
@@ -118,17 +123,11 @@ class RoomScene extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        layers(const [HouseLayer.back, HouseLayer.floorLight]),
+        layers(const [HouseLayer.back]),
+        ...door,
+        layers(const [HouseLayer.floorLight]),
         Positioned.fill(
-          child: IgnorePointer(
-            child: CustomPaint(
-              painter: _ShadowPainter(
-                shadows,
-                context.koColors.roomShadow,
-                shadowBlur * geo.artScale,
-              ),
-            ),
-          ),
+          child: SceneShadowLayer(shadows: shadows, geo: geo),
         ),
         ...floor,
         ...passing,
@@ -138,6 +137,26 @@ class RoomScene extends StatelessWidget {
       ],
     );
   }
+}
+
+/// Bayangan [shadows] di bawah kucing dan barang (warna `roomShadow`,
+/// blur [RoomScene.shadowBlur] × `artScale`), dipakai ruangan dan gang.
+class SceneShadowLayer extends StatelessWidget {
+  const SceneShadowLayer({super.key, required this.shadows, required this.geo});
+
+  final List<SceneShadow> shadows;
+  final RoomGeometry geo;
+
+  @override
+  Widget build(BuildContext context) => IgnorePointer(
+    child: CustomPaint(
+      painter: _ShadowPainter(
+        shadows,
+        context.koColors.roomShadow,
+        RoomScene.shadowBlur * geo.artScale,
+      ),
+    ),
+  );
 }
 
 class _LayerPainter extends CustomPainter {

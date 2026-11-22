@@ -4,6 +4,7 @@ import '../app/routes.dart';
 import '../game/model/accessories.dart';
 import '../game/model/home_items.dart';
 import '../game/model/kitties.dart';
+import '../game/model/neighbor.dart';
 import '../game/model/snacks.dart';
 import '../game/render/render.dart';
 import '../l10n/l10n.dart';
@@ -58,6 +59,24 @@ class GalleryKittyScreen extends StatelessWidget {
                   height: _Spec.cardHeight,
                   child: KittyView(
                     look: KittyLook(kitty: KittyId.oyen, pose: pose),
+                    size: _Spec.poseSize,
+                  ),
+                ),
+            ],
+          ),
+        ),
+        // Tetangga Gang Depan (langkah 36): bukan kucing koleksi.
+        GallerySection(
+          title: 'Tetangga: Kumis',
+          child: GalleryGrid(
+            minWidth: _Spec.poseMinWidth,
+            children: [
+              for (final pose in KittyPose.values)
+                _ArtCard(
+                  label: pose.name,
+                  height: _Spec.cardHeight,
+                  child: KittyView(
+                    look: KittyLook(neighbor: Neighbor.kumis, pose: pose),
                     size: _Spec.poseSize,
                   ),
                 ),
