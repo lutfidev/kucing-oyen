@@ -287,9 +287,8 @@ void main() {
       : null;
 
   group('isi SVG sama dengan desain rumah Oyen', () {
-    test('Kucing.dc.html', () {
-      expect(_lf(kittySvg), _innerHome('Kucing.dc.html'));
-    });
+    // Kucing.dc.html sekarang dari kanvas Gang Depan (Kumis, endus, geser):
+    // dicek di grup Gang Depan.
 
     test('IkonAksesoris.dc.html', () {
       expect(_lf(accessoryIconSvg), _innerHome('IkonAksesoris.dc.html'));
@@ -467,6 +466,19 @@ void main() {
         final rule = RegExp('\\.$name\\{([^}]*)\\}').firstMatch(sources)![1]!;
         expect(norm(css), norm(rule), reason: name);
       }
+    });
+
+    test('templat kucing dan @keyframes-nya (Kucing.dc.html Gang Depan)', () {
+      final source = File('$_lane/Kucing.dc.html')
+          .readAsStringSync()
+          .replaceAll('\r\n', '\n');
+      final inner = RegExp(
+        r'<svg\b[^>]*>\n(.*?)\n\s*</svg>',
+        dotAll: true,
+      ).firstMatch(source)![1]!;
+      expect(_lf(kittySvg), _lf(inner));
+      final frames = RegExp(r'@keyframes [^\n]*').allMatches(source);
+      expect(_lf(kittyKeyframes).split('\n'), [for (final m in frames) m[0]!]);
     });
 
     test('data daun pintu sama dengan DATA di PintuDepan', () {

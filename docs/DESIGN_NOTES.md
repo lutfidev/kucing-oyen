@@ -669,6 +669,7 @@ Rencana: `docs/superpowers/plans/2026-11-22-gang-depan.md`, Task 1–5. Kanvas: 
   - Geometri gang (bangku, titik lompat, tempat nyaman, jalur Kumis, `laneScale`) ada di `lib/game/model/lane.dart`.
   - Gang belum bisa dibuka dari kamar. Kamera dan alurnya di langkah 38.
 - **Potret:** `test/screenshots/lane_screenshot_test.dart` (`36-gang-utama`, `36-gang-kosong`, `36-kumis-pose`). Potret `19-kamar` dan potret toko `01-kamar` sekarang dengan pintu depan.
+- **Belum diputuskan (untuk langkah 38, tanya pemilik repo):** daun pintu depan yang berayun 70–88° saat kamera (`kKamera`) melewati strip lantai x 95–160 dekat y 400–430, di luar jalur pintu desain. Barang di sana (kasur desain di (118,434), rumah kucing yang dibeli, tiang lama yang dipindah ke pojok kiri) akan tergambar di atas daun yang terbuka. Ada dua pilihan: jadikan zona ayun bebas barang, atau gambar barang di belakang daun di bawah pintu selama kamera bergerak.
 - **Untuk langkah 38:** kelas animasi `pg-bob` penanda ada di tag `<svg>` desain, jadi `laneMarkerSvg` tidak bergoyang sendiri. Ayunannya dibuat di widget penanda.
 
 ## Bahan langkah 33 lama (8 Nov 2026, dibatalkan 21 Nov 2026)
