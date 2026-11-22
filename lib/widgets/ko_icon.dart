@@ -393,6 +393,12 @@ abstract final class KoIcons {
   ], strokeWidth: 2.4);
 
   /// Gagang seret di pojok barang saat menghias (enam titik).
+  /// Jalur pintu saat menghias: lingkaran dicoret (`AdeganTengah.dc.html`).
+  static const noEntry = KoIconData([
+    KoIconShape.circle(Offset(12, 12), 9),
+    KoIconShape.path('M5.6 5.6l12.8 12.8'),
+  ], strokeWidth: 3);
+
   static const grip = KoIconData([
     KoIconShape.circle(Offset(8, 6), 2.4, paint: KoIconPaint.fill),
     KoIconShape.circle(Offset(16, 6), 2.4, paint: KoIconPaint.fill),

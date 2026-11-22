@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-498 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+504 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -496,6 +496,12 @@ files and anything written there is overwritten.
 | `decorateHint` | Drag things to a new spot | Seret barang ke tempat baru | Chip shown while decorating. | |
 | `zoneWall` | Wall area | Area dinding | Label of the wall area while decorating. | |
 | `zoneFloor` | Floor area | Area lantai | Label of the floor area while decorating. | |
+| `zoneDoorPath` | Door path | Jalur pintu | Label of the hatched door path, where no furniture may stand, while decorating. | |
+| `zoneHangHammock` | Hang point · hammock | Titik gantung · hammock | Label of the two terrace beam hooks for the hammock while decorating. | |
+| `zoneHangLamp` | Moon lamp | Lampu bulan | Label of the terrace beam hook for the moon lamp while decorating. | |
+| `storageLivingOnly` | {item}, can only go in the living room | {item}, hanya bisa dipasang di ruang tengah | Screen reader label of a dimmed storage slot on the terrace: a wall item that can only hang in the living room. Placeholders: `{item}`. | |
+| `livingOnlyNote` | Only fits in the living room | Bisa dipasang di ruang tengah | Short note shown above a dimmed storage slot when tapped on the terrace. | |
+| `hangNote` | Hung from the roof beam | Gantung di balok atap | Short note when the hammock or moon lamp is put on the terrace: it hangs from the roof beam. | |
 | `storage` | Storage | Gudang | Title of the storage tray with owned items that are not in the room. | |
 | `storageCount` | {count, plural, =1{1 item} other{{count} items}} | {count, plural, other{{count} barang}} | Number of items in storage. Placeholders: `{count}`. | |
 | `storageTapHint` | Tap to place | Ketuk untuk menaruh | Hint on the storage tray. | |

@@ -1810,6 +1810,26 @@ class AppLocalizationsId extends AppLocalizations {
   String get zoneFloor => 'Area lantai';
 
   @override
+  String get zoneDoorPath => 'Jalur pintu';
+
+  @override
+  String get zoneHangHammock => 'Titik gantung · hammock';
+
+  @override
+  String get zoneHangLamp => 'Lampu bulan';
+
+  @override
+  String storageLivingOnly(String item) {
+    return '$item, hanya bisa dipasang di ruang tengah';
+  }
+
+  @override
+  String get livingOnlyNote => 'Bisa dipasang di ruang tengah';
+
+  @override
+  String get hangNote => 'Gantung di balok atap';
+
+  @override
   String get storage => 'Gudang';
 
   @override

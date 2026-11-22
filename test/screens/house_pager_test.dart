@@ -123,9 +123,7 @@ void main() {
     expect(_chip(), findsOneWidget);
   });
 
-  testWidgets('teras: tombol Hias belum ada (Hias per ruangan di langkah 35)', (
-    tester,
-  ) async {
+  testWidgets('tombol Hias ada di kedua ruangan', (tester) async {
     await pumpRoom(
       tester,
       progress: testProgressWith(
@@ -135,7 +133,7 @@ void main() {
     expect(find.text('Hias'), findsOneWidget);
     await tester.tap(_toTerrace());
     await tester.pumpAndSettle();
-    expect(find.text('Hias'), findsNothing);
+    expect(find.text('Hias'), findsOneWidget);
     await tester.tap(_chip());
     await tester.pumpAndSettle();
     expect(find.text('Hias'), findsOneWidget);

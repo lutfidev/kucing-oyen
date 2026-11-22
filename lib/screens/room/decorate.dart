@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../game/model/home_items.dart';
+import '../../game/model/house.dart';
 import '../../l10n/l10n.dart';
 import '../../l10n/names.dart';
 import '../../theme/theme.dart';
@@ -102,83 +103,285 @@ class DecorateHint extends StatelessWidget {
   }
 }
 
-/// Area dinding dan lantai bergaris putus-putus saat menghias, dengan
-/// labelnya (`Kamar.dc.html`, keadaan `hias`).
+//// Panduan mode Hias (`AdeganTengah.dc.html`/`AdeganTeras.dc.html` mode
+/// `hias`): area dinding (ruang tengah), area lantai, jalur pintu yang
+/// diarsir, dan di teras titik gantung hammock dan lampu bulan; dengan
+/// labelnya. [time] = detik denyut titik gantung (null = diam).
 class ZoneGuides extends StatelessWidget {
-  const ZoneGuides({super.key, required this.geo});
+  const ZoneGuides({super.key, required this.geo, this.time});
 
   final RoomGeometry geo;
+  final double? time;
 
-  // Letak desain area rumah 390×652 (`AdeganTengah.dc.html` mode `hias`;
-  // bentuk lantai dan jalur pintu menyusul di langkah 35).
+  // Letak desain area rumah 390×652.
   static const wall = Rect.fromLTWH(88, 150, 214, 182);
-  static const floor = Rect.fromLTWH(4, 398, 382, 248);
+  static const wallRadius = 14.0;
+  static const floor = [
+    Offset(84, 398),
+    Offset(306, 398),
+    Offset(386, 508),
+    Offset(386, 646),
+    Offset(4, 646),
+    Offset(4, 508),
+  ];
   static const wallLabel = Offset(96, 302);
   static const floorLabel = Offset(14, 616);
+  static const livingDoorLabel = Offset(252, 534);
+  static const terraceDoorLabel = Offset(50, 518);
+
+  /// Titik gantung teras: G1 dan G2 hammock, G3 lampu bulan.
+  static const hangHammock = [Offset(150.4, 158), Offset(239.8, 158)];
+  static const hangLamp = Offset(305, 158);
+  static const hangRadius = 12.0;
+  static const hangLineY = 174.0;
+  static const hammockLabel = Offset(146, 182);
+  static const lampLabel = Offset(266, 182);
+
+  /// Denyut cincin (`rmDenyut` 5 detik: opasitas 0,78 → 1 → 0,78).
+  static double pulse(double? time) {
+    if (time == null) return 1;
+    final t = (time % 5) / 5;
+    final half = t < 0.5 ? t * 2 : 2 - t * 2;
+    return 0.78 + 0.22 * Curves.easeInOut.transform(half);
+  }
 
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
     final l = context.l10n;
-    final radius = context.koRadius.control;
-    Widget area(Rect design) => Positioned.fromRect(
-      rect: geo.fromDesign(design, stretch: true),
-      child: KoDashedBorder(
-        color: c.roomZoneLine,
-        radius: radius,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: c.roomZoneFill,
-            borderRadius: BorderRadius.circular(radius),
-          ),
-        ),
-      ),
-    );
-    Widget label(Offset design, String text) {
-      final at = geo.fromDesign(design & Size.zero).topLeft;
-      return Positioned(left: at.dx, top: at.dy, child: _ZoneLabel(text));
+    final terrace = geo.which == HouseRoom.terrace;
+    Widget label(Offset design, Widget chip) {
+      final at = geo.toScreen(design.dx, design.dy);
+      return Positioned(left: at.dx, top: at.dy, child: chip);
     }
 
+    final door = [
+      for (final p in const HouseFloor().doorPath(geo.which)) Offset(p.x, p.y),
+    ];
     return IgnorePointer(
       child: Stack(
         children: [
-          area(wall),
-          area(floor),
-          label(wallLabel, l.zoneWall),
-          label(floorLabel, l.zoneFloor),
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _ZonePainter(
+                sx: geo.sx,
+                sy: geo.sy,
+                wall: terrace ? null : wall,
+                floor: floor,
+                door: door,
+                hang: terrace,
+                pulse: pulse(time),
+                colors: c,
+              ),
+            ),
+          ),
+          if (!terrace) label(wallLabel, _ZoneLabel(l.zoneWall)),
+          label(floorLabel, _ZoneLabel(l.zoneFloor)),
+          label(
+            terrace ? terraceDoorLabel : livingDoorLabel,
+            _ZoneLabel(
+              l.zoneDoorPath,
+              color: c.roomDoorPathChip,
+              icon: KoIcons.noEntry,
+            ),
+          ),
+          if (terrace) ...[
+            label(hammockLabel, _ZoneLabel(l.zoneHangHammock)),
+            label(lampLabel, _ZoneLabel(l.zoneHangLamp, outlined: true)),
+          ],
         ],
       ),
     );
   }
 }
 
+class _ZonePainter extends CustomPainter {
+  _ZonePainter({
+    required this.sx,
+    required this.sy,
+    required this.wall,
+    required this.floor,
+    required this.door,
+    required this.hang,
+    required this.pulse,
+    required this.colors,
+  });
+
+  final double sx;
+  final double sy;
+  final Rect? wall;
+  final List<Offset> floor;
+  final List<Offset> door;
+  final bool hang;
+  final double pulse;
+  final KoColors colors;
+
+  // Garis desain: area `6 5` 2 px, jalur pintu `7 5` 2,4 px, arsir 4 px tiap
+  // 10 px miring 45°, cincin 2,6 px (G3 `4 3`), garis G1–G2 `3 3` 2 px.
+  static const _areaDash = [6.0, 5.0];
+  static const _doorDash = [7.0, 5.0];
+  static const _lampDash = [4.0, 3.0];
+  static const _lineDash = [3.0, 3.0];
+
+  static Path _polygon(List<Offset> points) => Path()..addPolygon(points, true);
+
+  static Path _dashed(Path source, List<double> dash) {
+    final out = Path();
+    for (final metric in source.computeMetrics()) {
+      var d = 0.0;
+      var i = 0;
+      while (d < metric.length) {
+        final len = dash[i % dash.length];
+        if (i.isEven) out.addPath(metric.extractPath(d, d + len), Offset.zero);
+        d += len;
+        i++;
+      }
+    }
+    return out;
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas
+      ..save()
+      ..scale(sx, sy);
+    Paint stroke(Color color, double width) => Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = width
+      ..strokeJoin = StrokeJoin.round
+      ..color = color;
+    final fill = Paint()..color = colors.roomZoneFill;
+    final wall = this.wall;
+    if (wall != null) {
+      final path = Path()
+        ..addRRect(
+          RRect.fromRectAndRadius(
+            wall,
+            const Radius.circular(ZoneGuides.wallRadius),
+          ),
+        );
+      canvas
+        ..drawPath(path, fill)
+        ..drawPath(_dashed(path, _areaDash), stroke(colors.roomZoneLine, 2));
+    }
+    final floorPath = _polygon(floor);
+    canvas
+      ..drawPath(floorPath, fill)
+      ..drawPath(_dashed(floorPath, _areaDash), stroke(colors.roomZoneLine, 2));
+
+    final doorPath = _polygon(door);
+    canvas
+      ..save()
+      ..clipPath(doorPath)
+      ..drawPath(doorPath, Paint()..color = colors.roomDoorPathFill);
+    final bounds = doorPath.getBounds();
+    final hatch = Paint()
+      ..color = colors.roomDoorPathHatch
+      ..strokeWidth = 4;
+    // Garis miring 45° tiap 10 px (pola `rotate(45)` desain).
+    for (
+      var x = bounds.left - bounds.height;
+      x < bounds.right + bounds.height;
+      x += 10 * 1.4142
+    ) {
+      canvas.drawLine(
+        Offset(x, bounds.bottom),
+        Offset(x + bounds.height, bounds.top),
+        hatch,
+      );
+    }
+    canvas
+      ..restore()
+      ..drawPath(_dashed(doorPath, _doorDash), stroke(colors.orangeDeep, 2.4));
+
+    if (hang) {
+      final ringFill = Paint()
+        ..color = colors.roomHangFill.withValues(
+          alpha: colors.roomHangFill.a * pulse,
+        );
+      final ring = stroke(colors.waterDeep.withValues(alpha: pulse), 2.6);
+      for (final g in ZoneGuides.hangHammock) {
+        canvas
+          ..drawCircle(g, ZoneGuides.hangRadius, ringFill)
+          ..drawCircle(g, ZoneGuides.hangRadius, ring);
+      }
+      final lamp = Path()
+        ..addOval(
+          Rect.fromCircle(
+            center: ZoneGuides.hangLamp,
+            radius: ZoneGuides.hangRadius,
+          ),
+        );
+      canvas
+        ..drawPath(lamp, ringFill)
+        ..drawPath(_dashed(lamp, _lampDash), ring);
+      final line = Path()
+        ..moveTo(ZoneGuides.hangHammock[0].dx, ZoneGuides.hangLineY)
+        ..lineTo(ZoneGuides.hangHammock[1].dx, ZoneGuides.hangLineY);
+      canvas.drawPath(_dashed(line, _lineDash), stroke(colors.waterDeep, 2));
+    }
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_ZonePainter old) =>
+      old.sx != sx ||
+      old.sy != sy ||
+      old.hang != hang ||
+      old.pulse != pulse ||
+      old.wall != wall ||
+      old.colors != colors;
+}
+
 class _ZoneLabel extends StatelessWidget {
-  const _ZoneLabel(this.text);
+  const _ZoneLabel(this.text, {this.color, this.icon, this.outlined = false});
 
   final String text;
+
+  /// Warna chip; null = biru zona.
+  final Color? color;
+  final KoIconData? icon;
+
+  /// Chip terang bergaris biru ("Lampu bulan").
+  final bool outlined;
 
   @override
   Widget build(BuildContext context) {
     final c = context.koColors;
+    final s = context.koSize;
     final space = context.koSpace;
+    final ink = outlined ? c.waterDeep : c.onWaterDeep;
+    final icon = this.icon;
     return Container(
-      height: context.koSize.roomZoneChip,
+      height: s.roomZoneChip,
       padding: EdgeInsets.symmetric(horizontal: space.s8),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: c.waterDeep,
+        color: outlined ? c.surface : (color ?? c.waterDeep),
         borderRadius: BorderRadius.circular(context.koRadius.pill),
+        border: outlined
+            ? Border.all(color: c.waterDeep, width: s.border)
+            : null,
       ),
-      child: Text(
-        text,
-        maxLines: 1,
-        style: context.koType.tagSmall.copyWith(color: c.onWaterDeep),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            KoIcon(icon, size: s.iconMicro, color: ink),
+            SizedBox(width: space.s4),
+          ],
+          Text(
+            text,
+            maxLines: 1,
+            style: context.koType.tagSmall.copyWith(color: ink),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Garis putus-putus dan gagang di sekeliling barang saat menghias.
+// Garis putus-putus dan gagang di sekeliling barang saat menghias.
 class DecorOutline extends StatelessWidget {
   const DecorOutline({super.key, required this.child});
 

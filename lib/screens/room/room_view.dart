@@ -633,7 +633,7 @@ class _RoomViewState extends State<RoomView>
       if (_overTray(_dragPointer) && !roomItemOf(id).builtIn) {
         _progress.storeItem(id);
       } else if (spot != null) {
-        _progress.placeItem(id, spot);
+        _progress.placeItem(id, spot, room: _house);
       }
     }
     setState(() {
@@ -705,6 +705,7 @@ class _RoomViewState extends State<RoomView>
                             onPlace: (id) => _progress.placeItem(
                               id,
                               roomItemOf(id).defaultSpot,
+                              room: _house,
                             ),
                           )
                         : RoomMenu(
@@ -890,12 +891,7 @@ class _RoomViewState extends State<RoomView>
                   )
                 else
                   const Spacer(),
-                // Hias per ruangan menyusul (langkah 35): sampai itu hanya
-                // di ruang tengah, supaya barang dari Gudang tidak pindah
-                // ke ruangan yang tidak tampil.
-                if ((!empty || _decorating) &&
-                    _house == HouseRoom.living &&
-                    lifted == null) ...[
+                if ((!empty || _decorating) && lifted == null) ...[
                   SizedBox(width: space.s8),
                   DecorateButton(
                     done: _decorating,
@@ -1009,7 +1005,10 @@ class _RoomViewState extends State<RoomView>
             },
             onTap: () => _goTo(geo.which.other),
           ),
-        if (_decorating) Positioned.fill(child: ZoneGuides(geo: geo)),
+        if (_decorating)
+          Positioned.fill(
+            child: ZoneGuides(geo: geo, time: _animating ? _time : null),
+          ),
         for (final sprite in sprites.whereType<KittySprite>())
           if (sprite.kitty == _selected)
             Positioned(

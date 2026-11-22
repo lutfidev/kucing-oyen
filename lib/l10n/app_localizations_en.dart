@@ -1938,6 +1938,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get zoneFloor => 'Floor area';
 
   @override
+  String get zoneDoorPath => 'Door path';
+
+  @override
+  String get zoneHangHammock => 'Hang point · hammock';
+
+  @override
+  String get zoneHangLamp => 'Moon lamp';
+
+  @override
+  String storageLivingOnly(String item) {
+    return '$item, can only go in the living room';
+  }
+
+  @override
+  String get livingOnlyNote => 'Only fits in the living room';
+
+  @override
+  String get hangNote => 'Hung from the roof beam';
+
+  @override
   String get storage => 'Storage';
 
   @override

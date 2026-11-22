@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/screens/room/decorate.dart';
@@ -325,5 +326,102 @@ void main() {
     await pumpDecorating(tester, size: const Size(360, 640));
     expect(tester.takeException(), isNull);
     expect(find.text('Gudang'), findsOneWidget);
+  });
+  group('dua ruangan', () {
+    Future<ProgressController> pumpTerrace(
+      WidgetTester tester, {
+      bool decorate = true,
+    }) async {
+      final p = await pumpRoom(
+        tester,
+        progress: withNeeds(const {}, home: decoratedHome()),
+      );
+      await goThroughDoor(tester);
+      expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
+      if (decorate) {
+        await tester.tap(find.text('Hias'));
+        await tester.pumpAndSettle();
+      }
+      return p;
+    }
+
+    testWidgets('panduan jalur pintu di ruang tengah', (tester) async {
+      await pumpDecorating(tester);
+      expect(find.text('Jalur pintu'), findsOneWidget);
+      expect(find.text('Area dinding'), findsOneWidget);
+      expect(find.text('Titik gantung · hammock'), findsNothing);
+    });
+
+    testWidgets('panduan jalur pintu dan titik gantung di teras', (
+      tester,
+    ) async {
+      await pumpTerrace(tester);
+      expect(find.text('Jalur pintu'), findsOneWidget);
+      expect(find.text('Area lantai'), findsOneWidget);
+      expect(find.text('Area dinding'), findsNothing);
+      expect(find.text('Titik gantung · hammock'), findsOneWidget);
+      expect(find.text('Lampu bulan'), findsOneWidget);
+    });
+
+    testWidgets('kasur dilepas di jalur pintu bergeser keluar jalur', (
+      tester,
+    ) async {
+      final progress = await pumpDecorating(tester);
+      final (room, geo) = roomOf(tester);
+      final target = room.topLeft + geo.toScreen(300, 500);
+      final from = tester.getCenter(itemView(RoomItemId.kasur));
+      await dragFramed(tester, itemView(RoomItemId.kasur), target - from);
+      await tester.pumpAndSettle();
+      final spot = progress.home.room.spotOf(RoomItemId.kasur)!;
+      expect(
+        const HouseFloor().blocksDoor(
+          roomItemOf(RoomItemId.kasur),
+          HouseRoom.living,
+          spot,
+        ),
+        isFalse,
+      );
+    });
+
+    testWidgets('Hias di teras: barang dari Gudang masuk ke teras', (
+      tester,
+    ) async {
+      final progress = await pumpTerrace(tester);
+      await progress.storeItem(RoomItemId.kasur);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Kasur Bantal'));
+      await tester.pumpAndSettle();
+      expect(progress.home.room.roomOf(RoomItemId.kasur), HouseRoom.terrace);
+      expect(itemView(RoomItemId.kasur), findsOneWidget);
+    });
+
+    testWidgets('seret di teras menyimpan barang di teras', (tester) async {
+      final progress = await pumpTerrace(tester);
+      await progress.placeItem(
+        RoomItemId.bola,
+        roomItemOf(RoomItemId.bola).defaultSpot,
+        room: HouseRoom.terrace,
+      );
+      await tester.pumpAndSettle();
+      await dragFramed(tester, itemView(RoomItemId.bola), const Offset(30, 20));
+      await tester.pumpAndSettle();
+      expect(progress.home.room.roomOf(RoomItemId.bola), HouseRoom.terrace);
+    });
+
+    testWidgets('Selesai dan tombol kembali di teras tetap di teras', (
+      tester,
+    ) async {
+      await pumpTerrace(tester);
+      await tester.tap(find.text('Selesai'));
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Hias'));
+      await tester.pumpAndSettle();
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('house-terrace')), findsOneWidget);
+      expect(find.text('Hias'), findsOneWidget);
+    });
   });
 }

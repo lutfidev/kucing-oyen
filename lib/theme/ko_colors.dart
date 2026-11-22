@@ -111,6 +111,13 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.roomZoneLine,
     required this.roomZoneFill,
     required this.roomItemDecorFill,
+    required this.roomDoorPathFill,
+    required this.roomDoorPathHatch,
+    required this.roomDoorPathChip,
+    required this.roomHangFill,
+    required this.roomPlaceLine,
+    required this.roomPlaceFill,
+    required this.roomPlaceInk,
     required this.roomDragShadow,
     required this.roomShadow,
     required this.onWaterDeep,
@@ -220,6 +227,13 @@ class KoColors extends ThemeExtension<KoColors> {
     roomZoneLine: Color(0x8C2F86B8), // rgba(47,134,184,.55),
     roomZoneFill: Color(0x0D2F86B8), // rgba(47,134,184,.05),
     roomItemDecorFill: Color(0x122F86B8), // rgba(47,134,184,.07),
+    roomDoorPathFill: Color(0x1AC9650C), // rgba(201,101,12,.10),
+    roomDoorPathHatch: Color(0x52C9650C), // rgba(201,101,12,.32),
+    roomDoorPathChip: Color(0xFFA9530A),
+    roomHangFill: Color(0x2E2F86B8), // rgba(47,134,184,.18),
+    roomPlaceLine: Color(0x8CA9530A), // rgba(169,83,10,.55),
+    roomPlaceFill: Color(0x59FFFBF3), // rgba(255,251,243,.35),
+    roomPlaceInk: Color(0xB3A9530A), // rgba(169,83,10,.7),
     roomDragShadow: Color(0x383B2716), // rgba(59,39,22,.22),
     roomShadow: Color(0xFF3B2716), // Bayangan elips di kaki kucing dan barang (#3B2716; opasitas di RoomScene)
     onWaterDeep: Color(0xFFFFFFFF),
@@ -506,6 +520,27 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Isi kotak barang saat menghias.
   final Color roomItemDecorFill;
 
+  /// Isi jalur pintu saat menghias.
+  final Color roomDoorPathFill;
+
+  /// Arsir miring jalur pintu saat menghias.
+  final Color roomDoorPathHatch;
+
+  /// Chip "Jalur pintu" saat menghias.
+  final Color roomDoorPathChip;
+
+  /// Isi cincin titik gantung teras saat menghias.
+  final Color roomHangFill;
+
+  /// Garis putus tempat nyaman teras kosong.
+  final Color roomPlaceLine;
+
+  /// Isi tempat nyaman teras kosong.
+  final Color roomPlaceFill;
+
+  /// Ikon tapak tempat nyaman teras kosong.
+  final Color roomPlaceInk;
+
   /// Bayangan elips di bawah barang yang diangkat.
   final Color roomDragShadow;
 
@@ -620,6 +655,13 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? roomZoneLine,
     Color? roomZoneFill,
     Color? roomItemDecorFill,
+    Color? roomDoorPathFill,
+    Color? roomDoorPathHatch,
+    Color? roomDoorPathChip,
+    Color? roomHangFill,
+    Color? roomPlaceLine,
+    Color? roomPlaceFill,
+    Color? roomPlaceInk,
     Color? roomDragShadow,
     Color? roomShadow,
     Color? onWaterDeep,
@@ -728,6 +770,13 @@ class KoColors extends ThemeExtension<KoColors> {
       roomZoneLine: roomZoneLine ?? this.roomZoneLine,
       roomZoneFill: roomZoneFill ?? this.roomZoneFill,
       roomItemDecorFill: roomItemDecorFill ?? this.roomItemDecorFill,
+      roomDoorPathFill: roomDoorPathFill ?? this.roomDoorPathFill,
+      roomDoorPathHatch: roomDoorPathHatch ?? this.roomDoorPathHatch,
+      roomDoorPathChip: roomDoorPathChip ?? this.roomDoorPathChip,
+      roomHangFill: roomHangFill ?? this.roomHangFill,
+      roomPlaceLine: roomPlaceLine ?? this.roomPlaceLine,
+      roomPlaceFill: roomPlaceFill ?? this.roomPlaceFill,
+      roomPlaceInk: roomPlaceInk ?? this.roomPlaceInk,
       roomDragShadow: roomDragShadow ?? this.roomDragShadow,
       roomShadow: roomShadow ?? this.roomShadow,
       onWaterDeep: onWaterDeep ?? this.onWaterDeep,
@@ -842,6 +891,13 @@ class KoColors extends ThemeExtension<KoColors> {
       roomZoneLine: c(roomZoneLine, other.roomZoneLine),
       roomZoneFill: c(roomZoneFill, other.roomZoneFill),
       roomItemDecorFill: c(roomItemDecorFill, other.roomItemDecorFill),
+      roomDoorPathFill: c(roomDoorPathFill, other.roomDoorPathFill),
+      roomDoorPathHatch: c(roomDoorPathHatch, other.roomDoorPathHatch),
+      roomDoorPathChip: c(roomDoorPathChip, other.roomDoorPathChip),
+      roomHangFill: c(roomHangFill, other.roomHangFill),
+      roomPlaceLine: c(roomPlaceLine, other.roomPlaceLine),
+      roomPlaceFill: c(roomPlaceFill, other.roomPlaceFill),
+      roomPlaceInk: c(roomPlaceInk, other.roomPlaceInk),
       roomDragShadow: c(roomDragShadow, other.roomDragShadow),
       roomShadow: c(roomShadow, other.roomShadow),
       onWaterDeep: c(onWaterDeep, other.onWaterDeep),

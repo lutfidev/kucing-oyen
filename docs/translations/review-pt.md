@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-498 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+504 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -496,6 +496,12 @@ files and anything written there is overwritten.
 | `decorateHint` | Drag things to a new spot | Arraste as coisas pra um lugar novo | Chip shown while decorating. | |
 | `zoneWall` | Wall area | Área da parede | Label of the wall area while decorating. | |
 | `zoneFloor` | Floor area | Área do chão | Label of the floor area while decorating. | |
+| `zoneDoorPath` | Door path | Passagem da porta | Label of the hatched door path, where no furniture may stand, while decorating. | |
+| `zoneHangHammock` | Hang point · hammock | Ponto de pendurar · rede | Label of the two terrace beam hooks for the hammock while decorating. | |
+| `zoneHangLamp` | Moon lamp | Lâmpada lua | Label of the terrace beam hook for the moon lamp while decorating. | |
+| `storageLivingOnly` | {item}, can only go in the living room | {item}, só pode ficar na sala | Screen reader label of a dimmed storage slot on the terrace: a wall item that can only hang in the living room. Placeholders: `{item}`. | |
+| `livingOnlyNote` | Only fits in the living room | Só cabe na sala | Short note shown above a dimmed storage slot when tapped on the terrace. | |
+| `hangNote` | Hung from the roof beam | Pendurado na viga do telhado | Short note when the hammock or moon lamp is put on the terrace: it hangs from the roof beam. | |
 | `storage` | Storage | Depósito | Title of the storage tray with owned items that are not in the room. | |
 | `storageCount` | {count, plural, =1{1 item} other{{count} items}} | {count, plural, =1{1 item} other{{count} itens}} | Number of items in storage. Placeholders: `{count}`. | |
 | `storageTapHint` | Tap to place | Toque pra colocar | Hint on the storage tray. | |

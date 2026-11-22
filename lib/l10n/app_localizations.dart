@@ -2916,6 +2916,42 @@ abstract class AppLocalizations {
   /// **'Floor area'**
   String get zoneFloor;
 
+  /// Label of the hatched door path, where no furniture may stand, while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Door path'**
+  String get zoneDoorPath;
+
+  /// Label of the two terrace beam hooks for the hammock while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Hang point · hammock'**
+  String get zoneHangHammock;
+
+  /// Label of the terrace beam hook for the moon lamp while decorating.
+  ///
+  /// In en, this message translates to:
+  /// **'Moon lamp'**
+  String get zoneHangLamp;
+
+  /// Screen reader label of a dimmed storage slot on the terrace: a wall item that can only hang in the living room.
+  ///
+  /// In en, this message translates to:
+  /// **'{item}, can only go in the living room'**
+  String storageLivingOnly(String item);
+
+  /// Short note shown above a dimmed storage slot when tapped on the terrace.
+  ///
+  /// In en, this message translates to:
+  /// **'Only fits in the living room'**
+  String get livingOnlyNote;
+
+  /// Short note when the hammock or moon lamp is put on the terrace: it hangs from the roof beam.
+  ///
+  /// In en, this message translates to:
+  /// **'Hung from the roof beam'**
+  String get hangNote;
+
   /// Title of the storage tray with owned items that are not in the room.
   ///
   /// In en, this message translates to:
