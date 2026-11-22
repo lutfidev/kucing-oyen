@@ -1100,10 +1100,6 @@ class _RoomViewState extends State<RoomView>
             },
             onTap: () => _goTo(geo.which.other),
           ),
-        if (_decorating)
-          Positioned.fill(
-            child: ZoneGuides(geo: geo, time: _animating ? _time : null),
-          ),
         for (final sprite in sprites.whereType<KittySprite>())
           if (sprite.kitty == _selected)
             Positioned(
@@ -1178,6 +1174,12 @@ class _RoomViewState extends State<RoomView>
       clipBehavior: Clip.none,
       children: [
         Positioned.fill(child: scene),
+        // Panduan Hias di atas barang dan kucing, seperti desain (z 890):
+        // label jalur pintu tidak tertutup barang. Sentuhan tembus.
+        if (_decorating)
+          Positioned.fill(
+            child: ZoneGuides(geo: geo, time: _animating ? _time : null),
+          ),
         if (attention case (_, final need))
           DoorAttention(geo: geo, need: need, time: _animating ? _time : null),
         if (lifted != null)

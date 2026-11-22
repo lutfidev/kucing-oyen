@@ -354,6 +354,16 @@ void main() {
       expect(find.text('Jalur pintu'), findsOneWidget);
       expect(find.text('Area dinding'), findsOneWidget);
       expect(find.text('Titik gantung · hammock'), findsNothing);
+      // Panduan di atas barang (desain z 890), bukan di lapisan lantai:
+      // label jalur pintu tidak tertutup kasur.
+      expect(
+        find.descendant(
+          of: find.byType(RoomScene),
+          matching: find.byType(ZoneGuides),
+        ),
+        findsNothing,
+      );
+      expect(find.byType(ZoneGuides), findsOneWidget);
     });
 
     testWidgets('panduan jalur pintu dan titik gantung di teras', (
@@ -363,8 +373,9 @@ void main() {
       expect(find.text('Jalur pintu'), findsOneWidget);
       expect(find.text('Area lantai'), findsOneWidget);
       expect(find.text('Area dinding'), findsNothing);
-      expect(find.text('Titik gantung · hammock'), findsOneWidget);
-      expect(find.text('Lampu bulan'), findsOneWidget);
+      final hammock = tester.getRect(find.text('Titik gantung · hammock'));
+      final lamp = tester.getRect(find.text('Lampu bulan'));
+      expect(hammock.overlaps(lamp), isFalse);
     });
 
     testWidgets('kasur dilepas di jalur pintu bergeser keluar jalur', (

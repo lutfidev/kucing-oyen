@@ -136,8 +136,13 @@ class ZoneGuides extends StatelessWidget {
   static const hangLamp = Offset(305, 158);
   static const hangRadius = 12.0;
   static const hangLineY = 174.0;
-  static const hammockLabel = Offset(146, 182);
-  static const lampLabel = Offset(266, 182);
+
+  /// Label titik gantung, tengah-atas. Desain menaruhnya berdampingan di
+  /// (146, 182) dan (266, 182), tapi label hammock lebih lebar dari celah
+  /// itu (juga di kanvas): label hammock di tengah G1–G2, label lampu satu
+  /// baris lebih bawah di bawah G3.
+  static const hammockLabel = Offset(195.1, 182);
+  static const lampLabel = Offset(305, 210);
 
   /// Denyut cincin (`rmDenyut` 5 detik: opasitas 0,78 → 1 → 0,78).
   static double pulse(double? time) {
@@ -155,6 +160,18 @@ class ZoneGuides extends StatelessWidget {
     Widget label(Offset design, Widget chip) {
       final at = geo.toScreen(design.dx, design.dy);
       return Positioned(left: at.dx, top: at.dy, child: chip);
+    }
+
+    Widget centered(Offset design, Widget chip) {
+      final at = geo.toScreen(design.dx, design.dy);
+      return Positioned(
+        left: at.dx,
+        top: at.dy,
+        child: FractionalTranslation(
+          translation: const Offset(-0.5, 0),
+          child: chip,
+        ),
+      );
     }
 
     final door = [
@@ -188,8 +205,8 @@ class ZoneGuides extends StatelessWidget {
             ),
           ),
           if (terrace) ...[
-            label(hammockLabel, _ZoneLabel(l.zoneHangHammock)),
-            label(lampLabel, _ZoneLabel(l.zoneHangLamp, outlined: true)),
+            centered(hammockLabel, _ZoneLabel(l.zoneHangHammock)),
+            centered(lampLabel, _ZoneLabel(l.zoneHangLamp, outlined: true)),
           ],
         ],
       ),

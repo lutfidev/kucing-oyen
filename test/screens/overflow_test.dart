@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/ad_consent.dart';
@@ -20,6 +21,7 @@ import 'package:kucing_oren/screens/level/hint_sheet.dart';
 import 'package:kucing_oren/screens/level/rules_sheet.dart';
 import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
+import 'package:kucing_oren/screens/room/door_parts.dart';
 import 'package:kucing_oren/screens/room/kitty_card.dart';
 import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
@@ -534,6 +536,98 @@ void _cases(AppLanguage language) {
         await tester.pumpAndSettle();
         expect(find.text(l.storageCount(2)), findsOneWidget);
         expect(find.text(l.decorateDone).hitTestable(), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+      // Langkah 35: Hias di teras dengan titik gantung, jalur pintu, dan
+      // keterangan slot Gudang (barang redup, gantungan).
+      testWidgets('tanpa overflow: mode hias teras @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpApp(tester, progress: fullRoom());
+        await goThroughDoor(tester);
+        await tester.tap(find.text(l.decorate));
+        await tester.pumpAndSettle();
+        final screen = tester.view.physicalSize / tester.view.devicePixelRatio;
+        for (final chip in [
+          l.zoneDoorPath,
+          l.zoneFloor,
+          l.zoneHangHammock,
+          l.zoneHangLamp,
+        ]) {
+          final rect = tester.getRect(find.text(chip));
+          expect(rect.right, lessThanOrEqualTo(screen.width), reason: chip);
+        }
+        expect(tester.takeException(), isNull);
+        for (final (item, note) in [
+          (RoomItemId.jam, l.livingOnlyNote),
+          (RoomItemId.hammock, l.hangNote),
+        ]) {
+          await tester.tap(find.text(roomItemName(l, item)));
+          await tester.pump();
+          final tip = tester.getRect(find.text(note));
+          expect(tip.left, greaterThanOrEqualTo(0), reason: note);
+          expect(tip.right, lessThanOrEqualTo(screen.width), reason: note);
+          expect(tester.takeException(), isNull);
+        }
+        await tester.pump(const Duration(seconds: 3));
+      });
+      testWidgets('tanpa overflow: kucing diangkat @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpApp(tester, progress: fullRoom());
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byType(KittyView).first),
+        );
+        await tester.pump(kLongPressTimeout + const Duration(milliseconds: 50));
+        await tester.pump();
+        expect(find.byType(LiftStatus), findsOneWidget);
+        final status = tester.getRect(find.byType(LiftStatus));
+        final screen = tester.view.physicalSize / tester.view.devicePixelRatio;
+        expect(status.right, lessThanOrEqualTo(screen.width));
+        expect(tester.takeException(), isNull);
+        await gesture.up();
+        await tester.pumpAndSettle();
+      });
+      testWidgets('tanpa overflow: kartu kucing dengan tombol ajak @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpApp(tester, progress: fullRoom());
+        await openOyenCard(tester);
+        final invite = find.byKey(const ValueKey('kitty-invite'));
+        await tester.ensureVisible(invite);
+        await tester.pumpAndSettle();
+        expect(invite.hitTestable(), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+      testWidgets('tanpa overflow: ruang tengah dengan ikon pintu @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        final now = DateTime(2026, 10, 29, 9);
+        var room = Room();
+        for (final item in shopItems) {
+          room = room.buy(item.id);
+        }
+        await pumpApp(
+          tester,
+          progress: testProgressWith(
+            coins: 99999,
+            language: language,
+            clock: () => now,
+            home: Home(room: room, kitties: KittyId.values),
+            needs: HomeNeeds(
+              cats: {
+                for (final kitty in KittyId.values)
+                  if (kitty != KittyId.oyen)
+                    kitty: CatNeeds(hunger: 5, joy: 50, at: now),
+              },
+            ),
+          ),
+        );
+        expect(find.byType(DoorAttention), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
       testWidgets('tanpa overflow: kartu kucing dengan Camilan dan Aksesoris '

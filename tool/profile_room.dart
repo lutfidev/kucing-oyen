@@ -1,4 +1,6 @@
 // Jalankan: flutter run --profile -t tool/profile_room.dart -d <device>
+// Tambah --dart-define=SWITCH_ROOMS=true untuk mengukur sambil pindah
+// ruangan bolak-balik (pintu diketuk tiap 2,5 detik).
 // Data uji hanya di memori; tidak membaca atau menulis progres pemain.
 // ignore_for_file: avoid_print
 
@@ -7,6 +9,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kucing_oren/app/app.dart';
@@ -20,6 +23,7 @@ import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
+import 'package:kucing_oren/screens/room/door_parts.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,14 +65,22 @@ Future<void> main() async {
       roomRandom: () => Random(1),
     ),
   );
+  Timer? switching;
   Timer(const Duration(seconds: 15), () {
     measuring = true;
     print(
-      'ROOM_PROFILE_START cats=${store.home.kitties.length} items=${room.placed.length}',
+      'ROOM_PROFILE_START cats=${store.home.kitties.length} items=${room.placed.length} switch=$_switchRooms',
     );
+    if (_switchRooms) {
+      switching = Timer.periodic(
+        const Duration(milliseconds: 2500),
+        (_) => _tapDoor(),
+      );
+    }
   });
   Timer(const Duration(seconds: 75), () {
     measuring = false;
+    switching?.cancel();
     Map<String, Object> stats(List<double> values) {
       values.sort();
       double percentile(double p) => values[((values.length - 1) * p).round()];
@@ -87,6 +99,7 @@ Future<void> main() async {
     }
     print(
       'ROOM_PROFILE_RESULT ${jsonEncode({
+        'switch_rooms': _switchRooms,
         'frames': frames.length,
         'seconds': 60,
         'cats': store.home.kitties.length,
@@ -98,4 +111,28 @@ Future<void> main() async {
       })}',
     );
   });
+}
+
+const _switchRooms = bool.fromEnvironment('SWITCH_ROOMS');
+
+/// Mengetuk pintu ruangan yang sedang tampil seperti jari: cari
+/// [DoorButton] di pohon widget, lalu kirim sentuhan ke tengahnya. Selama
+/// transisi kedua ruangan dibangun; ketukan dilewati sampai tinggal satu.
+void _tapDoor() {
+  final boxes = <RenderBox>[];
+  void visit(Element element) {
+    if (element.widget is DoorButton) {
+      final box = element.findRenderObject();
+      if (box is RenderBox && box.hasSize && box.attached) boxes.add(box);
+      return;
+    }
+    element.visitChildElements(visit);
+  }
+
+  WidgetsBinding.instance.rootElement?.visitChildElements(visit);
+  if (boxes.length != 1) return;
+  final at = boxes.single.localToGlobal(boxes.single.size.center(Offset.zero));
+  final binding = GestureBinding.instance;
+  binding.handlePointerEvent(PointerDownEvent(position: at, pointer: 9001));
+  binding.handlePointerEvent(PointerUpEvent(position: at, pointer: 9001));
 }
