@@ -121,6 +121,17 @@ class EnteredRoom extends LifeEvent {
   int get hashCode => Object.hash(kitty, to, 'entered');
 }
 
+/// Kucing selesai keluar lewat pintu kucing ke Gang Depan.
+class WentOut extends LifeEvent {
+  const WentOut(super.kitty);
+
+  @override
+  bool operator ==(Object other) => other is WentOut && other.kitty == kitty;
+
+  @override
+  int get hashCode => Object.hash(kitty, 'out');
+}
+
 /// Lama tiap kegiatan (detik, `AnimasiKucing.dc.html` dan rute
 /// `Kamar.dc.html`; tidur diperpanjang supaya tidak gelisah).
 const lifeIdleSeconds = 2.6;
@@ -258,6 +269,21 @@ class CatLife {
 
   /// Sedang diajak pindah: betah dimulai saat masuk ruangan tujuan.
   bool invited = false;
+
+  /// Di Gang Depan: tidak dimajukan, tidak memakai barang atau tempat, dan
+  /// tidak dihitung keramaian. Masuk lagi lewat `RoomLife.comeHome`.
+  bool outside = false;
+
+  /// Keluar atau masuk lewat pintu kucing di pintu depan (digambar dipotong
+  /// di `flapClipX`), bukan pintu teras.
+  bool viaFlap = false;
+
+  /// Berjalan ke pintu depan untuk keluar ke gang.
+  bool goingOut = false;
+
+  /// Keluar ke gang sudah diminta tapi ditunda (betah, diajak, dijeda, di
+  /// atas barang, atau bereaksi).
+  bool wantsOut = false;
 
   /// Detik sampai kegiatan diam/pakai/reaksi/lewat pintu selesai.
   double remaining;
@@ -417,6 +443,7 @@ class RoomLife {
     _hungry = Set.of(hungry);
     _sad = Set.of(sad);
     for (final cat in _cats.values) {
+      if (cat.outside) continue;
       if (cat.activity == CatActivity.idle && _sad.contains(cat.kitty)) {
         cat
           ..activity = CatActivity.sad
@@ -504,8 +531,10 @@ class RoomLife {
   /// lewat pintu bereaksi di ambang ruangan tujuan.
   void react(KittyId kitty, LifePose pose, double seconds) {
     final cat = _cats[kitty];
-    if (cat == null || _isRaised(cat)) return;
+    if (cat == null || cat.outside || _isRaised(cat)) return;
     if (cat.isPassing) _finishPassing(cat);
+    if (cat.outside) return;
+    _holdOuting(cat);
     cat
       ..item = null
       ..place = null
@@ -519,11 +548,128 @@ class RoomLife {
       ..hops = 0;
   }
 
+  /// Peristiwa yang terjadi di luar [advance] (lewat pintu kucing yang
+  /// diselesaikan jeda), dikembalikan di [advance] berikutnya.
+  final _pending = <LifeEvent>[];
+
+  /// [goOut] untuk [kitty] sudah diminta tapi ditunda.
+  bool wantsOut(KittyId kitty) => _cats[kitty]?.wantsOut ?? false;
+
+  /// Kucing yang keluarnya diminta [goOut] `instant` (tetap langsung di luar
+  /// walau ditunda dulu).
+  final _instantOut = <KittyId>{};
+
+  /// Kunjungan Kumis mulai: [kitty] berjalan ke pintu depan lalu keluar
+  /// lewat pintu kucing ([WentOut]). Dari teras, atau [instant] (kurangi
+  /// gerak, layar lain), ia langsung di luar. Selama betah, diajak,
+  /// dijeda, di atas barang, atau bereaksi, keluarnya ditunda ([wantsOut]):
+  /// ajakan pemain menang.
+  void goOut(KittyId kitty, {bool instant = false}) {
+    final cat = _cats[kitty];
+    if (cat == null || cat.outside || cat.goingOut) return;
+    cat.wantsOut = true;
+    if (instant) _instantOut.add(kitty);
+    if (paused || !_canGoOut(cat)) return;
+    if (instant) {
+      if (cat.isPassing) _finishPassing(cat);
+      if (!cat.outside) _putOutside(cat, _pending);
+      return;
+    }
+    _beginGoOut(cat, _pending);
+  }
+
+  /// Kunjungan selesai (atau Oyen lapar): [kitty] masuk lewat pintu kucing
+  /// ke ruang tengah, lalu [EnteredRoom]. [instant] = langsung diam di
+  /// depan pintu depan.
+  void comeHome(KittyId kitty, {bool instant = false}) {
+    final cat = _cats[kitty];
+    if (cat == null) return;
+    if (cat.activity == CatActivity.leaving && cat.viaFlap) {
+      _finishPassing(cat);
+    }
+    if (!cat.outside) {
+      if (cat.goingOut) {
+        cat.goingOut = false;
+        _rest(cat);
+      }
+      cat.wantsOut = false;
+      _instantOut.remove(kitty);
+      return;
+    }
+    cat
+      ..outside = false
+      ..wantsOut = false
+      ..room = HouseRoom.living
+      ..spot = floor.frontThreshold;
+    if (instant) return _rest(cat);
+    cat
+      ..viaFlap = true
+      ..activity = CatActivity.entering
+      ..pose = LifePose.walk
+      ..heading = LifeHeading.right
+      ..elapsed = 0
+      ..remaining = lifeDoorSeconds;
+  }
+
+  bool _canGoOut(CatLife cat) =>
+      cat.stayLeft <= 0 &&
+      !cat.invited &&
+      !cat.isPassing &&
+      !_isRaised(cat) &&
+      cat.activity != CatActivity.reacting;
+
+  void _beginGoOut(CatLife cat, List<LifeEvent> events) {
+    cat.wantsOut = false;
+    if (cat.room == HouseRoom.terrace || _instantOut.contains(cat.kitty)) {
+      return _putOutside(cat, events);
+    }
+    _rest(cat);
+    cat.goingOut = true;
+    _startWalk(cat, floor.frontThreshold, events);
+  }
+
+  void _putOutside(CatLife cat, List<LifeEvent> events) {
+    _instantOut.remove(cat.kitty);
+    cat
+      ..outside = true
+      ..goingOut = false
+      ..wantsOut = false
+      ..viaFlap = false
+      ..room = HouseRoom.living
+      ..spot = floor.frontThreshold
+      ..item = null
+      ..place = null
+      ..traveling = false
+      ..invited = false
+      ..stayLeft = 0
+      ..activity = CatActivity.idle
+      ..pose = LifePose.idle
+      ..heading = LifeHeading.down
+      ..remaining = lifeIdleSeconds
+      ..elapsed = 0
+      ..hops = 0;
+    events.add(WentOut(cat.kitty));
+  }
+
+  /// Kucing yang berhenti di tengah jalan ke pintu depan tetap ingin keluar.
+  static void _holdOuting(CatLife cat) {
+    if (!cat.goingOut) return;
+    cat
+      ..goingOut = false
+      ..wantsOut = true;
+  }
+
   /// Maju [seconds] detik; peristiwa yang terjadi selama itu.
   List<LifeEvent> advance(double seconds) {
     if (paused || seconds <= 0) return const [];
-    final events = <LifeEvent>[];
+    final events = [..._pending];
+    _pending.clear();
     for (final cat in _cats.values) {
+      if (cat.outside) continue;
+      if (cat.wantsOut && _canGoOut(cat)) {
+        _beginGoOut(cat, events);
+        if (cat.outside) continue;
+      }
       cat.elapsed += seconds;
       if (cat.stayLeft > 0) {
         cat.stayLeft = math.max(0, cat.stayLeft - seconds);
@@ -543,10 +689,14 @@ class RoomLife {
             ..pose = LifePose.walk
             ..elapsed = 0
             ..remaining = cat.hops * lifeHopSeconds;
+        case CatActivity.leaving when cat.viaFlap:
+          _putOutside(cat, events);
         case CatActivity.leaving:
           _enter(cat, events);
         case CatActivity.entering:
-          cat.traveling = false;
+          cat
+            ..traveling = false
+            ..viaFlap = false;
           if (cat.invited) {
             cat
               ..invited = false
@@ -562,6 +712,7 @@ class RoomLife {
   }
 
   void _rest(CatLife cat) {
+    _holdOuting(cat);
     final sad = _sad.contains(cat.kitty);
     cat
       ..item = null
@@ -594,6 +745,13 @@ class RoomLife {
   /// Lewat pintu langsung selesai: kucing diam di ambang ruangan tujuan
   /// (dan betah di sana kalau diajak).
   void _finishPassing(CatLife cat) {
+    if (cat.viaFlap) {
+      if (cat.activity == CatActivity.leaving) {
+        return _putOutside(cat, _pending);
+      }
+      cat.viaFlap = false;
+      return _rest(cat);
+    }
     final invited = cat.invited;
     if (cat.activity == CatActivity.leaving) {
       final to = cat.room.other;
@@ -606,7 +764,9 @@ class RoomLife {
   }
 
   void _walk(CatLife cat, double seconds, List<LifeEvent> events) {
-    final target = cat.traveling
+    final target = cat.goingOut
+        ? floor.frontThreshold
+        : cat.traveling
         ? floor.threshold(cat.room)
         : switch (_placeOf(cat)) {
             final place? => _placeSpot(place),
@@ -631,6 +791,17 @@ class RoomLife {
   /// Sampai di tempat berdiri: ambang dilewati, tempat nyaman ditempati,
   /// barang dinding dinaiki dulu.
   void _reach(CatLife cat, List<LifeEvent> events) {
+    if (cat.goingOut) {
+      cat
+        ..goingOut = false
+        ..viaFlap = true
+        ..activity = CatActivity.leaving
+        ..pose = LifePose.walk
+        ..heading = LifeHeading.left
+        ..elapsed = 0
+        ..remaining = lifeDoorSeconds;
+      return;
+    }
     if (cat.traveling) {
       cat
         ..activity = CatActivity.leaving
@@ -684,7 +855,9 @@ class RoomLife {
   double _crowd(CatLife cat, Spot at) {
     var w = 1.0;
     for (final other in _cats.values) {
-      if (other.kitty == cat.kitty || other.room != cat.room) continue;
+      if (other.kitty == cat.kitty || other.room != cat.room || other.outside) {
+        continue;
+      }
       final there = switch (_placeOf(other)) {
         final place? => _placeSpot(place),
         null => _routeOf(other.item, other.kitty)?.stand ?? other.spot,

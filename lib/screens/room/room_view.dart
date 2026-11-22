@@ -339,7 +339,7 @@ class _RoomViewState extends State<RoomView>
           _progress.play(kitty, item);
         case LeftRoom(:final kitty, :final from) when from == _house:
           _announceLeft(kitty, from.other);
-        case LeftRoom() || EnteredRoom():
+        case LeftRoom() || EnteredRoom() || WentOut():
           break;
       }
     }

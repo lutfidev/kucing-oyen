@@ -798,4 +798,199 @@ void main() {
       expect(oyen.item, isNull);
     });
   });
+
+  group('keluar ke gang', () {
+    RoomLife house(
+      int seed, {
+      Map<KittyId, (HouseRoom, Spot)>? homes,
+      Map<HouseRoom, List<LifePlace>> places = const {},
+    }) {
+      final life = RoomLife(
+        random: Random(seed),
+        places: places,
+        travelWeight: 0,
+      );
+      life.sync(
+        homes: homes ?? {KittyId.oyen: (HouseRoom.living, Spot(0.5, 0.5))},
+        targets: const {},
+        uses: const {},
+      );
+      return life;
+    }
+
+    /// Maju sampai [done] (paling lama [limit] detik); semua peristiwa.
+    List<LifeEvent> until(
+      RoomLife life,
+      bool Function() done, {
+      double limit = 60,
+    }) {
+      final events = <LifeEvent>[];
+      for (var t = 0.0; t < limit && !done(); t += _frame) {
+        events.addAll(life.advance(_frame));
+      }
+      return events;
+    }
+
+    test(
+      'goOut: berjalan ke pintu depan, lewat pintu kucing, lalu di luar',
+      () {
+        final life = house(1);
+        final oyen = life.of(KittyId.oyen);
+        life.goOut(KittyId.oyen);
+        expect(oyen.activity, CatActivity.walking);
+        expect(oyen.outside, isFalse);
+        final walked = until(life, () => oyen.activity == CatActivity.leaving);
+        expect(walked.whereType<WentOut>(), isEmpty);
+        expect(oyen.spot, _floor.frontThreshold);
+        expect(oyen.viaFlap, isTrue);
+        expect(oyen.heading, LifeHeading.left);
+        final events = until(life, () => oyen.outside);
+        expect(events, contains(const WentOut(KittyId.oyen)));
+        expect(oyen.outside, isTrue);
+        expect(oyen.viaFlap, isFalse);
+        expect(life.advance(10), isEmpty);
+        expect(oyen.outside, isTrue);
+      },
+    );
+
+    test('dijeda di tengah pintu kucing: langsung di luar', () {
+      final life = house(2);
+      final oyen = life.of(KittyId.oyen);
+      life.goOut(KittyId.oyen);
+      until(life, () => oyen.activity == CatActivity.leaving);
+      life.advance(lifeDoorSeconds / 2);
+      expect(oyen.isPassing, isTrue);
+      life.paused = true;
+      expect(oyen.outside, isTrue);
+      expect(oyen.isPassing, isFalse);
+      life.paused = false;
+      expect(life.advance(_frame), contains(const WentOut(KittyId.oyen)));
+    });
+
+    test('goOut selama dijeda menunggu sampai rutinitas jalan lagi', () {
+      final life = house(2);
+      final oyen = life.of(KittyId.oyen);
+      life.paused = true;
+      life.goOut(KittyId.oyen);
+      expect(life.wantsOut(KittyId.oyen), isTrue);
+      expect(oyen.activity, isNot(CatActivity.walking));
+      life.paused = false;
+      until(life, () => oyen.outside);
+      expect(oyen.outside, isTrue);
+      expect(life.wantsOut(KittyId.oyen), isFalse);
+    });
+
+    test('di teras atau instant: langsung di luar', () {
+      final terrace = house(
+        3,
+        homes: {KittyId.oyen: (HouseRoom.terrace, Spot(0.5, 0.5))},
+      );
+      terrace.goOut(KittyId.oyen);
+      expect(terrace.of(KittyId.oyen).outside, isTrue);
+      expect(terrace.advance(_frame), contains(const WentOut(KittyId.oyen)));
+
+      final instant = house(3);
+      instant.goOut(KittyId.oyen, instant: true);
+      expect(instant.of(KittyId.oyen).outside, isTrue);
+    });
+
+    test('diajak ke teras: baru keluar sesudah betahnya habis', () {
+      final life = house(4);
+      final oyen = life.of(KittyId.oyen);
+      life.invite(KittyId.oyen, instant: true);
+      expect(oyen.stayLeft, lifeStaySeconds);
+      life.goOut(KittyId.oyen);
+      expect(life.wantsOut(KittyId.oyen), isTrue);
+      expect(oyen.outside, isFalse);
+      _run(life, lifeStaySeconds - 1);
+      expect(oyen.outside, isFalse);
+      expect(oyen.room, HouseRoom.terrace);
+      _run(life, 2);
+      expect(oyen.outside, isTrue);
+    });
+
+    test('Oyen yang di luar melepas tempatnya untuk kucing lain', () {
+      const places = {
+        HouseRoom.living: [
+          LifePlace(200, 520, pose: LifePose.lounge, weight: 1000),
+        ],
+      };
+      final life = house(5, places: places);
+      final oyen = life.of(KittyId.oyen);
+      until(life, () => oyen.place == 0);
+      expect(oyen.place, 0);
+      life.sync(
+        homes: {
+          KittyId.oyen: (HouseRoom.living, Spot(0.5, 0.5)),
+          KittyId.salju: (HouseRoom.living, Spot(0.2, 0.9)),
+        },
+        targets: const {},
+        uses: const {},
+      );
+      final salju = life.of(KittyId.salju);
+      _run(life, 20);
+      expect(salju.place, isNull);
+      life.goOut(KittyId.oyen, instant: true);
+      expect(oyen.place, isNull);
+      until(life, () => salju.place == 0, limit: 120);
+      expect(salju.place, 0);
+    });
+
+    test('comeHome: masuk lewat pintu kucing ke ruang tengah', () {
+      final life = house(6);
+      final oyen = life.of(KittyId.oyen);
+      life.goOut(KittyId.oyen, instant: true);
+      life.comeHome(KittyId.oyen);
+      expect(oyen.outside, isFalse);
+      expect(oyen.room, HouseRoom.living);
+      expect(oyen.spot, _floor.frontThreshold);
+      expect(oyen.activity, CatActivity.entering);
+      expect(oyen.viaFlap, isTrue);
+      final events = until(life, () => oyen.activity != CatActivity.entering);
+      expect(
+        events,
+        contains(const EnteredRoom(KittyId.oyen, HouseRoom.living)),
+      );
+      expect(oyen.viaFlap, isFalse);
+
+      final instant = house(6);
+      instant.goOut(KittyId.oyen, instant: true);
+      instant.comeHome(KittyId.oyen, instant: true);
+      final back = instant.of(KittyId.oyen);
+      expect(back.outside, isFalse);
+      expect(back.spot, _floor.frontThreshold);
+      expect(back.activity, CatActivity.idle);
+    });
+
+    test('sync dengan kucing baru tidak memasukkan Oyen yang di luar', () {
+      final life = house(7);
+      life.goOut(KittyId.oyen, instant: true);
+      life.sync(
+        homes: {
+          KittyId.oyen: (HouseRoom.living, Spot(0.5, 0.5)),
+          KittyId.salju: (HouseRoom.living, Spot(0.2, 0.9)),
+        },
+        targets: const {},
+        uses: const {},
+        sad: const {KittyId.oyen},
+      );
+      final oyen = life.of(KittyId.oyen);
+      expect(oyen.outside, isTrue);
+      expect(oyen.activity, isNot(CatActivity.sad));
+      _run(life, 20);
+      expect(oyen.outside, isTrue);
+    });
+
+    test('Hias di tengah jalan ke pintu: keluar sesudah Hias selesai', () {
+      final life = house(8);
+      final oyen = life.of(KittyId.oyen);
+      life.goOut(KittyId.oyen);
+      life.advance(0.5);
+      life.interrupt();
+      expect(oyen.activity, CatActivity.idle);
+      expect(life.wantsOut(KittyId.oyen), isTrue);
+      until(life, () => oyen.outside);
+      expect(oyen.outside, isTrue);
+    });
+  });
 }
