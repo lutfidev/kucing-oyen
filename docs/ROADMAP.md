@@ -704,7 +704,7 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 35".
 
-## 36. Gang Depan: gambar pintu depan, gang, dan Kumis
+## 36. Gang Depan: gambar pintu depan, gang, dan Kumis ✅
 
 **Waktu:** sesudah langkah 35 di-merge.
 
