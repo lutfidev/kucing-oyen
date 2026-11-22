@@ -1,4 +1,4 @@
-# Rumah Oyen: pintu depan dan gang
+# Rumah Oyen: pintu depan dan Gang Depan
 
 Disepakati pemilik repo pada 22 Nov 2026. Memperluas rumah dua ruangan (`docs/superpowers/specs/2026-11-21-rumah-dua-ruangan-design.md`) dengan tempat ketiga di luar rumah. Brief untuk Claude Design ada di `docs/design-brief/gang-depan.md`. Pratinjau konsep (sketsa kasar di atas potret layar game, bukan gambar final): https://claude.ai/artifact/59AgVWDnrnRnLjgJHmX2jM.
 
@@ -76,7 +76,7 @@ Inti pengalamannya: seekor kucing tetangga lewat, ujung ekornya terlihat sebenta
 
 ### Nama dan letak
 
-- Nama tempatnya **gang** (Inggris "lane", Portugis "viela", Rusia "переулок"). Gang bukan `HouseRoom` yang bisa dihias; di model ia tempat terpisah yang memakai lantai dan rutinitas yang sama.
+- Nama tempatnya **Gang Depan** (disetujui pemilik repo 22 Nov 2026). Di dokumen ini disingkat "gang". Terjemahannya ditulis di ARB seperti nama ruangan lain (usulan: Inggris "Front Lane", Portugis "Viela da Frente", Rusia "Переулок у дома"). Gang Depan bukan `HouseRoom` yang bisa dihias; di model ia tempat terpisah yang memakai lantai dan rutinitas yang sama.
 - Kucing tetangga diusulkan bernama **Kumis** (nama sama di semua bahasa): kucing warung, putih dengan belang abu dan "kumis" abu di bawah hidung, ekor pendek bengkok, syal kain bergaris merah-krem seperti tenda warung. Desain lengkapnya di brief. Ekor bengkoknya sengaja dibuat mudah dikenali karena ekor itulah yang terlihat di pintu kucing.
 - Letak di gang: warung dan bangku di sisi kiri, depan rumah Oyen di sisi kanan. **Pintu pulang berada tepat di posisi pintu teras di ruang tengah** (bukaan (320,212)–(382,203)–(382,489)–(320,403)), dengan kusen, panel, jendela, dan pintu kucing yang sama dengan sisi dalam. Pintunya sedikit terbuka dengan cahaya hangat di baliknya. Seperti teras, pintu kembali selalu di dinding samping yang menghadap rumah.
 - Header di gang: chip koin, logo, chip bintang, dan chip "‹ Ruang tengah" (pulang, sama seperti chip di teras). Tidak ada tombol Hias. Panel bawah tetap.
@@ -86,7 +86,7 @@ Inti pengalamannya: seekor kucing tetangga lewat, ujung ekornya terlihat sebenta
 - Bukaan pintu depan = cermin bukaan pintu teras: (70,212)–(8,203)–(8,489)–(70,403); kusen dicerminkan dari `LatarTengah`/`KusenTengah`.
 - **Jalur pintu depan** ikut `HouseFloor.doorPath`/`blocksDoor`, sama seperti pintu teras. Posisi bawaan tiang garukan (sekarang di pojok kiri) pindah keluar dari jalur itu. Barang simpanan lama yang jatuh di jalur bergeser lewat `allowedSpot`.
 - Penanda "Oyen di gang": gelembung kecil bergambar tapak di dekat pintu depan, dengan gaya dan aturan `DoorAttention` (tanpa semantik sendiri; label pintu yang menyebutnya). Kalau Oyen lapar atau lesu di gang, ikon perhatian yang biasa (lapar → lesu → hadiah) menggantikannya.
-- Pembaca layar: pintu depan "Keluar ke gang" (ditambah "Oyen ada di gang" kalau ia di luar); pintu di gang "Pulang ke ruang tengah". Saat Oyen keluar sendiri dari ruangan yang sedang dibuka, diumumkan singkat seperti `kittyLeftTo`.
+- Pembaca layar: pintu depan "Keluar ke Gang Depan" (ditambah "Oyen ada di Gang Depan" kalau ia di luar); pintu di gang "Pulang ke ruang tengah". Saat Oyen keluar sendiri dari ruangan yang sedang dibuka, diumumkan singkat seperti `kittyLeftTo`.
 
 ### Kamera ke gang dan pulang
 
@@ -122,7 +122,8 @@ Inti pengalamannya: seekor kucing tetangga lewat, ujung ekornya terlihat sebenta
 
 ### Pertemuan pertama dan sesudahnya
 
-- Pertemuan pertama dicatat sekali (`lane.metNeighbor` di `ProgressStore`, membaca data rusak sebagai belum bertemu). `resetProgress` menghapusnya seperti isi rumah lain: progres baru berarti pertemuan pertama diputar lagi.
+- **Pertemuan pertama diingat permanen (keputusan pemilik repo).** Game mencatat `lane.metNeighbor` di `ProgressStore` (kunci `PrefsProgressStore` sendiri, ikut antrean simpan yang tidak pernah melempar dan `retrySaves`) **hanya sesudah pemain melihat seluruh pertemuan pertama di gang**: Kumis bergeser, Oyen melompat naik, mengendus, sampai duduk bersama. Catatan ini bertahan sesudah aplikasi ditutup dan dibuka ulang, jadi pertemuan pertama tidak pernah diputar dua kali dan kunjungan paksa tidak muncul lagi.
+- Kalau pemain meninggalkan gang (pulang, kembali, membuka layar lain, atau aplikasi ditutup) sebelum mereka duduk bersama, pertemuan pertama belum dianggap terlihat: kunjungan itu berlanjut sebagai kunjungan biasa, dan pertemuan pertama diputar lagi di kunjungan berikutnya. Data rusak dibaca sebagai belum bertemu. `resetProgress` menghapusnya seperti isi rumah lain: progres baru berarti pertemuan pertama diputar lagi. Test: tersimpan sesudah urutan lengkap, tidak tersimpan kalau terputus, tetap ada sesudah `ProgressController.load` ulang.
 - Urutan pertemuan pertama: Kumis sudah duduk di tengah bangku. Oyen datang dan duduk di depan bangku sambil menengadah. **Oyen menunggu pemain:** selama pemain belum di gang, keduanya tetap di pose itu. Begitu pemain tiba (gerakan kamera selesai), Kumis bergeser ke ujung kanan bangku, Oyen melompat naik ke kiri, keduanya mengendus, lalu duduk bersama. Sesudah itu rutinitas biasa.
 - Kalau kunjungan pertama berakhir tanpa pemain datang, pertemuan pertama belum dianggap terjadi dan diulang di kunjungan berikutnya.
 - Kunjungan berikutnya: Oyen dan Kumis memilih momen dari **tempat nyaman gang** dengan bobot, memakai `RoomLife` (`LifePlace`, jarak kaki `HouseFloor.distance`, pose kucing biasa). Daftar awal: duduk bersama di bangku (Kumis bergeser lagi kalau Oyen datang belakangan), tidur berdampingan di bangku, berbaring di teduh pohon, minum dari piring air di dekat warung, duduk di tangga warung, melihat kupu-kupu bersama.
@@ -154,6 +155,6 @@ Isi lengkap ada di `docs/design-brief/gang-depan.md`. Ringkasnya: ruang tengah d
 - Model Dart murni: tempat gang di samping `HouseRoom` (atau tipe tempat yang lebih umum), jadwal kunjungan per hari, keadaan kunjungan (mulai, menunggu pemain, selesai), pertemuan pertama, dan perluasan `RoomLife` untuk Kumis, pintu kucing, dan gang.
 - Geometri: bukaan pintu depan dan jalurnya, tempat nyaman gang, bangku sebagai tempat duduk dua kucing (tempat berdiri dan lompat seperti barang dinding).
 - Gerakan kamera ke gang dan pulang, potongan bukaan, homografi daun pintu, ketuk untuk melompati, kurangi gerak.
-- Simpanan `lane.metNeighbor` dan migrasinya.
+- Simpanan `lane.metNeighbor` (kapan tepatnya dianggap "duduk bersama" di rutinitas) dan migrasinya.
 - Test: jadwal ber-seed, jaminan menyusul, pertemuan pertama yang menunggu pemain, layar (ketuk pintu, transisi, kembali, kurangi gerak, pembaca layar), `overflow_test` dan potret layar keempat bahasa, profil kinerja kamar seperti langkah 32.
 - Pembagian ke langkah roadmap sesudah langkah 35. Rencana dimulai sesudah link kanvas Claude Design diserahkan.
