@@ -567,3 +567,77 @@ class _SadMarkPainter extends CustomPainter {
   @override
   bool shouldRepaint(_SadMarkPainter old) => old.hungry != hungry;
 }
+
+/// Daun pintu yang diproyeksikan ([paintDoorLeaf]) di kotak seukuran area
+/// rumah: viewBox desain 390×652 diskalakan seperti lapisan latar.
+class DoorLeafView extends StatelessWidget {
+  const DoorLeafView({
+    super.key,
+    required this.side,
+    required this.angleDeg,
+    this.flapDeg,
+  });
+
+  final DoorLeafSide side;
+  final double angleDeg;
+
+  /// Sudut ayun pintu kucing; null = tanpa daun pintu kucing.
+  final double? flapDeg;
+
+  @override
+  Widget build(BuildContext context) => IgnorePointer(
+    child: CustomPaint(
+      size: Size.infinite,
+      painter: _DoorLeafPainter(side, angleDeg, flapDeg),
+    ),
+  );
+}
+
+class _DoorLeafPainter extends CustomPainter {
+  _DoorLeafPainter(this.side, this.angleDeg, this.flapDeg);
+
+  final DoorLeafSide side;
+  final double angleDeg;
+  final double? flapDeg;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas
+      ..save()
+      ..scale(size.width / laneViewBox.width, size.height / laneViewBox.height);
+    paintDoorLeaf(canvas, side, angleDeg: angleDeg, flapDeg: flapDeg);
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_DoorLeafPainter old) =>
+      old.side != side || old.angleDeg != angleDeg || old.flapDeg != flapDeg;
+}
+
+/// Penanda "Oyen di gang" (`PenandaGang.dc.html`) seukuran [size];
+/// [time] = detik ayunan, null = diam. Tanpa semantik: label pintu yang
+/// menyebutnya.
+class LaneMarkerView extends StatelessWidget {
+  const LaneMarkerView({super.key, required this.size, this.time});
+
+  final Size size;
+  final double? time;
+
+  @override
+  Widget build(BuildContext context) => ExcludeSemantics(
+    child: CustomPaint(size: size, painter: _LaneMarkerPainter(time)),
+  );
+}
+
+class _LaneMarkerPainter extends CustomPainter {
+  _LaneMarkerPainter(this.time);
+
+  final double? time;
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      paintLaneMarker(canvas, size: size, time: time);
+
+  @override
+  bool shouldRepaint(_LaneMarkerPainter old) => old.time != time;
+}

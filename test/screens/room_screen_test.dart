@@ -11,7 +11,9 @@ import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
+import 'package:kucing_oren/game/render/door_leaf.dart';
 import 'package:kucing_oren/screens/room/room_parts.dart';
+import 'package:kucing_oren/screens/room/room_scene.dart';
 import 'package:kucing_oren/screens/room/room_view.dart';
 import 'package:kucing_oren/screens/settings/settings_screen.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
@@ -102,6 +104,26 @@ void main() {
         );
         expect(bubble.overlaps(oyen.shift(room.topLeft)), isFalse);
       }
+    });
+
+    testWidgets('pintu depan tertutup di dinding kiri ruang tengah', (
+      tester,
+    ) async {
+      await pumpRoom(tester);
+      final door = tester.widget<DoorLeafView>(find.byType(DoorLeafView));
+      expect(door.side, DoorLeafSide.front);
+      expect(door.angleDeg, 0);
+      expect(door.flapDeg, 0);
+      // Di bawah cahaya lantai dan kucing: bagian lapisan ruangan.
+      expect(
+        find.descendant(
+          of: find.byType(RoomScene),
+          matching: find.byType(DoorLeafView),
+        ),
+        findsOneWidget,
+      );
+      await goThroughDoor(tester);
+      expect(find.byType(DoorLeafView), findsNothing);
     });
 
     testWidgets('kamar berisi: tanpa ajakan', (tester) async {
