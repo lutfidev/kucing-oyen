@@ -45,7 +45,8 @@ ProgressController testProgress([
 /// kucing [needs], hadiah harian [rewards], iklan
 /// [ads] untuk petunjuk dan koin (default iklan palsu yang berhasil), jam
 /// [clock], dan bahasa [language] (default Indonesia, supaya test bisa
-/// mencari teks Indonesia; [AppLanguage.system] untuk menguji bahasa HP).
+/// mencari teks Indonesia; [AppLanguage.system] untuk menguji bahasa HP),
+/// dan pertemuan pertama dengan Kumis [metNeighbor].
 ProgressController testProgressWith({
   Map<int, int> best = const {},
   Set<int>? tutorialsDone,
@@ -57,6 +58,7 @@ ProgressController testProgressWith({
   RewardedAds? ads,
   DateTime Function()? clock,
   AppLanguage language = AppLanguage.id,
+  bool metNeighbor = false,
 }) {
   final progress = Progress(best);
   final tutorials = tutorialsDone ?? tutorialLevels;
@@ -68,7 +70,8 @@ ProgressController testProgressWith({
       ..home = home ?? Home.initial
       ..needs = needs ?? HomeNeeds.empty
       ..rewards = rewards
-      ..language = language,
+      ..language = language
+      ..metNeighbor = metNeighbor,
     progress: progress,
     tutorialsDone: tutorials,
     coins: coins,
@@ -77,6 +80,7 @@ ProgressController testProgressWith({
     needs: needs,
     rewards: rewards,
     language: language,
+    metNeighbor: metNeighbor,
     hintAds: ads,
     coinAds: ads,
     clock: clock,
@@ -210,8 +214,8 @@ Future<void> pumpThemed(
 }
 
 /// Simpanan di memori yang mencatat urutan tulisan ([writes], nama bagian:
-/// `progress`, `tutorials`, `coins`, `hints`, `home`, `needs`, `rewards`,
-/// `language`, `sound`) dan melempar untuk bagian di [failing], seperti
+/// `progress`, `tutorials`, `coins`, `hints`, `home`, `lane`, `needs`,
+/// `rewards`, `language`, `sound`) dan melempar untuk bagian di [failing], seperti
 /// penyimpanan perangkat yang gagal (I/O).
 class FailingProgressStore extends MemoryProgressStore {
   FailingProgressStore({this.failing = const {}});
@@ -248,6 +252,10 @@ class FailingProgressStore extends MemoryProgressStore {
   @override
   Future<void> saveHome(Home home) =>
       _write('home', () => super.saveHome(home));
+
+  @override
+  Future<void> saveMetNeighbor(bool met) =>
+      _write('lane', () => super.saveMetNeighbor(met));
 
   @override
   Future<void> saveNeeds(HomeNeeds needs) =>

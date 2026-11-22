@@ -12,6 +12,7 @@ import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/lane.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
@@ -25,6 +26,179 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 import '../test_helpers.dart';
 
 void main() {
+  group('gang depan', () {
+    setUp(() {
+      SharedPreferencesAsyncPlatform.instance =
+          InMemorySharedPreferencesAsync.empty();
+    });
+
+    final day = DateTime(2026, 11, 22);
+    final visit = laneVisitsOn(day).first;
+
+    test(
+      'pertemuan pertama tersimpan dan bertahan sesudah dimuat ulang',
+      () async {
+        final store = PrefsProgressStore();
+        final c = await ProgressController.load(
+          levels: testLevels,
+          store: store,
+        );
+        expect(c.metNeighbor, isFalse);
+        var notified = 0;
+        c.addListener(() => notified++);
+        await c.meetNeighbor();
+        await c.meetNeighbor();
+        expect(c.metNeighbor, isTrue);
+        expect(notified, 1);
+        expect(
+          await SharedPreferencesAsync().getBool(PrefsProgressStore.laneKey),
+          isTrue,
+        );
+        final again = await ProgressController.load(
+          levels: testLevels,
+          store: PrefsProgressStore(),
+        );
+        expect(again.metNeighbor, isTrue);
+      },
+    );
+
+    test('tanpa meetNeighbor: muat ulang = belum bertemu', () async {
+      await ProgressController.load(
+        levels: testLevels,
+        store: PrefsProgressStore(),
+      );
+      final again = await ProgressController.load(
+        levels: testLevels,
+        store: PrefsProgressStore(),
+      );
+      expect(again.metNeighbor, isFalse);
+    });
+
+    test('data rusak dibaca belum bertemu', () async {
+      await SharedPreferencesAsync().setString(
+        PrefsProgressStore.laneKey,
+        'ya',
+      );
+      expect(await PrefsProgressStore().loadMetNeighbor(), isFalse);
+    });
+
+    test('resetProgress menghapus pertemuan pertama', () async {
+      final store = MemoryProgressStore()..metNeighbor = true;
+      final c = await ProgressController.load(levels: testLevels, store: store);
+      expect(c.metNeighbor, isTrue);
+      await c.resetProgress();
+      expect(c.metNeighbor, isFalse);
+      expect(store.metNeighbor, isFalse);
+    });
+
+    test('simpan gagal ditulis ulang lewat retrySaves', () async {
+      final store = FailingProgressStore(failing: {'lane'});
+      final c = ProgressController(levels: testLevels, store: store);
+      await c.meetNeighbor();
+      expect(c.metNeighbor, isTrue);
+      expect(c.hasUnsavedChanges, isTrue);
+      store.failing = {};
+      await c.retrySaves();
+      expect(store.writes, ['lane']);
+      expect(store.metNeighbor, isTrue);
+      expect(c.hasUnsavedChanges, isFalse);
+    });
+
+    test('isi rumah ditulis sebelum gang, gang sebelum koin', () async {
+      final store = FailingProgressStore();
+      final c = ProgressController(levels: testLevels, store: store);
+      await c.resetProgress();
+      expect(
+        store.writes.indexOf('home'),
+        lessThan(store.writes.indexOf('lane')),
+      );
+      expect(
+        store.writes.indexOf('lane'),
+        lessThan(store.writes.indexOf('coins')),
+      );
+    });
+
+    test('belum ada kunjungan sebelum level 1 menang', () {
+      final now = visit.start.add(const Duration(minutes: 1));
+      final fresh = testProgressWith(clock: () => now);
+      expect(fresh.lanesOpen, isFalse);
+      expect(fresh.laneVisit, isNull);
+      expect(fresh.oyenInLane, isFalse);
+      expect(fresh.forceFirstVisit(), isFalse);
+      final won = testProgressWith(best: {1: 3}, clock: () => now);
+      expect(won.lanesOpen, isTrue);
+      expect(won.laneVisit, visit);
+      expect(won.oyenInLane, isTrue);
+    });
+
+    test('kunjungan paksa sekali per sesi, hanya sebelum bertemu', () {
+      final now = DateTime(2026, 11, 22, 3);
+      final c = testProgressWith(best: {1: 3}, clock: () => now);
+      expect(c.laneVisit, isNull);
+      expect(c.forceFirstVisit(), isTrue);
+      expect(c.laneVisit?.start, now);
+      expect(c.laneVisit?.end, now.add(const Duration(minutes: 10)));
+      expect(c.forceFirstVisit(), isFalse);
+
+      final met = testProgressWith(
+        best: {1: 3},
+        metNeighbor: true,
+        clock: () => now,
+      );
+      expect(met.forceFirstVisit(), isFalse);
+      expect(met.laneVisit, isNull);
+
+      final during = testProgressWith(best: {1: 3}, clock: () => visit.start);
+      expect(during.forceFirstVisit(), isFalse);
+    });
+
+    test('followTail: kunjungan bertahan 5 menit walau jadwal lewat', () {
+      var now = visit.end.subtract(const Duration(seconds: 10));
+      final c = testProgressWith(best: {1: 3}, clock: () => now);
+      c.followTail();
+      now = now.add(const Duration(minutes: 4, seconds: 59));
+      expect(c.laneVisit?.start, visit.start);
+      now = now.add(const Duration(seconds: 1));
+      expect(c.laneVisit, isNull);
+    });
+
+    test('jam melewati akhir tanpa holdLane = selesai', () {
+      var now = visit.end.subtract(const Duration(seconds: 30));
+      final c = testProgressWith(best: {1: 3}, clock: () => now);
+      expect(c.laneVisit, isNotNull);
+      now = visit.end;
+      expect(c.laneVisit, isNull);
+      expect(c.oyenInLane, isFalse);
+    });
+
+    test('holdLane: pemain di gang menahan kunjungan satu menit', () {
+      var now = visit.end.subtract(const Duration(seconds: 30));
+      final c = testProgressWith(best: {1: 3}, clock: () => now);
+      c.holdLane();
+      now = visit.end.add(const Duration(seconds: 29));
+      expect(c.laneVisit, isNotNull);
+      c.holdLane();
+      now = now.add(const Duration(seconds: 59));
+      expect(c.laneVisit, isNotNull);
+      now = now.add(const Duration(seconds: 2));
+      expect(c.laneVisit, isNull);
+    });
+
+    test('sendOyenHome: Oyen pulang, kunjungan berlanjut, berikutnya ikut', () {
+      final visits = laneVisitsOn(day);
+      var now = visits[0].start.add(const Duration(minutes: 1));
+      final c = testProgressWith(best: {1: 3}, clock: () => now);
+      var notified = 0;
+      c.addListener(() => notified++);
+      c.sendOyenHome();
+      expect(notified, 1);
+      expect(c.laneVisit, isNotNull);
+      expect(c.oyenInLane, isFalse);
+      now = visits[1].start;
+      expect(c.oyenInLane, isTrue);
+    });
+  });
+
   group('PrefsProgressStore', () {
     setUp(() {
       SharedPreferencesAsyncPlatform.instance =

@@ -7,6 +7,7 @@ import '../game/model/home.dart';
 import '../game/model/home_items.dart';
 import '../game/model/house.dart';
 import '../game/model/kitties.dart';
+import '../game/model/lane.dart';
 import '../game/model/needs.dart';
 import '../game/model/progress.dart';
 import '../game/model/rewards.dart';
@@ -37,8 +38,18 @@ enum AdReward {
 /// sebelum koin yang membayarnya, koin sebelum bintang, hadiah harian, dan
 /// hari hadiah kucing yang memberikannya (jadi paling buruk koin didapat
 /// lagi, tidak hilang). Akibatnya stok camilan ditulis sebelum bar yang
-/// dinaikkannya.
-enum _Part { hints, home, coins, needs, progress, rewards, tutorials, language }
+/// dinaikkannya. Pertemuan pertama dengan Kumis ditulis sesudah rumah.
+enum _Part {
+  hints,
+  home,
+  lane,
+  coins,
+  needs,
+  progress,
+  rewards,
+  tutorials,
+  language,
+}
 
 /// Data level dan progres pemain untuk semua layar: bintang, tutorial,
 /// koin, petunjuk, rumah Oyen dan kebutuhan kucingnya, hadiah harian, dan
@@ -55,6 +66,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     HomeNeeds? needs,
     this._rewards = DailyRewards.initial,
     this._language = AppLanguage.system,
+    this._metNeighbor = false,
     RewardedAds? hintAds,
     RewardedAds? coinAds,
     DateTime Function()? clock,
@@ -98,6 +110,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
       needs: needs,
       rewards: await store.loadRewards(),
       language: await store.loadLanguage(),
+      metNeighbor: await store.loadMetNeighbor(),
       hintAds: hintAds,
       coinAds: coinAds,
       clock: clock,
@@ -484,6 +497,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// ulang dari bintang.
   Future<void> resetProgress() async {
     _progress = Progress.empty;
+    _metNeighbor = false;
     _coins = 0;
     _hints = const {};
     _home = Home.initial;
@@ -495,6 +509,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
       _Part.coins,
       _Part.hints,
       _Part.home,
+      _Part.lane,
       _Part.needs,
       _Part.tutorials,
     });
@@ -506,6 +521,82 @@ class ProgressController extends ChangeNotifier implements HintSource {
     _tutorialsDone = Set.unmodifiable({..._tutorialsDone, id});
     notifyListeners();
     await _save({_Part.tutorials});
+  }
+
+  // ── Gang Depan ──────────────────────────────────────────────────────
+
+  bool _metNeighbor;
+
+  /// Pemain sudah melihat seluruh pertemuan pertama Oyen dengan Kumis.
+  bool get metNeighbor => _metNeighbor;
+
+  /// Mencatat pertemuan pertama (sekali; panggilan berikutnya tidak apa-apa).
+  Future<void> meetNeighbor() async {
+    if (_metNeighbor) return;
+    _metNeighbor = true;
+    notifyListeners();
+    await _save({_Part.lane});
+  }
+
+  /// Kunjungan Kumis baru ada sesudah level 1 menang.
+  bool get lanesOpen => _progress.isWon(1);
+
+  /// Perpanjangan kunjungan (pemain di gang, momen ekor) dan kunjungan
+  /// paksa: hanya di memori, hilang kalau aplikasi ditutup.
+  DateTime? _laneHeld;
+  LaneVisit? _laneForced;
+  bool _laneForcedUsed = false;
+
+  /// Mulai kunjungan yang Oyen-nya sudah pulang karena lapar.
+  DateTime? _oyenHomeFrom;
+
+  /// Kunjungan yang sedang berjalan menurut jam, atau null.
+  LaneVisit? get laneVisit => lanesOpen
+      ? laneVisitAt(clock(), heldUntil: _laneHeld, forced: _laneForced)
+      : null;
+
+  /// Oyen sedang di gang: ada kunjungan dan ia belum pulang karena lapar.
+  bool get oyenInLane {
+    final visit = laneVisit;
+    return visit != null && visit.start != _oyenHomeFrom;
+  }
+
+  void _holdUntil(DateTime until) {
+    final held = _laneHeld;
+    if (held == null || until.isAfter(held)) _laneHeld = until;
+  }
+
+  /// Dipanggil tiap penyegaran selama pemain di gang: kunjungan tidak
+  /// berakhir selama pemain di sana.
+  void holdLane() => _holdUntil(clock().add(const Duration(minutes: 1)));
+
+  /// Oyen keluar lewat momen ekor: kunjungan berlangsung paling sedikit
+  /// [laneFollowTime] lagi.
+  void followTail() => _holdUntil(clock().add(laneFollowTime));
+
+  /// Kunjungan paksa 10 menit mulai sekarang untuk pertemuan pertama,
+  /// sekali per sesi aplikasi. False kalau gang belum terbuka, pertemuan
+  /// pertama sudah terjadi, sedang ada kunjungan, atau sudah dipakai.
+  bool forceFirstVisit() {
+    if (_laneForcedUsed || !lanesOpen || _metNeighbor || laneVisit != null) {
+      return false;
+    }
+    final now = clock();
+    _laneForcedUsed = true;
+    _laneForced = LaneVisit(
+      start: now,
+      end: now.add(const Duration(minutes: 10)),
+    );
+    notifyListeners();
+    return true;
+  }
+
+  /// Oyen lapar pulang lebih awal; sisa kunjungan ini berlanjut tanpa dia.
+  void sendOyenHome() {
+    final visit = laneVisit;
+    if (visit == null || visit.start == _oyenHomeFrom) return;
+    _oyenHomeFrom = visit.start;
+    notifyListeners();
   }
 
   // ── Simpanan ────────────────────────────────────────────────────────
@@ -559,6 +650,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     _Part.coins => store.saveCoins(_coins),
     _Part.hints => store.saveHints(_hints),
     _Part.home => store.saveHome(_home),
+    _Part.lane => store.saveMetNeighbor(_metNeighbor),
     _Part.needs => store.saveNeeds(_needs),
     _Part.rewards => store.saveRewards(_rewards),
     _Part.language => store.saveLanguage(_language),
