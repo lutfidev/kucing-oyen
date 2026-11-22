@@ -733,6 +733,6 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 
 > **Baca dulu:** spec dan rencana di atas (Task 10–13).
 >
-> **Lalu:** kerjakan Task 10–13 rencana. Cek di HP: ekor Kumis mudah dikenali, gerakan kamera terasa seperti melangkah keluar, dan Kumis masih ada saat pemain menyusul.
+> **Lalu:** kerjakan Task 10–13 rencana. Pemeriksaan utama di HP adalah momen menyusul Oyen: kamera tetap saat Oyen menyelinap, lalu sesudah pintu depan diketuk, gang terlihat lewat celah yang melebar dan kamera membawa pemain melewati ambang dalam satu gerakan utuh. Cek juga: ekor Kumis mudah dikenali, dan Kumis masih ada saat pemain menyusul.
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 38".

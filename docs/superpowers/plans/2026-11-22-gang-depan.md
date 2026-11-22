@@ -67,6 +67,8 @@
 - Semua teks baru (termasuk label pembaca layar dan pengumuman) masuk ke keempat ARB, Indonesia ditulis dulu. Jalankan `flutter gen-l10n` dan `python tool/translations/make_review.py`.
 - Tidak ada warna atau ukuran hardcode di widget. Konstanta geometri bernama ada di model atau `RoomGeometry`, warna di `KoColors`.
 - SVG desain tidak diketik ulang. Semuanya lewat `tool/design/make_lane_svg.py` dan `make_house_svg.py`, lalu dijaga `design_sync_test`.
+- **Checkout baru harus bisa build dan lulus test tanpa `docs/design/`** (keputusan pemilik repo). Hasil skrip (`design_svg_lane.dart`, `design_svg_house.dart`, `design_svg_home.dart`) dan aset audio ikut di-commit. Tidak ada kode game, test, atau `pubspec.yaml` yang membaca `docs/design/`; hanya skrip `tool/design/` dan `design_sync_test` (dilewati kalau folder itu tidak ada). Dicek di akhir setiap langkah: `git clone` branch ke folder scratch, lalu `flutter pub get && flutter analyze && flutter test` di sana.
+- **Pemeriksaan visual utama di HP (keputusan pemilik repo):** momen menyusul Oyen. Oyen menyelinap lewat pintu kucing, kamera tetap bersama pemain, lalu saat pintu depan diketuk gang terlihat lewat celah yang melebar dan kamera membawa pemain melewati ambang dalam satu gerakan utuh, tanpa potongan, kedipan, atau patah. Kalau ini belum terasa benar, langkah 38 belum selesai.
 
 ## Review Focus
 
@@ -74,7 +76,7 @@
 2. **Aplikasi kembali dari latar belakang di tengah atau sesudah kunjungan, atau saat hari berganti.** Keadaan dihitung ulang dari jam: Oyen sudah di bangku (tanpa ekor), atau sudah pulang. Tidak boleh ada dua Kumis atau Oyen ganda. Test ada di Task 7 dan Task 12.
 3. **Pemain meninggalkan gang di tengah pertemuan pertama** lewat tombol kembali sistem, chip, membuka Toko atau level, atau aplikasi ke latar belakang. `metNeighbor` tetap false, dan pertemuan diputar lagi di kunjungan berikutnya. Test ada di Task 12.
 4. **Ketuk ganda pintu, atau ketuk selama gerakan kamera.** Tidak boleh ada dua transisi. Ketuk kedua melompat ke akhir. Test ada di Task 11.
-5. **Simpanan lama dengan barang di jalur pintu depan yang baru** (tiang garukan di pojok kiri). Barang itu harus bergeser lewat `allowedSpot` saat dimuat. Test ada di Task 4.
+5. **Simpanan lama dengan barang di jalur pintu depan yang baru** (tiang garukan di pojok kiri). Hanya barang yang menutup jalur yang dipindah, ke tempat kosong terdekat yang sah, atau ke Gudang kalau ruangannya penuh. Barang lain tidak bergeser. Test ada di Task 4.
 
 ---
 
@@ -204,6 +206,8 @@ Branch `feat/gang-depan-gambar`. Di awal, ikuti alur git `CLAUDE.md`. Langkah 35
   - `onDoorPath`, `blocksDoor`, dan `allowedSpot` memakai semua jalur di `doorPaths`.
   - `HouseFloor.frontThreshold` = `spotAtFeet(70, 436)`: tempat Oyen berdiri sebelum menyelinap (bayangan desain di (70, 436)).
   - `const flapClipX = 45.2` dan `const laneFlapClipX = 344.8`: garis potong kucing yang lewat pintu kucing.
+  - `Spot? freeSpot(RoomItem item, HouseRoom room, Spot spot, Iterable<({RoomItem item, Spot spot})> others)`: spot terdekat (jarak kaki, kisi 41×41) yang tidak `blocksDoor` dan jejaknya (persegi `blocksDoor`: selebar gambar, 12 × skala di belakang kaki) tidak bersinggungan dengan jejak barang lantai lain yang tidak rata di ruangan itu. Null kalau tidak ada.
+- Produces di `room.dart` (keputusan pemilik repo untuk tata letak lama): saat `Room` dibuat dari simpanan, barang lantai yang **tidak** menutup jalur pintu tetap di tempatnya. Barang yang menutup jalur diproses urut katalog, sesudah barang yang tidak menutup: dipindah ke `freeSpot`, atau masuk Gudang (tidak `placed`, tetap `owned`) kalau hasilnya null. Mangkuk bawaan tidak pernah ke Gudang; kalau tidak ada `freeSpot`, ia memakai `allowedSpot`. Seret di mode Hias tetap memakai `allowedSpot` seperti sekarang.
 - Produces di `lane.dart` (semua titik kaki desain):
   - `laneBenchLeft` (133.2, 396.5), `laneBenchRight` (198.3, 396.5), `laneBenchMiddle` (165.7, 396.5).
   - `laneBenchScaleY = 455`: skala kucing di bangku = `depthScale(455)`.
@@ -220,10 +224,13 @@ Branch `feat/gang-depan-gambar`. Di awal, ikuti alur git `CLAUDE.md`. Langkah 35
 - [ ] **Step 1:** Tulis test yang gagal:
   - `onDoorPath(living, spotAtFeet(60, 480))` true.
   - Tiang garukan di posisi bawaan baru (kaki (266,414) skala `depthScale(414)`, sama dengan `AdeganTengah` `barang('tiang', 266, 414)`) tidak `blocksDoor`.
-  - `Room.fromJson` dengan tiang di pojok kiri lama memindahkannya keluar jalur (Review Focus 5).
+  - `Room.fromJson` dengan tiang di pojok kiri lama: tiang dipindah ke spot terdekat yang tidak menutup pintu dan tidak bertumpuk dengan barang lain; spot barang lain di JSON tidak berubah (Review Focus 5).
+  - Ruang tengah penuh: isi semua spot bebas dengan barang lantai lalu taruh kardus di jalur pintu depan → kardus masuk Gudang (`stored` memuatnya, `placed` tidak), dan tetap dimiliki.
+  - Mangkuk di jalur pintu depan saat ruangan penuh tetap ditaruh (`allowedSpot`), tidak masuk Gudang.
+  - Barang yang sudah di luar jalur tidak bergeser, juga kalau bertumpuk dengan barang lain (aturan v1 dibiarkan).
   - `laneScale(292)` ≈ 0,287 dan `laneScale(455)` ≈ 0,847.
 - [ ] **Step 2:** Jalankan `flutter test test/game/model`. Harapannya: FAIL.
-- [ ] **Step 3:** Implementasikan. Ubah `defaultX`/`defaultY` tiang agar kakinya di (266,414) (lewat `spotAtFeet`), lalu perbarui test katalog di `home_items_test` yang mengunci posisi lama.
+- [ ] **Step 3:** Implementasikan `freeSpot` dan aturan muat `Room` di atas. Ubah `defaultX`/`defaultY` tiang agar kakinya di (266,414) (lewat `spotAtFeet`), lalu perbarui test katalog di `home_items_test` yang mengunci posisi lama.
 - [ ] **Step 4:** Jalankan `flutter test test/game/model test/screens/room_geometry_test.dart test/screens/decorate_test.dart`. Harapannya: PASS. Lalu commit `feat(house): front door path and lane geometry`.
 
 ### Task 5: Ruang tengah dengan pintu depan, dan `LaneScene`
@@ -260,7 +267,7 @@ Branch `feat/gang-depan-gambar`. Di awal, ikuti alur git `CLAUDE.md`. Langkah 35
   - Catat "Langkah 36" di `DESIGN_NOTES.md` (desain menang atas angka spec, proyeksi per titik, KusenDepan di lapisan frame).
   - Perbarui `CLAUDE.md` "Struktur" (`design_svg_lane.dart`, `door_leaf.dart`, `lane_art.dart`, `neighbor.dart`, `lane.dart`, `LaneScene`, skrip baru).
   - Centang langkah 36 di `ROADMAP.md`.
-  - Review, `/check`, lalu PR.
+  - Review, `/check`, cek checkout baru (Global Constraints), lalu PR.
 
 ---
 
@@ -419,7 +426,7 @@ Branch `feat/gang-depan-kunjungan`.
 - [ ] **Step 4:** Jalankan test yang sama. Harapannya: PASS. Lalu commit `feat(lane): lane routine and first meeting`.
 - [ ] **Step 5:** Akhir langkah 37:
   - Catat "Langkah 37" di `DESIGN_NOTES.md`, termasuk keputusan `LaneLife` terpisah dari `RoomLife`. `RoomLife` berkunci `KittyId` dan barang; gang tidak punya barang, dan Kumis bukan `KittyId`. Tempat nyaman, jarak, dan kecepatan tetap dipakai bersama.
-  - Perbarui `CLAUDE.md` "Struktur", centang langkah 37, review, `/check`, lalu PR.
+  - Perbarui `CLAUDE.md` "Struktur", centang langkah 37, review, `/check`, cek checkout baru, lalu PR.
 
 ---
 
@@ -517,7 +524,7 @@ Branch `feat/gang-depan-layar`.
   - Kurangi gerak → `FadeTransition` 240 ms tanpa `Transform`.
   - Pembaca layar: pintu di gang "Pulang ke ruang tengah".
 - [ ] **Step 2:** Jalankan `flutter test test/screens/lane_camera_test.dart`. Harapannya: FAIL.
-- [ ] **Step 3:** Implementasikan. Bandingkan bingkai 0/480/860/1400/1700 ms dengan artboard 6 dan 12 lewat potret sementara.
+- [ ] **Step 3:** Implementasikan. Bandingkan bingkai 0/480/860/1400/1700 ms dengan artboard 6 dan 12 lewat potret sementara. Di setiap bingkai antara 600 dan 1400 ms, gang harus terlihat di dalam celah pintu. Tidak boleh ada bingkai saat ruang tengah dan gang sama-sama hilang, atau saat gang tiba-tiba muncul penuh.
 - [ ] **Step 4:** Jalankan `flutter test test/screens`. Harapannya: PASS. Lalu commit `feat(room): walk through the front door into the lane`.
 
 ### Task 12: Kehidupan di gang
@@ -573,6 +580,7 @@ Branch `feat/gang-depan-layar`.
 - [ ] **Step 1:** Tambah kasus overflow. Ikuti catatan `n360`: chip "‹ Ruang tengah" tetap 44 px, penanda tetap 48×52. Kalau ada yang terpotong, perbaiki di widget-nya. Teduh pohon dan baris sachet ikut geometri bersama karena gambar diskalakan seperti rumah.
 - [ ] **Step 2:** Jalankan `flutter test test/screens/overflow_test.dart`. Harapannya: PASS.
 - [ ] **Step 3:** Ambil potret layar keempat bahasa dan bandingkan dengan artboard 3 (ekor di ukuran HP), 7, 9, dan 13.
-- [ ] **Step 4:** Profil gang di HP (`flutter run --profile -t tool/profile_room.dart --dart-define=PLACE=lane`). Catat p90/p99 build dan raster di dokumen kinerja. Hanya tempat yang dibuka yang menggambar.
-- [ ] **Step 5:** Tulis "Langkah 38" di `DESIGN_NOTES.md`, perbarui `CLAUDE.md` "Struktur" (`LaneCamera`, `LaneView`, `FrontDoor`, `LaneMarker`, `lane.metNeighbor`, suara baru), lalu centang langkah 38.
-- [ ] **Step 6:** Review (`superpowers:requesting-code-review`), `/check`, `superpowers:verification-before-completion`, lalu PR `feat: Gang Depan, layar dan kamera`.
+- [ ] **Step 4:** Pemeriksaan visual utama di HP (Global Constraints). Mulai dari progres dengan level 1 menang dan `metNeighbor` false. Tunggu kunjungan paksa, lihat ekor dan Oyen menyelinap, pastikan kamera tetap, lalu ketuk pintu depan. Ulangi dengan ketuk di tengah gerakan dan dengan pulang. Rekam layar sekali (`adb shell screenrecord`) untuk PR. Catat hasilnya, termasuk penyesuaian waktu kalau ada, di `DESIGN_NOTES.md`.
+- [ ] **Step 5:** Profil gang di HP (`flutter run --profile -t tool/profile_room.dart --dart-define=PLACE=lane`). Catat p90/p99 build dan raster di dokumen kinerja. Hanya tempat yang dibuka yang menggambar.
+- [ ] **Step 6:** Tulis "Langkah 38" di `DESIGN_NOTES.md`, perbarui `CLAUDE.md` "Struktur" (`LaneCamera`, `LaneView`, `FrontDoor`, `LaneMarker`, `lane.metNeighbor`, suara baru), lalu centang langkah 38.
+- [ ] **Step 7:** Review (`superpowers:requesting-code-review`), `/check`, cek checkout baru, `superpowers:verification-before-completion`, lalu PR `feat: Gang Depan, layar dan kamera`.
