@@ -242,4 +242,139 @@ void main() {
     expect(views, isNotEmpty);
     expect(views.every((v) => v.look.time == null), isTrue);
   });
+
+  group('temuan review', () {
+    /// Aplikasi ke latar belakang lalu kembali (urutan siklus hidup).
+    Future<void> background(WidgetTester tester) async {
+      for (final state in const [
+        AppLifecycleState.inactive,
+        AppLifecycleState.hidden,
+        AppLifecycleState.paused,
+      ]) {
+        tester.binding.handleAppLifecycleStateChanged(state);
+      }
+      await tester.pump();
+    }
+
+    Future<void> resume(WidgetTester tester) async {
+      for (final state in const [
+        AppLifecycleState.hidden,
+        AppLifecycleState.inactive,
+        AppLifecycleState.resumed,
+      ]) {
+        tester.binding.handleAppLifecycleStateChanged(state);
+      }
+      await tester.pump();
+    }
+
+    testWidgets('menyusul di tengah momen ekor: Oyen di gang = Oyen di luar', (
+      tester,
+    ) async {
+      await _pump(tester);
+      expect(
+        await _until(
+          tester,
+          () => _found(find.byKey(const ValueKey('kumis-tail'))),
+        ),
+        isTrue,
+      );
+      await _toLane(tester);
+      // Tepat sesudah kamera: Oyen di rumah belum sempat keluar sendiri.
+      final semantics = tester.ensureSemantics();
+      tester.semantics.tap(
+        find.semantics.byLabel(RegExp(r'^Oyen.*Ketuk untuk lihat kartunya$')),
+      );
+      semantics.dispose();
+      await tester.pump();
+      expect(find.byKey(const ValueKey('kitty-invite')), findsNothing);
+      expect(find.text(l10nId.kittyInRoom('lane')), findsOneWidget);
+    });
+
+    testWidgets('kurangi gerak: kunjungan yang mulai saat aplikasi terbuka '
+        'tetap terlihat di gang', (tester) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      var now = _night;
+      await _pump(tester, clock: () => now, metNeighbor: true);
+      now = laneVisitsOn(_night).first.start.add(const Duration(seconds: 5));
+      await tester.pump(roomRefreshInterval);
+      expect(_marker, findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('front-door')));
+      await tester.pump();
+      await tester.pump(Duration(milliseconds: laneFadeMs.toInt()));
+      await tester.pump();
+      final area = tester.getRect(find.byType(LaneScene));
+      final seat = area.top + laneBenchLeft.y * area.height / 652;
+      for (final f in [_kumis, _oyen]) {
+        final box = tester.getRect(f);
+        expect(box.top + box.height * 0.92, closeTo(seat, 1));
+      }
+      expect(
+        find.descendant(
+          of: _kumis,
+          matching: find.byWidgetPredicate(
+            (w) => w is Opacity && w.opacity == 0,
+          ),
+        ),
+        findsNothing,
+      );
+    });
+
+    testWidgets('latar belakang di gang: kunjungan tidak ditahan, kembali = '
+        'gang kosong dan Oyen di rumah', (tester) async {
+      final visit = laneVisitsOn(_night).first;
+      var now = visit.start.add(const Duration(minutes: 1));
+      await _pump(tester, clock: () => now, metNeighbor: true);
+      await _toLane(tester);
+      expect(_kumis, findsOneWidget);
+      await background(tester);
+      for (var i = 0; i < 60; i++) {
+        now = now.add(roomRefreshInterval);
+        await tester.pump(roomRefreshInterval);
+      }
+      await resume(tester);
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(_kumis, findsNothing);
+      expect(_oyen, findsNothing);
+      await _home(tester);
+      expect(_marker, findsNothing);
+      expect(find.byKey(const ValueKey('passing-oyen')), findsNothing);
+    });
+
+    testWidgets('kunjungan mulai saat aplikasi di latar belakang: kembali = '
+        'Oyen sudah di luar, tanpa ekor', (tester) async {
+      var now = _night;
+      await _pump(tester, clock: () => now, metNeighbor: true);
+      await background(tester);
+      now = laneVisitsOn(_night).first.start.add(const Duration(minutes: 1));
+      await tester.pump(roomRefreshInterval);
+      await resume(tester);
+      await tester.pump(const Duration(milliseconds: 100));
+      for (var i = 0; i < 30; i++) {
+        expect(find.byKey(const ValueKey('kumis-tail')), findsNothing);
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(_marker, findsOneWidget);
+    });
+
+    testWidgets('kunjungan paksa tidak terpakai saat pemain di gang', (
+      tester,
+    ) async {
+      await _pump(tester);
+      await _toLane(tester);
+      await _until(tester, () => false, max: const Duration(seconds: 25));
+      expect(_kumis, findsNothing);
+      await _home(tester);
+      expect(
+        await _until(
+          tester,
+          () => _found(find.byKey(const ValueKey('kumis-tail'))),
+        ),
+        isTrue,
+      );
+    });
+  });
 }

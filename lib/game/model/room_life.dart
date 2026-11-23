@@ -578,6 +578,18 @@ class RoomLife {
     _beginGoOut(cat, _pending);
   }
 
+  /// Pemain menyusul ke gang selama kunjungan: [kitty] langsung di luar
+  /// ([WentOut] di [advance] berikutnya), juga kalau sedang dijeda, betah,
+  /// diajak, di atas barang, atau di tengah jalan ke pintu. Oyen di gang
+  /// selalu sama dengan Oyen yang di luar rumah.
+  void goOutNow(KittyId kitty) {
+    final cat = _cats[kitty];
+    if (cat == null || cat.outside) return;
+    if (cat.isPassing) _finishPassing(cat);
+    if (cat.outside) return;
+    _putOutside(cat, _pending);
+  }
+
   /// Kunjungan selesai (atau Oyen lapar): [kitty] masuk lewat pintu kucing
   /// ke ruang tengah, lalu [EnteredRoom]. [instant] = langsung diam di
   /// depan pintu depan.
