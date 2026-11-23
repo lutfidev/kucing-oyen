@@ -241,6 +241,9 @@ class LaneView extends StatelessWidget {
             ],
           ),
         ),
+        // Kepulan endus di atas cahaya udara (desain z 890).
+        if (life.puff)
+          const Positioned.fill(child: IgnorePointer(child: LanePuffView())),
       ],
     );
   }

@@ -52,6 +52,16 @@ void main() {
     },
   );
 
+  test('kepulan endus krem di antara hidung (temuD)', () async {
+    // `AdeganGang.dc.html`: lingkaran r 4,4 di (166, 352) #FFFBF3.
+    void puff(Canvas c) => paintLanePuff(c, size: laneViewBox);
+    expect(await _pixel(puff, 166, 352), const Color(0xFFFFFBF3));
+    expect(
+      await _pixel(puff, 190, 352),
+      isA<Color>().having((c) => c.a, 'alfa', 0),
+    );
+  });
+
   test('kusen pintu pulang di tepi kanan', () async {
     expect(
       await _pixel(_layer(LaneLayer.frame), 388, 300),

@@ -280,6 +280,10 @@ const kumisTailSvg =
 const seruSvg =
     r'''<path d="M12 29 L8.6 23.6 H5 A4 4 0 0 1 1 19.6 V5 A4 4 0 0 1 5 1 H19 A4 4 0 0 1 23 5 V19.6 A4 4 0 0 1 19 23.6 H15.4 Z" fill="#FFFBF3" stroke="#C9650C" stroke-width="2" stroke-linejoin="round"></path><rect x="10" y="4.6" width="4" height="10.4" rx="2" fill="#C9650C"></rect><circle cx="12" cy="18.6" r="2.2" fill="#C9650C"></circle>''';
 
+/// Kepulan kecil di antara hidung Oyen dan Kumis saat mengendus di bangku (`AdeganGang.dc.html`, `temuD`). viewBox 0 0 390 652.
+const lanePuffSvg =
+    r'''<g fill="#FFFBF3" stroke="#E2C79C" stroke-width="1.2"><circle cx="166" cy="352" r="4.4"></circle><circle cx="172" cy="344" r="3"></circle><circle cx="161" cy="343" r="2.4"></circle></g>''';
+
 /// `@keyframes` lapisan gang, penanda, ekor, dan "!".
 const laneKeyframesCss = r'''@keyframes rmAwan{0%{transform:translateX(-10px)}100%{transform:translateX(22px)}}
 @keyframes ggAwan2{0%{transform:translateX(14px)}100%{transform:translateX(-12px)}}

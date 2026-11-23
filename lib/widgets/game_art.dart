@@ -720,6 +720,25 @@ class _DoorLeafCoverPainter extends CustomPainter {
 }
 
 /// Tanda "!" (`AdeganTengah`, `seru`) seukuran [size], tanpa semantik.
+/// Kepulan endus di bangku gang, seukuran area rumah. Tanpa semantik.
+class LanePuffView extends StatelessWidget {
+  const LanePuffView({super.key});
+
+  @override
+  Widget build(BuildContext context) =>
+      const ExcludeSemantics(child: CustomPaint(painter: _LanePuffPainter()));
+}
+
+class _LanePuffPainter extends CustomPainter {
+  const _LanePuffPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) => paintLanePuff(canvas, size: size);
+
+  @override
+  bool shouldRepaint(_LanePuffPainter old) => false;
+}
+
 class SeruView extends StatelessWidget {
   const SeruView({super.key, required this.size});
 

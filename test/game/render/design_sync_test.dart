@@ -448,6 +448,15 @@ void main() {
       expect(_laneSvgWith('AdeganTengah.dc.html', 'at-seru'), seruSvg);
     });
 
+    test('kepulan endus (AdeganGang)', () {
+      final source = _lf(File('$_lane/AdeganGang.dc.html').readAsStringSync());
+      final block = RegExp(
+        r'<sc-if value="\{\{puff\}\}"[^>]*>(.*?)</sc-if>',
+        dotAll: true,
+      ).firstMatch(source)![1]!;
+      expect(block.trim(), lanePuffSvg);
+    });
+
     test('@keyframes dan kelas animasi gang', () {
       final sources = [
         for (final f in [

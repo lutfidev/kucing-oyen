@@ -124,3 +124,17 @@ void paintSeru(Canvas canvas, {required Size size}) {
   drawing.paint(canvas);
   canvas.restore();
 }
+
+final _puff = SvgTemplate(lanePuffSvg);
+SvgDrawing? _puffDrawing;
+
+/// Kepulan kecil di antara hidung Oyen dan Kumis saat mengendus
+/// (`AdeganGang`, `temuD`; viewBox 390×652 = area rumah [size]).
+void paintLanePuff(Canvas canvas, {required Size size}) {
+  final drawing = _puffDrawing ??= _puff.render(const {});
+  canvas
+    ..save()
+    ..scale(size.width / laneViewBox.width, size.height / laneViewBox.height);
+  drawing.paint(canvas);
+  canvas.restore();
+}
