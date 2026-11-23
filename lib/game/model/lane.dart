@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'house.dart';
+import 'rewards.dart';
 import 'room_life.dart';
 
 /// Geometri Gang Depan (catatan kanvas `kGang` dan `kTempat`). Gang memakai
@@ -26,6 +29,10 @@ const laneHopSeconds = 0.42;
 /// Depan pintu pulang: Oyen berdiri di sini sebelum masuk pintu kucing.
 const laneThreshold = (x: 300.0, y: 470.0);
 
+/// Kaki Oyen saat lewat pintu kucing pintu pulang (`AdeganGang` "masuk",
+/// dipotong di `laneFlapClipX`).
+const laneFlapFeet = (x: 338.0, y: 437.0);
+
 /// Tempat nyaman gang selain bangku: dua teduh pohon, piring air (minum
 /// dengan pose makan tanpa mangkuk), tangga warung (skala dari y 404), dan
 /// depan pintu pulang.
@@ -52,3 +59,108 @@ const kumisLeavePath = [
   (x: 232.0, y: 330.0),
   (x: 226.0, y: 292.0),
 ];
+
+/// Kunjungan Kumis per hari: tiga, mulai di jendela 08.00–22.00 waktu
+/// lokal dengan jarak antar-mulai paling sedikit [laneMinGap], masing-masing
+/// [laneMinVisit]–[laneMaxVisit]. Jadwal diundi dari [dayNumber], jadi tidak
+/// disimpan.
+const laneVisitsPerDay = 3;
+const laneWindowStartHour = 8;
+const laneWindowEndHour = 22;
+const laneMinGap = Duration(hours: 2);
+const laneMinVisit = Duration(minutes: 8);
+const laneMaxVisit = Duration(minutes: 12);
+
+/// Sesudah momen ekor, kunjungan berlangsung paling sedikit selama ini.
+const laneFollowTime = Duration(minutes: 5);
+
+/// Kunjungan paksa pertama datang selama ini sesudah ruang tengah tampil.
+const laneForcedDelay = Duration(seconds: 20);
+
+/// Undian jadwal yang gagal memenuhi [laneMinGap] dicoba ulang sebanyak ini,
+/// lalu jatuh ke tiga slot tetap.
+const _laneScheduleTries = 50;
+const _laneFallbackHours = [9, 14, 19];
+
+/// Satu kunjungan: [start] sampai sebelum [end].
+class LaneVisit {
+  const LaneVisit({required this.start, required this.end});
+
+  final DateTime start;
+  final DateTime end;
+
+  bool contains(DateTime t) => !t.isBefore(start) && t.isBefore(end);
+
+  LaneVisit until(DateTime end) => LaneVisit(start: start, end: end);
+
+  @override
+  bool operator ==(Object other) =>
+      other is LaneVisit && other.start == start && other.end == end;
+
+  @override
+  int get hashCode => Object.hash(start, end);
+
+  @override
+  String toString() => 'LaneVisit($start – $end)';
+}
+
+/// Jadwal kunjungan hari kalender [day] (jamnya diabaikan), urut mulai.
+/// Kunjungan mulai di jendela, tetapi boleh berakhir sesudah 22.00.
+List<LaneVisit> laneVisitsOn(DateTime day) {
+  final random = Random(dayNumber(day));
+  final open = DateTime(day.year, day.month, day.day, laneWindowStartHour);
+  final windowSeconds = (laneWindowEndHour - laneWindowStartHour) * 3600;
+  List<DateTime>? starts;
+  for (var i = 0; i < _laneScheduleTries && starts == null; i++) {
+    final tried = [
+      for (var j = 0; j < laneVisitsPerDay; j++)
+        open.add(Duration(seconds: random.nextInt(windowSeconds + 1))),
+    ]..sort();
+    var ok = true;
+    for (var j = 1; j < tried.length; j++) {
+      if (tried[j].difference(tried[j - 1]) < laneMinGap) ok = false;
+    }
+    if (ok) starts = tried;
+  }
+  starts ??= [
+    for (final hour in _laneFallbackHours)
+      DateTime(day.year, day.month, day.day, hour, random.nextInt(60)),
+  ];
+  final spread = (laneMaxVisit - laneMinVisit).inSeconds;
+  return [
+    for (final start in starts)
+      LaneVisit(
+        start: start,
+        end: start.add(
+          laneMinVisit + Duration(seconds: random.nextInt(spread + 1)),
+        ),
+      ),
+  ];
+}
+
+/// Kunjungan yang sedang berjalan pada [now], atau null.
+///
+/// Kunjungan kemarin (yang diperpanjang melewati tengah malam), hari ini,
+/// [forced], dan perpanjangan [held] dipertimbangkan bersama. [held] dimulai
+/// di awal kunjungan yang sedang berjalan saat perpanjangan dipasang
+/// (pemain di gang, momen ekor), jadi hanya kunjungan itu yang diperpanjang.
+/// Kunjungan yang dimulai sebelum kunjungan lain berakhir (atau tepat saat
+/// berakhir) digabung, jadi tidak pernah ada dua Kumis atau celah.
+LaneVisit? laneVisitAt(DateTime now, {LaneVisit? held, LaneVisit? forced}) {
+  final visits = [
+    ...laneVisitsOn(DateTime(now.year, now.month, now.day - 1)),
+    ...laneVisitsOn(now),
+    ?forced,
+    ?held,
+  ]..sort((a, b) => a.start.compareTo(b.start));
+  LaneVisit? current;
+  for (final v in visits) {
+    if (current != null && !v.start.isAfter(current.end)) {
+      if (v.end.isAfter(current.end)) current = current.until(v.end);
+      continue;
+    }
+    if (current != null && current.contains(now)) return current;
+    current = v;
+  }
+  return current != null && current.contains(now) ? current : null;
+}

@@ -35,6 +35,11 @@ abstract interface class ProgressStore {
   Future<Home> loadHome();
   Future<void> saveHome(Home home);
 
+  /// Pertemuan pertama Oyen dengan Kumis sudah dilihat pemain; false kalau
+  /// belum pernah disimpan atau rusak.
+  Future<bool> loadMetNeighbor();
+  Future<void> saveMetNeighbor(bool met);
+
   /// Kebutuhan kucing, mangkuk, dan hari hadiah kucing; [HomeNeeds.empty]
   /// kalau belum pernah disimpan atau rusak.
   Future<HomeNeeds> loadNeeds();
@@ -68,6 +73,9 @@ class MemoryProgressStore implements ProgressStore {
 
   /// Rumah yang terakhir disimpan.
   Home home = Home.initial;
+
+  /// Pertemuan pertama dengan Kumis yang terakhir disimpan.
+  bool metNeighbor = false;
 
   /// Kebutuhan kucing yang terakhir disimpan.
   HomeNeeds needs = HomeNeeds.empty;
@@ -124,6 +132,12 @@ class MemoryProgressStore implements ProgressStore {
   Future<void> saveHome(Home home) async => this.home = home;
 
   @override
+  Future<bool> loadMetNeighbor() async => metNeighbor;
+
+  @override
+  Future<void> saveMetNeighbor(bool met) async => metNeighbor = met;
+
+  @override
   Future<HomeNeeds> loadNeeds() async => needs;
 
   @override
@@ -152,8 +166,9 @@ class MemoryProgressStore implements ProgressStore {
 
 /// Simpanan lokal lewat `shared_preferences`: JSON `{"id level": bintang}`,
 /// daftar id level yang tutorialnya selesai, saldo koin, JSON
-/// `{"id level": tingkat petunjuk}`, JSON rumah dan kebutuhan kucing, JSON hadiah harian, nama
-/// bahasa, dan sakelar suara.
+/// `{"id level": tingkat petunjuk}`, JSON rumah dan kebutuhan kucing,
+/// pertemuan pertama dengan Kumis, JSON hadiah harian, nama bahasa, dan
+/// sakelar suara.
 class PrefsProgressStore implements ProgressStore {
   PrefsProgressStore([SharedPreferencesAsync? prefs])
     : _prefs = prefs ?? SharedPreferencesAsync();
@@ -168,6 +183,7 @@ class PrefsProgressStore implements ProgressStore {
   static const oldCostumeKeys = ['costume.owned', 'costume.wearing'];
   static const homeKey = 'home.state';
   static const needsKey = 'home.needs';
+  static const laneKey = 'lane.metNeighbor';
   static const rewardsKey = 'rewards.daily';
   static const languageKey = 'settings.language';
   static const musicKey = 'settings.music';
@@ -287,6 +303,19 @@ class PrefsProgressStore implements ProgressStore {
   @override
   Future<void> saveHome(Home home) =>
       _prefs.setString(homeKey, jsonEncode(home.toJson()));
+
+  /// Nilai yang bukan bool dibaca belum bertemu.
+  @override
+  Future<bool> loadMetNeighbor() async {
+    try {
+      return await _prefs.getBool(laneKey) ?? false;
+    } on TypeError {
+      return false;
+    }
+  }
+
+  @override
+  Future<void> saveMetNeighbor(bool met) => _prefs.setBool(laneKey, met);
 
   @override
   Future<HomeNeeds> loadNeeds() =>
