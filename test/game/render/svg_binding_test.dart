@@ -5,6 +5,7 @@ import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/render/css_animation.dart';
 import 'package:kucing_oren/game/render/design_svg_home.dart';
+import 'package:kucing_oren/game/render/design_svg_house.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/render/svg_template.dart';
 
@@ -116,5 +117,53 @@ void main() {
     final bound = template.bind(vals);
     dots.first['x'] = 70;
     expect(await pixels(bound.render(time: 20)), expected);
+  });
+
+  test('static shapes next to animated ones match the reference', () async {
+    final keyframes = CssKeyframes.parse(
+      '@keyframes geser{0%{transform:translateX(0px)}100%{transform:translateX(40px)}}',
+    );
+    final template = SvgTemplate(
+      '<g><circle cx="20" cy="20" r="9" fill="#3355aa"/>'
+      '<rect x="40" y="12" width="30" height="14" rx="3" fill="#aa7700"/></g>'
+      '<g style="animation: geser 2s linear infinite">'
+      '<circle cx="10" cy="60" r="8" fill="#ff0000"/>'
+      '<g><ellipse cx="20" cy="80" rx="12" ry="5" fill="#00aa00"/></g></g>'
+      '<polygon points="0,100 40,100 20,120" fill="#0000aa"/>',
+      keyframes: keyframes,
+    );
+    final bound = template.bind(const {});
+    for (final time in [0.0, 0.5, 1.3, 7.9]) {
+      expect(
+        await pixels(bound.render(time: time)),
+        await pixels(template.render(const {}, time: time)),
+        reason: 't=$time',
+      );
+    }
+  });
+
+  test('house background layer matches the reference over time', () async {
+    final template = SvgTemplate(
+      houseLivingBackSvg,
+      keyframes: CssKeyframes.parse(houseKeyframesCss),
+      classes: houseClassStyles,
+    );
+    final bound = template.bind(const {});
+    Future<List<int>> full(SvgDrawing d) async {
+      final recorder = PictureRecorder();
+      d.paint(Canvas(recorder));
+      final image = await recorder.endRecording().toImage(390, 652);
+      final bytes = (await image.toByteData())!.buffer.asUint8List().toList();
+      image.dispose();
+      return bytes;
+    }
+
+    for (final time in [0.0, 2.7, 9.1]) {
+      expect(
+        await full(bound.render(time: time)),
+        await full(template.render(const {}, time: time)),
+        reason: 't=$time',
+      );
+    }
   });
 }

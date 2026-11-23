@@ -474,20 +474,30 @@ class _Emitter {
   }
 }
 
+/// [moving] = salah satu induknya beranimasi (bentuk di bawahnya ikut
+/// bergerak).
 List<_BoundNode> _bindNodes(
   List<_Element> nodes,
   Map<String, Object> vals,
   Map<String, String> inherited,
   Map<String, CssKeyframes> keyframes,
-  _Defs defs,
-) {
+  _Defs defs, {
+  bool moving = false,
+}) {
   final result = <_BoundNode>[];
   for (final el in nodes) {
     if (el.name == 'defs') continue;
     if (el.name == 'sc-if') {
       if (_condition(el.attrs['value'] ?? '', vals)) {
         result.addAll(
-          _bindNodes(el.children, vals, inherited, keyframes, defs),
+          _bindNodes(
+            el.children,
+            vals,
+            inherited,
+            keyframes,
+            defs,
+            moving: moving,
+          ),
         );
       }
       continue;
@@ -504,6 +514,7 @@ List<_BoundNode> _bindNodes(
               inherited,
               keyframes,
               defs,
+              moving: moving,
             ),
           );
         }
@@ -542,6 +553,10 @@ List<_BoundNode> _bindNodes(
       );
     }
 
+    // Elemen ini atau induknya bergerak: bentuknya dibuat ulang tiap
+    // bingkai (lihat `shapeAtOpacity` di bawah).
+    final animates = css?.animation != null && css!.duration > 0;
+    final inMotion = moving || animates;
     final center = css != null && css.centerOrigin
         ? boxOrigin(css)
         : Offset(css?.originX ?? 0, css?.originY ?? 0);
@@ -555,6 +570,7 @@ List<_BoundNode> _bindNodes(
             },
             keyframes,
             defs,
+            moving: inMotion,
           )
         : const <_BoundNode>[];
     final _Op? leaf = switch (el.name) {
@@ -582,18 +598,29 @@ List<_BoundNode> _bindNodes(
         children,
         clip,
         // Bentuk dasar dibuat lagi seperti render acuan. Memakai ulang
-        // Path oval/persegi pada transformasi animasi yang berbeda bisa
-        // memakai cache raster native dengan pembulatan tepi berbeda.
-        leaf is _ShapeOp &&
-                (el.name != 'path' ||
-                    (keyframes[css?.animation]?.animatesOpacity ?? false))
-            ? (alpha) => _ShapeOp.from(
-                el.name,
-                {...attrs, 'opacity': '$alpha'},
-                _Affine.identity,
-                defs,
-              )
-            : null,
+        // Path oval/persegi bisa memakai cache raster native dengan
+        // pembulatan tepi berbeda.
+        switch (leaf) {
+          _ShapeOp()
+              when inMotion &&
+                  (el.name != 'path' ||
+                      (keyframes[css?.animation]?.animatesOpacity ?? false)) =>
+            (alpha) => _ShapeOp.from(
+              el.name,
+              {...attrs, 'opacity': '$alpha'},
+              _Affine.identity,
+              defs,
+            ),
+          // Diam: hanya Path oval/persegi/garis yang baru. Mengurai atribut
+          // dan membuat shader gradien lagi tiap bingkai memakan sebagian
+          // besar waktu lapisan rumah.
+          final _ShapeOp shape
+              when el.name != 'path' &&
+                  el.name != 'polygon' &&
+                  el.name != 'polyline' =>
+            (_) => shape.withPath(_geometry(el.name, attrs)),
+          _ => null,
+        },
       ),
     );
   }
@@ -822,6 +849,7 @@ class _ShapeOp extends _Op {
     required this.strokePath,
     required this.stroke,
     required this.layerOpacity,
+    this.dashes,
   });
 
   factory _ShapeOp.from(
@@ -858,6 +886,7 @@ class _ShapeOp extends _Op {
 
     Paint? stroke;
     var strokePath = path;
+    List<double>? dashList;
     if (hasStroke) {
       stroke = Paint()
         ..style = PaintingStyle.stroke
@@ -875,10 +904,8 @@ class _ShapeOp extends _Op {
         };
       final dashes = a['stroke-dasharray'];
       if (dashes != null && dashes != 'none') {
-        strokePath = dashPath(
-          path,
-          dashArray: CircularIntervalList(_numbers(dashes)),
-        );
+        dashList = _numbers(dashes);
+        strokePath = dashPath(path, dashArray: CircularIntervalList(dashList));
       }
     }
 
@@ -889,6 +916,7 @@ class _ShapeOp extends _Op {
       strokePath: strokePath,
       stroke: stroke,
       layerOpacity: layer ? opacity : 1,
+      dashes: dashList,
     );
   }
 
@@ -896,6 +924,23 @@ class _ShapeOp extends _Op {
   final Paint? fill;
   final Path strokePath;
   final Paint? stroke;
+
+  /// Pola `stroke-dasharray`; null = garis utuh.
+  final List<double>? dashes;
+
+  /// Bentuk yang sama dengan Path baru [fresh] (geometrinya sama); garis
+  /// putus-putus ikut dibuat lagi dari [fresh].
+  _ShapeOp withPath(Path fresh) => _ShapeOp(
+    matrix,
+    path: fresh,
+    fill: fill,
+    strokePath: identical(strokePath, path)
+        ? fresh
+        : dashPath(fresh, dashArray: CircularIntervalList(dashes!)),
+    stroke: stroke,
+    layerOpacity: layerOpacity,
+    dashes: dashes,
+  );
 
   /// Di bawah 1: isian dan garis digambar di satu lapisan transparan.
   final double layerOpacity;

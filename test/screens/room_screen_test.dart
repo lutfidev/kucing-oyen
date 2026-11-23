@@ -11,7 +11,7 @@ import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/screens/chapter/chapter_screen.dart';
-import 'package:kucing_oren/game/render/door_leaf.dart';
+import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/screens/room/room_parts.dart';
 import 'package:kucing_oren/screens/room/room_scene.dart';
 import 'package:kucing_oren/screens/room/room_view.dart';
@@ -138,6 +138,35 @@ void main() {
       await goThroughDoor(tester);
       expect(find.byType(EmptyTerraceSpots), findsNothing);
     });
+
+    testWidgets(
+      'barang diam punya lapisan paint sendiri, yang bergerak tidak',
+      (tester) async {
+        expect(RoomItemArt.isAnimated(RoomItemId.kasur), isFalse);
+        expect(RoomItemArt.isAnimated(RoomItemId.akuarium), isTrue);
+        await pumpRoom(
+          tester,
+          progress: testProgressWith(
+            home: Home(
+              room: Room().buy(RoomItemId.kasur).buy(RoomItemId.akuarium),
+            ),
+          ),
+        );
+        // Kucing yang bergerak di dekatnya tidak merekam ulang barang diam.
+        bool ownLayer(RoomItemId id) =>
+            tester
+                    .element(itemView(id))
+                    .findAncestorWidgetOfExactType<RepaintBoundary>() !=
+                null &&
+            (tester
+                    .element(itemView(id))
+                    .findAncestorWidgetOfExactType<RepaintBoundary>()!
+                    .child ==
+                tester.widget(itemView(id)));
+        expect(ownLayer(RoomItemId.kasur), isTrue);
+        expect(ownLayer(RoomItemId.akuarium), isFalse);
+      },
+    );
 
     for (final size in [const Size(390, 844), const Size(360, 640)]) {
       testWidgets('gelembung pemain baru maks 186 × sx, tidak menutupi Oyen '

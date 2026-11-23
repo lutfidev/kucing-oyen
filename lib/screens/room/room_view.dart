@@ -2051,13 +2051,17 @@ class _RoomViewState extends State<RoomView>
         ),
       );
     }
+    final animated = RoomItemArt.isAnimated(id);
     Widget art = RoomItemView(
       id: id,
       box: sprite.box.size,
       full: id != RoomItemId.mangkuk || bowlFull,
       // Barang diam tidak digambar ulang tiap bingkai.
-      time: RoomItemArt.isAnimated(id) ? time : null,
+      time: animated ? time : null,
     );
+    // Lapisan paint sendiri: kucing yang bergerak di sekitarnya tidak ikut
+    // merekam ulang gambar barang diam tiap bingkai.
+    if (!animated) art = RepaintBoundary(child: art);
     // Hanya ruangan yang sedang dibuka yang bisa dihias: selama transisi
     // pintu kedua ruangan dibangun, dan barang ruangan yang sedang keluar
     // tidak boleh terseret ke ruangan ini.
