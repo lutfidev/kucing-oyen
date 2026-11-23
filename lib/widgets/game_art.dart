@@ -641,3 +641,53 @@ class _LaneMarkerPainter extends CustomPainter {
   @override
   bool shouldRepaint(_LaneMarkerPainter old) => old.time != time;
 }
+
+/// Ekor Kumis di pintu kucing (`AdeganTengah`), seukuran area rumah;
+/// [time] = detik goyang, null = diam.
+class KumisTailView extends StatelessWidget {
+  const KumisTailView({super.key, this.time});
+
+  final double? time;
+
+  @override
+  Widget build(BuildContext context) => IgnorePointer(
+    child: ExcludeSemantics(
+      child: CustomPaint(size: Size.infinite, painter: _KumisTailPainter(time)),
+    ),
+  );
+}
+
+class _KumisTailPainter extends CustomPainter {
+  _KumisTailPainter(this.time);
+
+  final double? time;
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      paintKumisTail(canvas, size: size, time: time);
+
+  @override
+  bool shouldRepaint(_KumisTailPainter old) => old.time != time;
+}
+
+/// Tanda "!" (`AdeganTengah`, `seru`) seukuran [size], tanpa semantik.
+class SeruView extends StatelessWidget {
+  const SeruView({super.key, required this.size});
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) => ExcludeSemantics(
+    child: CustomPaint(size: size, painter: const _SeruPainter()),
+  );
+}
+
+class _SeruPainter extends CustomPainter {
+  const _SeruPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) => paintSeru(canvas, size: size);
+
+  @override
+  bool shouldRepaint(_SeruPainter old) => false;
+}

@@ -2182,4 +2182,32 @@ class AppLocalizationsPt extends AppLocalizations {
     });
     return '$_temp3';
   }
+
+  @override
+  String get laneName => 'Viela da Frente';
+
+  @override
+  String get frontDoorTo => 'Sair para a Viela da Frente';
+
+  @override
+  String get frontDoorOyenOut =>
+      'Sair para a Viela da Frente. Oyen está lá fora';
+
+  @override
+  String frontDoorAttention(String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name está com fome lá fora',
+      'sad': '$name está sem ânimo lá fora',
+      'other': '$name tem moedas de presente para você',
+    });
+    return 'Sair para a Viela da Frente. $_temp0';
+  }
+
+  @override
+  String get laneHomeDoor => 'Voltar para a sala';
+
+  @override
+  String oyenWentOut(String name) {
+    return '$name escapuliu para a Viela da Frente';
+  }
 }

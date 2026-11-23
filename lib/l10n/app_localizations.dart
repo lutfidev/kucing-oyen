@@ -3131,6 +3131,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{room, select, living{To the living room. {need, select, hungry{{name} is hungry in there} sad{{name} is feeling down in there} other{{name} has a coin gift for you}}} terrace{To the terrace. {need, select, hungry{{name} is hungry out there} sad{{name} is feeling down out there} other{{name} has a coin gift for you}}} other{To the living room. {need, select, hungry{{name} is hungry in there} sad{{name} is feeling down in there} other{{name} has a coin gift for you}}}}'**
   String doorAttention(String room, String name, String need);
+
+  /// Name of the little lane outside Oyen's front door, where the neighbour cat Kumis visits. A place name, shown in screen-reader labels.
+  ///
+  /// In en, this message translates to:
+  /// **'Front Lane'**
+  String get laneName;
+
+  /// Screen-reader label of the front door in the living room. Tapping it walks the player outside to the Front Lane.
+  ///
+  /// In en, this message translates to:
+  /// **'Go out to the Front Lane'**
+  String get frontDoorTo;
+
+  /// Screen-reader label of the front door while Oyen is outside in the Front Lane (a small paw marker shows by the door).
+  ///
+  /// In en, this message translates to:
+  /// **'Go out to the Front Lane. Oyen is out there'**
+  String get frontDoorOyenOut;
+
+  /// Screen-reader label of the front door when Oyen, out in the Front Lane, needs a look (small icon by the door). need is hungry, sad, or reward (a coin gift).
+  ///
+  /// In en, this message translates to:
+  /// **'Go out to the Front Lane. {need, select, hungry{{name} is hungry out there} sad{{name} is feeling down out there} other{{name} has a coin gift for you}}'**
+  String frontDoorAttention(String name, String need);
+
+  /// Screen-reader label of the house door seen from the Front Lane. Tapping it walks the player back inside.
+  ///
+  /// In en, this message translates to:
+  /// **'Head back to the living room'**
+  String get laneHomeDoor;
+
+  /// Screen-reader announcement when Oyen slips out through the cat flap of the front door. Only Oyen goes out (a male cat).
+  ///
+  /// In en, this message translates to:
+  /// **'{name} slipped out to the Front Lane'**
+  String oyenWentOut(String name);
 }
 
 class _AppLocalizationsDelegate

@@ -2790,5 +2790,44 @@
         "type": "String"
       }
     }
+  },
+  "laneName": "Front Lane",
+  "@laneName": {
+    "description": "Name of the little lane outside Oyen's front door, where the neighbour cat Kumis visits. A place name, shown in screen-reader labels."
+  },
+  "frontDoorTo": "Go out to the Front Lane",
+  "@frontDoorTo": {
+    "description": "Screen-reader label of the front door in the living room. Tapping it walks the player outside to the Front Lane."
+  },
+  "frontDoorOyenOut": "Go out to the Front Lane. Oyen is out there",
+  "@frontDoorOyenOut": {
+    "description": "Screen-reader label of the front door while Oyen is outside in the Front Lane (a small paw marker shows by the door)."
+  },
+  "frontDoorAttention": "Go out to the Front Lane. {need, select, hungry{{name} is hungry out there} sad{{name} is feeling down out there} other{{name} has a coin gift for you}}",
+  "@frontDoorAttention": {
+    "description": "Screen-reader label of the front door when Oyen, out in the Front Lane, needs a look (small icon by the door). need is hungry, sad, or reward (a coin gift).",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Oyen"
+      },
+      "need": {
+        "type": "String"
+      }
+    }
+  },
+  "laneHomeDoor": "Head back to the living room",
+  "@laneHomeDoor": {
+    "description": "Screen-reader label of the house door seen from the Front Lane. Tapping it walks the player back inside."
+  },
+  "oyenWentOut": "{name} slipped out to the Front Lane",
+  "@oyenWentOut": {
+    "description": "Screen-reader announcement when Oyen slips out through the cat flap of the front door. Only Oyen goes out (a male cat).",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Oyen"
+      }
+    }
   }
 }

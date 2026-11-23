@@ -2021,4 +2021,31 @@ class AppLocalizationsId extends AppLocalizations {
     });
     return '$_temp3';
   }
+
+  @override
+  String get laneName => 'Gang Depan';
+
+  @override
+  String get frontDoorTo => 'Keluar ke Gang Depan';
+
+  @override
+  String get frontDoorOyenOut => 'Keluar ke Gang Depan. Oyen ada di Gang Depan';
+
+  @override
+  String frontDoorAttention(String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name di Gang Depan lapar',
+      'sad': '$name di Gang Depan lesu',
+      'other': 'Ada hadiah koin dari $name',
+    });
+    return 'Keluar ke Gang Depan. $_temp0';
+  }
+
+  @override
+  String get laneHomeDoor => 'Pulang ke ruang tengah';
+
+  @override
+  String oyenWentOut(String name) {
+    return '$name menyelinap ke Gang Depan';
+  }
 }

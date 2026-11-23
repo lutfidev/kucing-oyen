@@ -2164,4 +2164,31 @@ class AppLocalizationsEn extends AppLocalizations {
     });
     return '$_temp3';
   }
+
+  @override
+  String get laneName => 'Front Lane';
+
+  @override
+  String get frontDoorTo => 'Go out to the Front Lane';
+
+  @override
+  String get frontDoorOyenOut => 'Go out to the Front Lane. Oyen is out there';
+
+  @override
+  String frontDoorAttention(String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name is hungry out there',
+      'sad': '$name is feeling down out there',
+      'other': '$name has a coin gift for you',
+    });
+    return 'Go out to the Front Lane. $_temp0';
+  }
+
+  @override
+  String get laneHomeDoor => 'Head back to the living room';
+
+  @override
+  String oyenWentOut(String name) {
+    return '$name slipped out to the Front Lane';
+  }
 }

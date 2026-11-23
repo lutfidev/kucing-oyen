@@ -240,10 +240,15 @@ class DoorAttention extends StatelessWidget {
     required this.geo,
     required this.need,
     this.time,
+    this.front = false,
   });
 
   final RoomGeometry geo;
   final DoorNeed need;
+
+  /// Ikon di pintu depan ruang tengah (Oyen di gang): letak cermin pintu
+  /// teras, sama dengan penanda "Oyen di gang" (15, 238).
+  final bool front;
 
   /// Detik naik-turun; null = diam.
   final double? time;
@@ -261,7 +266,8 @@ class DoorAttention extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final reward = need == DoorNeed.reward;
-    final at = (reward ? _bubble : _mark)[geo.which]!;
+    final side = front ? HouseRoom.terrace : geo.which;
+    final at = (reward ? _bubble : _mark)[side]!;
     final view = reward ? RoomArt.coinBubbleViewBox : RoomArt.sadMarkViewBox;
     final box = geo.fromDesign(at & view);
     return Positioned.fromRect(

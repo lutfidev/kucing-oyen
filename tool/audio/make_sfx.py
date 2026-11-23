@@ -9,7 +9,9 @@ Sumber tidak ikut repo. Unduh dan bongkar ke satu folder:
     -> <sumber>/oga/
 
 Lapisan "synth:<jenis>" dibuat sendiri tanpa berkas sumber: "chime:<Hz,...>"
-(nada lonceng berurutan) dan "munch" (tiga gigitan derau lembut).
+(nada lonceng berurutan), "munch" (tiga gigitan derau lembut),
+"wood:<Hz>:<detik,...>" (ketukan kayu teredam pada detik itu), "creak"
+(derit engsel), dan "click" (klik gerendel).
 
 Pakai:  python tool/audio/make_sfx.py <sumber> [nama ...]
         (tanpa nama = semua suara; dengan nama = hanya itu)
@@ -66,6 +68,18 @@ SOUNDS = {
     "reward": ([("synth:chime:1318.5,1975.5", 1, 0)], 0.7, 0.5),
     "buy": ([("synth:chime:1046.5,1318.5,1568", 1, 0)], 0.7, 0.5),
     "wear": ([("synth:chime:1568,2093,2637", 1, 0)], 0.6, 0.45),
+    # Gang Depan (langkah 38): disintesis, tidak ada sumber CC0 di sini.
+    "flap": ([("synth:wood:520:0,0.16,0.3", 1, 0)], 0.5, 0.45),
+    "door_open": (
+        [("synth:click", 0.8, 0), ("synth:creak", 0.6, 0.05)],
+        0.6,
+        0.5,
+    ),
+    "door_close": (
+        [("synth:wood:150:0", 1, 0), ("synth:click", 0.7, 0.04)],
+        0.45,
+        0.6,
+    ),
 }
 
 
@@ -94,6 +108,37 @@ def synth(kind):
             start = int(i * 0.13 * RATE)
             out[start : start + bite] += noise * env * (1 - 0.15 * i)
         return out
+    if kind.startswith("wood:"):
+        _, hz, times = kind.split(":")
+        f = float(hz)
+        hits = [float(x) for x in times.split(",")]
+        ring = 0.12
+        t = np.arange(int(ring * RATE)) / RATE
+        knock = (
+            np.sin(2 * np.pi * f * t) + 0.5 * np.sin(2 * np.pi * 2.7 * f * t)
+        ) * np.exp(-t * 38)
+        knock[: int(0.004 * RATE)] += rng.standard_normal(int(0.004 * RATE)) * 0.6
+        out = np.zeros(int((hits[-1] + ring) * RATE))
+        for i, at in enumerate(hits):
+            start = int(at * RATE)
+            out[start : start + len(t)] += knock * (0.55**i)
+        return out
+    if kind == "creak":
+        length = 0.42
+        t = np.arange(int(length * RATE)) / RATE
+        f = 190 + 120 * t / length + 18 * np.sin(2 * np.pi * 7 * t)
+        phase = 2 * np.pi * np.cumsum(f) / RATE
+        saw = 2 * ((phase / (2 * np.pi)) % 1) - 1
+        kernel = np.ones(12) / 12
+        env = np.sin(np.pi * t / length) ** 1.5
+        return np.convolve(saw, kernel, "same") * env
+    if kind == "click":
+        n = int(0.03 * RATE)
+        t = np.arange(n) / RATE
+        return (
+            rng.standard_normal(n) * np.exp(-t * 260)
+            + np.sin(2 * np.pi * 2400 * t) * np.exp(-t * 180) * 0.5
+        )
     raise ValueError("synth tidak dikenal: " + kind)
 
 
