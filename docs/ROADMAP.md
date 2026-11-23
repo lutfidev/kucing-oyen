@@ -47,13 +47,14 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 29. Aksesibilitas, suara, dan putar ulang
 - [x] 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
 - [x] 31. Tinggi baris teks mengikuti desain
-- [ ] 32. Cek di HP dan persiapan rilis produksi
+- [x] 32. Cek di HP dan persiapan rilis produksi
 - [x] 33. Rumah dua ruangan: gambar dan pindah ruangan
 - [x] 34. Rumah dua ruangan: kucing di dua ruangan
 - [x] 35. Rumah dua ruangan: Hias, pemain baru, dan cek akhir
 - [x] 36. Gang Depan: gambar pintu depan, gang, dan Kumis
 - [x] 37. Gang Depan: kunjungan Kumis dan rutinitas gang
 - [x] 38. Gang Depan: layar, kamera, dan cek akhir
+- [ ] 39. Kinerja rumah penuh: animasi SVG per bingkai
 
 Langkah 33 lama ("Rapikan informasi dan tata letak kamar Oyen") dibatalkan 21 Nov 2026 dan sisanya masuk langkah 35; isinya disimpan di `docs/DESIGN_NOTES.md`, "Bahan langkah 33 lama". Langkah 32 (cek di HP) dikerjakan sesudah langkah 38 dan juga mengukur profil rumah dan gang yang tertunda di langkah 35 dan 38.
 
@@ -651,7 +652,9 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 31".
 
-## 32. Cek di HP dan persiapan rilis produksi
+## 32. Cek di HP dan persiapan rilis produksi ✅
+
+**Status:** selesai 23 Nov 2026 (PR langkah 32). Hal yang hanya bisa dikerjakan pemilik repo (ID AdMob asli, keystore, Data safety, rating konten, unggah bundle) ada sebagai daftar periksa di PR. Kinerja rumah dua ruangan penuh masih di atas batas dan dilanjutkan di langkah 39.
 
 **Kemajuan 8 Nov 2026:** tes mode profil kamar penuh (9 kucing, 21 barang termasuk mangkuk) selesai sebelum dan sesudah optimasi di Xiaomi 24117RN76O. Bingkai di atas 16,67 ms turun dari 14,3% menjadi 2,61%; build rata-rata turun dari 13,47 menjadi 8,21 ms. Varian SVG animasi di-cache secara terbatas dan dijaga test kesamaan piksel. Versi release beroptimasi, progres asli (80 koin, 9/60 bintang), dan pengaturan layar sudah dipulihkan. Hasil serta batas pengujian: [catatan performa](performance-room-2026-11-08.md). TalkBack dilewati atas permintaan pemilik repo; langkah ini belum selesai karena masih ada pemeriksaan dan persiapan produksi lain.
 
@@ -747,3 +750,21 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 > **Lalu:** kerjakan Task 10–13 rencana. Pemeriksaan utama di HP adalah momen menyusul Oyen: kamera tetap saat Oyen menyelinap, lalu sesudah pintu depan diketuk, gang terlihat lewat celah yang melebar dan kamera membawa pemain melewati ambang dalam satu gerakan utuh. Cek juga: ekor Kumis mudah dikenali, dan Kumis masih ada saat pemain menyusul.
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 38".
+
+## 39. Kinerja rumah penuh: animasi SVG per bingkai
+
+**Waktu:** sesudah langkah 32 di-merge. Disepakati pemilik repo 23 Nov 2026: angka dicatat dulu, optimasi lanjutan jadi langkah sendiri.
+
+**Hasil:** rumah dua ruangan penuh (9 kucing, 21 barang) di Xiaomi 24117RN76O mendekati batas langkah 32: bingkai dengan build atau raster di atas 16,67 ms ≲ 3%, saat diam dan saat pindah ruangan.
+
+> **Baca dulu:**
+> - `docs/performance-room-2026-11-08.md`, bagian "Rumah dua ruangan (langkah 32, 23 Nov 2026)": angka, cara mengukur, dan rincian biaya paint per bagian
+> - `docs/DESIGN_NOTES.md` bagian "Langkah 32"
+> - `lib/game/render/svg_template.dart` (`SvgTemplate.bind`, `SvgAnimation`, `_BoundNode`), `lib/game/render/house_art.dart`, `lib/screens/room/room_scene.dart`, `RoomView._itemSprite`
+>
+> **Lalu:**
+> - Ukur dulu di HP dengan `tool/profile_room.dart` (diam dan `SWITCH_ROOMS=true`, masing-masing minimal dua kali karena variasi antar-run besar). Probe sementara (stopwatch di penggambar) boleh dipakai tapi tidak di-commit.
+> - Calon perbaikan (pilih berdasarkan ukuran, bukan tebakan): pisahkan bagian lapisan rumah yang bergerak (awan, daun, denyut cahaya) dari bagian diam supaya bagian diam direkam sekali; lapisan latar animasi digambar lebih jarang (mis. 30 fps) kalau tidak terlihat beda; kurangi biaya raster lapisan bergradien. Piksel harus tetap sama dengan renderer acuan (`svg_binding_test`).
+> - Cek juga HP spek rendah kalau pemilik repo punya.
+>
+> Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 39" dan di catatan performa.

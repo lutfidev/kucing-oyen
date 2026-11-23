@@ -89,6 +89,35 @@ Gang setara dengan rumah penuh pada HP ini; satu pengukuran, suhu dan aktivitas 
 {"place":"lane","frames":3680,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":8.40434157608697,"p50_ms":7.735,"p90_ms":9.731,"p99_ms":19.743,"max_ms":36.411},"raster":{"mean_ms":11.40143722826086,"p50_ms":11.185,"p90_ms":13.582,"p99_ms":15.675,"max_ms":22.852},"over_16_67ms":128,"over_8_33ms":3670}
 ```
 
+## Rumah dua ruangan (langkah 32, 23 Nov 2026 18.20–19.00 WIB)
+
+HP sama (Xiaomi 24117RN76O, Android 16), layar terbuka, dicas, status termal 0, suhu baterai 33 °C. `tool/profile_room.dart` dengan data memori yang sama (9 kucing beraksesoris, 20 barang toko + mangkuk, semuanya di ruang tengah). APK profil dipasang dengan `adb install -r`, bukan `flutter run`. Satu run "diam" pertama sesudah perbaikan tidak sah karena layar HP mati sendiri (359 bingkai); pengaturan tetap menyala saat USB diubah sementara 0 → `usb` → 0.
+
+| Metrik | Sebelum, diam | Sebelum, pindah ruangan | Sesudah, diam | Sesudah, pindah ruangan |
+| --- | --- | --- | --- | --- |
+| Bingkai dalam 60 detik | 3.353 | 3.495 | 3.448 | 3.502 |
+| Build rata-rata (ms) | 10,604 | 10,273 | 10,095 | 9,856 |
+| Build P50 / P90 / P99 (ms) | 9,370 / 15,205 / 28,906 | 9,206 / 14,680 / 28,076 | 9,185 / 11,532 / 22,571 | 8,877 / 14,000 / 26,416 |
+| Raster rata-rata (ms) | 12,028 | 11,419 | 12,951 | 12,347 |
+| Raster P50 / P90 / P99 (ms) | 11,468 / 14,201 / 22,794 | 11,353 / 14,346 / 15,721 | 12,761 / 14,158 / 16,911 | 12,453 / 14,734 / 17,602 |
+| Build atau raster >16,67 ms | 303 (9,0%) | 222 (6,4%) | 237 (6,9%) | 265 (7,6%) |
+
+Pembanding tanpa `RepaintBoundary` barang diam (hanya perbaikan bentuk SVG): 261 (7,6%) diam, 395 (11,7%) pindah ruangan, build rata-rata 10,84 / 10,51 ms. Variasi antar-run besar; satu run per baris.
+
+**Rincian biaya (probe stopwatch sementara di HP, rata-rata 600 bingkai, sebelum perbaikan):** `paintRoomItemArt` 3,7 ms (21 barang per bingkai), `paintHouseLayer` 3,2 ms (3 lapisan bergerak), `paintKitty` 2,9 ms (±7,5 kucing), logika `RoomView` (tick, `_syncKitties`, `build`, `_room`) ±0,5 ms. Sesudah `RepaintBoundary`: ±11 barang per bingkai (yang beranimasi atau sedang dipakai kucing). Sesudah perbaikan bentuk: lapisan rumah 2,2 ms. Benchmark desktop lapisan latar ruang tengah: `render` 916 → 331 µs, `paint` ±290 µs, total per bingkai 1,43 → 0,79 ms.
+
+**Batas:** masih di atas ≲3%. Sisa biayanya SVG beranimasi yang direkam ulang tiap bingkai (lapisan latar, kucing, barang yang dipakai) dan raster ±12–13 ms. Dilanjutkan di langkah 39 (keputusan pemilik repo).
+
+Gang sesudah perbaikan, satu run: 4.058 bingkai, build 7,149 ms (P90 8,152), raster 12,953 ms, 147 (3,6%) di atas 16,67 ms; sebelumnya 3,48%.
+
+```json
+{"switch_rooms":false,"place":"house","frames":3353,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":10.604313748881593,"p50_ms":9.37,"p90_ms":15.205,"p99_ms":28.906,"max_ms":44.88},"raster":{"mean_ms":12.028198628094266,"p50_ms":11.468,"p90_ms":14.201,"p99_ms":22.794,"max_ms":57.203},"over_16_67ms":303,"over_8_33ms":3353}
+{"switch_rooms":true,"place":"house","frames":3495,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":10.273481545064381,"p50_ms":9.206,"p90_ms":14.68,"p99_ms":28.076,"max_ms":44.534},"raster":{"mean_ms":11.419389985693863,"p50_ms":11.353,"p90_ms":14.346,"p99_ms":15.721,"max_ms":22.175},"over_16_67ms":222,"over_8_33ms":3338}
+{"switch_rooms":false,"place":"house","frames":3448,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":10.095315255220427,"p50_ms":9.185,"p90_ms":11.532,"p99_ms":22.571,"max_ms":42.186},"raster":{"mean_ms":12.951233468677472,"p50_ms":12.761,"p90_ms":14.158,"p99_ms":16.911,"max_ms":24.876},"over_16_67ms":237,"over_8_33ms":3448}
+{"switch_rooms":true,"place":"house","frames":3502,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":9.855773843517978,"p50_ms":8.877,"p90_ms":14.0,"p99_ms":26.416,"max_ms":45.112},"raster":{"mean_ms":12.347453455168493,"p50_ms":12.453,"p90_ms":14.734,"p99_ms":17.602,"max_ms":21.984},"over_16_67ms":265,"over_8_33ms":3430}
+{"switch_rooms":false,"place":"lane","frames":4058,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":7.149174963035977,"p50_ms":6.407,"p90_ms":8.152,"p99_ms":19.786,"max_ms":38.107},"raster":{"mean_ms":12.95331665845247,"p50_ms":13.459,"p90_ms":14.374,"p99_ms":15.763,"max_ms":18.986},"over_16_67ms":147,"over_8_33ms":4058}
+```
+
 ## Pemulihan dan pengujian manual
 
 Versi release biasa dengan optimasi dipasang kembali setelah tes ulang. Potret layar sesudah pemulihan menunjukkan progres asli tetap ada: 80 koin, 9/60 bintang, kamar awal Oyen dan mangkuk. Data kamar penuh tidak ditulis ke penyimpanan pemain. Pengaturan layar tetap menyala saat USB tersambung sudah dikembalikan ke nilai awal 0; proses aplikasi release berjalan dan buffer crash kosong saat diperiksa.
