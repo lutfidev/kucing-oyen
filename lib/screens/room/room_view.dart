@@ -452,7 +452,10 @@ class _RoomViewState extends State<RoomView>
           _progress.play(kitty, item);
         case LeftRoom(:final kitty, :final from) when from == _house:
           _announceLeft(kitty, from.other);
-        case WentOut(:final kitty, viaFlap: true):
+        // Keluar yang tertunda jeda dan baru dilaporkan saat pemain sudah
+        // menuju atau di gang: pintu kucing tidak terlihat, jadi diam.
+        case WentOut(:final kitty, viaFlap: true)
+            when _camera == null && !_inLane:
           _swingFlap(flapOutDeg);
           if (_house == HouseRoom.living) _announceWentOut(kitty);
         case EnteredRoom(:final kitty, to: HouseRoom.living)

@@ -576,7 +576,8 @@ Saran 17 tabel "Sesudah langkah 26" di roadmap (PR #25).
   - Kepulan endus (`AdeganGang`, `temuD`) digambar selama `LaneLife.puff`, disalin dari desain lewat `make_lane_svg.py` (`lanePuffSvg`, `LanePuffView`) di atas cahaya udara gang.
   - `paintLaneMarker`/`LaneMarkerView` tidak lagi punya parameter `time` yang tidak berpengaruh (SVG penanda tidak punya animasi; ayunan `pgBob` di `LaneMarker`).
   - Test baru: dua barang lama yang sama-sama menutup jalur pintu (rumah kucing + tiang) keduanya pindah tanpa bertumpuk.
-- **Pesan gagal persetujuan iklan** (dari arsip v2, disetujui 21 Nov 2026): kalau `showPrivacyOptions()` melempar, Pengaturan menampilkan `privacyConsentFailed` sendiri, bukan pesan browser, dan tombolnya bisa diketuk lagi. Juga dicek di `overflow_test`.
+- **Pesan gagal persetujuan iklan** (dari arsip v2, disetujui 21 Nov 2026): kalau `showPrivacyOptions()` melempar, Pengaturan menampilkan `privacyConsentFailed` sendiri, bukan pesan browser, dan tombolnya bisa diketuk lagi; coba lagi yang berhasil menghapus pesannya. `UmpAdConsent.showPrivacyOptions` dulu menelan semua error, jadi sekarang melempar kalau plugin melaporkan error (callback-nya dipanggil sebelum Future-nya selesai) atau pemanggilannya gagal (temuan review). Jalur SDK asli ini tidak punya test (berkas khusus SDK) dan tidak bisa dicoba dari Indonesia. Juga dicek di `overflow_test`.
+- **Temuan review yang tidak diubah:** poligon tutupan daun pintu dihitung dua kali per sprite selama kamera (murah); kucing yang sedang melompat ke barang dinding digambar sesudah semua sprite sehingga tidak tertutup daun (jarang, 1,7 detik); test binding SVG hanya menjaga kesamaan piksel, bukan jumlah pembuatan ulang bentuk (diukur dengan benchmark). `WentOut` lewat pintu kucing yang baru dilaporkan saat pemain di kamera atau di gang tidak lagi mengayunkan pintu kucing atau diumumkan.
 
 ## 21 Nov 2026: kembali ke desain v1
 

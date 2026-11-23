@@ -56,6 +56,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _consentOpen = true;
     try {
       await consent.showPrivacyOptions();
+      // Berhasil sesudah gagal: pesan gagalnya tidak berlaku lagi.
+      if (mounted && _notice == _Notice.consentFailed) {
+        setState(() => _notice = null);
+      }
     } on Object {
       // Formulir UMP gagal dibuka (jaringan, SDK): pesan sendiri, bisa
       // dicoba lagi.

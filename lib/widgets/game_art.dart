@@ -719,7 +719,6 @@ class _DoorLeafCoverPainter extends CustomPainter {
   bool shouldRepaint(_DoorLeafCoverPainter old) => true;
 }
 
-/// Tanda "!" (`AdeganTengah`, `seru`) seukuran [size], tanpa semantik.
 /// Kepulan endus di bangku gang, seukuran area rumah. Tanpa semantik.
 class LanePuffView extends StatelessWidget {
   const LanePuffView({super.key});
@@ -739,6 +738,7 @@ class _LanePuffPainter extends CustomPainter {
   bool shouldRepaint(_LanePuffPainter old) => false;
 }
 
+/// Tanda "!" (`AdeganTengah`, `seru`) seukuran [size], tanpa semantik.
 class SeruView extends StatelessWidget {
   const SeruView({super.key, required this.size});
 

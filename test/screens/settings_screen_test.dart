@@ -429,6 +429,12 @@ void main() {
         expect(find.text(l10nId.privacyLinkFailed), findsNothing);
         await _tapText(tester, l10nId.adConsent);
         expect(consent.optionsShown, 2);
+        expect(find.text(l10nId.privacyConsentFailed), findsOneWidget);
+        // Coba lagi berhasil: pesan gagalnya hilang.
+        consent.fail = false;
+        await _tapText(tester, l10nId.adConsent);
+        expect(consent.optionsShown, 3);
+        expect(find.text(l10nId.privacyConsentFailed), findsNothing);
         expect(tester.takeException(), isNull);
       },
     );
@@ -485,9 +491,12 @@ class _SlowConsent extends FakeAdConsent {
 class _ThrowingConsent extends FakeAdConsent {
   _ThrowingConsent() : super(privacyOptionsRequired: true);
 
+  /// False = formulirnya terbuka (coba lagi berhasil).
+  bool fail = true;
+
   @override
   Future<void> showPrivacyOptions() async {
     optionsShown++;
-    throw StateError('formulir tidak tersedia');
+    if (fail) throw StateError('formulir tidak tersedia');
   }
 }
