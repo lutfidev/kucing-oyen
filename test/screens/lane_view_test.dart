@@ -99,6 +99,18 @@ void main() {
     expect(progress.hasUnsavedChanges, isFalse);
   });
 
+  testWidgets('kamera berangkat: penanda gang tidak ikut diperbesar', (
+    tester,
+  ) async {
+    await _pump(tester);
+    await _followTail(tester);
+    await tester.tap(find.byKey(const ValueKey('front-door')));
+    for (var ms = 0; ms < laneCameraMs - 100; ms += 16) {
+      await tester.pump(const Duration(milliseconds: 16));
+      expect(_marker, findsNothing, reason: 'di $ms ms');
+    }
+  });
+
   testWidgets('pulang lewat chip sebelum duduk bersama: belum bertemu', (
     tester,
   ) async {

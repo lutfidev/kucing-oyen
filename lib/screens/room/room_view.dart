@@ -1391,7 +1391,8 @@ class _RoomViewState extends State<RoomView>
                       geo: livingGeo,
                       from: camera
                           ? (deg) => _laneArea(livingGeo, homeDeg: deg)
-                          : (deg) => _room(livingGeo, frontDeg: deg),
+                          : (deg) =>
+                                _room(livingGeo, frontDeg: deg, leaving: true),
                       to: camera ? _room(livingGeo) : _laneArea(livingGeo),
                       onOpen: () => _sound(GameSound.doorOpen),
                       onFrame: (f) => _cameraChip = f.chipOpacity,
@@ -1488,8 +1489,10 @@ class _RoomViewState extends State<RoomView>
   }
 
   /// Isi satu ruangan [geo]: latar, barang, kucing di ruangan itu (yang
-  /// lewat pintu di belakang kusen), dan tanda di atasnya.
-  Widget _room(RoomGeometry geo, {double frontDeg = 0}) {
+  /// lewat pintu di belakang kusen), dan tanda di atasnya. [leaving] = ruang
+  /// tengah di kamera berangkat: penanda dan ikon pintu depan tidak digambar,
+  /// karena ikut diperbesar sampai menutupi header.
+  Widget _room(RoomGeometry geo, {double frontDeg = 0, bool leaving = false}) {
     final living = geo.which == HouseRoom.living;
     if (geo.which == _house) _geo = geo;
     final current = geo.which == _house;
@@ -1545,7 +1548,7 @@ class _RoomViewState extends State<RoomView>
         top + s.roomDecorateGap + s.roomDecorateButton + space.s8;
     final unit = geo.artScale;
     final attention = _decorating ? null : _doorAttention(geo.which.other);
-    final front = living && !_decorating ? _frontAttention() : null;
+    final front = living && !_decorating && !leaving ? _frontAttention() : null;
     final oyenOut = living && _isOut(KittyId.oyen);
     final tailAt = living ? _tailAt : null;
     final tailTime = tailAt == null ? null : _time - tailAt;
@@ -1748,7 +1751,7 @@ class _RoomViewState extends State<RoomView>
             front: true,
             time: _animating ? _time : null,
           )
-        else if (oyenOut && !_decorating)
+        else if (oyenOut && !_decorating && !leaving)
           LaneMarker(
             key: const ValueKey('lane-marker'),
             geo: geo,

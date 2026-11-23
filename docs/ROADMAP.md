@@ -738,7 +738,7 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 
 ## 38. Gang Depan: layar, kamera, dan cek akhir ✅
 
-**Status:** selesai 23 Nov 2026, kecuali pemeriksaan visual dan profil kinerja di HP (tidak ada HP tersambung). Keduanya dikerjakan bersama cek HP langkah 32; perintahnya di `docs/DESIGN_NOTES.md`, "Langkah 38".
+**Status:** selesai 23 Nov 2026. Profil gang dan potret kamera sudah dicek di HP (Xiaomi 24117RN76O); rasa gerakan dengan tangan dan HP spek rendah menyusul bersama langkah 32 (`docs/DESIGN_NOTES.md`, "Langkah 38").
 
 **Hasil:** ekor di pintu kucing dan Oyen menyelinap, kamera menembus pintu ke gang dan pulang, Oyen dan Kumis hidup di gang, lalu overflow, potret layar keempat bahasa, dan profil kinerja di HP.
 
