@@ -1972,6 +1972,7 @@ class AppLocalizationsId extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(room, {
       'living': 'Sedang di ruang tengah.',
       'terrace': 'Sedang di teras.',
+      'lane': 'Sedang di Gang Depan.',
       'other': 'Sedang di ruang tengah.',
     });
     return '$_temp0';
@@ -2047,5 +2048,10 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String oyenWentOut(String name) {
     return '$name menyelinap ke Gang Depan';
+  }
+
+  @override
+  String neighborTapHint(String name) {
+    return '$name, kucing tetangga. Ketuk untuk menyapa';
   }
 }

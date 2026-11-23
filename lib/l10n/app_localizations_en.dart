@@ -2115,6 +2115,7 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(room, {
       'living': 'In the living room right now.',
       'terrace': 'Out on the terrace right now.',
+      'lane': 'Out in the Front Lane right now.',
       'other': 'In the living room right now.',
     });
     return '$_temp0';
@@ -2190,5 +2191,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String oyenWentOut(String name) {
     return '$name slipped out to the Front Lane';
+  }
+
+  @override
+  String neighborTapHint(String name) {
+    return '$name, the neighbour\'s cat. Tap to say hi';
   }
 }

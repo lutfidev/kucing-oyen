@@ -501,7 +501,7 @@
   "roomName": "{room, select, living{Sala} terrace{Varanda} other{Sala}}",
   "doorTo": "{room, select, living{Ir para a sala} terrace{Ir para a varanda} other{Ir para a sala}}",
   "kittyLeftTo": "{name} {room, select, living{foi para a sala} terrace{saiu para a varanda} other{foi para a sala}}",
-  "kittyInRoom": "{room, select, living{Agora está na sala.} terrace{Agora está na varanda.} other{Agora está na sala.}}",
+  "kittyInRoom": "{room, select, living{Agora está na sala.} terrace{Agora está na varanda.} lane{Agora está na Viela da Frente.} other{Agora está na sala.}}",
   "inviteTo": "{room, select, living{Levar para a sala} terrace{Levar para a varanda} other{Levar para a sala}}",
   "liftHint": "{room, select, living{Leve até a porta para ir à sala} terrace{Leve até a porta para ir à varanda} other{Leve até a porta para ir à sala}}",
   "doorAttention": "{room, select, living{Para a sala. {need, select, hungry{{name} está com fome na sala} sad{{name} está sem ânimo na sala} other{{name} tem moedas de presente para você}}} terrace{Para a varanda. {need, select, hungry{{name} está com fome na varanda} sad{{name} está sem ânimo na varanda} other{{name} tem moedas de presente para você}}} other{Para a sala. {need, select, hungry{{name} está com fome na sala} sad{{name} está sem ânimo na sala} other{{name} tem moedas de presente para você}}}}",
@@ -510,5 +510,6 @@
   "frontDoorOyenOut": "Sair para a Viela da Frente. Oyen está lá fora",
   "frontDoorAttention": "Sair para a Viela da Frente. {need, select, hungry{{name} está com fome lá fora} sad{{name} está sem ânimo lá fora} other{{name} tem moedas de presente para você}}",
   "laneHomeDoor": "Voltar para a sala",
-  "oyenWentOut": "{name} escapuliu para a Viela da Frente"
+  "oyenWentOut": "{name} escapuliu para a Viela da Frente",
+  "neighborTapHint": "{name}, o gato do vizinho. Toque para dar oi"
 }

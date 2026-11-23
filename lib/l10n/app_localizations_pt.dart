@@ -2133,6 +2133,7 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(room, {
       'living': 'Agora está na sala.',
       'terrace': 'Agora está na varanda.',
+      'lane': 'Agora está na Viela da Frente.',
       'other': 'Agora está na sala.',
     });
     return '$_temp0';
@@ -2209,5 +2210,10 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String oyenWentOut(String name) {
     return '$name escapuliu para a Viela da Frente';
+  }
+
+  @override
+  String neighborTapHint(String name) {
+    return '$name, o gato do vizinho. Toque para dar oi';
   }
 }

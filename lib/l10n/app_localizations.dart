@@ -3111,7 +3111,7 @@ abstract class AppLocalizations {
   /// Sentence added after a cat's description on its card: which room of the house the cat is in now.
   ///
   /// In en, this message translates to:
-  /// **'{room, select, living{In the living room right now.} terrace{Out on the terrace right now.} other{In the living room right now.}}'**
+  /// **'{room, select, living{In the living room right now.} terrace{Out on the terrace right now.} lane{Out in the Front Lane right now.} other{In the living room right now.}}'**
   String kittyInRoom(String room);
 
   /// Green button on a cat's card (and screen-reader action on the cat): the cat walks through the door to the named room and stays there a while.
@@ -3167,6 +3167,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name} slipped out to the Front Lane'**
   String oyenWentOut(String name);
+
+  /// Screen-reader label of Kumis, the neighbour cat who visits the Front Lane (a tomcat; his name means moustache). Tapping her gets a meow and a little heart, no card.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, the neighbour\'s cat. Tap to say hi'**
+  String neighborTapHint(String name);
 }
 
 class _AppLocalizationsDelegate
