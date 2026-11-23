@@ -2173,7 +2173,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get frontDoorTo => 'Go out to the Front Lane';
 
   @override
-  String get frontDoorOyenOut => 'Go out to the Front Lane. Oyen is out there';
+  String frontDoorOyenOut(String name) {
+    return 'Go out to the Front Lane. $name is out there';
+  }
 
   @override
   String frontDoorAttention(String name, String need) {

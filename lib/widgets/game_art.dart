@@ -614,32 +614,28 @@ class _DoorLeafPainter extends CustomPainter {
       old.side != side || old.angleDeg != angleDeg || old.flapDeg != flapDeg;
 }
 
-/// Penanda "Oyen di gang" (`PenandaGang.dc.html`) seukuran [size];
-/// [time] = detik ayunan, null = diam. Tanpa semantik: label pintu yang
+/// Penanda "Oyen di gang" (`PenandaGang.dc.html`) seukuran [size], diam
+/// (ayunannya di `LaneMarker`). Tanpa semantik: label pintu yang
 /// menyebutnya.
 class LaneMarkerView extends StatelessWidget {
-  const LaneMarkerView({super.key, required this.size, this.time});
+  const LaneMarkerView({super.key, required this.size});
 
   final Size size;
-  final double? time;
 
   @override
   Widget build(BuildContext context) => ExcludeSemantics(
-    child: CustomPaint(size: size, painter: _LaneMarkerPainter(time)),
+    child: CustomPaint(size: size, painter: const _LaneMarkerPainter()),
   );
 }
 
 class _LaneMarkerPainter extends CustomPainter {
-  _LaneMarkerPainter(this.time);
-
-  final double? time;
+  const _LaneMarkerPainter();
 
   @override
-  void paint(Canvas canvas, Size size) =>
-      paintLaneMarker(canvas, size: size, time: time);
+  void paint(Canvas canvas, Size size) => paintLaneMarker(canvas, size: size);
 
   @override
-  bool shouldRepaint(_LaneMarkerPainter old) => old.time != time;
+  bool shouldRepaint(_LaneMarkerPainter old) => false;
 }
 
 /// Ekor Kumis di pintu kucing (`AdeganTengah`), seukuran area rumah;

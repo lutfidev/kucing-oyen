@@ -507,7 +507,7 @@
   "doorAttention": "{room, select, living{Ke ruang tengah. {need, select, hungry{{name} di ruang tengah lapar} sad{{name} di ruang tengah lesu} other{Ada hadiah koin dari {name}}}} terrace{Ke teras. {need, select, hungry{{name} di teras lapar} sad{{name} di teras lesu} other{Ada hadiah koin dari {name}}}} other{Ke ruang tengah. {need, select, hungry{{name} di ruang tengah lapar} sad{{name} di ruang tengah lesu} other{Ada hadiah koin dari {name}}}}}",
   "laneName": "Gang Depan",
   "frontDoorTo": "Keluar ke Gang Depan",
-  "frontDoorOyenOut": "Keluar ke Gang Depan. Oyen ada di Gang Depan",
+  "frontDoorOyenOut": "Keluar ke Gang Depan. {name} ada di Gang Depan",
   "frontDoorAttention": "Keluar ke Gang Depan. {need, select, hungry{{name} di Gang Depan lapar} sad{{name} di Gang Depan lesu} other{Ada hadiah koin dari {name}}}",
   "laneHomeDoor": "Pulang ke ruang tengah",
   "oyenWentOut": "{name} menyelinap ke Gang Depan",

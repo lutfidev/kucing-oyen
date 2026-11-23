@@ -69,20 +69,13 @@ void paintLaneLayer(
 /// Ukuran viewBox penanda "Oyen di gang" (`PenandaGang.dc.html`).
 const laneMarkerViewBox = Size(48, 52);
 
-final _marker = SvgTemplate(
-  laneMarkerSvg,
-  keyframes: _keyframes,
-  classes: laneClassStyles,
-);
-SvgDrawing? _markerStill;
-SvgAnimation? _markerMoving;
+final _marker = SvgTemplate(laneMarkerSvg, classes: laneClassStyles);
+SvgDrawing? _markerDrawing;
 
-/// Penanda "Oyen di gang" seukuran [size] di pojok kiri atas kanvas;
-/// [time] = detik ayunan `pgBob`, null = diam.
-void paintLaneMarker(Canvas canvas, {required Size size, double? time}) {
-  final drawing = time == null
-      ? _markerStill ??= _marker.render(const {})
-      : (_markerMoving ??= _marker.bind(const {})).render(time: time);
+/// Penanda "Oyen di gang" seukuran [size] di pojok kiri atas kanvas. Isinya
+/// diam; ayunan `pgBob` (kelas di tag `<svg>`) digerakkan `LaneMarker`.
+void paintLaneMarker(Canvas canvas, {required Size size}) {
+  final drawing = _markerDrawing ??= _marker.render(const {});
   canvas
     ..save()
     ..scale(

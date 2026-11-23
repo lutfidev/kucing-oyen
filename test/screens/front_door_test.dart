@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
+import 'package:kucing_oren/game/model/home.dart';
+import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/model/lane.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/rewards.dart';
+import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/screens/room/front_door.dart';
 
@@ -27,6 +30,7 @@ Future<ProgressController> _pump(
   Map<int, int> best = const {1: 3},
   bool metNeighbor = false,
   GameAudio? audio,
+  Home? home,
 }) async {
   setScreenSize(tester, const Size(390, 844));
   return pumpApp(
@@ -35,6 +39,7 @@ Future<ProgressController> _pump(
       best: best,
       clock: clock ?? () => _night,
       metNeighbor: metNeighbor,
+      home: home,
       // Hadiah Oyen hari ini sudah diambil: ikon hadiah tidak menggantikan
       // penanda "Oyen di gang".
       needs: HomeNeeds(rewardDays: {KittyId.oyen: dayNumber(_night)}),
@@ -130,7 +135,43 @@ void main() {
       tester.takeAnnouncements().map((a) => a.message),
       contains(l10nId.oyenWentOut('Oyen')),
     );
-    expect(find.bySemanticsLabel(l10nId.frontDoorOyenOut), findsOneWidget);
+    expect(
+      find.bySemanticsLabel(l10nId.frontDoorOyenOut('Oyen')),
+      findsOneWidget,
+    );
+    semantics.dispose();
+  });
+
+  testWidgets('Hias dibuka saat Oyen di pintu kucing: tetap diumumkan', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    final audio = testAudio();
+    // Lukisan = hanya hiasan: kamar tidak kosong (ada tombol Hias) tanpa
+    // mengubah rutinitas Oyen.
+    await _pump(
+      tester,
+      audio: audio,
+      home: Home(room: Room(owned: const [RoomItemId.lukisan])),
+    );
+    expect(await _until(tester, () => _passing.evaluate().isNotEmpty), isTrue);
+    tester.takeAnnouncements();
+    await tester.tap(find.text('Hias'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.tap(find.text('Selesai'));
+    await tester.pump();
+    expect(
+      await _until(
+        tester,
+        () => tester.takeAnnouncements().any(
+          (a) => a.message == l10nId.oyenWentOut('Oyen'),
+        ),
+        max: const Duration(seconds: 3),
+      ),
+      isTrue,
+    );
+    expect(playedBy(audio), contains(GameSound.flap));
     semantics.dispose();
   });
 

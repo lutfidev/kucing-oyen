@@ -207,6 +207,29 @@ void main() {
     semantics.dispose();
   });
 
+  testWidgets('pembaca layar: tiba di gang dan pulang diumumkan', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await _pumpRoom(tester);
+    tester.takeAnnouncements();
+    await tester.tap(_frontDoor);
+    await tester.pump();
+    await _finishCamera(tester);
+    expect(
+      tester.takeAnnouncements().map((a) => a.message),
+      contains(l10nId.laneName),
+    );
+    await tester.tap(find.byKey(const ValueKey('lane-home-door-button')));
+    await tester.pump();
+    await _finishCamera(tester);
+    expect(
+      tester.takeAnnouncements().map((a) => a.message),
+      contains(l10nId.roomName('living')),
+    );
+    semantics.dispose();
+  });
+
   testWidgets('bunyi pintu terbuka dan tertutup', (tester) async {
     final audio = testAudio();
     setScreenSize(tester, const Size(390, 844));

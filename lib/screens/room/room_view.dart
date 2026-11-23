@@ -186,10 +186,6 @@ class _RoomViewState extends State<RoomView>
   /// layar; [ProgressController.forceFirstVisit] sekali per sesi).
   Timer? _forceTimer;
 
-  /// Oyen sedang lewat pintu kucing di bingkai terakhir (keluarnya
-  /// terlihat, jadi pintu kucing berayun dan diumumkan).
-  bool _oyenAtFlap = false;
-
   /// Oyen sedang pulang lewat pintu kucing (bingkai terakhir): pintu kucing
   /// berayun saat ia sampai.
   bool _oyenComingHome = false;
@@ -456,7 +452,7 @@ class _RoomViewState extends State<RoomView>
           _progress.play(kitty, item);
         case LeftRoom(:final kitty, :final from) when from == _house:
           _announceLeft(kitty, from.other);
-        case WentOut(:final kitty) when _oyenAtFlap:
+        case WentOut(:final kitty, viaFlap: true):
           _swingFlap(flapOutDeg);
           if (_house == HouseRoom.living) _announceWentOut(kitty);
         case EnteredRoom(:final kitty, to: HouseRoom.living)
@@ -468,7 +464,6 @@ class _RoomViewState extends State<RoomView>
     }
     if (_progress.home.ownsKitty(KittyId.oyen)) {
       final oyen = _life.of(KittyId.oyen);
-      _oyenAtFlap = oyen.viaFlap && oyen.activity == CatActivity.leaving;
       _oyenComingHome = oyen.viaFlap && oyen.activity == CatActivity.entering;
     }
     setState(() {});
@@ -638,7 +633,6 @@ class _RoomViewState extends State<RoomView>
     if (!widget.life || !_progress.home.ownsKitty(KittyId.oyen)) return;
     if (!_progress.oyenInLane || _isOut(KittyId.oyen)) return;
     _tailAt = null;
-    _oyenAtFlap = false;
     _progress.followTail();
     _life.goOutNow(KittyId.oyen);
   }
@@ -693,6 +687,19 @@ class _RoomViewState extends State<RoomView>
     final cat = _life.of(KittyId.oyen);
     if (cat.outside || cat.goingOut || cat.wantsOut) return false;
     return _progress.oyenInLane;
+  }
+
+  /// Pembaca layar: tempat yang baru dicapai sesudah kamera pintu depan
+  /// (gang tidak punya chip atau judul lain yang dibacakan).
+  void _announcePlace(bool home) {
+    final l = context.l10n;
+    unawaited(
+      SemanticsService.sendAnnouncement(
+        View.of(context),
+        home ? l.roomName(HouseRoom.living.name) : l.laneName,
+        Directionality.of(context),
+      ),
+    );
   }
 
   /// Pembaca layar: kucing keluar dari ruangan yang sedang dibuka.
@@ -1306,6 +1313,7 @@ class _RoomViewState extends State<RoomView>
     if (home == null) return;
     _sound(GameSound.doorClose);
     if (!home) _arriveInLane();
+    _announcePlace(home);
     setState(() {
       _camera = null;
       _inLane = !home;
@@ -1633,7 +1641,9 @@ class _RoomViewState extends State<RoomView>
                 kittyName(context.l10n, KittyId.oyen),
                 need.name,
               ),
-              (null, true) => context.l10n.frontDoorOyenOut,
+              (null, true) => context.l10n.frontDoorOyenOut(
+                kittyName(context.l10n, KittyId.oyen),
+              ),
               (null, false) => context.l10n.frontDoorTo,
             },
             onTap: _openLane,

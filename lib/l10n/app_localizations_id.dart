@@ -2030,7 +2030,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get frontDoorTo => 'Keluar ke Gang Depan';
 
   @override
-  String get frontDoorOyenOut => 'Keluar ke Gang Depan. Oyen ada di Gang Depan';
+  String frontDoorOyenOut(String name) {
+    return 'Keluar ke Gang Depan. $name ada di Gang Depan';
+  }
 
   @override
   String frontDoorAttention(String name, String need) {

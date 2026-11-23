@@ -507,7 +507,7 @@
   "doorAttention": "{room, select, living{Para a sala. {need, select, hungry{{name} está com fome na sala} sad{{name} está sem ânimo na sala} other{{name} tem moedas de presente para você}}} terrace{Para a varanda. {need, select, hungry{{name} está com fome na varanda} sad{{name} está sem ânimo na varanda} other{{name} tem moedas de presente para você}}} other{Para a sala. {need, select, hungry{{name} está com fome na sala} sad{{name} está sem ânimo na sala} other{{name} tem moedas de presente para você}}}}",
   "laneName": "Viela da Frente",
   "frontDoorTo": "Sair para a Viela da Frente",
-  "frontDoorOyenOut": "Sair para a Viela da Frente. Oyen está lá fora",
+  "frontDoorOyenOut": "Sair para a Viela da Frente. {name} está lá fora",
   "frontDoorAttention": "Sair para a Viela da Frente. {need, select, hungry{{name} está com fome lá fora} sad{{name} está sem ânimo lá fora} other{{name} tem moedas de presente para você}}",
   "laneHomeDoor": "Voltar para a sala",
   "oyenWentOut": "{name} escapuliu para a Viela da Frente",
