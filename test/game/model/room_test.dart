@@ -261,8 +261,7 @@ void main() {
               .overlaps(floor.footprint(tiang, movedTiang)),
           isFalse,
         );
-        // Urut katalog: rumah kucing dipindah lebih dulu, dan hasilnya tetap
-        // sama kalau dibaca ulang.
+        // Dibaca ulang: tempat barunya tetap (tidak bergeser tiap dibuka).
         expect(
           Room.fromJson(room.toJson()).spotOf(RoomItemId.rumah),
           movedRumah,
