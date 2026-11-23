@@ -1680,6 +1680,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t open the browser. Try again later, okay?'**
   String get privacyLinkFailed;
 
+  /// Settings, Privacy: small message when the ad privacy consent form could not be opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the ad privacy choices. Try again later, okay?'**
+  String get privacyConsentFailed;
+
   /// Settings section: about the game.
   ///
   /// In en, this message translates to:

@@ -1434,6 +1434,10 @@
   "@privacyLinkFailed": {
     "description": "Settings, Privacy: small message when the browser could not be opened."
   },
+  "privacyConsentFailed": "Couldn't open the ad privacy choices. Try again later, okay?",
+  "@privacyConsentFailed": {
+    "description": "Settings, Privacy: small message when the ad privacy consent form could not be opened."
+  },
   "about": "About",
   "@about": {
     "description": "Settings section: about the game."

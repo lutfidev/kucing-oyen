@@ -1159,6 +1159,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get privacyLinkFailed => 'Браузер не открылся. Попробуй позже, ладно?';
 
   @override
+  String get privacyConsentFailed =>
+      'Не получилось открыть настройки конфиденциальности рекламы. Попробуй позже, ладно?';
+
+  @override
   String get about => 'Об игре';
 
   @override

@@ -1068,6 +1068,10 @@ class AppLocalizationsId extends AppLocalizations {
       'Browser-nya belum mau kebuka. Coba lagi nanti, ya.';
 
   @override
+  String get privacyConsentFailed =>
+      'Pilihan privasi iklan belum mau kebuka. Coba lagi nanti, ya.';
+
+  @override
   String get about => 'Tentang';
 
   @override

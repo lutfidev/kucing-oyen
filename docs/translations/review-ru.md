@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-512 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+513 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -290,6 +290,7 @@ files and anything written there is overwritten.
 | `privacyPolicy` | Privacy policy | Политика конфиденциальности | Settings, Privacy: button that opens the privacy policy in the browser. | |
 | `adConsent` | Ad consent settings | Согласие на рекламу | Settings, Privacy: button that reopens the ad consent form (only where the law requires it). | |
 | `privacyLinkFailed` | Couldn't open the browser. Try again later, okay? | Браузер не открылся. Попробуй позже, ладно? | Settings, Privacy: small message when the browser could not be opened. | |
+| `privacyConsentFailed` | Couldn't open the ad privacy choices. Try again later, okay? | Не получилось открыть настройки конфиденциальности рекламы. Попробуй позже, ладно? | Settings, Privacy: small message when the ad privacy consent form could not be opened. | |
 | `about` | About | Об игре | Settings section: about the game. | |
 | `version` | Version {version} | Версия {version} | App version. Placeholders: `{version}`. | |
 | `fontCredits` | Fonts: Fredoka and Nunito (SIL Open Font License). | Шрифты: Fredoka и Nunito (SIL Open Font License). | Font credits. | |

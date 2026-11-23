@@ -1151,6 +1151,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'O navegador não abriu. Tenta de novo mais tarde, tá?';
 
   @override
+  String get privacyConsentFailed =>
+      'Não deu para abrir as opções de privacidade dos anúncios. Tenta de novo mais tarde, tá?';
+
+  @override
   String get about => 'Sobre';
 
   @override

@@ -263,6 +263,7 @@
   "privacyPolicy": "Политика конфиденциальности",
   "adConsent": "Согласие на рекламу",
   "privacyLinkFailed": "Браузер не открылся. Попробуй позже, ладно?",
+  "privacyConsentFailed": "Не получилось открыть настройки конфиденциальности рекламы. Попробуй позже, ладно?",
   "about": "Об игре",
   "version": "Версия {version}",
   "fontCredits": "Шрифты: Fredoka и Nunito (SIL Open Font License).",

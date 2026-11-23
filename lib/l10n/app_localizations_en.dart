@@ -1138,6 +1138,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t open the browser. Try again later, okay?';
 
   @override
+  String get privacyConsentFailed =>
+      'Couldn\'t open the ad privacy choices. Try again later, okay?';
+
+  @override
   String get about => 'About';
 
   @override

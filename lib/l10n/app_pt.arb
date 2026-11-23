@@ -263,6 +263,7 @@
   "privacyPolicy": "Política de privacidade",
   "adConsent": "Consentimento de anúncios",
   "privacyLinkFailed": "O navegador não abriu. Tenta de novo mais tarde, tá?",
+  "privacyConsentFailed": "Não deu para abrir as opções de privacidade dos anúncios. Tenta de novo mais tarde, tá?",
   "about": "Sobre",
   "version": "Versão {version}",
   "fontCredits": "Fontes: Fredoka e Nunito (SIL Open Font License).",

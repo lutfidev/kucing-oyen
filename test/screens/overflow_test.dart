@@ -938,7 +938,7 @@ void _cases(AppLanguage language) {
   }
 
   // Kartu Privasi dengan dan tanpa tombol persetujuan, plus pesan browser
-  // gagal dibuka.
+  // dan formulir persetujuan gagal dibuka.
   for (final size in sizes) {
     for (final scale in textScales) {
       for (final required in [false, true]) {
@@ -952,7 +952,9 @@ void _cases(AppLanguage language) {
             tester,
             location: AppRoutes.settings,
             progress: p(),
-            consent: FakeAdConsent(privacyOptionsRequired: required),
+            consent: required
+                ? _ThrowingConsent()
+                : FakeAdConsent(privacyOptionsRequired: false),
           );
           final policy = find.text(l.privacyPolicy);
           await tester.ensureVisible(policy);
@@ -967,10 +969,30 @@ void _cases(AppLanguage language) {
             find.text(l.adConsent),
             required ? findsOneWidget : findsNothing,
           );
+          if (required) {
+            // Formulir persetujuan gagal dibuka: pesannya juga muat.
+            await tester.tap(find.text(l.adConsent));
+            await settle(tester);
+            final consentFailed = find.text(l.privacyConsentFailed);
+            await tester.ensureVisible(consentFailed);
+            await settle(tester);
+            expect(consentFailed.hitTestable(), findsOneWidget);
+          }
           expect(tester.takeException(), isNull);
         });
       }
     }
+  }
+}
+
+/// Persetujuan wajib yang formulirnya selalu gagal dibuka.
+class _ThrowingConsent extends FakeAdConsent {
+  _ThrowingConsent() : super(privacyOptionsRequired: true);
+
+  @override
+  Future<void> showPrivacyOptions() async {
+    optionsShown++;
+    throw StateError('formulir tidak tersedia');
   }
 }
 
