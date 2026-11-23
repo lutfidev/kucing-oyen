@@ -26,7 +26,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 /// Pesan yang tampil di bawah tombol sesudah ditekan.
-enum _Notice { tutorials, reset, privacyFailed }
+enum _Notice { tutorials, reset, privacyFailed, consentFailed }
 
 class _SettingsScreenState extends State<SettingsScreen> {
   /// Versi aplikasi; null selama dimuat atau kalau tidak bisa dibaca.
@@ -56,6 +56,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _consentOpen = true;
     try {
       await consent.showPrivacyOptions();
+      // Berhasil sesudah gagal: pesan gagalnya tidak berlaku lagi.
+      if (mounted && _notice == _Notice.consentFailed) {
+        setState(() => _notice = null);
+      }
+    } on Object {
+      // Formulir UMP gagal dibuka (jaringan, SDK): pesan sendiri, bisa
+      // dicoba lagi.
+      if (mounted) setState(() => _notice = _Notice.consentFailed);
     } finally {
       _consentOpen = false;
     }
@@ -185,9 +193,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               consent != null && consent.privacyOptionsRequired
                               ? () => unawaited(_showConsent(consent))
                               : null,
-                          message: _notice == _Notice.privacyFailed
-                              ? l.privacyLinkFailed
-                              : null,
+                          message: switch (_notice) {
+                            _Notice.privacyFailed => l.privacyLinkFailed,
+                            _Notice.consentFailed => l.privacyConsentFailed,
+                            _ => null,
+                          },
                         ),
                       ),
                       SizedBox(height: space.s16),

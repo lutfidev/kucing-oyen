@@ -1151,6 +1151,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'O navegador não abriu. Tenta de novo mais tarde, tá?';
 
   @override
+  String get privacyConsentFailed =>
+      'Não deu para abrir as opções de privacidade dos anúncios. Tenta de novo mais tarde, tá?';
+
+  @override
   String get about => 'Sobre';
 
   @override
@@ -2191,8 +2195,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get frontDoorTo => 'Sair para a Viela da Frente';
 
   @override
-  String get frontDoorOyenOut =>
-      'Sair para a Viela da Frente. Oyen está lá fora';
+  String frontDoorOyenOut(String name) {
+    return 'Sair para a Viela da Frente. $name está lá fora';
+  }
 
   @override
   String frontDoorAttention(String name, String need) {

@@ -186,10 +186,6 @@ class _RoomViewState extends State<RoomView>
   /// layar; [ProgressController.forceFirstVisit] sekali per sesi).
   Timer? _forceTimer;
 
-  /// Oyen sedang lewat pintu kucing di bingkai terakhir (keluarnya
-  /// terlihat, jadi pintu kucing berayun dan diumumkan).
-  bool _oyenAtFlap = false;
-
   /// Oyen sedang pulang lewat pintu kucing (bingkai terakhir): pintu kucing
   /// berayun saat ia sampai.
   bool _oyenComingHome = false;
@@ -456,7 +452,10 @@ class _RoomViewState extends State<RoomView>
           _progress.play(kitty, item);
         case LeftRoom(:final kitty, :final from) when from == _house:
           _announceLeft(kitty, from.other);
-        case WentOut(:final kitty) when _oyenAtFlap:
+        // Keluar yang tertunda jeda dan baru dilaporkan saat pemain sudah
+        // menuju atau di gang: pintu kucing tidak terlihat, jadi diam.
+        case WentOut(:final kitty, viaFlap: true)
+            when _camera == null && !_inLane:
           _swingFlap(flapOutDeg);
           if (_house == HouseRoom.living) _announceWentOut(kitty);
         case EnteredRoom(:final kitty, to: HouseRoom.living)
@@ -468,7 +467,6 @@ class _RoomViewState extends State<RoomView>
     }
     if (_progress.home.ownsKitty(KittyId.oyen)) {
       final oyen = _life.of(KittyId.oyen);
-      _oyenAtFlap = oyen.viaFlap && oyen.activity == CatActivity.leaving;
       _oyenComingHome = oyen.viaFlap && oyen.activity == CatActivity.entering;
     }
     setState(() {});
@@ -638,7 +636,6 @@ class _RoomViewState extends State<RoomView>
     if (!widget.life || !_progress.home.ownsKitty(KittyId.oyen)) return;
     if (!_progress.oyenInLane || _isOut(KittyId.oyen)) return;
     _tailAt = null;
-    _oyenAtFlap = false;
     _progress.followTail();
     _life.goOutNow(KittyId.oyen);
   }
@@ -693,6 +690,19 @@ class _RoomViewState extends State<RoomView>
     final cat = _life.of(KittyId.oyen);
     if (cat.outside || cat.goingOut || cat.wantsOut) return false;
     return _progress.oyenInLane;
+  }
+
+  /// Pembaca layar: tempat yang baru dicapai sesudah kamera pintu depan
+  /// (gang tidak punya chip atau judul lain yang dibacakan).
+  void _announcePlace(bool home) {
+    final l = context.l10n;
+    unawaited(
+      SemanticsService.sendAnnouncement(
+        View.of(context),
+        home ? l.roomName(HouseRoom.living.name) : l.laneName,
+        Directionality.of(context),
+      ),
+    );
   }
 
   /// Pembaca layar: kucing keluar dari ruangan yang sedang dibuka.
@@ -1306,6 +1316,7 @@ class _RoomViewState extends State<RoomView>
     if (home == null) return;
     _sound(GameSound.doorClose);
     if (!home) _arriveInLane();
+    _announcePlace(home);
     setState(() {
       _camera = null;
       _inLane = !home;
@@ -1534,6 +1545,9 @@ class _RoomViewState extends State<RoomView>
                 )
               : sprite,
     ];
+    // Bagian gambar yang bisa tertutup daun pintu depan, sejajar [ordered];
+    // null = pintu tertutup.
+    final covers = living && frontDeg > 0 ? _coverTargets(ordered, geo) : null;
     final hopping = {
       for (final kitty in home.kitties)
         if (here(kitty)) kitty: ?_hopBox(kitty, geo),
@@ -1633,7 +1647,9 @@ class _RoomViewState extends State<RoomView>
                 kittyName(context.l10n, KittyId.oyen),
                 need.name,
               ),
-              (null, true) => context.l10n.frontDoorOyenOut,
+              (null, true) => context.l10n.frontDoorOyenOut(
+                kittyName(context.l10n, KittyId.oyen),
+              ),
               (null, false) => context.l10n.frontDoorTo,
             },
             onTap: _openLane,
@@ -1668,20 +1684,8 @@ class _RoomViewState extends State<RoomView>
               ),
             ),
       ],
-      // Daun pintu depan yang terbuka (kamera ke gang) menutup bagian
-      // barang dan kucing di belakangnya (keputusan pemilik repo).
-      cover: [
-        if (living && frontDeg > 0)
-          Positioned.fill(
-            child: DoorLeafCoverView(
-              side: DoorLeafSide.front,
-              angleDeg: frontDeg,
-              targets: _coverTargets(ordered, geo),
-            ),
-          ),
-      ],
       sprites: [
-        for (final sprite in ordered) ...[
+        for (final (i, sprite) in ordered.indexed) ...[
           // Tali gantungan teras tepat di belakang barangnya.
           if (sprite case ItemSprite(:final id)
               when geo.hangs(id) && id != dragging)
@@ -1706,6 +1710,25 @@ class _RoomViewState extends State<RoomView>
                 ),
               ),
             },
+          // Daun pintu depan yang terbuka (kamera ke gang) menutup bagian
+          // gambar ini yang di belakangnya (keputusan pemilik repo), tepat
+          // sesudah gambarnya: barang dan kucing di depannya tetap di atas
+          // daun.
+          if (covers != null &&
+              doorLeafCoverPolygon(
+                    DoorLeafSide.front,
+                    frontDeg,
+                    covers[i],
+                  ).length >=
+                  3)
+            Positioned.fill(
+              key: ValueKey('door-cover-$i'),
+              child: DoorLeafCoverView(
+                side: DoorLeafSide.front,
+                angleDeg: frontDeg,
+                targets: [covers[i]],
+              ),
+            ),
         ],
         // Kucing yang melompat ke atau dari barang dinding, paling depan.
         for (final MapEntry(key: kitty, value: box) in hopping.entries)
@@ -2031,13 +2054,17 @@ class _RoomViewState extends State<RoomView>
         ),
       );
     }
+    final animated = RoomItemArt.isAnimated(id);
     Widget art = RoomItemView(
       id: id,
       box: sprite.box.size,
       full: id != RoomItemId.mangkuk || bowlFull,
       // Barang diam tidak digambar ulang tiap bingkai.
-      time: RoomItemArt.isAnimated(id) ? time : null,
+      time: animated ? time : null,
     );
+    // Lapisan paint sendiri: kucing yang bergerak di sekitarnya tidak ikut
+    // merekam ulang gambar barang diam tiap bingkai.
+    if (!animated) art = RepaintBoundary(child: art);
     // Hanya ruangan yang sedang dibuka yang bisa dihias: selama transisi
     // pintu kedua ruangan dibangun, dan barang ruangan yang sedang keluar
     // tidak boleh terseret ke ruangan ini.

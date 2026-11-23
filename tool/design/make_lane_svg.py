@@ -33,6 +33,14 @@ def svg_with(name, marker):
     return found[0]
 
 
+def sc_if(name, value):
+    """Isi blok `<sc-if value="{{value}}">` di berkas [name]; harus tepat satu."""
+    found = re.findall(
+        r'<sc-if value="\{\{' + value + r'\}\}"[^>]*>(.*?)</sc-if>', text(name), re.S)
+    assert len(found) == 1, (name, value, len(found))
+    return found[0]
+
+
 def keyframes(*names):
     seen = {}
     for name in names:
@@ -104,6 +112,8 @@ small = [
      'Ekor Kumis di pintu kucing ruang tengah, goyang `ekGoyang` di sekitar pangkalnya (46,2, 426,2) (`AdeganTengah.dc.html`).'),
     ('seruSvg', svg_with('AdeganTengah', 'at-seru'), '0 0 24 30',
      'Gelembung "!" di atas Oyen saat menyadari ekor (`AdeganTengah.dc.html`).'),
+    ('lanePuffSvg', sc_if('AdeganGang', 'puff'), '0 0 390 652',
+     'Kepulan kecil di antara hidung Oyen dan Kumis saat mengendus di bangku (`AdeganGang.dc.html`, `temuD`).'),
 ]
 
 lane_classes = classes(

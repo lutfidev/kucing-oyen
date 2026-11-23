@@ -419,6 +419,26 @@ void main() {
       expect(consent.optionsShown, 2);
     });
 
+    testWidgets(
+      'formulir persetujuan gagal: pesannya sendiri, bisa dicoba lagi',
+      (tester) async {
+        final consent = _ThrowingConsent();
+        await pumpApp(tester, location: AppRoutes.settings, consent: consent);
+        await _tapText(tester, l10nId.adConsent);
+        expect(find.text(l10nId.privacyConsentFailed), findsOneWidget);
+        expect(find.text(l10nId.privacyLinkFailed), findsNothing);
+        await _tapText(tester, l10nId.adConsent);
+        expect(consent.optionsShown, 2);
+        expect(find.text(l10nId.privacyConsentFailed), findsOneWidget);
+        // Coba lagi berhasil: pesan gagalnya hilang.
+        consent.fail = false;
+        await _tapText(tester, l10nId.adConsent);
+        expect(consent.optionsShown, 3);
+        expect(find.text(l10nId.privacyConsentFailed), findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
+
     testWidgets('persetujuan diwajibkan belakangan: tombol muncul', (
       tester,
     ) async {
@@ -464,5 +484,19 @@ class _SlowConsent extends FakeAdConsent {
   Future<void> showPrivacyOptions() {
     optionsShown++;
     return (_open = Completer<void>()).future;
+  }
+}
+
+/// Persetujuan yang formulirnya selalu gagal dibuka.
+class _ThrowingConsent extends FakeAdConsent {
+  _ThrowingConsent() : super(privacyOptionsRequired: true);
+
+  /// False = formulirnya terbuka (coba lagi berhasil).
+  bool fail = true;
+
+  @override
+  Future<void> showPrivacyOptions() async {
+    optionsShown++;
+    if (fail) throw StateError('formulir tidak tersedia');
   }
 }

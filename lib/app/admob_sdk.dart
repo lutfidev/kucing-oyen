@@ -107,16 +107,24 @@ class UmpAdConsent extends AdConsent {
     await _refresh();
   }
 
+  /// Melempar kalau formulir gagal dibuka, supaya Pengaturan bisa memberi
+  /// tahu pemain. Plugin memanggil callback-nya sebelum Future-nya selesai,
+  /// jadi errornya sudah diketahui saat kembali.
   @override
   Future<void> showPrivacyOptions() async {
+    Object? failure;
     try {
       await ConsentForm.showPrivacyOptionsForm((error) {
-        if (error != null) debugPrint('Formulir privasi: ${error.message}');
+        if (error != null) failure = error.message;
       });
     } on Object catch (error) {
-      debugPrint('Formulir privasi gagal dibuka: $error');
+      failure = error;
     }
     await _refresh();
+    if (failure != null) {
+      debugPrint('Formulir privasi gagal dibuka: $failure');
+      throw StateError('Formulir privasi gagal dibuka: $failure');
+    }
   }
 
   Future<void> _refresh() async {

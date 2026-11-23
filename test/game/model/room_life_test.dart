@@ -845,7 +845,7 @@ void main() {
         expect(oyen.viaFlap, isTrue);
         expect(oyen.heading, LifeHeading.left);
         final events = until(life, () => oyen.outside);
-        expect(events, contains(const WentOut(KittyId.oyen)));
+        expect(events, contains(const WentOut(KittyId.oyen, viaFlap: true)));
         expect(oyen.outside, isTrue);
         expect(oyen.viaFlap, isFalse);
         expect(life.advance(10), isEmpty);
@@ -864,7 +864,23 @@ void main() {
       expect(oyen.outside, isTrue);
       expect(oyen.isPassing, isFalse);
       life.paused = false;
-      expect(life.advance(_frame), contains(const WentOut(KittyId.oyen)));
+      // Tetap dilaporkan sebagai lewat pintu kucing: pintunya berayun dan
+      // pembaca layar mengumumkan Oyen menyelinap.
+      expect(
+        life.advance(_frame),
+        contains(const WentOut(KittyId.oyen, viaFlap: true)),
+      );
+    });
+
+    test('goOutNow di tengah pintu kucing: bukan lewat pintu kucing', () {
+      final life = house(2);
+      final oyen = life.of(KittyId.oyen);
+      life.goOut(KittyId.oyen);
+      until(life, () => oyen.activity == CatActivity.leaving);
+      life.advance(lifeDoorSeconds / 2);
+      life.goOutNow(KittyId.oyen);
+      expect(oyen.outside, isTrue);
+      expect(life.advance(_frame), [const WentOut(KittyId.oyen)]);
     });
 
     test('goOut selama dijeda menunggu sampai rutinitas jalan lagi', () {

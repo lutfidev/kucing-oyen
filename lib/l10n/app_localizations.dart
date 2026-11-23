@@ -1680,6 +1680,12 @@ abstract class AppLocalizations {
   /// **'Couldn\'t open the browser. Try again later, okay?'**
   String get privacyLinkFailed;
 
+  /// Settings, Privacy: small message when the ad privacy consent form could not be opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the ad privacy choices. Try again later, okay?'**
+  String get privacyConsentFailed;
+
   /// Settings section: about the game.
   ///
   /// In en, this message translates to:
@@ -3132,7 +3138,7 @@ abstract class AppLocalizations {
   /// **'{room, select, living{To the living room. {need, select, hungry{{name} is hungry in there} sad{{name} is feeling down in there} other{{name} has a coin gift for you}}} terrace{To the terrace. {need, select, hungry{{name} is hungry out there} sad{{name} is feeling down out there} other{{name} has a coin gift for you}}} other{To the living room. {need, select, hungry{{name} is hungry in there} sad{{name} is feeling down in there} other{{name} has a coin gift for you}}}}'**
   String doorAttention(String room, String name, String need);
 
-  /// Name of the little lane outside Oyen's front door, where the neighbour cat Kumis visits. A place name, shown in screen-reader labels.
+  /// Name of the little lane outside Oyen's front door, where the neighbour cat Kumis visits. A place name, announced by the screen reader when the player arrives in the lane.
   ///
   /// In en, this message translates to:
   /// **'Front Lane'**
@@ -3144,11 +3150,11 @@ abstract class AppLocalizations {
   /// **'Go out to the Front Lane'**
   String get frontDoorTo;
 
-  /// Screen-reader label of the front door while Oyen is outside in the Front Lane (a small paw marker shows by the door).
+  /// Screen-reader label of the front door while Oyen is outside in the Front Lane (a small paw marker shows by the door). name is the cat's name.
   ///
   /// In en, this message translates to:
-  /// **'Go out to the Front Lane. Oyen is out there'**
-  String get frontDoorOyenOut;
+  /// **'Go out to the Front Lane. {name} is out there'**
+  String frontDoorOyenOut(String name);
 
   /// Screen-reader label of the front door when Oyen, out in the Front Lane, needs a look (small icon by the door). need is hungry, sad, or reward (a coin gift).
   ///

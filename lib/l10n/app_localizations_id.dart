@@ -1068,6 +1068,10 @@ class AppLocalizationsId extends AppLocalizations {
       'Browser-nya belum mau kebuka. Coba lagi nanti, ya.';
 
   @override
+  String get privacyConsentFailed =>
+      'Pilihan privasi iklan belum mau kebuka. Coba lagi nanti, ya.';
+
+  @override
   String get about => 'Tentang';
 
   @override
@@ -2030,7 +2034,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get frontDoorTo => 'Keluar ke Gang Depan';
 
   @override
-  String get frontDoorOyenOut => 'Keluar ke Gang Depan. Oyen ada di Gang Depan';
+  String frontDoorOyenOut(String name) {
+    return 'Keluar ke Gang Depan. $name ada di Gang Depan';
+  }
 
   @override
   String frontDoorAttention(String name, String need) {

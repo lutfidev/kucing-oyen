@@ -121,15 +121,20 @@ class EnteredRoom extends LifeEvent {
   int get hashCode => Object.hash(kitty, to, 'entered');
 }
 
-/// Kucing selesai keluar lewat pintu kucing ke Gang Depan.
+/// Kucing selesai keluar ke Gang Depan. [viaFlap] = ia lewat pintu kucing
+/// (juga kalau lewatnya dipotong jeda), bukan langsung di luar (teras,
+/// `instant`, atau pemain menyusul).
 class WentOut extends LifeEvent {
-  const WentOut(super.kitty);
+  const WentOut(super.kitty, {this.viaFlap = false});
+
+  final bool viaFlap;
 
   @override
-  bool operator ==(Object other) => other is WentOut && other.kitty == kitty;
+  bool operator ==(Object other) =>
+      other is WentOut && other.kitty == kitty && other.viaFlap == viaFlap;
 
   @override
-  int get hashCode => Object.hash(kitty, 'out');
+  int get hashCode => Object.hash(kitty, viaFlap, 'out');
 }
 
 /// Lama tiap kegiatan (detik, `AnimasiKucing.dc.html` dan rute
@@ -585,8 +590,9 @@ class RoomLife {
   void goOutNow(KittyId kitty) {
     final cat = _cats[kitty];
     if (cat == null || cat.outside) return;
-    if (cat.isPassing) _finishPassing(cat);
-    if (cat.outside) return;
+    // Di tengah pintu kucing: langsung di luar tanpa dilaporkan lewat pintu
+    // kucing (kamera pemain yang berjalan).
+    if (cat.isPassing && !cat.viaFlap) _finishPassing(cat);
     _putOutside(cat, _pending);
   }
 
@@ -642,7 +648,11 @@ class RoomLife {
     _startWalk(cat, floor.frontThreshold, events);
   }
 
-  void _putOutside(CatLife cat, List<LifeEvent> events) {
+  void _putOutside(
+    CatLife cat,
+    List<LifeEvent> events, {
+    bool viaFlap = false,
+  }) {
     _instantOut.remove(cat.kitty);
     cat
       ..outside = true
@@ -662,7 +672,7 @@ class RoomLife {
       ..remaining = lifeIdleSeconds
       ..elapsed = 0
       ..hops = 0;
-    events.add(WentOut(cat.kitty));
+    events.add(WentOut(cat.kitty, viaFlap: viaFlap));
   }
 
   /// Kucing yang berhenti di tengah jalan ke pintu depan tetap ingin keluar.
@@ -704,7 +714,7 @@ class RoomLife {
             ..elapsed = 0
             ..remaining = cat.hops * lifeHopSeconds;
         case CatActivity.leaving when cat.viaFlap:
-          _putOutside(cat, events);
+          _putOutside(cat, events, viaFlap: true);
         case CatActivity.leaving:
           _enter(cat, events);
         case CatActivity.entering:
@@ -761,7 +771,7 @@ class RoomLife {
   void _finishPassing(CatLife cat) {
     if (cat.viaFlap) {
       if (cat.activity == CatActivity.leaving) {
-        return _putOutside(cat, _pending);
+        return _putOutside(cat, _pending, viaFlap: true);
       }
       cat.viaFlap = false;
       return _rest(cat);

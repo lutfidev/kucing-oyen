@@ -1138,6 +1138,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Couldn\'t open the browser. Try again later, okay?';
 
   @override
+  String get privacyConsentFailed =>
+      'Couldn\'t open the ad privacy choices. Try again later, okay?';
+
+  @override
   String get about => 'About';
 
   @override
@@ -2173,7 +2177,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get frontDoorTo => 'Go out to the Front Lane';
 
   @override
-  String get frontDoorOyenOut => 'Go out to the Front Lane. Oyen is out there';
+  String frontDoorOyenOut(String name) {
+    return 'Go out to the Front Lane. $name is out there';
+  }
 
   @override
   String frontDoorAttention(String name, String need) {

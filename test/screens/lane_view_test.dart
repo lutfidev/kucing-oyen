@@ -99,6 +99,20 @@ void main() {
     expect(progress.hasUnsavedChanges, isFalse);
   });
 
+  testWidgets('pertemuan pertama: kepulan endus muncul lalu hilang', (
+    tester,
+  ) async {
+    final progress = await _pump(tester);
+    await _followTail(tester);
+    await _toLane(tester);
+    final puff = find.byType(LanePuffView);
+    expect(puff, findsNothing);
+    expect(await _until(tester, () => _found(puff)), isTrue);
+    expect(progress.metNeighbor, isFalse);
+    expect(await _until(tester, () => !_found(puff)), isTrue);
+    expect(await _until(tester, () => progress.metNeighbor), isTrue);
+  });
+
   testWidgets('kamera berangkat: penanda gang tidak ikut diperbesar', (
     tester,
   ) async {

@@ -120,7 +120,7 @@ class LaneMarker extends StatelessWidget {
         : bobPx * (0.5 - 0.5 * math.cos(2 * math.pi * t / bobSeconds));
     return Positioned.fromRect(
       rect: rect.shift(Offset(0, -lift * geo.artScale)),
-      child: IgnorePointer(child: LaneMarkerView(size: rect.size, time: null)),
+      child: IgnorePointer(child: LaneMarkerView(size: rect.size)),
     );
   }
 }

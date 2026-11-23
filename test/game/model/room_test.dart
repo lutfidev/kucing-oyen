@@ -241,6 +241,38 @@ void main() {
       }
     });
 
+    test(
+      'dua barang lama di jalur pintu: keduanya pindah, tidak bertumpuk',
+      () {
+        final rumah = roomItemOf(RoomItemId.rumah);
+        final rumahAt = floor.spotAtFeet(60, 480);
+        expect(floor.blocksDoor(rumah, HouseRoom.living, rumahAt), isTrue);
+        final room = Room.fromJson({
+          'owned': ['tiang', 'rumah'],
+          'placed': {'tiang': oldTiang.toJson(), 'rumah': rumahAt.toJson()},
+        });
+        final movedRumah = room.spotOf(RoomItemId.rumah)!;
+        final movedTiang = room.spotOf(RoomItemId.tiang)!;
+        expect(floor.blocksDoor(rumah, HouseRoom.living, movedRumah), isFalse);
+        expect(floor.blocksDoor(tiang, HouseRoom.living, movedTiang), isFalse);
+        expect(
+          floor
+              .footprint(rumah, movedRumah)
+              .overlaps(floor.footprint(tiang, movedTiang)),
+          isFalse,
+        );
+        // Dibaca ulang: tempat barunya tetap (tidak bergeser tiap dibuka).
+        expect(
+          Room.fromJson(room.toJson()).spotOf(RoomItemId.rumah),
+          movedRumah,
+        );
+        expect(
+          Room.fromJson(room.toJson()).spotOf(RoomItemId.tiang),
+          movedTiang,
+        );
+      },
+    );
+
     test('tanpa tempat bebas: masuk Gudang, tetap dimiliki', () {
       final room = Room.fromJson({
         'owned': ['tiang'],
