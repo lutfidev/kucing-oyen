@@ -10,6 +10,7 @@ import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/lane.dart';
 import 'package:kucing_oren/game/model/level_session.dart';
 import 'package:kucing_oren/game/model/needs.dart';
 import 'package:kucing_oren/game/model/room.dart';
@@ -23,11 +24,14 @@ import 'package:kucing_oren/screens/level/tutorial.dart';
 import 'package:kucing_oren/screens/replay/replay_parts.dart';
 import 'package:kucing_oren/screens/room/door_parts.dart';
 import 'package:kucing_oren/screens/room/kitty_card.dart';
+import 'package:kucing_oren/screens/room/lane_camera.dart';
+import 'package:kucing_oren/screens/lane/lane_scene.dart';
 import 'package:kucing_oren/screens/replay/replay_view.dart';
 import 'package:kucing_oren/screens/result/result_view.dart';
 import 'package:kucing_oren/screens/settings/settings_parts.dart';
 import 'package:kucing_oren/screens/shop/shop_screen.dart';
 import 'package:kucing_oren/screens/level/level_view.dart';
+import 'package:kucing_oren/theme/theme.dart';
 import 'package:kucing_oren/widgets/widgets.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -628,6 +632,87 @@ void _cases(AppLanguage language) {
           ),
         );
         expect(find.byType(DoorAttention), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+      // Gang Depan (langkah 38): dibuka di tengah kunjungan terjadwal
+      // pertama hari itu, jadi Oyen sudah di luar dan Kumis di bangku.
+      final laneDay = DateTime(2026, 11, 23, 3);
+      final laneNow = laneVisitsOn(laneDay).first.start
+          .add(const Duration(minutes: 1));
+      ProgressController laneProgress({bool visit = true}) => testProgressWith(
+        best: const {1: 3},
+        coins: 99999,
+        language: language,
+        metNeighbor: true,
+        clock: () => visit ? laneNow : laneDay,
+        needs: HomeNeeds(rewardDays: {KittyId.oyen: dayNumber(laneDay)}),
+      );
+      Future<void> pumpLaneRoom(WidgetTester tester, {bool visit = true}) =>
+          pumpApp(tester, progress: laneProgress(visit: visit), roomLife: true);
+      Future<void> toLane(WidgetTester tester) async {
+        await tester.tap(find.byKey(const ValueKey('front-door')));
+        for (var ms = 0; ms <= laneCameraMs + 50; ms += 50) {
+          await tester.pump(const Duration(milliseconds: 50));
+        }
+        await tester.pump();
+        expect(find.byType(LaneScene), findsOneWidget);
+      }
+
+      testWidgets('tanpa overflow: ruang tengah dengan penanda gang @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpLaneRoom(tester);
+        expect(find.byKey(const ValueKey('lane-marker')), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+      for (final visit in [true, false]) {
+        testWidgets('tanpa overflow: gang ${visit ? 'utama' : 'kosong'} '
+            '@ $label, teks ${scale * 100}%', (tester) async {
+          setScreenSize(tester, size);
+          setTextScale(tester, scale);
+          await pumpLaneRoom(tester, visit: visit);
+          await toLane(tester);
+          expect(
+            find.byKey(const ValueKey('lane-kumis')),
+            visit ? findsOneWidget : findsNothing,
+          );
+          final chip = find.byType(RoomChip);
+          expect(chip.hitTestable(), findsOneWidget);
+          expect(
+            tester.getSize(chip).height,
+            tester.element(chip).koSize.roomDecorateButton,
+          );
+          expect(tester.takeException(), isNull);
+        });
+      }
+      testWidgets('tanpa overflow: kartu Oyen di gang @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpLaneRoom(tester);
+        await toLane(tester);
+        final handle = tester.ensureSemantics();
+        tester.semantics.tap(
+          find.semantics.byLabel(l.kittyTapHint(kittyName(l, KittyId.oyen))),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+        handle.dispose();
+        expect(find.byType(KittyCard), findsOneWidget);
+        expect(find.byKey(const ValueKey('kitty-invite')), findsNothing);
+        expect(tester.takeException(), isNull);
+      });
+      testWidgets('tanpa overflow: kamera ke gang 900 ms @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        await pumpLaneRoom(tester);
+        await tester.tap(find.byKey(const ValueKey('front-door')));
+        for (var ms = 0; ms < 900; ms += 50) {
+          await tester.pump(const Duration(milliseconds: 50));
+        }
+        expect(find.byType(LaneCamera), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
       testWidgets('tanpa overflow: kartu kucing dengan Camilan dan Aksesoris '

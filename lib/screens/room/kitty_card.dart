@@ -42,8 +42,9 @@ class KittyCard extends StatefulWidget {
   final ProgressController progress;
   final KittyId kitty;
 
-  /// Ruangan tempat kucing berada sekarang.
-  final HouseRoom room;
+  /// Ruangan tempat kucing berada sekarang; null = di Gang Depan (tanpa
+  /// tombol ajak).
+  final HouseRoom? room;
   final void Function(RoomReaction reaction) onReaction;
 
   /// "Ajak ke …": kucing diajak ke ruangan sebelah (kartu ditutup).
@@ -216,15 +217,17 @@ class _KittyCardState extends State<KittyCard> {
                 ),
                 SizedBox(height: space.s12),
                 _buttons(),
-                SizedBox(height: space.s12),
-                KoButton(
-                  key: const ValueKey('kitty-invite'),
-                  kind: KoButtonKind.success,
-                  icon: KoIcons.doorOut,
-                  height: context.koSize.roomCardButton,
-                  label: l.inviteTo(widget.room.other.name),
-                  onPressed: widget.onInvite,
-                ),
+                if (widget.room case final room?) ...[
+                  SizedBox(height: space.s12),
+                  KoButton(
+                    key: const ValueKey('kitty-invite'),
+                    kind: KoButtonKind.success,
+                    icon: KoIcons.doorOut,
+                    height: context.koSize.roomCardButton,
+                    label: l.inviteTo(room.other.name),
+                    onPressed: widget.onInvite,
+                  ),
+                ],
                 if (_panel == _Panel.snacks) ...[
                   SizedBox(height: space.s12),
                   _snacks(),
@@ -292,7 +295,7 @@ class _KittyCardState extends State<KittyCard> {
                 ),
               ),
               Text(
-                l.kittyInRoom(widget.room.name),
+                l.kittyInRoom(widget.room?.name ?? 'lane'),
                 style: t.cardText.copyWith(
                   color: c.inkSoft,
                   height: _descHeight,

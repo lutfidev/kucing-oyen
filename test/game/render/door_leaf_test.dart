@@ -82,4 +82,123 @@ void main() {
     );
     expect(closed.a, greaterThan(0.9));
   });
+
+  group('daun pintu menutup gambar di belakangnya', () {
+    // Kasur bawaan `AdeganTengah` `barang('kasur', 118, 434)`: 150×76 ×
+    // skala kedalaman 0,815 di kaki y 434.
+    const s = 0.75 + 0.4 * (434 - 392) / 260;
+    const bed = DoorCoverTarget(
+      Rect.fromLTWH(118, 434 - 76 * s, 150 * s, 76 * s),
+      feet: 434,
+    );
+
+    /// Piksel daun yang tergambar di atas [targets] pada [deg].
+    Future<int> covered(
+      double deg,
+      List<DoorCoverTarget> targets, {
+      DoorLeafSide side = DoorLeafSide.front,
+    }) async {
+      final recorder = PictureRecorder();
+      paintDoorLeafCover(
+        Canvas(recorder),
+        side,
+        angleDeg: deg,
+        flapDeg: 0,
+        targets: targets,
+      );
+      final image = await recorder.endRecording().toImage(390, 652);
+      final bytes = (await image.toByteData())!;
+      var n = 0;
+      for (var i = 3; i < bytes.lengthInBytes; i += 4) {
+        if (bytes.getUint8(i) > 0) n++;
+      }
+      return n;
+    }
+
+    test('pintu tertutup tidak menutup kasur', () async {
+      expect(await covered(0, const [bed]), 0);
+    });
+
+    test('70–88°: tepi daun menutup bagian belakang kasur, bertahap', () async {
+      final area = bed.box.width * bed.box.height;
+      final out = [
+        for (var d = 70; d <= 88; d++) await covered(d.toDouble(), const [bed]),
+      ];
+      final back = [
+        for (var d = 88; d >= 70; d--) await covered(d.toDouble(), const [bed]),
+      ];
+      expect(out.first, greaterThan(0));
+      // Pergi dan pulang melewati bingkai yang sama.
+      expect(back.reversed.toList(), out);
+      for (var i = 1; i < out.length; i++) {
+        // Tidak ada lompatan: per derajat berubah < 4% luas kasur.
+        expect(
+          (out[i] - out[i - 1]).abs(),
+          lessThan(area * 0.04),
+          reason: '${70 + i}°',
+        );
+      }
+      // Bagian depan kasur (di depan bidang daun) tetap di atas daun.
+      expect(out.every((n) => n < area * 0.5), isTrue);
+    });
+
+    test(
+      '0–70°: tutupan mulai dari nol dan naik pelan saat tepi lewat',
+      () async {
+        final area = bed.box.width * bed.box.height;
+        var last = 0;
+        for (var d = 0; d <= 70; d++) {
+          final n = await covered(d.toDouble(), const [bed]);
+          expect((n - last).abs(), lessThan(area * 0.04), reason: '$d°');
+          last = n;
+        }
+      },
+    );
+
+    test(
+      'kamar berisi: tiang di kanan dan kucing di depan pintu tidak tertutup',
+      () async {
+        // Tiang bawaan kaki (285,6, 414), 50×152 × skala; kucing di ambang
+        // (70, 470) tegak di depan daun.
+        const t = 0.75 + 0.4 * (414 - 392) / 260;
+        const tiang = DoorCoverTarget(
+          Rect.fromLTWH(266, 414 - 152 * t, 50 * t, 152 * t),
+          feet: 414,
+        );
+        const cat = DoorCoverTarget(
+          Rect.fromLTWH(30, 380, 90, 90),
+          feet: 470,
+          depth: DoorCoverTarget.upright,
+        );
+        for (var d = 70; d <= 88; d++) {
+          expect(
+            await covered(d.toDouble(), const [tiang, cat]),
+            0,
+            reason: '$d°',
+          );
+        }
+      },
+    );
+
+    test(
+      'pintu pulang: kucing di belakang bidang daun tertutup, di depan tidak',
+      () async {
+        const front = DoorCoverTarget(
+          Rect.fromLTWH(255, 400, 90, 90),
+          feet: 490,
+          depth: DoorCoverTarget.upright,
+        );
+        const behind = DoorCoverTarget(
+          Rect.fromLTWH(230, 330, 70, 70),
+          feet: 400,
+          depth: DoorCoverTarget.upright,
+        );
+        expect(await covered(80, const [front], side: DoorLeafSide.home), 0);
+        expect(
+          await covered(80, const [behind], side: DoorLeafSide.home),
+          greaterThan(0),
+        );
+      },
+    );
+  });
 }

@@ -15,6 +15,8 @@ import '../../game/model/home.dart';
 import '../../game/model/home_items.dart';
 import '../../game/model/house.dart';
 import '../../game/model/kitties.dart';
+import '../../game/model/lane.dart';
+import '../../game/model/lane_life.dart';
 import '../../game/model/needs.dart';
 import '../../game/model/room_life.dart';
 import '../../game/model/sounds.dart';
@@ -24,12 +26,15 @@ import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../coins/coin_sheet.dart';
+import '../lane/lane_view.dart';
 import '../shop/shop_tab.dart';
 import 'room_geometry.dart';
 import 'decorate.dart';
 import 'door_parts.dart';
+import 'front_door.dart';
 import 'house_pager.dart';
 import 'kitty_card.dart';
+import 'lane_camera.dart';
 import 'room_parts.dart';
 import 'room_reaction.dart';
 import 'room_scene.dart';
@@ -146,6 +151,10 @@ const catLift = 30.0;
 /// Selang penyegaran bar kebutuhan, gelembung hadiah, dan label mangkuk.
 const roomRefreshInterval = Duration(seconds: 30);
 
+/// Selang (detik animasi) kunjungan Kumis dicek ulang selama Oyen
+/// menunggu bebas untuk momen ekor.
+const laneCheckSeconds = 0.5;
+
 class _RoomViewState extends State<RoomView>
     with SingleTickerProviderStateMixin {
   late final Random _random = widget.random ?? Random();
@@ -166,6 +175,60 @@ class _RoomViewState extends State<RoomView>
   /// kamar hidup dan gerak tidak dikurangi; `TickerMode` mematikannya saat
   /// layar lain menutupi kamar.
   late final Ticker _ticker = createTicker(_tick);
+
+  /// Momen ekor Kumis: [_time] saat ekor muncul, null = tidak ada.
+  double? _tailAt;
+
+  /// Ayunan pintu kucing sesudah Oyen lewat: [_time] mulai dan sudut awal.
+  (double, double)? _flapSwing;
+
+  /// Kunjungan paksa 20 detik sesudah ruang tengah tampil (sekali per
+  /// layar; [ProgressController.forceFirstVisit] sekali per sesi).
+  Timer? _forceTimer;
+
+  /// Oyen sedang lewat pintu kucing di bingkai terakhir (keluarnya
+  /// terlihat, jadi pintu kucing berayun dan diumumkan).
+  bool _oyenAtFlap = false;
+
+  /// Oyen sedang pulang lewat pintu kucing (bingkai terakhir): pintu kucing
+  /// berayun saat ia sampai.
+  bool _oyenComingHome = false;
+
+  /// Aplikasi di latar belakang: kunjungan tidak ditahan, tidak ada momen
+  /// ekor, dan pemain tidak dianggap di gang. Kembali = keadaan dihitung
+  /// ulang dari jam ([_checkLane] `opening`).
+  bool _hidden = false;
+  AppLifecycleListener? _lifecycle;
+
+  /// Pemain di Gang Depan (di luar pager rumah).
+  bool _inLane = false;
+
+  /// Kamera menembus pintu yang sedang berjalan: false = ke gang, true =
+  /// pulang; null = tidak ada.
+  bool? _camera;
+  final _cameraKey = GlobalKey<LaneCameraState>();
+
+  /// Opasitas chip "‹ Ruang tengah" selama kamera ke gang.
+  double _cameraChip = 0;
+
+  /// Rutinitas Oyen dan Kumis di gang (maju walau pemain di rumah) dan
+  /// awal kunjungan yang sedang diputarnya.
+  late LaneLife _lane = LaneLife(random: _random);
+  DateTime? _laneVisitStart;
+
+  /// Kotak tiap kucing gang di bingkai terakhir (letak reaksi).
+  final Map<LaneCat, Rect> _laneBoxes = {};
+
+  /// Hati di atas kucing gang: kucingnya (null = keduanya, saat duduk
+  /// bersama pertama kali) dan nomor urutnya.
+  (LaneCat?, int)? _laneHeart;
+  bool _laneHeartShown = false;
+
+  /// Pemain sedang melihat gang (di sana atau kamera sedang berjalan).
+  bool get _laneWatched => _inLane || _camera != null;
+
+  /// [_time] terakhir kunjungan dicek dari jam di bingkai kamar.
+  double _laneCheckedAt = double.negativeInfinity;
   Duration _lastTick = Duration.zero;
   double _time = 0;
   Timer? _refresh;
@@ -257,6 +320,9 @@ class _RoomViewState extends State<RoomView>
     ),
   );
 
+  /// Kucing di Gang Depan (hanya Oyen): tidak digambar di rumah.
+  bool _isOut(KittyId kitty) => widget.life && _life.of(kitty).outside;
+
   /// Tempat kucing sekarang: dari rutinitas kalau kamar hidup.
   Spot _catSpot(KittyId kitty) =>
       widget.life ? _life.of(kitty).spot : _homeOf(kitty).$2;
@@ -272,13 +338,43 @@ class _RoomViewState extends State<RoomView>
     if (widget.life) {
       _syncKitties();
       _refresh = Timer.periodic(roomRefreshInterval, (_) => _refreshNeeds());
+      // Dibuka di tengah kunjungan: Oyen sudah di bangku, tanpa ekor.
+      _checkLane(opening: true);
+      if (_house == HouseRoom.living) _armForcedVisit();
+      _lifecycle = AppLifecycleListener(onHide: _onHide, onShow: _onShow);
     }
+  }
+
+  void _onHide() {
+    _hidden = true;
+    _lane.playerHere(false);
+    if (_tailAt != null) {
+      _tailAt = null;
+      _life.rest(KittyId.oyen);
+    }
+  }
+
+  void _onShow() {
+    if (!mounted) return;
+    _hidden = false;
+    _checkLane(opening: true);
+    if (_inLane && _camera == null && TickerMode.valuesOf(context).enabled) {
+      _lane.playerHere(true);
+    }
+    if (_house == HouseRoom.living && !_inLane) _armForcedVisit();
+    setState(() {});
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _still = MediaQuery.disableAnimationsOf(context);
+    // Rute lain menutupi kamar (Toko, level) = pemain pergi dari gang.
+    if (widget.life) {
+      final shown = TickerMode.valuesOf(context).enabled;
+      _lane.playerHere(_inLane && _camera == null && shown && !_hidden);
+      if (shown && _house == HouseRoom.living && !_inLane) _armForcedVisit();
+    }
     if (_animating && !_ticker.isActive) {
       _lastTick = Duration.zero;
       _ticker.start();
@@ -295,6 +391,9 @@ class _RoomViewState extends State<RoomView>
     super.didUpdateWidget(old);
     if (widget.showKitty != old.showKitty) {
       if (_roomShowing(widget.showKitty) case final room?) {
+        _inLane = false;
+        _camera = null;
+        _lane.playerHere(false);
         _house = _arrived = room;
         // Pager baru = langsung di ruangan itu, tanpa animasi geser.
         _pagerJumps++;
@@ -315,6 +414,8 @@ class _RoomViewState extends State<RoomView>
   void dispose() {
     _ticker.dispose();
     _refresh?.cancel();
+    _forceTimer?.cancel();
+    _lifecycle?.dispose();
     _trayTipTimer?.cancel();
     super.dispose();
   }
@@ -331,6 +432,22 @@ class _RoomViewState extends State<RoomView>
         _decorating ||
         _reaction != null ||
         _lifted != null;
+    _advanceTail();
+    _lane.paused = _selected != null;
+    for (final event in _lane.advance(dt)) {
+      switch (event) {
+        case SatTogether():
+          _progress.meetNeighbor();
+        case OyenEnteredHouse():
+          _life.comeHome(KittyId.oyen, instant: !_watchingLiving);
+        case KumisGone():
+          break;
+      }
+    }
+    if (_lane.heart && !_laneHeartShown && _inLane) {
+      _laneHeart = (null, ++_reactions);
+    }
+    _laneHeartShown = _lane.heart;
     for (final event in _life.advance(dt)) {
       switch (event) {
         case ReachedBowl(:final kitty):
@@ -339,11 +456,243 @@ class _RoomViewState extends State<RoomView>
           _progress.play(kitty, item);
         case LeftRoom(:final kitty, :final from) when from == _house:
           _announceLeft(kitty, from.other);
+        case WentOut(:final kitty) when _oyenAtFlap:
+          _swingFlap(flapOutDeg);
+          if (_house == HouseRoom.living) _announceWentOut(kitty);
+        case EnteredRoom(:final kitty, to: HouseRoom.living)
+            when kitty == KittyId.oyen && _oyenComingHome:
+          _swingFlap(flapInDeg);
         case LeftRoom() || EnteredRoom() || WentOut():
           break;
       }
     }
+    if (_progress.home.ownsKitty(KittyId.oyen)) {
+      final oyen = _life.of(KittyId.oyen);
+      _oyenAtFlap = oyen.viaFlap && oyen.activity == CatActivity.leaving;
+      _oyenComingHome = oyen.viaFlap && oyen.activity == CatActivity.entering;
+    }
     setState(() {});
+  }
+
+  /// Pintu kucing berayun dari [from] (Oyen baru lewat) dengan bunyinya.
+  void _swingFlap(double from) {
+    _flapSwing = (_time, from);
+    _sound(GameSound.flap);
+  }
+
+  /// Pembaca layar: Oyen menyelinap ke Gang Depan dari ruang tengah.
+  void _announceWentOut(KittyId kitty) {
+    final l = context.l10n;
+    unawaited(
+      SemanticsService.sendAnnouncement(
+        View.of(context),
+        l.oyenWentOut(kittyName(l, kitty)),
+        Directionality.of(context),
+      ),
+    );
+  }
+
+  /// Kunjungan paksa pertama 20 detik sesudah ruang tengah tampil, kalau
+  /// pertemuan pertama belum terjadi. Kalau saat itu pemain tidak di ruang
+  /// tengah, dicoba lagi saat ruang tengah tampil lagi.
+  void _armForcedVisit() {
+    if (_forceTimer != null || _progress.metNeighbor) return;
+    if (!_progress.lanesOpen) return;
+    _forceTimer = Timer(laneForcedDelay, () {
+      if (!mounted) return;
+      _forceTimer = null;
+      if (!_seeingLiving) return;
+      if (_progress.forceFirstVisit()) _checkLane();
+    });
+  }
+
+  /// Oyen bebas untuk momen ekor: di ruang tengah, di lantai, tidak lewat
+  /// pintu, tidak diangkat, tidak bereaksi, kartunya tertutup, tidak Hias.
+  bool get _oyenFree {
+    final cat = _life.of(KittyId.oyen);
+    return _selected == null &&
+        !_decorating &&
+        _reaction == null &&
+        _lifted == null &&
+        cat.room == HouseRoom.living &&
+        !cat.outside &&
+        !cat.isPassing &&
+        (cat.activity == CatActivity.idle ||
+            cat.activity == CatActivity.walking ||
+            cat.activity == CatActivity.sad);
+  }
+
+  /// Pemain melihat ruang tengah sekarang (aplikasi tampil, rumah tidak
+  /// tertutup layar lain, tidak di gang atau di tengah kamera).
+  bool get _seeingLiving =>
+      !_hidden &&
+      _house == HouseRoom.living &&
+      !_inLane &&
+      _camera == null &&
+      !_ticker.muted;
+
+  /// [_seeingLiving] dan gerak hidup: momen ekor dan Oyen yang terlihat
+  /// lewat pintu kucing.
+  bool get _watchingLiving => _seeingLiving && _animating;
+
+  /// Keadaan kunjungan Kumis ke keadaan Oyen: kunjungan berjalan = Oyen
+  /// keluar (dengan momen ekor kalau pemain melihat ruang tengah, langsung
+  /// kalau tidak atau saat aplikasi dibuka [opening]); kunjungan selesai =
+  /// Oyen pulang.
+  void _checkLane({bool opening = false}) {
+    if (!widget.life || !_progress.home.ownsKitty(KittyId.oyen)) return;
+    final cat = _life.of(KittyId.oyen);
+    // Lapar di gang: Oyen pulang lebih dulu ke mangkuk.
+    if (cat.outside &&
+        _progress.oyenInLane &&
+        _progress.catNeeds(KittyId.oyen).hunger <= sadThreshold) {
+      _progress.sendOyenHome();
+    }
+    _syncLane(opening: opening);
+    if (_progress.oyenInLane) {
+      if (cat.outside || cat.goingOut || cat.wantsOut || _tailAt != null) {
+        return;
+      }
+      if (cat.isPassing && cat.viaFlap) return;
+      if (opening || !_watchingLiving) {
+        _life.goOut(KittyId.oyen, instant: true);
+        if (!opening && _house == HouseRoom.living) {
+          _announceWentOut(KittyId.oyen);
+        }
+        return;
+      }
+      if (cat.room != HouseRoom.living) {
+        _life.goOut(KittyId.oyen);
+        return;
+      }
+      if (_oyenFree) _startTail();
+      return;
+    }
+    if (_tailAt != null) {
+      _tailAt = null;
+      _life.rest(KittyId.oyen);
+    }
+    if (cat.outside) {
+      // Pemain di gang: Oyen pulang lewat pintu kucing gang dulu
+      // ([OyenEnteredHouse]).
+      if (_laneWatched && _lane.of(LaneCat.oyen) != null) return;
+      _life.comeHome(KittyId.oyen, instant: opening || !_watchingLiving);
+    } else if (cat.goingOut || cat.wantsOut) {
+      _life.comeHome(KittyId.oyen);
+    }
+  }
+
+  /// Kunjungan ke rutinitas gang: kunjungan baru = Kumis datang (dan Oyen
+  /// kalau ikut), dibuka di tengah kunjungan [opening] = keduanya sudah di
+  /// bangku; Oyen pulang lebih dulu = ia masuk lewat pintu kucing gang;
+  /// kunjungan selesai = Kumis pergi lalu Oyen pulang (kalau pemain di
+  /// gang), atau gang langsung kosong.
+  void _syncLane({bool opening = false}) {
+    final visit = _progress.laneVisit;
+    if (visit == null) {
+      _laneVisitStart = null;
+      if (_lane.actors.isEmpty) return;
+      if (_laneWatched && !_still && !opening) {
+        _lane.leave();
+      } else {
+        _lane = LaneLife(random: _random);
+      }
+      return;
+    }
+    if (_laneVisitStart != visit.start) {
+      _laneVisitStart = visit.start;
+      _lane.start(
+        firstMeeting: !_progress.metNeighbor,
+        oyenComing: _progress.oyenInLane,
+        midVisit: opening || _still,
+      );
+      if (_inLane) _lane.playerHere(true);
+      return;
+    }
+    if (!_progress.oyenInLane && _lane.of(LaneCat.oyen) != null) {
+      if (_laneWatched && !_still) {
+        _lane.oyenGoesHome();
+      } else {
+        _lane.start(firstMeeting: false, oyenComing: false, midVisit: true);
+      }
+    }
+  }
+
+  /// Pemain tiba di gang (akhir kamera): kunjungan ditahan, pertemuan
+  /// pertama mulai. Gerak dikurangi = langsung duduk bersama (tanpa
+  /// naskah yang bergerak) dan dihitung sudah bertemu.
+  void _arriveInLane() {
+    _progress.holdLane();
+    if (_still && _lane.actors.isNotEmpty) {
+      final oyen = _lane.of(LaneCat.oyen) != null || _progress.oyenInLane;
+      _lane.start(firstMeeting: false, oyenComing: oyen, midVisit: true);
+      if (oyen) _progress.meetNeighbor();
+    }
+    _lane.playerHere(true);
+  }
+
+  /// Pemain menyusul ke gang selama kunjungan: Oyen yang belum keluar
+  /// (momen ekor, jalan ke pintu, diajak, di barang) langsung di luar, jadi
+  /// Oyen di gang selalu Oyen yang di luar rumah.
+  void _followOyen() {
+    if (!widget.life || !_progress.home.ownsKitty(KittyId.oyen)) return;
+    if (!_progress.oyenInLane || _isOut(KittyId.oyen)) return;
+    _tailAt = null;
+    _oyenAtFlap = false;
+    _progress.followTail();
+    _life.goOutNow(KittyId.oyen);
+  }
+
+  /// Ketuk Kumis: meong dan hati kecil, tanpa kartu (`ReaksiKumis`).
+  void _tapKumis() {
+    _sound(GameSound.meow);
+    _lane.react(
+      LaneCat.kumis,
+      LifePose.happy,
+      ReactionOverlay.duration.inMilliseconds / 1000,
+    );
+    setState(() => _laneHeart = (LaneCat.kumis, ++_reactions));
+  }
+
+  /// Ekor Kumis muncul: pintu kucing terdorong, Oyen diam lalu menoleh.
+  void _startTail() {
+    _tailAt = _time;
+    _sound(GameSound.meow);
+    _life.react(KittyId.oyen, LifePose.idle, tailMomentSeconds);
+  }
+
+  /// Maju momen ekor tiap bingkai: batal kalau Oyen diganggu (kartu,
+  /// angkat, Hias), selesai = Oyen berjalan ke pintu depan. Tanpa momen,
+  /// kunjungan yang menunggu Oyen bebas dicek lagi.
+  void _advanceTail() {
+    final start = _tailAt;
+    if (start == null) {
+      if (_hidden || _time - _laneCheckedAt < laneCheckSeconds) return;
+      _laneCheckedAt = _time;
+      if (_oyenFree && _waitingForOyen) _checkLane();
+      return;
+    }
+    if (_selected != null || _decorating || _lifted != null) {
+      _tailAt = null;
+      _life.goOut(KittyId.oyen);
+      return;
+    }
+    if (tailPhaseAt(_time - start) != null) return;
+    _tailAt = null;
+    _progress.followTail();
+    _life
+      ..rest(KittyId.oyen)
+      ..goOut(KittyId.oyen);
+  }
+
+  /// Kunjungan berjalan tapi Oyen masih di rumah tanpa permintaan keluar
+  /// (menunggu bebas untuk momen ekor). Dihitung dari jam hanya kalau
+  /// perlu, supaya tiap bingkai murah.
+  bool get _waitingForOyen {
+    if (!_progress.home.ownsKitty(KittyId.oyen)) return false;
+    final cat = _life.of(KittyId.oyen);
+    if (cat.outside || cat.goingOut || cat.wantsOut) return false;
+    return _progress.oyenInLane;
   }
 
   /// Pembaca layar: kucing keluar dari ruangan yang sedang dibuka.
@@ -369,12 +718,16 @@ class _RoomViewState extends State<RoomView>
   void _eatWithoutWalking() {
     if (!mounted || !_still) return;
     for (final kitty in _progress.home.kitties) {
-      if (_progress.canEatFromBowl(kitty)) _eatFromBowl(kitty);
+      if (!_isOut(kitty) && _progress.canEatFromBowl(kitty)) {
+        _eatFromBowl(kitty);
+      }
     }
   }
 
   void _refreshNeeds() {
-    if (!mounted) return;
+    if (!mounted || _hidden) return;
+    if (_inLane && TickerMode.valuesOf(context).enabled) _progress.holdLane();
+    _checkLane();
     setState(() {});
     _eatWithoutWalking();
   }
@@ -537,7 +890,7 @@ class _RoomViewState extends State<RoomView>
     return doorAttention(
       [
         for (final kitty in home.kitties)
-          if (_catRoom(kitty) == room) kitty,
+          if (_catRoom(kitty) == room && !_isOut(kitty)) kitty,
       ],
       hungry: (kitty) => _progress.catNeeds(kitty).hunger <= sadThreshold,
       sad: (kitty) => _progress.catNeeds(kitty).isSad,
@@ -546,6 +899,33 @@ class _RoomViewState extends State<RoomView>
           !home.isFresh(kitty) &&
           _progress.canClaimKittyReward(kitty),
     );
+  }
+
+  /// Ikon perhatian di pintu depan untuk Oyen yang di gang (lapar, lesu,
+  /// lalu hadiah), atau null.
+  DoorNeed? _frontAttention() {
+    if (!_isOut(KittyId.oyen)) return null;
+    return doorAttention(
+      const [KittyId.oyen],
+      hungry: (kitty) => _progress.catNeeds(kitty).hunger <= sadThreshold,
+      sad: (kitty) => _progress.catNeeds(kitty).isSad,
+      // Hadiah koin tidak bisa diambil di gang: penanda tetap tampil.
+      reward: (_) => false,
+    )?.$2;
+  }
+
+  /// Sudut pintu kucing pintu depan sekarang; null = Oyen sedang lewat.
+  double? _flapDeg() {
+    if (!widget.life || _still) return 0;
+    if (_progress.home.ownsKitty(KittyId.oyen)) {
+      final cat = _life.of(KittyId.oyen);
+      if (cat.isPassing && cat.viaFlap && !_decorating) return null;
+    }
+    if (_tailAt case final start?) return tailFlapAt(_time - start);
+    if (_flapSwing case (final start, final from)) {
+      return flapSwingAt(_time - start, from);
+    }
+    return 0;
   }
 
   /// Kucing yang memakai barang [id] (null kalau sedang diangkat).
@@ -557,7 +937,13 @@ class _RoomViewState extends State<RoomView>
 
   void _react(KittyId kitty, RoomReaction reaction) {
     if (reaction.sound case final sound?) _sound(sound);
-    if (widget.life) {
+    if (_isOut(kitty)) {
+      _lane.react(
+        LaneCat.oyen,
+        reaction.pose,
+        ReactionOverlay.duration.inMilliseconds / 1000,
+      );
+    } else if (widget.life) {
       _life.react(
         kitty,
         reaction.pose,
@@ -748,10 +1134,16 @@ class _RoomViewState extends State<RoomView>
         ? s.roomPlayCompact + space.s12 + s.roomMenuButtonCompact
         : s.roomPlay + space.s16 + s.roomMenuButton;
     return PopScope(
-      canPop: selected == null && !_decorating,
+      canPop: selected == null && !_decorating && !_inLane && _camera == null,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
-        if (_decorating) {
+        if (_camera != null) {
+          _cameraKey.currentState?.skip();
+        } else if (selected != null) {
+          _closeCard();
+        } else if (_inLane) {
+          _goHome();
+        } else if (_decorating) {
           _finish();
         } else {
           _closeCard();
@@ -832,7 +1224,7 @@ class _RoomViewState extends State<RoomView>
                     key: ValueKey(selected),
                     progress: _progress,
                     kitty: selected,
-                    room: _catRoom(selected),
+                    room: _isOut(selected) ? null : _catRoom(selected),
                     onReaction: (r) => _react(selected, r),
                     onInvite: () {
                       _closeCard();
@@ -849,9 +1241,18 @@ class _RoomViewState extends State<RoomView>
               ReactionOverlay(
                 key: ValueKey(n),
                 reaction: r,
-                anchor:
-                    _shownBoxes[kitty] ?? geo.catBoxOf(kitty, _catSpot(kitty)),
+                anchor: _isOut(kitty)
+                    ? _laneBoxes[LaneCat.oyen] ?? Rect.zero
+                    : _shownBoxes[kitty] ??
+                          geo.catBoxOf(kitty, _catSpot(kitty)),
                 onDone: _reactionDone,
+              ),
+            if ((_laneHeart, _inLane) case ((final cat, final n), true))
+              ReactionOverlay(
+                key: ValueKey('lane-heart-$n'),
+                reaction: const RoomReaction(),
+                anchor: _laneHeartAnchor(cat),
+                onDone: () => setState(() => _laneHeart = null),
               ),
             if (praise case (final bonus, final n))
               Positioned(
@@ -873,6 +1274,57 @@ class _RoomViewState extends State<RoomView>
     );
   }
 
+  /// Ketuk pintu depan: kamera menembus pintu ke Gang Depan. Ketukan
+  /// selama kamera berjalan melompat ke akhir, bukan transisi baru.
+  void _openLane() => _startCamera(home: false);
+
+  /// Ketuk pintu pulang, chip, atau tombol kembali di gang: pulang.
+  void _goHome() => _startCamera(home: true);
+
+  void _startCamera({required bool home}) {
+    if (_camera != null) {
+      _cameraKey.currentState?.skip();
+      return;
+    }
+    if (_inLane != home) return;
+    if (home) {
+      _lane.playerHere(false);
+    } else {
+      _followOyen();
+    }
+    setState(() {
+      _camera = home;
+      _cameraChip = 0;
+      _selected = null;
+      _reaction = null;
+      _lifted = null;
+    });
+  }
+
+  void _cameraDone() {
+    final home = _camera;
+    if (home == null) return;
+    _sound(GameSound.doorClose);
+    if (!home) _arriveInLane();
+    setState(() {
+      _camera = null;
+      _inLane = !home;
+      if (home) {
+        _house = _arrived = HouseRoom.living;
+        _pagerJumps++;
+      }
+    });
+    if (home) _armForcedVisit();
+  }
+
+  /// Kotak hati di gang: di atas [cat], atau di atas keduanya.
+  Rect _laneHeartAnchor(LaneCat? cat) {
+    if (cat != null) return _laneBoxes[cat] ?? Rect.zero;
+    final boxes = _laneBoxes.values;
+    if (boxes.isEmpty) return Rect.zero;
+    return boxes.reduce((a, b) => a.expandToInclude(b));
+  }
+
   /// Pindah ruangan lewat pintu atau chip (pager menggeser).
   void _goTo(HouseRoom room) => setState(() => _house = room);
 
@@ -887,14 +1339,25 @@ class _RoomViewState extends State<RoomView>
     final top = MediaQuery.paddingOf(context).top + space.s6;
     // Kurangi gerak: tidak ada transisi, chip langsung tampil.
     final arrived = _still ? _house : _arrived;
+    final outside = _inLane || _camera != null;
     final terrace =
         _house == HouseRoom.terrace &&
         arrived == HouseRoom.terrace &&
-        !_decorating;
+        !_decorating &&
+        !outside;
     final lifted = _lifted;
     // Tahan-seret kucing: satu pengenal untuk seluruh ruangan, supaya
-    // seretan tidak putus saat kucing pindah lapisan.
-    final canLift = !_decorating && _selected == null;
+    // seretan tidak putus saat kucing pindah lapisan. Tidak ada di gang.
+    final canLift = !_decorating && _selected == null && !outside;
+    final livingGeo = RoomGeometry(size, HouseRoom.living);
+    final camera = _camera;
+    // Chip "‹ Ruang tengah" di gang, memudar masuk di akhir kamera.
+    final laneChip = switch ((camera, _inLane)) {
+      (false, _) => _cameraChip,
+      (true, _) => 0.0,
+      (null, true) => 1.0,
+      (null, false) => 0.0,
+    };
     return Stack(
       key: const ValueKey('room-area'),
       clipBehavior: Clip.none,
@@ -921,16 +1384,36 @@ class _RoomViewState extends State<RoomView>
                           ..onLongPressEnd = ((_) => _liftEnd()),
                       ),
               },
-              child: HousePager(
-                key: ValueKey(_pagerJumps),
-                room: _house,
-                enabled: !_decorating && lifted == null,
-                onRoom: (room) => setState(() => _house = room),
-                onArrive: (room) {
-                  if (room != _arrived) setState(() => _arrived = room);
-                },
-                builder: (context, room) => _room(RoomGeometry(size, room)),
-              ),
+              child: camera != null
+                  ? LaneCamera(
+                      key: _cameraKey,
+                      home: camera,
+                      geo: livingGeo,
+                      from: camera
+                          ? (deg) => _laneArea(livingGeo, homeDeg: deg)
+                          : (deg) =>
+                                _room(livingGeo, frontDeg: deg, leaving: true),
+                      to: camera ? _room(livingGeo) : _laneArea(livingGeo),
+                      onOpen: () => _sound(GameSound.doorOpen),
+                      onFrame: (f) => _cameraChip = f.chipOpacity,
+                      onDone: _cameraDone,
+                    )
+                  : _inLane
+                  ? _laneArea(livingGeo)
+                  : HousePager(
+                      key: ValueKey(_pagerJumps),
+                      room: _house,
+                      enabled: !_decorating && lifted == null,
+                      onRoom: (room) => setState(() => _house = room),
+                      onArrive: (room) {
+                        if (room == HouseRoom.living && widget.life) {
+                          _armForcedVisit();
+                        }
+                        if (room != _arrived) setState(() => _arrived = room);
+                      },
+                      builder: (context, room) =>
+                          _room(RoomGeometry(size, room)),
+                    ),
             ),
           ),
         ),
@@ -946,7 +1429,21 @@ class _RoomViewState extends State<RoomView>
             onCoins: () => showCoinSheet(context, _progress),
           ),
         ),
-        if (!empty || _decorating || terrace || lifted != null)
+        if (laneChip > 0)
+          Positioned(
+            left: space.s16,
+            right: space.s16,
+            top: top + s.roomDecorateGap,
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Opacity(
+                opacity: laneChip,
+                child: RoomChip(onPressed: _goHome),
+              ),
+            ),
+          )
+        else if (!outside &&
+            (!empty || _decorating || terrace || lifted != null))
           Positioned(
             left: space.s16,
             right: space.s16,
@@ -992,13 +1489,16 @@ class _RoomViewState extends State<RoomView>
   }
 
   /// Isi satu ruangan [geo]: latar, barang, kucing di ruangan itu (yang
-  /// lewat pintu di belakang kusen), dan tanda di atasnya.
-  Widget _room(RoomGeometry geo) {
+  /// lewat pintu di belakang kusen), dan tanda di atasnya. [leaving] = ruang
+  /// tengah di kamera berangkat: penanda dan ikon pintu depan tidak digambar,
+  /// karena ikut diperbesar sampai menutupi header.
+  Widget _room(RoomGeometry geo, {double frontDeg = 0, bool leaving = false}) {
     final living = geo.which == HouseRoom.living;
     if (geo.which == _house) _geo = geo;
     final current = geo.which == _house;
     final lifted = current ? _lifted : null;
-    bool here(KittyId kitty) => _catRoom(kitty) == geo.which && kitty != lifted;
+    bool here(KittyId kitty) =>
+        _catRoom(kitty) == geo.which && kitty != lifted && !_isOut(kitty);
     final c = context.koColors;
     final s = context.koSize;
     final space = context.koSpace;
@@ -1048,6 +1548,10 @@ class _RoomViewState extends State<RoomView>
         top + s.roomDecorateGap + s.roomDecorateButton + space.s8;
     final unit = geo.artScale;
     final attention = _decorating ? null : _doorAttention(geo.which.other);
+    final front = living && !_decorating && !leaving ? _frontAttention() : null;
+    final oyenOut = living && _isOut(KittyId.oyen);
+    final tailAt = living ? _tailAt : null;
+    final tailTime = tailAt == null ? null : _time - tailAt;
     final shadows = [
       for (final sprite in ordered)
         switch (sprite) {
@@ -1094,11 +1598,12 @@ class _RoomViewState extends State<RoomView>
       // kucing (artboard 1).
       door: [
         if (living)
-          const Positioned.fill(
-            child: DoorLeafView(
-              side: DoorLeafSide.front,
-              angleDeg: 0,
-              flapDeg: 0,
+          Positioned.fill(
+            child: FrontDoor(
+              angleDeg: frontDeg,
+              flapDeg: frontDeg > 0 ? 0 : _flapDeg(),
+              tail: tailTime != null && tailVisibleAt(tailTime),
+              time: _animating ? tailTime : null,
             ),
           ),
       ],
@@ -1119,6 +1624,20 @@ class _RoomViewState extends State<RoomView>
           Positioned.fill(child: EmptyTerraceSpots(geo: geo)),
         // Pintu di bawah kucing dan barang: kucing di ambang tetap bisa
         // diketuk.
+        if (!_decorating && living)
+          FrontDoorButton(
+            key: const ValueKey('front-door'),
+            geo: geo,
+            label: switch ((front, oyenOut)) {
+              (final need?, _) => context.l10n.frontDoorAttention(
+                kittyName(context.l10n, KittyId.oyen),
+                need.name,
+              ),
+              (null, true) => context.l10n.frontDoorOyenOut,
+              (null, false) => context.l10n.frontDoorTo,
+            },
+            onTap: _openLane,
+          ),
         if (!_decorating)
           DoorButton(
             geo: geo,
@@ -1148,6 +1667,18 @@ class _RoomViewState extends State<RoomView>
                 ),
               ),
             ),
+      ],
+      // Daun pintu depan yang terbuka (kamera ke gang) menutup bagian
+      // barang dan kucing di belakangnya (keputusan pemilik repo).
+      cover: [
+        if (living && frontDeg > 0)
+          Positioned.fill(
+            child: DoorLeafCoverView(
+              side: DoorLeafSide.front,
+              angleDeg: frontDeg,
+              targets: _coverTargets(ordered, geo),
+            ),
+          ),
       ],
       sprites: [
         for (final sprite in ordered) ...[
@@ -1213,6 +1744,22 @@ class _RoomViewState extends State<RoomView>
           Positioned.fill(child: ZoneGuides(geo: geo, labels: true)),
         if (attention case (_, final need))
           DoorAttention(geo: geo, need: need, time: _animating ? _time : null),
+        if (front case final need?)
+          DoorAttention(
+            geo: geo,
+            need: need,
+            front: true,
+            time: _animating ? _time : null,
+          )
+        else if (oyenOut && !_decorating && !leaving)
+          LaneMarker(
+            key: const ValueKey('lane-marker'),
+            geo: geo,
+            time: _animating ? _time : null,
+          ),
+        if ((tailTime, _shownBoxes[KittyId.oyen]) case (final t?, final box?)
+            when current && tailPhaseAt(t) == TailPhase.notice)
+          SeruMark(cat: box, unit: unit, time: _animating ? t : null),
         if (lifted != null)
           Positioned.fill(
             child: DoorGlow(
@@ -1308,17 +1855,83 @@ class _RoomViewState extends State<RoomView>
     );
   }
 
+  /// Gambar ruangan [geo] yang bisa tertutup daun pintu yang terbuka, di
+  /// koordinat desain.
+  List<DoorCoverTarget> _coverTargets(
+    List<RoomSprite> sprites,
+    RoomGeometry geo,
+  ) {
+    Rect design(Rect r) => Rect.fromLTRB(
+      r.left / geo.sx,
+      r.top / geo.sy,
+      r.right / geo.sx,
+      r.bottom / geo.sy,
+    );
+    return [
+      for (final sprite in sprites)
+        switch (sprite) {
+          ItemSprite(:final id, :final box, :final flat) => DoorCoverTarget(
+            design(box),
+            feet: box.bottom / geo.sy,
+            depth: flat ? DoorCoverTarget.flat : DoorCoverTarget.item,
+            wall: roomItemOf(id).zone == RoomZone.wall && !geo.hangs(id),
+          ),
+          KittySprite(:final box) => DoorCoverTarget(
+            design(box),
+            feet: geo.feetOf(box) / geo.sy,
+            depth: DoorCoverTarget.upright,
+          ),
+        },
+    ];
+  }
+
+  /// Gang Depan (desain 7–13): latar, pintu pulang terbuka [homeDeg], Oyen
+  /// dan Kumis dari rutinitas gang, dan tombol pintu pulang.
+  Widget _laneArea(
+    RoomGeometry geo, {
+    double homeDeg = LaneDoorAngles.homeRest,
+  }) {
+    final l = context.l10n;
+    _laneBoxes.clear();
+    final hungry = _progress.catNeeds(KittyId.oyen).hunger <= sadThreshold;
+    final name = kittyName(l, KittyId.oyen);
+    return LaneView(
+      geo: geo,
+      life: _lane,
+      time: _animating ? _time : null,
+      homeDeg: homeDeg,
+      oyenAccessory: _progress.home.closet.wearingOf(KittyId.oyen),
+      oyenLabel: hungry ? l.kittyTapHintHungry(name) : l.kittyTapHint(name),
+      boxes: _laneBoxes,
+      onOyen: () => _select(KittyId.oyen),
+      onKumis: _tapKumis,
+      onHome: _goHome,
+    );
+  }
+
   /// Kucing [kitty] yang sedang lewat pintu ruangan [geo], digambar di
   /// belakang kusen; null kalau tidak sedang lewat.
   Widget? _passing(KittyId kitty, RoomGeometry geo) {
     if (!widget.life || _decorating) return null;
     final cat = _life.of(kitty);
     if (!cat.isPassing) return null;
-    final box = geo.passingBox(
-      kitty,
-      cat.doorProgress,
-      leaving: cat.activity == CatActivity.leaving,
-    );
+    final leaving = cat.activity == CatActivity.leaving;
+    if (cat.viaFlap) {
+      final box = geo.flapPassingBox(kitty, cat.doorProgress, leaving: leaving);
+      return Positioned.fromRect(
+        key: ValueKey('passing-${kitty.name}'),
+        rect: box,
+        child: IgnorePointer(
+          child: ExcludeSemantics(
+            child: ClipRect(
+              clipper: FlapClipper(geo.flapClip - box.left),
+              child: _kitty(kitty, box),
+            ),
+          ),
+        ),
+      );
+    }
+    final box = geo.passingBox(kitty, cat.doorProgress, leaving: leaving);
     return Positioned.fromRect(
       key: ValueKey('passing-${kitty.name}'),
       rect: box,
@@ -1518,6 +2131,13 @@ class _RoomViewState extends State<RoomView>
       };
     }
     facing = hopFacing ?? facing;
+    final tailAt = kitty == KittyId.oyen ? _tailAt : null;
+    if (tailAt != null) {
+      final phase = tailPhaseAt(_time - tailAt);
+      if (phase == TailPhase.notice || phase == TailPhase.settle) {
+        facing = KittyFacing.left;
+      }
+    }
     return _kittyButton(
       kitty,
       KittyView(

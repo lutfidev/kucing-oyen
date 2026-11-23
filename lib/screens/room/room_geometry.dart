@@ -275,6 +275,27 @@ class RoomGeometry {
     return catBoxAtFeet(kitty, x * sx, y * sy);
   }
 
+  /// Kucing lewat pintu kucing pintu depan (`AdeganTengah` `selinapB`,
+  /// `pulangA`): kaki dari ambang (70, 436) ke balik dinding (−4, 437),
+  /// hadap kiri saat keluar. Dipotong di [flapClip].
+  static const _passFlap = ((70.0, 436.0), (-4.0, 437.0));
+
+  /// Kotak kucing [kitty] yang lewat pintu kucing pada [progress] 0–1.
+  Rect flapPassingBox(KittyId kitty, double progress, {required bool leaving}) {
+    final (inside, behind) = _passFlap;
+    final (from, to) = leaving ? (inside, behind) : (behind, inside);
+    final t = progress.clamp(0.0, 1.0);
+    final x = from.$1 + (to.$1 - from.$1) * t;
+    final y = from.$2 + (to.$2 - from.$2) * t;
+    return catBoxAtFeet(kitty, x * sx, y * sy);
+  }
+
+  /// Garis potong kucing yang lewat pintu kucing (px layar): `flapClipX`.
+  double get flapClip => flapClipX * sx;
+
+  /// Kotak ketuk pintu depan (desain (6, 205) 64×172), cermin [doorTap].
+  Rect get frontDoorTap => fromDesign(const Rect.fromLTWH(6, 205, 64, 172));
+
   /// [Spot] kucing [kitty] untuk kotak sprite [box] (kebalikan [catBoxOf],
   /// dijepit ke lantai).
   Spot catSpotAt(KittyId kitty, Rect box) =>

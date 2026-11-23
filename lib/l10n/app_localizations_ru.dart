@@ -2163,6 +2163,7 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(room, {
       'living': 'Сейчас в гостиной.',
       'terrace': 'Сейчас на террасе.',
+      'lane': 'Сейчас в переулке у дома.',
       'other': 'Сейчас в гостиной.',
     });
     return '$_temp0';
@@ -2211,5 +2212,37 @@ class AppLocalizationsRu extends AppLocalizations {
       'other': 'В гостиную. $_temp2',
     });
     return '$_temp3';
+  }
+
+  @override
+  String get laneName => 'Переулок у дома';
+
+  @override
+  String get frontDoorTo => 'Выйти в переулок у дома';
+
+  @override
+  String get frontDoorOyenOut => 'Выйти в переулок у дома. Оен там';
+
+  @override
+  String frontDoorAttention(String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name хочет есть на улице',
+      'sad': '$name грустит на улице',
+      'other': '$name: для тебя подарок, монетки',
+    });
+    return 'Выйти в переулок у дома. $_temp0';
+  }
+
+  @override
+  String get laneHomeDoor => 'Вернуться в гостиную';
+
+  @override
+  String oyenWentOut(String name) {
+    return '$name шмыгнул в переулок у дома';
+  }
+
+  @override
+  String neighborTapHint(String name) {
+    return '$name, соседский кот. Нажми, чтобы поздороваться';
   }
 }

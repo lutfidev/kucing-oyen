@@ -68,6 +68,27 @@ Hasil log sesudah optimasi:
 {"frames":3792,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":8.207055643459917,"p50_ms":7.537,"p90_ms":9.733,"p99_ms":18.517,"max_ms":28.876},"raster":{"mean_ms":10.571090981012631,"p50_ms":10.041,"p90_ms":13.176,"p99_ms":17.017,"max_ms":19.656},"over_16_67ms":99,"over_8_33ms":3736}
 ```
 
+## Gang Depan (langkah 38, 23 Nov 2026 16.46 WIB)
+
+HP sama, layar terbuka, pengaturan tetap menyala saat USB tersambung diubah sementara ke 2 lalu dikembalikan ke 0. `tool/profile_room.dart --dart-define=PLACE=lane`: data memori kamar penuh yang sama, level 1 menang, sudah bertemu Kumis, jam di tengah kunjungan; pintu depan diketuk sesudah 5 detik, jadi pemanasan memuat kamera ke gang, lalu 60 detik pengukuran di gang (Oyen dan Kumis di bangku, lalu bermain). Kamera sendiri tidak ikut diukur.
+
+| Metrik | Rumah (sesudah optimasi) | Gang |
+| --- | --- | --- |
+| Bingkai tercatat selama 60 detik | 3.792 | 3.680 |
+| Build rata-rata (ms) | 8,207 | 8,404 |
+| Build P50 / P90 / P99 (ms) | 7,537 / 9,733 / 18,517 | 7,735 / 9,731 / 19,743 |
+| Build maksimum (ms) | 28,876 | 36,411 |
+| Raster rata-rata (ms) | 10,571 | 11,401 |
+| Raster P50 / P90 / P99 (ms) | 10,041 / 13,176 / 17,017 | 11,185 / 13,582 / 15,675 |
+| Raster maksimum (ms) | 19,656 | 22,852 |
+| Build atau raster >16,67 ms | 99 (2,61%) | 128 (3,48%) |
+
+Gang setara dengan rumah penuh pada HP ini; satu pengukuran, suhu dan aktivitas sistem tidak dikontrol. Potret beruntun lewat adb selama kamera pergi dan pulang menemukan penanda "Oyen di gang" yang ikut diperbesar kamera berangkat (diperbaiki, lihat `docs/DESIGN_NOTES.md` "Langkah 38").
+
+```json
+{"place":"lane","frames":3680,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":8.40434157608697,"p50_ms":7.735,"p90_ms":9.731,"p99_ms":19.743,"max_ms":36.411},"raster":{"mean_ms":11.40143722826086,"p50_ms":11.185,"p90_ms":13.582,"p99_ms":15.675,"max_ms":22.852},"over_16_67ms":128,"over_8_33ms":3670}
+```
+
 ## Pemulihan dan pengujian manual
 
 Versi release biasa dengan optimasi dipasang kembali setelah tes ulang. Potret layar sesudah pemulihan menunjukkan progres asli tetap ada: 80 koin, 9/60 bintang, kamar awal Oyen dan mangkuk. Data kamar penuh tidak ditulis ke penyimpanan pemain. Pengaturan layar tetap menyala saat USB tersambung sudah dikembalikan ke nilai awal 0; proses aplikasi release berjalan dan buffer crash kosong saat diperiksa.

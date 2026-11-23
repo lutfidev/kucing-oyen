@@ -880,6 +880,29 @@ void main() {
       expect(life.wantsOut(KittyId.oyen), isFalse);
     });
 
+    test('goOutNow: pemain menyusul ke gang, Oyen langsung di luar', () {
+      // Sedang berjalan ke pintu.
+      final walking = house(5);
+      walking.goOut(KittyId.oyen);
+      walking.advance(0.5);
+      walking.goOutNow(KittyId.oyen);
+      expect(walking.of(KittyId.oyen).outside, isTrue);
+      expect(walking.wantsOut(KittyId.oyen), isFalse);
+      // Diajak ke teras (betah): menyusul tetap membawanya keluar.
+      final invited = house(5);
+      invited.invite(KittyId.oyen, instant: true);
+      invited.goOut(KittyId.oyen);
+      invited.goOutNow(KittyId.oyen);
+      final oyen = invited.of(KittyId.oyen);
+      expect(oyen.outside, isTrue);
+      expect(oyen.stayLeft, 0);
+      expect(invited.advance(_frame), contains(const WentOut(KittyId.oyen)));
+      // Dijeda (kartu terbuka) tidak menahan.
+      final paused = house(5)..paused = true;
+      paused.goOutNow(KittyId.oyen);
+      expect(paused.of(KittyId.oyen).outside, isTrue);
+    });
+
     test('di teras atau instant: langsung di luar', () {
       final terrace = house(
         3,

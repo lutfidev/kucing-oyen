@@ -80,4 +80,26 @@ void main() {
     );
     expect(color.a, 1);
   });
+
+  test(
+    'ekor Kumis: ujung bengkok gelap, bergoyang di sekitar pangkalnya',
+    () async {
+      // `AdeganTengah.dc.html`: ujung ekor #55657A, kurva (52,2, 397,2) →
+      // (62,2, 392,2); tengahnya di sekitar (56, 392,5).
+      void still(Canvas c) => paintKumisTail(c, size: laneViewBox);
+      expect(await _pixel(still, 56, 392), const Color(0xFF55657A));
+      // Goyang ±8°: titik yang sama tidak selalu tertutup ekor.
+      final a = await _pixel(
+        (c) => paintKumisTail(c, size: laneViewBox, time: 0),
+        62,
+        392,
+      );
+      final b = await _pixel(
+        (c) => paintKumisTail(c, size: laneViewBox, time: 0.55),
+        62,
+        392,
+      );
+      expect(a, isNot(b));
+    },
+  );
 }

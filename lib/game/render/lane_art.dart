@@ -92,3 +92,42 @@ void paintLaneMarker(Canvas canvas, {required Size size, double? time}) {
   drawing.paint(canvas);
   canvas.restore();
 }
+
+final _tail = SvgTemplate(
+  kumisTailSvg,
+  keyframes: _keyframes,
+  classes: laneClassStyles,
+);
+SvgDrawing? _tailStill;
+SvgAnimation? _tailMoving;
+
+/// Ekor Kumis di pintu kucing ruang tengah (`AdeganTengah`, viewBox
+/// 390×652 = area rumah [size]); [time] = detik goyang `ekGoyang`, null =
+/// diam.
+void paintKumisTail(Canvas canvas, {required Size size, double? time}) {
+  final drawing = time == null
+      ? _tailStill ??= _tail.render(const {})
+      : (_tailMoving ??= _tail.bind(const {})).render(time: time);
+  canvas
+    ..save()
+    ..scale(size.width / laneViewBox.width, size.height / laneViewBox.height);
+  drawing.paint(canvas);
+  canvas.restore();
+}
+
+/// Ukuran viewBox tanda "!" (`AdeganTengah`, `seru`).
+const seruViewBox = Size(24, 30);
+
+final _seru = SvgTemplate(seruSvg);
+SvgDrawing? _seruDrawing;
+
+/// Tanda "!" seukuran [size] di pojok kiri atas kanvas (pantulannya
+/// digerakkan widget, karena kelas `at-seru` ada di tag `<svg>`).
+void paintSeru(Canvas canvas, {required Size size}) {
+  final drawing = _seruDrawing ??= _seru.render(const {});
+  canvas
+    ..save()
+    ..scale(size.width / seruViewBox.width, size.height / seruViewBox.height);
+  drawing.paint(canvas);
+  canvas.restore();
+}

@@ -93,6 +93,7 @@ class RoomScene extends StatelessWidget {
     this.floor = const [],
     this.passing = const [],
     this.door = const [],
+    this.cover = const [],
   });
 
   final RoomGeometry geo;
@@ -107,6 +108,10 @@ class RoomScene extends StatelessWidget {
   /// Di antara latar dan cahaya lantai: daun pintu depan ruang tengah
   /// (Gang Depan), di atas dinding dan di bawah cahaya dan kucing.
   final List<Widget> door;
+
+  /// Di atas barang dan kucing, di bawah cahaya udara: daun pintu yang
+  /// terbuka menutup gambar di belakangnya ([DoorLeafCoverView]).
+  final List<Widget> cover;
 
   /// Blur bayangan (desain `filter: blur(1.5px)`), px desain.
   static const shadowBlur = 1.5;
@@ -133,6 +138,7 @@ class RoomScene extends StatelessWidget {
         ...passing,
         layers(const [HouseLayer.frame]),
         ...sprites,
+        ...cover,
         layers(const [HouseLayer.airLight]),
       ],
     );

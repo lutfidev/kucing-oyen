@@ -212,3 +212,114 @@ void paintDoorLeaf(
     );
   }
 }
+
+/// Gambar di ruangan yang bisa tertutup daun pintu yang terbuka: kotak
+/// [box] dan garis kaki [feet] (koordinat desain 390×652). Kedalaman tiap
+/// baris piksel gambar = titik lantai di y `feet + depth · (y − feet)`:
+/// [upright] (kucing) seluruhnya di garis kakinya, [item] (barang lantai)
+/// bagian atasnya dianggap bagian belakang barang, [flat] (karpet) tiap
+/// piksel = lantai itu sendiri. [wall] = barang di dinding belakang, selalu
+/// di belakang daun pintu.
+class DoorCoverTarget {
+  const DoorCoverTarget(
+    this.box, {
+    required this.feet,
+    this.depth = item,
+    this.wall = false,
+  });
+
+  final Rect box;
+  final double feet;
+  final double depth;
+  final bool wall;
+
+  static const upright = 0.0;
+  static const item = 0.5;
+  static const flat = 1.0;
+}
+
+/// Lantai kamera (`kProyeksi`: Y 1,385 = tepi bawah daun).
+const _floorY = _leafTop + _leafHeight;
+
+/// Bagian [target] yang berada di belakang daun pintu [side] terbuka
+/// [angleDeg] dilihat dari kamera (poligon desain, kosong kalau tidak ada).
+/// Batasnya = bidang daun pintu: titik lantai tiap baris piksel di sisi
+/// bidang yang jauh dari kamera tertutup daun. Batas ini garis lurus di
+/// layar yang ikut bergerak dengan sudut pintu, jadi bagian yang tertutup
+/// bertambah dan berkurang sedikit demi sedikit, tanpa lompatan.
+List<DoorPoint> doorLeafCoverPolygon(
+  DoorLeafSide side,
+  double angleDeg,
+  DoorCoverTarget target,
+) {
+  final theta = angleDeg * math.pi / 180;
+  final mirror = side == DoorLeafSide.home ? -1.0 : 1.0;
+  // Engsel dan tepi bebas di lantai (X, Z), normal bidang daun.
+  final hx = -1.0 * mirror;
+  const hz = _hingeZ;
+  final ex = (-1 + _leafWidth * math.sin(theta)) * mirror;
+  final ez = _hingeZ - _leafWidth * math.cos(theta);
+  final nx = -(ez - hz);
+  final nz = ex - hx;
+  // Sisi kamera (titik asal). Daun yang tegak lurus layar tidak menutup.
+  final camera = nx * (0 - hx) + nz * (0 - hz);
+  if (camera.abs() < 1e-6) return const [];
+  final box = target.box;
+  final corners = [
+    (x: box.left, y: box.top),
+    (x: box.right, y: box.top),
+    (x: box.right, y: box.bottom),
+    (x: box.left, y: box.bottom),
+  ];
+  if (target.wall) return corners;
+  // (yf − 230) · dot(n, P − H) dengan P titik lantai piksel (x, y): linear
+  // di x dan y. Tertutup kalau tandanya berlawanan dengan sisi kamera.
+  double side_(DoorPoint p) {
+    final yf = target.feet + target.depth * (p.y - target.feet);
+    final w = yf - _vanishY;
+    final px = (p.x - _vanishX) * _floorY;
+    final pz = _focal * _floorY;
+    final v = nx * (px - hx * w) + nz * (pz - hz * w);
+    return v * camera.sign;
+  }
+
+  final out = <DoorPoint>[];
+  for (var i = 0; i < corners.length; i++) {
+    final a = corners[i];
+    final b = corners[(i + 1) % corners.length];
+    final sa = side_(a);
+    final sb = side_(b);
+    if (sa < 0) out.add(a);
+    if ((sa < 0) != (sb < 0)) {
+      final t = sa / (sa - sb);
+      out.add((x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t));
+    }
+  }
+  return out;
+}
+
+/// Daun pintu [side] digambar lagi di atas gambar [targets], hanya di
+/// bagian yang berada di belakangnya ([doorLeafCoverPolygon]). Dipakai di
+/// lapisan di atas barang dan kucing; daun di lapisan pintu tetap di bawah.
+void paintDoorLeafCover(
+  Canvas canvas,
+  DoorLeafSide side, {
+  required double angleDeg,
+  double? flapDeg,
+  required Iterable<DoorCoverTarget> targets,
+}) {
+  final clip = Path();
+  var any = false;
+  for (final target in targets) {
+    final polygon = doorLeafCoverPolygon(side, angleDeg, target);
+    if (polygon.length < 3) continue;
+    clip.addPolygon([for (final p in polygon) Offset(p.x, p.y)], true);
+    any = true;
+  }
+  if (!any) return;
+  canvas
+    ..save()
+    ..clipPath(clip);
+  paintDoorLeaf(canvas, side, angleDeg: angleDeg, flapDeg: flapDeg);
+  canvas.restore();
+}

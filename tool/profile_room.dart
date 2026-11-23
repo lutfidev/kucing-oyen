@@ -1,6 +1,9 @@
 // Jalankan: flutter run --profile -t tool/profile_room.dart -d <device>
 // Tambah --dart-define=SWITCH_ROOMS=true untuk mengukur sambil pindah
 // ruangan bolak-balik (pintu diketuk tiap 2,5 detik).
+// Tambah --dart-define=PLACE=lane untuk mengukur di Gang Depan: jam di
+// tengah kunjungan Kumis (Oyen dan Kumis di bangku), pintu depan diketuk
+// sesudah 5 detik, lalu pengukuran di gang.
 // Data uji hanya di memori; tidak membaca atau menulis progres pemain.
 // ignore_for_file: avoid_print
 
@@ -21,8 +24,11 @@ import 'package:kucing_oren/game/model/accessories.dart';
 import 'package:kucing_oren/game/model/home.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/lane.dart';
+import 'package:kucing_oren/game/model/progress.dart';
 import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/screens/room/door_parts.dart';
+import 'package:kucing_oren/screens/room/front_door.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,22 +37,32 @@ Future<void> main() async {
   for (final item in shopItems) {
     room = room.buy(item.id);
   }
-  final store = MemoryProgressStore()
-    ..coins = 99999
-    ..home = Home(
-      room: room,
-      kitties: KittyId.values,
-      closet: AccessoryCloset(
-        owned: AccessoryId.values,
-        wearing: {
-          for (final kitty in KittyId.values)
-            kitty: AccessoryId.values[kitty.index % AccessoryId.values.length],
-        },
-      ),
-    );
+  // Gang: level 1 menang (gang terbuka), sudah bertemu Kumis (tanpa
+  // kunjungan paksa), jam berjalan dari 1 menit sesudah kunjungan pertama
+  // hari ini dimulai.
+  final store =
+      MemoryProgressStore(_lane ? Progress(const {1: 3}) : Progress.empty)
+        ..metNeighbor = _lane
+        ..coins = 99999
+        ..home = Home(
+          room: room,
+          kitties: KittyId.values,
+          closet: AccessoryCloset(
+            owned: AccessoryId.values,
+            wearing: {
+              for (final kitty in KittyId.values)
+                kitty:
+                    AccessoryId.values[kitty.index % AccessoryId.values.length],
+            },
+          ),
+        );
+  final started = DateTime.now();
+  final visit = laneVisitsOn(started).first.start
+      .add(const Duration(minutes: 1));
   final progress = await ProgressController.load(
     levels: await loadLevels(),
     store: store,
+    clock: _lane ? () => visit.add(DateTime.now().difference(started)) : null,
   );
   final audio = await GameAudio.load(
     store: store,
@@ -65,10 +81,11 @@ Future<void> main() async {
     ),
   );
   Timer? switching;
+  if (_lane) Timer(const Duration(seconds: 5), _tapFrontDoor);
   Timer(const Duration(seconds: 15), () {
     measuring = true;
     print(
-      'ROOM_PROFILE_START cats=${store.home.kitties.length} items=${room.placed.length} switch=$_switchRooms',
+      'ROOM_PROFILE_START cats=${store.home.kitties.length} items=${room.placed.length} switch=$_switchRooms place=${_lane ? 'lane' : 'house'}',
     );
     if (_switchRooms) {
       switching = Timer.periodic(
@@ -99,6 +116,7 @@ Future<void> main() async {
     print(
       'ROOM_PROFILE_RESULT ${jsonEncode({
         'switch_rooms': _switchRooms,
+        'place': _lane ? 'lane' : 'house',
         'frames': frames.length,
         'seconds': 60,
         'cats': store.home.kitties.length,
@@ -113,6 +131,18 @@ Future<void> main() async {
 }
 
 const _switchRooms = bool.fromEnvironment('SWITCH_ROOMS');
+const _lane = String.fromEnvironment('PLACE') == 'lane';
+
+/// Ketuk pintu depan (ke Gang Depan) lewat `onTap`-nya langsung.
+void _tapFrontDoor() {
+  void visit(Element element) {
+    final widget = element.widget;
+    if (widget is FrontDoorButton) return widget.onTap();
+    element.visitChildElements(visit);
+  }
+
+  WidgetsBinding.instance.rootElement?.visitChildElements(visit);
+}
 
 /// Membuka pintu ruangan yang sedang tampil: cari [DoorButton] di pohon
 /// widget lalu panggil `onTap`-nya langsung (sentuhan sungguhan bisa

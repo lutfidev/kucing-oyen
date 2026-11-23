@@ -48,7 +48,14 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 30. Alat dan render: `SvgTemplate` dan berkas terjemahan
 - [x] 31. Tinggi baris teks mengikuti desain
 - [ ] 32. Cek di HP dan persiapan rilis produksi
-- [ ] 33. Rapikan informasi dan tata letak kamar Oyen
+- [x] 33. Rumah dua ruangan: gambar dan pindah ruangan
+- [x] 34. Rumah dua ruangan: kucing di dua ruangan
+- [x] 35. Rumah dua ruangan: Hias, pemain baru, dan cek akhir
+- [x] 36. Gang Depan: gambar pintu depan, gang, dan Kumis
+- [x] 37. Gang Depan: kunjungan Kumis dan rutinitas gang
+- [x] 38. Gang Depan: layar, kamera, dan cek akhir
+
+Langkah 33 lama ("Rapikan informasi dan tata letak kamar Oyen") dibatalkan 21 Nov 2026 dan sisanya masuk langkah 35; isinya disimpan di `docs/DESIGN_NOTES.md`, "Bahan langkah 33 lama". Langkah 32 (cek di HP) dikerjakan sesudah langkah 38 dan juga mengukur profil rumah dan gang yang tertunda di langkah 35 dan 38.
 
 Langkah 15–17 dipecah dari "Polish dan rilis Android" lama (diskusi dengan pemilik repo, 19 Okt 2026). Keputusan pasar, bahasa, iklan, dan isi Pengaturan dicatat di `docs/DESIGN_NOTES.md` bagian "Sebelum langkah 15"; prompt di bawah tidak perlu menanyakannya lagi.
 
@@ -729,7 +736,9 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 37".
 
-## 38. Gang Depan: layar, kamera, dan cek akhir
+## 38. Gang Depan: layar, kamera, dan cek akhir ✅
+
+**Status:** selesai 23 Nov 2026. Profil gang dan potret kamera sudah dicek di HP (Xiaomi 24117RN76O); rasa gerakan dengan tangan dan HP spek rendah menyusul bersama langkah 32 (`docs/DESIGN_NOTES.md`, "Langkah 38").
 
 **Hasil:** ekor di pintu kucing dan Oyen menyelinap, kamera menembus pintu ke gang dan pulang, Oyen dan Kumis hidup di gang, lalu overflow, potret layar keempat bahasa, dan profil kinerja di HP.
 

@@ -58,7 +58,16 @@ enum GameSound {
   buy('buy'),
 
   /// Aksesoris dipasang.
-  wear('wear');
+  wear('wear'),
+
+  /// Pintu kucing di pintu depan berayun (Oyen lewat).
+  flap('flap'),
+
+  /// Pintu depan atau pintu pulang terbuka (kamera ke gang atau pulang).
+  doorOpen('door_open'),
+
+  /// Pintu depan atau pintu pulang tertutup di akhir gerakan kamera.
+  doorClose('door_close');
 
   const GameSound(this.file);
 

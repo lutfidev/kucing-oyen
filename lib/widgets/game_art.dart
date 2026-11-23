@@ -641,3 +641,106 @@ class _LaneMarkerPainter extends CustomPainter {
   @override
   bool shouldRepaint(_LaneMarkerPainter old) => old.time != time;
 }
+
+/// Ekor Kumis di pintu kucing (`AdeganTengah`), seukuran area rumah;
+/// [time] = detik goyang, null = diam.
+class KumisTailView extends StatelessWidget {
+  const KumisTailView({super.key, this.time});
+
+  final double? time;
+
+  @override
+  Widget build(BuildContext context) => IgnorePointer(
+    child: ExcludeSemantics(
+      child: CustomPaint(size: Size.infinite, painter: _KumisTailPainter(time)),
+    ),
+  );
+}
+
+class _KumisTailPainter extends CustomPainter {
+  _KumisTailPainter(this.time);
+
+  final double? time;
+
+  @override
+  void paint(Canvas canvas, Size size) =>
+      paintKumisTail(canvas, size: size, time: time);
+
+  @override
+  bool shouldRepaint(_KumisTailPainter old) => old.time != time;
+}
+
+/// Daun pintu [side] terbuka [angleDeg] di atas gambar [targets] (koordinat
+/// desain 390×652), hanya di bagian yang ada di belakangnya; seukuran area
+/// rumah, di lapisan di atas barang dan kucing.
+class DoorLeafCoverView extends StatelessWidget {
+  const DoorLeafCoverView({
+    super.key,
+    required this.side,
+    required this.angleDeg,
+    required this.targets,
+    this.flapDeg = 0,
+  });
+
+  final DoorLeafSide side;
+  final double angleDeg;
+  final double? flapDeg;
+  final List<DoorCoverTarget> targets;
+
+  @override
+  Widget build(BuildContext context) => IgnorePointer(
+    child: CustomPaint(
+      size: Size.infinite,
+      painter: _DoorLeafCoverPainter(side, angleDeg, flapDeg, targets),
+    ),
+  );
+}
+
+class _DoorLeafCoverPainter extends CustomPainter {
+  _DoorLeafCoverPainter(this.side, this.angleDeg, this.flapDeg, this.targets);
+
+  final DoorLeafSide side;
+  final double angleDeg;
+  final double? flapDeg;
+  final List<DoorCoverTarget> targets;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas
+      ..save()
+      ..scale(size.width / laneViewBox.width, size.height / laneViewBox.height);
+    paintDoorLeafCover(
+      canvas,
+      side,
+      angleDeg: angleDeg,
+      flapDeg: flapDeg,
+      targets: targets,
+    );
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_DoorLeafCoverPainter old) => true;
+}
+
+/// Tanda "!" (`AdeganTengah`, `seru`) seukuran [size], tanpa semantik.
+class SeruView extends StatelessWidget {
+  const SeruView({super.key, required this.size});
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) => ExcludeSemantics(
+    child: CustomPaint(size: size, painter: const _SeruPainter()),
+  );
+}
+
+class _SeruPainter extends CustomPainter {
+  const _SeruPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) => paintSeru(canvas, size: size);
+
+  @override
+  bool shouldRepaint(_SeruPainter old) => false;
+}

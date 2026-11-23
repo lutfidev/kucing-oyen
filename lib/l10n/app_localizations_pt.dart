@@ -2133,6 +2133,7 @@ class AppLocalizationsPt extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(room, {
       'living': 'Agora está na sala.',
       'terrace': 'Agora está na varanda.',
+      'lane': 'Agora está na Viela da Frente.',
       'other': 'Agora está na sala.',
     });
     return '$_temp0';
@@ -2181,5 +2182,38 @@ class AppLocalizationsPt extends AppLocalizations {
       'other': 'Para a sala. $_temp2',
     });
     return '$_temp3';
+  }
+
+  @override
+  String get laneName => 'Viela da Frente';
+
+  @override
+  String get frontDoorTo => 'Sair para a Viela da Frente';
+
+  @override
+  String get frontDoorOyenOut =>
+      'Sair para a Viela da Frente. Oyen está lá fora';
+
+  @override
+  String frontDoorAttention(String name, String need) {
+    String _temp0 = intl.Intl.selectLogic(need, {
+      'hungry': '$name está com fome lá fora',
+      'sad': '$name está sem ânimo lá fora',
+      'other': '$name tem moedas de presente para você',
+    });
+    return 'Sair para a Viela da Frente. $_temp0';
+  }
+
+  @override
+  String get laneHomeDoor => 'Voltar para a sala';
+
+  @override
+  String oyenWentOut(String name) {
+    return '$name escapuliu para a Viela da Frente';
+  }
+
+  @override
+  String neighborTapHint(String name) {
+    return '$name, o gato do vizinho. Toque para dar oi';
   }
 }
