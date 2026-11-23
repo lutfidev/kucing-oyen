@@ -1542,6 +1542,9 @@ class _RoomViewState extends State<RoomView>
                 )
               : sprite,
     ];
+    // Bagian gambar yang bisa tertutup daun pintu depan, sejajar [ordered];
+    // null = pintu tertutup.
+    final covers = living && frontDeg > 0 ? _coverTargets(ordered, geo) : null;
     final hopping = {
       for (final kitty in home.kitties)
         if (here(kitty)) kitty: ?_hopBox(kitty, geo),
@@ -1678,20 +1681,8 @@ class _RoomViewState extends State<RoomView>
               ),
             ),
       ],
-      // Daun pintu depan yang terbuka (kamera ke gang) menutup bagian
-      // barang dan kucing di belakangnya (keputusan pemilik repo).
-      cover: [
-        if (living && frontDeg > 0)
-          Positioned.fill(
-            child: DoorLeafCoverView(
-              side: DoorLeafSide.front,
-              angleDeg: frontDeg,
-              targets: _coverTargets(ordered, geo),
-            ),
-          ),
-      ],
       sprites: [
-        for (final sprite in ordered) ...[
+        for (final (i, sprite) in ordered.indexed) ...[
           // Tali gantungan teras tepat di belakang barangnya.
           if (sprite case ItemSprite(:final id)
               when geo.hangs(id) && id != dragging)
@@ -1716,6 +1707,25 @@ class _RoomViewState extends State<RoomView>
                 ),
               ),
             },
+          // Daun pintu depan yang terbuka (kamera ke gang) menutup bagian
+          // gambar ini yang di belakangnya (keputusan pemilik repo), tepat
+          // sesudah gambarnya: barang dan kucing di depannya tetap di atas
+          // daun.
+          if (covers != null &&
+              doorLeafCoverPolygon(
+                    DoorLeafSide.front,
+                    frontDeg,
+                    covers[i],
+                  ).length >=
+                  3)
+            Positioned.fill(
+              key: ValueKey('door-cover-$i'),
+              child: DoorLeafCoverView(
+                side: DoorLeafSide.front,
+                angleDeg: frontDeg,
+                targets: [covers[i]],
+              ),
+            ),
         ],
         // Kucing yang melompat ke atau dari barang dinding, paling depan.
         for (final MapEntry(key: kitty, value: box) in hopping.entries)

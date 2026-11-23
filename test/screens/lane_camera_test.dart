@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/game/model/home.dart';
+import 'package:kucing_oren/game/model/home_items.dart';
+import 'package:kucing_oren/game/model/house.dart';
+import 'package:kucing_oren/game/model/kitties.dart';
+import 'package:kucing_oren/game/model/room.dart';
 import 'package:kucing_oren/game/model/sounds.dart';
 import 'package:kucing_oren/screens/lane/lane_scene.dart';
 import 'package:kucing_oren/screens/room/lane_camera.dart';
 import 'package:kucing_oren/screens/room/room_parts.dart';
 import 'package:kucing_oren/screens/room/room_scene.dart';
+import 'package:kucing_oren/widgets/widgets.dart';
 
 import '../test_helpers.dart';
 
@@ -228,6 +234,56 @@ void main() {
       contains(l10nId.roomName('living')),
     );
     semantics.dispose();
+  });
+
+  testWidgets('daun pintu menutup kasur di belakangnya, bukan Oyen di depan', (
+    tester,
+  ) async {
+    // Kasur di posisi desain `AdeganTengah` (kiri 118, kaki 434), Oyen di
+    // tempat awalnya (kaki y 556) = di depan kasur.
+    const floor = HouseFloor();
+    final kasur = roomItemOf(RoomItemId.kasur);
+    final s = floor.itemSize(kasur, depthScale(434));
+    final room = Room(owned: const [RoomItemId.kasur])
+        .place(RoomItemId.kasur, floor.spotAtFeet(118 + s.width / 2, 434));
+    setScreenSize(tester, const Size(390, 844));
+    await pumpApp(
+      tester,
+      progress: testProgressWith(
+        best: const {1: 3},
+        home: Home(room: room),
+      ),
+    );
+    await tester.tap(_frontDoor);
+    // Pintu 70–88°: daun menutup sebagian kasur.
+    for (var ms = 0; ms <= laneOpeningMs + 300; ms += 16) {
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    final covers = find.byType(DoorLeafCoverView);
+    expect(covers, findsWidgets);
+    // Urutan gambar (urutan pohon di satu Stack): tutupan kasur sesudah
+    // kasur dan sebelum Oyen, jadi Oyen tetap di atas daun pintu.
+    final order = find
+        .descendant(
+          of: find.byType(RoomScene),
+          matching: find.byWidgetPredicate(
+            (w) =>
+                w is DoorLeafCoverView ||
+                w.key == const ValueKey(KittyId.oyen) ||
+                (w is RoomItemView && w.id == RoomItemId.kasur),
+          ),
+        )
+        .evaluate()
+        .map((e) => e.widget)
+        .toList();
+    final bed = order.indexWhere((w) => w is RoomItemView);
+    final cover = order.indexWhere((w) => w is DoorLeafCoverView);
+    final oyen = order.indexWhere((w) => w.key == const ValueKey(KittyId.oyen));
+    expect(bed, isNonNegative);
+    expect(oyen, greaterThan(bed));
+    expect(cover, greaterThan(bed));
+    expect(cover, lessThan(oyen));
+    await _finishCamera(tester);
   });
 
   testWidgets('bunyi pintu terbuka dan tertutup', (tester) async {
