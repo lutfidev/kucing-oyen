@@ -68,10 +68,13 @@ class FrontDoor extends StatelessWidget {
   const FrontDoor({
     super.key,
     required this.flapDeg,
+    this.angleDeg = 0,
     this.tail = false,
     this.time,
   });
 
+  /// Sudut daun pintu depan (0 = tertutup; terbuka selama kamera ke gang).
+  final double angleDeg;
   final double? flapDeg;
   final bool tail;
   final double? time;
@@ -81,7 +84,11 @@ class FrontDoor extends StatelessWidget {
     child: Stack(
       fit: StackFit.expand,
       children: [
-        DoorLeafView(side: DoorLeafSide.front, angleDeg: 0, flapDeg: flapDeg),
+        DoorLeafView(
+          side: DoorLeafSide.front,
+          angleDeg: angleDeg,
+          flapDeg: flapDeg,
+        ),
         if (tail) KumisTailView(key: const ValueKey('kumis-tail'), time: time),
       ],
     ),

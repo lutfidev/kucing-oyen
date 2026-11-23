@@ -26,6 +26,7 @@ class LaneScene extends StatelessWidget {
     this.passing = const [],
     this.onBench = const [],
     this.sprites = const [],
+    this.cover = const [],
   });
 
   /// Pintu pulang diam: sedikit terbuka (`kGang`: 8°, tepi bebas x 363).
@@ -46,6 +47,10 @@ class LaneScene extends StatelessWidget {
   final List<Widget> passing;
   final List<Widget> onBench;
   final List<Widget> sprites;
+
+  /// Di atas kucing, di bawah cahaya udara: daun pintu pulang yang terbuka
+  /// menutup kucing di belakangnya ([DoorLeafCoverView]).
+  final List<Widget> cover;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +85,7 @@ class LaneScene extends StatelessWidget {
         ...onBench,
         layer('lane-bench-front', LaneLayer.benchFront),
         ...sprites,
+        ...cover,
         layer('lane-air', LaneLayer.airLight),
       ],
     );

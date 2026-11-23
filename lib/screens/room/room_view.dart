@@ -25,6 +25,7 @@ import '../../l10n/names.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 import '../coins/coin_sheet.dart';
+import '../lane/lane_scene.dart';
 import '../shop/shop_tab.dart';
 import 'room_geometry.dart';
 import 'decorate.dart';
@@ -32,6 +33,7 @@ import 'door_parts.dart';
 import 'front_door.dart';
 import 'house_pager.dart';
 import 'kitty_card.dart';
+import 'lane_camera.dart';
 import 'room_parts.dart';
 import 'room_reaction.dart';
 import 'room_scene.dart';
@@ -189,6 +191,17 @@ class _RoomViewState extends State<RoomView>
 
   /// Oyen sedang pulang lewat pintu kucing yang terlihat.
   bool _oyenComingHome = false;
+
+  /// Pemain di Gang Depan (di luar pager rumah).
+  bool _inLane = false;
+
+  /// Kamera menembus pintu yang sedang berjalan: false = ke gang, true =
+  /// pulang; null = tidak ada.
+  bool? _camera;
+  final _cameraKey = GlobalKey<LaneCameraState>();
+
+  /// Opasitas chip "‹ Ruang tengah" selama kamera ke gang.
+  double _cameraChip = 0;
 
   /// [_time] terakhir kunjungan dicek dari jam di bingkai kamar.
   double _laneCheckedAt = double.negativeInfinity;
@@ -443,7 +456,11 @@ class _RoomViewState extends State<RoomView>
 
   /// Pemain melihat ruang tengah sekarang (rumah tampil, gerak hidup).
   bool get _watchingLiving =>
-      _house == HouseRoom.living && _animating && !_ticker.muted;
+      _house == HouseRoom.living &&
+      !_inLane &&
+      _camera == null &&
+      _animating &&
+      !_ticker.muted;
 
   /// Keadaan kunjungan Kumis ke keadaan Oyen: kunjungan berjalan = Oyen
   /// keluar (dengan momen ekor kalau pemain melihat ruang tengah, langsung
@@ -954,10 +971,16 @@ class _RoomViewState extends State<RoomView>
         ? s.roomPlayCompact + space.s12 + s.roomMenuButtonCompact
         : s.roomPlay + space.s16 + s.roomMenuButton;
     return PopScope(
-      canPop: selected == null && !_decorating,
+      canPop: selected == null && !_decorating && !_inLane && _camera == null,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
-        if (_decorating) {
+        if (_camera != null) {
+          _cameraKey.currentState?.skip();
+        } else if (selected != null) {
+          _closeCard();
+        } else if (_inLane) {
+          _goHome();
+        } else if (_decorating) {
           _finish();
         } else {
           _closeCard();
@@ -1079,8 +1102,41 @@ class _RoomViewState extends State<RoomView>
     );
   }
 
-  /// Ketuk pintu depan: ke Gang Depan (langkah 38, Task 11).
-  void _openLane() {}
+  /// Ketuk pintu depan: kamera menembus pintu ke Gang Depan. Ketukan
+  /// selama kamera berjalan melompat ke akhir, bukan transisi baru.
+  void _openLane() => _startCamera(home: false);
+
+  /// Ketuk pintu pulang, chip, atau tombol kembali di gang: pulang.
+  void _goHome() => _startCamera(home: true);
+
+  void _startCamera({required bool home}) {
+    if (_camera != null) {
+      _cameraKey.currentState?.skip();
+      return;
+    }
+    if (_inLane != home) return;
+    setState(() {
+      _camera = home;
+      _cameraChip = 0;
+      _selected = null;
+      _reaction = null;
+      _lifted = null;
+    });
+  }
+
+  void _cameraDone() {
+    final home = _camera;
+    if (home == null) return;
+    _sound(GameSound.doorClose);
+    setState(() {
+      _camera = null;
+      _inLane = !home;
+      if (home) {
+        _house = _arrived = HouseRoom.living;
+        _pagerJumps++;
+      }
+    });
+  }
 
   /// Pindah ruangan lewat pintu atau chip (pager menggeser).
   void _goTo(HouseRoom room) => setState(() => _house = room);
@@ -1096,14 +1152,25 @@ class _RoomViewState extends State<RoomView>
     final top = MediaQuery.paddingOf(context).top + space.s6;
     // Kurangi gerak: tidak ada transisi, chip langsung tampil.
     final arrived = _still ? _house : _arrived;
+    final outside = _inLane || _camera != null;
     final terrace =
         _house == HouseRoom.terrace &&
         arrived == HouseRoom.terrace &&
-        !_decorating;
+        !_decorating &&
+        !outside;
     final lifted = _lifted;
     // Tahan-seret kucing: satu pengenal untuk seluruh ruangan, supaya
-    // seretan tidak putus saat kucing pindah lapisan.
-    final canLift = !_decorating && _selected == null;
+    // seretan tidak putus saat kucing pindah lapisan. Tidak ada di gang.
+    final canLift = !_decorating && _selected == null && !outside;
+    final livingGeo = RoomGeometry(size, HouseRoom.living);
+    final camera = _camera;
+    // Chip "‹ Ruang tengah" di gang, memudar masuk di akhir kamera.
+    final laneChip = switch ((camera, _inLane)) {
+      (false, _) => _cameraChip,
+      (true, _) => 0.0,
+      (null, true) => 1.0,
+      (null, false) => 0.0,
+    };
     return Stack(
       key: const ValueKey('room-area'),
       clipBehavior: Clip.none,
@@ -1130,19 +1197,35 @@ class _RoomViewState extends State<RoomView>
                           ..onLongPressEnd = ((_) => _liftEnd()),
                       ),
               },
-              child: HousePager(
-                key: ValueKey(_pagerJumps),
-                room: _house,
-                enabled: !_decorating && lifted == null,
-                onRoom: (room) => setState(() => _house = room),
-                onArrive: (room) {
-                  if (room == HouseRoom.living && widget.life) {
-                    _armForcedVisit();
-                  }
-                  if (room != _arrived) setState(() => _arrived = room);
-                },
-                builder: (context, room) => _room(RoomGeometry(size, room)),
-              ),
+              child: camera != null
+                  ? LaneCamera(
+                      key: _cameraKey,
+                      home: camera,
+                      geo: livingGeo,
+                      from: camera
+                          ? (deg) => _lane(livingGeo, homeDeg: deg)
+                          : (deg) => _room(livingGeo, frontDeg: deg),
+                      to: camera ? _room(livingGeo) : _lane(livingGeo),
+                      onOpen: () => _sound(GameSound.doorOpen),
+                      onFrame: (f) => _cameraChip = f.chipOpacity,
+                      onDone: _cameraDone,
+                    )
+                  : _inLane
+                  ? _lane(livingGeo)
+                  : HousePager(
+                      key: ValueKey(_pagerJumps),
+                      room: _house,
+                      enabled: !_decorating && lifted == null,
+                      onRoom: (room) => setState(() => _house = room),
+                      onArrive: (room) {
+                        if (room == HouseRoom.living && widget.life) {
+                          _armForcedVisit();
+                        }
+                        if (room != _arrived) setState(() => _arrived = room);
+                      },
+                      builder: (context, room) =>
+                          _room(RoomGeometry(size, room)),
+                    ),
             ),
           ),
         ),
@@ -1158,7 +1241,21 @@ class _RoomViewState extends State<RoomView>
             onCoins: () => showCoinSheet(context, _progress),
           ),
         ),
-        if (!empty || _decorating || terrace || lifted != null)
+        if (laneChip > 0)
+          Positioned(
+            left: space.s16,
+            right: space.s16,
+            top: top + s.roomDecorateGap,
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Opacity(
+                opacity: laneChip,
+                child: RoomChip(onPressed: _goHome),
+              ),
+            ),
+          )
+        else if (!outside &&
+            (!empty || _decorating || terrace || lifted != null))
           Positioned(
             left: space.s16,
             right: space.s16,
@@ -1205,7 +1302,7 @@ class _RoomViewState extends State<RoomView>
 
   /// Isi satu ruangan [geo]: latar, barang, kucing di ruangan itu (yang
   /// lewat pintu di belakang kusen), dan tanda di atasnya.
-  Widget _room(RoomGeometry geo) {
+  Widget _room(RoomGeometry geo, {double frontDeg = 0}) {
     final living = geo.which == HouseRoom.living;
     if (geo.which == _house) _geo = geo;
     final current = geo.which == _house;
@@ -1313,7 +1410,8 @@ class _RoomViewState extends State<RoomView>
         if (living)
           Positioned.fill(
             child: FrontDoor(
-              flapDeg: _flapDeg(),
+              angleDeg: frontDeg,
+              flapDeg: frontDeg > 0 ? 0 : _flapDeg(),
               tail: tailTime != null && tailVisibleAt(tailTime),
               time: _animating ? tailTime : null,
             ),
@@ -1379,6 +1477,18 @@ class _RoomViewState extends State<RoomView>
                 ),
               ),
             ),
+      ],
+      // Daun pintu depan yang terbuka (kamera ke gang) menutup bagian
+      // barang dan kucing di belakangnya (keputusan pemilik repo).
+      cover: [
+        if (living && frontDeg > 0)
+          Positioned.fill(
+            child: DoorLeafCoverView(
+              side: DoorLeafSide.front,
+              angleDeg: frontDeg,
+              targets: _coverTargets(ordered, geo),
+            ),
+          ),
       ],
       sprites: [
         for (final sprite in ordered) ...[
@@ -1551,6 +1661,61 @@ class _RoomViewState extends State<RoomView>
                   child: BowlRefillLabel(left: left),
                 ),
               ),
+      ],
+    );
+  }
+
+  /// Gambar ruangan [geo] yang bisa tertutup daun pintu yang terbuka, di
+  /// koordinat desain.
+  List<DoorCoverTarget> _coverTargets(
+    List<RoomSprite> sprites,
+    RoomGeometry geo,
+  ) {
+    Rect design(Rect r) => Rect.fromLTRB(
+      r.left / geo.sx,
+      r.top / geo.sy,
+      r.right / geo.sx,
+      r.bottom / geo.sy,
+    );
+    return [
+      for (final sprite in sprites)
+        switch (sprite) {
+          ItemSprite(:final id, :final box, :final flat) => DoorCoverTarget(
+            design(box),
+            feet: box.bottom / geo.sy,
+            depth: flat ? DoorCoverTarget.flat : DoorCoverTarget.item,
+            wall: roomItemOf(id).zone == RoomZone.wall && !geo.hangs(id),
+          ),
+          KittySprite(:final box) => DoorCoverTarget(
+            design(box),
+            feet: geo.feetOf(box) / geo.sy,
+            depth: DoorCoverTarget.upright,
+          ),
+        },
+    ];
+  }
+
+  /// Gang Depan (desain 7, 9): latar, pintu pulang terbuka [homeDeg], dan
+  /// tombol pintu pulang. Kucing di gang ditambahkan Task 12.
+  Widget _lane(RoomGeometry geo, {double homeDeg = LaneDoorAngles.homeRest}) {
+    final l = context.l10n;
+    return Stack(
+      key: const ValueKey('lane'),
+      clipBehavior: Clip.none,
+      children: [
+        Positioned.fill(
+          child: LaneScene(
+            geo: geo,
+            time: _animating ? _time : null,
+            homeDoorDeg: homeDeg,
+          ),
+        ),
+        DoorButton(
+          key: const ValueKey('lane-home-door-button'),
+          geo: geo,
+          label: l.laneHomeDoor,
+          onTap: _goHome,
+        ),
       ],
     );
   }
