@@ -54,7 +54,7 @@ Satu langkah = satu sesi = satu PR. Pemilik repo `/clear` setelah tiap sesi, jad
 - [x] 36. Gang Depan: gambar pintu depan, gang, dan Kumis
 - [x] 37. Gang Depan: kunjungan Kumis dan rutinitas gang
 - [x] 38. Gang Depan: layar, kamera, dan cek akhir
-- [ ] 39. Kinerja rumah penuh: animasi SVG per bingkai
+- [x] 39. Kinerja rumah penuh: animasi SVG per bingkai
 
 Langkah 33 lama ("Rapikan informasi dan tata letak kamar Oyen") dibatalkan 21 Nov 2026 dan sisanya masuk langkah 35; isinya disimpan di `docs/DESIGN_NOTES.md`, "Bahan langkah 33 lama". Langkah 32 (cek di HP) dikerjakan sesudah langkah 38 dan juga mengukur profil rumah dan gang yang tertunda di langkah 35 dan 38.
 
@@ -751,7 +751,9 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 38".
 
-## 39. Kinerja rumah penuh: animasi SVG per bingkai
+## 39. Kinerja rumah penuh: animasi SVG per bingkai ✅
+
+**Status:** selesai 24 Nov 2026 (PR langkah 39). Bagian lapisan rumah dan gang yang tidak bergerak direkam sekali, barang beranimasi memakai varian `bind`. Di Xiaomi: diam 4,8% → 2,1–2,6%, pindah ruangan 5,0% → 2,6–2,8%, gang 3,6% → 1,1% (satu run diam 13,6% saat HP panas). HP spek rendah belum diukur (dilewati atas keputusan pemilik repo). Rincian di [catatan performa](performance-room-2026-11-08.md) dan `docs/DESIGN_NOTES.md`, "Langkah 39".
 
 **Waktu:** sesudah langkah 32 di-merge. Disepakati pemilik repo 23 Nov 2026: angka dicatat dulu, optimasi lanjutan jadi langkah sendiri.
 

@@ -63,7 +63,7 @@ void paintHouseLayer(
   final drawing = time == null || !template.animated
       ? _still.putIfAbsent(key, () => template.render(const {}))
       : _moving
-            .putIfAbsent(key, () => template.bind(const {}))
+            .putIfAbsent(key, () => template.bind(const {}, record: true))
             .render(time: time);
   canvas
     ..save()

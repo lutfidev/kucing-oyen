@@ -58,7 +58,9 @@ void paintLaneLayer(
   final vals = {'kupu': butterflies};
   final drawing = time == null || !template.animated
       ? _still.putIfAbsent(key, () => template.render(vals))
-      : _moving.putIfAbsent(key, () => template.bind(vals)).render(time: time);
+      : _moving
+            .putIfAbsent(key, () => template.bind(vals, record: true))
+            .render(time: time);
   canvas
     ..save()
     ..scale(size.width / laneViewBox.width, size.height / laneViewBox.height);

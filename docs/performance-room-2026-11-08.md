@@ -123,3 +123,58 @@ Gang sesudah perbaikan, satu run: 4.058 bingkai, build 7,149 ms (P90 8,152), ras
 Versi release biasa dengan optimasi dipasang kembali setelah tes ulang. Potret layar sesudah pemulihan menunjukkan progres asli tetap ada: 80 koin, 9/60 bintang, kamar awal Oyen dan mangkuk. Data kamar penuh tidak ditulis ke penyimpanan pemain. Pengaturan layar tetap menyala saat USB tersambung sudah dikembalikan ke nilai awal 0; proses aplikasi release berjalan dan buffer crash kosong saat diperiksa.
 
 Pemilik repo melaporkan pengujian manual debug dan release berjalan baik untuk gameplay, suara, iklan Tambah Koin dan hadiahnya; ikon dan splash juga dinilai baik. Ini laporan manual, bukan pengukuran latensi audio. TalkBack dilewati atas permintaan pemilik repo. Formulir UMP, iklan petunjuk, ikon tema, dan splash Android versi lama belum diverifikasi secara terpisah.
+
+## Kinerja rumah penuh (langkah 39, 24 Nov 2026)
+
+HP sama (Xiaomi 24117RN76O, Android 16), data `tool/profile_room.dart` yang sama (9 kucing beraksesoris, 20 barang toko + mangkuk). APK profil dipasang dengan `adb install -r`; "tetap menyala saat USB" sementara 0 → `usb` → 0. `tool/profile_room.dart` sekarang juga menghitung bingkai lambat karena build (`build_over_16_67ms`) dan karena raster (`raster_over_16_67ms`) secara terpisah.
+
+**Probe sementara** (sakelar `--dart-define=PROBE=…` di penggambar, tidak di-commit), satu run per baris, bingkai di atas 16,67 ms per 60 detik:
+
+| Varian | Bingkai | Build rata-rata (ms) | Raster rata-rata (ms) | Lambat (build / raster) |
+| --- | --- | --- | --- | --- |
+| Normal (2 run) | 3.479 / 3.484 | 9,48 / 9,45 | 11,78 / 11,75 | 168 (152 / 19) · 164 (159 / 9) |
+| Tanpa lapisan rumah | 3.938 | 7,98 | 10,45 | 99 (68 / 32) |
+| Tanpa bayangan | 3.472 | 9,80 | 11,57 | 178 (168 / 13) |
+| Tanpa kucing | 3.804 | 8,25 | 11,61 | 97 (88 / 15) |
+| Tanpa barang | 4.131 | 7,57 | 11,64 | 122 (105 / 19) |
+| Lapisan rumah dan kucing diam | 3.831 | 8,07 | 13,08 | 86 (50 / 37) |
+| Normal, pindah ruangan | 3.705 | 8,85 | 12,63 | 185 (176 / 13) |
+
+Kesimpulan: bingkai lambat hampir semuanya karena build (sisi Dart), bukan raster. Penyumbang terbesar lapisan rumah yang bergerak: seluruh latar disusun ulang tiap bingkai, padahal yang bergerak hanya awan, daun, dan cahaya berdenyut. Barang beranimasi juga masih memakai `SvgTemplate.render` (urai template) tiap bingkai. Bayangan blur tidak berpengaruh.
+
+**Perbaikan:**
+
+- `SvgTemplate.bind(vals, record: true)`: rangkaian elemen yang tidak beranimasi (dirinya, induknya, dan anaknya) direkam sekali sebagai `Picture` di koordinat akhirnya; hanya bagian yang bergerak disusun tiap bingkai. Dipakai lapisan rumah dan gang. Di dalam `<g opacity>` atau `clip-path`, dan di bawah induk yang bergerak, bentuk tetap digambar langsung (rekaman di sana menggeser warna 1 tingkat dari render acuan). Sprite kucing tidak memakainya: rekaman kucing yang sudah pernah digambar bisa beda 1 tingkat warna dari render acuan (test piksel).
+- Barang beranimasi memakai varian `bind` per isi mangkuk, seperti kucing.
+
+**Sesudah** (kode akhir tanpa probe):
+
+| Run | Bingkai | Build rata-rata / P90 (ms) | Raster rata-rata / P90 (ms) | Lambat (build / raster) |
+| --- | --- | --- | --- | --- |
+| Diam 1 | 3.716 | 8,04 / 9,38 | 12,94 / 14,48 | 97 = 2,6% (71 / 27) |
+| Diam 2 | 3.472 | 9,38 / 11,09 | 15,20 / 16,71 | 471 = 13,6% (131 / 367), HP panas sesudah ±45 menit diukur sambil dicas |
+| Diam 3 (sesudah didinginkan 6 menit, baterai 33,6 °C) | 3.814 | 7,74 / 8,99 | 12,86 / 14,49 | 81 = 2,1% (61 / 24) |
+| Pindah ruangan 1 | 3.834 | 7,20 / 9,72 | 13,32 / 14,72 | 108 = 2,8% (63 / 51) |
+| Pindah ruangan 2 | 3.830 | 7,22 / 9,83 | 13,33 / 14,74 | 100 = 2,6% (64 / 42) |
+| Gang | 4.281 | 5,42 / 6,42 | 13,59 / 14,37 | 45 = 1,1% (23 / 23) |
+
+Run lebih awal dengan perbaikan yang sama tetapi sakelar ukur masih terpasang (tidak aktif), bingkai lambat: diam 92 (2,4%) dan 167 (4,5%, raster 93), pindah ruangan 87 (2,2%) dan 91 (2,4%).
+
+**Batas:** di bawah ≲3% saat diam dan pindah ruangan, kecuali run yang HP-nya panas. Bingkai lambat karena raster naik (diam 19/9 → 27/24, pindah ruangan 13 → 51/42), jadi sekarang 25–50% dari bingkai lambat yang tersisa; ini sasaran berikutnya kalau kinerja perlu ditingkatkan lagi. Raster rata-rata naik ±1,3 ms dibanding sebelum perbaikan; kenaikan yang sama muncul di probe "diam" tanpa rekaman, jadi kemungkinan karena bingkai dibuat lebih cepat, bukan karena `drawPicture`. Sisanya raster ±13 ms per bingkai (seluruh layar digambar ulang tiap bingkai; Impeller tidak punya cache raster) dan lonjakan build P99 ±18 ms.
+
+```json
+{"probe":"","switch_rooms":false,"place":"house","frames":3479,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":9.477787007760842,"p50_ms":8.813,"p90_ms":10.665,"p99_ms":21.568,"max_ms":37.688},"raster":{"mean_ms":11.78224978442084,"p50_ms":11.571,"p90_ms":13.604,"p99_ms":16.17,"max_ms":30.369},"over_16_67ms":168,"build_over_16_67ms":152,"raster_over_16_67ms":19,"over_8_33ms":3479}
+{"probe":"nohouse","switch_rooms":false,"place":"house","frames":3938,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":7.983416962925326,"p50_ms":7.352,"p90_ms":9.576,"p99_ms":20.529,"max_ms":31.398},"raster":{"mean_ms":10.450573895378387,"p50_ms":10.013,"p90_ms":12.786,"p99_ms":16.531,"max_ms":26.833},"over_16_67ms":99,"build_over_16_67ms":68,"raster_over_16_67ms":32,"over_8_33ms":3758}
+{"probe":"noshadow","switch_rooms":false,"place":"house","frames":3472,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":9.801340725806444,"p50_ms":9.097,"p90_ms":10.952,"p99_ms":21.652,"max_ms":37.022},"raster":{"mean_ms":11.574465437788025,"p50_ms":11.391,"p90_ms":13.185,"p99_ms":15.578,"max_ms":24.325},"over_16_67ms":178,"build_over_16_67ms":168,"raster_over_16_67ms":13,"over_8_33ms":3472}
+{"probe":"nokitty","switch_rooms":false,"place":"house","frames":3804,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":8.245946372239755,"p50_ms":7.573,"p90_ms":9.487,"p99_ms":19.664,"max_ms":36.867},"raster":{"mean_ms":11.612433491062076,"p50_ms":11.457,"p90_ms":13.834,"p99_ms":15.288,"max_ms":22.55},"over_16_67ms":97,"build_over_16_67ms":88,"raster_over_16_67ms":15,"over_8_33ms":3774}
+{"probe":"noitem","switch_rooms":false,"place":"house","frames":4131,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":7.572454611474224,"p50_ms":6.951,"p90_ms":8.774,"p99_ms":19.737,"max_ms":44.459},"raster":{"mean_ms":11.644395545872694,"p50_ms":12.529,"p90_ms":13.493,"p99_ms":14.943,"max_ms":25.573},"over_16_67ms":122,"build_over_16_67ms":105,"raster_over_16_67ms":19,"over_8_33ms":3894}
+{"probe":"stillhouse,stillkitty","switch_rooms":false,"place":"house","frames":3831,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":8.070439832941807,"p50_ms":7.499,"p90_ms":9.866,"p99_ms":18.031,"max_ms":27.16},"raster":{"mean_ms":13.076827460193108,"p50_ms":13.365,"p90_ms":14.723,"p99_ms":16.501,"max_ms":30.481},"over_16_67ms":86,"build_over_16_67ms":50,"raster_over_16_67ms":37,"over_8_33ms":3831}
+{"probe":"","switch_rooms":false,"place":"house","frames":3484,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":9.452847014925378,"p50_ms":8.789,"p90_ms":10.541,"p99_ms":21.944,"max_ms":36.361},"raster":{"mean_ms":11.750208955223869,"p50_ms":11.559,"p90_ms":13.518,"p99_ms":15.623,"max_ms":20.213},"over_16_67ms":164,"build_over_16_67ms":159,"raster_over_16_67ms":9,"over_8_33ms":3484}
+{"probe":"","switch_rooms":true,"place":"house","frames":3705,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":8.85213603238867,"p50_ms":8.061,"p90_ms":11.991,"p99_ms":23.441,"max_ms":43.531},"raster":{"mean_ms":12.6315120107962,"p50_ms":12.978,"p90_ms":14.621,"p99_ms":15.938,"max_ms":26.06},"over_16_67ms":185,"build_over_16_67ms":176,"raster_over_16_67ms":13,"over_8_33ms":3674}
+{"switch_rooms":false,"place":"house","frames":3716,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":8.041252691065656,"p50_ms":7.458,"p90_ms":9.382,"p99_ms":19.101,"max_ms":41.453},"raster":{"mean_ms":12.936931377825621,"p50_ms":12.851,"p90_ms":14.477,"p99_ms":16.34,"max_ms":23.902},"over_16_67ms":97,"build_over_16_67ms":71,"raster_over_16_67ms":27,"over_8_33ms":3716}
+{"switch_rooms":true,"place":"house","frames":3834,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":7.195794470526875,"p50_ms":6.937,"p90_ms":9.724,"p99_ms":18.426,"max_ms":33.714},"raster":{"mean_ms":13.323632759520072,"p50_ms":13.813,"p90_ms":14.716,"p99_ms":16.882,"max_ms":24.567},"over_16_67ms":108,"build_over_16_67ms":63,"raster_over_16_67ms":51,"over_8_33ms":3834}
+{"switch_rooms":false,"place":"house","frames":3472,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":9.378721774193576,"p50_ms":8.706,"p90_ms":11.094,"p99_ms":20.665,"max_ms":39.207},"raster":{"mean_ms":15.202633640552992,"p50_ms":15.128,"p90_ms":16.71,"p99_ms":19.447,"max_ms":29.545},"over_16_67ms":471,"build_over_16_67ms":131,"raster_over_16_67ms":367,"over_8_33ms":3472}
+{"switch_rooms":true,"place":"house","frames":3830,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":7.217926370757184,"p50_ms":6.919,"p90_ms":9.829,"p99_ms":18.592,"max_ms":36.015},"raster":{"mean_ms":13.333026892950409,"p50_ms":13.767,"p90_ms":14.741,"p99_ms":16.787,"max_ms":28.499},"over_16_67ms":100,"build_over_16_67ms":64,"raster_over_16_67ms":42,"over_8_33ms":3830}
+{"switch_rooms":false,"place":"lane","frames":4281,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":5.420305769679979,"p50_ms":4.801,"p90_ms":6.424,"p99_ms":14.656,"max_ms":32.695},"raster":{"mean_ms":13.594898855407623,"p50_ms":13.61,"p90_ms":14.373,"p99_ms":16.025,"max_ms":21.971},"over_16_67ms":45,"build_over_16_67ms":23,"raster_over_16_67ms":23,"over_8_33ms":4281}
+{"switch_rooms":false,"place":"house","frames":3814,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":7.73908730991086,"p50_ms":7.104,"p90_ms":8.989,"p99_ms":18.283,"max_ms":33.308},"raster":{"mean_ms":12.856357105401118,"p50_ms":12.862,"p90_ms":14.487,"p99_ms":16.112,"max_ms":23.358},"over_16_67ms":81,"build_over_16_67ms":61,"raster_over_16_67ms":24,"over_8_33ms":3814}
+```

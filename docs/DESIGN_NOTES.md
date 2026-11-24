@@ -579,6 +579,21 @@ Saran 17 tabel "Sesudah langkah 26" di roadmap (PR #25).
 - **Pesan gagal persetujuan iklan** (dari arsip v2, disetujui 21 Nov 2026): kalau `showPrivacyOptions()` melempar, Pengaturan menampilkan `privacyConsentFailed` sendiri, bukan pesan browser, dan tombolnya bisa diketuk lagi; coba lagi yang berhasil menghapus pesannya. `UmpAdConsent.showPrivacyOptions` dulu menelan semua error, jadi sekarang melempar kalau plugin melaporkan error (callback-nya dipanggil sebelum Future-nya selesai) atau pemanggilannya gagal (temuan review). Jalur SDK asli ini tidak punya test (berkas khusus SDK) dan tidak bisa dicoba dari Indonesia. Juga dicek di `overflow_test`.
 - **Temuan review yang tidak diubah:** poligon tutupan daun pintu dihitung dua kali per sprite selama kamera (murah); kucing yang sedang melompat ke barang dinding digambar sesudah semua sprite sehingga tidak tertutup daun (jarang, 1,7 detik); test binding SVG hanya menjaga kesamaan piksel, bukan jumlah pembuatan ulang bentuk (diukur dengan benchmark). `WentOut` lewat pintu kucing yang baru dilaporkan saat pemain di kamera atau di gang tidak lagi mengayunkan pintu kucing atau diumumkan.
 
+## Langkah 39: kinerja rumah penuh
+
+- **Diukur dulu di HP** (Xiaomi 24117RN76O, 24 Nov 2026), dengan sakelar probe sementara yang mematikan satu bagian per run (tidak di-commit). Bingkai lambat hampir semuanya karena build, bukan raster. Penyumbang terbesar lapisan rumah yang bergerak (seluruh latar disusun ulang tiap bingkai, padahal yang bergerak hanya awan, daun, dan cahaya), lalu kucing dan barang beranimasi. Bayangan blur tidak berpengaruh. Angka lengkap di `docs/performance-room-2026-11-08.md`, "Kinerja rumah penuh (langkah 39)".
+- **Perbaikan:**
+  - `SvgTemplate.bind(vals, record: true)` merekam rangkaian elemen yang tidak beranimasi (dirinya, induknya, dan anaknya) sekali sebagai `Picture`. Rekamannya dibuat di koordinat akhir, dengan matriks induk ikut direkam, karena transform kanvas di atas rekaman membulatkan tepi bentuk sedikit berbeda. Dipakai lapisan rumah dan gang.
+  - Barang beranimasi memakai varian `bind` per isi mangkuk, bukan `render` tiap bingkai.
+- **Batas rekaman, dijaga test piksel `svg_binding_test`:**
+  - Di dalam `<g opacity>` atau `clip-path`, dan di bawah induk yang bergerak, bentuk tetap digambar langsung. Rekaman di sana menggeser warna 1 tingkat dari render acuan.
+  - Sprite kucing tidak direkam: rekaman kucing yang sudah pernah digambar sekali bisa beda 1 tingkat warna dari render acuan. Penyebab pastinya di raster native belum ditemukan.
+  - Waktu di test diulang (0 → 2,7 → 9,1 → 0) supaya rekaman yang dipakai ulang ikut dicek, di skala 1 dan dua skala tidak seragam layar HP (360×520, 412×690,7), satu binding per skala.
+  - **Batas yang diterima:** rekaman berisi lapisan transparan atau clip yang sudah pernah digambar di satu skala lalu dipakai di skala lain bisa beda 1 tingkat warna di beberapa piksel (contoh: 34 byte di latar gang). Di aplikasi ukuran ruangan tetap per HP, jadi ini hanya terjadi selama kamera ke gang (1,7 detik). Mengecualikan bagian itu dari rekaman akan menghilangkan sebagian besar penghematan, karena garis lantai ruang tengah ada di dalam clip.
+  - Temuan review kecil yang diperbaiki: grup diam kosong tidak lagi menambah perintah dan kotak `Rect.zero`; binding tanpa `record` tidak lagi membuat grup gabungan.
+- **Hasil:** diam 4,8% → 2,6% dan 2,1%, pindah ruangan 5,0% → 2,8% dan 2,6%, gang 3,6% → 1,1%. Satu run diam 13,6% saat HP panas (raster 15,2 ms rata-rata) sesudah ±45 menit diukur terus sambil dicas; diulang sesudah didinginkan. Sisanya raster ±13 ms per bingkai dan lonjakan build P99 ±18 ms.
+- **HP spek rendah:** pemilik repo punya, tetapi pengukurannya dilewati atas keputusan pemilik repo (25 Nov 2026). APK ukur kode akhir sudah dibuat; tinggal dijalankan kalau HP itu tersambung.
+
 ## 21 Nov 2026: kembali ke desain v1
 
 - Perombakan visual v2 (roadmap yang dimulai ulang 8 Nov 2026, langkah 1–14c) dibatalkan pemilik repo. Alasannya: gaya gambar v2 terlalu kartun di semua layar, mulai dari peta; dan empat area rumah (Santai, Makan, Bermain, Perawatan) terasa seperti pindah tab/tombol saja, bukan masuk ke ruangan lain.
