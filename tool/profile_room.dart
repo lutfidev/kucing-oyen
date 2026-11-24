@@ -124,6 +124,8 @@ Future<void> main() async {
         'build': stats([for (final f in frames) f.buildDuration.inMicroseconds / 1000]),
         'raster': stats([for (final f in frames) f.rasterDuration.inMicroseconds / 1000]),
         'over_16_67ms': frames.where((f) => f.buildDuration.inMicroseconds > 16667 || f.rasterDuration.inMicroseconds > 16667).length,
+        'build_over_16_67ms': frames.where((f) => f.buildDuration.inMicroseconds > 16667).length,
+        'raster_over_16_67ms': frames.where((f) => f.rasterDuration.inMicroseconds > 16667).length,
         'over_8_33ms': frames.where((f) => f.buildDuration.inMicroseconds > 8333 || f.rasterDuration.inMicroseconds > 8333).length,
       })}',
     );
