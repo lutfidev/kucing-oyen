@@ -79,10 +79,17 @@ class SvgTemplate {
   /// Gaya animasi divalidasi saat binding, juga jika [SvgAnimation.render]
   /// nanti dipanggil tanpa waktu. Pakai [render] untuk SVG diam yang
   /// sengaja mengabaikan gaya animasi yang tidak didukung.
-  SvgAnimation bind(Map<String, Object> vals) => SvgAnimation._(
-    _bindNodes(_nodes, vals, const {}, keyframes, _defs),
-    keyframes,
-  );
+  ///
+  /// [record] = bagian yang tidak bergerak direkam sekali sebagai `Picture`
+  /// (lapisan rumah dan gang: hanya awan, daun, dan cahaya yang bergerak).
+  /// Sprite kucing tidak memakainya: rekaman yang sudah pernah digambar
+  /// bisa beda 1 tingkat warna dari render acuan.
+  SvgAnimation bind(Map<String, Object> vals, {bool record = false}) =>
+      SvgAnimation._(
+        _bindNodes(_nodes, vals, const {}, keyframes, _defs),
+        keyframes,
+        record,
+      );
 
   /// [vals] berisi nilai `{{nama}}`, juga bersarang lewat titik
   /// (`{{c.fur}}` = `vals['c']['fur']`). Blok `sc-if` tampil kalau nilainya
@@ -106,15 +113,20 @@ class SvgTemplate {
 /// Varian SVG yang siap dievaluasi pada waktu animasi yang tepat, tanpa
 /// membulatkan waktu atau menyimpan semua bingkai sepanjang permainan.
 class SvgAnimation {
-  SvgAnimation._(this._nodes, this._keyframes);
+  SvgAnimation._(this._nodes, this._keyframes, this._record);
 
   final List<_BoundNode> _nodes;
   final Map<String, CssKeyframes> _keyframes;
+  final bool _record;
 
   SvgDrawing render({double? time}) {
     final ops = <_Op>[];
     for (final node in _nodes) {
-      node.emit(time, _keyframes, _Affine.identity, ops);
+      if (_record) {
+        node.emit(time, _keyframes, _Affine.identity, ops);
+      } else {
+        node._emit(time, _keyframes, _Affine.identity, ops, record: false);
+      }
     }
     return SvgDrawing._(ops);
   }
@@ -621,9 +633,38 @@ List<_BoundNode> _bindNodes(
             (_) => shape.withPath(_geometry(el.name, attrs)),
           _ => null,
         },
+        inMotion,
       ),
     );
   }
+  return _recordStill(result);
+}
+
+/// Rangkaian saudara yang tidak bergerak (dirinya dan semua anaknya tanpa
+/// animasi) digabung jadi satu grup yang direkam sekali sebagai [Picture]
+/// (lihat [_BoundNode.emit]): lapisan rumah yang hanya punya awan, daun,
+/// dan cahaya bergerak tidak lagi menyusun ratusan bentuk diam tiap bingkai.
+List<_BoundNode> _recordStill(List<_BoundNode> nodes) {
+  final result = <_BoundNode>[];
+  final run = <_BoundNode>[];
+  void flush() {
+    if (run.length > 1) {
+      result.add(_BoundNode.group(List.of(run)));
+    } else {
+      result.addAll(run);
+    }
+    run.clear();
+  }
+
+  for (final node in nodes) {
+    if (node.still) {
+      run.add(node);
+    } else {
+      flush();
+      result.add(node);
+    }
+  }
+  flush();
   return result;
 }
 
@@ -638,7 +679,36 @@ class _BoundNode {
     this.children,
     this.clip,
     this.shapeAtOpacity,
+    this.inMotion,
   );
+
+  /// Grup tanpa atribut berisi [children] (lihat [_recordStill]).
+  _BoundNode.group(this.children)
+    : matrix = _Affine.identity,
+      hasTransform = false,
+      css = null,
+      origin = Offset.zero,
+      opacity = 1,
+      leaf = null,
+      clip = null,
+      shapeAtOpacity = null,
+      inMotion = false;
+
+  /// Elemen ini atau induknya beranimasi.
+  final bool inMotion;
+
+  /// Tidak ada animasi di elemen ini, induknya, maupun anaknya: gambarnya
+  /// sama pada waktu apa pun. Rekaman di bawah induk yang bergerak
+  /// menggeser pembulatan tepi bentuk, jadi bagian itu tetap disusun tiap
+  /// bingkai.
+  late final bool still = !inMotion && children.every((child) => child.still);
+
+  /// Rekaman [still] di koordinat kanvas, dengan matriks induk tempat
+  /// pertama kali digambar (tetap, karena tidak ada induk yang bergerak).
+  /// Matriksnya ikut direkam: transform kanvas di atas rekaman membulatkan
+  /// tepi bentuk sedikit beda dari matriks gabungan render acuan.
+  _StillOp? _recorded;
+  _Affine? _recordedAt;
 
   final _Affine matrix;
   final bool hasTransform;
@@ -658,6 +728,37 @@ class _BoundNode {
     _Affine parent,
     List<_Op> ops,
   ) {
+    if (still && (children.isNotEmpty || shapeAtOpacity != null)) {
+      final at = _recordedAt;
+      if (at == null) {
+        final drawn = <_Op>[];
+        _emit(null, const {}, parent, drawn, record: false);
+        final recorder = PictureRecorder();
+        final canvas = Canvas(recorder);
+        for (final op in drawn) {
+          op.paint(canvas);
+        }
+        _recorded = _StillOp(recorder.endRecording(), drawn);
+        _recordedAt = parent;
+      }
+      if (at == null || at == parent) {
+        ops.add(_recorded!);
+        return;
+      }
+    }
+    _emit(time, keyframes, parent, ops);
+  }
+
+  /// [record] = anak yang diam boleh memakai rekamannya sendiri. Saat
+  /// merekam, seluruh anak digambar langsung (tanpa rekaman di dalam
+  /// rekaman).
+  void _emit(
+    double? time,
+    Map<String, CssKeyframes> keyframes,
+    _Affine parent,
+    List<_Op> ops, {
+    bool record = true,
+  }) {
     var m = parent * matrix;
     final frame = time == null ? null : css?.frameAt(time, keyframes);
     if (hasTransform && frame?.transform != null) {
@@ -672,9 +773,17 @@ class _BoundNode {
       return;
     }
     final clipPath = clip;
-    final output = alpha < 1 || clipPath != null ? <_Op>[] : ops;
+    final layer = alpha < 1 || clipPath != null;
+    final output = layer ? <_Op>[] : ops;
+    // Di dalam lapisan transparan atau clip, rekaman membuat lapisannya
+    // dicampur lain dari bentuk biasa (warna bergeser 1 tingkat).
+    final inner = record && !layer;
     for (final child in children) {
-      child.emit(time, keyframes, m, output);
+      if (inner) {
+        child.emit(time, keyframes, m, output);
+      } else {
+        child._emit(time, keyframes, m, output, record: false);
+      }
     }
     var group = output;
     if (clipPath != null && output.isNotEmpty) {
@@ -828,6 +937,26 @@ abstract class _Op {
     final m = matrix;
     return m == null ? outline.getBounds() : outline.transform(m).getBounds();
   }
+}
+
+/// Gambar diam yang sudah direkam ([_BoundNode.still]) beserta perintah
+/// aslinya, hanya untuk [bounds] (jarang dipakai, tidak tiap bingkai).
+class _StillOp extends _Op {
+  _StillOp(this.picture, this.ops) : super(null);
+
+  final Picture picture;
+  final List<_Op> ops;
+
+  @override
+  Rect get bounds => ops.isEmpty
+      ? Rect.zero
+      : ops.map((op) => op.bounds).reduce((a, b) => a.expandToInclude(b));
+
+  @override
+  Path get outline => Path()..addRect(bounds);
+
+  @override
+  void draw(Canvas canvas) => canvas.drawPicture(picture);
 }
 
 class _PlacedOp extends _Op {
@@ -1118,6 +1247,19 @@ class _Affine {
     a * o.e + c * o.f + e,
     b * o.e + d * o.f + f,
   );
+
+  @override
+  bool operator ==(Object other) =>
+      other is _Affine &&
+      a == other.a &&
+      b == other.b &&
+      c == other.c &&
+      d == other.d &&
+      e == other.e &&
+      f == other.f;
+
+  @override
+  int get hashCode => Object.hash(a, b, c, d, e, f);
 
   bool get isIdentity =>
       a == 1 && b == 0 && c == 0 && d == 1 && e == 0 && f == 0;

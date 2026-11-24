@@ -6,6 +6,7 @@ import 'package:kucing_oren/game/model/kitties.dart';
 import 'package:kucing_oren/game/render/css_animation.dart';
 import 'package:kucing_oren/game/render/design_svg_home.dart';
 import 'package:kucing_oren/game/render/design_svg_house.dart';
+import 'package:kucing_oren/game/render/design_svg_lane.dart';
 import 'package:kucing_oren/game/render/render.dart';
 import 'package:kucing_oren/game/render/svg_template.dart';
 
@@ -142,28 +143,129 @@ void main() {
     }
   });
 
-  test('house background layer matches the reference over time', () async {
-    final template = SvgTemplate(
-      houseLivingBackSvg,
-      keyframes: CssKeyframes.parse(houseKeyframesCss),
-      classes: houseClassStyles,
-    );
-    final bound = template.bind(const {});
-    Future<List<int>> full(SvgDrawing d) async {
-      final recorder = PictureRecorder();
-      d.paint(Canvas(recorder));
-      final image = await recorder.endRecording().toImage(390, 652);
-      final bytes = (await image.toByteData())!.buffer.asUint8List().toList();
-      image.dispose();
-      return bytes;
-    }
+  Future<List<int>> full(SvgDrawing d) async {
+    final recorder = PictureRecorder();
+    d.paint(Canvas(recorder));
+    final image = await recorder.endRecording().toImage(390, 652);
+    final bytes = (await image.toByteData())!.buffer.asUint8List().toList();
+    image.dispose();
+    return bytes;
+  }
 
-    for (final time in [0.0, 2.7, 9.1]) {
-      expect(
-        await full(bound.render(time: time)),
-        await full(template.render(const {}, time: time)),
-        reason: 't=$time',
-      );
+  // Waktu terakhir mengulang yang pertama: rekaman yang sudah pernah
+  // digambar harus tetap sama dengan render acuan.
+  const times = [0.0, 2.7, 9.1, 0.0];
+
+  test(
+    'recorded house and lane layers match the reference over time',
+    () async {
+      final house = CssKeyframes.parse(houseKeyframesCss);
+      final lane = CssKeyframes.parse(laneKeyframesCss);
+      final layers = {
+        'living back': SvgTemplate(
+          houseLivingBackSvg,
+          keyframes: house,
+          classes: houseClassStyles,
+        ),
+        'living floor': SvgTemplate(
+          houseLivingFloorLightSvg,
+          keyframes: house,
+          classes: houseClassStyles,
+        ),
+        'living air': SvgTemplate(
+          houseLivingAirLightSvg,
+          keyframes: house,
+          classes: houseClassStyles,
+        ),
+        'terrace back': SvgTemplate(
+          houseTerraceBackSvg,
+          keyframes: house,
+          classes: houseClassStyles,
+        ),
+        'terrace floor': SvgTemplate(
+          houseTerraceFloorLightSvg,
+          keyframes: house,
+          classes: houseClassStyles,
+        ),
+        'terrace air': SvgTemplate(
+          houseTerraceAirLightSvg,
+          keyframes: house,
+          classes: houseClassStyles,
+        ),
+        'lane back': SvgTemplate(
+          laneBackSvg,
+          keyframes: lane,
+          classes: laneClassStyles,
+        ),
+        'lane floor': SvgTemplate(
+          laneFloorLightSvg,
+          keyframes: lane,
+          classes: laneClassStyles,
+        ),
+        'lane air': SvgTemplate(
+          laneAirLightSvg,
+          keyframes: lane,
+          classes: laneClassStyles,
+        ),
+      };
+      for (final MapEntry(key: name, value: template) in layers.entries) {
+        if (!template.animated) continue;
+        for (final butterflies in [true, false]) {
+          final vals = {'kupu': butterflies};
+          final bound = template.bind(vals, record: true);
+          for (final time in times) {
+            expect(
+              await full(bound.render(time: time)),
+              await full(template.render(vals, time: time)),
+              reason: '$name kupu=$butterflies t=$time',
+            );
+          }
+        }
+      }
+    },
+  );
+
+  test('recording keeps bounds and skips moving parts', () {
+    final keyframes = CssKeyframes.parse(
+      '@keyframes geser{0%{transform:translateX(0px)}100%{transform:translateX(40px)}}',
+    );
+    final template = SvgTemplate(
+      '<rect x="0" y="0" width="10" height="10" fill="#ff0000"/>'
+      '<g transform="translate(5 5)"><circle cx="20" cy="20" r="4" fill="#00ff00"/></g>'
+      '<g style="animation: geser 2s linear infinite">'
+      '<circle cx="10" cy="60" r="8" fill="#0000ff"/></g>'
+      '<rect x="80" y="80" width="5" height="5" fill="#ff0000"/>',
+      keyframes: keyframes,
+    );
+    final recorded = template.bind(const {}, record: true);
+    for (final time in [0.0, 1.0]) {
+      final expected = template.render(const {}, time: time);
+      final actual = recorded.render(time: time);
+      expect(actual.bounds, expected.bounds, reason: 't=$time');
+      // Dua bentuk diam pertama jadi satu rekaman; lingkaran bergerak dan
+      // persegi terakhir tetap perintah sendiri.
+      expect(actual.length, 3);
+    }
+  });
+
+  test('animated room items match the reference over time', () async {
+    final keyframes = CssKeyframes.parse(roomItemKeyframes);
+    for (final svgs in [roomItemBackSvgs, roomItemFrontSvgs]) {
+      for (final MapEntry(key: code, value: source) in svgs.entries) {
+        final template = SvgTemplate(source, keyframes: keyframes);
+        if (!template.animated) continue;
+        for (final full in [true, false]) {
+          final vals = <String, Object>{'penuh': full, 'kosong': !full};
+          final bound = template.bind(vals);
+          for (final time in times) {
+            expect(
+              await pixels(bound.render(time: time)),
+              await pixels(template.render(vals, time: time)),
+              reason: '$code penuh=$full t=$time',
+            );
+          }
+        }
+      }
     }
   });
 }

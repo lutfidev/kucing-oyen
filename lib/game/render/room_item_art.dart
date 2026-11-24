@@ -21,6 +21,10 @@ final _front = <String, SvgTemplate>{
 };
 final _cache = <(String, bool), (SvgDrawing?, SvgDrawing?)>{};
 
+/// Barang beranimasi: varian siap pakai per isi mangkuk, supaya template
+/// tidak diurai ulang tiap bingkai.
+final _bound = <(String, bool), (SvgAnimation?, SvgAnimation?)>{};
+
 /// Barang yang sedang dipakai kucing (`Barang.dc.html` dengan `dipakai`):
 /// kotaknya membesar ke [size], gambar barang bergeser [artOffset] di
 /// dalamnya, dan kucing seukuran [catSize] digambar di [catOffset] dalam
@@ -286,7 +290,12 @@ Size _sizeOf(String code) {
       time != null &&
       ((_back[code]?.animated ?? false) || (_front[code]?.animated ?? false));
   // Barang tanpa animasi digambar sekali saja, juga di kamar yang bergerak.
-  return moving ? render() : _cache.putIfAbsent((code, full), render);
+  if (!moving) return _cache.putIfAbsent((code, full), render);
+  final (back, front) = _bound.putIfAbsent((code, full), () {
+    final vals = <String, Object>{'penuh': full, 'kosong': !full};
+    return (_back[code]?.bind(vals), _front[code]?.bind(vals));
+  });
+  return (back?.render(time: time), front?.render(time: time));
 }
 
 Float64List _matrix(CssMatrix m) => Float64List.fromList([
