@@ -592,7 +592,7 @@ Saran 17 tabel "Sesudah langkah 26" di roadmap (PR #25).
   - **Batas yang diterima:** rekaman berisi lapisan transparan atau clip yang sudah pernah digambar di satu skala lalu dipakai di skala lain bisa beda 1 tingkat warna di beberapa piksel (contoh: 34 byte di latar gang). Di aplikasi ukuran ruangan tetap per HP, jadi ini hanya terjadi selama kamera ke gang (1,7 detik). Mengecualikan bagian itu dari rekaman akan menghilangkan sebagian besar penghematan, karena garis lantai ruang tengah ada di dalam clip.
   - Temuan review kecil yang diperbaiki: grup diam kosong tidak lagi menambah perintah dan kotak `Rect.zero`; binding tanpa `record` tidak lagi membuat grup gabungan.
 - **Hasil:** diam 4,8% → 2,6% dan 2,1%, pindah ruangan 5,0% → 2,8% dan 2,6%, gang 3,6% → 1,1%. Satu run diam 13,6% saat HP panas (raster 15,2 ms rata-rata) sesudah ±45 menit diukur terus sambil dicas; diulang sesudah didinginkan. Sisanya raster ±13 ms per bingkai dan lonjakan build P99 ±18 ms.
-- **HP spek rendah:** pemilik repo punya, belum diukur (lihat badan PR).
+- **HP spek rendah:** pemilik repo punya, tetapi pengukurannya dilewati atas keputusan pemilik repo (25 Nov 2026). APK ukur kode akhir sudah dibuat; tinggal dijalankan kalau HP itu tersambung.
 
 ## 21 Nov 2026: kembali ke desain v1
 

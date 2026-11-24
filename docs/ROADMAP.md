@@ -753,7 +753,7 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 
 ## 39. Kinerja rumah penuh: animasi SVG per bingkai ✅
 
-**Status:** selesai 24 Nov 2026 (PR langkah 39). Bagian lapisan rumah dan gang yang tidak bergerak direkam sekali, barang beranimasi memakai varian `bind`. Di Xiaomi: diam 4,8% → 2,1–2,6%, pindah ruangan 5,0% → 2,6–2,8%, gang 3,6% → 1,1% (satu run diam 13,6% saat HP panas). HP spek rendah belum diukur. Rincian di [catatan performa](performance-room-2026-11-08.md) dan `docs/DESIGN_NOTES.md`, "Langkah 39".
+**Status:** selesai 24 Nov 2026 (PR langkah 39). Bagian lapisan rumah dan gang yang tidak bergerak direkam sekali, barang beranimasi memakai varian `bind`. Di Xiaomi: diam 4,8% → 2,1–2,6%, pindah ruangan 5,0% → 2,6–2,8%, gang 3,6% → 1,1% (satu run diam 13,6% saat HP panas). HP spek rendah belum diukur (dilewati atas keputusan pemilik repo). Rincian di [catatan performa](performance-room-2026-11-08.md) dan `docs/DESIGN_NOTES.md`, "Langkah 39".
 
 **Waktu:** sesudah langkah 32 di-merge. Disepakati pemilik repo 23 Nov 2026: angka dicatat dulu, optimasi lanjutan jadi langkah sendiri.
 
