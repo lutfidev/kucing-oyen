@@ -143,10 +143,17 @@ void main() {
     }
   });
 
-  Future<List<int>> full(SvgDrawing d) async {
+  /// Seperti `paintHouseLayer`: viewBox 390×652 diskalakan ke [size].
+  Future<List<int>> full(
+    SvgDrawing d, [
+    Size size = const Size(390, 652),
+  ]) async {
     final recorder = PictureRecorder();
-    d.paint(Canvas(recorder));
-    final image = await recorder.endRecording().toImage(390, 652);
+    d.paint(Canvas(recorder)..scale(size.width / 390, size.height / 652));
+    final image = await recorder.endRecording().toImage(
+      size.width.ceil(),
+      size.height.ceil(),
+    );
     final bytes = (await image.toByteData())!.buffer.asUint8List().toList();
     image.dispose();
     return bytes;
@@ -212,17 +219,28 @@ void main() {
         if (!template.animated) continue;
         for (final butterflies in [true, false]) {
           final vals = {'kupu': butterflies};
-          final bound = template.bind(vals, record: true);
-          for (final time in times) {
-            expect(
-              await full(bound.render(time: time)),
-              await full(template.render(vals, time: time)),
-              reason: '$name kupu=$butterflies t=$time',
-            );
+          // Skala 1 dan skala tidak seragam layar HP, satu binding per skala
+          // seperti di aplikasi (ukuran ruangan tetap). Rekaman berisi
+          // lapisan transparan atau clip yang sudah digambar di skala lain
+          // bisa beda 1 tingkat warna (hanya selama kamera ke gang).
+          for (final size in const [
+            Size(390, 652),
+            Size(360, 520),
+            Size(412, 690.7),
+          ]) {
+            final bound = template.bind(vals, record: true);
+            for (final time in times) {
+              expect(
+                await full(bound.render(time: time), size),
+                await full(template.render(vals, time: time), size),
+                reason: '$name kupu=$butterflies t=$time $size',
+              );
+            }
           }
         }
       }
     },
+    timeout: const Timeout(Duration(minutes: 3)),
   );
 
   test('recording keeps bounds and skips moving parts', () {
@@ -234,7 +252,11 @@ void main() {
       '<g transform="translate(5 5)"><circle cx="20" cy="20" r="4" fill="#00ff00"/></g>'
       '<g style="animation: geser 2s linear infinite">'
       '<circle cx="10" cy="60" r="8" fill="#0000ff"/></g>'
-      '<rect x="80" y="80" width="5" height="5" fill="#ff0000"/>',
+      '<rect x="80" y="80" width="5" height="5" fill="#ff0000"/>'
+      // Grup diam yang kosong tidak menambah perintah maupun kotak.
+      '<g style="animation: geser 2s linear infinite">'
+      '<circle cx="90" cy="90" r="2" fill="#0000ff"/></g>'
+      '<g></g><g></g>',
       keyframes: keyframes,
     );
     final recorded = template.bind(const {}, record: true);
@@ -242,9 +264,10 @@ void main() {
       final expected = template.render(const {}, time: time);
       final actual = recorded.render(time: time);
       expect(actual.bounds, expected.bounds, reason: 't=$time');
-      // Dua bentuk diam pertama jadi satu rekaman; lingkaran bergerak dan
-      // persegi terakhir tetap perintah sendiri.
-      expect(actual.length, 3);
+      // Dua bentuk diam pertama jadi satu rekaman, lalu lingkaran bergerak,
+      // persegi diam, dan lingkaran bergerak; grup kosong tidak menambah
+      // apa pun.
+      expect(actual.length, 4);
     }
   });
 

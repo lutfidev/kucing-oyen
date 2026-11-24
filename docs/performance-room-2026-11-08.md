@@ -160,7 +160,7 @@ Kesimpulan: bingkai lambat hampir semuanya karena build (sisi Dart), bukan raste
 
 Run lebih awal dengan perbaikan yang sama tetapi sakelar ukur masih terpasang (tidak aktif), bingkai lambat: diam 92 (2,4%) dan 167 (4,5%, raster 93), pindah ruangan 87 (2,2%) dan 91 (2,4%).
 
-**Batas:** di bawah ≲3% saat diam dan pindah ruangan, kecuali run yang HP-nya panas. Raster rata-rata naik ±1,3 ms dibanding sebelum perbaikan; kenaikan yang sama muncul di probe "diam" tanpa rekaman, jadi kemungkinan karena bingkai dibuat lebih cepat, bukan karena `drawPicture`. Sisanya raster ±13 ms per bingkai (seluruh layar digambar ulang tiap bingkai; Impeller tidak punya cache raster) dan lonjakan build P99 ±18 ms.
+**Batas:** di bawah ≲3% saat diam dan pindah ruangan, kecuali run yang HP-nya panas. Bingkai lambat karena raster naik (diam 19/9 → 27/24, pindah ruangan 13 → 51/42), jadi sekarang 25–50% dari bingkai lambat yang tersisa; ini sasaran berikutnya kalau kinerja perlu ditingkatkan lagi. Raster rata-rata naik ±1,3 ms dibanding sebelum perbaikan; kenaikan yang sama muncul di probe "diam" tanpa rekaman, jadi kemungkinan karena bingkai dibuat lebih cepat, bukan karena `drawPicture`. Sisanya raster ±13 ms per bingkai (seluruh layar digambar ulang tiap bingkai; Impeller tidak punya cache raster) dan lonjakan build P99 ±18 ms.
 
 ```json
 {"probe":"","switch_rooms":false,"place":"house","frames":3479,"seconds":60,"cats":9,"items_including_bowl":21,"build":{"mean_ms":9.477787007760842,"p50_ms":8.813,"p90_ms":10.665,"p99_ms":21.568,"max_ms":37.688},"raster":{"mean_ms":11.78224978442084,"p50_ms":11.571,"p90_ms":13.604,"p99_ms":16.17,"max_ms":30.369},"over_16_67ms":168,"build_over_16_67ms":152,"raster_over_16_67ms":19,"over_8_33ms":3479}

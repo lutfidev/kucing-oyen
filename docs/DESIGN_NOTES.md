@@ -588,7 +588,9 @@ Saran 17 tabel "Sesudah langkah 26" di roadmap (PR #25).
 - **Batas rekaman, dijaga test piksel `svg_binding_test`:**
   - Di dalam `<g opacity>` atau `clip-path`, dan di bawah induk yang bergerak, bentuk tetap digambar langsung. Rekaman di sana menggeser warna 1 tingkat dari render acuan.
   - Sprite kucing tidak direkam: rekaman kucing yang sudah pernah digambar sekali bisa beda 1 tingkat warna dari render acuan. Penyebab pastinya di raster native belum ditemukan.
-  - Waktu di test diulang (0 → 2,7 → 9,1 → 0) supaya rekaman yang dipakai ulang ikut dicek.
+  - Waktu di test diulang (0 → 2,7 → 9,1 → 0) supaya rekaman yang dipakai ulang ikut dicek, di skala 1 dan dua skala tidak seragam layar HP (360×520, 412×690,7), satu binding per skala.
+  - **Batas yang diterima:** rekaman berisi lapisan transparan atau clip yang sudah pernah digambar di satu skala lalu dipakai di skala lain bisa beda 1 tingkat warna di beberapa piksel (contoh: 34 byte di latar gang). Di aplikasi ukuran ruangan tetap per HP, jadi ini hanya terjadi selama kamera ke gang (1,7 detik). Mengecualikan bagian itu dari rekaman akan menghilangkan sebagian besar penghematan, karena garis lantai ruang tengah ada di dalam clip.
+  - Temuan review kecil yang diperbaiki: grup diam kosong tidak lagi menambah perintah dan kotak `Rect.zero`; binding tanpa `record` tidak lagi membuat grup gabungan.
 - **Hasil:** diam 4,8% → 2,6% dan 2,1%, pindah ruangan 5,0% → 2,8% dan 2,6%, gang 3,6% → 1,1%. Satu run diam 13,6% saat HP panas (raster 15,2 ms rata-rata) sesudah ±45 menit diukur terus sambil dicas; diulang sesudah didinginkan. Sisanya raster ±13 ms per bingkai dan lonjakan build P99 ±18 ms.
 - **HP spek rendah:** pemilik repo punya, belum diukur (lihat badan PR).
 

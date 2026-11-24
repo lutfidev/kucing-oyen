@@ -86,7 +86,7 @@ class SvgTemplate {
   /// bisa beda 1 tingkat warna dari render acuan.
   SvgAnimation bind(Map<String, Object> vals, {bool record = false}) =>
       SvgAnimation._(
-        _bindNodes(_nodes, vals, const {}, keyframes, _defs),
+        _bindNodes(_nodes, vals, const {}, keyframes, _defs, record: record),
         keyframes,
         record,
       );
@@ -487,7 +487,8 @@ class _Emitter {
 }
 
 /// [moving] = salah satu induknya beranimasi (bentuk di bawahnya ikut
-/// bergerak).
+/// bergerak). [record] = saudara diam digabung untuk direkam
+/// ([_recordStill]).
 List<_BoundNode> _bindNodes(
   List<_Element> nodes,
   Map<String, Object> vals,
@@ -495,6 +496,7 @@ List<_BoundNode> _bindNodes(
   Map<String, CssKeyframes> keyframes,
   _Defs defs, {
   bool moving = false,
+  bool record = false,
 }) {
   final result = <_BoundNode>[];
   for (final el in nodes) {
@@ -509,6 +511,7 @@ List<_BoundNode> _bindNodes(
             keyframes,
             defs,
             moving: moving,
+            record: record,
           ),
         );
       }
@@ -527,6 +530,7 @@ List<_BoundNode> _bindNodes(
               keyframes,
               defs,
               moving: moving,
+              record: record,
             ),
           );
         }
@@ -583,6 +587,7 @@ List<_BoundNode> _bindNodes(
             keyframes,
             defs,
             moving: inMotion,
+            record: record,
           )
         : const <_BoundNode>[];
     final _Op? leaf = switch (el.name) {
@@ -637,7 +642,7 @@ List<_BoundNode> _bindNodes(
       ),
     );
   }
-  return _recordStill(result);
+  return record ? _recordStill(result) : result;
 }
 
 /// Rangkaian saudara yang tidak bergerak (dirinya dan semua anaknya tanpa
@@ -738,11 +743,15 @@ class _BoundNode {
         for (final op in drawn) {
           op.paint(canvas);
         }
-        _recorded = _StillOp(recorder.endRecording(), drawn);
+        _recorded = drawn.isEmpty
+            ? null
+            : _StillOp(recorder.endRecording(), drawn);
         _recordedAt = parent;
       }
+      // Induk bagian diam tidak pernah bergerak, jadi matriksnya selalu
+      // sama; kalau ternyata beda, gambar langsung saja (pengaman).
       if (at == null || at == parent) {
-        ops.add(_recorded!);
+        if (_recorded case final recorded?) ops.add(recorded);
         return;
       }
     }
