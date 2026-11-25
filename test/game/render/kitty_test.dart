@@ -351,4 +351,53 @@ void main() {
       expect(kittyVals(eat.copyWith(bowl: false))['showBowl'], isFalse);
     });
   });
+
+  group('pose baca (langkah 40)', () {
+    test('kacamata baca muncul sendiri, kecuali memakai kacamata', () {
+      final plain = kittyVals(
+        const KittyLook(kitty: KittyId.oyen, pose: KittyPose.baca),
+      );
+      expect(plain['isBaca'], isTrue);
+      expect(plain['kacaBaca'], isTrue);
+      expect(plain['bacaInk'], '#8E5A30');
+      final glasses = kittyVals(
+        const KittyLook(
+          kitty: KittyId.oyen,
+          pose: KittyPose.baca,
+          accessory: AccessoryId.kacamata,
+        ),
+      );
+      expect(glasses['kacaBaca'], isFalse);
+      expect(
+        kittyVals(const KittyLook(kitty: KittyId.oyen))['kacaBaca'],
+        isFalse,
+      );
+    });
+
+    test('kucing bergaris terang: bingkai kacamata terang', () {
+      final arang = kittyVals(
+        const KittyLook(kitty: KittyId.arang, pose: KittyPose.baca),
+      );
+      expect(arang['bacaInk'], '#D8A86F');
+    });
+
+    test('halaman dibalik hanya saat bergerak', () {
+      const still = KittyLook(kitty: KittyId.oyen, pose: KittyPose.baca);
+      expect(kittyVals(still)['pageOn'], isFalse);
+      expect(kittyVals(still.copyWith(time: 1))['pageOn'], isTrue);
+      expect(
+        kittyVals(still.copyWith(time: 1))['pageAnim'],
+        contains('kcPage 6.5s'),
+      );
+    });
+
+    test('digambar: bingkai kacamata di lensa kiri', () async {
+      final at = await _sampler(
+        const KittyLook(kitty: KittyId.oyen, pose: KittyPose.baca),
+      );
+      // Garis bawah lensa kiri (setengah bulan), sesudah kepala turun 4,5.
+      final pixel = at(37, 47.6 + 4.5 + 6.2);
+      expect(pixel, isNot(const Color(0x00000000)));
+    });
+  });
 }

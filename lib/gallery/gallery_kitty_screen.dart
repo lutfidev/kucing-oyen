@@ -234,6 +234,14 @@ const _motionCats = [
     'Garuk tiang',
   ),
   (KittyId.salju, KittyPose.petted, KittyFacing.down, null, 'Dielus'),
+  (KittyId.oyen, KittyPose.baca, KittyFacing.down, null, 'Membaca'),
+  (
+    KittyId.arang,
+    KittyPose.baca,
+    KittyFacing.right,
+    AccessoryId.kacamata,
+    'Membaca berkacamata',
+  ),
   (
     KittyId.oyen,
     KittyPose.happy,

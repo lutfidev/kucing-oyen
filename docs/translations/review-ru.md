@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-513 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+517 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -320,6 +320,8 @@ files and anything written there is overwritten.
 | `roomItemLukisanDesc` | Art that makes you hungry. | Искусство, от которого хочется есть. | Shop description of the room item "Fish Painting". | |
 | `roomItemRak` | Wall Shelf | Полка на стене | Name of the room item "Wall Shelf". | |
 | `roomItemRakDesc` | VIP seat for watching everyone. | VIP-место, чтобы следить за всеми. | Shop description of the room item "Wall Shelf". | |
+| `roomItemRakBuku` | Bookshelf | Книжный шкаф | Room item: a bookshelf on the floor where cats sit and read in reading glasses. | |
+| `roomItemRakBukuDesc` | Fish stories, mostly. Reading glasses on, looking very clever. | В основном рассказы про рыбу. Очки для чтения — и сразу вид умный. | Shop description of the bookshelf: cats read here wearing reading glasses. | |
 | `roomItemPancingan` | Feather Wand | Удочка с перьями | Name of the room item "Feather Wand". | |
 | `roomItemPancinganDesc` | Chases the feather, leaves its dignity behind. | За перышком бежит, достоинство остаётся позади. | Shop description of the room item "Feather Wand". | |
 | `roomItemLampuBulan` | Moon Lamp | Лампа-луна | Name of the room item "Moon Lamp". | |
@@ -434,6 +436,8 @@ files and anything written there is overwritten.
 | `buySuccessOverline` | Success! | Готово! | Overline above the title after a successful purchase. | |
 | `buySuccessItem` | {name} is yours! | {name} теперь твой! | Buy sheet title after buying a room item. Placeholders: `{name}`. | |
 | `buySuccessItemBody` | It's in the room already. Move it around in decorate mode. | Уже стоит в комнате. Переставить можно в режиме «Украшать». | Buy sheet body after buying a room item. | |
+| `buySuccessItemStoredBody` | The house is full, so it's waiting in Storage. Find it a spot in decorate mode. | Дом забит, так что вещь пока ждёт в кладовке. Найди ей место в режиме «Украшать». | Buy sheet body after buying a room item when the house had no free spot, so the item went to Storage. | |
+| `buySuccessItemTerraceBody` | The living room is full, so it went out to the terrace. Swipe over to see it. | В гостиной тесно, так что вещь отправилась на террасу. Смахни туда, чтобы посмотреть. | Buy sheet body after buying a room item when the living room had no free spot, so the item was placed on the terrace. | |
 | `buySuccessKitty` | {name} moved into the room! | {name} переехал в комнату! | Buy sheet title after adopting a cat. Placeholders: `{name}`. | |
 | `buySuccessKittyBody` | Say hi in the room. Expect some fake indifference first. | Поздоровайся в комнате. Сначала сделает вид, что ему всё равно. | Buy sheet body after adopting a cat. | |
 | `buySuccessAccessory` | {name} is yours forever! | {name} теперь твой навсегда! | Buy sheet title after buying an accessory. Placeholders: `{name}`. | |
@@ -445,7 +449,7 @@ files and anything written there is overwritten.
 | `buySeeRoom` | See it in the room | Посмотреть в комнате | Buy sheet button after a purchase: open the room. | |
 | `buyWearOn` | Wear on {name} | Надеть на {name} | Buy sheet button after buying an accessory: put it on this cat. Placeholders: `{name}`. | |
 | `buyNotEnoughHelp` | Play a puzzle or watch a rewarded ad to get more coins. | Пройди головоломку или посмотри рекламу за награду, чтобы получить монеты. | Buy sheet hint when the player cannot afford the item. | |
-| `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} endus{sniffing} geser1{scooting over} geser2{scooting over} other{sitting still}} | {pose, select, idle{сидит спокойно} lick{облизывает лапку} walk1{идёт} walk2{идёт} sleep{спит свернувшись} eat{ест из миски} play{играет с игрушкой} scratch{точит когти о когтеточку} happy{радуется} lesu{вялый} rebah{лежит и отдыхает} petted{мурчит от поглаживаний} endus{принюхивается} geser1{подвигается} geser2{подвигается} other{сидит спокойно}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
+| `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} endus{sniffing} geser1{scooting over} geser2{scooting over} baca{reading a book} bacaKaca{reading a book in reading glasses} other{sitting still}} | {pose, select, idle{сидит спокойно} lick{облизывает лапку} walk1{идёт} walk2{идёт} sleep{спит свернувшись} eat{ест из миски} play{играет с игрушкой} scratch{точит когти о когтеточку} happy{радуется} lesu{вялый} rebah{лежит и отдыхает} petted{мурчит от поглаживаний} endus{принюхивается} geser1{подвигается} geser2{подвигается} baca{читает книжку} bacaKaca{читает книжку в очках для чтения} other{сидит спокойно}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
 | `neighborKumis` | Kumis | Kumis | Name of the neighbour cat in the Front Lane (a stall cat with a moustache-like grey patch and a scarf). Same in every language. | |
 | `kittyLabel` | {name} {pose} | {name} {pose} | Screen reader label of a room cat: name and what it is doing. Placeholders: `{name}`, `{pose}`. | |
 | `kittyLabelAccessory` | {name} {pose}, wearing a {accessory} | {name} {pose}, в {accessory} | Screen reader label of a room cat wearing an accessory. Placeholders: `{name}`, `{pose}`, `{accessory}`. | |
@@ -458,10 +462,6 @@ files and anything written there is overwritten.
 | `sadMarkHungry` | Droopy: hungry | Скис: голодный | Screen reader label of the thought bubble above a hungry room cat. | |
 | `sadMarkSad` | Droopy: wants attention | Скис: мало внимания | Screen reader label of the thought bubble above a room cat that needs attention. | |
 | `roomEmptyBubble` | Pretty empty in here. To the Shop! | Пустовато тут. Айда в магазин! | Speech bubble in an empty starter room, pointing the player to the shop. | |
-| `roomEmptyWall` | Wall decor? | Что-то на стену? | Short label inside the empty dashed spot on the wall of a starter room. | |
-| `roomEmptyWallHint` | Empty. Find wall decor in the Shop | Пусто. Найди украшение для стены в магазине | Screen reader label of the empty wall spot; tapping opens the shop. | |
-| `roomEmptyFloor` | A bed, maybe? | Может, лежанку? | Short label inside the empty dashed spot on the floor of a starter room. | |
-| `roomEmptyFloorHint` | Empty. Find a bed or a toy in the Shop | Пусто. Найди лежанку или игрушку в магазине | Screen reader label of the empty floor spot; tapping opens the shop. | |
 | `accessories` | Accessories | Аксессуары | Room menu button that opens the accessories tab of the shop. | |
 | `shopHasNew` | something new you can afford | есть что-то новое по карману | Added to a room menu button's screen reader label when something there is affordable and not owned yet. | |
 | `menuButtonNew` | {label}, {note} | {label}, {note} | Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew. Placeholders: `{label}`, `{note}`. | |
@@ -495,6 +495,9 @@ files and anything written there is overwritten.
 | `reactionRelieved` | Ahh, free! | Свобода! | Floating text over a cat after taking its accessory off. | |
 | `decorate` | Decorate | Обустроить | Room button that starts decorate mode. | |
 | `decorateDone` | Done | Готово | Button that ends decorate mode. | |
+| `decorateTidy` | Tidy up | Прибрать | Decorate mode button that slides stacked items in the open room apart (to Storage if there is no room). | |
+| `decorateTidyDone` | All neat! | Порядок! | Toast after the Tidy up button. | |
+| `decorateTidyUndo` | Undo | Отменить | Button in the toast after Tidy up that puts the items back where they were. | |
 | `decorateHint` | Drag things to a new spot | Перетащи вещи на новое место | Chip shown while decorating. | |
 | `zoneWall` | Wall area | Стена | Label of the wall area while decorating. | |
 | `zoneFloor` | Floor area | Пол | Label of the floor area while decorating. | |
@@ -516,6 +519,7 @@ files and anything written there is overwritten.
 | `bowlRefill` | {hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}} | {hours, plural, one{Наполнится через {hours} час} few{Наполнится через {hours} часа} many{Наполнится через {hours} часов} other{Наполнится через {hours} часа}} | Label over the empty shared food bowl in the cat room: hours until it refills. Placeholders: `{hours}`. | |
 | `bowlRefillSoon` | Refills any minute now | Скоро наполнится | Label over the empty shared food bowl in the cat room when it refills in under an hour. | |
 | `kittyRewardLabel` | {coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}} | {coins, plural, one{{name}: забрать {coins} монету} few{{name}: забрать {coins} монеты} many{{name}: забрать {coins} монет} other{{name}: забрать {coins} монеты}} | Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward. Placeholders: `{coins}`, `{name}`. | |
+| `kittyRewardMore` | {count, plural, other{+{count} more}} | {count, plural, one{ещё +{count}} few{ещё +{count}} many{ещё +{count}} other{ещё +{count}}} | Small dark chip under the single coin bubble in a room: how many other cats in this room also have a coin reward waiting (the bubble moves to the next cat after each tap). Placeholders: `{count}`. | |
 | `reactionCoins` | {coins, plural, one{+{coins} coin} other{+{coins} coins}} | {coins, plural, one{+{coins} монета} few{+{coins} монеты} many{+{coins} монет} other{+{coins} монеты}} | Floating text over a cat after collecting its coin reward. Placeholders: `{coins}`. | |
 | `chapterIntroOverline` | New chapter unlocked! | Новая глава открыта! | Overline on the card shown over the map when a new chapter is unlocked for the first time (after beating the chapter 1 boss). | |
 | `chapterIntroEnter` | Let's go in! | Заходим! | Button that closes the new-chapter card and shows the new map. | |

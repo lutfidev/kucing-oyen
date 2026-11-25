@@ -1559,6 +1559,14 @@
   "@roomItemRakDesc": {
     "description": "Shop description of the room item \"Wall Shelf\"."
   },
+  "roomItemRakBuku": "Bookshelf",
+  "@roomItemRakBuku": {
+    "description": "Room item: a bookshelf on the floor where cats sit and read in reading glasses."
+  },
+  "roomItemRakBukuDesc": "Fish stories, mostly. Reading glasses on, looking very clever.",
+  "@roomItemRakBukuDesc": {
+    "description": "Shop description of the bookshelf: cats read here wearing reading glasses."
+  },
   "roomItemPancingan": "Feather Wand",
   "@roomItemPancingan": {
     "description": "Name of the room item \"Feather Wand\"."
@@ -2107,6 +2115,14 @@
   "@buySuccessItemBody": {
     "description": "Buy sheet body after buying a room item."
   },
+  "buySuccessItemStoredBody": "The house is full, so it's waiting in Storage. Find it a spot in decorate mode.",
+  "@buySuccessItemStoredBody": {
+    "description": "Buy sheet body after buying a room item when the house had no free spot, so the item went to Storage."
+  },
+  "buySuccessItemTerraceBody": "The living room is full, so it went out to the terrace. Swipe over to see it.",
+  "@buySuccessItemTerraceBody": {
+    "description": "Buy sheet body after buying a room item when the living room had no free spot, so the item was placed on the terrace."
+  },
   "buySuccessKitty": "{name} moved into the room!",
   "@buySuccessKitty": {
     "description": "Buy sheet title after adopting a cat.",
@@ -2176,7 +2192,7 @@
   "@buyNotEnoughHelp": {
     "description": "Buy sheet hint when the player cannot afford the item."
   },
-  "kittyPose": "{pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} endus{sniffing} geser1{scooting over} geser2{scooting over} other{sitting still}}",
+  "kittyPose": "{pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} endus{sniffing} geser1{scooting over} geser2{scooting over} baca{reading a book} bacaKaca{reading a book in reading glasses} other{sitting still}}",
   "@kittyPose": {
     "description": "What a room cat is doing, for its screen reader label.",
     "placeholders": {
@@ -2285,22 +2301,6 @@
   "roomEmptyBubble": "Pretty empty in here. To the Shop!",
   "@roomEmptyBubble": {
     "description": "Speech bubble in an empty starter room, pointing the player to the shop."
-  },
-  "roomEmptyWall": "Wall decor?",
-  "@roomEmptyWall": {
-    "description": "Short label inside the empty dashed spot on the wall of a starter room."
-  },
-  "roomEmptyWallHint": "Empty. Find wall decor in the Shop",
-  "@roomEmptyWallHint": {
-    "description": "Screen reader label of the empty wall spot; tapping opens the shop."
-  },
-  "roomEmptyFloor": "A bed, maybe?",
-  "@roomEmptyFloor": {
-    "description": "Short label inside the empty dashed spot on the floor of a starter room."
-  },
-  "roomEmptyFloorHint": "Empty. Find a bed or a toy in the Shop",
-  "@roomEmptyFloorHint": {
-    "description": "Screen reader label of the empty floor spot; tapping opens the shop."
   },
   "accessories": "Accessories",
   "@accessories": {
@@ -2536,6 +2536,18 @@
   "@decorateDone": {
     "description": "Button that ends decorate mode."
   },
+  "decorateTidy": "Tidy up",
+  "@decorateTidy": {
+    "description": "Decorate mode button that slides stacked items in the open room apart (to Storage if there is no room)."
+  },
+  "decorateTidyDone": "All neat!",
+  "@decorateTidyDone": {
+    "description": "Toast after the Tidy up button."
+  },
+  "decorateTidyUndo": "Undo",
+  "@decorateTidyUndo": {
+    "description": "Button in the toast after Tidy up that puts the items back where they were."
+  },
   "decorateHint": "Drag things to a new spot",
   "@decorateHint": {
     "description": "Chip shown while decorating."
@@ -2650,6 +2662,15 @@
       },
       "name": {
         "type": "String"
+      }
+    }
+  },
+  "kittyRewardMore": "{count, plural, other{+{count} more}}",
+  "@kittyRewardMore": {
+    "description": "Small dark chip under the single coin bubble in a room: how many other cats in this room also have a coin reward waiting (the bubble moves to the next cat after each tap).",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
     }
   },

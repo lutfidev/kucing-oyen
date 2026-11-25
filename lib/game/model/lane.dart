@@ -37,12 +37,35 @@ const laneFlapFeet = (x: 338.0, y: 437.0);
 /// dengan pose makan tanpa mangkuk), tangga warung (skala dari y 404), dan
 /// depan pintu pulang.
 const lanePlaces = <LifePlace>[
-  LifePlace(88, 584, pose: LifePose.lounge, heading: LifeHeading.right),
-  LifePlace(170, 574, pose: LifePose.lounge, heading: LifeHeading.left),
+  LifePlace(
+    88,
+    584,
+    pose: LifePose.lounge,
+    heading: LifeHeading.right,
+    seconds: laneSleepSeconds,
+  ),
+  LifePlace(
+    170,
+    574,
+    pose: LifePose.lounge,
+    heading: LifeHeading.left,
+    seconds: laneSleepSeconds,
+  ),
   LifePlace(51, 481, pose: LifePose.eat, seconds: lifeEatSeconds * 2),
-  LifePlace(85.7, 390.1, pose: LifePose.idle, heading: LifeHeading.right),
-  LifePlace(300, 470, pose: LifePose.idle, seconds: lifeIdleSeconds * 2),
+  LifePlace(
+    85.7,
+    390.1,
+    pose: LifePose.idle,
+    heading: LifeHeading.right,
+    seconds: laneSleepSeconds,
+  ),
+  LifePlace(300, 470, pose: LifePose.idle, seconds: laneIdleSeconds * 2),
 ];
+
+/// Lama momen gang, tetap seperti sebelum langkah 40 (rutinitas rumah
+/// yang lebih tenang tidak berlaku di gang).
+const laneIdleSeconds = 2.6;
+const laneSleepSeconds = 6.0;
 
 /// Kaki di tangga warung diskalakan seperti y ini (`kGang`).
 const laneStepScaleY = 404.0;

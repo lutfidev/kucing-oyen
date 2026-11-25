@@ -88,6 +88,27 @@ const kittySvg = r'''
       </sc-if>
     </sc-if>
 
+    <sc-if value="{{isBaca}}" hint-placeholder-val="{{ false }}">
+      <g transform="{{bukuT}}">
+        <g class="kc-anim" style="{{readAnim}}">
+          <path d="M28.5 74.6 Q39.5 71 50 74.2 Q60.5 71 71.5 74.6 L72.4 89.8 Q61 86.8 50 89.8 Q39 86.8 27.6 89.8 Z" fill="#C2492F" stroke="#9A3520" stroke-width="1.2" stroke-linejoin="round"></path>
+          <path d="M31.4 73.4 Q41 70.6 50 73.4 L50 87.6 Q41 84.8 30.8 87.6 Z" fill="#FFFBF3"></path>
+          <path d="M50 73.4 Q59 70.6 68.6 73.4 L69.2 87.6 Q59 84.8 50 87.6 Z" fill="#FFF1DC"></path>
+          <path d="M34.6 77.2 Q41 75.4 47 76.8 M34.6 80.6 Q41 78.8 47 80.2 M34.6 84 Q39.5 82.6 43.6 83.4 M53 76.8 Q59 75.4 65.4 77.2 M53 80.2 Q59 78.8 65.6 80.6 M53 83.6 Q58 82.4 61.4 83" stroke="#D9C4A0" stroke-width="1.1" fill="none" stroke-linecap="round"></path>
+          <path d="M50 73.4 V87.6" stroke="#C9A97A" stroke-width="1"></path>
+          <sc-if value="{{pageOn}}" hint-placeholder-val="{{ false }}">
+            <g class="kc-anim" style="{{pageAnim}}">
+              <path d="M50 73.4 Q59 70.6 68.6 73.4 L69.2 87.6 Q59 84.8 50 87.6 Z" fill="#FFFBF3" stroke="#E2C79C" stroke-width="0.8" stroke-linejoin="round"></path>
+            </g>
+          </sc-if>
+          <path d="M29.5 67.5 Q26.6 76.6 32.4 81.6" stroke="{{c.leg}}" stroke-width="9" fill="none" stroke-linecap="round"></path>
+          <ellipse cx="33" cy="81.4" rx="5.6" ry="4.8" fill="{{c.paw}}" stroke="{{pawLine}}" stroke-width="1"></ellipse>
+          <path d="M70.5 67.5 Q73.4 76.6 67.6 81.6" stroke="{{c.leg}}" stroke-width="9" fill="none" stroke-linecap="round"></path>
+          <ellipse cx="67" cy="81.4" rx="5.6" ry="4.8" fill="{{c.paw}}" stroke="{{pawLine}}" stroke-width="1"></ellipse>
+        </g>
+      </g>
+    </sc-if>
+
     <sc-if value="{{showHead}}" hint-placeholder-val="{{ true }}">
       <g class="kc-anim" style="{{headAnim}}">
       <g transform="{{headT}}">
@@ -204,6 +225,12 @@ const kittySvg = r'''
             <circle cx="63" cy="43" r="10.5" fill="none" stroke="{{glassInk}}" stroke-width="2.2"></circle>
             <path d="M47.5 42 Q50 39.5 52.5 42 M26.5 41 L19 38.5 M73.5 41 L81 38.5" stroke="{{glassInk}}" stroke-width="2" fill="none" stroke-linecap="round"></path>
             <path d="M31 37.5 Q33 35.6 35.4 35.2 M57 37.5 Q59 35.6 61.4 35.2" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"></path>
+          </sc-if>
+          <sc-if value="{{kacaBaca}}" hint-placeholder-val="{{ false }}">
+            <path d="M28.6 47.6 H45.4 A8.4 6.2 0 0 1 28.6 47.6 Z" fill="#FFFFFF" fill-opacity="0.22" stroke="{{bacaInk}}" stroke-width="1.5" stroke-linejoin="round"></path>
+            <path d="M54.6 47.6 H71.4 A8.4 6.2 0 0 1 54.6 47.6 Z" fill="#FFFFFF" fill-opacity="0.22" stroke="{{bacaInk}}" stroke-width="1.5" stroke-linejoin="round"></path>
+            <path d="M45.4 48.2 Q50 50.4 54.6 48.2 M28.6 47.8 L20.6 44.8 M71.4 47.8 L79.4 44.8" stroke="{{bacaInk}}" stroke-width="1.3" fill="none" stroke-linecap="round"></path>
+            <path d="M31.8 50.2 Q33.2 52 35.6 52.4 M57.8 50.2 Q59.2 52 61.6 52.4" stroke="#FFFFFF" stroke-width="1.1" fill="none" stroke-linecap="round" opacity="0.75"></path>
           </sc-if>
         </g>
 
@@ -799,6 +826,130 @@ const roomItemBackSvgs = <String, String>{
             <path d="M90.5 -8 Q86 -16 84 -20 M90.5 -8 Q91 -17 92 -22 M90.5 -8 Q95 -15 98 -18" stroke="#4E9A4A" stroke-width="2.6" fill="none" stroke-linecap="round"></path>
           </g>
       ''',
+  'rakBuku': r'''
+          <ellipse cx="56" cy="136.5" rx="57" ry="4" fill="#7A4A1F" opacity="0.16"></ellipse>
+          <rect x="8" y="18" width="96" height="108" fill="#8E5A30"></rect>
+          <rect x="8" y="18" width="96" height="6" fill="#6B4122" opacity="0.35"></rect>
+          <g stroke="#8E5A30" stroke-width="0.8">
+            <rect x="12" y="26" width="9" height="29" rx="1" fill="#F59A33"></rect>
+            <rect x="21" y="23" width="7" height="32" rx="1" fill="#8FAE7E"></rect>
+            <rect x="28" y="29" width="10" height="26" rx="1" fill="#7FC8E8"></rect>
+            <rect x="38" y="25" width="8" height="30" rx="1" fill="#C2492F"></rect>
+            <rect x="53" y="27" width="8" height="28" rx="1" fill="#E58A62" transform="rotate(-14 53 55)"></rect>
+            <rect x="64" y="48" width="34" height="7" rx="1.5" fill="#7FC8E8"></rect>
+            <rect x="67" y="42" width="29" height="6" rx="1.5" fill="#C2492F"></rect>
+            <rect x="65" y="37" width="31" height="5" rx="1.5" fill="#8FAE7E"></rect>
+          </g>
+          <path d="M12 30 H21 M12 49 H21 M21 27 H28 M38 29 H46 M38 50 H46" stroke="#FFFBF3" stroke-width="2" opacity="0.85"></path>
+          <rect x="30" y="35" width="6" height="7" rx="1" fill="#FFFBF3"></rect>
+          <path d="M90 48.5 V54.5 M71 42.5 V47.5" stroke="#FFFBF3" stroke-width="2.2"></path>
+          <g stroke="#8E5A30" stroke-width="0.8">
+            <rect x="12" y="66" width="10" height="27" rx="1" fill="#C2492F"></rect>
+            <rect x="22" y="63" width="8" height="30" rx="1" fill="#FBE7C6"></rect>
+            <rect x="30" y="67" width="9" height="26" rx="1" fill="#8FAE7E"></rect>
+            <rect x="43" y="67" width="8" height="26" rx="1" fill="#7FC8E8" transform="rotate(16 51 93)"></rect>
+            <rect x="60" y="64" width="9" height="29" rx="1" fill="#F59A33"></rect>
+            <rect x="69" y="69" width="10" height="24" rx="1" fill="#7FC8E8"></rect>
+            <rect x="79" y="65" width="7" height="28" rx="1" fill="#C2492F"></rect>
+            <rect x="86" y="67" width="9" height="26" rx="1" fill="#8FAE7E"></rect>
+            <rect x="95" y="71" width="7" height="22" rx="1" fill="#FBE7C6"></rect>
+          </g>
+          <path d="M12 70 H22 M22 67 H30 M22 88 H30 M30 71 H39 M60 68 H69 M60 88 H69 M79 69 H86 M86 71 H95" stroke="#FFFBF3" stroke-width="2" opacity="0.85"></path>
+          <path d="M22.5 67 H29.5 M22.5 88 H29.5 M95.5 75 H101.5" stroke="#C8673F" stroke-width="2"></path>
+          <rect x="71" y="74" width="6" height="7" rx="1" fill="#FFFBF3"></rect>
+          <g stroke="#8E5A30" stroke-width="0.8">
+            <rect x="12" y="117" width="40" height="7" rx="1.5" fill="#8FAE7E"></rect>
+            <rect x="14" y="110" width="35" height="7" rx="1.5" fill="#F59A33"></rect>
+            <rect x="56" y="101" width="9" height="23" rx="1" fill="#C2492F"></rect>
+            <rect x="65" y="103" width="8" height="21" rx="1" fill="#7FC8E8"></rect>
+            <rect x="73" y="100" width="10" height="24" rx="1" fill="#FBE7C6"></rect>
+          </g>
+          <path d="M44 117.5 V123.5 M19 110.5 V116.5 M56 105 H65 M73 104 H83 M73 119 H83" stroke="#FFFBF3" stroke-width="2" opacity="0.85"></path>
+          <path d="M73.5 104 H82.5 M73.5 119 H82.5" stroke="#8FAE7E" stroke-width="2"></path>
+          <circle cx="93" cy="117" r="7" fill="#F59A33"></circle>
+          <path d="M87 114 Q93 111 99 115 M86.4 119 Q93 116 99.6 120 M90.5 110.6 Q88 117 91 123.6" stroke="#C9650C" stroke-width="1.3" fill="none" stroke-linecap="round"></path>
+          <path d="M99 121 Q103 125 100.5 127" stroke="#C9650C" stroke-width="1.2" fill="none" stroke-linecap="round"></path>
+          <rect x="8" y="55" width="96" height="6" fill="#B07A4F"></rect>
+          <rect x="8" y="55" width="96" height="2.2" fill="#C99466"></rect>
+          <rect x="8" y="61" width="96" height="3" fill="#6B4122" opacity="0.3"></rect>
+          <rect x="8" y="93" width="96" height="6" fill="#B07A4F"></rect>
+          <rect x="8" y="93" width="96" height="2.2" fill="#C99466"></rect>
+          <rect x="8" y="99" width="96" height="3" fill="#6B4122" opacity="0.3"></rect>
+          <rect x="2" y="14" width="8" height="120" rx="2" fill="#B07A4F"></rect>
+          <rect x="102" y="14" width="8" height="120" rx="2" fill="#B07A4F"></rect>
+          <rect x="3.6" y="18" width="2" height="112" rx="1" fill="#C99466" opacity="0.8"></rect>
+          <rect x="0" y="124" width="112" height="11" rx="2.5" fill="#B07A4F"></rect>
+          <rect x="0" y="124" width="112" height="3" rx="1.5" fill="#C99466"></rect>
+          <path d="M6 135 V137 M106 135 V137" stroke="#8E5A30" stroke-width="4" stroke-linecap="round"></path>
+          <rect x="-2" y="11" width="116" height="9" rx="3" fill="#B07A4F"></rect>
+          <rect x="-2" y="11" width="116" height="3.5" rx="1.75" fill="#C99466"></rect>
+          <g transform="rotate(-4 28 12)">
+            <path d="M33 6 L37 11.6" stroke="#8E5A30" stroke-width="2" stroke-linecap="round"></path>
+            <rect x="14" y="-19" width="28" height="31" rx="3" fill="#B07A4F"></rect>
+            <rect x="17" y="-16" width="22" height="25" rx="1.5" fill="#FBE7C6"></rect>
+            <rect x="19" y="-14" width="18" height="21" fill="#BFE7F7"></rect>
+            <path d="M19 7 V4 Q28 -1 37 4 V7 Z" fill="#F29A3A"></path>
+            <path d="M22.4 -3.6 L23 -11 L27.4 -7.4 Z M33.6 -3.6 L33 -11 L28.6 -7.4 Z" fill="#F29A3A" stroke="#F29A3A" stroke-width="1.4" stroke-linejoin="round"></path>
+            <ellipse cx="28" cy="-2.4" rx="7.4" ry="5.8" fill="#F5A447"></ellipse>
+            <path d="M26.4 -7.4 L26.8 -5.4 M28 -7.9 V-5.6 M29.6 -7.4 L29.2 -5.4" stroke="#C4651A" stroke-width="1.1" stroke-linecap="round"></path>
+            <path d="M23.8 -2.8 H26.6 M29.4 -2.8 H32.2" stroke="#3A2618" stroke-width="1.3" stroke-linecap="round"></path>
+            <ellipse cx="28" cy="0.6" rx="2.8" ry="1.9" fill="#FDE6C4"></ellipse>
+            <circle cx="28" cy="-0.3" r="0.8" fill="#D9606A"></circle>
+            <path d="M21 -11 L24 -13" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" opacity="0.7"></path>
+          </g>
+          <g class="brg-anim" style="transform-origin: 81px 0px; animation: brgSway 3.8s ease-in-out infinite">
+            <path d="M81 0 Q73 -7 71 -16 Q80 -12 81 0 Z" fill="#8FAE7E"></path>
+            <path d="M81 0 Q83 -12 91 -17 Q90.5 -7 81 0 Z" fill="#7E9F6D"></path>
+            <path d="M81 0 Q78.5 -12 82 -22 Q86 -12 81 0 Z" fill="#9CBB8B"></path>
+          </g>
+          <path d="M73 1 L89 1 L87.4 12 L74.6 12 Z" fill="#C8673F"></path>
+          <rect x="71.5" y="-2" width="19" height="4.5" rx="2" fill="#DB7B4E"></rect>
+          <path d="M88.5 3 Q97 6 96.2 16 Q95.6 24 99 31" stroke="#7E9F6D" stroke-width="1.8" fill="none" stroke-linecap="round"></path>
+          <ellipse cx="95" cy="13" rx="2.8" ry="1.6" fill="#8FAE7E" transform="rotate(-30 95 13)"></ellipse>
+          <ellipse cx="98" cy="22" rx="2.8" ry="1.6" fill="#9CBB8B" transform="rotate(30 98 22)"></ellipse>
+          <ellipse cx="97.6" cy="30.6" rx="2.6" ry="1.5" fill="#8FAE7E" transform="rotate(-25 97.6 30.6)"></ellipse>
+      ''',
+  'mangkuk': r'''
+          <ellipse cx="27" cy="27.5" rx="24" ry="3" fill="#7A4A1F" opacity="0.16"></ellipse>
+          <path d="M4 8 L50 8 L45 25 Q27 29 9 25 Z" fill="#2F86B8"></path>
+          <path d="M17 16 Q22 12.5 27 16 Q22 19.5 17 16 Z M27 16 L31 13.4 L31 18.6 Z" fill="#BFE7F7"></path>
+          <ellipse cx="27" cy="8" rx="23" ry="4.6" fill="#5FB2DE"></ellipse>
+          <sc-if value="{{penuh}}" hint-placeholder-val="{{ true }}">
+            <ellipse cx="27" cy="7.4" rx="18" ry="3.8" fill="#B07A4F"></ellipse>
+            <circle cx="19" cy="6" r="1.6" fill="#8E5A30"></circle>
+            <circle cx="27" cy="5" r="1.7" fill="#D9A066"></circle>
+            <circle cx="35" cy="6.4" r="1.5" fill="#8E5A30"></circle>
+            <circle cx="31" cy="4.6" r="1.3" fill="#8E5A30"></circle>
+            <circle cx="23" cy="4.4" r="1.3" fill="#D9A066"></circle>
+          </sc-if>
+          <sc-if value="{{kosong}}" hint-placeholder-val="{{ false }}">
+            <ellipse cx="27" cy="8.6" rx="18.5" ry="3.4" fill="#1F5E80"></ellipse>
+            <circle cx="22" cy="9" r="1.1" fill="#B07A4F"></circle>
+            <circle cx="31" cy="8.4" r="0.9" fill="#B07A4F"></circle>
+          </sc-if>
+      ''',
+  'ikanAsin': r'''
+          <path d="M3 11 Q14 1 30 7 L41 2 L38 11 L41 20 L30 15 Q14 21 3 11 Z" fill="#D9C08E" stroke="#A88A55" stroke-width="1.4" stroke-linejoin="round"></path>
+          <path d="M13 6 Q16 11 13 16" stroke="#A88A55" stroke-width="1.3" fill="none"></path>
+          <path d="M18 7.5 L18 14.5 M22 7.5 L22 14.5 M26 8.2 L26 13.8" stroke="#BFA06A" stroke-width="1.2" stroke-linecap="round"></path>
+          <circle cx="8.6" cy="10" r="1.6" fill="#3B2716"></circle>
+          <circle cx="20" cy="4" r="0.9" fill="#FFFFFF"></circle>
+          <circle cx="28" cy="17.5" r="0.8" fill="#FFFFFF"></circle>
+      ''',
+  'susu': r'''
+          <ellipse cx="21" cy="13" rx="19" ry="6" fill="#FFFBF3" stroke="#CDB48C" stroke-width="1.4"></ellipse>
+          <ellipse cx="21" cy="11.5" rx="13" ry="3.8" fill="#F2E9DA"></ellipse>
+          <ellipse cx="21" cy="11.3" rx="11.5" ry="3.1" fill="#FFFFFF"></ellipse>
+          <path d="M35 1 Q37.4 4.6 35 6.2 Q32.6 4.6 35 1 Z" fill="#FFFFFF" stroke="#D9CFC0" stroke-width="1"></path>
+      ''',
+  'tuna': r'''
+          <rect x="3" y="8" width="26" height="20" rx="3" fill="#B8C2CC"></rect>
+          <rect x="3" y="13" width="26" height="10" fill="#2F86B8"></rect>
+          <path d="M9 18 Q14 14.4 19 18 Q14 21.6 9 18 Z M19 18 L23 15.4 L23 20.6 Z" fill="#FFFFFF"></path>
+          <ellipse cx="16" cy="8" rx="13" ry="3.6" fill="#D9E0E6" stroke="#9AA6B2" stroke-width="1"></ellipse>
+          <ellipse cx="20" cy="7.4" rx="4" ry="1.6" fill="none" stroke="#9AA6B2" stroke-width="1.4"></ellipse>
+          <path d="M3 25 Q16 30 29 25" stroke="#9AA6B2" stroke-width="1.2" fill="none"></path>
+      ''',
   'terowongan': r'''
           <ellipse cx="78" cy="60" rx="74" ry="4" fill="#7A4A1F" opacity="0.14"></ellipse>
           <path d="M16 12 H140 A10 22 0 0 1 140 56 H16 Z" fill="#B79CE0"></path>
@@ -878,47 +1029,6 @@ const roomItemBackSvgs = <String, String>{
           <path d="M22 32 Q60 72 98 32 Q60 46 22 32 Z" fill="#F4B48C" stroke="#E58A62" stroke-width="1.4" stroke-linejoin="round"></path>
           <path d="M34 38 Q60 48 86 38" stroke="#FFFBF3" stroke-width="2.4" fill="none" opacity="0.8"></path>
       ''',
-  'mangkuk': r'''
-          <ellipse cx="27" cy="27.5" rx="24" ry="3" fill="#7A4A1F" opacity="0.16"></ellipse>
-          <path d="M4 8 L50 8 L45 25 Q27 29 9 25 Z" fill="#2F86B8"></path>
-          <path d="M17 16 Q22 12.5 27 16 Q22 19.5 17 16 Z M27 16 L31 13.4 L31 18.6 Z" fill="#BFE7F7"></path>
-          <ellipse cx="27" cy="8" rx="23" ry="4.6" fill="#5FB2DE"></ellipse>
-          <sc-if value="{{penuh}}" hint-placeholder-val="{{ true }}">
-            <ellipse cx="27" cy="7.4" rx="18" ry="3.8" fill="#B07A4F"></ellipse>
-            <circle cx="19" cy="6" r="1.6" fill="#8E5A30"></circle>
-            <circle cx="27" cy="5" r="1.7" fill="#D9A066"></circle>
-            <circle cx="35" cy="6.4" r="1.5" fill="#8E5A30"></circle>
-            <circle cx="31" cy="4.6" r="1.3" fill="#8E5A30"></circle>
-            <circle cx="23" cy="4.4" r="1.3" fill="#D9A066"></circle>
-          </sc-if>
-          <sc-if value="{{kosong}}" hint-placeholder-val="{{ false }}">
-            <ellipse cx="27" cy="8.6" rx="18.5" ry="3.4" fill="#1F5E80"></ellipse>
-            <circle cx="22" cy="9" r="1.1" fill="#B07A4F"></circle>
-            <circle cx="31" cy="8.4" r="0.9" fill="#B07A4F"></circle>
-          </sc-if>
-      ''',
-  'ikanAsin': r'''
-          <path d="M3 11 Q14 1 30 7 L41 2 L38 11 L41 20 L30 15 Q14 21 3 11 Z" fill="#D9C08E" stroke="#A88A55" stroke-width="1.4" stroke-linejoin="round"></path>
-          <path d="M13 6 Q16 11 13 16" stroke="#A88A55" stroke-width="1.3" fill="none"></path>
-          <path d="M18 7.5 L18 14.5 M22 7.5 L22 14.5 M26 8.2 L26 13.8" stroke="#BFA06A" stroke-width="1.2" stroke-linecap="round"></path>
-          <circle cx="8.6" cy="10" r="1.6" fill="#3B2716"></circle>
-          <circle cx="20" cy="4" r="0.9" fill="#FFFFFF"></circle>
-          <circle cx="28" cy="17.5" r="0.8" fill="#FFFFFF"></circle>
-      ''',
-  'susu': r'''
-          <ellipse cx="21" cy="13" rx="19" ry="6" fill="#FFFBF3" stroke="#CDB48C" stroke-width="1.4"></ellipse>
-          <ellipse cx="21" cy="11.5" rx="13" ry="3.8" fill="#F2E9DA"></ellipse>
-          <ellipse cx="21" cy="11.3" rx="11.5" ry="3.1" fill="#FFFFFF"></ellipse>
-          <path d="M35 1 Q37.4 4.6 35 6.2 Q32.6 4.6 35 1 Z" fill="#FFFFFF" stroke="#D9CFC0" stroke-width="1"></path>
-      ''',
-  'tuna': r'''
-          <rect x="3" y="8" width="26" height="20" rx="3" fill="#B8C2CC"></rect>
-          <rect x="3" y="13" width="26" height="10" fill="#2F86B8"></rect>
-          <path d="M9 18 Q14 14.4 19 18 Q14 21.6 9 18 Z M19 18 L23 15.4 L23 20.6 Z" fill="#FFFFFF"></path>
-          <ellipse cx="16" cy="8" rx="13" ry="3.6" fill="#D9E0E6" stroke="#9AA6B2" stroke-width="1"></ellipse>
-          <ellipse cx="20" cy="7.4" rx="4" ry="1.6" fill="none" stroke="#9AA6B2" stroke-width="1.4"></ellipse>
-          <path d="M3 25 Q16 30 29 25" stroke="#9AA6B2" stroke-width="1.2" fill="none"></path>
-      ''',
   'biskuit': r'''
           <g fill="#D9A066" stroke="#B07A4F" stroke-width="1" stroke-linejoin="round">
             <path d="M3 16 Q9 9 17 12 L22 9 L21 15 L22 21 L17 18 Q9 22 3 16 Z"></path>
@@ -958,6 +1068,9 @@ const roomItemFrontSvgs = <String, String>{
           <path d="M3 38 A72 26 0 0 0 147 38 L129 38 A54 15 0 0 1 21 38 Z" fill="#6FB8DD"></path>
           <path d="M14 46 A62 19 0 0 0 136 46" stroke="#FFFFFF" stroke-width="1.6" stroke-dasharray="3 5" fill="none" opacity="0.65"></path>
       ''',
+  'rumah': r'''
+          <rect x="30" y="119" width="62" height="10" rx="3" fill="#D59E67"></rect>
+      ''',
   'catnip': r'''
           <ellipse cx="26" cy="71" rx="21" ry="3" fill="#7A4A1F" opacity="0.16"></ellipse>
           <g class="brg-anim" style="transform-origin: 26px 37px; animation: brgSway 3.2s ease-in-out infinite">
@@ -970,9 +1083,6 @@ const roomItemFrontSvgs = <String, String>{
           <path d="M10 40 L42 40 L38 70 L14 70 Z" fill="#C8673F"></path>
           <rect x="6" y="34" width="40" height="9" rx="3" fill="#DB7B4E"></rect>
           <g fill="#F4B48C" transform="translate(26 56)"><ellipse cx="0" cy="2.4" rx="3.6" ry="3"></ellipse><circle cx="-3.8" cy="-2.4" r="1.4"></circle><circle cx="-1.3" cy="-4.6" r="1.4"></circle><circle cx="1.3" cy="-4.6" r="1.4"></circle><circle cx="3.8" cy="-2.4" r="1.4"></circle></g>
-      ''',
-  'rumah': r'''
-          <rect x="30" y="119" width="62" height="10" rx="3" fill="#D59E67"></rect>
       ''',
   'terowongan': r'''
           <path d="M34 12 H140 A10 22 0 0 1 140 56 H34 Q39 34 34 12 Z" fill="#B79CE0"></path>
@@ -997,6 +1107,18 @@ const roomItemFrontSvgs = <String, String>{
           <path d="M20 84 H50 L46 108 H24 Z" fill="#C8673F"></path>
           <rect x="17" y="80" width="36" height="7" rx="3" fill="#DB7B4E"></rect>
       ''',
+  'rakBuku': r'''
+          <ellipse cx="92" cy="139" rx="21" ry="2.6" fill="#7A4A1F" opacity="0.16"></ellipse>
+          <rect x="74" y="131" width="36" height="7.5" rx="1.5" fill="#C2492F" stroke="#9A3520" stroke-width="0.8"></rect>
+          <path d="M76.5 134.8 H103" stroke="#F4B48C" stroke-width="1.6" stroke-linecap="round"></path>
+          <rect x="104" y="131.4" width="3" height="6.7" fill="#F4B48C"></rect>
+          <rect x="77" y="125" width="31" height="6" rx="1.5" fill="#7FC8E8" stroke="#4FA3C9" stroke-width="0.8"></rect>
+          <path d="M79.5 128 H105.5" stroke="#FFFBF3" stroke-width="1.8" stroke-linecap="round"></path>
+          <g transform="rotate(-6 92 122.5)">
+            <rect x="80" y="120" width="24" height="5" rx="1.2" fill="#8FAE7E" stroke="#7E9F6D" stroke-width="0.8"></rect>
+            <path d="M83 120.4 V124.6" stroke="#FBE7C6" stroke-width="1.8"></path>
+          </g>
+      ''',
   'hammock': r'''
           <path d="M22 32 Q60 72 98 32 Q60 58 22 32 Z" fill="#E58A62"></path>
           <path d="M30 40 Q60 62 90 40" stroke="#FFFBF3" stroke-width="2" fill="none" stroke-dasharray="3 4" opacity="0.8"></path>
@@ -1010,27 +1132,28 @@ const roomItemViewBoxes = <String, (double, double, double, double)>{
   'tikus': (0, 0, 46, 28),
   'karpet': (0, 0, 184, 60),
   'kasur': (0, 0, 150, 76),
-  'catnip': (0, 0, 52, 74),
   'tiang': (0, 0, 50, 152),
   'akuarium': (0, 0, 92, 90),
   'rumah': (0, 0, 122, 132),
   'lukisan': (0, 0, 72, 66),
   'jam': (0, 0, 52, 86),
   'rak': (0, 0, 104, 34),
-  'terowongan': (0, 0, 152, 64),
-  'pancingan': (0, 0, 80, 70),
-  'bantalIkan': (0, 0, 130, 56),
-  'sofaMini': (0, 0, 140, 86),
-  'monstera': (0, 0, 70, 110),
-  'jendelaBurung': (0, 0, 100, 96),
-  'lampuBulan': (0, 0, 60, 60),
-  'hammock': (0, 0, 120, 70),
+  'rakBuku': (0, 0, 112, 140),
   'mangkuk': (0, 0, 54, 30),
   'ikanAsin': (0, 0, 46, 22),
   'susu': (0, 0, 42, 20),
   'tuna': (0, 0, 32, 30),
+  'terowongan': (0, 0, 152, 64),
+  'pancingan': (0, 0, 80, 70),
+  'bantalIkan': (0, 0, 130, 56),
+  'sofaMini': (0, 0, 140, 86),
+  'jendelaBurung': (0, 0, 100, 96),
+  'lampuBulan': (0, 0, 60, 60),
+  'hammock': (0, 0, 120, 70),
   'biskuit': (0, 0, 44, 24),
   'puding': (0, 0, 40, 34),
+  'catnip': (0, 0, 52, 74),
+  'monstera': (0, 0, 70, 110),
 };
 
 /// Tanda lesu di atas kucing, viewBox 0 0 48 52 (`TandaLesu.dc.html`).
@@ -1067,6 +1190,8 @@ const kittyKeyframes = r'''
 @keyframes kcSway{0%{transform:rotate(-7deg)}100%{transform:rotate(7deg)}}
 @keyframes kcSwaySoft{0%{transform:rotate(-2.5deg)}100%{transform:rotate(2.5deg)}}
 @keyframes kcSniff{0%{transform:translate(0,0)}100%{transform:translate(-1.6px,0.7px)}}
+@keyframes kcPage{0%,74%{transform:scaleX(1);opacity:0}76%{transform:scaleX(1);opacity:1}86%{transform:scaleX(0.04);opacity:1}96%{transform:scaleX(-1);opacity:1}100%{transform:scaleX(-1);opacity:0}}
+@keyframes kcRead{0%,100%{transform:translateY(0)}50%{transform:translateY(0.8px)}}
 ''';
 
 /// `@keyframes` barang kamar (`Barang.dc.html`), disalin utuh.

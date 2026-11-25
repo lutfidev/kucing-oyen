@@ -1248,6 +1248,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get roomItemRakDesc => 'Assento VIP para vigiar todo mundo.';
 
   @override
+  String get roomItemRakBuku => 'Estante de Livros';
+
+  @override
+  String get roomItemRakBukuDesc =>
+      'Quase tudo história de peixe. Óculos de leitura no rosto, cara de sabichão.';
+
+  @override
   String get roomItemPancingan => 'Varinha de Penas';
 
   @override
@@ -1678,6 +1685,14 @@ class AppLocalizationsPt extends AppLocalizations {
       'Já está no quarto. Mude de lugar no modo Decorar.';
 
   @override
+  String get buySuccessItemStoredBody =>
+      'A casa está cheia, então ele está esperando no Depósito. Arrume um lugar no modo Decorar.';
+
+  @override
+  String get buySuccessItemTerraceBody =>
+      'A sala está cheia, então ele foi para a varanda. Deslize até lá para ver.';
+
+  @override
   String buySuccessKitty(String name) {
     return '$name se mudou para o quarto!';
   }
@@ -1747,6 +1762,8 @@ class AppLocalizationsPt extends AppLocalizations {
       'endus': 'cheirando',
       'geser1': 'chegando pro lado',
       'geser2': 'chegando pro lado',
+      'baca': 'lendo um livro',
+      'bacaKaca': 'lendo um livro de óculos de leitura',
       'other': 'sentado quietinho',
     });
     return '$_temp0';
@@ -1813,19 +1830,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get roomEmptyBubble => 'Quarto vazio demais. Bora pra Loja!';
-
-  @override
-  String get roomEmptyWall => 'Decoração de parede?';
-
-  @override
-  String get roomEmptyWallHint => 'Vazio. Procure decoração de parede na Loja';
-
-  @override
-  String get roomEmptyFloor => 'Uma caminha, talvez?';
-
-  @override
-  String get roomEmptyFloorHint =>
-      'Vazio. Procure uma caminha ou brinquedo na Loja';
 
   @override
   String get accessories => 'Acessórios';
@@ -1957,6 +1961,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get decorateDone => 'Pronto';
 
   @override
+  String get decorateTidy => 'Arrumar';
+
+  @override
+  String get decorateTidyDone => 'Tudo arrumado!';
+
+  @override
+  String get decorateTidyUndo => 'Desfazer';
+
+  @override
   String get decorateHint => 'Arraste as coisas pra um lugar novo';
 
   @override
@@ -2046,6 +2059,16 @@ class AppLocalizationsPt extends AppLocalizations {
       locale: localeName,
       other: 'Pegar $coins moedas de $name',
       one: 'Pegar $coins moeda de $name',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String kittyRewardMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '+$count na fila',
     );
     return '$_temp0';
   }

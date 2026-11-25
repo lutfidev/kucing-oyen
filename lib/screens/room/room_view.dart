@@ -18,6 +18,8 @@ import '../../game/model/kitties.dart';
 import '../../game/model/lane.dart';
 import '../../game/model/lane_life.dart';
 import '../../game/model/needs.dart';
+import '../../game/model/room.dart';
+import '../../game/model/reward_turn.dart';
 import '../../game/model/room_life.dart';
 import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
@@ -276,6 +278,22 @@ class _RoomViewState extends State<RoomView>
   (bool, int)? _praise;
   int _praises = 0;
 
+  /// Pesan Rapikan (langkah 40): nomor urutnya, susunan sebelum dirapikan
+  /// untuk Batalkan (null = tidak ada yang bergeser atau sudah dibatalkan),
+  /// dan barang yang sedang meluncur ke tempat barunya.
+  int? _tidyNote;
+  int _tidyNotes = 0;
+  Room? _undoRoom;
+  Room? _tidiedRoom;
+  bool _tidying = false;
+
+  /// Barang meluncur ke tempat barunya sampai saat ini (Rapikan dan
+  /// Batalkan); tanpa timer, dibandingkan saat dibangun.
+  DateTime _slideUntil = DateTime(0);
+
+  /// Lama barang meluncur sesudah Rapikan atau Batalkan.
+  static const tidySlide = Duration(milliseconds: 300);
+
   /// Barang yang sedang diseret, letaknya sekarang, pojok kiri-atasnya
   /// saat mulai diseret, dan titik jari (layar) saat mulai dan sekarang.
   RoomItemId? _dragging;
@@ -290,6 +308,14 @@ class _RoomViewState extends State<RoomView>
   /// barangnya, teksnya, dan kotak slot di layar. Hilang sendiri.
   (RoomItemId, String, Rect)? _trayTip;
   Timer? _trayTipTimer;
+
+  /// Jeda sesudah gelembung hadiah diketuk (langkah 40): gelembung kucing
+  /// berikutnya baru muncul sesudah reaksinya, jadi ketukan ganda cepat
+  /// tidak mengambil hadiah dua kucing sekaligus.
+  Timer? _rewardHold;
+
+  /// `TickerMode` terakhir di [didChangeDependencies].
+  bool _wasShown = true;
 
   /// Lama keterangan slot Gudang tampil.
   static const trayTipDuration = Duration(milliseconds: 2400);
@@ -353,6 +379,7 @@ class _RoomViewState extends State<RoomView>
   void _onShow() {
     if (!mounted) return;
     _hidden = false;
+    if (widget.life) _life.watching = null;
     _checkLane(opening: true);
     if (_inLane && _camera == null && TickerMode.valuesOf(context).enabled) {
       _lane.playerHere(true);
@@ -369,6 +396,11 @@ class _RoomViewState extends State<RoomView>
     if (widget.life) {
       final shown = TickerMode.valuesOf(context).enabled;
       _lane.playerHere(_inLane && _camera == null && shown && !_hidden);
+      // Kembali dari Toko atau level = ruangan dibuka lagi: satu kucing
+      // bergerak [lifeStartSeconds] kemudian (tick berikutnya mengisi
+      // `watching` lagi).
+      if (shown && !_wasShown) _life.watching = null;
+      _wasShown = shown;
       if (shown && _house == HouseRoom.living && !_inLane) _armForcedVisit();
     }
     if (_animating && !_ticker.isActive) {
@@ -413,6 +445,7 @@ class _RoomViewState extends State<RoomView>
     _forceTimer?.cancel();
     _lifecycle?.dispose();
     _trayTipTimer?.cancel();
+    _rewardHold?.cancel();
     super.dispose();
   }
 
@@ -444,6 +477,8 @@ class _RoomViewState extends State<RoomView>
       _laneHeart = (null, ++_reactions);
     }
     _laneHeartShown = _lane.heart;
+    // Ruangan yang dilihat pemain tidak pernah beku (langkah 40).
+    _life.watching = _inLane ? null : _house;
     for (final event in _life.advance(dt)) {
       switch (event) {
         case ReachedBowl(:final kitty):
@@ -805,6 +840,9 @@ class _RoomViewState extends State<RoomView>
   }
 
   void _select(KittyId kitty) {
+    // Ketukan kedua dari ketukan ganda di gelembung hadiah jatuh ke kucing
+    // di bawahnya (gelembung sedang disembunyikan): diabaikan.
+    if (_rewardHold != null) return;
     _sound(GameSound.meow);
     setState(() => _selected = kitty);
     _progress.seeKitty(kitty);
@@ -971,8 +1009,18 @@ class _RoomViewState extends State<RoomView>
 
   /// Ambil hadiah koin kucing yang dirawat (gelembung).
   Future<void> _claim(KittyId kitty) async {
+    if (_rewardHold != null) return;
     final l = context.l10n;
-    if (!await _progress.claimKittyReward(kitty) || !mounted) return;
+    setState(() {
+      _rewardHold = Timer(ReactionOverlay.duration, () {
+        if (mounted) setState(() => _rewardHold = null);
+      });
+    });
+    if (!await _progress.claimKittyReward(kitty) || !mounted) {
+      _rewardHold?.cancel();
+      if (mounted) setState(() => _rewardHold = null);
+      return;
+    }
     _react(
       kitty,
       RoomReaction(
@@ -990,6 +1038,9 @@ class _RoomViewState extends State<RoomView>
     _decorating = true;
     _selected = null;
     _reaction = null;
+    _undoRoom = null;
+    _tidiedRoom = null;
+    _tidyNote = null;
     _clearTrayTip();
     _life.interrupt();
   });
@@ -1009,6 +1060,8 @@ class _RoomViewState extends State<RoomView>
       _decorating = false;
       _dragging = null;
       _dragSpot = null;
+      _undoRoom = null;
+      _tidyNote = null;
       _clearTrayTip();
     });
     final bonus = await _progress.finishDecorating();
@@ -1019,7 +1072,58 @@ class _RoomViewState extends State<RoomView>
     });
   }
 
+  /// Rapikan ruangan yang dibuka; ketukan saat masih bekerja diabaikan.
+  Future<void> _tidy() async {
+    if (_tidying || !_decorating) return;
+    // Pesan dengan Batalkan masih tampil: ruangan sudah rapi, dan ketukan
+    // kedua tidak boleh menghapus Batalkan.
+    if (_undoRoom != null) return;
+    _tidying = true;
+    _slide();
+    final before = await _progress.tidyRoom(_house);
+    if (!mounted) return;
+    _tidying = false;
+    // Selesai atau seret selama menunggu simpanan: tanpa pesan.
+    if (!_decorating) return;
+    setState(() {
+      _undoRoom = before;
+      _tidiedRoom = before == null ? null : _progress.home.room;
+      _tidyNote = ++_tidyNotes;
+    });
+  }
+
+  /// Batalkan Rapikan: susunan sebelumnya kembali, sekali saja.
+  Future<void> _undoTidy() async {
+    final (before, after) = (_undoRoom, _tidiedRoom);
+    if (before == null || after == null) return;
+    setState(() {
+      _undoRoom = null;
+      _tidiedRoom = null;
+      _tidyNote = null;
+    });
+    if (_progress.home.room != after) return;
+    _slide();
+    await _progress.restoreRoom(before, after: after);
+  }
+
+  /// Barang meluncur selama [tidySlide] (langsung saat kurangi gerak).
+  void _slide() {
+    if (MediaQuery.disableAnimationsOf(context)) return;
+    _slideUntil = DateTime.now().add(tidySlide);
+  }
+
+  /// Susunan berubah lewat cara lain: Batalkan tidak berlaku lagi.
+  void _dropUndo() {
+    if (_undoRoom == null && _tidyNote == null) return;
+    setState(() {
+      _undoRoom = null;
+      _tidiedRoom = null;
+      _tidyNote = null;
+    });
+  }
+
   void _dragStart(RoomItemId id, Rect box, Offset pointer) {
+    _dropUndo();
     _dragOrigin = box.topLeft;
     _dragDown = pointer;
     _dragPointer = pointer;
@@ -1061,9 +1165,11 @@ class _RoomViewState extends State<RoomView>
   /// Ketuk barang di Gudang: ditaruh di posisi bawaannya di ruangan ini;
   /// gantungan teras memunculkan "Gantung di balok atap".
   Future<void> _placeFromTray(RoomItemId id, Rect slot) async {
+    _dropUndo();
+    // Langkah 40: tidak ditaruh di atas barang lain kalau ada tempat bebas.
     final placed = await _progress.placeItem(
       id,
-      roomItemOf(id).defaultSpot,
+      _progress.home.room.freeSpotFor(id, _house),
       room: _house,
     );
     if (!mounted) return;
@@ -1263,6 +1369,29 @@ class _RoomViewState extends State<RoomView>
                 reaction: const RoomReaction(),
                 anchor: _laneHeartAnchor(cat),
                 onDone: () => setState(() => _laneHeart = null),
+              ),
+            if ((_tidyNote, _decorating) case (final n?, true))
+              Positioned(
+                left: s.roomPraiseInset,
+                right: s.roomPraiseInset,
+                // Di bawah kolom Selesai + Rapikan, supaya tidak menutupi
+                // tombol Rapikan (ketukan kedua jatuh di Batalkan).
+                top:
+                    padding.top +
+                    context.koSpace.s6 +
+                    s.roomDecorateGap +
+                    2 * s.roomDecorateButton +
+                    2 * context.koSpace.s8,
+                child: Center(
+                  child: TidyToast(
+                    key: ValueKey('tidy-$n'),
+                    onUndo: _undoRoom == null ? null : _undoTidy,
+                    onDone: () => setState(() {
+                      _tidyNote = null;
+                      _undoRoom = null;
+                    }),
+                  ),
+                ),
               ),
             if (praise case (final bonus, final n))
               Positioned(
@@ -1487,9 +1616,23 @@ class _RoomViewState extends State<RoomView>
                   const Spacer(),
                 if ((!empty || _decorating) && lifted == null) ...[
                   SizedBox(width: space.s8),
-                  DecorateButton(
-                    done: _decorating,
-                    onPressed: _decorating ? _finish : _startDecorating,
+                  // Rapikan (langkah 40) di bawah Selesai: baris atas sudah
+                  // penuh petunjuk dan Selesai di layar kecil.
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      DecorateButton(
+                        done: _decorating,
+                        onPressed: _decorating ? _finish : _startDecorating,
+                      ),
+                      if (_decorating) ...[
+                        SizedBox(height: space.s8),
+                        TidyButton(
+                          key: const ValueKey('decorate-tidy'),
+                          onPressed: _tidy,
+                        ),
+                      ],
+                    ],
                   ),
                 ],
               ],
@@ -1554,6 +1697,24 @@ class _RoomViewState extends State<RoomView>
     };
     final catBoxes = {..._catBoxes(sprites, geo), ...hopping};
     if (geo.which == _house) _shownBoxes = catBoxes;
+    // Hadiah bergiliran (langkah 40): satu gelembung per ruangan.
+    final reward = rewardTurn(
+      _rewardHold != null ? const <KittyId>[] : catBoxes.keys,
+      (kitty) =>
+          _progress.canClaimKittyReward(kitty) &&
+          !_progress.catNeeds(kitty).isSad &&
+          !home.isFresh(kitty),
+    );
+    // Gelembung hadiah: desain (163, 362) untuk Oyen 116 di (137, 430).
+    // Chip "+N lagi" di sisi yang menjauhi tepi terdekat, supaya tidak
+    // menimpa ikon pintu teras di tepi kanan.
+    final bubbleSize = RoomArt.coinBubbleViewBox.width * geo.artScale;
+    final rewardBox = catBoxes[reward.kitty];
+    final bubbleLeft = rewardBox == null
+        ? 0.0
+        : rewardBox.left + rewardBox.width * 26 / oyenRoomSize;
+    final moreOnLeft =
+        reward.more > 0 && bubbleLeft + bubbleSize / 2 > geo.room.width / 2;
     final empty = _empty && living;
     final top = MediaQuery.paddingOf(context).top + space.s6;
     // Tag dan gelembung tidak naik ke bawah header dan tombol Hias, yang
@@ -1827,27 +1988,36 @@ class _RoomViewState extends State<RoomView>
                   child: const NewKittyTag(),
                 ),
               )
-            else if (widget.life && _progress.canClaimKittyReward(kitty))
+            else if (widget.life && kitty == reward.kitty)
               Positioned.fill(
                 child: CustomSingleChildLayout(
                   // Desain: gelembung di (163, 362) untuk Oyen 116 di
                   // (137, 430); dijepit supaya tidak keluar tepi kamar.
                   delegate: KeepInside(
                     Offset(
-                      box.left + box.width * 26 / oyenRoomSize,
+                      bubbleLeft + (moreOnLeft ? bubbleSize : 0),
                       box.top - box.width * 68 / oyenRoomSize,
                     ),
                     margin: space.s8,
                     top: overlayTop,
+                    fromRight: moreOnLeft,
                   ),
                   child: CoinBubbleView(
                     key: ValueKey('reward-${kitty.name}'),
                     coins: kittyRewardCoins,
-                    label: context.l10n.kittyRewardLabel(
-                      kittyRewardCoins,
-                      kittyName(context.l10n, kitty),
-                    ),
-                    size: RoomArt.coinBubbleViewBox.width * geo.artScale,
+                    moreOnLeft: moreOnLeft,
+                    more: reward.more > 0
+                        ? context.l10n.kittyRewardMore(reward.more)
+                        : null,
+                    label: [
+                      context.l10n.kittyRewardLabel(
+                        kittyRewardCoins,
+                        kittyName(context.l10n, kitty),
+                      ),
+                      if (reward.more > 0)
+                        context.l10n.kittyRewardMore(reward.more),
+                    ].join(', '),
+                    size: bubbleSize,
                     time: _animating ? _time : null,
                     onTap: () => _claim(kitty),
                   ),
@@ -1859,7 +2029,8 @@ class _RoomViewState extends State<RoomView>
                 home.room.placedIn(geo.which)[RoomItemId.mangkuk],
               )
               case (final left?, final spot?))
-            if (geo.boxOf(roomItemOf(RoomItemId.mangkuk), spot) case final bowl)
+            if (geo.boxOf(roomItemOf(RoomItemId.mangkuk), spot) case final bowl
+                when !geo.bowlLabelHidden(bowl, catBoxes.values))
               Positioned.fill(
                 child: CustomSingleChildLayout(
                   // Desain: label di (282, 566) untuk mangkuk di (298, 596),
@@ -2077,8 +2248,10 @@ class _RoomViewState extends State<RoomView>
           customSemanticsActions: roomItemOf(id).builtIn
               ? null
               : {
-                  CustomSemanticsAction(label: l.storeItemAction): () =>
-                      _progress.storeItem(id),
+                  CustomSemanticsAction(label: l.storeItemAction): () {
+                    _dropUndo();
+                    _progress.storeItem(id);
+                  },
                 },
           child: art,
         ),
@@ -2101,7 +2274,15 @@ class _RoomViewState extends State<RoomView>
         child: art,
       );
     }
-    return Positioned.fromRect(key: ValueKey(id), rect: sprite.box, child: art);
+    return AnimatedPositioned.fromRect(
+      key: ValueKey(id),
+      rect: sprite.box,
+      duration: DateTime.now().isBefore(_slideUntil)
+          ? tidySlide
+          : Duration.zero,
+      curve: Curves.easeOut,
+      child: art,
+    );
   }
 
   /// Kucing yang bisa diketuk untuk membuka kartunya.

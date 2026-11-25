@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-513 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+517 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -320,6 +320,8 @@ files and anything written there is overwritten.
 | `roomItemLukisanDesc` | Art that makes you hungry. | Seni yang bikin lapar. | Shop description of the room item "Fish Painting". | |
 | `roomItemRak` | Wall Shelf | Rak Dinding | Name of the room item "Wall Shelf". | |
 | `roomItemRakDesc` | VIP seat for watching everyone. | Kursi VIP buat ngawasin semua orang. | Shop description of the room item "Wall Shelf". | |
+| `roomItemRakBuku` | Bookshelf | Rak Buku | Room item: a bookshelf on the floor where cats sit and read in reading glasses. | |
+| `roomItemRakBukuDesc` | Fish stories, mostly. Reading glasses on, looking very clever. | Isinya cerita ikan semua. Pakai kacamata baca, biar kelihatan pintar. | Shop description of the bookshelf: cats read here wearing reading glasses. | |
 | `roomItemPancingan` | Feather Wand | Pancingan Bulu | Name of the room item "Feather Wand". | |
 | `roomItemPancinganDesc` | Chases the feather, leaves its dignity behind. | Bulunya dikejar, harga dirinya ketinggalan. | Shop description of the room item "Feather Wand". | |
 | `roomItemLampuBulan` | Moon Lamp | Lampu Bulan | Name of the room item "Moon Lamp". | |
@@ -434,6 +436,8 @@ files and anything written there is overwritten.
 | `buySuccessOverline` | Success! | Berhasil! | Overline above the title after a successful purchase. | |
 | `buySuccessItem` | {name} is yours! | {name} jadi punyamu! | Buy sheet title after buying a room item. Placeholders: `{name}`. | |
 | `buySuccessItemBody` | It's in the room already. Move it around in decorate mode. | Sudah nongkrong di kamar. Geser lewat mode Hias kalau mau pindah. | Buy sheet body after buying a room item. | |
+| `buySuccessItemStoredBody` | The house is full, so it's waiting in Storage. Find it a spot in decorate mode. | Rumah lagi penuh, jadi barangnya nunggu di Gudang dulu. Cari tempatnya lewat mode Hias. | Buy sheet body after buying a room item when the house had no free spot, so the item went to Storage. | |
+| `buySuccessItemTerraceBody` | The living room is full, so it went out to the terrace. Swipe over to see it. | Ruang tengah lagi penuh, jadi barangnya ditaruh di teras. Geser ke teras buat lihat. | Buy sheet body after buying a room item when the living room had no free spot, so the item was placed on the terrace. | |
 | `buySuccessKitty` | {name} moved into the room! | {name} pindah ke kamar! | Buy sheet title after adopting a cat. Placeholders: `{name}`. | |
 | `buySuccessKittyBody` | Say hi in the room. Expect some fake indifference first. | Sapa dia di kamar. Mungkin pura-pura cuek dulu. | Buy sheet body after adopting a cat. | |
 | `buySuccessAccessory` | {name} is yours forever! | {name} milikmu selamanya! | Buy sheet title after buying an accessory. Placeholders: `{name}`. | |
@@ -445,7 +449,7 @@ files and anything written there is overwritten.
 | `buySeeRoom` | See it in the room | Lihat di kamar | Buy sheet button after a purchase: open the room. | |
 | `buyWearOn` | Wear on {name} | Pakai di {name} | Buy sheet button after buying an accessory: put it on this cat. Placeholders: `{name}`. | |
 | `buyNotEnoughHelp` | Play a puzzle or watch a rewarded ad to get more coins. | Main puzzle atau tonton iklan berhadiah buat nambah koin. | Buy sheet hint when the player cannot afford the item. | |
-| `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} endus{sniffing} geser1{scooting over} geser2{scooting over} other{sitting still}} | {pose, select, idle{duduk diam} lick{menjilat kaki} walk1{jalan} walk2{jalan} sleep{tidur melingkar} eat{makan dari mangkuk} play{main menepuk mainan} scratch{menggaruk tiang} happy{senang} lesu{lesu} rebah{rebahan santai} petted{dielus dan mendengkur} endus{mengendus} geser1{bergeser di tempat duduk} geser2{bergeser di tempat duduk} other{duduk diam}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
+| `kittyPose` | {pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} endus{sniffing} geser1{scooting over} geser2{scooting over} baca{reading a book} bacaKaca{reading a book in reading glasses} other{sitting still}} | {pose, select, idle{duduk diam} lick{menjilat kaki} walk1{jalan} walk2{jalan} sleep{tidur melingkar} eat{makan dari mangkuk} play{main menepuk mainan} scratch{menggaruk tiang} happy{senang} lesu{lesu} rebah{rebahan santai} petted{dielus dan mendengkur} endus{mengendus} geser1{bergeser di tempat duduk} geser2{bergeser di tempat duduk} baca{membaca buku} bacaKaca{membaca buku, berkacamata baca} other{duduk diam}} | What a room cat is doing, for its screen reader label. Placeholders: `{pose}`. | |
 | `neighborKumis` | Kumis | Kumis | Name of the neighbour cat in the Front Lane (a stall cat with a moustache-like grey patch and a scarf). Same in every language. | |
 | `kittyLabel` | {name} {pose} | {name} {pose} | Screen reader label of a room cat: name and what it is doing. Placeholders: `{name}`, `{pose}`. | |
 | `kittyLabelAccessory` | {name} {pose}, wearing a {accessory} | {name} {pose}, memakai {accessory} | Screen reader label of a room cat wearing an accessory. Placeholders: `{name}`, `{pose}`, `{accessory}`. | |
@@ -458,10 +462,6 @@ files and anything written there is overwritten.
 | `sadMarkHungry` | Droopy: hungry | Lesu: lapar | Screen reader label of the thought bubble above a hungry room cat. | |
 | `sadMarkSad` | Droopy: wants attention | Lesu: kurang perhatian | Screen reader label of the thought bubble above a room cat that needs attention. | |
 | `roomEmptyBubble` | Pretty empty in here. To the Shop! | Kamar masih sepi. Ke Toko, yuk! | Speech bubble in an empty starter room, pointing the player to the shop. | |
-| `roomEmptyWall` | Wall decor? | Hiasan dinding? | Short label inside the empty dashed spot on the wall of a starter room. | |
-| `roomEmptyWallHint` | Empty. Find wall decor in the Shop | Kosong. Cari hiasan dinding di Toko | Screen reader label of the empty wall spot; tapping opens the shop. | |
-| `roomEmptyFloor` | A bed, maybe? | Kasur, mungkin? | Short label inside the empty dashed spot on the floor of a starter room. | |
-| `roomEmptyFloorHint` | Empty. Find a bed or a toy in the Shop | Kosong. Cari kasur atau mainan di Toko | Screen reader label of the empty floor spot; tapping opens the shop. | |
 | `accessories` | Accessories | Aksesoris | Room menu button that opens the accessories tab of the shop. | |
 | `shopHasNew` | something new you can afford | ada yang baru terjangkau | Added to a room menu button's screen reader label when something there is affordable and not owned yet. | |
 | `menuButtonNew` | {label}, {note} | {label}, {note} | Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew. Placeholders: `{label}`, `{note}`. | |
@@ -495,6 +495,9 @@ files and anything written there is overwritten.
 | `reactionRelieved` | Ahh, free! | Lega! | Floating text over a cat after taking its accessory off. | |
 | `decorate` | Decorate | Hias | Room button that starts decorate mode. | |
 | `decorateDone` | Done | Selesai | Button that ends decorate mode. | |
+| `decorateTidy` | Tidy up | Rapikan | Decorate mode button that slides stacked items in the open room apart (to Storage if there is no room). | |
+| `decorateTidyDone` | All neat! | Sudah rapi! | Toast after the Tidy up button. | |
+| `decorateTidyUndo` | Undo | Batalkan | Button in the toast after Tidy up that puts the items back where they were. | |
 | `decorateHint` | Drag things to a new spot | Seret barang ke tempat baru | Chip shown while decorating. | |
 | `zoneWall` | Wall area | Area dinding | Label of the wall area while decorating. | |
 | `zoneFloor` | Floor area | Area lantai | Label of the floor area while decorating. | |
@@ -516,6 +519,7 @@ files and anything written there is overwritten.
 | `bowlRefill` | {hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}} | {hours, plural, other{Terisi lagi {hours} jam}} | Label over the empty shared food bowl in the cat room: hours until it refills. Placeholders: `{hours}`. | |
 | `bowlRefillSoon` | Refills any minute now | Terisi sebentar lagi | Label over the empty shared food bowl in the cat room when it refills in under an hour. | |
 | `kittyRewardLabel` | {coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}} | Ambil {coins} koin dari {name} | Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward. Placeholders: `{coins}`, `{name}`. | |
+| `kittyRewardMore` | {count, plural, other{+{count} more}} | {count, plural, other{+{count} lagi}} | Small dark chip under the single coin bubble in a room: how many other cats in this room also have a coin reward waiting (the bubble moves to the next cat after each tap). Placeholders: `{count}`. | |
 | `reactionCoins` | {coins, plural, one{+{coins} coin} other{+{coins} coins}} | +{coins} koin | Floating text over a cat after collecting its coin reward. Placeholders: `{coins}`. | |
 | `chapterIntroOverline` | New chapter unlocked! | Babak baru terbuka! | Overline on the card shown over the map when a new chapter is unlocked for the first time (after beating the chapter 1 boss). | |
 | `chapterIntroEnter` | Let's go in! | Ayo masuk! | Button that closes the new-chapter card and shows the new map. | |

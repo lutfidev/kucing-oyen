@@ -770,3 +770,17 @@ Selesai: origin px dengan `fill-box` dan opasitas animasi di elemen ber-`opacity
 > - Cek juga HP spek rendah kalau pemilik repo punya.
 >
 > Catat di `docs/DESIGN_NOTES.md` bagian "Langkah 39" dan di catatan performa.
+
+## 40. Rumah yang rapi: hadiah bergiliran, kucing lebih tenang, barang tidak menumpuk, rak buku ✅
+
+**Status:** selesai 25 Nov 2026 (PR langkah 40). Spec [`2026-11-25-rumah-rapi-design.md`](superpowers/specs/2026-11-25-rumah-rapi-design.md), rencana [`2026-11-25-rumah-rapi.md`](superpowers/plans/2026-11-25-rumah-rapi.md). Rincian keputusan di `docs/DESIGN_NOTES.md`, "Langkah 40".
+
+**Asal:** pemilik repo melihat rumah penuh di HP terlalu ramai: enam gelembung "+10" sekaligus, barang baru menumpuk di posisi bawaan, semua kucing berjalan tiap beberapa detik, Oyen terpotong di mangkuk tepi kanan, dan kotak "Hiasan dinding?"/"Kasur, mungkin?" berlebihan. Ia juga minta rak buku tempat kucing membaca berkacamata (desain dari kanvas Gang Depan, artboard 15 dan 16).
+
+**Hasil:**
+- Kotak petunjuk rumah kosong dihapus; gelembung "Kamar masih sepi. Ke Toko, yuk!" tetap.
+- Hadiah koin bergiliran: satu gelembung per ruangan dengan chip "+N lagi".
+- Rutinitas tenang: diam 8–20 detik, memakai barang 8–14, tidur/rebahan 20–40; paling banyak 2 kucing berjalan per ruangan; ruangan yang dilihat bergerak dalam 2,5 detik dan didorong sesudah 8 detik diam; tujuan diam berjarak ≥ 40 px dari kucing lain.
+- Barang tidak menumpuk: kotak gambar tertutup > 10% = menumpuk. Barang baru ke tempat bebas (ruang tengah → teras → Gudang), simpanan lama dirapikan sekali saat dimuat, tombol Rapikan + Batalkan di mode Hias.
+- Kucing di mangkuk tepi tidak terpotong; label mangkuk disembunyikan selama ada kucing di mangkuk.
+- Rak Buku (220 koin, ruang tengah) dengan pose baca dan kacamata baca otomatis.

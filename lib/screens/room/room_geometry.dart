@@ -200,12 +200,27 @@ class RoomGeometry {
     // Dijepit lagi di layar: di layar lebar artScale bisa lebih dari sx.
     final half = size.width / 2;
     final x = at.dx.clamp(half, math.max(half, room.width - half)).toDouble();
-    return Rect.fromLTWH(
+    final box = Rect.fromLTWH(
       x - half,
       at.dy - size.height,
       size.width,
       size.height,
     );
+    return box.shift(Offset(_inUseShift(item.id, box), 0));
+  }
+
+  /// Geseran mendatar supaya kucing yang memakai barang [id] (kotak diam
+  /// [box]) tetap di dalam ruangan kalau cermin ([mirrorsInUse]) pun tidak
+  /// cukup, mis. mangkuk di pojok kanan depan (langkah 40).
+  double _inUseShift(RoomItemId id, Rect box) {
+    double outside(Rect r) =>
+        math.max(0.0, -r.left) + math.max(0.0, r.right - room.width);
+    final plain = RoomItemArt.inUseBox(id, box);
+    if (outside(plain) == 0) return 0;
+    final flipped = RoomItemArt.inUseBox(id, box, mirror: true);
+    if (outside(flipped) == 0) return 0;
+    final use = outside(plain) <= outside(flipped) ? plain : flipped;
+    return use.left < 0 ? -use.left : room.width - use.right;
   }
 
   /// [Spot] untuk [item] dengan pojok kiri-atas di [topLeft] (dijepit).
@@ -323,6 +338,23 @@ class RoomGeometry {
         math.max(0.0, -r.left) + math.max(0.0, r.right - room.width);
     return outside(flipped) < outside(plain);
   }
+
+  /// Label "Terisi lagi…" di atas mangkuk [bowl] disembunyikan selama ada
+  /// kucing ([cats], kotak layar) yang kakinya di mangkuk, supaya label
+  /// tidak menimpa kucing itu (langkah 40).
+  bool bowlLabelHidden(Rect bowl, Iterable<Rect> cats) {
+    final reach = bowlLabelReach * artScale;
+    final area = Rect.fromLTRB(
+      bowl.left - reach,
+      bowl.top - reach,
+      bowl.right + reach,
+      bowl.bottom + reach,
+    );
+    return cats.any((cat) => area.contains(Offset(cat.center.dx, feetOf(cat))));
+  }
+
+  /// Jangkauan "di mangkuk" di sekitar kotak mangkuk (px desain).
+  static const bowlLabelReach = 30.0;
 
   /// Kotak kucing di barang [id] (kotak diam [box]) yang sedang dipakai.
   Rect userBoxOf(RoomItemId id, Rect box) {

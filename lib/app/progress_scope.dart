@@ -6,6 +6,7 @@ import '../game/model/hints.dart';
 import '../game/model/home.dart';
 import '../game/model/home_items.dart';
 import '../game/model/house.dart';
+import '../game/model/room.dart';
 import '../game/model/kitties.dart';
 import '../game/model/lane.dart';
 import '../game/model/needs.dart';
@@ -70,6 +71,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
     RewardedAds? hintAds,
     RewardedAds? coinAds,
     DateTime Function()? clock,
+    this.floor = const HouseFloor(),
   }) : levels = List.unmodifiable(levels),
        _tutorialsDone = Set.unmodifiable(tutorialsDone),
        _hints = Map.unmodifiable(hints),
@@ -266,13 +268,18 @@ class ProgressController extends ChangeNotifier implements HintSource {
     return true;
   }
 
-  /// Membeli barang [id]; langsung ditaruh di posisi bawaannya. Gagal tanpa
+  /// Lantai rumah untuk menaruh barang baru ([Room.buyPlaced]); hanya
+  /// diganti di test (rumah penuh).
+  final HouseFloor floor;
+
+  /// Membeli barang [id]; langsung ditaruh di tempat pertama yang muat
+  /// (ruang tengah, teras, lalu Gudang; [Room.buyPlaced]). Gagal tanpa
   /// efek kalau sudah dimiliki atau koin kurang, begitu juga pembelian lain.
   Future<bool> buyItem(RoomItemId id) async {
     if (!_home.room.canBuy(id, _coins)) return false;
     return _changeHome(
       {_Part.home},
-      home: _home.copyWith(room: _home.room.buy(id)),
+      home: _home.copyWith(room: _home.room.buyPlaced(id, floor: floor).room),
       coins: -roomItemOf(id).price,
     );
   }
@@ -342,6 +349,25 @@ class ProgressController extends ChangeNotifier implements HintSource {
     return _changeHome({
       _Part.home,
     }, home: _home.copyWith(room: _home.room.place(id, spot, room: room)));
+  }
+
+  /// Tombol Rapikan (langkah 40): merapikan [room] ([Room.tidy]) dan
+  /// menyimpannya. Mengembalikan susunan sebelumnya untuk Batalkan, atau
+  /// null tanpa menyimpan kalau tidak ada yang berubah.
+  Future<Room?> tidyRoom(HouseRoom room) async {
+    final before = _home.room;
+    final after = before.tidy(room, floor: floor);
+    if (after == before) return null;
+    await _changeHome({_Part.home}, home: _home.copyWith(room: after));
+    return before;
+  }
+
+  /// Batalkan Rapikan: susunan [before] dipakai lagi dan disimpan, hanya
+  /// kalau rumah masih persis hasil Rapikan [after]. Perubahan sesudahnya
+  /// (barang disimpan, dibeli) tidak pernah ditimpa; false tanpa efek.
+  Future<bool> restoreRoom(Room before, {required Room after}) async {
+    if (_home.room != after) return false;
+    return _changeHome({_Part.home}, home: _home.copyWith(room: before));
   }
 
   /// Memindahkan barang [id] ke Gudang; mangkuk tidak bisa.

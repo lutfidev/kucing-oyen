@@ -290,8 +290,9 @@ class RoomMenuButton extends StatelessWidget {
   }
 }
 
-/// Kamar baru (hanya mangkuk): dua bidang kosong bergaris putus-putus dan
-/// gelembung ajakan ke Toko (`Kamar.dc.html`, keadaan `baru`).
+/// Kamar baru (hanya mangkuk): gelembung ajakan ke Toko (`Kamar.dc.html`,
+/// keadaan `baru`). Dua bidang kosong desain dihapus atas permintaan
+/// pemilik repo (langkah 40).
 class EmptyRoomHints extends StatelessWidget {
   const EmptyRoomHints({
     super.key,
@@ -308,8 +309,6 @@ class EmptyRoomHints extends StatelessWidget {
 
   // Letak desain area rumah 390×652 (`AdeganTengah.dc.html` isi `baru`,
   // `RuangTengah.dc.html`).
-  static const wallSpot = Rect.fromLTWH(212, 176, 88, 70);
-  static const floorSpot = Rect.fromLTWH(82, 398, 126, 56);
   static const bubbleAt = Offset(20, 570);
 
   /// Satu anggukan `rtNudge` (detik): naik lalu turun, `ease-in-out`.
@@ -326,39 +325,12 @@ class EmptyRoomHints extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.koColors;
     final s = context.koSize;
     final l = context.l10n;
-    final wall = geo.fromDesign(wallSpot);
-    final floor = geo.fromDesign(floorSpot);
     final bubble = geo.fromDesign(bubbleAt & Size.zero).topLeft;
     final lift = nod(time) * s.roomBubbleNod * geo.artScale;
     return Stack(
       children: [
-        Positioned.fromRect(
-          rect: wall,
-          child: _EmptySpot(
-            label: l.roomEmptyWall,
-            hint: l.roomEmptyWallHint,
-            line: c.roomHintWallLine,
-            ink: c.roomHintWallInk,
-            radius: context.koRadius.icon,
-            icon: s.icon,
-            onTap: onShop,
-          ),
-        ),
-        Positioned.fromRect(
-          rect: floor,
-          child: _EmptySpot(
-            label: l.roomEmptyFloor,
-            hint: l.roomEmptyFloorHint,
-            line: c.roomHintFloorLine,
-            ink: c.roomHintFloorInk,
-            radius: floor.height / 2,
-            icon: s.iconSmall,
-            onTap: onShop,
-          ),
-        ),
         Positioned(
           left: bubble.dx,
           top: bubble.dy - lift,
@@ -432,65 +404,6 @@ class EmptyTerraceSpots extends StatelessWidget {
                 );
               }(),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _EmptySpot extends StatelessWidget {
-  const _EmptySpot({
-    required this.label,
-    required this.hint,
-    required this.line,
-    required this.ink,
-    required this.radius,
-    required this.icon,
-    required this.onTap,
-  });
-
-  final String label;
-  final String hint;
-  final Color line;
-  final Color ink;
-  final double radius;
-  final double icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final space = context.koSpace;
-    return Semantics(
-      button: true,
-      label: hint,
-      excludeSemantics: true,
-      onTap: onTap,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: KoDashedBorder(
-          color: line,
-          radius: radius,
-          width: context.koSize.roomHintBorder,
-          child: Center(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Padding(
-                padding: EdgeInsets.all(space.s4),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    KoIcon(KoIcons.plus, size: icon, color: ink),
-                    Text(
-                      label,
-                      maxLines: 1,
-                      style: context.koType.tagSmall.copyWith(color: ink),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
         ),
       ),
     );
@@ -639,19 +552,22 @@ class NewKittyTag extends StatelessWidget {
 
 /// Menaruh anak seukuran aslinya di [at], digeser masuk supaya paling
 /// sedikit [margin] dari tepi kiri dan kanan dan tidak di atas [top].
-/// [centered]: [at] adalah tengah atas anak, bukan pojok kiri atasnya.
+/// [centered]: [at] adalah tengah atas anak, bukan pojok kiri atasnya;
+/// [fromRight]: [at] adalah pojok kanan atasnya.
 class KeepInside extends SingleChildLayoutDelegate {
   const KeepInside(
     this.at, {
     this.margin = 0,
     this.top = double.negativeInfinity,
     this.centered = false,
+    this.fromRight = false,
   });
 
   final Offset at;
   final double margin;
   final double top;
   final bool centered;
+  final bool fromRight;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
@@ -659,7 +575,11 @@ class KeepInside extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
-    final x = centered ? at.dx - childSize.width / 2 : at.dx;
+    final x = centered
+        ? at.dx - childSize.width / 2
+        : fromRight
+        ? at.dx - childSize.width
+        : at.dx;
     return Offset(
       x.clamp(margin, max(margin, size.width - childSize.width - margin)),
       max(top, at.dy),
@@ -671,7 +591,8 @@ class KeepInside extends SingleChildLayoutDelegate {
       old.at != at ||
       old.margin != margin ||
       old.top != top ||
-      old.centered != centered;
+      old.centered != centered ||
+      old.fromRight != fromRight;
 }
 
 /// Elips berisi [fill] dengan garis putus-putus [line] setebal [width]

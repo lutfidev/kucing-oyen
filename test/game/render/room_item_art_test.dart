@@ -320,4 +320,18 @@ void main() {
       expect(swung, isNot(still));
     });
   });
+
+  test(
+    'Rak Buku dipakai: tabel Barang.dc.html, kucing membaca menghadap kanan',
+    () {
+      final use = RoomItemArt.inUse(RoomItemId.rakBuku);
+      expect(use.size, const Size(150, 152));
+      expect(use.artOffset, const Offset(38, 8));
+      expect(use.catOffset, const Offset(0, 52));
+      expect(use.catSize, 100);
+      expect(use.pose, KittyPose.baca);
+      expect(use.facing, KittyFacing.right);
+      expect(RoomItemArt.inUse(RoomItemId.kasur).facing, KittyFacing.down);
+    },
+  );
 }

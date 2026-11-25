@@ -1256,6 +1256,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get roomItemRakDesc => 'VIP-место, чтобы следить за всеми.';
 
   @override
+  String get roomItemRakBuku => 'Книжный шкаф';
+
+  @override
+  String get roomItemRakBukuDesc =>
+      'В основном рассказы про рыбу. Очки для чтения — и сразу вид умный.';
+
+  @override
   String get roomItemPancingan => 'Удочка с перьями';
 
   @override
@@ -1693,6 +1700,14 @@ class AppLocalizationsRu extends AppLocalizations {
       'Уже стоит в комнате. Переставить можно в режиме «Украшать».';
 
   @override
+  String get buySuccessItemStoredBody =>
+      'Дом забит, так что вещь пока ждёт в кладовке. Найди ей место в режиме «Украшать».';
+
+  @override
+  String get buySuccessItemTerraceBody =>
+      'В гостиной тесно, так что вещь отправилась на террасу. Смахни туда, чтобы посмотреть.';
+
+  @override
   String buySuccessKitty(String name) {
     return '$name переехал в комнату!';
   }
@@ -1764,6 +1779,8 @@ class AppLocalizationsRu extends AppLocalizations {
       'endus': 'принюхивается',
       'geser1': 'подвигается',
       'geser2': 'подвигается',
+      'baca': 'читает книжку',
+      'bacaKaca': 'читает книжку в очках для чтения',
       'other': 'сидит спокойно',
     });
     return '$_temp0';
@@ -1834,19 +1851,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get roomEmptyBubble => 'Пустовато тут. Айда в магазин!';
-
-  @override
-  String get roomEmptyWall => 'Что-то на стену?';
-
-  @override
-  String get roomEmptyWallHint => 'Пусто. Найди украшение для стены в магазине';
-
-  @override
-  String get roomEmptyFloor => 'Может, лежанку?';
-
-  @override
-  String get roomEmptyFloorHint =>
-      'Пусто. Найди лежанку или игрушку в магазине';
 
   @override
   String get accessories => 'Аксессуары';
@@ -1978,6 +1982,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get decorateDone => 'Готово';
 
   @override
+  String get decorateTidy => 'Прибрать';
+
+  @override
+  String get decorateTidyDone => 'Порядок!';
+
+  @override
+  String get decorateTidyUndo => 'Отменить';
+
+  @override
   String get decorateHint => 'Перетащи вещи на новое место';
 
   @override
@@ -2072,6 +2085,19 @@ class AppLocalizationsRu extends AppLocalizations {
       many: '$name: забрать $coins монет',
       few: '$name: забрать $coins монеты',
       one: '$name: забрать $coins монету',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String kittyRewardMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ещё +$count',
+      many: 'ещё +$count',
+      few: 'ещё +$count',
+      one: 'ещё +$count',
     );
     return '$_temp0';
   }

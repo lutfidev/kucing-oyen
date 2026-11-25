@@ -1236,6 +1236,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get roomItemRakDesc => 'VIP seat for watching everyone.';
 
   @override
+  String get roomItemRakBuku => 'Bookshelf';
+
+  @override
+  String get roomItemRakBukuDesc =>
+      'Fish stories, mostly. Reading glasses on, looking very clever.';
+
+  @override
   String get roomItemPancingan => 'Feather Wand';
 
   @override
@@ -1661,6 +1668,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'It\'s in the room already. Move it around in decorate mode.';
 
   @override
+  String get buySuccessItemStoredBody =>
+      'The house is full, so it\'s waiting in Storage. Find it a spot in decorate mode.';
+
+  @override
+  String get buySuccessItemTerraceBody =>
+      'The living room is full, so it went out to the terrace. Swipe over to see it.';
+
+  @override
   String buySuccessKitty(String name) {
     return '$name moved into the room!';
   }
@@ -1730,6 +1745,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'endus': 'sniffing',
       'geser1': 'scooting over',
       'geser2': 'scooting over',
+      'baca': 'reading a book',
+      'bacaKaca': 'reading a book in reading glasses',
       'other': 'sitting still',
     });
     return '$_temp0';
@@ -1796,18 +1813,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get roomEmptyBubble => 'Pretty empty in here. To the Shop!';
-
-  @override
-  String get roomEmptyWall => 'Wall decor?';
-
-  @override
-  String get roomEmptyWallHint => 'Empty. Find wall decor in the Shop';
-
-  @override
-  String get roomEmptyFloor => 'A bed, maybe?';
-
-  @override
-  String get roomEmptyFloorHint => 'Empty. Find a bed or a toy in the Shop';
 
   @override
   String get accessories => 'Accessories';
@@ -1939,6 +1944,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get decorateDone => 'Done';
 
   @override
+  String get decorateTidy => 'Tidy up';
+
+  @override
+  String get decorateTidyDone => 'All neat!';
+
+  @override
+  String get decorateTidyUndo => 'Undo';
+
+  @override
   String get decorateHint => 'Drag things to a new spot';
 
   @override
@@ -2028,6 +2042,16 @@ class AppLocalizationsEn extends AppLocalizations {
       locale: localeName,
       other: 'Collect $coins coins from $name',
       one: 'Collect $coins coin from $name',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String kittyRewardMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '+$count more',
     );
     return '$_temp0';
   }

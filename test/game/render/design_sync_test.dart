@@ -294,48 +294,6 @@ void main() {
       expect(_lf(accessoryIconSvg), _innerHome('IkonAksesoris.dc.html'));
     });
 
-    test('Barang.dc.html: dua lapisan tiap barang dan camilan', () {
-      final source = _readHome('Barang.dc.html');
-      final cut = source.indexOf('sc-if value="{{pakai}}"');
-      expect(cut, greaterThan(0));
-      final back = <String, String>{};
-      final front = <String, String>{};
-      final boxes = <String, String>{};
-      final pattern = RegExp(
-        r'<sc-if value="\{\{v\.(\w+)\}\}"[^>]*>\s*<svg\b([^>]*)>\n'
-        r'(.*?)\n\s*</svg>\s*</sc-if>',
-        dotAll: true,
-      );
-      for (final m in pattern.allMatches(source)) {
-        final code = m[1]!;
-        (m.start < cut ? back : front)[code] = _lf(m[3]!);
-        boxes.putIfAbsent(
-          code,
-          () => RegExp(r'viewBox="([-\d. ]+)"').firstMatch(m[2]!)![1]!,
-        );
-      }
-      expect(back, hasLength(24));
-      expect(front, hasLength(8));
-      expect(roomItemBackSvgs.keys, back.keys.toSet());
-      expect(roomItemFrontSvgs.keys, front.keys.toSet());
-      for (final MapEntry(:key, :value) in roomItemBackSvgs.entries) {
-        expect(_lf(value), back[key], reason: key);
-      }
-      for (final MapEntry(:key, :value) in roomItemFrontSvgs.entries) {
-        expect(_lf(value), front[key], reason: key);
-      }
-      expect(roomItemViewBoxes.keys, boxes.keys.toSet());
-      for (final MapEntry(:key, :value) in roomItemViewBoxes.entries) {
-        final (x, y, w, h) = value;
-        expect(boxes[key]!.split(' ').map(double.parse).toList(), [
-          x,
-          y,
-          w,
-          h,
-        ], reason: key);
-      }
-    });
-
     test('TandaLesu.dc.html', () {
       expect(_lf(sadMarkSvg), _innerHome('TandaLesu.dc.html'));
     });
@@ -442,6 +400,49 @@ void main() {
     for (final MapEntry(key: file, value: svgs) in layers.entries) {
       test(file, () => expect(_laneSvgs(file), svgs));
     }
+
+    test('Barang.dc.html: dua lapisan tiap barang dan camilan', () {
+      // Langkah 40: Rak Buku ada di Barang.dc.html Gang Depan.
+      final source = _lf(File('$_lane/Barang.dc.html').readAsStringSync());
+      final cut = source.indexOf('sc-if value="{{pakai}}"');
+      expect(cut, greaterThan(0));
+      final back = <String, String>{};
+      final front = <String, String>{};
+      final boxes = <String, String>{};
+      final pattern = RegExp(
+        r'<sc-if value="\{\{v\.(\w+)\}\}"[^>]*>\s*<svg\b([^>]*)>\n'
+        r'(.*?)\n\s*</svg>\s*</sc-if>',
+        dotAll: true,
+      );
+      for (final m in pattern.allMatches(source)) {
+        final code = m[1]!;
+        (m.start < cut ? back : front)[code] = _lf(m[3]!);
+        boxes.putIfAbsent(
+          code,
+          () => RegExp(r'viewBox="([-\d. ]+)"').firstMatch(m[2]!)![1]!,
+        );
+      }
+      expect(back, hasLength(25));
+      expect(front, hasLength(9));
+      expect(roomItemBackSvgs.keys, back.keys.toSet());
+      expect(roomItemFrontSvgs.keys, front.keys.toSet());
+      for (final MapEntry(:key, :value) in roomItemBackSvgs.entries) {
+        expect(_lf(value), back[key], reason: key);
+      }
+      for (final MapEntry(:key, :value) in roomItemFrontSvgs.entries) {
+        expect(_lf(value), front[key], reason: key);
+      }
+      expect(roomItemViewBoxes.keys, boxes.keys.toSet());
+      for (final MapEntry(:key, :value) in roomItemViewBoxes.entries) {
+        final (x, y, w, h) = value;
+        expect(boxes[key]!.split(' ').map(double.parse).toList(), [
+          x,
+          y,
+          w,
+          h,
+        ], reason: key);
+      }
+    });
 
     test('ekor Kumis dan gelembung "!" (AdeganTengah)', () {
       expect(_laneSvgWith('AdeganTengah.dc.html', 'ek-goyang'), kumisTailSvg);

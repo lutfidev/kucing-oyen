@@ -174,6 +174,34 @@ def replace_const(dart_text, name, body):
     return dart_text[:start] + '\n' + body + '\n' + dart_text[end:]
 
 
+def replace_map(dart_text, head, body):
+    """Ganti isi map `const ... = <...>{ ... };` yang dimulai [head]."""
+    start = dart_text.index(head) + len(head)
+    end = dart_text.index('\n};', start)
+    return dart_text[:start] + '\n' + body + dart_text[end:]
+
+
+def number(value):
+    v = float(value)
+    return str(int(v)) if v == int(v) else value
+
+
+def room_items():
+    """Lapisan belakang, depan, dan viewBox tiap barang `Barang.dc.html`
+    (regex sama dengan `design_sync_test`), urut desain."""
+    source = text('Barang')
+    cut = source.index('sc-if value="{{pakai}}"')
+    pattern = re.compile(
+        r'<sc-if value="\{\{v\.(\w+)\}\}"[^>]*>\s*<svg\b([^>]*)>\n'
+        r'(.*?)\n\s*</svg>\s*</sc-if>', re.S)
+    back, front, boxes = {}, {}, {}
+    for m in pattern.finditer(source):
+        (back if m.start() < cut else front)[m.group(1)] = m.group(3)
+        boxes.setdefault(
+            m.group(1), re.search(r'viewBox="([-\d. ]+)"', m.group(2)).group(1))
+    return back, front, boxes
+
+
 if kitty_out:
     kucing = text('Kucing')
     inner = re.search(r'<svg\b[^>]*>\n(.*?)\n\s*</svg>', kucing, re.S).group(1)
@@ -181,5 +209,20 @@ if kitty_out:
     home = open(kitty_out, encoding='utf-8').read()
     home = replace_const(home, 'kittySvg', inner)
     home = replace_const(home, 'kittyKeyframes', frames)
+    # Barang kamar (langkah 40: Rak Buku ada di Barang.dc.html Gang Depan).
+    back, front, boxes = room_items()
+
+    def layers(items):
+        return ''.join(
+            f"  '{code}': r'''\n{body}\n      ''',\n" for code, body in items.items())
+
+    home = replace_map(home, 'const roomItemBackSvgs = <String, String>{', layers(back))
+    home = replace_map(home, 'const roomItemFrontSvgs = <String, String>{', layers(front))
+    home = replace_map(
+        home,
+        'const roomItemViewBoxes = <String, (double, double, double, double)>{',
+        ''.join(
+            f"  '{code}': ({', '.join(number(v) for v in box.split())}),\n"
+            for code, box in boxes.items()))
     open(kitty_out, 'w', encoding='utf-8', newline='\n').write(home)
     print('ok kitty')

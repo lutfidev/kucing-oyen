@@ -137,11 +137,33 @@ class WentOut extends LifeEvent {
   int get hashCode => Object.hash(kitty, viaFlap, 'out');
 }
 
-/// Lama tiap kegiatan (detik, `AnimasiKucing.dc.html` dan rute
-/// `Kamar.dc.html`; tidur diperpanjang supaya tidak gelisah).
-const lifeIdleSeconds = 2.6;
-const lifeUseSeconds = 3.0;
-const lifeSleepSeconds = 6.0;
+/// Lama diam di tempat, memakai barang, dan tidur atau rebahan (detik,
+/// diacak merata; spec langkah 40: rumah penuh terasa tenang). Makan
+/// tetap [lifeEatSeconds].
+const lifeIdleMin = 8.0;
+const lifeIdleMax = 20.0;
+const lifeUseMin = 8.0;
+const lifeUseMax = 14.0;
+const lifeSleepMin = 20.0;
+const lifeSleepMax = 40.0;
+
+/// Paling banyak sekian kucing berjalan atau melompat di satu ruangan
+/// (tanpa kucing lapar ke mangkuk, kucing yang diajak, dan yang keluar ke
+/// gang). Kucing yang mau pergi saat slot penuh menunggu
+/// [lifeWaitSeconds] lalu mengundi lagi.
+const lifeMaxWalkers = 2;
+const lifeWaitSeconds = 3.0;
+
+/// Ruangan yang ditonton ([RoomLife.watching]) tidak pernah terlihat beku:
+/// sekian detik sesudah dibuka satu kucing mulai bergerak, dan sesudah
+/// [lifeNudgeSeconds] tanpa kucing yang bergerak satu kucing didorong.
+const lifeStartSeconds = 2.5;
+const lifeNudgeSeconds = 8.0;
+
+/// Tujuan diam (tempat nyaman, barang selain mangkuk) tidak dipilih dalam
+/// sekian px desain dari kaki atau tujuan kucing lain seruangan.
+const lifeCatSpacing = 40.0;
+
 const lifeEatSeconds = 3.0;
 
 /// Lama satu lompatan ke atau dari barang dinding (detik).
@@ -165,6 +187,7 @@ const lifeUseWeights = <ItemUse, int>{
   ItemUse.watch: 2,
   ItemUse.sit: 2,
   ItemUse.eat: 0,
+  ItemUse.read: 2,
 };
 
 /// Tempat nyaman tanpa barang (spec "Kucing di dua ruangan"): kaki kucing
@@ -176,7 +199,7 @@ class LifePlace {
     this.y, {
     required this.pose,
     this.heading = LifeHeading.down,
-    this.seconds = lifeSleepSeconds,
+    this.seconds = (lifeSleepMin + lifeSleepMax) / 2,
     this.weight = 3,
   });
 
@@ -196,17 +219,37 @@ const lifePlaces = <HouseRoom, List<LifePlace>>{
     // Tengah lantai.
     LifePlace(200, 560, pose: LifePose.sleep),
     // Ambang pintu.
-    LifePlace(345, 456, pose: LifePose.idle, seconds: lifeIdleSeconds * 2),
+    LifePlace(
+      345,
+      456,
+      pose: LifePose.idle,
+      seconds: (lifeIdleMin + lifeIdleMax) / 2,
+    ),
   ],
   HouseRoom.terrace: [
     // Petak matahari.
     LifePlace(182, 600, pose: LifePose.lounge),
     // Dekat pagar.
-    LifePlace(282, 432, pose: LifePose.idle, seconds: lifeIdleSeconds * 2),
+    LifePlace(
+      282,
+      432,
+      pose: LifePose.idle,
+      seconds: (lifeIdleMin + lifeIdleMax) / 2,
+    ),
     // Dekat pot.
-    LifePlace(296, 556, pose: LifePose.idle, seconds: lifeIdleSeconds * 2),
+    LifePlace(
+      296,
+      556,
+      pose: LifePose.idle,
+      seconds: (lifeIdleMin + lifeIdleMax) / 2,
+    ),
     // Ambang pintu.
-    LifePlace(46, 456, pose: LifePose.idle, seconds: lifeIdleSeconds * 2),
+    LifePlace(
+      46,
+      456,
+      pose: LifePose.idle,
+      seconds: (lifeIdleMin + lifeIdleMax) / 2,
+    ),
   ],
 };
 
@@ -353,6 +396,95 @@ class RoomLife {
 
   bool _paused = false;
 
+  /// Ruangan yang sedang dilihat pemain (null = gang atau tidak ada).
+  /// Berganti = hitungan dorongan mulai lagi, jadi satu kucing bergerak
+  /// [lifeStartSeconds] sesudah ruangan dibuka.
+  HouseRoom? get watching => _watching;
+  set watching(HouseRoom? room) {
+    if (room == _watching) return;
+    _watching = room;
+    _still = lifeNudgeSeconds - lifeStartSeconds;
+  }
+
+  HouseRoom? _watching;
+  double _still = 0;
+
+  double _between(double min, double max) =>
+      min + random.nextDouble() * (max - min);
+
+  double _idleSeconds() => _between(lifeIdleMin, lifeIdleMax);
+
+  static bool _onFoot(CatLife cat) => switch (cat.activity) {
+    CatActivity.walking ||
+    CatActivity.climbing ||
+    CatActivity.descending => true,
+    _ => false,
+  };
+
+  /// Kucing yang terlihat bergerak: berjalan, lewat pintu, atau memakai
+  /// mainan.
+  bool _lively(CatLife cat) =>
+      _onFoot(cat) ||
+      cat.isPassing ||
+      (cat.activity == CatActivity.using &&
+          (_toys.contains(cat.item) || _uses[cat.item] == ItemUse.read));
+
+  /// Kucing yang sedang jalan, naik, atau turun di [room], selain [except]
+  /// (kucing yang baru selesai turun dari barang masih `descending` saat
+  /// mengundi tujuan berikutnya, jadi dirinya tidak ikut dihitung).
+  int _walkers(HouseRoom room, {CatLife? except}) => _cats.values
+      .where((c) => c != except && c.room == room && !c.outside && _onFoot(c))
+      .length;
+
+  /// Ruangan yang ditonton diam terlalu lama: satu kucing yang diam
+  /// (tidak lesu, tidak di barang) didorong pergi.
+  void _nudgeIfStill(double seconds, List<LifeEvent> events) {
+    final room = _watching;
+    if (room == null) return;
+    final here = _cats.values.where((c) => c.room == room && !c.outside);
+    if (here.any(_lively)) {
+      _still = 0;
+      return;
+    }
+    _still += seconds;
+    if (_still < lifeNudgeSeconds) return;
+    _still = 0;
+    final idle = [
+      for (final c in here)
+        if (c.activity == CatActivity.idle &&
+            c.item == null &&
+            !c.invited &&
+            !_sad.contains(c.kitty))
+          c,
+    ];
+    // Kucing yang tidak punya tujuan bebas tetap diam; coba yang lain.
+    // Yang sedang tidur atau rebahan di tempat nyaman paling akhir, supaya
+    // tidurnya tidak dipotong selama masih ada kucing yang cuma diam.
+    idle.shuffle(random);
+    idle.sort(
+      (a, b) => (a.place == null ? 0 : 1).compareTo(b.place == null ? 0 : 1),
+    );
+    for (final cat in idle) {
+      _next(cat, events, move: true);
+      if (_lively(cat)) return;
+    }
+  }
+
+  /// [at] terlalu dekat dengan kaki atau tujuan kucing lain seruangan.
+  bool _tooClose(CatLife cat, Spot at) {
+    for (final other in _cats.values) {
+      if (other.kitty == cat.kitty || other.room != cat.room || other.outside) {
+        continue;
+      }
+      final there = switch (_placeOf(other)) {
+        final place? => _placeSpot(place),
+        null => _routeOf(other.item, other.kitty)?.stand ?? other.spot,
+      };
+      if (floor.distance(there, at) < lifeCatSpacing) return true;
+    }
+    return false;
+  }
+
   /// Rutinitas berhenti (kartu terbuka, mode hias, atau ada reaksi).
   /// Kucing yang sedang lewat pintu langsung selesai di ruangan tujuan,
   /// supaya tidak tertahan di balik kusen.
@@ -426,8 +558,7 @@ class RoomLife {
     for (final MapEntry(key: kitty, value: (room, spot)) in homes.entries) {
       _cats.putIfAbsent(
         kitty,
-        () =>
-            CatLife._(kitty, room, spot, random.nextDouble() * lifeIdleSeconds),
+        () => CatLife._(kitty, room, spot, random.nextDouble() * lifeIdleMax),
       );
     }
     for (final cat in _cats.values) {
@@ -669,7 +800,7 @@ class RoomLife {
       ..activity = CatActivity.idle
       ..pose = LifePose.idle
       ..heading = LifeHeading.down
-      ..remaining = lifeIdleSeconds
+      ..remaining = _idleSeconds()
       ..elapsed = 0
       ..hops = 0;
     events.add(WentOut(cat.kitty, viaFlap: viaFlap));
@@ -688,6 +819,7 @@ class RoomLife {
     if (paused || seconds <= 0) return const [];
     final events = [..._pending];
     _pending.clear();
+    _nudgeIfStill(seconds, events);
     for (final cat in _cats.values) {
       if (cat.outside) continue;
       if (cat.wantsOut && _canGoOut(cat)) {
@@ -746,7 +878,7 @@ class RoomLife {
       ..activity = sad ? CatActivity.sad : CatActivity.idle
       ..pose = sad ? LifePose.sad : LifePose.idle
       ..heading = LifeHeading.down
-      ..remaining = lifeIdleSeconds
+      ..remaining = _idleSeconds()
       ..elapsed = 0
       ..hops = 0;
   }
@@ -864,9 +996,11 @@ class RoomLife {
       ..elapsed = 0
       ..remaining = bowl
           ? lifeEatSeconds
-          : _uses[item] == ItemUse.sleep
-          ? lifeSleepSeconds
-          : lifeUseSeconds;
+          : switch (_uses[item]) {
+              ItemUse.sleep ||
+              ItemUse.lounge => _between(lifeSleepMin, lifeSleepMax),
+              _ => _between(lifeUseMin, lifeUseMax),
+            };
     if (bowl) {
       events.add(ReachedBowl(cat.kitty));
     } else if (_toys.contains(item)) {
@@ -891,7 +1025,12 @@ class RoomLife {
     return w;
   }
 
-  void _next(CatLife cat, List<LifeEvent> events, {bool justEntered = false}) {
+  void _next(
+    CatLife cat,
+    List<LifeEvent> events, {
+    bool justEntered = false,
+    bool move = false,
+  }) {
     final taken = users.keys.toSet();
     final bowl = _uses.entries
         .where(
@@ -920,20 +1059,27 @@ class RoomLife {
       for (final c in _cats.values)
         if (c.room == cat.room && c.kitty != cat.kitty) ?c.place,
     };
+    // Diam di tempat juga tidak boleh berdesakan: kucing yang berdiri di
+    // jalur pintu (mis. baru masuk di ambang) terlalu dekat kucing lain
+    // harus pindah dulu.
+    final crowdedDoor =
+        floor.onDoorPath(cat.room, cat.spot) && _tooClose(cat, cat.spot);
     final options = <(Object?, double)>[
-      (null, lifeIdleWeight.toDouble()),
+      if (!move && !crowdedDoor) (null, lifeIdleWeight.toDouble()),
       for (final MapEntry(key: item, value: use) in _uses.entries)
         if (!taken.contains(item) &&
             _roomOf(item) == cat.room &&
             _routeOf(item, cat.kitty) != null &&
-            (lifeUseWeights[use] ?? 0) > 0)
+            (lifeUseWeights[use] ?? 0) > 0 &&
+            !_tooClose(cat, _routeOf(item, cat.kitty)!.stand))
           (
             item,
             lifeUseWeights[use]! *
                 _crowd(cat, _routeOf(item, cat.kitty)!.stand),
           ),
       for (var i = 0; i < roomPlaces.length; i++)
-        if (!takenPlaces.contains(i))
+        if (!takenPlaces.contains(i) &&
+            !_tooClose(cat, _placeSpot(roomPlaces[i])))
           (i, roomPlaces[i].weight * _crowd(cat, _placeSpot(roomPlaces[i]))),
       // Kucing lapar menunggu mangkuk yang sedang dipakai, tidak pergi ke
       // ruangan sebelah lalu langsung balik karena lapar.
@@ -945,6 +1091,12 @@ class RoomLife {
     for (final (target, weight) in options) {
       roll -= weight;
       if (roll >= 0) continue;
+      // Slot jalan ruangan ini penuh: menunggu sebentar lalu mengundi lagi.
+      if (target != null && _walkers(cat.room, except: cat) >= lifeMaxWalkers) {
+        _rest(cat);
+        cat.remaining = lifeWaitSeconds;
+        return;
+      }
       switch (target) {
         case null:
           _rest(cat);

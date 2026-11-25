@@ -57,7 +57,7 @@ const laneHeartSeconds = 1.6;
 /// Pindah tempat duduk di bangku tanpa turun (detik).
 const laneSeatSlideSeconds = 0.25;
 
-/// Lama satu momen biasa: [lifeSleepSeconds] sampai ini (detik).
+/// Lama satu momen biasa: [laneSleepSeconds] sampai ini (detik).
 const laneMomentMaxSeconds = 20.0;
 
 /// Bobot undian momen biasa (spec "Kunjungan berikutnya").
@@ -553,8 +553,8 @@ class LaneLife {
   }
 
   double _holdSeconds() =>
-      lifeSleepSeconds +
-      random.nextDouble() * (laneMomentMaxSeconds - lifeSleepSeconds);
+      laneSleepSeconds +
+      random.nextDouble() * (laneMomentMaxSeconds - laneSleepSeconds);
 
   void _queueHoldAll() {
     final seconds = _holdSeconds();

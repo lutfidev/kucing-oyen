@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/app/ad_consent.dart';
 import 'package:kucing_oren/app/app.dart';
 import 'package:kucing_oren/app/game_audio.dart';
@@ -59,6 +60,7 @@ ProgressController testProgressWith({
   DateTime Function()? clock,
   AppLanguage language = AppLanguage.id,
   bool metNeighbor = false,
+  HouseFloor floor = const HouseFloor(),
 }) {
   final progress = Progress(best);
   final tutorials = tutorialsDone ?? tutorialLevels;
@@ -84,6 +86,7 @@ ProgressController testProgressWith({
     hintAds: ads,
     coinAds: ads,
     clock: clock,
+    floor: floor,
   );
 }
 

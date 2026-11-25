@@ -6,6 +6,7 @@ import '../../app/progress_scope.dart';
 import '../../app/routes.dart';
 import '../../game/model/accessories.dart';
 import '../../game/model/home_items.dart';
+import '../../game/model/house.dart';
 import '../../game/model/kitties.dart';
 import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
@@ -132,7 +133,16 @@ class _BuySheetState extends State<_BuySheet> {
     };
     final (title, body) = _bought
         ? switch (target) {
-            BuyItem() => (l.buySuccessItem(name), l.buySuccessItemBody),
+            BuyItem(:final id) => (
+              l.buySuccessItem(name),
+              switch (widget.progress.home.room) {
+                final room when !room.isPlaced(id) =>
+                  l.buySuccessItemStoredBody,
+                final room when room.roomOf(id) == HouseRoom.terrace =>
+                  l.buySuccessItemTerraceBody,
+                _ => l.buySuccessItemBody,
+              },
+            ),
             BuyKitty() => (l.buySuccessKitty(name), l.buySuccessKittyBody),
             BuyAccessory() => (
               l.buySuccessAccessory(name),

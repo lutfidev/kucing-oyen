@@ -40,12 +40,14 @@ const houseWallRight = 302.0;
 const houseWallTop = 150.0;
 const houseWallBottom = 332.0;
 
-/// Barang lantai boleh di ruangan mana pun (mangkuk hanya ruang tengah);
-/// barang dinding hanya di ruang tengah, kecuali [terraceHangers].
+/// Barang lantai boleh di ruangan mana pun (mangkuk dan rak buku hanya
+/// ruang tengah); barang dinding hanya di ruang tengah, kecuali
+/// [terraceHangers].
 bool canPlaceIn(RoomItemId id, HouseRoom room) {
   if (room == HouseRoom.living) return true;
   final item = roomItemOf(id);
   if (item.builtIn) return false;
+  if (id == RoomItemId.rakBuku) return false;
   return item.zone == RoomZone.floor || terraceHangers.contains(id);
 }
 
@@ -219,12 +221,57 @@ class HouseFloor {
     return ok(spot) ? spot : _nearest(spot, ok) ?? spot;
   }
 
-  /// Tempat untuk barang lantai [item] dari simpanan lama yang menutup
-  /// jalur pintu (keputusan pemilik repo, Gang Depan): [spot] kalau sudah
-  /// bebas, selain itu spot terdekat (jarak kaki, kisi 41×41) yang tidak
-  /// menutup jalur pintu dan jejaknya tidak bersinggungan dengan jejak
-  /// barang lantai lain yang tidak rata di [others]. Null kalau tidak ada
-  /// (ruangan penuh).
+  /// Kotak gambar barang [item] di [spot] (px desain area rumah 390×652):
+  /// barang lantai = selebar dan setinggi gambarnya di atas kakinya
+  /// ([itemFeet], [itemSize]); barang dinding = letaknya di dinding
+  /// belakang ruang tengah, ukuran × [houseWallScale] (seperti
+  /// `RoomGeometry.boxOf`).
+  ItemFootprint itemBox(RoomItem item, Spot spot) {
+    if (item.zone == RoomZone.wall) {
+      final w = item.baseWidth * houseWallScale;
+      final h = item.baseHeight * houseWallScale;
+      final left =
+          houseWallLeft + spot.x * (houseWallRight - houseWallLeft - w);
+      final top = houseWallTop + spot.y * (houseWallBottom - houseWallTop - h);
+      return ItemFootprint(left, top, left + w, top + h);
+    }
+    final feet = itemFeet(item, spot);
+    final size = itemSize(item, feet.scale);
+    return ItemFootprint(
+      feet.x - size.width / 2,
+      feet.y - size.height,
+      feet.x + size.width / 2,
+      feet.y,
+    );
+  }
+
+  /// Dua barang seruangan saling menumpuk (spec langkah 40, pilihan C):
+  /// barang lantai kalau gambar barang belakang (kaki lebih jauh) tertutup
+  /// barang depan lebih dari [itemCoverLimit] luasnya; barang dinding
+  /// kalau tumpang tindihnya lebih dari [itemCoverLimit] luas yang lebih
+  /// kecil. Barang rata (karpet) dan pasangan lantai–dinding tidak pernah
+  /// menumpuk. Gantungan teras tidak dikirim pemanggil.
+  bool stacks(({RoomItem item, Spot spot}) a, ({RoomItem item, Spot spot}) b) {
+    if (a.item.flat || b.item.flat || a.item.zone != b.item.zone) {
+      return false;
+    }
+    final boxA = itemBox(a.item, a.spot);
+    final boxB = itemBox(b.item, b.spot);
+    final overlap = boxA.overlapArea(boxB);
+    if (overlap <= 0) return false;
+    if (a.item.zone == RoomZone.wall) {
+      return overlap > itemCoverLimit * math.min(boxA.area, boxB.area);
+    }
+    final back = boxA.bottom <= boxB.bottom ? boxA : boxB;
+    return overlap > itemCoverLimit * back.area;
+  }
+
+  /// Tempat bebas untuk [item] di [room] (simpanan lama yang menutup
+  /// jalur pintu, barang baru, dan perapian langkah 40): [spot] kalau
+  /// sudah bebas, selain itu spot terdekat (jarak kaki untuk barang
+  /// lantai, jarak spot untuk barang dinding; kisi 41×41) yang tidak
+  /// menutup jalur pintu dan tidak menumpuk ([stacks]) dengan barang di
+  /// [others]. Null kalau tidak ada (ruangan penuh).
   Spot? freeSpot(
     RoomItem item,
     HouseRoom room,
@@ -233,19 +280,32 @@ class HouseFloor {
   ) {
     final taken = [
       for (final o in others)
-        if (o.item.zone == RoomZone.floor && !o.item.flat)
-          footprint(o.item, o.spot),
+        if (o.item.zone == item.zone && !o.item.flat) o,
     ];
     bool free(Spot candidate) {
       if (blocksDoor(item, room, candidate)) return false;
-      final f = footprint(item, candidate);
-      return !taken.any(f.overlaps);
+      final self = (item: item, spot: candidate);
+      return !taken.any((o) => stacks(self, o));
     }
 
-    return free(spot) ? spot : _nearest(spot, free);
+    if (free(spot)) return spot;
+    return item.zone == RoomZone.wall
+        ? _nearestBy(spot, free, (a, b) {
+            final dx = a.x - b.x;
+            final dy = a.y - b.y;
+            return dx * dx + dy * dy;
+          })
+        : _nearest(spot, free);
   }
 
-  Spot? _nearest(Spot spot, bool Function(Spot) ok) {
+  Spot? _nearest(Spot spot, bool Function(Spot) ok) =>
+      _nearestBy(spot, ok, distance);
+
+  Spot? _nearestBy(
+    Spot spot,
+    bool Function(Spot) ok,
+    double Function(Spot, Spot) distance,
+  ) {
     Spot? best;
     var bestDistance = double.infinity;
     for (var i = 0; i <= 40; i++) {
@@ -263,7 +323,12 @@ class HouseFloor {
   }
 }
 
-/// Jejak barang lantai di koordinat desain ([HouseFloor.footprint]).
+/// Batas tertutup sebelum dua barang dianggap menumpuk
+/// ([HouseFloor.stacks]): sepersepuluh luas gambar.
+const itemCoverLimit = 0.1;
+
+/// Jejak barang lantai di koordinat desain ([HouseFloor.footprint]), juga
+/// kotak gambar barang ([HouseFloor.itemBox]).
 class ItemFootprint {
   const ItemFootprint(this.left, this.top, this.right, this.bottom);
 
@@ -271,6 +336,15 @@ class ItemFootprint {
   final double top;
   final double right;
   final double bottom;
+
+  double get area => (right - left) * (bottom - top);
+
+  /// Luas bagian yang sama dengan [other]; 0 kalau tidak bersinggungan.
+  double overlapArea(ItemFootprint other) {
+    final w = math.min(right, other.right) - math.max(left, other.left);
+    final h = math.min(bottom, other.bottom) - math.max(top, other.top);
+    return w > 0 && h > 0 ? w * h : 0;
+  }
 
   /// Bersinggungan dengan [other] (tepi yang menempel tidak dihitung).
   bool overlaps(ItemFootprint other) =>

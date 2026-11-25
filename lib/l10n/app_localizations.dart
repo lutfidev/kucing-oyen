@@ -1860,6 +1860,18 @@ abstract class AppLocalizations {
   /// **'VIP seat for watching everyone.'**
   String get roomItemRakDesc;
 
+  /// Room item: a bookshelf on the floor where cats sit and read in reading glasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookshelf'**
+  String get roomItemRakBuku;
+
+  /// Shop description of the bookshelf: cats read here wearing reading glasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Fish stories, mostly. Reading glasses on, looking very clever.'**
+  String get roomItemRakBukuDesc;
+
   /// Name of the room item "Feather Wand".
   ///
   /// In en, this message translates to:
@@ -2544,6 +2556,18 @@ abstract class AppLocalizations {
   /// **'It\'s in the room already. Move it around in decorate mode.'**
   String get buySuccessItemBody;
 
+  /// Buy sheet body after buying a room item when the house had no free spot, so the item went to Storage.
+  ///
+  /// In en, this message translates to:
+  /// **'The house is full, so it\'s waiting in Storage. Find it a spot in decorate mode.'**
+  String get buySuccessItemStoredBody;
+
+  /// Buy sheet body after buying a room item when the living room had no free spot, so the item was placed on the terrace.
+  ///
+  /// In en, this message translates to:
+  /// **'The living room is full, so it went out to the terrace. Swipe over to see it.'**
+  String get buySuccessItemTerraceBody;
+
   /// Buy sheet title after adopting a cat.
   ///
   /// In en, this message translates to:
@@ -2613,7 +2637,7 @@ abstract class AppLocalizations {
   /// What a room cat is doing, for its screen reader label.
   ///
   /// In en, this message translates to:
-  /// **'{pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} endus{sniffing} geser1{scooting over} geser2{scooting over} other{sitting still}}'**
+  /// **'{pose, select, idle{sitting still} lick{licking a paw} walk1{walking} walk2{walking} sleep{curled up asleep} eat{eating from the bowl} play{batting a toy} scratch{scratching the post} happy{happy} lesu{listless} rebah{lounging} petted{being petted, purring} endus{sniffing} geser1{scooting over} geser2{scooting over} baca{reading a book} bacaKaca{reading a book in reading glasses} other{sitting still}}'**
   String kittyPose(String pose);
 
   /// Name of the neighbour cat in the Front Lane (a stall cat with a moustache-like grey patch and a scarf). Same in every language.
@@ -2687,30 +2711,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pretty empty in here. To the Shop!'**
   String get roomEmptyBubble;
-
-  /// Short label inside the empty dashed spot on the wall of a starter room.
-  ///
-  /// In en, this message translates to:
-  /// **'Wall decor?'**
-  String get roomEmptyWall;
-
-  /// Screen reader label of the empty wall spot; tapping opens the shop.
-  ///
-  /// In en, this message translates to:
-  /// **'Empty. Find wall decor in the Shop'**
-  String get roomEmptyWallHint;
-
-  /// Short label inside the empty dashed spot on the floor of a starter room.
-  ///
-  /// In en, this message translates to:
-  /// **'A bed, maybe?'**
-  String get roomEmptyFloor;
-
-  /// Screen reader label of the empty floor spot; tapping opens the shop.
-  ///
-  /// In en, this message translates to:
-  /// **'Empty. Find a bed or a toy in the Shop'**
-  String get roomEmptyFloorHint;
 
   /// Room menu button that opens the accessories tab of the shop.
   ///
@@ -2910,6 +2910,24 @@ abstract class AppLocalizations {
   /// **'Done'**
   String get decorateDone;
 
+  /// Decorate mode button that slides stacked items in the open room apart (to Storage if there is no room).
+  ///
+  /// In en, this message translates to:
+  /// **'Tidy up'**
+  String get decorateTidy;
+
+  /// Toast after the Tidy up button.
+  ///
+  /// In en, this message translates to:
+  /// **'All neat!'**
+  String get decorateTidyDone;
+
+  /// Button in the toast after Tidy up that puts the items back where they were.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get decorateTidyUndo;
+
   /// Chip shown while decorating.
   ///
   /// In en, this message translates to:
@@ -3035,6 +3053,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}}'**
   String kittyRewardLabel(int coins, String name);
+
+  /// Small dark chip under the single coin bubble in a room: how many other cats in this room also have a coin reward waiting (the bubble moves to the next cat after each tap).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{+{count} more}}'**
+  String kittyRewardMore(int count);
 
   /// Floating text over a cat after collecting its coin reward.
   ///

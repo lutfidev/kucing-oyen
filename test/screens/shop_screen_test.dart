@@ -1,6 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kucing_oren/game/model/house.dart';
 import 'package:kucing_oren/app/game_audio.dart';
 import 'package:kucing_oren/app/language.dart';
 import 'package:kucing_oren/app/progress_scope.dart';
@@ -27,12 +28,13 @@ Future<ProgressController> pumpShop(
   Home? home,
   ShopTab tab = ShopTab.items,
   GameAudio? audio,
+  HouseFloor floor = const HouseFloor(),
 }) async {
   setScreenSize(tester, const Size(390, 844));
   final progress = await pumpApp(
     tester,
     location: AppRoutes.shop(tab: tab),
-    progress: testProgressWith(coins: coins, home: home),
+    progress: testProgressWith(coins: coins, home: home, floor: floor),
     audio: audio,
   );
   await settle(tester);
@@ -82,6 +84,47 @@ void main() {
       await tester.tap(find.text('Lihat di kamar'));
       await settle(tester);
       expect(find.byType(RoomScreen), findsOneWidget);
+    });
+
+    testWidgets('Rak Buku dijual di tab Barang (langkah 40)', (tester) async {
+      final progress = await pumpShop(tester, coins: 220);
+      await tapCard(tester, 'shop-item-rakBuku');
+      expect(find.text('Rak Buku'), findsWidgets);
+      await tester.tap(find.text('Beli · 220 koin'));
+      await settle(tester);
+      expect(progress.home.room.owns(RoomItemId.rakBuku), isTrue);
+      expect(progress.home.room.roomOf(RoomItemId.rakBuku), HouseRoom.living);
+    });
+
+    testWidgets('rumah penuh: barang baru disimpan di Gudang', (tester) async {
+      final progress = await pumpShop(
+        tester,
+        coins: 100,
+        floor: const _FullFloor(),
+      );
+      await tapCard(tester, 'shop-item-kardus');
+      await tester.tap(find.text('Beli · 50 koin'));
+      await settle(tester);
+      expect(progress.home.room.stored, [RoomItemId.kardus]);
+      expect(find.text(l10nId.buySuccessItemStoredBody), findsOneWidget);
+      expect(find.text(l10nId.buySuccessItemBody), findsNothing);
+      expect(find.byKey(const ValueKey('buy-room')), findsOneWidget);
+    });
+
+    testWidgets('ruang tengah penuh: barang baru di teras, pesannya teras', (
+      tester,
+    ) async {
+      final progress = await pumpShop(
+        tester,
+        coins: 100,
+        floor: const _LivingFullFloor(),
+      );
+      await tapCard(tester, 'shop-item-kardus');
+      await tester.tap(find.text('Beli · 50 koin'));
+      await settle(tester);
+      expect(progress.home.room.roomOf(RoomItemId.kardus), HouseRoom.terrace);
+      expect(find.text(l10nId.buySuccessItemTerraceBody), findsOneWidget);
+      expect(find.text(l10nId.buySuccessItemBody), findsNothing);
     });
 
     testWidgets('koin pas cukup tetap bisa beli', (tester) async {
@@ -584,4 +627,32 @@ void main() {
       }
     }
   });
+}
+
+/// Lantai tanpa tempat bebas: barang yang dibeli masuk Gudang.
+class _FullFloor extends HouseFloor {
+  const _FullFloor();
+
+  @override
+  Spot? freeSpot(
+    RoomItem item,
+    HouseRoom room,
+    Spot spot,
+    Iterable<({RoomItem item, Spot spot})> others,
+  ) => null;
+}
+
+/// Ruang tengah tanpa tempat bebas; teras seperti biasa.
+class _LivingFullFloor extends HouseFloor {
+  const _LivingFullFloor();
+
+  @override
+  Spot? freeSpot(
+    RoomItem item,
+    HouseRoom room,
+    Spot spot,
+    Iterable<({RoomItem item, Spot spot})> others,
+  ) => room == HouseRoom.living
+      ? null
+      : super.freeSpot(item, room, spot, others);
 }
