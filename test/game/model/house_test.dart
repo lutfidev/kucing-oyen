@@ -230,10 +230,10 @@ void main() {
       expect(free, isNot(kasurAt));
       expect(floor.blocksDoor(kardus, HouseRoom.living, free), isFalse);
       expect(
-        floor.footprint(kardus, free).overlaps(floor.footprint(kasur, kasurAt)),
+        floor.stacks((item: kardus, spot: free), (item: kasur, spot: kasurAt)),
         isFalse,
       );
-      expect(floor.distance(free, kasurAt), lessThan(60));
+      expect(floor.distance(free, kasurAt), lessThan(90));
       // Tempat yang sudah bebas dipakai apa adanya.
       final open = floor.spotAtFeet(200, 620);
       expect(floor.freeSpot(kardus, HouseRoom.living, open, const []), open);
@@ -248,6 +248,124 @@ void main() {
       expect(
         floor.freeSpot(kardus, HouseRoom.living, Spot(0.5, 0.5), everywhere),
         isNull,
+      );
+    });
+  });
+
+  group('tumpuk (langkah 40)', () {
+    final tiang = roomItemOf(RoomItemId.tiang);
+    final sofa = roomItemOf(RoomItemId.sofaMini);
+    final karpet = roomItemOf(RoomItemId.karpet);
+    final lukisan = roomItemOf(RoomItemId.lukisan);
+    final jam = roomItemOf(RoomItemId.jam);
+    final kardus = roomItemOf(RoomItemId.kardus);
+    ({RoomItem item, Spot spot}) at(RoomItem item, double x, double y) =>
+        (item: item, spot: floor.spotAtFeet(x, y));
+    double covered(
+      ({RoomItem item, Spot spot}) back,
+      ({RoomItem item, Spot spot}) front,
+    ) {
+      final b = floor.itemBox(back.item, back.spot);
+      return b.overlapArea(floor.itemBox(front.item, front.spot)) / b.area;
+    }
+
+    test('itemBox lantai: kaki dan ukuran desain × skala kedalaman', () {
+      final box = floor.itemBox(kasur, floor.spotAtFeet(150, 500));
+      final scale = depthScale(500);
+      expect(box.bottom, closeTo(500, 1e-9));
+      expect(box.right - box.left, closeTo(150 * scale, 1e-9));
+      expect(box.bottom - box.top, closeTo(76 * scale, 1e-9));
+      expect((box.left + box.right) / 2, closeTo(150, 1e-9));
+    });
+
+    test('itemBox dinding: letak dinding belakang × skala dinding', () {
+      final box = floor.itemBox(lukisan, Spot(0, 0));
+      expect(box.left, houseWallLeft);
+      expect(box.top, houseWallTop);
+      expect(box.right - box.left, closeTo(72 * houseWallScale, 1e-9));
+      final far = floor.itemBox(lukisan, Spot(1, 1));
+      expect(far.right, closeTo(houseWallRight, 1e-9));
+      expect(far.bottom, closeTo(houseWallBottom, 1e-9));
+    });
+
+    test('tiang di belakang kasur yang tertutup > 25 % menumpuk', () {
+      final back = at(tiang, 150, 470);
+      final front = at(kasur, 150, 500);
+      expect(covered(back, front), greaterThan(itemCoverLimit));
+      expect(floor.stacks(back, front), isTrue);
+      expect(floor.stacks(front, back), isTrue);
+    });
+
+    test('bagian bawah tertutup sedikit tidak menumpuk', () {
+      final back = at(tiang, 150, 440);
+      final front = at(kasur, 150, 500);
+      final c = covered(back, front);
+      expect(c, greaterThan(0));
+      expect(c, lessThan(itemCoverLimit));
+      expect(floor.stacks(back, front), isFalse);
+    });
+
+    test('dua barang di tempat yang sama menumpuk; berjauhan tidak', () {
+      expect(floor.stacks(at(sofa, 200, 560), at(kasur, 200, 560)), isTrue);
+      expect(floor.stacks(at(sofa, 80, 600), at(kasur, 300, 600)), isFalse);
+    });
+
+    test('karpet tidak pernah menumpuk', () {
+      expect(floor.stacks(at(karpet, 200, 560), at(kasur, 200, 560)), isFalse);
+    });
+
+    test('barang dinding: di tempat sama menumpuk, berjauhan tidak', () {
+      expect(
+        floor.stacks(
+          (item: lukisan, spot: Spot(0, 0)),
+          (item: jam, spot: Spot(0, 0)),
+        ),
+        isTrue,
+      );
+      expect(
+        floor.stacks(
+          (item: lukisan, spot: Spot(0, 0)),
+          (item: jam, spot: Spot(1, 0)),
+        ),
+        isFalse,
+      );
+      // Barang dinding dan lantai tidak saling dibandingkan.
+      expect(
+        floor.stacks((item: lukisan, spot: Spot(0, 1)), at(kasur, 150, 400)),
+        isFalse,
+      );
+    });
+
+    test('freeSpot memindah barang yang menumpuk (juga barang dinding)', () {
+      final kasurAt = floor.spotAtFeet(150, 500);
+      final free = floor.freeSpot(
+        tiang,
+        HouseRoom.living,
+        floor.spotAtFeet(150, 470),
+        [(item: kasur, spot: kasurAt)],
+      )!;
+      expect(
+        floor.stacks((item: tiang, spot: free), (item: kasur, spot: kasurAt)),
+        isFalse,
+      );
+      final wall = floor.freeSpot(jam, HouseRoom.living, Spot(0, 0), [
+        (item: lukisan, spot: Spot(0, 0)),
+      ])!;
+      expect(wall, isNot(Spot(0, 0)));
+      expect(
+        floor.stacks(
+          (item: jam, spot: wall),
+          (item: lukisan, spot: Spot(0, 0)),
+        ),
+        isFalse,
+      );
+      // Kardus di kasur yang sudah rapi tidak terpengaruh barang dinding.
+      final open = floor.spotAtFeet(200, 620);
+      expect(
+        floor.freeSpot(kardus, HouseRoom.living, open, [
+          (item: lukisan, spot: Spot(0, 0)),
+        ]),
+        open,
       );
     });
   });
