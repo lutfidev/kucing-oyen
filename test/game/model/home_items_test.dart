@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kucing_oren/game/model/home_items.dart';
 
 void main() {
-  test('20 barang Toko, urutan dan harga persis desain', () {
+  test('21 barang Toko, urutan dan harga persis desain', () {
     expect(
       [for (final i in shopItems) i.id.name],
       [
@@ -18,6 +18,7 @@ void main() {
         'tiang',
         'lukisan',
         'rak',
+        'rakBuku',
         'pancingan',
         'lampuBulan',
         'bantalIkan',
@@ -32,10 +33,10 @@ void main() {
       [for (final i in shopItems) i.price],
       [
         120, 600, 900, 200, 180, 240, 50, 80, 150, 220, //
-        140, 160, 60, 120, 160, 200, 260, 380, 450, 700,
+        140, 160, 220, 60, 120, 160, 200, 260, 380, 450, 700,
       ],
     );
-    expect(shopItems.fold(0, (sum, i) => sum + i.price), 5370);
+    expect(shopItems.fold(0, (sum, i) => sum + i.price), 5590);
   });
 
   test('mangkuk barang bawaan gratis, tidak dijual', () {
@@ -45,11 +46,11 @@ void main() {
     expect(bowl.zone, RoomZone.floor);
     expect(bowl.use, ItemUse.eat);
     expect(shopItems, isNot(contains(bowl)));
-    expect(roomItems, hasLength(21));
+    expect(roomItems, hasLength(22));
     expect(shopItems.where((i) => i.builtIn), isEmpty);
   });
 
-  test('14 barang lantai dan 6 barang dinding (desain 22)', () {
+  test('15 barang lantai dan 6 barang dinding (desain 22 + rak buku)', () {
     final wall = {
       for (final i in shopItems)
         if (i.zone == RoomZone.wall) i.id,
@@ -62,7 +63,7 @@ void main() {
       RoomItemId.lampuBulan,
       RoomItemId.hammock,
     });
-    expect(shopItems.where((i) => i.zone == RoomZone.floor), hasLength(14));
+    expect(shopItems.where((i) => i.zone == RoomZone.floor), hasLength(15));
   });
 
   test('mainan sesuai spesifikasi', () {
@@ -93,6 +94,7 @@ void main() {
     expect(roomItemOf(RoomItemId.rak).use, ItemUse.sit);
     expect(roomItemOf(RoomItemId.akuarium).use, ItemUse.watch);
     expect(roomItemOf(RoomItemId.bola).use, ItemUse.play);
+    expect(roomItemOf(RoomItemId.rakBuku).use, ItemUse.read);
   });
 
   test('ukuran kamar = ukuran desain × skala Kamar', () {
@@ -170,5 +172,15 @@ void main() {
       expect(back.x, closeTo(0.3, 1e-9));
       expect(back.y, closeTo(0.6, 1e-9));
     });
+  });
+
+  test('Rak Buku (langkah 40): lantai, 220 koin, bukan mainan', () {
+    final rak = roomItemOf(RoomItemId.rakBuku);
+    expect(rak.price, 220);
+    expect(rak.zone, RoomZone.floor);
+    expect(rak.toy, isFalse);
+    expect(rak.flat, isFalse);
+    expect(rak.baseWidth, 112);
+    expect(rak.baseHeight, 140);
   });
 }

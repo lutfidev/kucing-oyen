@@ -47,6 +47,9 @@ void main() {
     expect(canPlaceIn(RoomItemId.lukisan, HouseRoom.living), isTrue);
     expect(canPlaceIn(RoomItemId.lukisan, HouseRoom.terrace), isFalse);
     expect(canPlaceIn(RoomItemId.hammock, HouseRoom.terrace), isTrue);
+    // Rak Buku hanya di ruang tengah (langkah 40).
+    expect(canPlaceIn(RoomItemId.rakBuku, HouseRoom.living), isTrue);
+    expect(canPlaceIn(RoomItemId.rakBuku, HouseRoom.terrace), isFalse);
     expect(canPlaceIn(RoomItemId.lampuBulan, HouseRoom.terrace), isTrue);
     expect(canPlaceIn(RoomItemId.kasur, HouseRoom.terrace), isTrue);
     expect(canPlaceIn(RoomItemId.mangkuk, HouseRoom.terrace), isFalse);
@@ -368,5 +371,11 @@ void main() {
         open,
       );
     });
+  });
+
+  test('Rak Buku: posisi bawaan seperti RakBukuTengah (kaki 257,6; 410)', () {
+    final feet = floor.feetAt(roomItemOf(RoomItemId.rakBuku).defaultSpot);
+    expect(feet.x, closeTo(257.6, 0.5));
+    expect(feet.y, closeTo(410, 0.5));
   });
 }

@@ -172,7 +172,7 @@ class _ShopScreenState extends State<ShopScreen> {
   }
 }
 
-/// Tab Barang: kisi dua kolom berisi 20 barang yang dijual.
+/// Tab Barang: kisi dua kolom berisi 21 barang yang dijual (rak buku sejak langkah 40).
 class _Items extends StatelessWidget {
   const _Items({required this.progress});
 

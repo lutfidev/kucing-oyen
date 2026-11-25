@@ -1163,6 +1163,13 @@ class AppLocalizationsId extends AppLocalizations {
   String get roomItemRakDesc => 'Kursi VIP buat ngawasin semua orang.';
 
   @override
+  String get roomItemRakBuku => 'Rak Buku';
+
+  @override
+  String get roomItemRakBukuDesc =>
+      'Isinya cerita ikan semua. Pakai kacamata baca, biar kelihatan pintar.';
+
+  @override
   String get roomItemPancingan => 'Pancingan Bulu';
 
   @override

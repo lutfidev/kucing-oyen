@@ -1248,6 +1248,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get roomItemRakDesc => 'Assento VIP para vigiar todo mundo.';
 
   @override
+  String get roomItemRakBuku => 'Estante de Livros';
+
+  @override
+  String get roomItemRakBukuDesc =>
+      'Quase tudo história de peixe. Óculos de leitura no rosto, cara de sabichão.';
+
+  @override
   String get roomItemPancingan => 'Varinha de Penas';
 
   @override

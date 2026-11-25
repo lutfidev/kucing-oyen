@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-514 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+516 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -320,6 +320,8 @@ files and anything written there is overwritten.
 | `roomItemLukisanDesc` | Art that makes you hungry. | Arte que dá fome. | Shop description of the room item "Fish Painting". | |
 | `roomItemRak` | Wall Shelf | Prateleira | Name of the room item "Wall Shelf". | |
 | `roomItemRakDesc` | VIP seat for watching everyone. | Assento VIP para vigiar todo mundo. | Shop description of the room item "Wall Shelf". | |
+| `roomItemRakBuku` | Bookshelf | Estante de Livros | Room item: a bookshelf on the floor where cats sit and read in reading glasses. | |
+| `roomItemRakBukuDesc` | Fish stories, mostly. Reading glasses on, looking very clever. | Quase tudo história de peixe. Óculos de leitura no rosto, cara de sabichão. | Shop description of the bookshelf: cats read here wearing reading glasses. | |
 | `roomItemPancingan` | Feather Wand | Varinha de Penas | Name of the room item "Feather Wand". | |
 | `roomItemPancinganDesc` | Chases the feather, leaves its dignity behind. | Corre atrás da pena e deixa a dignidade para trás. | Shop description of the room item "Feather Wand". | |
 | `roomItemLampuBulan` | Moon Lamp | Lâmpada Lua | Name of the room item "Moon Lamp". | |

@@ -86,6 +86,16 @@ void main() {
       expect(find.byType(RoomScreen), findsOneWidget);
     });
 
+    testWidgets('Rak Buku dijual di tab Barang (langkah 40)', (tester) async {
+      final progress = await pumpShop(tester, coins: 220);
+      await tapCard(tester, 'shop-item-rakBuku');
+      expect(find.text('Rak Buku'), findsWidgets);
+      await tester.tap(find.text('Beli · 220 koin'));
+      await settle(tester);
+      expect(progress.home.room.owns(RoomItemId.rakBuku), isTrue);
+      expect(progress.home.room.roomOf(RoomItemId.rakBuku), HouseRoom.living);
+    });
+
     testWidgets('rumah penuh: barang baru disimpan di Gudang', (tester) async {
       final progress = await pumpShop(
         tester,

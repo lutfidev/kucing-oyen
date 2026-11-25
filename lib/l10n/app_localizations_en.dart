@@ -1236,6 +1236,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get roomItemRakDesc => 'VIP seat for watching everyone.';
 
   @override
+  String get roomItemRakBuku => 'Bookshelf';
+
+  @override
+  String get roomItemRakBukuDesc =>
+      'Fish stories, mostly. Reading glasses on, looking very clever.';
+
+  @override
   String get roomItemPancingan => 'Feather Wand';
 
   @override

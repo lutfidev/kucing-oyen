@@ -1256,6 +1256,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get roomItemRakDesc => 'VIP-место, чтобы следить за всеми.';
 
   @override
+  String get roomItemRakBuku => 'Книжный шкаф';
+
+  @override
+  String get roomItemRakBukuDesc =>
+      'В основном рассказы про рыбу. Очки для чтения — и сразу вид умный.';
+
+  @override
   String get roomItemPancingan => 'Удочка с перьями';
 
   @override

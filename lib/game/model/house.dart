@@ -40,12 +40,14 @@ const houseWallRight = 302.0;
 const houseWallTop = 150.0;
 const houseWallBottom = 332.0;
 
-/// Barang lantai boleh di ruangan mana pun (mangkuk hanya ruang tengah);
-/// barang dinding hanya di ruang tengah, kecuali [terraceHangers].
+/// Barang lantai boleh di ruangan mana pun (mangkuk dan rak buku hanya
+/// ruang tengah); barang dinding hanya di ruang tengah, kecuali
+/// [terraceHangers].
 bool canPlaceIn(RoomItemId id, HouseRoom room) {
   if (room == HouseRoom.living) return true;
   final item = roomItemOf(id);
   if (item.builtIn) return false;
+  if (id == RoomItemId.rakBuku) return false;
   return item.zone == RoomZone.floor || terraceHangers.contains(id);
 }
 

@@ -187,6 +187,7 @@ const lifeUseWeights = <ItemUse, int>{
   ItemUse.watch: 2,
   ItemUse.sit: 2,
   ItemUse.eat: 0,
+  ItemUse.read: 2,
 };
 
 /// Tempat nyaman tanpa barang (spec "Kucing di dua ruangan"): kaki kucing
@@ -425,7 +426,8 @@ class RoomLife {
   bool _lively(CatLife cat) =>
       _onFoot(cat) ||
       cat.isPassing ||
-      (cat.activity == CatActivity.using && _toys.contains(cat.item));
+      (cat.activity == CatActivity.using &&
+          (_toys.contains(cat.item) || _uses[cat.item] == ItemUse.read));
 
   int _walkers(HouseRoom room) => _cats.values
       .where((c) => c.room == room && !c.outside && _onFoot(c))

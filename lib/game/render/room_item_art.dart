@@ -35,14 +35,18 @@ class ItemInUse {
     this.artOffset,
     this.catOffset,
     this.catSize,
-    this.pose,
-  );
+    this.pose, {
+    this.facing = KittyFacing.down,
+  });
 
   final Size size;
   final Offset artOffset;
   final Offset catOffset;
   final double catSize;
   final KittyPose pose;
+
+  /// Arah hadap kucingnya (`catDir` desain; rak buku menghadap kanan).
+  final KittyFacing facing;
 }
 
 /// Tabel `D` (ukuran dipakai), `offs`, dan `cats` di `Barang.dc.html`.
@@ -135,6 +139,14 @@ const _inUse = <RoomItemId, ItemInUse>{
     Offset(4, 0),
     80,
     KittyPose.idle,
+  ),
+  RoomItemId.rakBuku: ItemInUse(
+    Size(150, 152),
+    Offset(38, 8),
+    Offset(0, 52),
+    100,
+    KittyPose.baca,
+    facing: KittyFacing.right,
   ),
   RoomItemId.mangkuk: ItemInUse(
     Size(100, 100),
@@ -410,7 +422,7 @@ void paintRoomItemArt(
     canvas,
     user!.copyWith(
       pose: use.pose,
-      facing: KittyFacing.down,
+      facing: use.facing,
       mirror: mirror,
       toy: switch (id) {
         RoomItemId.bola => KittyToy.ball,

@@ -2,7 +2,7 @@
 enum RoomZone { floor, wall }
 
 /// Cara kucing memakai barang (pose `dipakai` di `Barang.dc.html`).
-enum ItemUse { sleep, play, scratch, watch, sit, hide, lounge, eat }
+enum ItemUse { sleep, play, scratch, watch, sit, hide, lounge, eat, read }
 
 /// Barang kamar, urut kartu tab Barang (`Toko.dc.html`), lalu mangkuk
 /// bawaan. Namanya per bahasa ditambahkan bersama layar Toko.
@@ -19,6 +19,7 @@ enum RoomItemId {
   tiang,
   lukisan,
   rak,
+  rakBuku,
   pancingan,
   lampuBulan,
   bantalIkan,
@@ -234,6 +235,20 @@ const roomItems = [
     250,
     336,
     scale: 1.1,
+  ),
+  // Langkah 40 (kanvas Gang Depan, `Barang.dc.html` `rakBuku`): tempat
+  // kucing membaca berkacamata. Posisi bawaan seperti `RakBukuTengah`
+  // (kiri 214, kaki y 410, jadi tengah kaki x 257,6), dihitung balik lewat
+  // `HouseFloor.spotAtFeet`. Harga pilihan pemilik repo.
+  RoomItem(
+    RoomItemId.rakBuku,
+    220,
+    RoomZone.floor,
+    ItemUse.read,
+    112,
+    140,
+    207.5,
+    306.16,
   ),
   RoomItem(
     RoomItemId.pancingan,

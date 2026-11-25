@@ -1559,6 +1559,14 @@
   "@roomItemRakDesc": {
     "description": "Shop description of the room item \"Wall Shelf\"."
   },
+  "roomItemRakBuku": "Bookshelf",
+  "@roomItemRakBuku": {
+    "description": "Room item: a bookshelf on the floor where cats sit and read in reading glasses."
+  },
+  "roomItemRakBukuDesc": "Fish stories, mostly. Reading glasses on, looking very clever.",
+  "@roomItemRakBukuDesc": {
+    "description": "Shop description of the bookshelf: cats read here wearing reading glasses."
+  },
   "roomItemPancingan": "Feather Wand",
   "@roomItemPancingan": {
     "description": "Name of the room item \"Feather Wand\"."

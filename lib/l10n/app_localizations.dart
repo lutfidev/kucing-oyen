@@ -1860,6 +1860,18 @@ abstract class AppLocalizations {
   /// **'VIP seat for watching everyone.'**
   String get roomItemRakDesc;
 
+  /// Room item: a bookshelf on the floor where cats sit and read in reading glasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookshelf'**
+  String get roomItemRakBuku;
+
+  /// Shop description of the bookshelf: cats read here wearing reading glasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Fish stories, mostly. Reading glasses on, looking very clever.'**
+  String get roomItemRakBukuDesc;
+
   /// Name of the room item "Feather Wand".
   ///
   /// In en, this message translates to:
