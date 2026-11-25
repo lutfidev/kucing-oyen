@@ -458,6 +458,8 @@ class _RoomViewState extends State<RoomView>
       _laneHeart = (null, ++_reactions);
     }
     _laneHeartShown = _lane.heart;
+    // Ruangan yang dilihat pemain tidak pernah beku (langkah 40).
+    _life.watching = _inLane ? null : _house;
     for (final event in _life.advance(dt)) {
       switch (event) {
         case ReachedBowl(:final kitty):

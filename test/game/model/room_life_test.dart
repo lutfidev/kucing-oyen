@@ -511,8 +511,9 @@ void main() {
         life.sync(
           homes: {
             KittyId.oyen: (HouseRoom.living, _floor.spotAtFeet(200, 500)),
-            // Mochi lesu: diam di sebelah tempat yang dekat.
-            KittyId.mochi: (HouseRoom.living, _floor.spotAtFeet(130, 570)),
+            // Mochi lesu: diam dekat tempat yang dekat (di luar jarak
+            // minimum lifeCatSpacing, masih di lifeCrowdRadius).
+            KittyId.mochi: (HouseRoom.living, _floor.spotAtFeet(170, 590)),
           },
           targets: const {},
           uses: const {},
@@ -1050,6 +1051,205 @@ void main() {
       expect(life.wantsOut(KittyId.oyen), isTrue);
       until(life, () => oyen.outside);
       expect(oyen.outside, isTrue);
+    });
+  });
+
+  group('tenang (langkah 40)', () {
+    const all = KittyId.values;
+    // Rumah penuh di ruang tengah: kucing tersebar, barang di kisi.
+    final items = <RoomItemId, Spot>{
+      RoomItemId.kasur: Spot(0.15, 0.3),
+      RoomItemId.bola: Spot(0.85, 0.3),
+      RoomItemId.mangkuk: _bowl,
+      RoomItemId.rak: Spot(0.5, 0.05),
+      RoomItemId.jendelaBurung: Spot(0.2, 0.05),
+    };
+    RoomLife full(int seed) {
+      final life = RoomLife(random: Random(seed), travelWeight: 0);
+      life.sync(
+        homes: {
+          for (final k in all)
+            k: (
+              HouseRoom.living,
+              Spot(0.1 + 0.1 * (k.index % 9), 0.4 + 0.15 * (k.index % 3)),
+            ),
+        },
+        targets: {
+          for (final MapEntry(key: item, value: spot) in items.entries)
+            item: {for (final k in all) k: LifeRoute(spot)},
+        },
+        uses: _uses,
+        toys: const {RoomItemId.bola, RoomItemId.jendelaBurung},
+      );
+      return life;
+    }
+
+    bool onFoot(CatLife c) => const {
+      CatActivity.walking,
+      CatActivity.climbing,
+      CatActivity.descending,
+    }.contains(c.activity);
+
+    test('paling banyak 2 kucing berjalan per ruangan', () {
+      for (final seed in [1, 2, 3]) {
+        final life = full(seed)..watching = HouseRoom.living;
+        _run(life, 300, () {
+          for (final room in HouseRoom.values) {
+            final walking = life.cats
+                .where((c) => c.room == room && !c.outside && onFoot(c))
+                .length;
+            expect(walking, lessThanOrEqualTo(lifeMaxWalkers));
+          }
+        });
+      }
+    });
+
+    test('ruangan yang ditonton bergerak dalam 3 detik', () {
+      for (final seed in [1, 2, 3, 4]) {
+        final life = full(seed)..watching = HouseRoom.living;
+        var moved = false;
+        _run(life, 3, () {
+          if (life.cats.any(onFoot)) moved = true;
+        });
+        expect(moved, isTrue, reason: 'seed $seed');
+      }
+    });
+
+    test('tidak pernah 8,5 detik diam di ruangan yang ditonton', () {
+      for (final seed in [1, 2]) {
+        final life = full(seed)..watching = HouseRoom.living;
+        var still = 0.0;
+        _run(life, 300, () {
+          final lively = life.cats.any(
+            (c) =>
+                onFoot(c) ||
+                (c.isInItem && c.item == RoomItemId.bola) ||
+                (c.isInItem && c.item == RoomItemId.jendelaBurung),
+          );
+          still = lively ? 0 : still + _frame;
+          expect(still, lessThan(8.5), reason: 'seed $seed');
+        });
+      }
+    });
+
+    test('tanpa ruangan ditonton tidak ada dorongan', () {
+      final life = _life(1);
+      _sync(life, targets: const {});
+      final cat = life.of(KittyId.oyen)..remaining = 100;
+      _run(life, 10);
+      expect(cat.activity, CatActivity.idle);
+    });
+
+    test('diam 8–20 detik, memakai barang 8–14, tidur 20–40', () {
+      final life = _life(5);
+      _sync(life);
+      var last = life.of(KittyId.oyen).activity;
+      var idles = 0;
+      var uses = 0;
+      _run(life, 600, () {
+        final cat = life.of(KittyId.oyen);
+        if (cat.activity != last) {
+          final left = cat.remaining + _frame;
+          if (cat.activity == CatActivity.idle) {
+            idles++;
+            expect(left, inInclusiveRange(lifeIdleMin, lifeIdleMax + _frame));
+          } else if (cat.activity == CatActivity.using) {
+            uses++;
+            final (lo, hi) = cat.item == RoomItemId.kasur
+                ? (lifeSleepMin, lifeSleepMax)
+                : (lifeUseMin, lifeUseMax);
+            expect(
+              left,
+              inInclusiveRange(lo, hi + _frame),
+              reason: '${cat.item}',
+            );
+          }
+          last = cat.activity;
+        }
+      });
+      expect(idles, greaterThan(3));
+      expect(uses, greaterThan(3));
+    });
+
+    test('tujuan tidak dalam 40 px dari kucing lain (selain mangkuk)', () {
+      final life = full(7)..watching = HouseRoom.living;
+      Spot? stop(CatLife c) => c.isInItem && c.item != RoomItemId.mangkuk
+          ? c.spot
+          : c.place != null && !onFoot(c)
+          ? c.spot
+          : null;
+      _run(life, 300, () {
+        final stops = [
+          for (final c in life.cats)
+            if (stop(c) case final s?) (c.kitty, s),
+        ];
+        for (var i = 0; i < stops.length; i++) {
+          for (var j = i + 1; j < stops.length; j++) {
+            expect(
+              _floor.distance(stops[i].$2, stops[j].$2),
+              greaterThanOrEqualTo(lifeCatSpacing - 0.01),
+              reason: '${stops[i].$1} × ${stops[j].$1}',
+            );
+          }
+        }
+      });
+    });
+
+    test('kucing lapar tetap ke mangkuk walau slot jalan penuh', () {
+      final life = _life(1);
+      _sync(
+        life,
+        kitties: {KittyId.oyen, KittyId.salju, KittyId.telon},
+        hungry: {KittyId.oyen},
+      );
+      // Dua kucing sedang berjalan ke kasur dan bola.
+      for (final (k, item) in [
+        (KittyId.salju, RoomItemId.kasur),
+        (KittyId.telon, RoomItemId.bola),
+      ]) {
+        life.of(k)
+          ..item = item
+          ..activity = CatActivity.walking
+          ..pose = LifePose.walk;
+      }
+      life.of(KittyId.oyen).remaining = 0;
+      life.advance(_frame);
+      expect(life.of(KittyId.oyen).activity, CatActivity.walking);
+      expect(life.of(KittyId.oyen).item, RoomItemId.mangkuk);
+    });
+
+    test('slot penuh: kucing lain menunggu sebentar', () {
+      final life = _life(1);
+      _sync(
+        life,
+        kitties: {KittyId.oyen, KittyId.salju, KittyId.telon},
+        // Rak bebas: Oyen sebenarnya punya tujuan.
+        targets: {
+          RoomItemId.kasur: _bed,
+          RoomItemId.bola: _ball,
+          RoomItemId.mangkuk: _bowl,
+          RoomItemId.rak: Spot(0.5, 0.05),
+        },
+      );
+      for (final (k, item) in [
+        (KittyId.salju, RoomItemId.kasur),
+        (KittyId.telon, RoomItemId.bola),
+      ]) {
+        life.of(k)
+          ..item = item
+          ..activity = CatActivity.walking
+          ..pose = LifePose.walk;
+      }
+      final oyen = life.of(KittyId.oyen)..remaining = 0;
+      var waits = 0;
+      for (var i = 0; i < 20; i++) {
+        oyen.remaining = 0;
+        life.advance(_frame);
+        // Tidak pernah berangkat; kadang memilih diam biasa, kadang menunggu.
+        expect(oyen.activity, CatActivity.idle);
+        if (oyen.remaining == lifeWaitSeconds) waits++;
+      }
+      expect(waits, greaterThan(0));
     });
   });
 }

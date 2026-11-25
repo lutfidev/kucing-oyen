@@ -583,7 +583,7 @@ void main() {
       var biggestJump = 0.0;
       for (
         var i = 0;
-        i < 2400 && inUse(RoomItemId.jendelaBurung).evaluate().isEmpty;
+        i < 9000 && inUse(RoomItemId.jendelaBurung).evaluate().isEmpty;
         i++
       ) {
         await tester.pump(const Duration(milliseconds: 16));
@@ -625,7 +625,7 @@ void main() {
         );
         for (
           var i = 0;
-          i < 3000 && inUse(RoomItemId.jendelaBurung).evaluate().isEmpty;
+          i < 9000 && inUse(RoomItemId.jendelaBurung).evaluate().isEmpty;
           i++
         ) {
           await tester.pump(const Duration(milliseconds: 16));
