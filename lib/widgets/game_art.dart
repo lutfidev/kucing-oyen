@@ -473,11 +473,16 @@ class CoinBubbleView extends StatelessWidget {
     this.size = 64,
     this.time,
     this.more,
+    this.moreOnLeft = false,
   });
 
   final int coins;
 
-  /// Chip kecil di kanan gelembung, mis. "+2 lagi" (hadiah bergiliran,
+  /// Chip [more] di kiri gelembung, bukan di kanan (gelembung di separuh
+  /// kanan ruangan, supaya chip tidak menimpa ikon pintu teras).
+  final bool moreOnLeft;
+
+  /// Chip kecil di samping gelembung, mis. "+2 lagi" (hadiah bergiliran,
   /// langkah 40); null = tanpa chip. Pemanggil memasukkannya juga ke
   /// [label].
   final String? more;
@@ -521,7 +526,7 @@ class CoinBubbleView extends StatelessWidget {
       onTap: onTap,
       child: Transform.translate(
         offset: Offset(0, RoomArt.coinBubbleBob(time) * scale),
-        // Chip "+N lagi" di kanan gelembung, sejajar label koin: di dalam
+        // Chip "+N lagi" di samping gelembung, sejajar label koin: di dalam
         // area ketuk dan tidak menimpa kepala kucing di bawahnya.
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
@@ -529,6 +534,7 @@ class CoinBubbleView extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
+            textDirection: moreOnLeft ? TextDirection.rtl : TextDirection.ltr,
             children: [
               SizedBox.fromSize(
                 size: box * scale,

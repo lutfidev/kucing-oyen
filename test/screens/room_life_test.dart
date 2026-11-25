@@ -362,8 +362,18 @@ void main() {
     await tester.pump();
     expect(progress.coins, 5 + kittyRewardCoins);
     expect(progress.canClaimKittyReward(KittyId.salju), isTrue);
+    // Ketukan kedua yang jatuh ke kucing di bawah gelembung tidak membuka
+    // kartunya selama jeda.
+    final semantics = tester.ensureSemantics();
+    await _tapOyen(tester);
+    expect(find.bySemanticsLabel('Tutup kartu'), findsNothing);
     await settle(tester, max: const Duration(seconds: 2));
     expect(find.byKey(const ValueKey('reward-salju')), findsOneWidget);
+    // Sesudah jeda kucing bisa diketuk lagi.
+    await _tapOyen(tester);
+    await tester.pump();
+    expect(find.bySemanticsLabel('Tutup kartu'), findsOneWidget);
+    semantics.dispose();
   });
 
   testWidgets('kucing lesu tidak memunculkan gelembung', (tester) async {

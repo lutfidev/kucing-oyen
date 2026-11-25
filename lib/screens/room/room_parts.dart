@@ -552,19 +552,22 @@ class NewKittyTag extends StatelessWidget {
 
 /// Menaruh anak seukuran aslinya di [at], digeser masuk supaya paling
 /// sedikit [margin] dari tepi kiri dan kanan dan tidak di atas [top].
-/// [centered]: [at] adalah tengah atas anak, bukan pojok kiri atasnya.
+/// [centered]: [at] adalah tengah atas anak, bukan pojok kiri atasnya;
+/// [fromRight]: [at] adalah pojok kanan atasnya.
 class KeepInside extends SingleChildLayoutDelegate {
   const KeepInside(
     this.at, {
     this.margin = 0,
     this.top = double.negativeInfinity,
     this.centered = false,
+    this.fromRight = false,
   });
 
   final Offset at;
   final double margin;
   final double top;
   final bool centered;
+  final bool fromRight;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
@@ -572,7 +575,11 @@ class KeepInside extends SingleChildLayoutDelegate {
 
   @override
   Offset getPositionForChild(Size size, Size childSize) {
-    final x = centered ? at.dx - childSize.width / 2 : at.dx;
+    final x = centered
+        ? at.dx - childSize.width / 2
+        : fromRight
+        ? at.dx - childSize.width
+        : at.dx;
     return Offset(
       x.clamp(margin, max(margin, size.width - childSize.width - margin)),
       max(top, at.dy),
@@ -584,7 +591,8 @@ class KeepInside extends SingleChildLayoutDelegate {
       old.at != at ||
       old.margin != margin ||
       old.top != top ||
-      old.centered != centered;
+      old.centered != centered ||
+      old.fromRight != fromRight;
 }
 
 /// Elips berisi [fill] dengan garis putus-putus [line] setebal [width]

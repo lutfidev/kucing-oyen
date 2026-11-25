@@ -840,6 +840,9 @@ class _RoomViewState extends State<RoomView>
   }
 
   void _select(KittyId kitty) {
+    // Ketukan kedua dari ketukan ganda di gelembung hadiah jatuh ke kucing
+    // di bawahnya (gelembung sedang disembunyikan): diabaikan.
+    if (_rewardHold != null) return;
     _sound(GameSound.meow);
     setState(() => _selected = kitty);
     _progress.seeKitty(kitty);
@@ -1702,6 +1705,16 @@ class _RoomViewState extends State<RoomView>
           !_progress.catNeeds(kitty).isSad &&
           !home.isFresh(kitty),
     );
+    // Gelembung hadiah: desain (163, 362) untuk Oyen 116 di (137, 430).
+    // Chip "+N lagi" di sisi yang menjauhi tepi terdekat, supaya tidak
+    // menimpa ikon pintu teras di tepi kanan.
+    final bubbleSize = RoomArt.coinBubbleViewBox.width * geo.artScale;
+    final rewardBox = catBoxes[reward.kitty];
+    final bubbleLeft = rewardBox == null
+        ? 0.0
+        : rewardBox.left + rewardBox.width * 26 / oyenRoomSize;
+    final moreOnLeft =
+        reward.more > 0 && bubbleLeft + bubbleSize / 2 > geo.room.width / 2;
     final empty = _empty && living;
     final top = MediaQuery.paddingOf(context).top + space.s6;
     // Tag dan gelembung tidak naik ke bawah header dan tombol Hias, yang
@@ -1982,15 +1995,17 @@ class _RoomViewState extends State<RoomView>
                   // (137, 430); dijepit supaya tidak keluar tepi kamar.
                   delegate: KeepInside(
                     Offset(
-                      box.left + box.width * 26 / oyenRoomSize,
+                      bubbleLeft + (moreOnLeft ? bubbleSize : 0),
                       box.top - box.width * 68 / oyenRoomSize,
                     ),
                     margin: space.s8,
                     top: overlayTop,
+                    fromRight: moreOnLeft,
                   ),
                   child: CoinBubbleView(
                     key: ValueKey('reward-${kitty.name}'),
                     coins: kittyRewardCoins,
+                    moreOnLeft: moreOnLeft,
                     more: reward.more > 0
                         ? context.l10n.kittyRewardMore(reward.more)
                         : null,
@@ -2002,7 +2017,7 @@ class _RoomViewState extends State<RoomView>
                       if (reward.more > 0)
                         context.l10n.kittyRewardMore(reward.more),
                     ].join(', '),
-                    size: RoomArt.coinBubbleViewBox.width * geo.artScale,
+                    size: bubbleSize,
                     time: _animating ? _time : null,
                     onTap: () => _claim(kitty),
                   ),
