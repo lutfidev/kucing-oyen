@@ -472,9 +472,15 @@ class CoinBubbleView extends StatelessWidget {
     required this.onTap,
     this.size = 64,
     this.time,
+    this.more,
   });
 
   final int coins;
+
+  /// Chip kecil di bawah gelembung, mis. "+2 lagi" (hadiah bergiliran,
+  /// langkah 40); null = tanpa chip. Pemanggil memasukkannya juga ke
+  /// [label].
+  final String? more;
 
   /// Label pembaca layar.
   final String label;
@@ -535,6 +541,32 @@ class CoinBubbleView extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (more case final more?)
+                  Positioned(
+                    top: box.height * scale + s.roomBubbleLabelPad * scale,
+                    child: Container(
+                      height: s.roomBubbleLabel * scale,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: s.roomBubbleLabelPad * scale,
+                      ),
+                      alignment: Alignment.center,
+                      decoration: ShapeDecoration(
+                        color: c.ink,
+                        shape: const StadiumBorder(),
+                      ),
+                      child: Text(
+                        more,
+                        maxLines: 1,
+                        softWrap: false,
+                        textScaler: TextScaler.noScaling,
+                        style: context.koType.badge.copyWith(
+                          color: c.cream,
+                          fontSize: context.koType.badge.fontSize! * scale,
+                          height: 1,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

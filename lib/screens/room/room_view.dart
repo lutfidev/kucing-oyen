@@ -19,6 +19,7 @@ import '../../game/model/lane.dart';
 import '../../game/model/lane_life.dart';
 import '../../game/model/needs.dart';
 import '../../game/model/room.dart';
+import '../../game/model/reward_turn.dart';
 import '../../game/model/room_life.dart';
 import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
@@ -1640,6 +1641,14 @@ class _RoomViewState extends State<RoomView>
     };
     final catBoxes = {..._catBoxes(sprites, geo), ...hopping};
     if (geo.which == _house) _shownBoxes = catBoxes;
+    // Hadiah bergiliran (langkah 40): satu gelembung per ruangan.
+    final reward = rewardTurn(
+      catBoxes.keys,
+      (kitty) =>
+          _progress.canClaimKittyReward(kitty) &&
+          !_progress.catNeeds(kitty).isSad &&
+          !home.isFresh(kitty),
+    );
     final empty = _empty && living;
     final top = MediaQuery.paddingOf(context).top + space.s6;
     // Tag dan gelembung tidak naik ke bawah header dan tombol Hias, yang
@@ -1913,7 +1922,7 @@ class _RoomViewState extends State<RoomView>
                   child: const NewKittyTag(),
                 ),
               )
-            else if (widget.life && _progress.canClaimKittyReward(kitty))
+            else if (widget.life && kitty == reward.kitty)
               Positioned.fill(
                 child: CustomSingleChildLayout(
                   // Desain: gelembung di (163, 362) untuk Oyen 116 di
@@ -1929,10 +1938,17 @@ class _RoomViewState extends State<RoomView>
                   child: CoinBubbleView(
                     key: ValueKey('reward-${kitty.name}'),
                     coins: kittyRewardCoins,
-                    label: context.l10n.kittyRewardLabel(
-                      kittyRewardCoins,
-                      kittyName(context.l10n, kitty),
-                    ),
+                    more: reward.more > 0
+                        ? context.l10n.kittyRewardMore(reward.more)
+                        : null,
+                    label: [
+                      context.l10n.kittyRewardLabel(
+                        kittyRewardCoins,
+                        kittyName(context.l10n, kitty),
+                      ),
+                      if (reward.more > 0)
+                        context.l10n.kittyRewardMore(reward.more),
+                    ].join(', '),
                     size: RoomArt.coinBubbleViewBox.width * geo.artScale,
                     time: _animating ? _time : null,
                     onTap: () => _claim(kitty),

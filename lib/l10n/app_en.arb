@@ -2653,6 +2653,15 @@
       }
     }
   },
+  "kittyRewardMore": "{count, plural, other{+{count} more}}",
+  "@kittyRewardMore": {
+    "description": "Small dark chip under the single coin bubble in a room: how many other cats in this room also have a coin reward waiting (the bubble moves to the next cat after each tap).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "reactionCoins": "{coins, plural, one{+{coins} coin} other{+{coins} coins}}",
   "@reactionCoins": {
     "description": "Floating text over a cat after collecting its coin reward.",

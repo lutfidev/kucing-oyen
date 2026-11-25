@@ -489,6 +489,7 @@
   "bowlRefill": "{hours, plural, one{Наполнится через {hours} час} few{Наполнится через {hours} часа} many{Наполнится через {hours} часов} other{Наполнится через {hours} часа}}",
   "bowlRefillSoon": "Скоро наполнится",
   "kittyRewardLabel": "{coins, plural, one{{name}: забрать {coins} монету} few{{name}: забрать {coins} монеты} many{{name}: забрать {coins} монет} other{{name}: забрать {coins} монеты}}",
+  "kittyRewardMore": "{count, plural, one{ещё +{count}} few{ещё +{count}} many{ещё +{count}} other{ещё +{count}}}",
   "reactionCoins": "{coins, plural, one{+{coins} монета} few{+{coins} монеты} many{+{coins} монет} other{+{coins} монеты}}",
   "chapterIntroOverline": "Новая глава открыта!",
   "chapterIntroEnter": "Заходим!",

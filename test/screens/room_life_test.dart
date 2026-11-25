@@ -186,6 +186,49 @@ void main() {
     expect(progress.canClaimKittyReward(KittyId.oyen), isFalse);
   });
 
+  testWidgets('hadiah bergiliran: satu gelembung, "+N lagi", lalu pindah', (
+    tester,
+  ) async {
+    final progress = withNeeds({
+      for (final kitty in KittyId.values) kitty: (90, 90),
+    }, home: Home(kitties: KittyId.values));
+    await _pump(tester, progress: progress);
+    Finder bubbles() => find.byWidgetPredicate(
+      (w) =>
+          w is CoinBubbleView &&
+          (w.key as ValueKey<String>?)?.value.startsWith('reward-') == true,
+    );
+    int more() {
+      final bubble = tester.widget<CoinBubbleView>(bubbles());
+      final text = bubble.more;
+      if (text == null) return 0;
+      return int.parse(RegExp(r'\d+').firstMatch(text)![0]!);
+    }
+
+    expect(bubbles(), findsOneWidget);
+    // Oyen lebih dulu di urutan kucing dan selalu di ruang tengah.
+    expect(find.byKey(const ValueKey('reward-oyen')), findsOneWidget);
+    expect(more(), greaterThan(0));
+    // Kucing bisa keluar-masuk ruangan selama itu, jadi jumlahnya tidak
+    // harus turun tepat satu; yang dijaga: selalu satu gelembung, kucing
+    // berbeda tiap kali, dan chip sesuai jumlahnya.
+    final shown = <String>{};
+    for (var i = 0; i < KittyId.values.length; i++) {
+      if (bubbles().evaluate().isEmpty) break;
+      expect(bubbles(), findsOneWidget);
+      final bubble = tester.widget<CoinBubbleView>(bubbles());
+      final key = (bubble.key! as ValueKey<String>).value;
+      expect(shown.add(key), isTrue, reason: 'kucing yang sama dua kali');
+      final left = more();
+      if (left > 0) {
+        expect(find.text(l10nId.kittyRewardMore(left)), findsOneWidget);
+      }
+      await tester.tap(bubbles());
+      await settle(tester, max: const Duration(seconds: 2));
+    }
+    expect(shown.length, greaterThan(1));
+  });
+
   testWidgets('gelembung hadiah juga di atas kucing di dalam barang', (
     tester,
   ) async {
@@ -252,6 +295,11 @@ void main() {
     tester.semantics.tap(find.semantics.byLabel('Tutup kartu'));
     await settle(tester, max: const Duration(seconds: 1));
     expect(find.text('Baru!'), findsNothing);
+    // Bergiliran: Oyen dulu, Salju dihitung di "+1 lagi".
+    expect(find.byKey(const ValueKey('reward-salju')), findsNothing);
+    expect(find.text(l10nId.kittyRewardMore(1)), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('reward-oyen')));
+    await settle(tester, max: const Duration(seconds: 2));
     expect(find.byKey(const ValueKey('reward-salju')), findsOneWidget);
     semantics.dispose();
   });

@@ -3036,6 +3036,12 @@ abstract class AppLocalizations {
   /// **'{coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}}'**
   String kittyRewardLabel(int coins, String name);
 
+  /// Small dark chip under the single coin bubble in a room: how many other cats in this room also have a coin reward waiting (the bubble moves to the next cat after each tap).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, other{+{count} more}}'**
+  String kittyRewardMore(int count);
+
   /// Floating text over a cat after collecting its coin reward.
   ///
   /// In en, this message translates to:

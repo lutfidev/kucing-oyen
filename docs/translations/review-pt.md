@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-513 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+514 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -516,6 +516,7 @@ files and anything written there is overwritten.
 | `bowlRefill` | {hours, plural, one{Refills in {hours} hour} other{Refills in {hours} hours}} | {hours, plural, one{Enche de novo em {hours} hora} other{Enche de novo em {hours} horas}} | Label over the empty shared food bowl in the cat room: hours until it refills. Placeholders: `{hours}`. | |
 | `bowlRefillSoon` | Refills any minute now | Enche de novo daqui a pouco | Label over the empty shared food bowl in the cat room when it refills in under an hour. | |
 | `kittyRewardLabel` | {coins, plural, one{Collect {coins} coin from {name}} other{Collect {coins} coins from {name}}} | {coins, plural, one{Pegar {coins} moeda de {name}} other{Pegar {coins} moedas de {name}}} | Screen reader label of the coin bubble over a well cared-for cat; tapping collects the daily reward. Placeholders: `{coins}`, `{name}`. | |
+| `kittyRewardMore` | {count, plural, other{+{count} more}} | {count, plural, other{+{count} na fila}} | Small dark chip under the single coin bubble in a room: how many other cats in this room also have a coin reward waiting (the bubble moves to the next cat after each tap). Placeholders: `{count}`. | |
 | `reactionCoins` | {coins, plural, one{+{coins} coin} other{+{coins} coins}} | {coins, plural, one{+{coins} moeda} other{+{coins} moedas}} | Floating text over a cat after collecting its coin reward. Placeholders: `{coins}`. | |
 | `chapterIntroOverline` | New chapter unlocked! | Capítulo novo liberado! | Overline on the card shown over the map when a new chapter is unlocked for the first time (after beating the chapter 1 boss). | |
 | `chapterIntroEnter` | Let's go in! | Bora entrar! | Button that closes the new-chapter card and shows the new map. | |

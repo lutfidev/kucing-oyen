@@ -489,6 +489,7 @@
   "bowlRefill": "{hours, plural, other{Terisi lagi {hours} jam}}",
   "bowlRefillSoon": "Terisi sebentar lagi",
   "kittyRewardLabel": "Ambil {coins} koin dari {name}",
+  "kittyRewardMore": "{count, plural, other{+{count} lagi}}",
   "reactionCoins": "+{coins} koin",
   "chapterIntroOverline": "Babak baru terbuka!",
   "chapterIntroEnter": "Ayo masuk!",

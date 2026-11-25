@@ -489,6 +489,7 @@
   "bowlRefill": "{hours, plural, one{Enche de novo em {hours} hora} other{Enche de novo em {hours} horas}}",
   "bowlRefillSoon": "Enche de novo daqui a pouco",
   "kittyRewardLabel": "{coins, plural, one{Pegar {coins} moeda de {name}} other{Pegar {coins} moedas de {name}}}",
+  "kittyRewardMore": "{count, plural, other{+{count} na fila}}",
   "reactionCoins": "{coins, plural, one{+{coins} moeda} other{+{coins} moedas}}",
   "chapterIntroOverline": "Capítulo novo liberado!",
   "chapterIntroEnter": "Bora entrar!",

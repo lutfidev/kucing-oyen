@@ -2077,6 +2077,19 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String kittyRewardMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ещё +$count',
+      many: 'ещё +$count',
+      few: 'ещё +$count',
+      one: 'ещё +$count',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String reactionCoins(int coins) {
     String _temp0 = intl.Intl.pluralLogic(
       coins,
