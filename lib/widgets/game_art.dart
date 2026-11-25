@@ -477,7 +477,7 @@ class CoinBubbleView extends StatelessWidget {
 
   final int coins;
 
-  /// Chip kecil di bawah gelembung, mis. "+2 lagi" (hadiah bergiliran,
+  /// Chip kecil di kanan gelembung, mis. "+2 lagi" (hadiah bergiliran,
   /// langkah 40); null = tanpa chip. Pemanggil memasukkannya juga ke
   /// [label].
   final String? more;
@@ -496,79 +496,64 @@ class CoinBubbleView extends StatelessWidget {
     final s = context.koSize;
     final box = RoomArt.coinBubbleViewBox;
     final scale = size / box.width;
+    Widget pill(String text, {FontWeight? weight}) => Container(
+      height: s.roomBubbleLabel * scale,
+      padding: EdgeInsets.symmetric(horizontal: s.roomBubbleLabelPad * scale),
+      alignment: Alignment.center,
+      decoration: ShapeDecoration(color: c.ink, shape: const StadiumBorder()),
+      child: Text(
+        text,
+        maxLines: 1,
+        softWrap: false,
+        textScaler: TextScaler.noScaling,
+        style: context.koType.badge.copyWith(
+          color: c.cream,
+          fontWeight: weight,
+          fontSize: context.koType.badge.fontSize! * scale,
+          height: 1,
+        ),
+      ),
+    );
     return Semantics(
       button: true,
       label: label,
       excludeSemantics: true,
       onTap: onTap,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: Transform.translate(
-          offset: Offset(0, RoomArt.coinBubbleBob(time) * scale),
-          child: SizedBox.fromSize(
-            size: box * scale,
-            child: Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.topCenter,
-              children: [
-                const Positioned.fill(
-                  child: CustomPaint(painter: _CoinBubblePainter()),
+      child: Transform.translate(
+        offset: Offset(0, RoomArt.coinBubbleBob(time) * scale),
+        // Chip "+N lagi" di kanan gelembung, sejajar label koin: di dalam
+        // area ketuk dan tidak menimpa kepala kucing di bawahnya.
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onTap,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox.fromSize(
+                size: box * scale,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.topCenter,
+                  children: [
+                    const Positioned.fill(
+                      child: CustomPaint(painter: _CoinBubblePainter()),
+                    ),
+                    Positioned(
+                      top: RoomArt.coinBubbleLabelTop * scale,
+                      child: pill('+$coins', weight: FontWeight.w700),
+                    ),
+                  ],
                 ),
-                Positioned(
-                  top: RoomArt.coinBubbleLabelTop * scale,
-                  child: Container(
-                    height: s.roomBubbleLabel * scale,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: s.roomBubbleLabelPad * scale,
-                    ),
-                    alignment: Alignment.center,
-                    decoration: ShapeDecoration(
-                      color: c.ink,
-                      shape: const StadiumBorder(),
-                    ),
-                    child: Text(
-                      '+$coins',
-                      maxLines: 1,
-                      softWrap: false,
-                      textScaler: TextScaler.noScaling,
-                      style: context.koType.badge.copyWith(
-                        color: c.cream,
-                        fontWeight: FontWeight.w700,
-                        fontSize: context.koType.badge.fontSize! * scale,
-                        height: 1,
-                      ),
-                    ),
+              ),
+              if (more case final more?)
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: RoomArt.coinBubbleLabelTop * scale,
                   ),
+                  child: pill(more),
                 ),
-                if (more case final more?)
-                  Positioned(
-                    top: box.height * scale + s.roomBubbleLabelPad * scale,
-                    child: Container(
-                      height: s.roomBubbleLabel * scale,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: s.roomBubbleLabelPad * scale,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: ShapeDecoration(
-                        color: c.ink,
-                        shape: const StadiumBorder(),
-                      ),
-                      child: Text(
-                        more,
-                        maxLines: 1,
-                        softWrap: false,
-                        textScaler: TextScaler.noScaling,
-                        style: context.koType.badge.copyWith(
-                          color: c.cream,
-                          fontSize: context.koType.badge.fontSize! * scale,
-                          height: 1,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+            ],
           ),
         ),
       ),

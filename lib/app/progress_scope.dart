@@ -356,7 +356,7 @@ class ProgressController extends ChangeNotifier implements HintSource {
   /// null tanpa menyimpan kalau tidak ada yang berubah.
   Future<Room?> tidyRoom(HouseRoom room) async {
     final before = _home.room;
-    final after = before.tidy(room);
+    final after = before.tidy(room, floor: floor);
     if (after == before) return null;
     await _changeHome({_Part.home}, home: _home.copyWith(room: after));
     return before;

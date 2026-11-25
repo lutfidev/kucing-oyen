@@ -1174,6 +1174,50 @@ void main() {
       }
     });
 
+    test('selesai turun dari barang: dirinya tidak dihitung berjalan', () {
+      // Mochi sedang berjalan (1 slot), Oyen baru selesai turun: masih ada
+      // slot untuk Oyen, jadi di beberapa seed Oyen langsung berjalan.
+      var walked = 0;
+      for (var seed = 1; seed <= 20; seed++) {
+        final life = _life(seed);
+        _sync(life, kitties: {KittyId.oyen, KittyId.mochi});
+        life.of(KittyId.mochi)
+          ..traveling = true
+          ..activity = CatActivity.walking
+          ..spot = Spot(0.1, 1);
+        life.of(KittyId.oyen)
+          ..activity = CatActivity.descending
+          ..hops = 1
+          ..remaining = _frame / 2;
+        life.advance(_frame);
+        final oyen = life.of(KittyId.oyen);
+        expect(oyen.activity, isNot(CatActivity.descending));
+        if (oyen.activity == CatActivity.walking) walked++;
+      }
+      expect(walked, greaterThan(0));
+    });
+
+    test('tidak memilih diam di ambang pintu dekat kucing lain', () {
+      final door = _floor.threshold(HouseRoom.living);
+      expect(_floor.onDoorPath(HouseRoom.living, door), isTrue);
+      for (var seed = 1; seed <= 20; seed++) {
+        final life = _life(seed);
+        _sync(life, kitties: {KittyId.oyen, KittyId.mochi});
+        life.of(KittyId.mochi)
+          ..spot = door
+          ..remaining = 100;
+        life.of(KittyId.oyen)
+          ..spot = door
+          ..remaining = _frame / 2;
+        life.advance(_frame);
+        expect(
+          life.of(KittyId.oyen).activity,
+          CatActivity.walking,
+          reason: 'seed $seed',
+        );
+      }
+    });
+
     test('tanpa ruangan ditonton tidak ada dorongan', () {
       final life = _life(1);
       _sync(life, targets: const {});

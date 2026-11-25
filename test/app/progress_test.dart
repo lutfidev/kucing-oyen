@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
@@ -309,6 +310,40 @@ void main() {
         expect(await PrefsProgressStore().loadHints(), isEmpty);
       }
     });
+    test('rumah lama tanpa tanda rapi: dirapikan sekali saat dimuat', () async {
+      final floor = HouseFloor();
+      final stacked = floor.spotAtFeet(150, 610).toJson();
+      await SharedPreferencesAsync().setString(
+        PrefsProgressStore.homeKey,
+        jsonEncode({
+          'room': {
+            'owned': ['kasur', 'sofaMini'],
+            'placed': {'kasur': stacked, 'sofaMini': stacked},
+          },
+        }),
+      );
+      Future<ProgressController> open() => ProgressController.load(
+        levels: testLevels,
+        store: PrefsProgressStore(),
+        hintAds: FakeRewardedAds(),
+        coinAds: FakeRewardedAds(),
+      );
+      final room = (await open()).home.room;
+      final kasur = (
+        item: roomItemOf(RoomItemId.kasur),
+        spot: room.spotOf(RoomItemId.kasur)!,
+      );
+      final sofa = (
+        item: roomItemOf(RoomItemId.sofaMini),
+        spot: room.spotOf(RoomItemId.sofaMini)!,
+      );
+      expect(floor.stacks(kasur, sofa), isFalse);
+      expect(room.toJson()['tidy'], 1);
+      // Disimpan lagi dengan tanda: dibuka ulang tidak berubah.
+      await PrefsProgressStore().saveHome(Home(room: room));
+      expect((await open()).home.room, room);
+    });
+
     test('hadiah harian: simpan lalu muat', () async {
       const rewards = DailyRewards(bonusDay: 3, adDay: 4, adsWatched: 2);
       await PrefsProgressStore().saveRewards(rewards);
@@ -637,8 +672,14 @@ void main() {
       int coins = 0,
       Home? home,
       HomeNeeds? needs,
-    }) =>
-        testProgressWith(coins: coins, home: home, needs: needs, clock: clock);
+      HouseFloor floor = const HouseFloor(),
+    }) => testProgressWith(
+      coins: coins,
+      home: home,
+      needs: needs,
+      clock: clock,
+      floor: floor,
+    );
     MemoryProgressStore storeOf(ProgressController c) =>
         c.store as MemoryProgressStore;
     Home owning(Iterable<RoomItemId> items, {Pantry? pantry}) => Home(
@@ -802,6 +843,22 @@ void main() {
       await c.restoreRoom(before!, after: messy.room.tidy(HouseRoom.living));
       expect(c.home.room, messy.room);
       expect(storeOf(c).home.room, messy.room);
+    });
+
+    test('Rapikan memakai lantai controller: penuh = Gudang', () async {
+      final stacked = HouseFloor().spotAtFeet(150, 610);
+      final messy = Home(
+        room: Room(
+          owned: [RoomItemId.kasur, RoomItemId.sofaMini],
+          placed: {RoomItemId.kasur: stacked, RoomItemId.sofaMini: stacked},
+        ),
+      );
+      final c = controller(home: messy, floor: const _FullFloor());
+      expect(await c.tidyRoom(HouseRoom.living), messy.room);
+      // Lantai bawaan masih punya tempat bebas; lantai tiruan tidak.
+      expect(c.home.room, isNot(messy.room.tidy(HouseRoom.living)));
+      expect(c.home.room.stored, isNotEmpty);
+      expect(storeOf(c).home.room, c.home.room);
     });
 
     test('Batalkan tidak menimpa perubahan sesudah Rapikan', () async {
@@ -1308,4 +1365,17 @@ void main() {
 class _ThrowingAds implements RewardedAds {
   @override
   Future<bool> show() async => throw StateError('iklan gagal dimuat');
+}
+
+/// Lantai tanpa tempat bebas sama sekali (ruangan penuh).
+class _FullFloor extends HouseFloor {
+  const _FullFloor();
+
+  @override
+  Spot? freeSpot(
+    RoomItem item,
+    HouseRoom room,
+    Spot spot,
+    Iterable<({RoomItem item, Spot spot})> others,
+  ) => null;
 }

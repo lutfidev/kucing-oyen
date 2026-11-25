@@ -429,8 +429,11 @@ class RoomLife {
       (cat.activity == CatActivity.using &&
           (_toys.contains(cat.item) || _uses[cat.item] == ItemUse.read));
 
-  int _walkers(HouseRoom room) => _cats.values
-      .where((c) => c.room == room && !c.outside && _onFoot(c))
+  /// Kucing yang sedang jalan, naik, atau turun di [room], selain [except]
+  /// (kucing yang baru selesai turun dari barang masih `descending` saat
+  /// mengundi tujuan berikutnya, jadi dirinya tidak ikut dihitung).
+  int _walkers(HouseRoom room, {CatLife? except}) => _cats.values
+      .where((c) => c != except && c.room == room && !c.outside && _onFoot(c))
       .length;
 
   /// Ruangan yang ditonton diam terlalu lama: satu kucing yang diam
@@ -1056,8 +1059,13 @@ class RoomLife {
       for (final c in _cats.values)
         if (c.room == cat.room && c.kitty != cat.kitty) ?c.place,
     };
+    // Diam di tempat juga tidak boleh berdesakan: kucing yang berdiri di
+    // jalur pintu (mis. baru masuk di ambang) terlalu dekat kucing lain
+    // harus pindah dulu.
+    final crowdedDoor =
+        floor.onDoorPath(cat.room, cat.spot) && _tooClose(cat, cat.spot);
     final options = <(Object?, double)>[
-      if (!move) (null, lifeIdleWeight.toDouble()),
+      if (!move && !crowdedDoor) (null, lifeIdleWeight.toDouble()),
       for (final MapEntry(key: item, value: use) in _uses.entries)
         if (!taken.contains(item) &&
             _roomOf(item) == cat.room &&
@@ -1084,7 +1092,7 @@ class RoomLife {
       roll -= weight;
       if (roll >= 0) continue;
       // Slot jalan ruangan ini penuh: menunggu sebentar lalu mengundi lagi.
-      if (target != null && _walkers(cat.room) >= lifeMaxWalkers) {
+      if (target != null && _walkers(cat.room, except: cat) >= lifeMaxWalkers) {
         _rest(cat);
         cat.remaining = lifeWaitSeconds;
         return;

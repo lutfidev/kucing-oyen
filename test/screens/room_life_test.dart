@@ -304,6 +304,68 @@ void main() {
     semantics.dispose();
   });
 
+  testWidgets('giliran hadiah melewati kucing lesu dan kucing baru', (
+    tester,
+  ) async {
+    final progress = withNeeds({
+      KittyId.oyen: (10, 90),
+      KittyId.salju: (90, 90),
+    }, home: Home(kitties: {KittyId.salju}).adopt(KittyId.salju));
+    final semantics = tester.ensureSemantics();
+    await _pump(tester, progress: progress);
+    // Oyen lesu, Salju masih bertag "Baru!": tidak ada gelembung.
+    expect(find.byType(CoinBubbleView), findsNothing);
+    tester.semantics.tap(
+      find.semantics.byLabel('Salju, baru. Ketuk untuk lihat kartunya'),
+    );
+    await settle(tester, max: const Duration(seconds: 1));
+    tester.semantics.tap(find.semantics.byLabel('Tutup kartu'));
+    await settle(tester, max: const Duration(seconds: 1));
+    // Oyen di depan urutan tapi lesu: giliran langsung ke Salju, tanpa
+    // "+1 lagi" untuk Oyen.
+    final bubble = find.byKey(const ValueKey('reward-salju'));
+    expect(bubble, findsOneWidget);
+    expect(tester.widget<CoinBubbleView>(bubble).more, isNull);
+    semantics.dispose();
+  });
+
+  testWidgets('chip "+N lagi" bisa diketuk; ketukan ganda cepat sekali', (
+    tester,
+  ) async {
+    final progress = withNeeds(
+      {KittyId.oyen: (90, 90), KittyId.salju: (90, 90)},
+      home: Home(kitties: {KittyId.salju}).adopt(KittyId.salju),
+      coins: 5,
+    );
+    await _pump(tester, progress: progress);
+    // Salju baru = ruang tengah; tag dihapus sesudah ia di sana.
+    await progress.seeKitty(KittyId.salju);
+    await tester.pump();
+    final oyen = find.byKey(const ValueKey('reward-oyen'));
+    final chip = find.text(l10nId.kittyRewardMore(1));
+    expect(oyen, findsOneWidget);
+    expect(chip, findsOneWidget);
+    // Chip di dalam area gelembung (bukan di bawahnya, di atas kepala
+    // kucing).
+    final area = tester.getRect(oyen);
+    final chipRect = tester.getRect(chip);
+    expect(area.contains(chipRect.center), isTrue);
+    expect(chipRect.bottom, lessThanOrEqualTo(area.bottom));
+    final at = area.center;
+    await tester.tap(chip);
+    await tester.pump(const Duration(milliseconds: 80));
+    expect(progress.coins, 5 + kittyRewardCoins);
+    // Gelembung Salju belum muncul di tempat yang sama: ketukan kedua
+    // tidak mengambil hadiahnya.
+    expect(find.byKey(const ValueKey('reward-salju')), findsNothing);
+    await tester.tapAt(at);
+    await tester.pump();
+    expect(progress.coins, 5 + kittyRewardCoins);
+    expect(progress.canClaimKittyReward(KittyId.salju), isTrue);
+    await settle(tester, max: const Duration(seconds: 2));
+    expect(find.byKey(const ValueKey('reward-salju')), findsOneWidget);
+  });
+
   testWidgets('kucing lesu tidak memunculkan gelembung', (tester) async {
     await _pump(tester, progress: withNeeds({KittyId.oyen: (10, 90)}));
     expect(find.byType(CoinBubbleView), findsNothing);

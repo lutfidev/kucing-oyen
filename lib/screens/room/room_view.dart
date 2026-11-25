@@ -309,6 +309,14 @@ class _RoomViewState extends State<RoomView>
   (RoomItemId, String, Rect)? _trayTip;
   Timer? _trayTipTimer;
 
+  /// Jeda sesudah gelembung hadiah diketuk (langkah 40): gelembung kucing
+  /// berikutnya baru muncul sesudah reaksinya, jadi ketukan ganda cepat
+  /// tidak mengambil hadiah dua kucing sekaligus.
+  Timer? _rewardHold;
+
+  /// `TickerMode` terakhir di [didChangeDependencies].
+  bool _wasShown = true;
+
   /// Lama keterangan slot Gudang tampil.
   static const trayTipDuration = Duration(milliseconds: 2400);
 
@@ -371,6 +379,7 @@ class _RoomViewState extends State<RoomView>
   void _onShow() {
     if (!mounted) return;
     _hidden = false;
+    if (widget.life) _life.watching = null;
     _checkLane(opening: true);
     if (_inLane && _camera == null && TickerMode.valuesOf(context).enabled) {
       _lane.playerHere(true);
@@ -387,6 +396,11 @@ class _RoomViewState extends State<RoomView>
     if (widget.life) {
       final shown = TickerMode.valuesOf(context).enabled;
       _lane.playerHere(_inLane && _camera == null && shown && !_hidden);
+      // Kembali dari Toko atau level = ruangan dibuka lagi: satu kucing
+      // bergerak [lifeStartSeconds] kemudian (tick berikutnya mengisi
+      // `watching` lagi).
+      if (shown && !_wasShown) _life.watching = null;
+      _wasShown = shown;
       if (shown && _house == HouseRoom.living && !_inLane) _armForcedVisit();
     }
     if (_animating && !_ticker.isActive) {
@@ -431,6 +445,7 @@ class _RoomViewState extends State<RoomView>
     _forceTimer?.cancel();
     _lifecycle?.dispose();
     _trayTipTimer?.cancel();
+    _rewardHold?.cancel();
     super.dispose();
   }
 
@@ -991,8 +1006,18 @@ class _RoomViewState extends State<RoomView>
 
   /// Ambil hadiah koin kucing yang dirawat (gelembung).
   Future<void> _claim(KittyId kitty) async {
+    if (_rewardHold != null) return;
     final l = context.l10n;
-    if (!await _progress.claimKittyReward(kitty) || !mounted) return;
+    setState(() {
+      _rewardHold = Timer(ReactionOverlay.duration, () {
+        if (mounted) setState(() => _rewardHold = null);
+      });
+    });
+    if (!await _progress.claimKittyReward(kitty) || !mounted) {
+      _rewardHold?.cancel();
+      if (mounted) setState(() => _rewardHold = null);
+      return;
+    }
     _react(
       kitty,
       RoomReaction(
@@ -1671,7 +1696,7 @@ class _RoomViewState extends State<RoomView>
     if (geo.which == _house) _shownBoxes = catBoxes;
     // Hadiah bergiliran (langkah 40): satu gelembung per ruangan.
     final reward = rewardTurn(
-      catBoxes.keys,
+      _rewardHold != null ? const <KittyId>[] : catBoxes.keys,
       (kitty) =>
           _progress.canClaimKittyReward(kitty) &&
           !_progress.catNeeds(kitty).isSad &&

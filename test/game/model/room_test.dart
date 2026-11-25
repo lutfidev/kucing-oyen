@@ -406,6 +406,44 @@ void main() {
       expectTidy(room.tidy(HouseRoom.terrace), HouseRoom.terrace);
     });
 
+    test('teras dengan gantungan: gantungan tetap, lantai dirapikan', () {
+      final hang = Spot(0.3, 0.2);
+      final room = Room(
+        owned: [
+          RoomItemId.kasur,
+          RoomItemId.sofaMini,
+          RoomItemId.hammock,
+          RoomItemId.lampuBulan,
+        ],
+        placed: {
+          RoomItemId.kasur: spotA,
+          RoomItemId.sofaMini: spotA,
+          RoomItemId.hammock: hang,
+          RoomItemId.lampuBulan: hang,
+        },
+        rooms: {
+          for (final id in [
+            RoomItemId.kasur,
+            RoomItemId.sofaMini,
+            RoomItemId.hammock,
+            RoomItemId.lampuBulan,
+          ])
+            id: HouseRoom.terrace,
+        },
+      );
+      final tidy = room.tidy(HouseRoom.terrace);
+      expect(tidy, isNot(room));
+      expectTidy(tidy, HouseRoom.terrace);
+      // Gantungan punya titik gantung sendiri: tidak dipindah, tidak ke
+      // Gudang, walau spot-nya sama.
+      for (final id in terraceHangers) {
+        expect(tidy.roomOf(id), HouseRoom.terrace, reason: '$id');
+        expect(tidy.spotOf(id), hang, reason: '$id');
+      }
+      expect(tidy.stored, isEmpty);
+      expect(tidy.tidy(HouseRoom.terrace), tidy);
+    });
+
     test('beli: spot bawaan terisi -> tempat kosong terdekat', () {
       final room = Room(
         owned: [RoomItemId.sofaMini],
