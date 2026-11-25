@@ -118,6 +118,8 @@ berkacamata ("jadi lucuk").
       `footprint` lama tetap untuk jalur pintu.
     - Akibatnya rumah yang sangat penuh bisa mengirim beberapa barang ke
       Gudang. Itu diterima.
+    - Angka akhirnya 10 %, bukan 25 %: lihat `docs/DESIGN_NOTES.md`,
+      "Langkah 40".
   - Aturan rapi (dipakai A dan B):
     - Barang lantai yang tidak rata diproses urut katalog. Barang yang tidak
       menimpa barang yang sudah diproses tetap di tempatnya. Barang yang

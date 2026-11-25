@@ -308,7 +308,7 @@ void main() {
     const floor = HouseFloor();
     final kasur = roomItemOf(RoomItemId.kasur);
     final spotA = floor.spotAtFeet(150, 610);
-    final farAway = floor.spotAtFeet(320, 620);
+    final farAway = floor.spotAtFeet(190, 440);
 
     void expectTidy(Room room, HouseRoom which) {
       final items = [

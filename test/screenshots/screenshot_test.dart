@@ -544,6 +544,45 @@ void main() {
     }
   }
 
+  // Langkah 40: simpanan lama dengan 21 barang bertumpuk di satu titik
+  // dirapikan sekali saat dimuat (ruang tengah dan teras).
+  for (final (name, size, terrace) in [
+    ('40-rumah-rapi', _size, false),
+    ('40-rumah-rapi-360x640', const Size(360, 640), false),
+    ('40-teras-rapi', _size, true),
+  ]) {
+    testWidgets('$folder/$name', (tester) async {
+      setScreenSize(tester, size);
+      final all = [for (final item in shopItems) item.id.name];
+      final room = Room.fromJson({
+        'owned': all,
+        'placed': {for (final id in all) id: Spot(0.5, 0.5).toJson()},
+        'terrace': ['kasur', 'sofaMini', 'kardus', 'monstera'],
+      });
+      await withShadows(() async {
+        await tester.pumpWidget(
+          capturable(
+            KucingOrenApp(
+              roomLife: false,
+              progress: testProgressWith(
+                best: _designProgress,
+                coins: 480,
+                home: Home(room: room, kitties: KittyId.values),
+              ),
+              initialLocation: AppRoutes.home,
+            ),
+          ),
+        );
+        await settle(tester);
+        if (terrace) {
+          await tester.tap(find.byType(DoorButton));
+          await settle(tester);
+        }
+        await capture(tester, '$folder/$name');
+      });
+    }, skip: !screenshotsEnabled);
+  }
+
   // Peta bergambar (desain 23) di keempat bahasa: Babak 1 seperti 23d
   // (level 7 saat ini), Babak 2 seperti 23a, kartu "Babak baru terbuka!"
   // (23c), dan Oyen di tengah jalan 12 → 13 (23b, hanya Indonesia).

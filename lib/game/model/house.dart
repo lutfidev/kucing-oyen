@@ -325,7 +325,7 @@ class HouseFloor {
 
 /// Batas tertutup sebelum dua barang dianggap menumpuk
 /// ([HouseFloor.stacks]): seperempat luas gambar.
-const itemCoverLimit = 0.25;
+const itemCoverLimit = 0.1;
 
 /// Jejak barang lantai di koordinat desain ([HouseFloor.footprint]), juga
 /// kotak gambar barang ([HouseFloor.itemBox]).

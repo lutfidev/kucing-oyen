@@ -790,3 +790,20 @@ Isi lama langkah 33 di `docs/ROADMAP.md`, disimpan sebagai riwayat. Langkah 33�
 > - Verifikasi kamar awal dan penuh, keempat bahasa, layar kecil, dan teks 130%; periksa potret layar dan sesuaikan aset toko bila tampilannya berubah.
 >
 > Catat keputusan di `docs/DESIGN_NOTES.md` bagian "Langkah 33".
+
+## Langkah 40: rumah yang rapi
+
+Spec `docs/superpowers/specs/2026-11-25-rumah-rapi-design.md`. Keputusan pemilik repo: hadiah bergiliran (pilihan C), minimal satu kucing bergerak, rumah lama A+B (rapikan sekali + tombol Rapikan), "menumpuk" diukur dari gambar dengan sedikit tutupan boleh (pilihan C), rak buku 220 koin, baca hanya di rak (tabel "dipakai"), desain rak buku dan pose baca dari kanvas Gang Depan (artboard 15, 16).
+
+Keputusan saat membangun (tidak ada di desain atau spec):
+
+- **Batas tutupan 10%, bukan ±25%.** Spec menyerahkan angka pastinya asal potret terlihat tidak bertumpuk. Dengan 25%, rumah penuh yang dirapikan (`40-rumah-rapi`, `40-teras-rapi`) masih terlihat ramai (terowongan menutupi rak buku, kardus menutupi kasur di teras). Dengan 10% semua barang terlihat utuh; barang yang tidak muat di rumah sangat penuh masuk Gudang, seperti yang disepakati.
+- **Barang dinding**: menumpuk kalau tumpang tindihnya > batas × luas yang lebih kecil. Barang dinding dan lantai tidak saling dibandingkan.
+- **Tombol Rapikan di bawah Selesai.** Spec menulis "di kiri"; di sana sudah ada petunjuk "Seret barang ke tempat baru", dan di 360×640 ketiganya tidak muat. Ikon `KoIcons.move` (tidak ada ikon rapikan di desain). Pesan "Sudah rapi!" 4 detik (pujian Selesai 2,4 detik) supaya Batalkan sempat diketuk; seret barang, ketuk Gudang, atau Selesai membuang Batalkan.
+- **Rapikan sekali saat dimuat**: JSON rumah sekarang selalu berisi `tidy: 1`; simpanan tanpa tanda itu dirapikan (ruang tengah lalu teras) di `Room.fromJson`.
+- **Hadiah bergiliran**: kucing pertama menurut urutan `KittyId` di ruangan yang dibuka yang siap, tidak lesu, dan tidak bertanda "Baru!"; "+N lagi" hanya menghitung kucing di ruangan itu. Ikon hadiah di pintu tetap.
+- **Slot jalan** menghitung jalan/naik/turun saja, bukan 0,6 detik lewat pintu. Dorongan mencoba kucing diam lain kalau yang pertama tidak punya tujuan bebas. Gang memakai lama momen lamanya (`laneIdleSeconds`, `laneSleepSeconds`).
+- **Mangkuk di tepi**: barang yang kucingnya tetap keluar ruangan walau dicerminkan digambar bergeser ke dalam (`RoomGeometry.boxOf`); spot yang tersimpan tidak berubah.
+- **Label mangkuk** disembunyikan selama kaki kucing ada di kotak mangkuk + 30 px, bukan dipindah (tempat lain bertabrakan dengan panel atau kucing).
+- **Rak buku**: kucing menghadap kanan (`catDir` desain, `ItemInUse.facing`), hanya di ruang tengah, membaca dihitung "bergerak" untuk dorongan (halaman dibalik). Pembaca layar: "membaca buku, berkacamata baca" kecuali memakai kacamata Toko.
+- **Artboard 15** (`RakBukuTengah`) menampilkan Oyen membaca di lantai depan rak; dianggap contoh susunan ruangan, game memakai tabel "dipakai" (kucing di samping rak).
