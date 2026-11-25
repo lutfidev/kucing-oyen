@@ -95,13 +95,10 @@ class TidyButton extends StatelessWidget {
         children: [
           KoIcon(KoIcons.move, size: s.iconSmall, color: c.ink),
           SizedBox(width: space.s8),
-          Flexible(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: context.koType.label.copyWith(color: c.ink),
-            ),
+          Text(
+            label,
+            maxLines: 1,
+            style: context.koType.label.copyWith(color: c.ink),
           ),
         ],
       ),

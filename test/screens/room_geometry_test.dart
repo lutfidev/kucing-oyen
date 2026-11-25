@@ -354,4 +354,48 @@ void main() {
       expect(route!.hops, 1);
     });
   });
+
+  test('kucing makan di mangkuk di tepi mana pun tetap di dalam ruangan', () {
+    final bowl = roomItemOf(RoomItemId.mangkuk);
+    for (final size in const [Size(390, 652), Size(360, 488), Size(412, 700)]) {
+      for (final room in HouseRoom.values) {
+        final geo = RoomGeometry(size, room);
+        for (final spot in [
+          Spot(1, 1),
+          Spot(0, 1),
+          Spot(1, 0.5),
+          Spot(0, 0.5),
+          bowl.defaultSpot,
+        ]) {
+          final allowed = floor.allowedSpot(bowl, room, spot);
+          final cat = geo.userBoxOf(
+            RoomItemId.mangkuk,
+            geo.boxOf(bowl, allowed),
+          );
+          expect(
+            cat.left,
+            greaterThanOrEqualTo(-0.01),
+            reason: '$size $room $spot',
+          );
+          expect(
+            cat.right,
+            lessThanOrEqualTo(size.width + 0.01),
+            reason: '$size $room $spot',
+          );
+        }
+      }
+    }
+  });
+
+  test('label mangkuk disembunyikan selama ada kucing di dekat mangkuk', () {
+    final bowl = design.boxOf(
+      roomItemOf(RoomItemId.mangkuk),
+      roomItemOf(RoomItemId.mangkuk).defaultSpot,
+    );
+    final atBowl = design.userBoxOf(RoomItemId.mangkuk, bowl);
+    expect(design.bowlLabelHidden(bowl, [atBowl]), isTrue);
+    final far = atBowl.shift(const Offset(-200, -150));
+    expect(design.bowlLabelHidden(bowl, [far]), isFalse);
+    expect(design.bowlLabelHidden(bowl, const []), isFalse);
+  });
 }

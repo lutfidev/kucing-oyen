@@ -1565,20 +1565,25 @@ class _RoomViewState extends State<RoomView>
                   )
                 else
                   const Spacer(),
-                if (_decorating && lifted == null) ...[
-                  SizedBox(width: space.s8),
-                  Flexible(
-                    child: TidyButton(
-                      key: const ValueKey('decorate-tidy'),
-                      onPressed: _tidy,
-                    ),
-                  ),
-                ],
                 if ((!empty || _decorating) && lifted == null) ...[
                   SizedBox(width: space.s8),
-                  DecorateButton(
-                    done: _decorating,
-                    onPressed: _decorating ? _finish : _startDecorating,
+                  // Rapikan (langkah 40) di bawah Selesai: baris atas sudah
+                  // penuh petunjuk dan Selesai di layar kecil.
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      DecorateButton(
+                        done: _decorating,
+                        onPressed: _decorating ? _finish : _startDecorating,
+                      ),
+                      if (_decorating) ...[
+                        SizedBox(height: space.s8),
+                        TidyButton(
+                          key: const ValueKey('decorate-tidy'),
+                          onPressed: _tidy,
+                        ),
+                      ],
+                    ],
                   ),
                 ],
               ],
@@ -1963,7 +1968,8 @@ class _RoomViewState extends State<RoomView>
                 home.room.placedIn(geo.which)[RoomItemId.mangkuk],
               )
               case (final left?, final spot?))
-            if (geo.boxOf(roomItemOf(RoomItemId.mangkuk), spot) case final bowl)
+            if (geo.boxOf(roomItemOf(RoomItemId.mangkuk), spot) case final bowl
+                when !geo.bowlLabelHidden(bowl, catBoxes.values))
               Positioned.fill(
                 child: CustomSingleChildLayout(
                   // Desain: label di (282, 566) untuk mangkuk di (298, 596),

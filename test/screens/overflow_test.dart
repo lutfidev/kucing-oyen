@@ -486,7 +486,9 @@ void _cases(AppLanguage language) {
             coins: 99999,
             language: language,
             clock: () => now,
-            home: Home(room: room, kitties: KittyId.values),
+            // Hanya Oyen: label mangkuk disembunyikan selama ada kucing
+            // di dekat mangkuk (langkah 40).
+            home: Home(room: room),
             needs: HomeNeeds(
               bowl: Bowl(
                 filledAt: now.subtract(const Duration(minutes: 30)),
