@@ -108,18 +108,91 @@ class Room {
     return !item.builtIn && !owns(id) && coins >= item.price;
   }
 
-  /// [id] menjadi milik pemain dan ditaruh di posisi bawaannya di ruang
-  /// tengah. Koin dipotong pemanggil.
-  Room buy(RoomItemId id) => owns(id) || roomItemOf(id).builtIn
-      ? this
-      : Room._(
-          {...owned, id},
-          {
-            ...placed,
-            id: _allowed(id, HouseRoom.living, roomItemOf(id).defaultSpot),
-          },
-          _rooms,
-        );
+  /// [id] menjadi milik pemain dan ditaruh di tempat pertama yang muat
+  /// ([buyPlaced]). Koin dipotong pemanggil.
+  Room buy(RoomItemId id) => buyPlaced(id).room;
+
+  /// Beli [id] (spec langkah 40, G5): ditaruh di posisi bawaannya di ruang
+  /// tengah atau tempat bebas terdekat ([HouseFloor.freeSpot]); kalau ruang
+  /// tengah penuh, di teras (kalau boleh); selain itu di Gudang (`at` =
+  /// null). Tidak berubah kalau sudah dimiliki atau barang bawaan.
+  ({Room room, HouseRoom? at}) buyPlaced(
+    RoomItemId id, {
+    HouseFloor floor = const HouseFloor(),
+  }) {
+    final item = roomItemOf(id);
+    if (owns(id) || item.builtIn) return (room: this, at: roomOf(id));
+    for (final room in HouseRoom.values) {
+      if (!canPlaceIn(id, room)) continue;
+      // Gantungan teras punya tempat tetap.
+      final spot = room == HouseRoom.terrace && terraceHangers.contains(id)
+          ? item.defaultSpot
+          : floor.freeSpot(item, room, item.defaultSpot, _others(room));
+      if (spot == null) continue;
+      return (
+        room: Room._({...owned, id}, {...placed, id: spot}, {
+          ..._rooms,
+          if (room == HouseRoom.terrace) id: room,
+        }),
+        at: room,
+      );
+    }
+    return (room: Room._({...owned, id}, placed, _rooms), at: null);
+  }
+
+  /// Barang [room] yang ikut dihitung saat mencari tempat bebas (tanpa
+  /// gantungan teras, yang tempatnya tetap).
+  List<({RoomItem item, Spot spot})> _others(HouseRoom room) => [
+    for (final MapEntry(:key, :value) in placedIn(room).entries)
+      if (!(room == HouseRoom.terrace && terraceHangers.contains(key)))
+        (item: roomItemOf(key), spot: value),
+  ];
+
+  /// Merapikan [room] (spec langkah 40, G6): mangkuk lebih dulu, lalu
+  /// barang lain urut katalog. Barang yang tidak menutup jalur pintu dan
+  /// tidak menumpuk dengan barang yang sudah diproses ([HouseFloor.stacks])
+  /// tetap di tempatnya; selain itu pindah ke tempat bebas terdekat di
+  /// ruangan itu, atau ke Gudang kalau penuh (mangkuk tidak pernah ke
+  /// Gudang). Karpet dan gantungan teras tidak disentuh, ruangan lain
+  /// juga tidak.
+  Room tidy(HouseRoom room, {HouseFloor floor = const HouseFloor()}) {
+    final here = placedIn(room);
+    final order = [
+      if (here.containsKey(RoomItemId.mangkuk)) roomItemOf(RoomItemId.mangkuk),
+      for (final item in roomItems)
+        if (!item.builtIn && here.containsKey(item.id)) item,
+    ];
+    final kept = <({RoomItem item, Spot spot})>[];
+    final spots = {...placed};
+    final rooms = {..._rooms};
+    for (final item in order) {
+      final spot = here[item.id]!;
+      if (item.flat ||
+          (room == HouseRoom.terrace && terraceHangers.contains(item.id))) {
+        continue;
+      }
+      final free =
+          floor.freeSpot(item, room, spot, kept) ??
+          (item.builtIn ? floor.allowedSpot(item, room, spot) : null);
+      if (free == null) {
+        spots.remove(item.id);
+        rooms.remove(item.id);
+        continue;
+      }
+      spots[item.id] = free;
+      kept.add((item: item, spot: free));
+    }
+    return Room._(owned, spots, rooms);
+  }
+
+  /// Barang yang letaknya berbeda dari [before]: pindah tempat, pindah
+  /// ruangan, atau masuk/keluar Gudang.
+  Set<RoomItemId> movedFrom(Room before) => {
+    for (final id in owned)
+      if (spotOf(id) != before.spotOf(id) ||
+          (isPlaced(id) && roomOf(id) != before.roomOf(id)))
+        id,
+  };
 
   /// Menaruh [id] di [spot] di [room] (juga dari Gudang); tidak berubah
   /// kalau belum dimiliki atau tidak boleh di ruangan itu ([canPlaceIn]).
@@ -143,6 +216,7 @@ class Room {
       : Room._(owned, {...placed}..remove(id), {..._rooms}..remove(id));
 
   Map<String, Object?> toJson() => {
+    'tidy': 1,
     'owned': [
       for (final item in roomItems)
         if (owns(item.id) && !item.builtIn) item.id.name,
@@ -159,7 +233,9 @@ class Room {
 
   /// Nama barang yang tidak dikenal, letak yang rusak, dan letak barang
   /// yang tidak dimiliki dibuang. Tanpa `terrace` (simpanan v1), semua
-  /// barang di ruang tengah; barang yang tidak boleh di teras juga.
+  /// barang di ruang tengah; barang yang tidak boleh di teras juga. Tanpa
+  /// `tidy: 1` (simpanan sebelum langkah 40), kedua ruangan dirapikan
+  /// sekali ([tidy]); [toJson] selalu menulis tandanya.
   factory Room.fromJson(
     Map<String, dynamic> json, {
     HouseFloor floor = const HouseFloor(),
@@ -168,7 +244,7 @@ class Room {
     final owned = json['owned'];
     final placed = json['placed'];
     final terrace = json['terrace'];
-    return Room(
+    final room = Room(
       owned: [
         if (owned is List)
           for (final name in owned) ?names[name],
@@ -189,6 +265,10 @@ class Room {
       },
       floor: floor,
     );
+    if (json['tidy'] == 1) return room;
+    return room
+        .tidy(HouseRoom.living, floor: floor)
+        .tidy(HouseRoom.terrace, floor: floor);
   }
 
   @override
