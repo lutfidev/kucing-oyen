@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-510 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+513 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -492,6 +492,9 @@ files and anything written there is overwritten.
 | `reactionRelieved` | Ahh, free! | Lega! | Floating text over a cat after taking its accessory off. | |
 | `decorate` | Decorate | Hias | Room button that starts decorate mode. | |
 | `decorateDone` | Done | Selesai | Button that ends decorate mode. | |
+| `decorateTidy` | Tidy up | Rapikan | Decorate mode button that slides stacked items in the open room apart (to Storage if there is no room). | |
+| `decorateTidyDone` | All neat! | Sudah rapi! | Toast after the Tidy up button. | |
+| `decorateTidyUndo` | Undo | Batalkan | Button in the toast after Tidy up that puts the items back where they were. | |
 | `decorateHint` | Drag things to a new spot | Seret barang ke tempat baru | Chip shown while decorating. | |
 | `zoneWall` | Wall area | Area dinding | Label of the wall area while decorating. | |
 | `zoneFloor` | Floor area | Area lantai | Label of the floor area while decorating. | |

@@ -1948,6 +1948,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get decorateDone => 'Pronto';
 
   @override
+  String get decorateTidy => 'Arrumar';
+
+  @override
+  String get decorateTidyDone => 'Tudo arrumado!';
+
+  @override
+  String get decorateTidyUndo => 'Desfazer';
+
+  @override
   String get decorateHint => 'Arraste as coisas pra um lugar novo';
 
   @override

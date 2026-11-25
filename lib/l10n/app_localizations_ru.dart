@@ -1969,6 +1969,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get decorateDone => 'Готово';
 
   @override
+  String get decorateTidy => 'Прибрать';
+
+  @override
+  String get decorateTidyDone => 'Порядок!';
+
+  @override
+  String get decorateTidyUndo => 'Отменить';
+
+  @override
   String get decorateHint => 'Перетащи вещи на новое место';
 
   @override

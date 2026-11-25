@@ -580,4 +580,115 @@ void main() {
       expect(progress.home.room.isPlaced(RoomItemId.hammock), isFalse);
     });
   });
+
+  group('Rapikan (langkah 40)', () {
+    final stacked = const HouseFloor().spotAtFeet(150, 610);
+    Home messyHome() => Home(
+      room: Room(
+        owned: [RoomItemId.kasur, RoomItemId.sofaMini],
+        placed: {RoomItemId.kasur: stacked, RoomItemId.sofaMini: stacked},
+      ),
+      kitties: const [KittyId.salju],
+    );
+    final tidyButton = find.byKey(const ValueKey('decorate-tidy'));
+    final undoButton = find.byKey(const ValueKey('decorate-tidy-undo'));
+
+    testWidgets('barang menumpuk bergeser; Batalkan mengembalikan', (
+      tester,
+    ) async {
+      final progress = await pumpDecorating(
+        tester,
+        progress: withNeeds(const {}, home: messyHome()),
+      );
+      expect(tidyButton, findsOneWidget);
+      final before = boxIn(tester, RoomItemId.sofaMini);
+      await tester.tap(tidyButton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 150));
+      // Di tengah geseran: belum sampai.
+      final middle = boxIn(tester, RoomItemId.sofaMini);
+      await tester.pump(const Duration(milliseconds: 400));
+      final after = boxIn(tester, RoomItemId.sofaMini);
+      expect(after, isNot(before));
+      expect(middle, isNot(after));
+      expect(progress.home.room, messyHome().room.tidy(HouseRoom.living));
+      expect(find.text('Sudah rapi!'), findsOneWidget);
+      expect(undoButton, findsOneWidget);
+
+      await tester.tap(undoButton);
+      await tester.pump();
+      // Ketukan kedua tidak berbuat apa-apa.
+      if (undoButton.evaluate().isNotEmpty) await tester.tap(undoButton);
+      await tester.pumpAndSettle();
+      expect(progress.home.room, messyHome().room);
+      expect(undoButton, findsNothing);
+    });
+
+    testWidgets('ruangan sudah rapi: "Sudah rapi!" tanpa Batalkan', (
+      tester,
+    ) async {
+      final progress = await pumpDecorating(tester);
+      final room = progress.home.room;
+      await tester.tap(tidyButton);
+      await tester.pump();
+      expect(find.text('Sudah rapi!'), findsOneWidget);
+      expect(undoButton, findsNothing);
+      expect(progress.home.room, room);
+      await tester.pumpAndSettle();
+      expect(find.text('Sudah rapi!'), findsNothing);
+    });
+
+    testWidgets('seret barang sesudah Rapikan: Batalkan hilang', (
+      tester,
+    ) async {
+      final progress = await pumpDecorating(
+        tester,
+        progress: withNeeds(const {}, home: messyHome()),
+      );
+      await tester.tap(tidyButton);
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(undoButton, findsOneWidget);
+      await dragFramed(
+        tester,
+        itemView(RoomItemId.kasur),
+        const Offset(0, -20),
+      );
+      await tester.pump();
+      expect(undoButton, findsNothing);
+      final moved = progress.home.room;
+      await tester.pumpAndSettle();
+      expect(progress.home.room, moved);
+    });
+
+    testWidgets('kurangi gerak: barang langsung di tempat baru', (
+      tester,
+    ) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      await pumpDecorating(
+        tester,
+        progress: withNeeds(const {}, home: messyHome()),
+      );
+      await tester.tap(tidyButton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 16));
+      final first = boxIn(tester, RoomItemId.sofaMini);
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(boxIn(tester, RoomItemId.sofaMini), first);
+    });
+
+    testWidgets('teras juga punya Rapikan', (tester) async {
+      await pumpDecorating(tester);
+      await tester.tap(find.text('Selesai'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(DoorButton).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Hias'));
+      await tester.pumpAndSettle();
+      expect(tidyButton, findsOneWidget);
+    });
+  });
 }

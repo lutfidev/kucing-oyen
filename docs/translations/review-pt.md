@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-510 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+513 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -492,6 +492,9 @@ files and anything written there is overwritten.
 | `reactionRelieved` | Ahh, free! | Ufa, livre! | Floating text over a cat after taking its accessory off. | |
 | `decorate` | Decorate | Decorar | Room button that starts decorate mode. | |
 | `decorateDone` | Done | Pronto | Button that ends decorate mode. | |
+| `decorateTidy` | Tidy up | Arrumar | Decorate mode button that slides stacked items in the open room apart (to Storage if there is no room). | |
+| `decorateTidyDone` | All neat! | Tudo arrumado! | Toast after the Tidy up button. | |
+| `decorateTidyUndo` | Undo | Desfazer | Button in the toast after Tidy up that puts the items back where they were. | |
 | `decorateHint` | Drag things to a new spot | Arraste as coisas pra um lugar novo | Chip shown while decorating. | |
 | `zoneWall` | Wall area | Área da parede | Label of the wall area while decorating. | |
 | `zoneFloor` | Floor area | Área do chão | Label of the floor area while decorating. | |

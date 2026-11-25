@@ -66,6 +66,150 @@ class DecorateButton extends StatelessWidget {
   }
 }
 
+/// Tombol Rapikan di mode hias (langkah 40, tidak ada di desain): gaya
+/// tombol Hias, ikon geser.
+class TidyButton extends StatelessWidget {
+  const TidyButton({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final s = context.koSize;
+    final space = context.koSpace;
+    final label = context.l10n.decorateTidy;
+    return KoPressable(
+      onPressed: onPressed,
+      semanticLabel: label,
+      color: c.surface,
+      edgeColor: c.lineDeep,
+      depth: context.koShadow.pressIcon,
+      borderColor: c.line,
+      borderWidth: s.border,
+      radius: context.koRadius.pill,
+      height: s.roomDecorateButton,
+      padding: EdgeInsetsDirectional.only(start: space.s12, end: space.s16),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          KoIcon(KoIcons.move, size: s.iconSmall, color: c.ink),
+          SizedBox(width: space.s8),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.koType.label.copyWith(color: c.ink),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Pesan sesudah Rapikan: "Sudah rapi!", plus tombol Batalkan kalau ada
+/// yang bergeser ([onUndo]). Hilang sendiri sesudah [duration]
+/// ([onDone]); diam saat kurangi gerak.
+class TidyToast extends StatefulWidget {
+  const TidyToast({super.key, required this.onDone, this.onUndo});
+
+  /// Lebih lama dari pujian Selesai supaya Batalkan sempat diketuk.
+  static const duration = Duration(milliseconds: 4000);
+
+  final VoidCallback onDone;
+  final VoidCallback? onUndo;
+
+  @override
+  State<TidyToast> createState() => _TidyToastState();
+}
+
+class _TidyToastState extends State<TidyToast>
+    with SingleTickerProviderStateMixin {
+  bool _gone = false;
+  late final AnimationController _time =
+      AnimationController(
+          vsync: this,
+          duration: TidyToast.duration,
+          animationBehavior: AnimationBehavior.preserve,
+        )
+        ..forward().whenComplete(() {
+          if (mounted && !_gone) {
+            _gone = true;
+            widget.onDone();
+          }
+        });
+
+  @override
+  void initState() {
+    super.initState();
+    _time; // Mulai menghitung.
+  }
+
+  @override
+  void dispose() {
+    _time.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.koColors;
+    final t = context.koType;
+    final s = context.koSize;
+    final space = context.koSpace;
+    final l = context.l10n;
+    final undo = widget.onUndo;
+    return Semantics(
+      liveRegion: true,
+      container: true,
+      child: Container(
+        padding: EdgeInsetsDirectional.only(
+          start: space.s16,
+          end: undo == null ? space.s16 : space.s8,
+          top: space.s8,
+          bottom: space.s8,
+        ),
+        decoration: BoxDecoration(
+          color: c.surface,
+          borderRadius: BorderRadius.circular(context.koRadius.tray),
+          border: Border.all(color: c.success, width: s.artBorder),
+          boxShadow: [
+            ...KoShadow.solid(c.successDeep, context.koShadow.pressHero - 2),
+            ...context.koShadow.dialog,
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                l.decorateTidyDone,
+                style: t.numberCompact.copyWith(color: c.successDeep),
+              ),
+            ),
+            if (undo != null) ...[
+              SizedBox(width: space.s12),
+              KoButton(
+                key: const ValueKey('decorate-tidy-undo'),
+                label: l.decorateTidyUndo,
+                kind: KoButtonKind.secondary,
+                size: KoButtonSize.medium,
+                onPressed: () {
+                  if (_gone) return;
+                  _gone = true;
+                  undo();
+                },
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// Chip "Seret barang ke tempat baru" saat menghias.
 class DecorateHint extends StatelessWidget {
   const DecorateHint({super.key});

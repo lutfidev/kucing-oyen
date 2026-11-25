@@ -542,6 +542,35 @@ void _cases(AppLanguage language) {
         expect(find.text(l.decorateDone).hitTestable(), findsOneWidget);
         expect(tester.takeException(), isNull);
       });
+      // Langkah 40: Rapikan rumah yang bertumpuk, pesan dengan Batalkan.
+      testWidgets('tanpa overflow: Rapikan @ $label, '
+          'teks ${scale * 100}%', (tester) async {
+        setScreenSize(tester, size);
+        setTextScale(tester, scale);
+        final all = [for (final item in shopItems) item.id];
+        await pumpApp(
+          tester,
+          progress: testProgressWith(
+            coins: 99999,
+            language: language,
+            home: Home(
+              room: Room(
+                owned: all,
+                placed: {for (final id in all) id: Spot(0.5, 0.5)},
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.text(l.decorate));
+        await tester.pumpAndSettle();
+        expect(find.text(l.decorateTidy).hitTestable(), findsOneWidget);
+        await tester.tap(find.byKey(const ValueKey('decorate-tidy')));
+        await tester.pump(const Duration(milliseconds: 400));
+        expect(find.text(l.decorateTidyDone), findsOneWidget);
+        expect(find.text(l.decorateTidyUndo).hitTestable(), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        await tester.pumpAndSettle();
+      });
       // Langkah 35: Hias di teras dengan titik gantung, jalur pintu, dan
       // keterangan slot Gudang (barang redup, gantungan).
       testWidgets('tanpa overflow: mode hias teras @ $label, '

@@ -1931,6 +1931,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get decorateDone => 'Done';
 
   @override
+  String get decorateTidy => 'Tidy up';
+
+  @override
+  String get decorateTidyDone => 'All neat!';
+
+  @override
+  String get decorateTidyUndo => 'Undo';
+
+  @override
   String get decorateHint => 'Drag things to a new spot';
 
   @override

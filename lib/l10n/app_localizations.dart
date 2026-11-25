@@ -2892,6 +2892,24 @@ abstract class AppLocalizations {
   /// **'Done'**
   String get decorateDone;
 
+  /// Decorate mode button that slides stacked items in the open room apart (to Storage if there is no room).
+  ///
+  /// In en, this message translates to:
+  /// **'Tidy up'**
+  String get decorateTidy;
+
+  /// Toast after the Tidy up button.
+  ///
+  /// In en, this message translates to:
+  /// **'All neat!'**
+  String get decorateTidyDone;
+
+  /// Button in the toast after Tidy up that puts the items back where they were.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get decorateTidyUndo;
+
   /// Chip shown while decorating.
   ///
   /// In en, this message translates to:

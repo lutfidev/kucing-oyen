@@ -1803,6 +1803,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get decorateDone => 'Selesai';
 
   @override
+  String get decorateTidy => 'Rapikan';
+
+  @override
+  String get decorateTidyDone => 'Sudah rapi!';
+
+  @override
+  String get decorateTidyUndo => 'Batalkan';
+
+  @override
   String get decorateHint => 'Seret barang ke tempat baru';
 
   @override

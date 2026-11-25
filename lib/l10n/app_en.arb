@@ -2524,6 +2524,18 @@
   "@decorateDone": {
     "description": "Button that ends decorate mode."
   },
+  "decorateTidy": "Tidy up",
+  "@decorateTidy": {
+    "description": "Decorate mode button that slides stacked items in the open room apart (to Storage if there is no room)."
+  },
+  "decorateTidyDone": "All neat!",
+  "@decorateTidyDone": {
+    "description": "Toast after the Tidy up button."
+  },
+  "decorateTidyUndo": "Undo",
+  "@decorateTidyUndo": {
+    "description": "Button in the toast after Tidy up that puts the items back where they were."
+  },
   "decorateHint": "Drag things to a new spot",
   "@decorateHint": {
     "description": "Chip shown while decorating."

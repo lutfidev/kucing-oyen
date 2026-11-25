@@ -18,6 +18,7 @@ import '../../game/model/kitties.dart';
 import '../../game/model/lane.dart';
 import '../../game/model/lane_life.dart';
 import '../../game/model/needs.dart';
+import '../../game/model/room.dart';
 import '../../game/model/room_life.dart';
 import '../../game/model/sounds.dart';
 import '../../game/render/render.dart';
@@ -275,6 +276,18 @@ class _RoomViewState extends State<RoomView>
   /// urutnya.
   (bool, int)? _praise;
   int _praises = 0;
+
+  /// Pesan Rapikan (langkah 40): nomor urutnya, susunan sebelum dirapikan
+  /// untuk Batalkan (null = tidak ada yang bergeser atau sudah dibatalkan),
+  /// dan barang yang sedang meluncur ke tempat barunya.
+  int? _tidyNote;
+  int _tidyNotes = 0;
+  Room? _undoRoom;
+  bool _tidying = false;
+  bool _sliding = false;
+
+  /// Lama barang meluncur sesudah Rapikan atau Batalkan.
+  static const tidySlide = Duration(milliseconds: 300);
 
   /// Barang yang sedang diseret, letaknya sekarang, pojok kiri-atasnya
   /// saat mulai diseret, dan titik jari (layar) saat mulai dan sekarang.
@@ -1009,6 +1022,8 @@ class _RoomViewState extends State<RoomView>
       _decorating = false;
       _dragging = null;
       _dragSpot = null;
+      _undoRoom = null;
+      _tidyNote = null;
       _clearTrayTip();
     });
     final bonus = await _progress.finishDecorating();
@@ -1019,7 +1034,52 @@ class _RoomViewState extends State<RoomView>
     });
   }
 
+  /// Rapikan ruangan yang dibuka; ketukan saat masih bekerja diabaikan.
+  Future<void> _tidy() async {
+    if (_tidying || !_decorating) return;
+    _tidying = true;
+    _slide();
+    final before = await _progress.tidyRoom(_house);
+    if (!mounted) return;
+    setState(() {
+      _tidying = false;
+      _undoRoom = before;
+      _tidyNote = ++_tidyNotes;
+    });
+  }
+
+  /// Batalkan Rapikan: susunan sebelumnya kembali, sekali saja.
+  Future<void> _undoTidy() async {
+    final before = _undoRoom;
+    if (before == null) return;
+    setState(() {
+      _undoRoom = null;
+      _tidyNote = null;
+    });
+    _slide();
+    await _progress.restoreRoom(before);
+  }
+
+  /// Barang meluncur selama [tidySlide] (langsung saat kurangi gerak).
+  void _slide() {
+    if (MediaQuery.disableAnimationsOf(context)) return;
+    setState(() => _sliding = true);
+    Future<void>.delayed(tidySlide, () {
+      if (mounted) setState(() => _sliding = false);
+    });
+  }
+
+  /// Susunan berubah lewat cara lain: Batalkan tidak berlaku lagi.
+  void _dropUndo() {
+    if (_undoRoom == null && _tidyNote == null) return;
+    setState(() {
+      _undoRoom = null;
+      _tidyNote = null;
+    });
+  }
+
   void _dragStart(RoomItemId id, Rect box, Offset pointer) {
+    _dropUndo();
     _dragOrigin = box.topLeft;
     _dragDown = pointer;
     _dragPointer = pointer;
@@ -1061,6 +1121,7 @@ class _RoomViewState extends State<RoomView>
   /// Ketuk barang di Gudang: ditaruh di posisi bawaannya di ruangan ini;
   /// gantungan teras memunculkan "Gantung di balok atap".
   Future<void> _placeFromTray(RoomItemId id, Rect slot) async {
+    _dropUndo();
     final placed = await _progress.placeItem(
       id,
       roomItemOf(id).defaultSpot,
@@ -1263,6 +1324,22 @@ class _RoomViewState extends State<RoomView>
                 reaction: const RoomReaction(),
                 anchor: _laneHeartAnchor(cat),
                 onDone: () => setState(() => _laneHeart = null),
+              ),
+            if ((_tidyNote, _decorating) case (final n?, true))
+              Positioned(
+                left: s.roomPraiseInset,
+                right: s.roomPraiseInset,
+                top: padding.top + s.roomPraiseTop,
+                child: Center(
+                  child: TidyToast(
+                    key: ValueKey('tidy-$n'),
+                    onUndo: _undoRoom == null ? null : _undoTidy,
+                    onDone: () => setState(() {
+                      _tidyNote = null;
+                      _undoRoom = null;
+                    }),
+                  ),
+                ),
               ),
             if (praise case (final bonus, final n))
               Positioned(
@@ -1485,6 +1562,15 @@ class _RoomViewState extends State<RoomView>
                   )
                 else
                   const Spacer(),
+                if (_decorating && lifted == null) ...[
+                  SizedBox(width: space.s8),
+                  Flexible(
+                    child: TidyButton(
+                      key: const ValueKey('decorate-tidy'),
+                      onPressed: _tidy,
+                    ),
+                  ),
+                ],
                 if ((!empty || _decorating) && lifted == null) ...[
                   SizedBox(width: space.s8),
                   DecorateButton(
@@ -2101,7 +2187,13 @@ class _RoomViewState extends State<RoomView>
         child: art,
       );
     }
-    return Positioned.fromRect(key: ValueKey(id), rect: sprite.box, child: art);
+    return AnimatedPositioned.fromRect(
+      key: ValueKey(id),
+      rect: sprite.box,
+      duration: _sliding ? tidySlide : Duration.zero,
+      curve: Curves.easeOut,
+      child: art,
+    );
   }
 
   /// Kucing yang bisa diketuk untuk membuka kartunya.
