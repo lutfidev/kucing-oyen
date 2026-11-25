@@ -252,9 +252,15 @@ String kittyLabel(AppLocalizations l, KittyLook look) {
   final name = kitty != null
       ? kittyName(l, kitty)
       : neighborName(l, look.neighbor!);
-  final pose = l.kittyPose(look.pose.name);
   // Tetangga tidak memakai aksesoris Toko (`noAcc` desain).
   final accessory = kitty != null ? look.accessory : null;
+  // Membaca: kacamata baca otomatis, kecuali memakai kacamata Toko
+  // (`kacaBaca` di `Kucing.dc.html`).
+  final pose = l.kittyPose(
+    look.pose == KittyPose.baca && accessory != AccessoryId.kacamata
+        ? 'bacaKaca'
+        : look.pose.name,
+  );
   return accessory == null
       ? l.kittyLabel(name, pose)
       : l.kittyLabelAccessory(name, pose, accessoryName(l, accessory));

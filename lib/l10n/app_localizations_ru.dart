@@ -1768,6 +1768,8 @@ class AppLocalizationsRu extends AppLocalizations {
       'endus': 'принюхивается',
       'geser1': 'подвигается',
       'geser2': 'подвигается',
+      'baca': 'читает книжку',
+      'bacaKaca': 'читает книжку в очках для чтения',
       'other': 'сидит спокойно',
     });
     return '$_temp0';

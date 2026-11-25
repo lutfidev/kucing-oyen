@@ -1751,6 +1751,8 @@ class AppLocalizationsPt extends AppLocalizations {
       'endus': 'cheirando',
       'geser1': 'chegando pro lado',
       'geser2': 'chegando pro lado',
+      'baca': 'lendo um livro',
+      'bacaKaca': 'lendo um livro de óculos de leitura',
       'other': 'sentado quietinho',
     });
     return '$_temp0';

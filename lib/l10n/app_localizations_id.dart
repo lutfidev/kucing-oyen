@@ -1618,6 +1618,8 @@ class AppLocalizationsId extends AppLocalizations {
       'endus': 'mengendus',
       'geser1': 'bergeser di tempat duduk',
       'geser2': 'bergeser di tempat duduk',
+      'baca': 'membaca buku',
+      'bacaKaca': 'membaca buku, berkacamata baca',
       'other': 'duduk diam',
     });
     return '$_temp0';

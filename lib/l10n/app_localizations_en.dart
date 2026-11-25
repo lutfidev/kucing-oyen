@@ -1734,6 +1734,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'endus': 'sniffing',
       'geser1': 'scooting over',
       'geser2': 'scooting over',
+      'baca': 'reading a book',
+      'bacaKaca': 'reading a book in reading glasses',
       'other': 'sitting still',
     });
     return '$_temp0';

@@ -127,6 +127,7 @@ Map<String, Object> kittyVals(KittyLook look) {
   final geser2 = pose == KittyPose.geser2;
   final geser = geser1 || geser2;
   final endus = pose == KittyPose.endus;
+  final isBaca = pose == KittyPose.baca;
   final side =
       (look.facing == KittyFacing.left || look.facing == KittyFacing.right) &&
       isSit;
@@ -144,6 +145,7 @@ Map<String, Object> kittyVals(KittyLook look) {
     KittyPose.endus => 'translate(${tx - 7} 6) rotate(-9 50 62)',
     KittyPose.geser1 => 'translate($tx -0.5)',
     KittyPose.geser2 => 'translate(${tx - 1} 0.5)',
+    KittyPose.baca => 'translate($tx 4.5)',
   };
   final tail = switch (pose) {
     KittyPose.happy || KittyPose.petted => _tailUp,
@@ -179,9 +181,11 @@ Map<String, Object> kittyVals(KittyLook look) {
     _ when walking || geser => 'kcTail 0.9s ease-in-out infinite',
     KittyPose.rebah => 'kcTail 3.4s ease-in-out infinite',
     KittyPose.lesu => 'none',
+    KittyPose.baca => 'kcTail 3.8s ease-in-out infinite',
     _ => 'kcTail 2.6s ease-in-out infinite',
   };
-  final eyeOpen = pose == KittyPose.idle || walking || geser || play || isRebah;
+  final eyeOpen =
+      pose == KittyPose.idle || walking || geser || play || isRebah || isBaca;
   final dl = c.delay;
   final headAnim = endus
       ? A('animation: kcSniff 0.42s ease-in-out infinite alternate')
@@ -294,7 +298,13 @@ Map<String, Object> kittyVals(KittyLook look) {
     'isPetted': petted,
     'toyBall': look.toy == KittyToy.ball,
     'toyMouse': look.toy == KittyToy.mouse,
-    'eyeSleepy': pose == KittyPose.idle || walking || geser || endus || isRebah,
+    'eyeSleepy':
+        pose == KittyPose.idle ||
+        walking ||
+        geser ||
+        endus ||
+        isRebah ||
+        isBaca,
     'eyeWide': play,
     'eyeClosed': pose == KittyPose.lick || petted || isScratch,
     'eyeHappy': happy || pose == KittyPose.eat,
@@ -307,7 +317,8 @@ Map<String, Object> kittyVals(KittyLook look) {
         play ||
         petted ||
         isScratch ||
-        isRebah,
+        isRebah ||
+        isBaca,
     'mouthOpen': happy || pose == KittyPose.eat,
     'mouthTongue': pose == KittyPose.lick,
     'mouthFrown': isLesu,
@@ -355,6 +366,24 @@ Map<String, Object> kittyVals(KittyLook look) {
     'tw1': A(twinkle),
     'tw2': A('$twinkle; animation-delay: -0.4s'),
     'tw3': A('$twinkle; animation-delay: -0.8s'),
+    'isBaca': isBaca,
+    'kacaBaca': isBaca && !a[AccessoryId.kacamata.name]!,
+    'bacaInk': const ['#3A2618', '#2B2E33'].contains(c.line)
+        ? '#8E5A30'
+        : '#D8A86F',
+    'bukuT': side ? 'translate(-3 0)' : 'translate(0 0)',
+    'pawLine': c.edge != 'none'
+        ? c.edge
+        : (c.paw == c.belly ? '#E2C79C' : 'none'),
+    'pageOn': anim && isBaca,
+    'pageAnim': A(
+      'transform-origin: 50px 80px; '
+      'animation: kcPage 6.5s ease-in-out infinite; '
+      'animation-delay: ${dl - 2}s',
+    ),
+    'readAnim': A(
+      'animation: kcRead 3.2s ease-in-out infinite; animation-delay: ${dl}s',
+    ),
     'heartAnim': A('animation: kcFloat 1.6s ease-out infinite'),
     'heartAnim2': A(
       'animation: kcFloat 1.6s ease-out infinite; animation-delay: -0.8s',

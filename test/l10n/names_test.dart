@@ -226,6 +226,28 @@ void main() {
       }
     });
 
+    test('label pembaca layar kucing membaca (langkah 40)', () {
+      expect(
+        kittyLabel(
+          l10nId,
+          const KittyLook(kitty: KittyId.oyen, pose: KittyPose.baca),
+        ),
+        'Oyen membaca buku, berkacamata baca',
+      );
+      // Memakai kacamata Toko: tanpa kacamata baca.
+      expect(
+        kittyLabel(
+          l10nId,
+          const KittyLook(
+            kitty: KittyId.arang,
+            pose: KittyPose.baca,
+            accessory: AccessoryId.kacamata,
+          ),
+        ),
+        startsWith('Arang membaca buku, memakai '),
+      );
+    });
+
     test('label pembaca layar kucing kamar', () {
       expect(
         kittyLabel(l10nId, const KittyLook(kitty: KittyId.oyen)),

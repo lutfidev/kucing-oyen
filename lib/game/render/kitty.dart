@@ -25,6 +25,10 @@ enum KittyPose {
   /// Bergeser sambil duduk, dua bingkai (Kumis memberi tempat di bangku).
   geser1,
   geser2,
+
+  /// Membaca buku di pangkuan, kacamata baca otomatis (Rak Buku, langkah
+  /// 40).
+  baca,
 }
 
 /// Arah hadap sprite kamar: ke depan, atau ke samping (kanan dicerminkan).
