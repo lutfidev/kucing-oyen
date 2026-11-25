@@ -140,6 +140,27 @@ class Room {
     return (room: Room._({...owned, id}, placed, _rooms), at: null);
   }
 
+  /// Tempat [id] saat diketuk dari Gudang (langkah 40): spot bawaannya
+  /// kalau bebas, selain itu tempat bebas terdekat di [room]
+  /// ([HouseFloor.freeSpot]); kalau ruangan penuh tetap spot bawaan
+  /// (pemain bisa menggesernya). Gantungan teras selalu di tempatnya.
+  Spot freeSpotFor(
+    RoomItemId id,
+    HouseRoom room, {
+    HouseFloor floor = const HouseFloor(),
+  }) {
+    final item = roomItemOf(id);
+    if (room == HouseRoom.terrace && terraceHangers.contains(id)) {
+      return item.defaultSpot;
+    }
+    final others = [
+      for (final o in _others(room))
+        if (o.item.id != id) o,
+    ];
+    return floor.freeSpot(item, room, item.defaultSpot, others) ??
+        item.defaultSpot;
+  }
+
   /// Barang [room] yang ikut dihitung saat mencari tempat bebas (tanpa
   /// gantungan teras, yang tempatnya tetap).
   List<({RoomItem item, Spot spot})> _others(HouseRoom room) => [

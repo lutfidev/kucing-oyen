@@ -1132,6 +1132,48 @@ void main() {
       }
     });
 
+    test('dorongan tidak membangunkan kucing yang tidur di tempat nyaman', () {
+      for (var seed = 0; seed < 20; seed++) {
+        final life = RoomLife(
+          random: Random(seed),
+          places: const {
+            HouseRoom.living: [
+              LifePlace(120, 600, pose: LifePose.sleep),
+              LifePlace(300, 450, pose: LifePose.lounge),
+            ],
+          },
+          travelWeight: 0,
+        );
+        life.sync(
+          homes: {
+            KittyId.oyen: (HouseRoom.living, _floor.spotAtFeet(120, 600)),
+            KittyId.salju: (HouseRoom.living, _floor.spotAtFeet(220, 470)),
+          },
+          targets: {
+            RoomItemId.bola: {
+              KittyId.oyen: LifeRoute(_ball),
+              KittyId.salju: LifeRoute(_ball),
+            },
+          },
+          uses: _uses,
+          toys: const {RoomItemId.bola},
+        );
+        life.of(KittyId.oyen)
+          ..place = 0
+          ..pose = LifePose.sleep
+          ..remaining = 100;
+        life.of(KittyId.salju).remaining = 100;
+        life.watching = HouseRoom.living;
+        _run(life, 3);
+        expect(life.of(KittyId.oyen).place, 0, reason: 'seed $seed');
+        expect(
+          life.of(KittyId.salju).activity,
+          isNot(CatActivity.idle),
+          reason: 'seed $seed',
+        );
+      }
+    });
+
     test('tanpa ruangan ditonton tidak ada dorongan', () {
       final life = _life(1);
       _sync(life, targets: const {});

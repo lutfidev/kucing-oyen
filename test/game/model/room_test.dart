@@ -429,6 +429,37 @@ void main() {
       expect(wall.room.stored, [RoomItemId.lukisan]);
     });
 
+    test('dari Gudang: spot bawaan terisi -> tempat bebas terdekat', () {
+      final room = Room(
+        owned: [RoomItemId.kasur, RoomItemId.sofaMini],
+        placed: {RoomItemId.sofaMini: kasur.defaultSpot},
+      );
+      final spot = room.freeSpotFor(RoomItemId.kasur, HouseRoom.living);
+      expect(spot, isNot(kasur.defaultSpot));
+      expectTidy(
+        room.place(RoomItemId.kasur, spot, room: HouseRoom.living),
+        HouseRoom.living,
+      );
+      // Ruangan kosong: tidak menutup jalur pintu; penuh: spot bawaan.
+      expect(
+        floor.blocksDoor(
+          kasur,
+          HouseRoom.living,
+          Room(owned: [RoomItemId.kasur])
+              .freeSpotFor(RoomItemId.kasur, HouseRoom.living),
+        ),
+        isFalse,
+      );
+      expect(
+        room.freeSpotFor(
+          RoomItemId.kasur,
+          HouseRoom.living,
+          floor: const _FullFloor(),
+        ),
+        kasur.defaultSpot,
+      );
+    });
+
     test('simpanan lama tanpa tidy dirapikan sekali; dengan tidy tidak', () {
       final json = {
         'owned': ['kasur', 'sofaMini'],

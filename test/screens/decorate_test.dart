@@ -184,15 +184,28 @@ void main() {
     expect(progress.home.room.isPlaced(RoomItemId.mangkuk), isTrue);
   });
 
-  testWidgets('ketuk barang di Gudang menaruhnya di posisi bawaan', (
+  testWidgets('ketuk barang di Gudang: posisi bawaan atau tempat bebas', (
     tester,
   ) async {
     final progress = await pumpDecorating(tester);
+    final expected = progress.home.room.freeSpotFor(
+      RoomItemId.jam,
+      HouseRoom.living,
+    );
     await tester.tap(find.text('Jam Kucing'));
     await tester.pumpAndSettle();
+    final spot = progress.home.room.spotOf(RoomItemId.jam)!;
+    expect(spot, expected);
+    // Langkah 40: tidak menumpuk dengan lukisan di posisi bawaannya.
     expect(
-      progress.home.room.spotOf(RoomItemId.jam),
-      roomItemOf(RoomItemId.jam).defaultSpot,
+      const HouseFloor().stacks(
+        (item: roomItemOf(RoomItemId.jam), spot: spot),
+        (
+          item: roomItemOf(RoomItemId.lukisan),
+          spot: progress.home.room.spotOf(RoomItemId.lukisan)!,
+        ),
+      ),
+      isFalse,
     );
     expect(itemView(RoomItemId.jam), findsOneWidget);
     expect(
@@ -622,6 +635,21 @@ void main() {
       await tester.pumpAndSettle();
       expect(progress.home.room, messyHome().room);
       expect(undoButton, findsNothing);
+    });
+
+    testWidgets('Rapikan diketuk dua kali: Batalkan tetap ada', (tester) async {
+      final progress = await pumpDecorating(
+        tester,
+        progress: withNeeds(const {}, home: messyHome()),
+      );
+      await tester.tap(tidyButton);
+      await tester.pump(const Duration(milliseconds: 120));
+      await tester.tap(tidyButton);
+      await tester.pump(const Duration(milliseconds: 120));
+      expect(undoButton, findsOneWidget);
+      await tester.tap(undoButton);
+      await tester.pumpAndSettle();
+      expect(progress.home.room, messyHome().room);
     });
 
     testWidgets('ruangan sudah rapi: "Sudah rapi!" tanpa Batalkan', (

@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-516 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+517 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -437,6 +437,7 @@ files and anything written there is overwritten.
 | `buySuccessItem` | {name} is yours! | {name} теперь твой! | Buy sheet title after buying a room item. Placeholders: `{name}`. | |
 | `buySuccessItemBody` | It's in the room already. Move it around in decorate mode. | Уже стоит в комнате. Переставить можно в режиме «Украшать». | Buy sheet body after buying a room item. | |
 | `buySuccessItemStoredBody` | The house is full, so it's waiting in Storage. Find it a spot in decorate mode. | Дом забит, так что вещь пока ждёт в кладовке. Найди ей место в режиме «Украшать». | Buy sheet body after buying a room item when the house had no free spot, so the item went to Storage. | |
+| `buySuccessItemTerraceBody` | The living room is full, so it went out to the terrace. Swipe over to see it. | В гостиной тесно, так что вещь отправилась на террасу. Смахни туда, чтобы посмотреть. | Buy sheet body after buying a room item when the living room had no free spot, so the item was placed on the terrace. | |
 | `buySuccessKitty` | {name} moved into the room! | {name} переехал в комнату! | Buy sheet title after adopting a cat. Placeholders: `{name}`. | |
 | `buySuccessKittyBody` | Say hi in the room. Expect some fake indifference first. | Поздоровайся в комнате. Сначала сделает вид, что ему всё равно. | Buy sheet body after adopting a cat. | |
 | `buySuccessAccessory` | {name} is yours forever! | {name} теперь твой навсегда! | Buy sheet title after buying an accessory. Placeholders: `{name}`. | |

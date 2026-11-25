@@ -2119,6 +2119,10 @@
   "@buySuccessItemStoredBody": {
     "description": "Buy sheet body after buying a room item when the house had no free spot, so the item went to Storage."
   },
+  "buySuccessItemTerraceBody": "The living room is full, so it went out to the terrace. Swipe over to see it.",
+  "@buySuccessItemTerraceBody": {
+    "description": "Buy sheet body after buying a room item when the living room had no free spot, so the item was placed on the terrace."
+  },
   "buySuccessKitty": "{name} moved into the room!",
   "@buySuccessKitty": {
     "description": "Buy sheet title after adopting a cat.",

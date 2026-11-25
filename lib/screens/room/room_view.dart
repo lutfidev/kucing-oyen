@@ -284,8 +284,12 @@ class _RoomViewState extends State<RoomView>
   int? _tidyNote;
   int _tidyNotes = 0;
   Room? _undoRoom;
+  Room? _tidiedRoom;
   bool _tidying = false;
-  bool _sliding = false;
+
+  /// Barang meluncur ke tempat barunya sampai saat ini (Rapikan dan
+  /// Batalkan); tanpa timer, dibandingkan saat dibangun.
+  DateTime _slideUntil = DateTime(0);
 
   /// Lama barang meluncur sesudah Rapikan atau Batalkan.
   static const tidySlide = Duration(milliseconds: 300);
@@ -1006,6 +1010,9 @@ class _RoomViewState extends State<RoomView>
     _decorating = true;
     _selected = null;
     _reaction = null;
+    _undoRoom = null;
+    _tidiedRoom = null;
+    _tidyNote = null;
     _clearTrayTip();
     _life.interrupt();
   });
@@ -1040,36 +1047,41 @@ class _RoomViewState extends State<RoomView>
   /// Rapikan ruangan yang dibuka; ketukan saat masih bekerja diabaikan.
   Future<void> _tidy() async {
     if (_tidying || !_decorating) return;
+    // Pesan dengan Batalkan masih tampil: ruangan sudah rapi, dan ketukan
+    // kedua tidak boleh menghapus Batalkan.
+    if (_undoRoom != null) return;
     _tidying = true;
     _slide();
     final before = await _progress.tidyRoom(_house);
     if (!mounted) return;
+    _tidying = false;
+    // Selesai atau seret selama menunggu simpanan: tanpa pesan.
+    if (!_decorating) return;
     setState(() {
-      _tidying = false;
       _undoRoom = before;
+      _tidiedRoom = before == null ? null : _progress.home.room;
       _tidyNote = ++_tidyNotes;
     });
   }
 
   /// Batalkan Rapikan: susunan sebelumnya kembali, sekali saja.
   Future<void> _undoTidy() async {
-    final before = _undoRoom;
-    if (before == null) return;
+    final (before, after) = (_undoRoom, _tidiedRoom);
+    if (before == null || after == null) return;
     setState(() {
       _undoRoom = null;
+      _tidiedRoom = null;
       _tidyNote = null;
     });
+    if (_progress.home.room != after) return;
     _slide();
-    await _progress.restoreRoom(before);
+    await _progress.restoreRoom(before, after: after);
   }
 
   /// Barang meluncur selama [tidySlide] (langsung saat kurangi gerak).
   void _slide() {
     if (MediaQuery.disableAnimationsOf(context)) return;
-    setState(() => _sliding = true);
-    Future<void>.delayed(tidySlide, () {
-      if (mounted) setState(() => _sliding = false);
-    });
+    _slideUntil = DateTime.now().add(tidySlide);
   }
 
   /// Susunan berubah lewat cara lain: Batalkan tidak berlaku lagi.
@@ -1077,6 +1089,7 @@ class _RoomViewState extends State<RoomView>
     if (_undoRoom == null && _tidyNote == null) return;
     setState(() {
       _undoRoom = null;
+      _tidiedRoom = null;
       _tidyNote = null;
     });
   }
@@ -1125,9 +1138,10 @@ class _RoomViewState extends State<RoomView>
   /// gantungan teras memunculkan "Gantung di balok atap".
   Future<void> _placeFromTray(RoomItemId id, Rect slot) async {
     _dropUndo();
+    // Langkah 40: tidak ditaruh di atas barang lain kalau ada tempat bebas.
     final placed = await _progress.placeItem(
       id,
-      roomItemOf(id).defaultSpot,
+      _progress.home.room.freeSpotFor(id, _house),
       room: _house,
     );
     if (!mounted) return;
@@ -1332,7 +1346,14 @@ class _RoomViewState extends State<RoomView>
               Positioned(
                 left: s.roomPraiseInset,
                 right: s.roomPraiseInset,
-                top: padding.top + s.roomPraiseTop,
+                // Di bawah kolom Selesai + Rapikan, supaya tidak menutupi
+                // tombol Rapikan (ketukan kedua jatuh di Batalkan).
+                top:
+                    padding.top +
+                    context.koSpace.s6 +
+                    s.roomDecorateGap +
+                    2 * s.roomDecorateButton +
+                    2 * context.koSpace.s8,
                 child: Center(
                   child: TidyToast(
                     key: ValueKey('tidy-$n'),
@@ -2187,8 +2208,10 @@ class _RoomViewState extends State<RoomView>
           customSemanticsActions: roomItemOf(id).builtIn
               ? null
               : {
-                  CustomSemanticsAction(label: l.storeItemAction): () =>
-                      _progress.storeItem(id),
+                  CustomSemanticsAction(label: l.storeItemAction): () {
+                    _dropUndo();
+                    _progress.storeItem(id);
+                  },
                 },
           child: art,
         ),
@@ -2214,7 +2237,9 @@ class _RoomViewState extends State<RoomView>
     return AnimatedPositioned.fromRect(
       key: ValueKey(id),
       rect: sprite.box,
-      duration: _sliding ? tidySlide : Duration.zero,
+      duration: DateTime.now().isBefore(_slideUntil)
+          ? tidySlide
+          : Duration.zero,
       curve: Curves.easeOut,
       child: art,
     );

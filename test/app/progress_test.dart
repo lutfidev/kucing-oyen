@@ -799,9 +799,29 @@ void main() {
       expect(storeOf(c).home.room, c.home.room);
       // Sudah rapi: tidak ada yang berubah, tidak ada yang dikembalikan.
       expect(await c.tidyRoom(HouseRoom.living), isNull);
-      await c.restoreRoom(before!);
+      await c.restoreRoom(before!, after: messy.room.tidy(HouseRoom.living));
       expect(c.home.room, messy.room);
       expect(storeOf(c).home.room, messy.room);
+    });
+
+    test('Batalkan tidak menimpa perubahan sesudah Rapikan', () async {
+      final stacked = HouseFloor().spotAtFeet(150, 610);
+      final messy = Home(
+        room: Room(
+          owned: [RoomItemId.kasur, RoomItemId.sofaMini],
+          placed: {RoomItemId.kasur: stacked, RoomItemId.sofaMini: stacked},
+        ),
+      );
+      final c = controller(home: messy, coins: 500);
+      final before = await c.tidyRoom(HouseRoom.living);
+      final tidied = c.home.room;
+      // Sesudah Rapikan: barang disimpan dan barang baru dibeli.
+      await c.storeItem(RoomItemId.kasur);
+      await c.buyItem(RoomItemId.kardus);
+      final later = c.home.room;
+      expect(await c.restoreRoom(before!, after: tidied), isFalse);
+      expect(c.home.room, later);
+      expect(c.home.room.owns(RoomItemId.kardus), isTrue);
     });
 
     test('tata letak: taruh di teras, barang dinding tidak boleh', () async {

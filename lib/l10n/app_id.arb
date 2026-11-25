@@ -410,6 +410,7 @@
   "buySuccessItem": "{name} jadi punyamu!",
   "buySuccessItemBody": "Sudah nongkrong di kamar. Geser lewat mode Hias kalau mau pindah.",
   "buySuccessItemStoredBody": "Rumah lagi penuh, jadi barangnya nunggu di Gudang dulu. Cari tempatnya lewat mode Hias.",
+  "buySuccessItemTerraceBody": "Ruang tengah lagi penuh, jadi barangnya ditaruh di teras. Geser ke teras buat lihat.",
   "buySuccessKitty": "{name} pindah ke kamar!",
   "buySuccessKittyBody": "Sapa dia di kamar. Mungkin pura-pura cuek dulu.",
   "buySuccessAccessory": "{name} milikmu selamanya!",

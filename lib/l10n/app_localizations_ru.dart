@@ -1704,6 +1704,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Дом забит, так что вещь пока ждёт в кладовке. Найди ей место в режиме «Украшать».';
 
   @override
+  String get buySuccessItemTerraceBody =>
+      'В гостиной тесно, так что вещь отправилась на террасу. Смахни туда, чтобы посмотреть.';
+
+  @override
   String buySuccessKitty(String name) {
     return '$name переехал в комнату!';
   }

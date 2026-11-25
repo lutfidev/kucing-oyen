@@ -455,7 +455,12 @@ class RoomLife {
           c,
     ];
     // Kucing yang tidak punya tujuan bebas tetap diam; coba yang lain.
+    // Yang sedang tidur atau rebahan di tempat nyaman paling akhir, supaya
+    // tidurnya tidak dipotong selama masih ada kucing yang cuma diam.
     idle.shuffle(random);
+    idle.sort(
+      (a, b) => (a.place == null ? 0 : 1).compareTo(b.place == null ? 0 : 1),
+    );
     for (final cat in idle) {
       _next(cat, events, move: true);
       if (_lively(cat)) return;

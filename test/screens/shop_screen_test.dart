@@ -111,6 +111,22 @@ void main() {
       expect(find.byKey(const ValueKey('buy-room')), findsOneWidget);
     });
 
+    testWidgets('ruang tengah penuh: barang baru di teras, pesannya teras', (
+      tester,
+    ) async {
+      final progress = await pumpShop(
+        tester,
+        coins: 100,
+        floor: const _LivingFullFloor(),
+      );
+      await tapCard(tester, 'shop-item-kardus');
+      await tester.tap(find.text('Beli · 50 koin'));
+      await settle(tester);
+      expect(progress.home.room.roomOf(RoomItemId.kardus), HouseRoom.terrace);
+      expect(find.text(l10nId.buySuccessItemTerraceBody), findsOneWidget);
+      expect(find.text(l10nId.buySuccessItemBody), findsNothing);
+    });
+
     testWidgets('koin pas cukup tetap bisa beli', (tester) async {
       final progress = await pumpShop(tester, coins: 50);
       await tapCard(tester, 'shop-item-kardus');
@@ -624,4 +640,19 @@ class _FullFloor extends HouseFloor {
     Spot spot,
     Iterable<({RoomItem item, Spot spot})> others,
   ) => null;
+}
+
+/// Ruang tengah tanpa tempat bebas; teras seperti biasa.
+class _LivingFullFloor extends HouseFloor {
+  const _LivingFullFloor();
+
+  @override
+  Spot? freeSpot(
+    RoomItem item,
+    HouseRoom room,
+    Spot spot,
+    Iterable<({RoomItem item, Spot spot})> others,
+  ) => room == HouseRoom.living
+      ? null
+      : super.freeSpot(item, room, spot, others);
 }

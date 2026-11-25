@@ -362,10 +362,12 @@ class ProgressController extends ChangeNotifier implements HintSource {
     return before;
   }
 
-  /// Batalkan Rapikan: susunan [before] dipakai lagi dan disimpan.
-  Future<void> restoreRoom(Room before) async {
-    if (before == _home.room) return;
-    await _changeHome({_Part.home}, home: _home.copyWith(room: before));
+  /// Batalkan Rapikan: susunan [before] dipakai lagi dan disimpan, hanya
+  /// kalau rumah masih persis hasil Rapikan [after]. Perubahan sesudahnya
+  /// (barang disimpan, dibeli) tidak pernah ditimpa; false tanpa efek.
+  Future<bool> restoreRoom(Room before, {required Room after}) async {
+    if (_home.room != after) return false;
+    return _changeHome({_Part.home}, home: _home.copyWith(room: before));
   }
 
   /// Memindahkan barang [id] ke Gudang; mangkuk tidak bisa.
