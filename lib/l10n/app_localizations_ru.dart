@@ -1693,6 +1693,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Уже стоит в комнате. Переставить можно в режиме «Украшать».';
 
   @override
+  String get buySuccessItemStoredBody =>
+      'Дом забит, так что вещь пока ждёт в кладовке. Найди ей место в режиме «Украшать».';
+
+  @override
   String buySuccessKitty(String name) {
     return '$name переехал в комнату!';
   }

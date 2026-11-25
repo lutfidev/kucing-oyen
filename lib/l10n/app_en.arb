@@ -2107,6 +2107,10 @@
   "@buySuccessItemBody": {
     "description": "Buy sheet body after buying a room item."
   },
+  "buySuccessItemStoredBody": "The house is full, so it's waiting in Storage. Find it a spot in decorate mode.",
+  "@buySuccessItemStoredBody": {
+    "description": "Buy sheet body after buying a room item when the house had no free spot, so the item went to Storage."
+  },
   "buySuccessKitty": "{name} moved into the room!",
   "@buySuccessKitty": {
     "description": "Buy sheet title after adopting a cat.",

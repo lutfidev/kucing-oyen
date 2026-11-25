@@ -132,7 +132,12 @@ class _BuySheetState extends State<_BuySheet> {
     };
     final (title, body) = _bought
         ? switch (target) {
-            BuyItem() => (l.buySuccessItem(name), l.buySuccessItemBody),
+            BuyItem(:final id) => (
+              l.buySuccessItem(name),
+              widget.progress.home.room.isPlaced(id)
+                  ? l.buySuccessItemBody
+                  : l.buySuccessItemStoredBody,
+            ),
             BuyKitty() => (l.buySuccessKitty(name), l.buySuccessKittyBody),
             BuyAccessory() => (
               l.buySuccessAccessory(name),

@@ -1678,6 +1678,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'Já está no quarto. Mude de lugar no modo Decorar.';
 
   @override
+  String get buySuccessItemStoredBody =>
+      'A casa está cheia, então ele está esperando no Depósito. Arrume um lugar no modo Decorar.';
+
+  @override
   String buySuccessKitty(String name) {
     return '$name se mudou para o quarto!';
   }

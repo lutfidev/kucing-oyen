@@ -2544,6 +2544,12 @@ abstract class AppLocalizations {
   /// **'It\'s in the room already. Move it around in decorate mode.'**
   String get buySuccessItemBody;
 
+  /// Buy sheet body after buying a room item when the house had no free spot, so the item went to Storage.
+  ///
+  /// In en, this message translates to:
+  /// **'The house is full, so it\'s waiting in Storage. Find it a spot in decorate mode.'**
+  String get buySuccessItemStoredBody;
+
   /// Buy sheet title after adopting a cat.
   ///
   /// In en, this message translates to:

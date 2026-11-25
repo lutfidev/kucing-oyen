@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-509 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+510 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Indonesian (original) | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -434,6 +434,7 @@ files and anything written there is overwritten.
 | `buySuccessOverline` | Success! | Berhasil! | Overline above the title after a successful purchase. | |
 | `buySuccessItem` | {name} is yours! | {name} jadi punyamu! | Buy sheet title after buying a room item. Placeholders: `{name}`. | |
 | `buySuccessItemBody` | It's in the room already. Move it around in decorate mode. | Sudah nongkrong di kamar. Geser lewat mode Hias kalau mau pindah. | Buy sheet body after buying a room item. | |
+| `buySuccessItemStoredBody` | The house is full, so it's waiting in Storage. Find it a spot in decorate mode. | Rumah lagi penuh, jadi barangnya nunggu di Gudang dulu. Cari tempatnya lewat mode Hias. | Buy sheet body after buying a room item when the house had no free spot, so the item went to Storage. | |
 | `buySuccessKitty` | {name} moved into the room! | {name} pindah ke kamar! | Buy sheet title after adopting a cat. Placeholders: `{name}`. | |
 | `buySuccessKittyBody` | Say hi in the room. Expect some fake indifference first. | Sapa dia di kamar. Mungkin pura-pura cuek dulu. | Buy sheet body after adopting a cat. | |
 | `buySuccessAccessory` | {name} is yours forever! | {name} milikmu selamanya! | Buy sheet title after buying an accessory. Placeholders: `{name}`. | |

@@ -407,6 +407,7 @@
   "buySuccessOverline": "Готово!",
   "buySuccessItem": "{name} теперь твой!",
   "buySuccessItemBody": "Уже стоит в комнате. Переставить можно в режиме «Украшать».",
+  "buySuccessItemStoredBody": "Дом забит, так что вещь пока ждёт в кладовке. Найди ей место в режиме «Украшать».",
   "buySuccessKitty": "{name} переехал в комнату!",
   "buySuccessKittyBody": "Поздоровайся в комнате. Сначала сделает вид, что ему всё равно.",
   "buySuccessAccessory": "{name} теперь твой навсегда!",

@@ -407,6 +407,7 @@
   "buySuccessOverline": "Sucesso!",
   "buySuccessItem": "{name} agora é seu!",
   "buySuccessItemBody": "Já está no quarto. Mude de lugar no modo Decorar.",
+  "buySuccessItemStoredBody": "A casa está cheia, então ele está esperando no Depósito. Arrume um lugar no modo Decorar.",
   "buySuccessKitty": "{name} se mudou para o quarto!",
   "buySuccessKittyBody": "Diga oi no quarto. Talvez finja não ligar no começo.",
   "buySuccessAccessory": "{name} é seu para sempre!",

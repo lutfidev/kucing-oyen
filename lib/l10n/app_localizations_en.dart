@@ -1661,6 +1661,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'It\'s in the room already. Move it around in decorate mode.';
 
   @override
+  String get buySuccessItemStoredBody =>
+      'The house is full, so it\'s waiting in Storage. Find it a spot in decorate mode.';
+
+  @override
   String buySuccessKitty(String name) {
     return '$name moved into the room!';
   }

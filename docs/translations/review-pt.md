@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-509 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+510 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -434,6 +434,7 @@ files and anything written there is overwritten.
 | `buySuccessOverline` | Success! | Sucesso! | Overline above the title after a successful purchase. | |
 | `buySuccessItem` | {name} is yours! | {name} agora é seu! | Buy sheet title after buying a room item. Placeholders: `{name}`. | |
 | `buySuccessItemBody` | It's in the room already. Move it around in decorate mode. | Já está no quarto. Mude de lugar no modo Decorar. | Buy sheet body after buying a room item. | |
+| `buySuccessItemStoredBody` | The house is full, so it's waiting in Storage. Find it a spot in decorate mode. | A casa está cheia, então ele está esperando no Depósito. Arrume um lugar no modo Decorar. | Buy sheet body after buying a room item when the house had no free spot, so the item went to Storage. | |
 | `buySuccessKitty` | {name} moved into the room! | {name} se mudou para o quarto! | Buy sheet title after adopting a cat. Placeholders: `{name}`. | |
 | `buySuccessKittyBody` | Say hi in the room. Expect some fake indifference first. | Diga oi no quarto. Talvez finja não ligar no começo. | Buy sheet body after adopting a cat. | |
 | `buySuccessAccessory` | {name} is yours forever! | {name} é seu para sempre! | Buy sheet title after buying an accessory. Placeholders: `{name}`. | |

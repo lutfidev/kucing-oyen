@@ -1551,6 +1551,10 @@ class AppLocalizationsId extends AppLocalizations {
       'Sudah nongkrong di kamar. Geser lewat mode Hias kalau mau pindah.';
 
   @override
+  String get buySuccessItemStoredBody =>
+      'Rumah lagi penuh, jadi barangnya nunggu di Gudang dulu. Cari tempatnya lewat mode Hias.';
+
+  @override
   String buySuccessKitty(String name) {
     return '$name pindah ke kamar!';
   }
