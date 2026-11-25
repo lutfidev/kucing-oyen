@@ -1815,19 +1815,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get roomEmptyBubble => 'Quarto vazio demais. Bora pra Loja!';
 
   @override
-  String get roomEmptyWall => 'Decoração de parede?';
-
-  @override
-  String get roomEmptyWallHint => 'Vazio. Procure decoração de parede na Loja';
-
-  @override
-  String get roomEmptyFloor => 'Uma caminha, talvez?';
-
-  @override
-  String get roomEmptyFloorHint =>
-      'Vazio. Procure uma caminha ou brinquedo na Loja';
-
-  @override
   String get accessories => 'Acessórios';
 
   @override

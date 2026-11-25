@@ -102,10 +102,6 @@ class KoColors extends ThemeExtension<KoColors> {
     required this.needJoyTile,
     required this.needLowTile,
     required this.heart,
-    required this.roomHintWallLine,
-    required this.roomHintWallInk,
-    required this.roomHintFloorLine,
-    required this.roomHintFloorInk,
     required this.roomScrim,
     required this.roomSelectFill,
     required this.roomZoneLine,
@@ -220,10 +216,6 @@ class KoColors extends ThemeExtension<KoColors> {
     needJoyTile: Color(0xFFCDEFE8),
     needLowTile: Color(0xFFF6D3CA),
     heart: Color(0xFFF07F9A),
-    roomHintWallLine: Color(0xFFD9A066),
-    roomHintWallInk: Color(0xFFA9530A),
-    roomHintFloorLine: Color(0xFFC99466),
-    roomHintFloorInk: Color(0xFF8E5A30),
     roomScrim: Color(0x383B2716), // rgba(59,39,22,.22),
     roomSelectFill: Color(0x2EF59A33), // rgba(245,154,51,.18),
     roomZoneLine: Color(0x992F86B8), // rgba(47,134,184,.6),
@@ -497,18 +489,6 @@ class KoColors extends ThemeExtension<KoColors> {
   /// Hati elusan.
   final Color heart;
 
-  /// Garis bidang kosong dinding kamar baru.
-  final Color roomHintWallLine;
-
-  /// Teks bidang kosong dinding kamar baru.
-  final Color roomHintWallInk;
-
-  /// Garis bidang kosong lantai kamar baru.
-  final Color roomHintFloorLine;
-
-  /// Teks bidang kosong lantai kamar baru.
-  final Color roomHintFloorInk;
-
   /// Latar gelap di belakang kartu kucing.
   final Color roomScrim;
 
@@ -656,10 +636,6 @@ class KoColors extends ThemeExtension<KoColors> {
     Color? needJoyTile,
     Color? needLowTile,
     Color? heart,
-    Color? roomHintWallLine,
-    Color? roomHintWallInk,
-    Color? roomHintFloorLine,
-    Color? roomHintFloorInk,
     Color? roomScrim,
     Color? roomSelectFill,
     Color? roomZoneLine,
@@ -773,10 +749,6 @@ class KoColors extends ThemeExtension<KoColors> {
       needJoyTile: needJoyTile ?? this.needJoyTile,
       needLowTile: needLowTile ?? this.needLowTile,
       heart: heart ?? this.heart,
-      roomHintWallLine: roomHintWallLine ?? this.roomHintWallLine,
-      roomHintWallInk: roomHintWallInk ?? this.roomHintWallInk,
-      roomHintFloorLine: roomHintFloorLine ?? this.roomHintFloorLine,
-      roomHintFloorInk: roomHintFloorInk ?? this.roomHintFloorInk,
       roomScrim: roomScrim ?? this.roomScrim,
       roomSelectFill: roomSelectFill ?? this.roomSelectFill,
       roomZoneLine: roomZoneLine ?? this.roomZoneLine,
@@ -896,10 +868,6 @@ class KoColors extends ThemeExtension<KoColors> {
       needJoyTile: c(needJoyTile, other.needJoyTile),
       needLowTile: c(needLowTile, other.needLowTile),
       heart: c(heart, other.heart),
-      roomHintWallLine: c(roomHintWallLine, other.roomHintWallLine),
-      roomHintWallInk: c(roomHintWallInk, other.roomHintWallInk),
-      roomHintFloorLine: c(roomHintFloorLine, other.roomHintFloorLine),
-      roomHintFloorInk: c(roomHintFloorInk, other.roomHintFloorInk),
       roomScrim: c(roomScrim, other.roomScrim),
       roomSelectFill: c(roomSelectFill, other.roomSelectFill),
       roomZoneLine: c(roomZoneLine, other.roomZoneLine),

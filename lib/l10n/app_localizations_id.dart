@@ -1670,18 +1670,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get roomEmptyBubble => 'Kamar masih sepi. Ke Toko, yuk!';
 
   @override
-  String get roomEmptyWall => 'Hiasan dinding?';
-
-  @override
-  String get roomEmptyWallHint => 'Kosong. Cari hiasan dinding di Toko';
-
-  @override
-  String get roomEmptyFloor => 'Kasur, mungkin?';
-
-  @override
-  String get roomEmptyFloorHint => 'Kosong. Cari kasur atau mainan di Toko';
-
-  @override
   String get accessories => 'Aksesoris';
 
   @override

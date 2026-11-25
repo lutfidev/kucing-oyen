@@ -72,15 +72,15 @@ void main() {
   });
 
   group('kamar', () {
-    testWidgets('kamar kosong: ajakan ke Toko dan dua bidang kosong', (
+    testWidgets('kamar kosong: hanya ajakan ke Toko, tanpa bidang kosong', (
       tester,
     ) async {
       await pumpRoom(tester);
       expect(find.byType(RoomView), findsOneWidget);
       expect(find.text('Kamar masih sepi. Ke Toko, yuk!'), findsOneWidget);
-      expect(find.text('Hiasan dinding?'), findsOneWidget);
-      expect(find.text('Kasur, mungkin?'), findsOneWidget);
-      await tester.tap(find.text('Kasur, mungkin?'));
+      expect(find.text('Hiasan dinding?'), findsNothing);
+      expect(find.text('Kasur, mungkin?'), findsNothing);
+      await tester.tap(find.text('Kamar masih sepi. Ke Toko, yuk!'));
       await settle(tester);
       expect(find.byType(ShopScreen), findsOneWidget);
     });
@@ -185,8 +185,8 @@ void main() {
         final oyen = tester.getRect(kittyView(KittyId.oyen));
         expect(bubble.overlaps(oyen), isFalse);
         expect(bubble.right, lessThanOrEqualTo(room.right));
-        expect(find.text('Hiasan dinding?'), findsOneWidget);
-        expect(find.text('Kasur, mungkin?'), findsOneWidget);
+        expect(find.text('Hiasan dinding?'), findsNothing);
+        expect(find.text('Kasur, mungkin?'), findsNothing);
       });
     }
 

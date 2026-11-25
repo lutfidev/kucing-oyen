@@ -2286,22 +2286,6 @@
   "@roomEmptyBubble": {
     "description": "Speech bubble in an empty starter room, pointing the player to the shop."
   },
-  "roomEmptyWall": "Wall decor?",
-  "@roomEmptyWall": {
-    "description": "Short label inside the empty dashed spot on the wall of a starter room."
-  },
-  "roomEmptyWallHint": "Empty. Find wall decor in the Shop",
-  "@roomEmptyWallHint": {
-    "description": "Screen reader label of the empty wall spot; tapping opens the shop."
-  },
-  "roomEmptyFloor": "A bed, maybe?",
-  "@roomEmptyFloor": {
-    "description": "Short label inside the empty dashed spot on the floor of a starter room."
-  },
-  "roomEmptyFloorHint": "Empty. Find a bed or a toy in the Shop",
-  "@roomEmptyFloorHint": {
-    "description": "Screen reader label of the empty floor spot; tapping opens the shop."
-  },
   "accessories": "Accessories",
   "@accessories": {
     "description": "Room menu button that opens the accessories tab of the shop."

@@ -1836,19 +1836,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get roomEmptyBubble => 'Пустовато тут. Айда в магазин!';
 
   @override
-  String get roomEmptyWall => 'Что-то на стену?';
-
-  @override
-  String get roomEmptyWallHint => 'Пусто. Найди украшение для стены в магазине';
-
-  @override
-  String get roomEmptyFloor => 'Может, лежанку?';
-
-  @override
-  String get roomEmptyFloorHint =>
-      'Пусто. Найди лежанку или игрушку в магазине';
-
-  @override
   String get accessories => 'Аксессуары';
 
   @override

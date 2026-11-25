@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-513 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+509 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Brazilian Portuguese | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -458,10 +458,6 @@ files and anything written there is overwritten.
 | `sadMarkHungry` | Droopy: hungry | Murchinho: com fome | Screen reader label of the thought bubble above a hungry room cat. | |
 | `sadMarkSad` | Droopy: wants attention | Murchinho: quer carinho | Screen reader label of the thought bubble above a room cat that needs attention. | |
 | `roomEmptyBubble` | Pretty empty in here. To the Shop! | Quarto vazio demais. Bora pra Loja! | Speech bubble in an empty starter room, pointing the player to the shop. | |
-| `roomEmptyWall` | Wall decor? | Decoração de parede? | Short label inside the empty dashed spot on the wall of a starter room. | |
-| `roomEmptyWallHint` | Empty. Find wall decor in the Shop | Vazio. Procure decoração de parede na Loja | Screen reader label of the empty wall spot; tapping opens the shop. | |
-| `roomEmptyFloor` | A bed, maybe? | Uma caminha, talvez? | Short label inside the empty dashed spot on the floor of a starter room. | |
-| `roomEmptyFloorHint` | Empty. Find a bed or a toy in the Shop | Vazio. Procure uma caminha ou brinquedo na Loja | Screen reader label of the empty floor spot; tapping opens the shop. | |
 | `accessories` | Accessories | Acessórios | Room menu button that opens the accessories tab of the shop. | |
 | `shopHasNew` | something new you can afford | tem novidade que cabe no bolso | Added to a room menu button's screen reader label when something there is affordable and not owned yet. | |
 | `menuButtonNew` | {label}, {note} | {label}, {note} | Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew. Placeholders: `{label}`, `{note}`. | |

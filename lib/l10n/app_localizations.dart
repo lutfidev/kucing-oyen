@@ -2688,30 +2688,6 @@ abstract class AppLocalizations {
   /// **'Pretty empty in here. To the Shop!'**
   String get roomEmptyBubble;
 
-  /// Short label inside the empty dashed spot on the wall of a starter room.
-  ///
-  /// In en, this message translates to:
-  /// **'Wall decor?'**
-  String get roomEmptyWall;
-
-  /// Screen reader label of the empty wall spot; tapping opens the shop.
-  ///
-  /// In en, this message translates to:
-  /// **'Empty. Find wall decor in the Shop'**
-  String get roomEmptyWallHint;
-
-  /// Short label inside the empty dashed spot on the floor of a starter room.
-  ///
-  /// In en, this message translates to:
-  /// **'A bed, maybe?'**
-  String get roomEmptyFloor;
-
-  /// Screen reader label of the empty floor spot; tapping opens the shop.
-  ///
-  /// In en, this message translates to:
-  /// **'Empty. Find a bed or a toy in the Shop'**
-  String get roomEmptyFloorHint;
-
   /// Room menu button that opens the accessories tab of the shop.
   ///
   /// In en, this message translates to:

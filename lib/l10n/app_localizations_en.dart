@@ -1798,18 +1798,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get roomEmptyBubble => 'Pretty empty in here. To the Shop!';
 
   @override
-  String get roomEmptyWall => 'Wall decor?';
-
-  @override
-  String get roomEmptyWallHint => 'Empty. Find wall decor in the Shop';
-
-  @override
-  String get roomEmptyFloor => 'A bed, maybe?';
-
-  @override
-  String get roomEmptyFloorHint => 'Empty. Find a bed or a toy in the Shop';
-
-  @override
   String get accessories => 'Accessories';
 
   @override

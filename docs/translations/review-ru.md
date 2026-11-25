@@ -23,7 +23,7 @@ files and anything written there is overwritten.
   the inner braces, e.g. `{n, plural, one{{n} step} other{{n} steps}}`.
   Russian plurals have `one`, `few`, and `many` forms.
 
-513 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
+509 lines. Generated from `lib/l10n/` by `tool/translations/make_review.py`; do not edit by hand.
 
 | Key | English | Russian | Notes | Feedback |
 | --- | --- | --- | --- | --- |
@@ -458,10 +458,6 @@ files and anything written there is overwritten.
 | `sadMarkHungry` | Droopy: hungry | Скис: голодный | Screen reader label of the thought bubble above a hungry room cat. | |
 | `sadMarkSad` | Droopy: wants attention | Скис: мало внимания | Screen reader label of the thought bubble above a room cat that needs attention. | |
 | `roomEmptyBubble` | Pretty empty in here. To the Shop! | Пустовато тут. Айда в магазин! | Speech bubble in an empty starter room, pointing the player to the shop. | |
-| `roomEmptyWall` | Wall decor? | Что-то на стену? | Short label inside the empty dashed spot on the wall of a starter room. | |
-| `roomEmptyWallHint` | Empty. Find wall decor in the Shop | Пусто. Найди украшение для стены в магазине | Screen reader label of the empty wall spot; tapping opens the shop. | |
-| `roomEmptyFloor` | A bed, maybe? | Может, лежанку? | Short label inside the empty dashed spot on the floor of a starter room. | |
-| `roomEmptyFloorHint` | Empty. Find a bed or a toy in the Shop | Пусто. Найди лежанку или игрушку в магазине | Screen reader label of the empty floor spot; tapping opens the shop. | |
 | `accessories` | Accessories | Аксессуары | Room menu button that opens the accessories tab of the shop. | |
 | `shopHasNew` | something new you can afford | есть что-то новое по карману | Added to a room menu button's screen reader label when something there is affordable and not owned yet. | |
 | `menuButtonNew` | {label}, {note} | {label}, {note} | Screen reader label of a room menu button with a red dot. {label} is the button name, {note} is shopHasNew. Placeholders: `{label}`, `{note}`. | |
